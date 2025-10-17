@@ -29,10 +29,10 @@ import org.supla.android.core.ui.theme.Distance
 
 @Composable
 fun SensorsItemsView(
-  sensors: List<SensorItemData>,
+  sensors: List<RelatedChannelData>,
   scale: Float = 1f,
-  onInfoClick: (SensorItemData) -> Unit = {},
-  onCaptionLongPress: (SensorItemData) -> Unit = {}
+  onInfoClick: (RelatedChannelData) -> Unit = {},
+  onCaptionLongPress: (RelatedChannelData) -> Unit = {}
 ) {
   if (sensors.isNotEmpty()) {
     Column(modifier = Modifier.padding(top = Distance.small)) {
@@ -42,8 +42,8 @@ fun SensorsItemsView(
         modifier = Modifier.padding(start = Distance.default, bottom = Distance.tiny, end = Distance.default)
       )
       sensors.forEach { sensor ->
-        SensorItemView(
-          sensor = sensor,
+        RelatedChannelItemView(
+          channel = sensor,
           scale = scale,
           onCaptionLongPress = onCaptionLongPress,
           onInfoClick = onInfoClick

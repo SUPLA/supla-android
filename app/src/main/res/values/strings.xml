@@ -734,10 +734,10 @@
   <string name="details_em_forward_reactive_energy_short" translatable="false">Forward reactive</string>
   <string name="details_em_reverse_reactive_energy_short" translatable="false">Reverse reactive</string>
   <string name="details_em_energy_label" translatable="false">Energy</string>
-  <string name="channel_btn_shut" translatable="false">Shut</string>
-  <string name="channel_btn_reveal" translatable="false">Reveal</string>
-  <string name="channel_btn_collapse" translatable="false">Collapse</string>
-  <string name="channel_btn_expand" translatable="false">Expand</string>
+  <string name="channel_btn_shut">Shut</string>
+  <string name="channel_btn_reveal">Reveal</string>
+  <string name="channel_btn_collapse">Collapse</string>
+  <string name="channel_btn_expand">Expand</string>
   <string name="settings_battery_level_warning" translatable="false">Low battery alert</string>
   <string name="channel_battery_level">Battery level (%1$d - %2$s): %3$d%%</string>
   <string name="counter_photo_counter_area" translatable="false">Counter area</string>
@@ -755,7 +755,7 @@
   <string name="em_electric_grid_parameters" translatable="false">Electric grid parameters</string>
   <string name="channel_caption_container" translatable="false">Container</string>
   <string name="developer_info_database_section" translatable="false">Database details</string>
-  <string name="developer_info_activated" translatable="false">Developer mode activated</string>
+  <string name="developer_info_activated">Developer mode activated</string>
   <string name="developer_info_title" translatable="false">App information</string>
   <string name="counter_photo_photos" translatable="false">Photo history</string>
   <string name="counter_photo_loading_error" translatable="false">Loading failed.</string>
@@ -767,8 +767,8 @@
   <string name="channel_caption_septic_tank" translatable="false">Septic tank</string>
   <string name="channel_caption_water_tank" translatable="false">Water tank</string>
   <string name="channel_caption_container_level_sensor" translatable="false">Container level sensor</string>
-  <string name="state_opened" translatable="false">opened</string>
-  <string name="state_closed" translatable="false">closed</string>
+  <string name="state_opened">opened</string>
+  <string name="state_closed">closed</string>
   <string name="valve_detail_sensors" translatable="false">Connected sensors</string>
   <string name="valve_action_error" translatable="false">Communication error occurred. Please try again later.</string>
   <string name="valve_warning_motor_problem_opening" translatable="false">A motor problem has been detected. Make sure nothing is blocking the valve. The valve may be partially open. Are you sure you want to open it?</string>
@@ -792,7 +792,7 @@
   <string name="state_switch_cycle_count" translatable="false">Switch cycles</string>
   <string name="settings_android_auto_label" translatable="false">Android Auto</string>
   <string name="android_auto_add" translatable="false">Add Android Auto item</string>
-  <string name="channel_btn_stop" translatable="false">Stop</string>
+  <string name="channel_btn_stop">Stop</string>
   <string name="android_auto_action">Action: %1$s</string>
   <string name="android_auto_empty" translatable="false">Android Auto not configured. Go to Supla App -> Settings -> Android Auto and prepare configuration.</string>
   <string name="android_auto_executing" translatable="false">Executing…</string>
@@ -870,4 +870,6 @@
   <string name="profiles_list_sorting_default">Default</string>
   <string name="profiles_list_sorting_name">Name</string>
   <string name="profiles_list_sorting_added">Last added</string>
+  <string name="state_partially_opened">Partially opened</string>
+  <string name="channel_btn_step_by_step">Open/Close (step by step)</string>
 </resources>

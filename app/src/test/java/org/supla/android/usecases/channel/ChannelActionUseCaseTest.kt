@@ -3,7 +3,7 @@ package org.supla.android.usecases.channel
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
-import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -213,7 +213,7 @@ class ChannelActionUseCaseTest {
     every { channel.channelValueEntity } returns channelValue
     every { channel.function } returns channelFunc
 
-    whenever(channelRepository.findChannelDataEntity(channelId)).thenReturn(Maybe.just(channel))
+    whenever(channelRepository.findChannelDataEntity(channelId)).thenReturn(Observable.just(channel))
 
     // when
     val testObserver = useCase(channelId, ButtonType.RIGHT).test()
@@ -238,7 +238,7 @@ class ChannelActionUseCaseTest {
     every { channelValue.asValveValue() } returns valveValue
     every { channel.channelValueEntity } returns channelValue
 
-    whenever(channelRepository.findChannelDataEntity(channelId)).thenReturn(Maybe.just(channel))
+    whenever(channelRepository.findChannelDataEntity(channelId)).thenReturn(Observable.just(channel))
 
     // when
     val testObserver = useCase(channelId, ButtonType.RIGHT).test()
@@ -261,7 +261,7 @@ class ChannelActionUseCaseTest {
     every { channel.function } returns channelFunc
     every { channel.flags } returns (flag?.rawValue ?: 0L)
 
-    whenever(channelRepository.findChannelDataEntity(channelId)).thenReturn(Maybe.just(channel))
+    whenever(channelRepository.findChannelDataEntity(channelId)).thenReturn(Observable.just(channel))
 
     val parametersSlot = slot<ActionParameters>()
     val suplaClient: SuplaClientApi = mockk()
@@ -295,7 +295,7 @@ class ChannelActionUseCaseTest {
     every { channel.function } returns channelFunc
     every { channel.channelValueEntity } returns channelValue
 
-    whenever(channelRepository.findChannelDataEntity(channelId)).thenReturn(Maybe.just(channel))
+    whenever(channelRepository.findChannelDataEntity(channelId)).thenReturn(Observable.just(channel))
 
     val suplaClient: SuplaClientApi = mockk()
     every { suplaClient.open(channelId, false, openValue) } returns true

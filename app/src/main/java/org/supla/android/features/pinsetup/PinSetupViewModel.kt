@@ -28,7 +28,7 @@ import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.LockScreenScope
 import org.supla.android.data.model.general.LockScreenSettings
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.ui.views.PIN_LENGTH
+import org.supla.android.ui.views.forms.PIN_LENGTH
 import timber.log.Timber
 import javax.inject.Inject
 

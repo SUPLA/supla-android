@@ -659,6 +659,7 @@
   <string name="thermostat_detail_other_thermostats">Priklausomi termostatai</string>
   <string name="thermostat_battery_cover_open">Baterijos dangtelis atidarytas</string>
   <string name="channel_battery_level">Baterijos lygis (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_btn_stop">Sustabdyti</string>
   <string name="android_auto_action">Veiksmas: %1$s</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Jei turite QR kodą, naudokite skaitytuvą. Įrenginiams be QR kodo, paspauskite <b>Kitas</b>, kad tęstumėte.]]></string>
   <string name="add_wizard_network_name">Tinklo pavadinimas</string>
@@ -701,4 +702,12 @@
   <string name="profiles_list_sorting_default">Numatytasis</string>
   <string name="profiles_list_sorting_name">Pavadinimas</string>
   <string name="profiles_list_sorting_added">Paskiausiai pridėtas</string>
+  <string name="state_opened">atidaryta</string>
+  <string name="state_closed">uždaryta</string>
+  <string name="state_partially_opened">iš dalies atidaryta</string>
+  <string name="channel_btn_step_by_step">Atidaryti/Uždaryti (žingsnis po žingsnio)</string>
+  <string name="channel_btn_shut">Uždaryti</string>
+  <string name="channel_btn_reveal">Atidaryti</string>
+  <string name="channel_btn_collapse">Sutraukti</string>
+  <string name="channel_btn_expand">Išskleisti</string>
 </resources>

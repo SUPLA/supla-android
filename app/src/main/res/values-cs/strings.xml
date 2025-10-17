@@ -662,6 +662,7 @@
   <string name="thermostat_battery_cover_open">Otevřený kryt baterie</string>
 
   <string name="channel_battery_level">Stav baterie (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_btn_stop">Zastavit</string>
   <string name="android_auto_action">Akce: %1$s</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Pokud máte QR kód, použijte skener. Pro zařízení bez QR kódu stiskněte <b>Další</b> pro pokračování.]]></string>
   <string name="add_wizard_network_name">Název sítě</string>
@@ -704,4 +705,12 @@
   <string name="profiles_list_sorting_default">Výchozí</string>
   <string name="profiles_list_sorting_name">Název</string>
   <string name="profiles_list_sorting_added">Naposledy přidáno</string>
+  <string name="state_opened">otevřeno</string>
+  <string name="state_closed">zavřeno</string>
+  <string name="state_partially_opened">částečně otevřeno</string>
+  <string name="channel_btn_step_by_step">Otevřít/Zavřít (krok za krokem)</string>
+  <string name="channel_btn_shut">Zavřít</string>
+  <string name="channel_btn_reveal">Otevřít</string>
+  <string name="channel_btn_collapse">Svinout</string>
+  <string name="channel_btn_expand">Rozvinout</string>
 </resources>

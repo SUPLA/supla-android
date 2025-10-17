@@ -47,7 +47,7 @@ import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
 import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModel
-import org.supla.android.ui.lists.sensordata.SensorItemData
+import org.supla.android.ui.lists.sensordata.RelatedChannelData
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
@@ -163,13 +163,13 @@ class ContainerGeneralDetailViewModel @Inject constructor(
     }
   }
 
-  private fun ChannelChildEntity.toSensorData(channelToLevelMap: Map<Int, Int>?): SensorItemData {
+  private fun ChannelChildEntity.toSensorData(channelToLevelMap: Map<Int, Int>?): RelatedChannelData {
     val caption = getCaptionUseCase(channelDataEntity.shareable)
     val captionWithPercentage = channelToLevelMap?.get(channel.remoteId)?.let {
       LocalizedString.WithResourceAndArguments(R.string.container_caption, caption, it)
     }
 
-    return SensorItemData(
+    return RelatedChannelData(
       channelId = channel.remoteId,
       profileId = channel.profileId,
       onlineState = channelDataEntity.channelValueEntity.onlineState,

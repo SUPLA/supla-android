@@ -766,6 +766,7 @@
   <string name="state_dialog_index">(%1$d z %2$d)</string>
   <string name="state_switch_cycle_count">Przełączenia przekaźnika</string>
   <string name="android_auto_add">Dodaj element Android Auto</string>
+  <string name="channel_btn_stop">Stop</string>
   <string name="android_auto_action">Akcja: %1$s</string>
   <string name="android_auto_empty">Android Auto nie jest skonfigurowany. Otwórz aplikację Supla -> Ustawienia -> Android Auto i przygotuj swoją konfigurację.</string>
   <string name="android_auto_executing">Wykonywanie…</string>
@@ -843,4 +844,6 @@
   <string name="profiles_list_sorting_default">Domyślne</string>
   <string name="profiles_list_sorting_name">Nazwa</string>
   <string name="profiles_list_sorting_added">Ostatnio dodane</string>
+  <string name="state_partially_opened">częściowo otwarty</string>
+  <string name="channel_btn_step_by_step">Otwórz/Zamknij (krok po kroku)</string>
 </resources>

@@ -48,7 +48,7 @@ import org.supla.core.shared.data.model.lists.IssueIcon
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.LocalizedStringId
 
-data class SensorItemData(
+data class RelatedChannelData(
   val channelId: Int,
   val profileId: Long,
   val onlineState: ListOnlineState,
@@ -60,11 +60,11 @@ data class SensorItemData(
 )
 
 @Composable
-fun SensorItemView(
-  sensor: SensorItemData,
+fun RelatedChannelItemView(
+  channel: RelatedChannelData,
   scale: Float = 1f,
-  onCaptionLongPress: (SensorItemData) -> Unit = {},
-  onInfoClick: (SensorItemData) -> Unit = {}
+  onCaptionLongPress: (RelatedChannelData) -> Unit = {},
+  onInfoClick: (RelatedChannelData) -> Unit = {}
 ) {
   Row(
     verticalAlignment = Alignment.CenterVertically,
@@ -75,18 +75,18 @@ fun SensorItemView(
       .padding(start = Distance.small, end = Distance.default)
       .padding(vertical = Distance.tiny)
   ) {
-    sensor.icon?.let { ListItemIcon(imageId = it, scale = scale) }
+    channel.icon?.let { ListItemIcon(imageId = it, scale = scale) }
     ListItemTitle(
-      text = sensor.caption(LocalContext.current),
+      text = channel.caption(LocalContext.current),
       onItemClick = {},
-      onLongClick = { onCaptionLongPress(sensor) },
+      onLongClick = { onCaptionLongPress(channel) },
       modifier = Modifier
         .padding(start = Distance.tiny)
         .weight(1f),
       scale = scale,
       maxLines = 2
     )
-    sensor.batteryIcon?.let {
+    channel.batteryIcon?.let {
       Image(
         drawableId = it.resource,
         modifier = Modifier
@@ -94,14 +94,14 @@ fun SensorItemView(
           .size(dimensionResource(R.dimen.icon_default_size))
       )
     }
-    if (sensor.showChannelStateIcon) {
+    if (channel.showChannelStateIcon) {
       ListItemInfoIcon(
-        onClick = { onInfoClick(sensor) },
+        onClick = { onInfoClick(channel) },
         modifier = Modifier.padding(end = Distance.small)
       )
     }
     ListItemDot(
-      onlineState = sensor.onlineState,
+      onlineState = channel.onlineState,
       withButton = false,
       paddingValues = PaddingValues(0.dp)
     )
@@ -113,8 +113,8 @@ fun SensorItemView(
 private fun Preview() {
   SuplaTheme {
     Column {
-      SensorItemView(
-        sensor = SensorItemData(
+      RelatedChannelItemView(
+        channel = RelatedChannelData(
           channelId = 123,
           profileId = 123L,
           onlineState = ListOnlineState.ONLINE,
@@ -125,8 +125,8 @@ private fun Preview() {
           showChannelStateIcon = true
         )
       )
-      SensorItemView(
-        sensor = SensorItemData(
+      RelatedChannelItemView(
+        channel = RelatedChannelData(
           channelId = 123,
           profileId = 123L,
           onlineState = ListOnlineState.OFFLINE,

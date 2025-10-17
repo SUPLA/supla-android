@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package org.supla.android.ui.views
+package org.supla.android.ui.views.forms
 /*
 Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerFormatter
 import androidx.compose.material3.DatePickerState
@@ -65,7 +66,7 @@ fun DatePicker(
     todayDateBorderColor = MaterialTheme.colorScheme.primary
   )
 
-  androidx.compose.material3.DatePicker(
+  DatePicker(
     state = state,
     colors = colors,
     title = null,

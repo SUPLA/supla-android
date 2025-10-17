@@ -290,7 +290,15 @@ class ProvideChannelDetailTypeUseCaseTest {
 
   @Test
   fun `should not provide detail for unsupported channel function`() {
-    testDetailType(SuplaFunction.CONTROLLING_THE_GATE, null)
+    testDetailType(SuplaFunction.DEPTH_SENSOR, null)
+  }
+
+  @Test
+  fun `should provide detail for gate`() {
+    testDetailType(SuplaFunction.CONTROLLING_THE_GATE, GateDetailType(listOf(DetailPage.GATE_GENERAL)))
+    testDetailType(SuplaFunction.CONTROLLING_THE_GARAGE_DOOR, GateDetailType(listOf(DetailPage.GATE_GENERAL)))
+    testDetailType(SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK, GateDetailType(listOf(DetailPage.GATE_GENERAL)))
+    testDetailType(SuplaFunction.CONTROLLING_THE_DOOR_LOCK, GateDetailType(listOf(DetailPage.GATE_GENERAL)))
   }
 
   @Test

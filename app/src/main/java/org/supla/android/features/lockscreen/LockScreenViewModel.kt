@@ -27,7 +27,7 @@ import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.ui.views.PIN_LENGTH
+import org.supla.android.ui.views.forms.PIN_LENGTH
 import org.supla.android.usecases.lock.CheckPinUseCase
 import javax.inject.Inject
 

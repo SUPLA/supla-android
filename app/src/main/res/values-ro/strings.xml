@@ -683,6 +683,7 @@
   <string name="thermostat_detail_other_thermostats">Termostate dependente</string>
   <string name="thermostat_battery_cover_open">Deschideți capacul bateriei</string>
   <string name="channel_battery_level">Nivelul bateriei (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_btn_stop">Oprește</string>
   <string name="android_auto_action">Acțiune: %1$s</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Dacă aveți un cod QR, utilizați scanerul. Pentru dispozitivele fără un cod QR, apăsați <b>Următorul</b> pentru a continua.]]></string>
   <string name="add_wizard_network_name">Nume rețea</string>
@@ -725,4 +726,12 @@
   <string name="profiles_list_sorting_default">Implicit</string>
   <string name="profiles_list_sorting_name">Nume</string>
   <string name="profiles_list_sorting_added">Adăugat cel mai recent</string>
+  <string name="state_opened">deschis</string>
+  <string name="state_closed">închis</string>
+  <string name="state_partially_opened">parțial deschis</string>
+  <string name="channel_btn_step_by_step">Deschide/Închide (pas cu pas)</string>
+  <string name="channel_btn_shut">Închide</string>
+  <string name="channel_btn_reveal">Deschide</string>
+  <string name="channel_btn_collapse">Strânge</string>
+  <string name="channel_btn_expand">Extinde</string>
 </resources>

@@ -19,6 +19,8 @@ package org.supla.android.data.source.local.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import org.supla.core.shared.data.model.battery.BatteryInfo
+import org.supla.core.shared.extensions.ifTrue
 
 @Entity(
   tableName = ChannelStateEntity.TABLE_NAME,
@@ -89,3 +91,9 @@ data class ChannelStateEntity(
       )
   }
 }
+
+val ChannelStateEntity.batteryInfo: BatteryInfo?
+  get() =
+    (batteryPowered != null || batteryLevel != null).ifTrue {
+      BatteryInfo(batteryPowered, batteryLevel, batteryHealth)
+    }

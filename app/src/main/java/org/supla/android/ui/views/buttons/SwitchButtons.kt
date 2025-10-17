@@ -41,7 +41,7 @@ import org.supla.android.ui.views.buttons.supla.SuplaButtonDefaults
 data class SwitchButtonState(
   val icon: ImageId?,
   val textRes: Int,
-  val pressed: Boolean
+  val pressed: Boolean = false
 )
 
 @Composable
@@ -50,17 +50,19 @@ fun SwitchButtons(
   rightButton: SwitchButtonState?,
   disabled: Boolean = false,
   leftButtonClick: () -> Unit = {},
-  rightButtonClick: () -> Unit = {}
+  rightButtonClick: () -> Unit = {},
+  leftColors: SuplaButtonColors = SuplaButtonDefaults.errorColors(contentDisabled = MaterialTheme.colorScheme.onSurface),
+  rightColors: SuplaButtonColors = SuplaButtonDefaults.primaryColors(contentDisabled = MaterialTheme.colorScheme.onSurface)
 ) =
   Row(
     horizontalArrangement = Arrangement.spacedBy(Distance.default),
     modifier = Modifier.padding(all = Distance.default)
   ) {
     leftButton?.let {
-      Button(
+      SwitchButton(
         icon = it.icon,
         text = stringResource(id = it.textRes),
-        colors = SuplaButtonDefaults.errorColors(contentDisabled = MaterialTheme.colorScheme.onSurface),
+        colors = leftColors,
         disabled = disabled,
         pressed = it.pressed,
         onClick = leftButtonClick,
@@ -68,10 +70,10 @@ fun SwitchButtons(
       )
     }
     rightButton?.let {
-      Button(
+      SwitchButton(
         icon = it.icon,
         text = stringResource(id = it.textRes),
-        colors = SuplaButtonDefaults.primaryColors(contentDisabled = MaterialTheme.colorScheme.onSurface),
+        colors = rightColors,
         disabled = disabled,
         pressed = it.pressed,
         onClick = rightButtonClick,
@@ -81,7 +83,7 @@ fun SwitchButtons(
   }
 
 @Composable
-private fun Button(
+fun SwitchButton(
   text: String,
   icon: ImageId?,
   modifier: Modifier = Modifier,

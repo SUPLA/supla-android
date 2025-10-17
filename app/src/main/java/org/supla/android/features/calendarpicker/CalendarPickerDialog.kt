@@ -79,10 +79,10 @@ import org.supla.android.extensions.weekStart
 import org.supla.android.ui.dialogs.Dialog
 import org.supla.android.ui.views.Separator
 import org.supla.android.ui.views.SeparatorStyle
-import org.supla.android.ui.views.TextField
 import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.buttons.IconButton
 import org.supla.android.ui.views.buttons.TextButton
+import org.supla.android.ui.views.forms.TextField
 import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.extensions.ifLet
 import java.util.Date

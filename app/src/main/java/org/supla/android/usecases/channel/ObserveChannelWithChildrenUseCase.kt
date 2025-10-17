@@ -17,22 +17,25 @@ package org.supla.android.usecases.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Maybe
-import org.supla.android.core.networking.suplaclient.SuplaClientProvider
-import org.supla.android.data.source.ChannelGroupRepository
-import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
+import io.reactivex.rxjava3.core.Observable
+import org.supla.android.data.source.ChannelRelationRepository
+import org.supla.android.data.source.RoomChannelRepository
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class GroupActionUseCase @Inject constructor(
-  private val channelGroupRepository: ChannelGroupRepository,
-  suplaClientProvider: SuplaClientProvider
-) : BaseActionUseCase<ChannelGroupDataEntity>(suplaClientProvider) {
+class ObserveChannelWithChildrenUseCase @Inject constructor(
+  private val roomChannelRepository: RoomChannelRepository,
+  private val channelRelationRepository: ChannelRelationRepository
+) {
 
-  operator fun invoke(groupId: Int, buttonType: ButtonType): Completable =
-    getGroup(groupId).flatMapCompletable { performActionCompletable(it, buttonType, true) }
-
-  private fun getGroup(groupId: Int): Maybe<ChannelGroupDataEntity> = channelGroupRepository.findGroupDataEntity(groupId).firstElement()
+  operator fun invoke(remoteId: Int): Observable<ChannelWithChildren> =
+    roomChannelRepository.findChannelDataEntity(remoteId)
+      .flatMap { channel ->
+        channelRelationRepository
+          .findChildrenForParent(remoteId)
+          .toObservable()
+          .map { ChannelWithChildren(channel, it) }
+      }
 }

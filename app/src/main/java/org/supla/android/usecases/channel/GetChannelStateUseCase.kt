@@ -19,6 +19,7 @@ package org.supla.android.usecases.channel
 
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.model.general.ChannelState
+import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
@@ -67,6 +68,10 @@ class GetChannelStateUseCase @Inject constructor(
     }
 
     throw IllegalArgumentException("Channel base is extended by unknown class!")
+  }
+
+  operator fun invoke(channelEntity: ChannelEntity, channelValueEntity: ChannelValueEntity): ChannelState {
+    return getChannelState(channelEntity.function, ChannelValueEntityStateWrapper(channelValueEntity))
   }
 
   private fun getChannelState(function: SuplaFunction, value: ValueStateWrapper): ChannelState {

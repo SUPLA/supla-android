@@ -20,9 +20,11 @@ package org.supla.android.core.shared
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
 import org.supla.android.data.source.local.entity.ChannelStateEntity
+import org.supla.android.data.source.local.entity.batteryInfo
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
+import org.supla.android.data.source.local.entity.complex.ChannelGroupRelationDataEntity
 import org.supla.android.data.source.local.entity.complex.batteryInfo
 import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
@@ -88,4 +90,16 @@ val ChannelStateEntity.shareable: ChannelState
         }
       }
       ?.let { 100 - it }
+  )
+
+val ChannelGroupRelationDataEntity.shareableChannel: Channel
+  get() = Channel(
+    remoteId = channelEntity.remoteId,
+    caption = channelEntity.caption,
+    altIcon = channelEntity.altIcon,
+    function = channelEntity.function,
+    batteryInfo = channelStateEntity?.batteryInfo,
+    channelState = channelStateEntity?.shareable,
+    status = channelValueEntity.status,
+    value = channelValueEntity.getValueAsByteArray()
   )

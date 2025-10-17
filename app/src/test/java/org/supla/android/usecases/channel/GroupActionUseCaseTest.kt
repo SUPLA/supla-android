@@ -21,6 +21,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
 import org.assertj.core.api.Assertions
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -131,7 +132,7 @@ class GroupActionUseCaseTest {
     every { group.function } returns channelFunc
     every { group.flags } returns 0
 
-    whenever(channelGroupRepository.findGroupDataEntity(groupId)).thenReturn(Maybe.just(group))
+    whenever(channelGroupRepository.findGroupDataEntity(groupId)).thenReturn(Observable.just(group))
 
     val parametersSlot = slot<ActionParameters>()
     val suplaClient: SuplaClientApi = mockk()
@@ -158,7 +159,7 @@ class GroupActionUseCaseTest {
     every { group.remoteId } returns groupId
     every { group.function } returns channelFunc
 
-    whenever(channelGroupRepository.findGroupDataEntity(groupId)).thenReturn(Maybe.just(group))
+    whenever(channelGroupRepository.findGroupDataEntity(groupId)).thenReturn(Observable.just(group))
 
     val suplaClient: SuplaClientApi = mockk()
     every { suplaClient.open(groupId, true, openValue) } returns true
