@@ -1,4 +1,4 @@
-package org.supla.android.usecases.group
+package org.supla.android.ui.views.forms
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,16 +17,18 @@ package org.supla.android.usecases.group
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import io.reactivex.rxjava3.core.Maybe
-import org.supla.android.data.source.ChannelGroupRepository
-import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
-import javax.inject.Inject
-import javax.inject.Singleton
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 
-@Singleton
-class ReadChannelGroupByRemoteIdUseCase @Inject constructor(
-  private val channelGroupRepository: ChannelGroupRepository
-) {
-  operator fun invoke(remoteId: Int): Maybe<ChannelGroupDataEntity> =
-    channelGroupRepository.findGroupDataEntity(remoteId).firstElement()
-}
+@Composable
+fun FieldErrorText(text: String, modifier: Modifier = Modifier) =
+  Text(
+    text = text,
+    style = MaterialTheme.typography.titleSmall,
+    color = MaterialTheme.colorScheme.error,
+    modifier = modifier.padding(top = 4.dp)
+  )

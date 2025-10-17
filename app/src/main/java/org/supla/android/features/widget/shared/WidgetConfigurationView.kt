@@ -59,9 +59,9 @@ import org.supla.android.tools.BACKGROUND_COLOR
 import org.supla.android.ui.views.EmptyListInfoView
 import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.SegmentedComponent
-import org.supla.android.ui.views.TextField
 import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.buttons.IconButton
+import org.supla.android.ui.views.forms.TextField
 import org.supla.android.ui.views.spinner.LabelledSpinner
 import org.supla.android.ui.views.spinner.Spinner
 import org.supla.core.shared.infrastructure.LocalizedString

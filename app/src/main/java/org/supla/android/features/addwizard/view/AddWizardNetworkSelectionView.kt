@@ -51,11 +51,11 @@ import org.supla.android.features.addwizard.AddWizardScope
 import org.supla.android.features.addwizard.model.AddWizardScreen
 import org.supla.android.features.addwizard.view.components.AddWizardContentText
 import org.supla.android.features.addwizard.view.components.AddWizardScaffold
-import org.supla.android.ui.views.Checkbox
-import org.supla.android.ui.views.PasswordTextField
-import org.supla.android.ui.views.TextField
-import org.supla.android.ui.views.TextFieldLabel
 import org.supla.android.ui.views.buttons.TextButton
+import org.supla.android.ui.views.forms.Checkbox
+import org.supla.android.ui.views.forms.PasswordTextField
+import org.supla.android.ui.views.forms.TextField
+import org.supla.android.ui.views.forms.TextFieldLabel
 
 data class AddWizardNetworkSelectionState(
   val networkName: String = "",

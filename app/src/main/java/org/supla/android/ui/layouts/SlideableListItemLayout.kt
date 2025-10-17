@@ -48,8 +48,7 @@ class SlideableListItemLayout @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr), SlideableItem, SwapableListItem {
 
   private val content: BaseSlideableContent<SlideableListItemData> by lazy {
-    findViewById<BaseSlideableContent<SlideableListItemData>>(R.id.list_item_content)
-      ?: throw IllegalStateException("No content view found")
+    findViewById(R.id.list_item_content) ?: throw IllegalStateException("No content view found")
   }
   private val leftItem: View? by lazy { findViewById(R.id.list_item_left_item) }
   private val rightItem: View? by lazy { findViewById(R.id.list_item_right_item) }

@@ -42,10 +42,10 @@ import org.supla.android.features.addwizard.view.components.SsidText
 import org.supla.android.ui.dialogs.Dialog
 import org.supla.android.ui.dialogs.DialogDoubleButtons
 import org.supla.android.ui.dialogs.DialogHeader
-import org.supla.android.ui.views.FieldErrorText
-import org.supla.android.ui.views.PasswordTextField
 import org.supla.android.ui.views.Separator
 import org.supla.android.ui.views.SeparatorStyle
+import org.supla.android.ui.views.forms.FieldErrorText
+import org.supla.android.ui.views.forms.PasswordTextField
 
 data class ProvidePasswordState(
   val error: Error? = null,

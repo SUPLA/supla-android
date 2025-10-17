@@ -681,6 +681,7 @@
   <string name="thermostat_detail_other_thermostats">Avhengige termostater</string>
   <string name="thermostat_battery_cover_open">Åpne batteridekselet</string>
   <string name="channel_battery_level">Batterinivå (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_btn_stop">Stopp</string>
   <string name="android_auto_action">Handling: %1$s</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Hvis du har en QR-kode, bruk skanneren. For enheter uten QR-kode, trykk <b>Neste</b> for å fortsette.]]></string>
   <string name="add_wizard_network_name">Nettverksnavn</string>
@@ -723,4 +724,12 @@
   <string name="profiles_list_sorting_default">Standard</string>
   <string name="profiles_list_sorting_name">Navn</string>
   <string name="profiles_list_sorting_added">Sist lagt til</string>
+  <string name="state_opened">åpen</string>
+  <string name="state_closed">lukket</string>
+  <string name="state_partially_opened">delvis åpen</string>
+  <string name="channel_btn_step_by_step">Åpne/Steng (steg for steg)</string>
+  <string name="channel_btn_shut">Lukk</string>
+  <string name="channel_btn_reveal">Åpne</string>
+  <string name="channel_btn_collapse">Rull inn</string>
+  <string name="channel_btn_expand">Rull ut</string>
 </resources>

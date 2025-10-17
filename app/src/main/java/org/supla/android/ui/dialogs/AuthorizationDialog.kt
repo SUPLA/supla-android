@@ -42,11 +42,11 @@ import org.supla.android.R
 import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.ui.views.FieldErrorText
-import org.supla.android.ui.views.PasswordTextField
 import org.supla.android.ui.views.Separator
 import org.supla.android.ui.views.SeparatorStyle
-import org.supla.android.ui.views.TextField
+import org.supla.android.ui.views.forms.FieldErrorText
+import org.supla.android.ui.views.forms.PasswordTextField
+import org.supla.android.ui.views.forms.TextField
 import org.supla.core.shared.infrastructure.LocalizedString
 
 data class AuthorizationDialogState(

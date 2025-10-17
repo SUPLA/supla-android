@@ -68,8 +68,8 @@ import org.supla.android.ui.views.BodyMedium
 import org.supla.android.ui.views.BodySmall
 import org.supla.android.ui.views.HeadlineSmall
 import org.supla.android.ui.views.Image
-import org.supla.android.ui.views.PinTextField
 import org.supla.android.ui.views.buttons.TextButton
+import org.supla.android.ui.views.forms.PinTextField
 import org.supla.core.shared.extensions.guardLet
 
 data class LockScreenViewState(

@@ -26,5 +26,5 @@ import javax.inject.Singleton
 @Singleton
 class ReadChannelByRemoteIdUseCase @Inject constructor(private val channelRepository: RoomChannelRepository) {
   operator fun invoke(remoteId: Int): Maybe<ChannelDataEntity> =
-    channelRepository.findChannelDataEntity(remoteId)
+    channelRepository.findChannelDataEntity(remoteId).firstElement()
 }

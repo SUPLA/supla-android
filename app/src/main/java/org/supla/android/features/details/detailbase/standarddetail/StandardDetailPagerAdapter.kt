@@ -26,6 +26,7 @@ import org.supla.android.features.details.containerdetail.general.ContainerGener
 import org.supla.android.features.details.electricitymeterdetail.general.ElectricityMeterGeneralFragment
 import org.supla.android.features.details.electricitymeterdetail.history.ElectricityMeterHistoryFragment
 import org.supla.android.features.details.electricitymeterdetail.settings.ElectricityMeterSettingsFragment
+import org.supla.android.features.details.gatedetail.general.GateGeneralFragment
 import org.supla.android.features.details.gpmdetail.history.GpmHistoryDetailFragment
 import org.supla.android.features.details.humiditydetail.history.HumidityHistoryDetailFragment
 import org.supla.android.features.details.impulsecounter.counterphoto.CounterPhotoFragment
@@ -114,6 +115,8 @@ class StandardDetailPagerAdapter(
     DetailPage.IC_OCR -> CounterPhotoFragment().apply { arguments = CounterPhotoFragment.bundle(itemBundle) }
 
     DetailPage.VALVE_GENERAL -> ValveGeneralDetailFragment().apply { arguments = ValveGeneralDetailFragment.bundle(itemBundle) }
+
+    DetailPage.GATE_GENERAL -> GateGeneralFragment().apply { arguments = GateGeneralFragment.bundle(itemBundle) }
   }
 }
 
@@ -164,7 +167,10 @@ enum class DetailPage(val item: DetailBottomItem) {
   IC_OCR(DetailBottomItem.OCR),
 
   // Valve
-  VALVE_GENERAL(DetailBottomItem.GENERAL)
+  VALVE_GENERAL(DetailBottomItem.GENERAL),
+
+  // Gate
+  GATE_GENERAL(DetailBottomItem.GENERAL)
 }
 
 enum class DetailBottomItem(val menuId: Int, @DrawableRes val iconRes: Int, @StringRes val stringRes: Int) {

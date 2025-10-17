@@ -42,11 +42,11 @@ import org.supla.android.features.details.electricitymeterdetail.history.Electri
 import org.supla.android.ui.dialogs.Dialog
 import org.supla.android.ui.dialogs.DialogButtonsRow
 import org.supla.android.ui.dialogs.DialogHeader
-import org.supla.android.ui.views.Checkbox
 import org.supla.android.ui.views.Separator
 import org.supla.android.ui.views.SeparatorStyle
 import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.buttons.OutlinedButton
+import org.supla.android.ui.views.forms.Checkbox
 import org.supla.android.ui.views.spinner.SpinnerItem
 import org.supla.android.ui.views.spinner.TextSpinner
 import org.supla.android.usecases.channel.measurementsprovider.electricity.PhaseItem

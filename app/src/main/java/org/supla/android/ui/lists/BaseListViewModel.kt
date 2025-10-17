@@ -112,18 +112,18 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
       SuplaFunction.HUMIDITY,
       SuplaFunction.LIGHTSWITCH,
       SuplaFunction.POWER_SWITCH,
-      SuplaFunction.STAIRCASE_TIMER -> true
-
-      SuplaFunction.UNKNOWN,
-      SuplaFunction.NONE,
+      SuplaFunction.STAIRCASE_TIMER,
       SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
       SuplaFunction.CONTROLLING_THE_GATE,
       SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
+      SuplaFunction.CONTROLLING_THE_DOOR_LOCK -> true
+
+      SuplaFunction.UNKNOWN,
+      SuplaFunction.NONE,
       SuplaFunction.OPEN_SENSOR_GATEWAY,
       SuplaFunction.OPEN_SENSOR_GATE,
       SuplaFunction.OPEN_SENSOR_GARAGE_DOOR,
       SuplaFunction.NO_LIQUID_SENSOR,
-      SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
       SuplaFunction.OPEN_SENSOR_DOOR,
       SuplaFunction.OPEN_SENSOR_ROLLER_SHUTTER,
       SuplaFunction.OPEN_SENSOR_ROOF_WINDOW,

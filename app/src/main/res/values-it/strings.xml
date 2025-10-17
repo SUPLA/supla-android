@@ -710,6 +710,7 @@
   <plurals name="second_pattern" tools:ignore="MissingQuantity">
   <item quantity="other">%1$d sec</item>
   </plurals>
+  <string name="channel_btn_stop">Fermare</string>
   <string name="android_auto_action">Azione: %1$s</string>
   <string name="add_wizard_network_name">Nome rete</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Se hai un codice QR, usa lo scanner. Per i dispositivi senza codice QR, premi <b>Avanti</b> per continuare.]]></string>
@@ -752,4 +753,8 @@
   <string name="profiles_list_sorting_default">Predefinito</string>
   <string name="profiles_list_sorting_name">Nome</string>
   <string name="profiles_list_sorting_added">Ultimo aggiunto</string>
+  <string name="state_opened">aperto</string>
+  <string name="state_closed">chiuso</string>
+  <string name="state_partially_opened">parzialmente aperto</string>
+  <string name="channel_btn_step_by_step">Apri/Chiudi (passo dopo passo)</string>
 </resources>

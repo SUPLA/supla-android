@@ -757,6 +757,7 @@
   <string name="state_dialog_index">(%1$d von %2$d)</string>
   <string name="state_switch_cycle_count">Schaltzyklusanzahl</string>
   <string name="android_auto_add">Android Auto Eintrag hinzufügen</string>
+  <string name="channel_btn_stop">Stoppen</string>
   <string name="android_auto_action">Aktion: %1$s</string>
   <string name="android_auto_empty">Android Auto nicht konfiguriert. Öffnen Sie bitte Supla App -> Einstelllungen -> Android Auto und konfiguriere dort.</string>
   <string name="android_auto_executing">Ausführen…</string>
@@ -811,4 +812,6 @@
   <string name="profiles_list_sorting_default">Standard</string>
   <string name="profiles_list_sorting_name">Name</string>
   <string name="profiles_list_sorting_added">Zuletzt hinzugefügt</string>
+  <string name="state_partially_opened">teilweise offen</string>
+  <string name="channel_btn_step_by_step">Öffnen/Schließen (schritt für schritt)</string>
 </resources>

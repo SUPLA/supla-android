@@ -34,6 +34,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
+import org.supla.android.features.details.gatedetail.GateDetailFragment
 import org.supla.android.features.details.windowdetail.WindowDetailFragment
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
@@ -46,6 +47,7 @@ import org.supla.android.usecases.channel.ActionException
 import org.supla.android.usecases.channel.ButtonType
 import org.supla.android.usecases.channel.GroupActionUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
+import org.supla.android.usecases.details.GateDetailType
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideGroupDetailTypeUseCase
 import org.supla.android.usecases.details.ThermostatDetailType
@@ -204,6 +206,7 @@ class GroupListViewModel @Inject constructor(
       is LegacyDetailType -> sendEvent(GroupListViewEvent.OpenLegacyDetails(group.remoteId, detailType))
       is WindowDetailType -> sendEvent(GroupListViewEvent.OpenRollerShutterDetail(ItemBundle.from(group), detailType.pages))
       is ThermostatDetailType -> sendEvent(GroupListViewEvent.OpenHeatpolThermostatDetail(ItemBundle.from(group), detailType.pages))
+      is GateDetailType -> sendEvent(GroupListViewEvent.OpenGateDetail(ItemBundle.from(group), detailType.pages))
       else -> {} // no action
     }
   }
@@ -221,6 +224,9 @@ sealed class GroupListViewEvent : ViewEvent {
 
   data class OpenHeatpolThermostatDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
     OpenStandardDetail(R.id.window_detail_fragment, WindowDetailFragment.bundle(itemBundle, pages.toTypedArray()))
+
+  data class OpenGateDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
+    OpenStandardDetail(R.id.container_detail_fragment, GateDetailFragment.bundle(itemBundle, pages.toTypedArray()))
 
   abstract class OpenStandardDetail(
     @IdRes val fragmentId: Int,

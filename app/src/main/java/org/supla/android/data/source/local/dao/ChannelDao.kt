@@ -183,7 +183,7 @@ interface ChannelDao {
       channel.${ChannelEntity.COLUMN_PRODUCT_ID} channel_${ChannelEntity.COLUMN_PRODUCT_ID},
       channel.${ChannelEntity.COLUMN_FLAGS} channel_${ChannelEntity.COLUMN_FLAGS}, 
       channel.${ChannelEntity.COLUMN_PROTOCOL_VERSION} channel_${ChannelEntity.COLUMN_PROTOCOL_VERSION}, 
-      channel.${ChannelEntity.COLUMN_POSITION} channel_${ChannelEntity.COLUMN_POSITION}, 
+      channel.$COLUMN_POSITION channel_$COLUMN_POSITION, 
       channel.$COLUMN_PROFILE_ID channel_$COLUMN_PROFILE_ID,
       value.${ChannelValueEntity.COLUMN_ID} value_${ChannelValueEntity.COLUMN_ID},
       value.${ChannelValueEntity.COLUMN_CHANNEL_REMOTE_ID} value_${ChannelValueEntity.COLUMN_CHANNEL_REMOTE_ID},
@@ -247,7 +247,7 @@ interface ChannelDao {
       AND channel.$COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
   """
   )
-  fun findChannelDataEntity(channelRemoteId: Int): Maybe<ChannelDataEntity>
+  fun findChannelDataEntity(channelRemoteId: Int): Observable<ChannelDataEntity>
 
   @Query(
     """

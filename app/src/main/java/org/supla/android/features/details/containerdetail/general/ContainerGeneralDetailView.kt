@@ -47,7 +47,7 @@ import org.supla.android.images.ImageId
 import org.supla.android.tools.BACKGROUND_COLOR
 import org.supla.android.ui.lists.ListOnlineState
 import org.supla.android.ui.lists.channelissues.ChannelIssuesView
-import org.supla.android.ui.lists.sensordata.SensorItemData
+import org.supla.android.ui.lists.sensordata.RelatedChannelData
 import org.supla.android.ui.lists.sensordata.SensorsItemsView
 import org.supla.android.ui.views.buttons.supla.SuplaButton
 import org.supla.android.ui.views.buttons.supla.SuplaButtonDefaults
@@ -62,7 +62,7 @@ data class ContainerGeneralDetailViewState(
   val containerType: ContainerType = ContainerType.DEFAULT,
   val controlLevels: List<ControlLevel> = emptyList(),
   val scale: Float = 1f,
-  val sensors: List<SensorItemData> = emptyList(),
+  val sensors: List<RelatedChannelData> = emptyList(),
   val issues: List<ChannelIssueItem> = emptyList(),
 
   val soundOn: Boolean = false
@@ -154,7 +154,7 @@ private fun Preview() {
           ErrorLevel(0.9f, "90%", ControlLevel.Type.UPPER)
         ),
         sensors = listOf(
-          SensorItemData(
+          RelatedChannelData(
             channelId = 123,
             profileId = 123L,
             onlineState = ListOnlineState.ONLINE,
@@ -164,7 +164,7 @@ private fun Preview() {
             batteryIcon = IssueIcon.Battery50,
             showChannelStateIcon = true
           ),
-          SensorItemData(
+          RelatedChannelData(
             channelId = 123,
             profileId = 123L,
             onlineState = ListOnlineState.OFFLINE,
@@ -194,7 +194,7 @@ private fun Preview_NoLevel() {
           WarningLevel(0.85f, "90%", ControlLevel.Type.UPPER)
         ),
         sensors = listOf(
-          SensorItemData(
+          RelatedChannelData(
             channelId = 123,
             profileId = 123L,
             onlineState = ListOnlineState.ONLINE,
@@ -204,7 +204,7 @@ private fun Preview_NoLevel() {
             batteryIcon = IssueIcon.Battery50,
             showChannelStateIcon = true
           ),
-          SensorItemData(
+          RelatedChannelData(
             channelId = 123,
             profileId = 123L,
             onlineState = ListOnlineState.OFFLINE,

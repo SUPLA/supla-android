@@ -103,16 +103,17 @@ abstract class BaseDetailTypeProviderUseCase {
     SuplaFunction.WATER_TANK ->
       ContainerDetailType(listOf(DetailPage.CONTAINER_GENERAL))
 
+    SuplaFunction.CONTROLLING_THE_GATE,
+    SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
+    SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
+    SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK -> GateDetailType(listOf(DetailPage.GATE_GENERAL))
+
     SuplaFunction.UNKNOWN,
     SuplaFunction.NONE,
-    SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
-    SuplaFunction.CONTROLLING_THE_GATE,
-    SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
     SuplaFunction.OPEN_SENSOR_GATEWAY,
     SuplaFunction.OPEN_SENSOR_GATE,
     SuplaFunction.OPEN_SENSOR_GARAGE_DOOR,
     SuplaFunction.NO_LIQUID_SENSOR,
-    SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
     SuplaFunction.OPEN_SENSOR_DOOR,
     SuplaFunction.OPEN_SENSOR_ROLLER_SHUTTER,
     SuplaFunction.OPEN_SENSOR_ROOF_WINDOW,

@@ -1,4 +1,4 @@
-package org.supla.android.ui.views
+package org.supla.android.ui.views.forms
 /*
 Copyright (C) AC SOFTWARE SP. Z O.O.
 

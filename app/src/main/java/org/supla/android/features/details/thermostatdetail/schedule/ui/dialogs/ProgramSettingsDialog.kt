@@ -54,11 +54,11 @@ import org.supla.android.ui.dialogs.Dialog
 import org.supla.android.ui.dialogs.DialogButtonsRow
 import org.supla.android.ui.views.Separator
 import org.supla.android.ui.views.SeparatorStyle
-import org.supla.android.ui.views.TextField
 import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.buttons.MinusIconButton
 import org.supla.android.ui.views.buttons.OutlinedButton
 import org.supla.android.ui.views.buttons.PlusIconButton
+import org.supla.android.ui.views.forms.TextField
 import org.supla.android.ui.views.spinner.Spinner
 import org.supla.core.shared.data.model.thermometer.TemperatureUnit
 

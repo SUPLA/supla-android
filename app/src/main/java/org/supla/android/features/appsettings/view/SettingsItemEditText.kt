@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.dp
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.ui.layouts.BaseAbstractComposeView
-import org.supla.android.ui.views.TextField
+import org.supla.android.ui.views.forms.TextField
 
 class SettingsItemEditText : BaseAbstractComposeView {
 

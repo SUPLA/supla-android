@@ -27,6 +27,7 @@ import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
 import org.supla.android.data.source.local.entity.ChannelStateEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.LocationEntity
+import org.supla.android.data.source.local.entity.batteryInfo
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelExtendedValue
@@ -139,11 +140,4 @@ val ChannelDataEntity.shareable: org.supla.core.shared.data.model.general.Channe
   )
 
 val ChannelDataEntity.batteryInfo: BatteryInfo?
-  get() = stateEntity?.let {
-    val batteryPowered = it.batteryPowered
-    val level = it.batteryLevel
-
-    (batteryPowered != null || level != null).ifTrue {
-      BatteryInfo(batteryPowered, level, it.batteryHealth)
-    }
-  }
+  get() = stateEntity?.batteryInfo

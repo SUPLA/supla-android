@@ -681,6 +681,7 @@
   <string name="thermostat_detail_other_thermostats">Mellék termosztátok</string>
   <string name="thermostat_battery_cover_open">Elemfedél nyitva</string>
   <string name="channel_battery_level">Az akkumulátor töltöttségi szintje (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_btn_stop">Állj</string>
   <string name="android_auto_action">Akció: %1$s</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Ha van QR-kódja, használja a szkennert. QR-kód nélküli eszközök esetén nyomja meg a <b>Tovább</b> gombot a folytatáshoz.]]></string>
   <string name="add_wizard_network_name">Hálózat neve</string>
@@ -723,4 +724,12 @@
   <string name="profiles_list_sorting_default">Alapértelmezett</string>
   <string name="profiles_list_sorting_name">Név</string>
   <string name="profiles_list_sorting_added">Utoljára hozzáadott</string>
+  <string name="state_opened">nyitva</string>
+  <string name="state_closed">zárva</string>
+  <string name="state_partially_opened">részben nyitva</string>
+  <string name="channel_btn_step_by_step">Nyitás/Bezárás (lépésről lépésre)</string>
+  <string name="channel_btn_shut">Bezár</string>
+  <string name="channel_btn_reveal">Kinyit</string>
+  <string name="channel_btn_collapse">Összecsuk</string>
+  <string name="channel_btn_expand">Kinyit</string>
 </resources>

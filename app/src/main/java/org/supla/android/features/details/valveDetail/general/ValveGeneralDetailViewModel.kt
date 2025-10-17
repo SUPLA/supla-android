@@ -37,7 +37,7 @@ import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.tools.VibrationHelper
-import org.supla.android.ui.lists.sensordata.SensorItemData
+import org.supla.android.ui.lists.sensordata.RelatedChannelData
 import org.supla.android.ui.views.buttons.SwitchButtonState
 import org.supla.android.usecases.channel.ActionException
 import org.supla.android.usecases.channel.ButtonType
@@ -154,7 +154,7 @@ class ValveGeneralDetailViewModel @Inject constructor(
   }
 
   private fun ChannelChildEntity.toSensor() =
-    SensorItemData(
+    RelatedChannelData(
       channelId = channel.remoteId,
       profileId = channel.profileId,
       onlineState = channelDataEntity.channelValueEntity.onlineState,

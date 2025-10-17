@@ -1,4 +1,4 @@
-package org.supla.android.ui.views
+package org.supla.android.ui.lists.sensordata
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -18,17 +18,33 @@ package org.supla.android.ui.views
  */
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import org.supla.android.core.ui.theme.Distance
 
 @Composable
-fun FieldErrorText(text: String, modifier: Modifier = Modifier) =
-  Text(
-    text = text,
-    style = MaterialTheme.typography.titleSmall,
-    color = MaterialTheme.colorScheme.error,
-    modifier = modifier.padding(top = 4.dp)
-  )
+fun RelatedChannelsView(
+  channels: List<RelatedChannelData>,
+  modifier: Modifier = Modifier,
+  scale: Float = 1f,
+  onInfoClick: (RelatedChannelData) -> Unit = {},
+  onCaptionLongPress: (RelatedChannelData) -> Unit = {}
+) {
+  if (channels.isNotEmpty()) {
+    LazyColumn(
+      modifier = modifier
+        .padding(top = Distance.small)
+    ) {
+      items(channels, key = { it.channelId }) {
+        RelatedChannelItemView(
+          channel = it,
+          scale = scale,
+          onCaptionLongPress = onCaptionLongPress,
+          onInfoClick = onInfoClick
+        )
+      }
+    }
+  }
+}

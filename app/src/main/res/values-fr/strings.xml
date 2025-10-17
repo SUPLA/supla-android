@@ -669,6 +669,7 @@
   <string name="thermostat_battery_cover_open">Couvercle de batterie ouvert</string>
 
   <string name="channel_battery_level">Niveau de batterie (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_btn_stop">Arrêter</string>
   <string name="android_auto_action">Action: %1$s</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Si vous avez un code QR, utilisez le scanner. Pour les appareils sans code QR, appuyez sur <b>Suivant</b> pour continuer.]]></string>
   <string name="add_wizard_network_name">Nom du réseau</string>
@@ -711,4 +712,12 @@
   <string name="profiles_list_sorting_default">Par défaut</string>
   <string name="profiles_list_sorting_name">Nom</string>
   <string name="profiles_list_sorting_added">Dernier ajouté</string>
+  <string name="state_opened">ouvert</string>
+  <string name="state_closed">fermé</string>
+  <string name="state_partially_opened">partiellement ouvert</string>
+  <string name="channel_btn_step_by_step">Ouvrir/Fermer (étape par étape)</string>
+  <string name="channel_btn_shut">Fermer</string>
+  <string name="channel_btn_reveal">Ouvrir</string>
+  <string name="channel_btn_collapse">Enrouler</string>
+  <string name="channel_btn_expand">Dérouler</string>
 </resources>
