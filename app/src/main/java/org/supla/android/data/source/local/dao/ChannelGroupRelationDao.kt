@@ -168,7 +168,7 @@ interface ChannelGroupRelationDao {
           AND relation.${ChannelGroupRelationEntity.COLUMN_GROUP_ID} = :remoteId
     """
   )
-  fun findGroupRelations(remoteId: Int): Single<List<ChannelGroupRelationDataEntity>>
+  fun findGroupRelations(remoteId: Int): Observable<List<ChannelGroupRelationDataEntity>>
 
   @Query("SELECT COUNT($COLUMN_ID) FROM $TABLE_NAME")
   fun count(): Observable<Int>

@@ -20,7 +20,6 @@ package org.supla.android.usecases.channel
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
-import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import org.assertj.core.api.Assertions
 import org.junit.Test

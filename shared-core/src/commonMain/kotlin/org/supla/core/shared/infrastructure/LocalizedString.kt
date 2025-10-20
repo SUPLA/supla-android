@@ -39,6 +39,9 @@ sealed interface LocalizedString {
       operator fun invoke(id: Int, arg1: LocalizedString, arg2: Int) = WithResourceAndArguments(id, listOf(arg1, arg2))
     }
   }
+
+  @HiddenFromObjC
+  data class WithResourceAndDate(val id: Int, val timestamp: Long) : LocalizedString
 }
 
 fun localizedString(id: LocalizedStringId?): LocalizedString = id?.let { LocalizedString.WithId(it) } ?: LocalizedString.Empty
