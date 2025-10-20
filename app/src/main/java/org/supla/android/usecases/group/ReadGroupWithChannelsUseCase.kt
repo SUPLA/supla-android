@@ -17,13 +17,28 @@ package org.supla.android.usecases.group
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.ChannelGroupRelationRepository
+import org.supla.android.data.source.ChannelGroupRepository
+import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
+import org.supla.android.data.source.local.entity.complex.ChannelGroupRelationDataEntity
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class GetGroupRelatedChannelsUseCase @Inject constructor(
+class ReadGroupWithChannelsUseCase @Inject constructor(
+  private val channelGroupRepository: ChannelGroupRepository,
   private val channelGroupRelationRepository: ChannelGroupRelationRepository
 ) {
-  operator fun invoke(groupId: Int) = channelGroupRelationRepository.findGroupRelations(groupId)
+  operator fun invoke(remoteId: Int): Observable<GroupWithChannels> =
+    channelGroupRepository.findGroupDataEntity(remoteId)
+      .flatMap { group ->
+        channelGroupRelationRepository.findGroupRelations(remoteId)
+          .map { GroupWithChannels(group, it) }
+      }
 }
+
+data class GroupWithChannels(
+  val group: ChannelGroupDataEntity,
+  val channels: List<ChannelGroupRelationDataEntity>
+)

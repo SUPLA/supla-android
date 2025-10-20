@@ -80,7 +80,7 @@ fun GateGeneralScope.View(
 
     state.relatedChannelsData?.let { relatedChannels ->
       Text(
-        text = stringResource(R.string.widget_configure_type_group_label).uppercase(),
+        text = stringResource(R.string.widget_group).uppercase(),
         style = MaterialTheme.typography.bodyMedium,
         modifier = Modifier.padding(start = Distance.default, top = Distance.default, end = Distance.default)
       )

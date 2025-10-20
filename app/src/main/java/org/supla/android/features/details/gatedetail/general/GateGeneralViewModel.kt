@@ -20,28 +20,23 @@ package org.supla.android.features.details.gatedetail.general
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.R
-import org.supla.android.core.shared.shareableChannel
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.ChannelState
-import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
-import org.supla.android.data.source.local.entity.complex.ChannelGroupRelationDataEntity
+import org.supla.android.data.source.local.entity.complex.ChannelGroupRelationDataEntityConvertible
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
-import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.ui.lists.onlineState
-import org.supla.android.ui.lists.sensordata.RelatedChannelData
 import org.supla.android.ui.views.DeviceStateData
 import org.supla.android.ui.views.buttons.SwitchButtonState
 import org.supla.android.usecases.channel.GetChannelStateUseCase
 import org.supla.android.usecases.channel.ObserveChannelWithChildrenUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
-import org.supla.android.usecases.group.GetGroupRelatedChannelsUseCase
-import org.supla.android.usecases.group.ObserveChannelGroupByRemoteIdUseCase
+import org.supla.android.usecases.group.GroupWithChannels
+import org.supla.android.usecases.group.ReadGroupWithChannelsUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.extensions.ifTrue
@@ -52,15 +47,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GateGeneralViewModel @Inject constructor(
-  private val observeChannelGroupByRemoteIdUseCase: ObserveChannelGroupByRemoteIdUseCase,
   private val observeChannelWithChildrenUseCase: ObserveChannelWithChildrenUseCase,
-  private val getGroupRelatedChannelsUseCase: GetGroupRelatedChannelsUseCase,
+  private val readGroupWithChannelsUseCase: ReadGroupWithChannelsUseCase,
   private val executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
-  private val getChannelStateUseCase: GetChannelStateUseCase,
-  private val getChannelIconUseCase: GetChannelIconUseCase,
-  private val getCaptionUseCase: GetCaptionUseCase,
+  override val getChannelStateUseCase: GetChannelStateUseCase,
+  override val getChannelIconUseCase: GetChannelIconUseCase,
+  override val getCaptionUseCase: GetCaptionUseCase,
   schedulers: SuplaSchedulers
-) : BaseViewModel<GateGeneralModelState, GateGeneralViewEvent>(GateGeneralModelState(), schedulers), GateGeneralScope {
+) : BaseViewModel<GateGeneralModelState, GateGeneralViewEvent>(GateGeneralModelState(), schedulers),
+  GateGeneralScope,
+  ChannelGroupRelationDataEntityConvertible {
 
   fun observeData(remoteId: Int, type: ItemType) {
     when (type) {
@@ -140,24 +136,23 @@ class GateGeneralViewModel @Inject constructor(
   }
 
   private fun observeGroup(remoteId: Int) {
-    observeChannelGroupByRemoteIdUseCase(remoteId)
-      .flatMap { group -> getGroupRelatedChannelsUseCase(group.remoteId).toObservable().map { Pair(group, it) } }
+    readGroupWithChannelsUseCase(remoteId)
       .attachSilent()
       .subscribeBy(
-        onNext = { handleGroup(it.first, it.second) },
+        onNext = this::handleGroup,
         onError = defaultErrorHandler("loadChannel($remoteId)")
       )
       .disposeBySelf()
   }
 
-  private fun handleGroup(group: ChannelGroupDataEntity, relations: List<ChannelGroupRelationDataEntity>) {
+  private fun handleGroup(groupWithChannels: GroupWithChannels) {
     updateState { state ->
       state.copy(
-        remoteId = group.remoteId,
+        remoteId = groupWithChannels.group.remoteId,
         type = ItemType.GROUP,
         viewState = state.viewState.copy(
           offline = false,
-          relatedChannelsData = relations.map { it.relatedChannelData }
+          relatedChannelsData = groupWithChannels.channels.map { it.relatedChannelData }
         )
       )
     }
@@ -175,18 +170,6 @@ class GateGeneralViewModel @Inject constructor(
         .disposeBySelf()
     }
   }
-
-  private val ChannelGroupRelationDataEntity.relatedChannelData: RelatedChannelData
-    get() = RelatedChannelData(
-      channelId = channelEntity.remoteId,
-      profileId = channelEntity.profileId,
-      onlineState = channelValueEntity.status.onlineState,
-      icon = getChannelIconUseCase.forState(channelEntity, getChannelStateUseCase(channelEntity, channelValueEntity)),
-      caption = getCaptionUseCase(shareableChannel),
-      userCaption = channelEntity.caption,
-      batteryIcon = null,
-      showChannelStateIcon = channelValueEntity.status.online && SuplaChannelFlag.CHANNEL_STATE inside channelEntity.flags
-    )
 }
 
 private val ChannelWithChildren.hasSensor: Boolean

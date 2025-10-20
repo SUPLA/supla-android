@@ -18,10 +18,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import androidx.room.Embedded
+import org.supla.android.core.shared.shareableChannel
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelStateEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
+import org.supla.android.data.source.remote.channel.SuplaChannelFlag
+import org.supla.android.ui.lists.onlineState
+import org.supla.android.ui.lists.sensordata.RelatedChannelData
+import org.supla.android.usecases.channel.GetChannelStateUseCase
+import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.core.shared.usecase.GetCaptionUseCase
 
 data class ChannelGroupRelationDataEntity(
   @Embedded(prefix = "group_") val channelGroupEntity: ChannelGroupEntity,
@@ -29,3 +36,21 @@ data class ChannelGroupRelationDataEntity(
   @Embedded(prefix = "value_") val channelValueEntity: ChannelValueEntity,
   @Embedded(prefix = "state_") val channelStateEntity: ChannelStateEntity?
 )
+
+interface ChannelGroupRelationDataEntityConvertible {
+  val getChannelStateUseCase: GetChannelStateUseCase
+  val getChannelIconUseCase: GetChannelIconUseCase
+  val getCaptionUseCase: GetCaptionUseCase
+
+  val ChannelGroupRelationDataEntity.relatedChannelData: RelatedChannelData
+    get() = RelatedChannelData(
+      channelId = channelEntity.remoteId,
+      profileId = channelEntity.profileId,
+      onlineState = channelValueEntity.status.onlineState,
+      icon = getChannelIconUseCase.forState(channelEntity, getChannelStateUseCase(channelEntity, channelValueEntity)),
+      caption = getCaptionUseCase(shareableChannel),
+      userCaption = channelEntity.caption,
+      batteryIcon = null,
+      showChannelStateIcon = channelValueEntity.status.online && SuplaChannelFlag.CHANNEL_STATE inside channelEntity.flags
+    )
+}

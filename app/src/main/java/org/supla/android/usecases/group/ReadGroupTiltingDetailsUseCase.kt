@@ -46,6 +46,7 @@ class ReadGroupTiltingDetailsUseCase @Inject constructor(
 
   operator fun invoke(remoteId: Int): Single<TiltingDetails> {
     return groupRelationRepository.findGroupRelations(remoteId)
+      .firstOrError()
       .flatMap { relations ->
         if (relations.isEmpty()) {
           return@flatMap Single.just(TiltingDetails.Unknown)
