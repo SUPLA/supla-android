@@ -729,4 +729,5 @@
   <string name="channel_btn_reveal">Άνοιγμα</string>
   <string name="channel_btn_collapse">Μαζεύω</string>
   <string name="channel_btn_expand">Ξεδιπλώνω</string>
+  <string name="gate_general_open_and_close_warning">Δεν έχουν όλες οι πύλες ρυθμισμένο αισθητήρα ανοίγματος – τα κουμπιά «Άνοιγμα» και «Κλείσιμο» ενδέχεται να μην λειτουργούν σωστά.</string>
 </resources>

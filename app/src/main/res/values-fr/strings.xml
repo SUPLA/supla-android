@@ -720,4 +720,5 @@
   <string name="channel_btn_reveal">Ouvrir</string>
   <string name="channel_btn_collapse">Enrouler</string>
   <string name="channel_btn_expand">Dérouler</string>
+  <string name="gate_general_open_and_close_warning">Toutes les portes ne sont pas dotées d\'un capteur d\'ouverture configuré – les boutons « Ouvrir » et « Fermer » pourraient ne pas fonctionner correctement.</string>
 </resources>

@@ -59,6 +59,8 @@ data class ChannelGroupRelationEntity(
     const val COLUMN_VISIBLE = "visible"
     const val COLUMN_PROFILE_ID = "profileid"
 
+    const val ALL_COLUMNS = "$COLUMN_ID, $COLUMN_GROUP_ID, $COLUMN_CHANNEL_ID, $COLUMN_VISIBLE, $COLUMN_PROFILE_ID"
+
     val SQL = arrayOf(
       """
         CREATE TABLE $TABLE_NAME

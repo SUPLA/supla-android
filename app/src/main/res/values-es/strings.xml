@@ -720,4 +720,5 @@
   <string name="channel_btn_reveal">Abrir</string>
   <string name="channel_btn_collapse">Recoger</string>
   <string name="channel_btn_expand">Desplegar</string>
+  <string name="gate_general_open_and_close_warning">No todas las puertas tienen un sensor de apertura configurado; es posible que los botones \"Abrir\" y \"Cerrar\" no funcionen correctamente.</string>
 </resources>

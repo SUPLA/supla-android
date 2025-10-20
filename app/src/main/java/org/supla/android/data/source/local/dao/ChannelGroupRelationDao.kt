@@ -25,8 +25,11 @@ import io.reactivex.rxjava3.core.Single
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity
+import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity.Companion.COLUMN_CHANNEL_ID
+import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity.Companion.COLUMN_GROUP_ID
 import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity.Companion.COLUMN_ID
 import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity.Companion.COLUMN_PROFILE_ID
+import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity.Companion.COLUMN_VISIBLE
 import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity.Companion.TABLE_NAME
 import org.supla.android.data.source.local.entity.ChannelStateEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
@@ -77,18 +80,18 @@ interface ChannelGroupRelationDao {
         value.${ChannelValueEntity.COLUMN_PROFILE_ID} value_${ChannelValueEntity.COLUMN_PROFILE_ID}
       FROM $TABLE_NAME relation
       JOIN ${ChannelGroupEntity.TABLE_NAME} channel_group
-        ON channel_group.${ChannelGroupEntity.COLUMN_REMOTE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_GROUP_ID}
-          AND channel_group.${ChannelGroupEntity.COLUMN_PROFILE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_PROFILE_ID}
+        ON channel_group.${ChannelGroupEntity.COLUMN_REMOTE_ID} = relation.$COLUMN_GROUP_ID
+          AND channel_group.${ChannelGroupEntity.COLUMN_PROFILE_ID} = relation.$COLUMN_PROFILE_ID
       JOIN ${ChannelEntity.TABLE_NAME} channel
-        ON channel.${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_CHANNEL_ID}
-          AND channel.${ChannelEntity.COLUMN_PROFILE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_PROFILE_ID}
+        ON channel.${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID} = relation.$COLUMN_CHANNEL_ID
+          AND channel.${ChannelEntity.COLUMN_PROFILE_ID} = relation.$COLUMN_PROFILE_ID
       JOIN ${ChannelValueEntity.TABLE_NAME} value
-        ON value.${ChannelValueEntity.COLUMN_CHANNEL_REMOTE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_CHANNEL_ID}
-          AND value.${ChannelValueEntity.COLUMN_PROFILE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_PROFILE_ID}
-      WHERE relation.${ChannelGroupRelationEntity.COLUMN_VISIBLE} > 0
+        ON value.${ChannelValueEntity.COLUMN_CHANNEL_REMOTE_ID} = relation.$COLUMN_CHANNEL_ID
+          AND value.${ChannelValueEntity.COLUMN_PROFILE_ID} = relation.$COLUMN_PROFILE_ID
+      WHERE relation.$COLUMN_VISIBLE > 0
           AND channel_group.${ChannelGroupEntity.COLUMN_VISIBLE} > 0  
-          AND relation.${ChannelGroupRelationEntity.COLUMN_PROFILE_ID} = ${ProfileEntity.SUBQUERY_ACTIVE}
-      ORDER BY relation.${ChannelGroupRelationEntity.COLUMN_GROUP_ID}
+          AND relation.$COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
+      ORDER BY relation.$COLUMN_GROUP_ID
     """
   )
   fun allVisibleRelations(): Single<List<ChannelGroupRelationDataEntity>>
@@ -151,24 +154,40 @@ interface ChannelGroupRelationDao {
         state.${ChannelStateEntity.COLUMN_PROFILE_ID} state_${ChannelStateEntity.COLUMN_PROFILE_ID}
       FROM $TABLE_NAME relation
       JOIN ${ChannelGroupEntity.TABLE_NAME} channel_group
-        ON channel_group.${ChannelGroupEntity.COLUMN_REMOTE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_GROUP_ID}
-          AND channel_group.${ChannelGroupEntity.COLUMN_PROFILE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_PROFILE_ID}
+        ON channel_group.${ChannelGroupEntity.COLUMN_REMOTE_ID} = relation.$COLUMN_GROUP_ID
+          AND channel_group.${ChannelGroupEntity.COLUMN_PROFILE_ID} = relation.$COLUMN_PROFILE_ID
       JOIN ${ChannelEntity.TABLE_NAME} channel
-        ON channel.${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_CHANNEL_ID}
-          AND channel.${ChannelEntity.COLUMN_PROFILE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_PROFILE_ID}
+        ON channel.${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID} = relation.$COLUMN_CHANNEL_ID
+          AND channel.${ChannelEntity.COLUMN_PROFILE_ID} = relation.$COLUMN_PROFILE_ID
       JOIN ${ChannelValueEntity.TABLE_NAME} value
-        ON value.${ChannelValueEntity.COLUMN_CHANNEL_REMOTE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_CHANNEL_ID}
-          AND value.${ChannelValueEntity.COLUMN_PROFILE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_PROFILE_ID}
+        ON value.${ChannelValueEntity.COLUMN_CHANNEL_REMOTE_ID} = relation.$COLUMN_CHANNEL_ID
+          AND value.${ChannelValueEntity.COLUMN_PROFILE_ID} = relation.$COLUMN_PROFILE_ID
       LEFT JOIN ${ChannelStateEntity.TABLE_NAME} state
-        ON state.${ChannelStateEntity.COLUMN_CHANNEL_ID} = relation.${ChannelGroupRelationEntity.COLUMN_CHANNEL_ID}
-          AND state.${ChannelStateEntity.COLUMN_PROFILE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_PROFILE_ID}
-      WHERE relation.${ChannelGroupRelationEntity.COLUMN_VISIBLE} > 0
+        ON state.${ChannelStateEntity.COLUMN_CHANNEL_ID} = relation.$COLUMN_CHANNEL_ID
+          AND state.${ChannelStateEntity.COLUMN_PROFILE_ID} = relation.$COLUMN_PROFILE_ID
+      WHERE relation.$COLUMN_VISIBLE > 0
           AND channel_group.${ChannelGroupEntity.COLUMN_VISIBLE} > 0  
-          AND relation.${ChannelGroupRelationEntity.COLUMN_PROFILE_ID} = ${ProfileEntity.SUBQUERY_ACTIVE}
-          AND relation.${ChannelGroupRelationEntity.COLUMN_GROUP_ID} = :remoteId
+          AND relation.$COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
+          AND relation.$COLUMN_GROUP_ID = :remoteId
     """
   )
-  fun findGroupRelations(remoteId: Int): Observable<List<ChannelGroupRelationDataEntity>>
+  fun findGroupRelationsData(remoteId: Int): Observable<List<ChannelGroupRelationDataEntity>>
+
+  @Query(
+    """
+      SELECT 
+        relation.$COLUMN_ID, relation.$COLUMN_CHANNEL_ID, relation.$COLUMN_GROUP_ID, relation.$COLUMN_VISIBLE, relation.$COLUMN_PROFILE_ID
+      FROM $TABLE_NAME relation
+      JOIN ${ChannelGroupEntity.TABLE_NAME} channel_group
+        ON channel_group.${ChannelGroupEntity.COLUMN_REMOTE_ID} = relation.$COLUMN_GROUP_ID
+          AND channel_group.${ChannelGroupEntity.COLUMN_PROFILE_ID} = relation.$COLUMN_PROFILE_ID
+      WHERE relation.$COLUMN_VISIBLE > 0
+          AND channel_group.${ChannelGroupEntity.COLUMN_VISIBLE} > 0  
+          AND relation.$COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
+          AND relation.$COLUMN_GROUP_ID = :remoteId
+    """
+  )
+  fun findGroupRelations(remoteId: Int): Observable<List<ChannelGroupRelationEntity>>
 
   @Query("SELECT COUNT($COLUMN_ID) FROM $TABLE_NAME")
   fun count(): Observable<Int>

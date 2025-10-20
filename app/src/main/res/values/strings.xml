@@ -872,4 +872,5 @@
   <string name="profiles_list_sorting_added">Last added</string>
   <string name="state_partially_opened">Partially opened</string>
   <string name="channel_btn_step_by_step">Open/Close (step by step)</string>
+  <string name="gate_general_open_and_close_warning">Not all gates have an opening sensor configured - the \"Open\" and \"Close\" buttons may not function correctly.</string>
 </resources>

@@ -734,4 +734,5 @@
   <string name="channel_btn_reveal">Deschide</string>
   <string name="channel_btn_collapse">Strânge</string>
   <string name="channel_btn_expand">Extinde</string>
+  <string name="gate_general_open_and_close_warning">Nu toate porțile au un senzor de deschidere configurat – butoanele „Deschide” și „Închide” s-ar putea să nu funcționeze corect.</string>
 </resources>

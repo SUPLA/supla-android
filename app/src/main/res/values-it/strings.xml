@@ -757,4 +757,5 @@
   <string name="state_closed">chiuso</string>
   <string name="state_partially_opened">parzialmente aperto</string>
   <string name="channel_btn_step_by_step">Apri/Chiudi (passo dopo passo)</string>
+  <string name="gate_general_open_and_close_warning">Non tutti i cancelli hanno un sensore di apertura configurato: i pulsanti \"Apri\" e \"Chiudi\" potrebbero non funzionare correttamente.</string>
 </resources>

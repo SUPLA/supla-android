@@ -41,7 +41,7 @@ class ReadGroupTiltingDetailsUseCaseTest {
   fun `should get unknown when group is empty`() {
     // given
     val remoteId = 123
-    every { groupRelationRepository.findGroupRelations(remoteId) } returns Observable.just(emptyList())
+    every { groupRelationRepository.findGroupRelationsData(remoteId) } returns Observable.just(emptyList())
 
     // when
     val observer = useCase.invoke(remoteId).test()
@@ -51,7 +51,7 @@ class ReadGroupTiltingDetailsUseCaseTest {
     observer.assertValues(TiltingDetails.Unknown)
 
     verify {
-      groupRelationRepository.findGroupRelations(remoteId)
+      groupRelationRepository.findGroupRelationsData(remoteId)
       channelConfigRepository wasNot Called
     }
   }
@@ -63,7 +63,7 @@ class ReadGroupTiltingDetailsUseCaseTest {
     val profileId = 321L
     val function = SuplaFunction.VERTICAL_BLIND
     val relation = mockRelation(profileId, remoteId, function)
-    every { groupRelationRepository.findGroupRelations(remoteId) } returns Observable.just(listOf(relation))
+    every { groupRelationRepository.findGroupRelationsData(remoteId) } returns Observable.just(listOf(relation))
     every { channelConfigRepository.findChannelConfig(profileId, remoteId, ChannelConfigType.FACADE_BLIND) } returns Single.just(mockk())
 
     // when
@@ -74,7 +74,7 @@ class ReadGroupTiltingDetailsUseCaseTest {
     observer.assertValues(TiltingDetails.Unknown)
 
     verify {
-      groupRelationRepository.findGroupRelations(remoteId)
+      groupRelationRepository.findGroupRelationsData(remoteId)
       channelConfigRepository.findChannelConfig(profileId, remoteId, ChannelConfigType.FACADE_BLIND)
     }
     confirmVerified(groupRelationRepository, channelConfigRepository)
@@ -90,7 +90,7 @@ class ReadGroupTiltingDetailsUseCaseTest {
     val relation2 = mockRelation(profileId, 234, function)
     val config = mockConfig(0, 90, SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING)
 
-    every { groupRelationRepository.findGroupRelations(groupId) } returns Observable.just(listOf(relation1, relation2))
+    every { groupRelationRepository.findGroupRelationsData(groupId) } returns Observable.just(listOf(relation1, relation2))
     every {
       channelConfigRepository.findChannelConfig(profileId, 123, ChannelConfigType.FACADE_BLIND)
     } returns Single.just(config)
@@ -106,7 +106,7 @@ class ReadGroupTiltingDetailsUseCaseTest {
     observer.assertValues(TiltingDetails.Similar(0, 90, SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING))
 
     verify {
-      groupRelationRepository.findGroupRelations(groupId)
+      groupRelationRepository.findGroupRelationsData(groupId)
       channelConfigRepository.findChannelConfig(profileId, 123, ChannelConfigType.FACADE_BLIND)
       channelConfigRepository.findChannelConfig(profileId, 234, ChannelConfigType.FACADE_BLIND)
     }
@@ -124,7 +124,7 @@ class ReadGroupTiltingDetailsUseCaseTest {
     val config1 = mockConfig(0, 90, SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING)
     val config2 = mockConfig(0, 180, SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING)
 
-    every { groupRelationRepository.findGroupRelations(groupId) } returns Observable.just(listOf(relation1, relation2))
+    every { groupRelationRepository.findGroupRelationsData(groupId) } returns Observable.just(listOf(relation1, relation2))
     every {
       channelConfigRepository.findChannelConfig(profileId, 123, ChannelConfigType.FACADE_BLIND)
     } returns Single.just(config1)
@@ -140,7 +140,7 @@ class ReadGroupTiltingDetailsUseCaseTest {
     observer.assertValues(TiltingDetails.Different)
 
     verify {
-      groupRelationRepository.findGroupRelations(groupId)
+      groupRelationRepository.findGroupRelationsData(groupId)
       channelConfigRepository.findChannelConfig(profileId, 123, ChannelConfigType.FACADE_BLIND)
       channelConfigRepository.findChannelConfig(profileId, 234, ChannelConfigType.FACADE_BLIND)
     }
@@ -159,7 +159,7 @@ class ReadGroupTiltingDetailsUseCaseTest {
     val config1 = mockConfig(0, 90, SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING)
     val config2 = mockConfig(0, 180, SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING)
 
-    every { groupRelationRepository.findGroupRelations(groupId) } returns Observable.just(listOf(relation1, relation2, relation3))
+    every { groupRelationRepository.findGroupRelationsData(groupId) } returns Observable.just(listOf(relation1, relation2, relation3))
     every {
       channelConfigRepository.findChannelConfig(profileId, 123, ChannelConfigType.FACADE_BLIND)
     } returns Single.just(config1)
@@ -178,7 +178,7 @@ class ReadGroupTiltingDetailsUseCaseTest {
     observer.assertValues(TiltingDetails.Different)
 
     verify {
-      groupRelationRepository.findGroupRelations(groupId)
+      groupRelationRepository.findGroupRelationsData(groupId)
       channelConfigRepository.findChannelConfig(profileId, 123, ChannelConfigType.FACADE_BLIND)
       channelConfigRepository.findChannelConfig(profileId, 234, ChannelConfigType.FACADE_BLIND)
       channelConfigRepository.findChannelConfig(profileId, 345, ChannelConfigType.FACADE_BLIND)

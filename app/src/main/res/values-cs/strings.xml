@@ -713,4 +713,5 @@
   <string name="channel_btn_reveal">Otevřít</string>
   <string name="channel_btn_collapse">Svinout</string>
   <string name="channel_btn_expand">Rozvinout</string>
+  <string name="gate_general_open_and_close_warning">Ne všechna vrata mají nakonfigurovaný senzor otevření – tlačítka „Otevřít“ a „Zavřít“ nemusí fungovat správně.</string>
 </resources>

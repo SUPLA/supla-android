@@ -814,4 +814,5 @@
   <string name="profiles_list_sorting_added">Zuletzt hinzugefügt</string>
   <string name="state_partially_opened">teilweise offen</string>
   <string name="channel_btn_step_by_step">Öffnen/Schließen (schritt für schritt)</string>
+  <string name="gate_general_open_and_close_warning">Nicht alle Tore habe ein Öffnungssensor konfiguriert – die Schaltflächen „Öffnen“ und „Schließen“ können falsch funktionieren.</string>
 </resources>

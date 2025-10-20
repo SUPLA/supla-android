@@ -24,7 +24,6 @@ import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.ChannelState
-import org.supla.android.data.source.local.entity.complex.ChannelGroupRelationDataEntityConvertible
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.runtime.ItemType
@@ -35,10 +34,12 @@ import org.supla.android.ui.views.buttons.SwitchButtonState
 import org.supla.android.usecases.channel.GetChannelStateUseCase
 import org.supla.android.usecases.channel.ObserveChannelWithChildrenUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
+import org.supla.android.usecases.group.ChannelGroupRelationDataEntityConvertible
 import org.supla.android.usecases.group.GroupWithChannels
 import org.supla.android.usecases.group.ReadGroupWithChannelsUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.model.channel.ChannelRelationType
+import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.extensions.ifTrue
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
@@ -90,7 +91,7 @@ class GateGeneralViewModel @Inject constructor(
   private fun handleChannel(channelWithChildren: ChannelWithChildren) {
     val channel = channelWithChildren.channel
     val channelState = getChannelStateUseCase(channel)
-    val hasSensor = channelWithChildren.hasSensor
+    val showOpenAndClose = channelWithChildren.hasSensor && channelWithChildren.function.supportsOpenAndClose
 
     updateState { state ->
       state.copy(
@@ -103,14 +104,15 @@ class GateGeneralViewModel @Inject constructor(
             label = localizedString(R.string.details_timer_state_label),
             value = getDeviceStateValue(channel.status, channelState),
           ),
-          openButtonState = hasSensor.ifTrue {
+          mainButtonLabel = mainButtonLabel(channel.function),
+          openButtonState = showOpenAndClose.ifTrue {
             SwitchButtonState(
               icon = getChannelIconUseCase(channel, channelStateValue = ChannelState.Value.OPEN),
               textRes = R.string.channel_btn_open,
               pressed = channelState.value == ChannelState.Value.OPEN
             )
           },
-          closeButtonState = hasSensor.ifTrue {
+          closeButtonState = showOpenAndClose.ifTrue {
             SwitchButtonState(
               icon = getChannelIconUseCase(channel, channelStateValue = ChannelState.Value.CLOSED),
               textRes = R.string.channel_btn_close,
@@ -146,13 +148,33 @@ class GateGeneralViewModel @Inject constructor(
   }
 
   private fun handleGroup(groupWithChannels: GroupWithChannels) {
+    val showOpenAndClose = groupWithChannels.channels.firstOrNull { it.hasSensor && it.function.supportsOpenAndClose } != null
+    val gateWithoutSensor = groupWithChannels.channels.firstOrNull { !it.hasSensor } != null
+    val groupState: ChannelState.Value? = groupWithChannels.aggregatedState(ChannelState.Value.CLOSED, ChannelState.Value.OPEN)
+
     updateState { state ->
       state.copy(
         remoteId = groupWithChannels.group.remoteId,
         type = ItemType.GROUP,
         viewState = state.viewState.copy(
           offline = false,
-          relatedChannelsData = groupWithChannels.channels.map { it.relatedChannelData }
+          mainButtonLabel = mainButtonLabel(groupWithChannels.group.function),
+          relatedChannelsData = groupWithChannels.relatedChannelData,
+          openButtonState = showOpenAndClose.ifTrue {
+            SwitchButtonState(
+              icon = getChannelIconUseCase(groupWithChannels.group, channelStateValue = ChannelState.Value.OPEN),
+              textRes = R.string.channel_btn_open,
+              pressed = groupState == ChannelState.Value.OPEN
+            )
+          },
+          closeButtonState = showOpenAndClose.ifTrue {
+            SwitchButtonState(
+              icon = getChannelIconUseCase(groupWithChannels.group, channelStateValue = ChannelState.Value.CLOSED),
+              textRes = R.string.channel_btn_close,
+              pressed = groupState == ChannelState.Value.CLOSED
+            )
+          },
+          showOpenAndCloseWarning = groupWithChannels.group.function.supportsOpenAndClose && showOpenAndClose && gateWithoutSensor
         )
       )
     }
@@ -170,11 +192,27 @@ class GateGeneralViewModel @Inject constructor(
         .disposeBySelf()
     }
   }
+
+  private fun mainButtonLabel(function: SuplaFunction): LocalizedString =
+    when (function) {
+      SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
+      SuplaFunction.CONTROLLING_THE_DOOR_LOCK -> localizedString(R.string.channel_btn_open)
+
+      else -> localizedString(R.string.channel_btn_step_by_step)
+    }
 }
 
 private val ChannelWithChildren.hasSensor: Boolean
   get() = children.firstOrNull { it.relationType == ChannelRelationType.OPENING_SENSOR } != null ||
     children.firstOrNull { it.relationType == ChannelRelationType.PARTIAL_OPENING_SENSOR } != null
+
+private val SuplaFunction.supportsOpenAndClose: Boolean
+  get() = when (this) {
+    SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
+    SuplaFunction.CONTROLLING_THE_GATE -> true
+
+    else -> false
+  }
 
 sealed interface GateGeneralViewEvent : ViewEvent
 
