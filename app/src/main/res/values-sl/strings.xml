@@ -733,4 +733,5 @@
   <string name="channel_btn_reveal">Odpri</string>
   <string name="channel_btn_collapse">Zvij</string>
   <string name="channel_btn_expand">Razvij</string>
+  <string name="gate_general_open_and_close_warning">Nimajo vsa vrata konfiguriranega senzorja odpiranja – gumba »Odpri« in »Zapri« morda ne bosta delovala pravilno.</string>
 </resources>

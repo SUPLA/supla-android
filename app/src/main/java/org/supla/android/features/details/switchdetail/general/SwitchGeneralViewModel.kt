@@ -29,7 +29,6 @@ import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.model.general.ChannelState
-import org.supla.android.data.source.local.entity.complex.ChannelGroupRelationDataEntityConvertible
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.DownloadEventsManager
@@ -52,9 +51,9 @@ import org.supla.android.usecases.channel.measurements.SummarizedMeasurements
 import org.supla.android.usecases.channel.measurements.electricitymeter.LoadElectricityMeterMeasurementsUseCase
 import org.supla.android.usecases.channel.measurements.impulsecounter.LoadImpulseCounterMeasurementsUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
+import org.supla.android.usecases.group.ChannelGroupRelationDataEntityConvertible
 import org.supla.android.usecases.group.GroupWithChannels
 import org.supla.android.usecases.group.ReadGroupWithChannelsUseCase
-import org.supla.android.usecases.group.totalvalue.OpenedClosedGroupValue
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.model.function.relay.SuplaRelayFlag
 import org.supla.core.shared.data.model.general.SuplaFunction
@@ -276,22 +275,7 @@ class SwitchGeneralViewModel @Inject constructor(
   }
 
   private fun handleGroup(groupWithChannels: GroupWithChannels) {
-    val groupState: ChannelState.Value? = groupWithChannels.group.channelGroupEntity.groupTotalValues
-      .map { (it as? OpenedClosedGroupValue)?.active }
-      .map {
-        when (it) {
-          true -> ChannelState.Value.ON
-          false -> ChannelState.Value.OFF
-          null -> ChannelState.Value.NOT_USED
-        }
-      }
-      .fold(null) { acc, value ->
-        when (acc) {
-          null -> value
-          value -> acc
-          else -> ChannelState.Value.NOT_USED
-        }
-      }
+    val groupState: ChannelState.Value? = groupWithChannels.aggregatedState(ChannelState.Value.ON, ChannelState.Value.OFF)
 
     updateState { state ->
       state.copy(
@@ -314,7 +298,7 @@ class SwitchGeneralViewModel @Inject constructor(
         ),
         electricityMeterState = null,
         impulseCounterState = null,
-        relatedChannelsData = groupWithChannels.channels.map { it.relatedChannelData }
+        relatedChannelsData = groupWithChannels.relatedChannelData
       )
     }
   }

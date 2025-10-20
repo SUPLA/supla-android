@@ -710,4 +710,5 @@
   <string name="channel_btn_reveal">Atidaryti</string>
   <string name="channel_btn_collapse">Sutraukti</string>
   <string name="channel_btn_expand">Išskleisti</string>
+  <string name="gate_general_open_and_close_warning">Ne visi vartai turi sukonfigūruotą atidarymo jutiklį – mygtukai „Atidaryti“ ir „Uždaryti“ gali neveikti tinkamai.</string>
 </resources>

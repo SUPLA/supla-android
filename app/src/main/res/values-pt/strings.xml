@@ -722,4 +722,5 @@
   <string name="channel_btn_reveal">Abrir</string>
   <string name="channel_btn_collapse">Enrolar</string>
   <string name="channel_btn_expand">Desdobrar</string>
+  <string name="gate_general_open_and_close_warning">Nem todos os portões têm um sensor de abertura configurado – os botões \"Abrir\" e \"Fechar\" podem não funcionar corretamente.</string>
 </resources>

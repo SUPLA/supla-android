@@ -733,4 +733,5 @@
   <string name="channel_btn_reveal">Openen</string>
   <string name="channel_btn_collapse">Inklappen</string>
   <string name="channel_btn_expand">Uitklappen</string>
+  <string name="gate_general_open_and_close_warning">Niet alle poorten hebben een openingssensor geconfigureerd – de knoppen \"Openen\" en \"Sluiten\" werken mogelijk niet correct.</string>
 </resources>

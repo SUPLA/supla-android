@@ -846,4 +846,5 @@
   <string name="profiles_list_sorting_added">Ostatnio dodane</string>
   <string name="state_partially_opened">częściowo otwarty</string>
   <string name="channel_btn_step_by_step">Otwórz/Zamknij (krok po kroku)</string>
+  <string name="gate_general_open_and_close_warning">Nie wszystkie bramy mają skonfigurowany czujnik otwarcia — przyciski „Otwórz” i „Zamknij” mogą nie działać prawidłowo.</string>
 </resources>

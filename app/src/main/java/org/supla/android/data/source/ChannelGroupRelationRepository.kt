@@ -31,6 +31,8 @@ class ChannelGroupRelationRepository @Inject constructor(
 ) : CountProvider, DeleteProfileUseCase.ProfileRemover {
   fun findAllVisibleRelations() = channelGroupRelationDao.allVisibleRelations()
 
+  fun findGroupRelationsData(remoteId: Int) = channelGroupRelationDao.findGroupRelationsData(remoteId)
+
   fun findGroupRelations(remoteId: Int) = channelGroupRelationDao.findGroupRelations(remoteId)
 
   override fun count(): Observable<Int> = channelGroupRelationDao.count()

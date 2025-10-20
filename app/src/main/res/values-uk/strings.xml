@@ -706,4 +706,5 @@
   <string name="channel_btn_reveal">Відкрити</string>
   <string name="channel_btn_collapse">Згорнути</string>
   <string name="channel_btn_expand">Розгорнути</string>
+  <string name="gate_general_open_and_close_warning">Не всі ворота мають налаштований датчик відкриття — кнопки «Відкрити» та «Закрити» можуть працювати неправильно.</string>
 </resources>

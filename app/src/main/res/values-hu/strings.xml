@@ -732,4 +732,5 @@
   <string name="channel_btn_reveal">Kinyit</string>
   <string name="channel_btn_collapse">Összecsuk</string>
   <string name="channel_btn_expand">Kinyit</string>
+  <string name="gate_general_open_and_close_warning">Nem minden kapuhoz van beállítva nyitásérzékelő – előfordulhat, hogy az „Nyitás” és „Zárás” gombok nem működnek megfelelően.</string>
 </resources>

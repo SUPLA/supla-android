@@ -29,13 +29,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import org.supla.android.R
+import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.images.ImageId
 import org.supla.android.ui.lists.ListOnlineState
+import org.supla.android.ui.lists.channelissues.ChannelIssueView
 import org.supla.android.ui.lists.channelissues.ChannelIssuesView
 import org.supla.android.ui.lists.sensordata.RelatedChannelData
 import org.supla.android.ui.lists.sensordata.RelatedChannelsView
@@ -54,8 +57,10 @@ data class GateGeneralViewState(
   val deviceStateData: DeviceStateData? = null,
   val relatedChannelsData: List<RelatedChannelData>? = null,
   val channelIssues: List<ChannelIssueItem>? = null,
+  val mainButtonLabel: LocalizedString = localizedString(R.string.channel_btn_step_by_step),
   val closeButtonState: SwitchButtonState? = null,
   val openButtonState: SwitchButtonState? = null,
+  val showOpenAndCloseWarning: Boolean = false,
   val offline: Boolean = false
 )
 
@@ -92,6 +97,13 @@ fun GateGeneralScope.View(
       )
     }
 
+    if (state.showOpenAndCloseWarning) {
+      ChannelIssueView(
+        iconId = R.drawable.channel_warning_level1,
+        message = stringResource(R.string.gate_general_open_and_close_warning),
+        modifier = Modifier.padding(all = Distance.default)
+      )
+    }
     if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT) {
       PortraitButtons(state)
     } else {
@@ -112,8 +124,9 @@ private fun GateGeneralScope.PortraitButtons(state: GateGeneralViewState) {
       leftColors = SuplaButtonDefaults.primaryColors(contentDisabled = MaterialTheme.colorScheme.onSurface)
     )
   }
+
   SuplaButton(
-    text = stringResource(R.string.channel_btn_step_by_step),
+    text = state.mainButtonLabel(LocalContext.current),
     onClick = { onOpenClose() },
     disabled = state.offline,
     modifier = Modifier

@@ -732,4 +732,5 @@
   <string name="channel_btn_reveal">Åpne</string>
   <string name="channel_btn_collapse">Rull inn</string>
   <string name="channel_btn_expand">Rull ut</string>
+  <string name="gate_general_open_and_close_warning">Ikke alle porter har en åpningssensor konfigurert – «Åpne»- og «Lukk»-knappene fungerer kanskje ikke riktig.</string>
 </resources>

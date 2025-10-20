@@ -733,4 +733,5 @@
   <string name="channel_btn_reveal">Otvoriť</string>
   <string name="channel_btn_collapse">Zvinúť</string>
   <string name="channel_btn_expand">Rozvinúť</string>
+  <string name="gate_general_open_and_close_warning">Nie všetky brány majú nakonfigurovaný snímač otvárania – tlačidlá „Otvoriť“ a „Zatvoriť“ nemusia fungovať správne.</string>
 </resources>

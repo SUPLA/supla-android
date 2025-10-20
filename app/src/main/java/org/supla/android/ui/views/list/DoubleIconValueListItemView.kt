@@ -119,7 +119,7 @@ fun DoubleIconValueListItemView(
     onItemClick = onItemClick,
     scale = scale
   ) {
-    ListItemMainRow(scale = scale, spacing = Distance.tiny) {
+    ListItemMainRow(scale = scale, spacing = if (scale <= 1) 4.dp else Distance.tiny) {
       if (scale <= 1) {
         Spacer(modifier = Modifier.width(4.dp))
         data.icon?.let {
