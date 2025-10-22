@@ -86,10 +86,7 @@
   <string name="add_wizard_step_1_welcome">Dobrodošli v čarovniku za dodajanje naprav, ki vam bo pomagal hitro in enostavno dodati novo napravo v sistem.</string>
   <string name="add_wizard_step_1_continue"><![CDATA[Če želite nadaljevati, pritisnite <b> Naprej </b>.]]></string>
   <string name="next">Naprej</string>
-  <string name="start">START</string><![CDATA[>
-
-
-    ]]>
+  <string name="start">START</string>
   <string name="add_wizard_remember_passwd">Shranite geslo</string>
 
   <string name="add_wizard_step_3_message_3"><![CDATA[Pritisnite tipko <b>START</b> da začnete konfiguracijo.]]></string>
