@@ -815,4 +815,8 @@
   <string name="state_partially_opened">teilweise offen</string>
   <string name="channel_btn_step_by_step">Öffnen/Schließen (schritt für schritt)</string>
   <string name="gate_general_open_and_close_warning">Nicht alle Tore haben ein Öffnungssensor konfiguriert – die Schaltflächen „Öffnen“ und „Schließen“ können falsch funktionieren.</string>
+  <string name="add_wizard_spaces_accept">Unverändert lassen</string>
+  <string name="add_wizard_spaces_modify">Leerzeichen entfernen</string>
+  <string name="add_wizard_spaces_title">Leerzeichen im Netzwerknamen?</string>
+  <string name="add_wizard_spaces_message">Der eingegebene Netzwerkname „%1$s“ enthält führende oder nachgestellte Leerzeichen oder Tabulatoren. Wenn Ihr Netzwerkname diese Zeichen nicht enthalten soll, kann Ihr Gerät keine Verbindung mit dem Netzwerk herstellen. Möchten Sie die führenden oder nachgestellten Leerzeichen beibehalten oder entfernen?</string>
 </resources>

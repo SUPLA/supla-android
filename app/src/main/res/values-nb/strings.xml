@@ -733,4 +733,8 @@
   <string name="channel_btn_collapse">Rull inn</string>
   <string name="channel_btn_expand">Rull ut</string>
   <string name="gate_general_open_and_close_warning">Ikke alle porter har en åpningssensor konfigurert – «Åpne»- og «Lukk»-knappene fungerer kanskje ikke riktig.</string>
+  <string name="add_wizard_spaces_accept">Behold uendret</string>
+  <string name="add_wizard_spaces_modify">Fjern mellomrom</string>
+  <string name="add_wizard_spaces_title">Mellomrom i nettverksnavnet?</string>
+  <string name="add_wizard_spaces_message">Det angitte nettverksnavnet «%1$s» inneholder innledende eller avsluttende mellomrom (mellomrom eller tabulatorer). Hvis nettverksnavnet ikke skal inneholde disse tegnene, kan ikke enheten din koble til nettverket. Vil du beholde eller fjerne de innledende eller avsluttende mellomrommene?</string>
 </resources>

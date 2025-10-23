@@ -707,4 +707,8 @@
   <string name="channel_btn_collapse">Згорнути</string>
   <string name="channel_btn_expand">Розгорнути</string>
   <string name="gate_general_open_and_close_warning">Не всі ворота мають налаштований датчик відкриття — кнопки «Відкрити» та «Закрити» можуть працювати неправильно.</string>
+  <string name="add_wizard_spaces_accept">Залишити без змін</string>
+  <string name="add_wizard_spaces_modify">Видалити пробіли</string>
+  <string name="add_wizard_spaces_title">Пробіл в імені мережі?</string>
+  <string name="add_wizard_spaces_message">Введене ім’я мережі «%1$s» містить провідні або кінцеві пробіли (пробіли або знаки табуляції). Якщо ваше ім’я мережі не повинно включати ці символи, ваш пристрій не зможе підключитися до мережі. Чи бажаєте ви зберегти або видалити провідні або кінцеві пробіли?</string>
 </resources>

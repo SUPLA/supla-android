@@ -257,6 +257,18 @@ class AddWizardViewModel @Inject constructor(
     }
   }
 
+  override fun onRemoveSpaces() {
+    updateState {
+      it.copy(
+        networkSelectionState = it.networkSelectionState?.copy(
+          networkName = it.networkSelectionState.networkName.trim(),
+          showSpacesPopup = false
+        )
+      )
+    }
+    networkSelectionNextStep()
+  }
+
   override fun onStepFinished(step: AddWizardScreen) {
     when (step) {
       AddWizardScreen.Welcome -> welcomeNextStep()
@@ -607,6 +619,8 @@ class AddWizardViewModel @Inject constructor(
     updateState { state ->
       if (state.networkSelectionState?.networkName.isNullOrEmpty() || state.networkSelectionState.networkPassword.isEmpty()) {
         state.copy(networkSelectionState = state.networkSelectionState?.copy(error = true))
+      } else if (shouldInformAboutWhiteCharsInNetworkName(state)) {
+        state.copy(networkSelectionState = state.networkSelectionState.copy(showSpacesPopup = true))
       } else {
         val ssid = state.networkSelectionState.networkName
         if (ssid.isNotEmpty()) {
@@ -618,9 +632,28 @@ class AddWizardViewModel @Inject constructor(
         } else if (!state.networkSelectionState.rememberPassword) {
           encryptedPreferences.wizardWifiPassword = null
         }
-        state.navigateTo(screen = AddWizardScreen.Configuration)
+        state
+          .copy(networkSelectionState = state.networkSelectionState.copy(showSpacesPopup = false))
+          .navigateTo(screen = AddWizardScreen.Configuration)
       }
     }
+  }
+
+  private fun shouldInformAboutWhiteCharsInNetworkName(state: AddWizardViewModelState): Boolean {
+    val stateNetworkName = state.networkSelectionState?.networkName
+    if (stateNetworkName == null) {
+      return false
+    }
+    if (stateNetworkName == encryptedPreferences.wizardWifiName) {
+      // Network name is the same as last time, show the user already know about white characters
+      return false
+    }
+    if (state.networkSelectionState.showSpacesPopup) {
+      // The popup about white characters is presented to the user. User decided to keep name as it is.
+      return false
+    }
+
+    return state.networkSelectionState.networkNameCanTrim
   }
 
   override fun onAgain() {

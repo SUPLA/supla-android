@@ -721,4 +721,8 @@
   <string name="channel_btn_collapse">Enrouler</string>
   <string name="channel_btn_expand">Dérouler</string>
   <string name="gate_general_open_and_close_warning">Toutes les portes ne sont pas dotées d\'un capteur d\'ouverture configuré – les boutons « Ouvrir » et « Fermer » pourraient ne pas fonctionner correctement.</string>
+  <string name="add_wizard_spaces_accept">Conserver</string>
+  <string name="add_wizard_spaces_modify">Supprimer les espaces</string>
+  <string name="add_wizard_spaces_title">Espace dans le nom du réseau ?</string>
+  <string name="add_wizard_spaces_message">Le nom de réseau saisi « %1$s » contient des espaces ou des caractères blancs (espaces ou tabulations) au début ou à la fin. Si le nom de votre réseau ne doit pas inclure ces caractères, votre appareil ne pourra pas s’y connecter. Voulez-vous conserver ou supprimer ces espaces ou caractères blancs au début ou à la fin ?</string>
 </resources>

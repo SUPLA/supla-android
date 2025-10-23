@@ -734,4 +734,8 @@
   <string name="channel_btn_collapse">Zvinúť</string>
   <string name="channel_btn_expand">Rozvinúť</string>
   <string name="gate_general_open_and_close_warning">Nie všetky brány majú nakonfigurovaný snímač otvárania – tlačidlá „Otvoriť“ a „Zatvoriť“ nemusia fungovať správne.</string>
+  <string name="add_wizard_spaces_accept">Ponechať nezmenené</string>
+  <string name="add_wizard_spaces_modify">Odstrániť medzery</string>
+  <string name="add_wizard_spaces_title">Medzera v názve siete?</string>
+  <string name="add_wizard_spaces_message">Zadaný názov siete „%1$s“ obsahuje úvodné alebo koncové prázdne znaky (medzery alebo tabulátory). Ak názov siete nemá obsahovať tieto znaky, vaše zariadenie sa nebude môcť pripojiť k sieti. Chcete ponechať alebo odstrániť úvodné alebo koncové prázdne znaky?</string>
 </resources>
