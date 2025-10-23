@@ -731,4 +731,8 @@
   <string name="channel_btn_collapse">Zvij</string>
   <string name="channel_btn_expand">Razvij</string>
   <string name="gate_general_open_and_close_warning">Nimajo vsa vrata konfiguriranega senzorja odpiranja – gumba »Odpri« in »Zapri« morda ne bosta delovala pravilno.</string>
+  <string name="add_wizard_spaces_accept">Ohrani nespremenjeno</string>
+  <string name="add_wizard_spaces_modify">Odstrani presledke</string>
+  <string name="add_wizard_spaces_title">Presledek v imenu omrežja?</string>
+  <string name="add_wizard_spaces_message">Vneseno ime omrežja »%1$s« vsebuje vodilne ali končne bele znake (presledke ali tabulatorje). Če ime omrežja ne bi smelo vsebovati teh znakov, se vaša naprava ne bo mogla povezati z omrežjem. Ali želite obdržati ali odstraniti vodilne ali končne bele znake?</string>
 </resources>

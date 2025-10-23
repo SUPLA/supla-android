@@ -723,4 +723,8 @@
   <string name="channel_btn_collapse">Enrolar</string>
   <string name="channel_btn_expand">Desdobrar</string>
   <string name="gate_general_open_and_close_warning">Nem todos os portões têm um sensor de abertura configurado – os botões \"Abrir\" e \"Fechar\" podem não funcionar corretamente.</string>
+  <string name="add_wizard_spaces_accept">Manter inalterado</string>
+  <string name="add_wizard_spaces_modify">Remover espaços</string>
+  <string name="add_wizard_spaces_title">Espaço no nome da rede?</string>
+  <string name="add_wizard_spaces_message">O nome de rede introduzido \"%1$s\" contém espaços em branco iniciais ou finais (espaços ou tabuladores). Se o nome da rede não incluir esses carateres, o seu dispositivo não conseguirá ligar-se à rede. Quer manter ou remover os espaços em branco iniciais ou finais?</string>
 </resources>

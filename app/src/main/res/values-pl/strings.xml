@@ -847,4 +847,8 @@
   <string name="state_partially_opened">częściowo otwarty</string>
   <string name="channel_btn_step_by_step">Otwórz/Zamknij (krok po kroku)</string>
   <string name="gate_general_open_and_close_warning">Nie wszystkie bramy mają skonfigurowany czujnik otwarcia — przyciski „Otwórz” i „Zamknij” mogą nie działać prawidłowo.</string>
+  <string name="add_wizard_spaces_accept">Zachowaj bez zmian</string>
+  <string name="add_wizard_spaces_modify">Usuń spacje</string>
+  <string name="add_wizard_spaces_title">Spacja w nazwie sieci?</string>
+  <string name="add_wizard_spaces_message">Wprowadzona nazwa sieci „%1$s” zawiera wiodące lub końcowe białe znaki (spacje lub tabulatory). Jeśli nazwa sieci nie powinna zawierać tych znaków, urządzenie nie będzie w stanie połączyć się z siecią. Czy chcesz zachować, czy usunąć wiodące lub końcowe białe znaki?</string>
 </resources>

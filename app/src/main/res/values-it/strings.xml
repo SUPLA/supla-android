@@ -758,4 +758,8 @@
   <string name="state_partially_opened">parzialmente aperto</string>
   <string name="channel_btn_step_by_step">Apri/Chiudi (passo dopo passo)</string>
   <string name="gate_general_open_and_close_warning">Non tutti i cancelli hanno un sensore di apertura configurato: i pulsanti \"Apri\" e \"Chiudi\" potrebbero non funzionare correttamente.</string>
+  <string name="add_wizard_spaces_accept">Mantieni invariato</string>
+  <string name="add_wizard_spaces_modify">Rimuovi spazi</string>
+  <string name="add_wizard_spaces_title">Spazio nel nome della rete?</string>
+  <string name="add_wizard_spaces_message">Il nome della rete immesso \"%1$s\" contiene caratteri spazi bianchi iniziali o finali (spazi o tabulatori). Se il nome della rete non deve includere questi caratteri, il dispositivo non sarà in grado di connettersi alla rete. Vuoi mantenere o rimuovere i caratteri spazi bianchi iniziali o finali?</string>
 </resources>

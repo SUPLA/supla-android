@@ -873,4 +873,8 @@
   <string name="state_partially_opened">Partially opened</string>
   <string name="channel_btn_step_by_step">Open/Close (step by step)</string>
   <string name="gate_general_open_and_close_warning">Not all gates have an opening sensor configured - the \"Open\" and \"Close\" buttons may not function correctly.</string>
+  <string name="add_wizard_spaces_accept">Keep unchanged</string>
+  <string name="add_wizard_spaces_modify">Remove spaces</string>
+  <string name="add_wizard_spaces_title">Space in network name?</string>
+  <string name="add_wizard_spaces_message">Entered network name \"%1$s\" contains leading or trailing white characters (spaces or tabulators). If your network name should not include those characters, your device will not be able to connect to the network. Do you want to keep or remove the leading or trailing white characters?</string>
 </resources>

@@ -733,4 +733,8 @@
   <string name="channel_btn_collapse">Összecsuk</string>
   <string name="channel_btn_expand">Kinyit</string>
   <string name="gate_general_open_and_close_warning">Nem minden kapuhoz van beállítva nyitásérzékelő – előfordulhat, hogy az „Nyitás” és „Zárás” gombok nem működnek megfelelően.</string>
+  <string name="add_wizard_spaces_accept">Tartsa változatlanul</string>
+  <string name="add_wizard_spaces_modify">Szóközök eltávolítása</string>
+  <string name="add_wizard_spaces_title">Szóköz van a hálózatnévben?</string>
+  <string name="add_wizard_spaces_message">A megadott hálózatnév \"%1$s\" kezdő vagy záró szóközöket (szóköz vagy tabulátor) tartalmaz. Ha a hálózatnév nem tartalmazhat ilyen karaktereket, az eszköze nem fog tudni csatlakozni a hálózathoz. Meg szeretné tartani vagy el szeretné távolítani a kezdő vagy záró szóközöket?</string>
 </resources>
