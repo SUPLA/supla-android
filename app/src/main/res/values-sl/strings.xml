@@ -735,4 +735,5 @@
   <string name="add_wizard_spaces_modify">Odstrani presledke</string>
   <string name="add_wizard_spaces_title">Presledek v imenu omrežja?</string>
   <string name="add_wizard_spaces_message">Vneseno ime omrežja »%1$s« vsebuje vodilne ali končne bele znake (presledke ali tabulatorje). Če ime omrežja ne bi smelo vsebovati teh znakov, se vaša naprava ne bo mogla povezati z omrežjem. Ali želite obdržati ali odstraniti vodilne ali končne bele znake?</string>
+  <string name="state_dialog_last_known_state">Brez povezave – zadnje znano stanje:</string>
 </resources>

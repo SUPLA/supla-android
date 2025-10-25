@@ -711,4 +711,5 @@
   <string name="add_wizard_spaces_modify">Видалити пробіли</string>
   <string name="add_wizard_spaces_title">Пробіл в імені мережі?</string>
   <string name="add_wizard_spaces_message">Введене ім’я мережі «%1$s» містить провідні або кінцеві пробіли (пробіли або знаки табуляції). Якщо ваше ім’я мережі не повинно включати ці символи, ваш пристрій не зможе підключитися до мережі. Чи бажаєте ви зберегти або видалити провідні або кінцеві пробіли?</string>
+  <string name="state_dialog_last_known_state">Офлайн – останній відомий стан:</string>
 </resources>

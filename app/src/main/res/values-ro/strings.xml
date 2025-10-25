@@ -739,4 +739,5 @@
   <string name="add_wizard_spaces_modify">Elimină spațiile</string>
   <string name="add_wizard_spaces_title">Spațiu în numele rețelei?</string>
   <string name="add_wizard_spaces_message">Numele de rețea introdus „%1$s” conține spații albe inițiale sau finale (spații sau tabulatori). Dacă numele rețelei nu ar trebui să includă aceste caractere, dispozitivul nu se va putea conecta la rețea. Doriți să păstrați sau să eliminați spațiile albe inițiale sau finale?</string>
+  <string name="state_dialog_last_known_state">Offline – ultima stare cunoscută:</string>
 </resources>

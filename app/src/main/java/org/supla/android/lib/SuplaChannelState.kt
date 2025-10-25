@@ -18,23 +18,6 @@ package org.supla.android.lib
  */
 
 import org.supla.android.data.source.local.entity.ChannelStateEntity
-import java.util.Locale
-
-val SuplaChannelState.lightSourceLifespanString: String?
-  get() = lightSourceLifespan?.let { lightSourceLifespan ->
-    val left = lightSourceLifespanLeft ?: lightSourceOperatingTimePercentLeft
-
-    if (left != null) {
-      String.format(Locale.getDefault(), "%dh (%.2f%%)", lightSourceLifespan, left)
-    } else {
-      String.format(Locale.getDefault(), "%dh", lightSourceLifespan)
-    }
-  }
-
-val SuplaChannelState.lightSourceOperatingTimeString: String?
-  get() = lightSourceOperatingTime?.let {
-    String.format(Locale.getDefault(), "%02dh %02d:%02d", it / 3600, it % 3600 / 60, it % 60)
-  }
 
 fun SuplaChannelState.toEntity(profileId: Long): ChannelStateEntity {
   return ChannelStateEntity(

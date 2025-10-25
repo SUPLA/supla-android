@@ -819,4 +819,5 @@
   <string name="add_wizard_spaces_modify">Leerzeichen entfernen</string>
   <string name="add_wizard_spaces_title">Leerzeichen im Netzwerknamen?</string>
   <string name="add_wizard_spaces_message">Der eingegebene Netzwerkname „%1$s“ enthält führende oder nachgestellte Leerzeichen oder Tabulatoren. Wenn Ihr Netzwerkname diese Zeichen nicht enthalten soll, kann Ihr Gerät keine Verbindung mit dem Netzwerk herstellen. Möchten Sie die führenden oder nachgestellten Leerzeichen beibehalten oder entfernen?</string>
+  <string name="state_dialog_last_known_state">Offline – letzter bekannter Status:</string>
 </resources>

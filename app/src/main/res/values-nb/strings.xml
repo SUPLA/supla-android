@@ -737,4 +737,5 @@
   <string name="add_wizard_spaces_modify">Fjern mellomrom</string>
   <string name="add_wizard_spaces_title">Mellomrom i nettverksnavnet?</string>
   <string name="add_wizard_spaces_message">Det angitte nettverksnavnet «%1$s» inneholder innledende eller avsluttende mellomrom (mellomrom eller tabulatorer). Hvis nettverksnavnet ikke skal inneholde disse tegnene, kan ikke enheten din koble til nettverket. Vil du beholde eller fjerne de innledende eller avsluttende mellomrommene?</string>
+  <string name="state_dialog_last_known_state">Frakoblet – siste kjente status:</string>
 </resources>

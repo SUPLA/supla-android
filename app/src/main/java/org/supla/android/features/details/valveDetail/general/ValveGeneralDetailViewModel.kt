@@ -162,7 +162,7 @@ class ValveGeneralDetailViewModel @Inject constructor(
       caption = getCaptionUseCase(channelDataEntity.shareable),
       userCaption = channel.caption,
       batteryIcon = getChannelBatteryIconUseCase(channelDataEntity.shareable),
-      showChannelStateIcon = channelDataEntity.channelValueEntity.status.online && SuplaChannelFlag.CHANNEL_STATE inside channel.flags
+      showChannelStateIcon = SuplaChannelFlag.CHANNEL_STATE inside channel.flags && channelDataEntity.stateEntity != null
     )
 
   private fun ValveValue.getStateStringRes(): Int =

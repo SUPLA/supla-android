@@ -20,7 +20,6 @@ package org.supla.android.usecases.list.eventmappers
 import org.supla.android.core.shared.shareable
 import org.supla.android.data.source.local.entity.complex.isIconValueItem
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -58,6 +57,6 @@ class ChannelWithChildrenToIconValueItemUpdateEventMapper @Inject constructor(
       value = getChannelValueStringUseCase.valueOrNull(channelWithChildren),
       issues = getChannelIssuesForListUseCase(channelWithChildren.shareable),
       estimatedTimerEndDate = null,
-      infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channelWithChildren.channel.flags)
+      infoSupported = channelWithChildren.showInfo
     )
 }

@@ -90,6 +90,9 @@ data class ChannelWithChildren(
       channel.channelValueEntity.status.onlineState mergeWith children.onlineState
     }
 
+  val showInfo: Boolean
+    get() = channel.showInfo
+
   override fun onlinePercentage(): Int = channel.onlinePercentage()
 
   fun temperatureControlType(gson: Gson): SuplaTemperatureControlType? =

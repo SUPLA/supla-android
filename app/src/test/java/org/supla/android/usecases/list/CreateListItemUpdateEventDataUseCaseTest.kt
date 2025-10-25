@@ -253,13 +253,13 @@ class CreateListItemUpdateEventDataUseCaseTest {
 
     val channel: ChannelDataEntity = mockk {
       every { function } returns SuplaFunction.POWER_SWITCH
-      every { flags } returns 0
     }
     channel.mockShareable(remoteId)
     val channelWithChildren: ChannelWithChildren = mockk()
     every { channelWithChildren.channel } returns channel
     every { channelWithChildren.children } returns emptyList()
     every { channelWithChildren.onlineState } returns ListOnlineState.ONLINE
+    every { channelWithChildren.showInfo } returns false
     val channelShareable = channel.shareable
     val channelWithChildrenShareable = channelWithChildren.shareable
 

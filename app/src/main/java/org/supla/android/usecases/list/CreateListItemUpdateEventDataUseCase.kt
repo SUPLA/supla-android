@@ -21,7 +21,6 @@ import io.reactivex.rxjava3.core.Observable
 import org.supla.android.core.shared.shareable
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.ui.lists.data.SlideableListItemData
@@ -98,7 +97,7 @@ class CreateListItemUpdateEventDataUseCase @Inject constructor(
         title = getCaptionUseCase(it.channel.shareable),
         icon = getChannelIconUseCase(it.channel),
         issues = getChannelIssuesForListUseCase(item.shareable),
-        infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(it.channel.flags),
+        infoSupported = it.showInfo,
         value = getChannelValueStringUseCase.valueOrNull(it)
       )
     }
