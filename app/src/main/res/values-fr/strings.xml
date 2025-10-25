@@ -725,4 +725,5 @@
   <string name="add_wizard_spaces_modify">Supprimer les espaces</string>
   <string name="add_wizard_spaces_title">Espace dans le nom du réseau ?</string>
   <string name="add_wizard_spaces_message">Le nom de réseau saisi « %1$s » contient des espaces ou des caractères blancs (espaces ou tabulations) au début ou à la fin. Si le nom de votre réseau ne doit pas inclure ces caractères, votre appareil ne pourra pas s’y connecter. Voulez-vous conserver ou supprimer ces espaces ou caractères blancs au début ou à la fin ?</string>
+  <string name="state_dialog_last_known_state">Hors ligne – dernier état connu :</string>
 </resources>

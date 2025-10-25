@@ -738,4 +738,5 @@
   <string name="add_wizard_spaces_modify">Spaties verwijderen</string>
   <string name="add_wizard_spaces_title">Spatie in netwerknaam?</string>
   <string name="add_wizard_spaces_message">De ingevoerde netwerknaam \"%1$s\" bevat inleidende of afsluitende witruimtetekens (spaties of tabs). Als uw netwerknaam deze tekens niet mag bevatten, kan uw apparaat geen verbinding maken met het netwerk. Wilt u de inleidende of afsluitende witruimtetekens behouden of verwijderen?</string>
+  <string name="state_dialog_last_known_state">Offline - laatst bekende status:</string>
 </resources>

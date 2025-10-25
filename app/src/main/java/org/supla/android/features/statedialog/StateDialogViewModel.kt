@@ -32,6 +32,7 @@ import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.events.OnlineEventsManager
 import org.supla.android.lib.SuplaChannelState
+import org.supla.android.lib.toEntity
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.AuthorizationReason
@@ -152,7 +153,7 @@ class StateDialogViewModel @Inject constructor(
     subscribe(
       readChannelWithChildrenTreeUseCase(channelRemoteId).firstElement(),
       onSuccess = { showDialog(it.channels) },
-      onError = {}
+      onError = defaultErrorHandler("showDialog($channelRemoteId)")
     )
   }
 
@@ -164,19 +165,17 @@ class StateDialogViewModel @Inject constructor(
       return
     }
     Timber.i("Updating channel state for ${channelState.channelId}")
+    currentChannel?.let { it.lastKnownState = state?.toEntity(it.profileId) }
 
     updateState { viewState ->
       lightSourceLifespan = state?.lightSourceLifespan
 
-      if (currentChannel?.online == true) {
-        val values = StateDialogItem.entries.associateWith { it.extractor(channelState) }
-          .filter { it.value != null }
-          .mapValues { it.value!! }
-
-        viewState.copy(viewState = viewState.viewState?.copy(loading = false, values = values))
-      } else {
-        viewState.copy(viewState = viewState.viewState?.copy(loading = false))
-      }
+      viewState.copy(
+        viewState = viewState.viewState?.copy(
+          loading = false,
+          values = StateDialogItem.values(channelState)
+        )
+      )
     }
   }
 
@@ -188,8 +187,8 @@ class StateDialogViewModel @Inject constructor(
     this.channels = channels
     this.idx = 0
 
-    updateState {
-      it.copy(
+    updateState { state ->
+      state.copy(
         viewState = StateDialogViewState(
           title = channels[0].caption,
           online = channels[0].online,
@@ -198,9 +197,9 @@ class StateDialogViewModel @Inject constructor(
           showArrows = channels.size > 1,
           showChangeLifespanButton = channels[0].showLifespanSettingsButton,
           function = channels[0].function,
-          values = mapOf(
-            StateDialogItem.CHANNEL_ID to LocalizedString.Constant("${channels[0].remoteId}")
-          )
+          values = channels[0].lastKnownState?.let {
+            StateDialogItem.values(it)
+          } ?: mapOf(StateDialogItem.CHANNEL_ID to LocalizedString.Constant("${channels[0].remoteId}"))
         )
       )
     }
@@ -238,11 +237,7 @@ class StateDialogViewModel @Inject constructor(
           loading = loading,
           online = currentChannel?.online ?: false,
           function = currentChannel?.function,
-          values = currentChannel?.let {
-            it.infoSupported.not().ifTrue {
-              mapOf(StateDialogItem.CHANNEL_ID to LocalizedString.Constant("${it.remoteId}"))
-            }
-          } ?: state.viewState.values
+          values = currentChannel?.lastKnownState?.let { StateDialogItem.values(it) } ?: emptyMap()
         )
       )
     }
@@ -282,10 +277,12 @@ class StateDialogViewModel @Inject constructor(
   private val ChannelDataEntity.channelData: ChannelData
     get() = ChannelData(
       remoteId = remoteId,
+      profileId = profileId,
       function = getChannelDefaultCaptionUseCase(function),
       caption = getCaptionUseCase(shareable),
       showLifespanSettingsButton = showLifespanSettingsButton,
-      infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(flags),
+      infoSupported = showInfo,
+      lastKnownState = stateEntity,
       online = status.online
     )
 

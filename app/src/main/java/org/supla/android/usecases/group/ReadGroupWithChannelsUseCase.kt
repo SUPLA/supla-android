@@ -122,7 +122,7 @@ interface ChannelGroupRelationDataEntityConvertible {
         caption = getCaptionUseCase(it.channel.shareable),
         userCaption = it.caption,
         batteryIcon = null,
-        showChannelStateIcon = it.status.online && SuplaChannelFlag.CHANNEL_STATE inside it.flags
+        showChannelStateIcon = SuplaChannelFlag.CHANNEL_STATE inside it.flags && it.channel.stateEntity != null
       )
     }
 }

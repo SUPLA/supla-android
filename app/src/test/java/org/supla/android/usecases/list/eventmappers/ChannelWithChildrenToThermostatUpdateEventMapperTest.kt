@@ -33,7 +33,6 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
-import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.db.Channel
 import org.supla.android.extensions.date
@@ -153,7 +152,13 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
       every { this@mockk.caption } returns captionString
       every { function } returns SuplaFunction.HVAC_THERMOSTAT
       every { status } returns SuplaChannelAvailabilityStatus.ONLINE
-      every { stateEntity } returns null
+      every { stateEntity } returns mockk {
+        every { batteryPowered } returns null
+        every { batteryLevel } returns null
+        every { lightSourceLifespan } returns null
+        every { lightSourceLifespanLeft } returns null
+        every { lightSourceOperatingTime } returns null
+      }
       every { channelEntity } returns mockk {
         every { function } returns SuplaFunction.HVAC_THERMOSTAT
       }
@@ -165,7 +170,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
       every { channelExtendedValueEntity } returns mockk {
         every { getSuplaValue() } returns null
       }
-      every { flags } returns SuplaChannelFlag.CHANNEL_STATE.rawValue
+      every { showInfo } returns true
       every { configEntity } returns null
     }
     val channelWithChildren = ChannelWithChildren(channel, listOf(thermometerChild))
@@ -230,7 +235,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
           it.TimerStateValue = SuplaTimerState(estimatedEndDate.toTimestamp(), null, 11, null)
         }
       }
-      every { flags } returns 0
+      every { showInfo } returns false
       every { configEntity } returns null
     }
     val channelWithChildren = ChannelWithChildren(channel, listOf())

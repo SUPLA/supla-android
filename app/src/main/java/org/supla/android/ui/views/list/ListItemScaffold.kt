@@ -118,7 +118,7 @@ fun ListItemScaffold(
     ) {
       ListItemDotLeading(onlineState, hasLeftButton)
 
-      if (onlineState.online && showInfoIcon) {
+      if (showInfoIcon) {
         ListItemInfoIcon(onInfoClick, modifier = Modifier.padding(start = dimensionResource(id = R.dimen.list_horizontal_spacing)))
       } else {
         ListItemIssueIconSpacing()

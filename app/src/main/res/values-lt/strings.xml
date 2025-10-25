@@ -715,4 +715,5 @@
   <string name="add_wizard_spaces_modify">Pašalinti tarpus</string>
   <string name="add_wizard_spaces_title">Tarpas tinklo pavadinime?</string>
   <string name="add_wizard_spaces_message">Įvestame tinklo pavadinime „%1$s“ yra pradžios ar pabaigos tuščiųjų simbolių (tarpų ar tabuliatorių). Jei tinklo pavadinime neturi būti šių simbolių, jūsų įrenginys negalės prisijungti prie tinklo. Ar norite palikti, ar pašalinti pradžios ar pabaigos tuščiuosius simbolius?</string>
+  <string name="state_dialog_last_known_state">Neprisijungęs – paskutinė žinoma būsena:</string>
 </resources>

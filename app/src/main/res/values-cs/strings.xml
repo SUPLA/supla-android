@@ -718,4 +718,5 @@
   <string name="add_wizard_spaces_modify">Odstranit mezery</string>
   <string name="add_wizard_spaces_title">Mezera v názvu sítě?</string>
   <string name="add_wizard_spaces_message">Zadaný název sítě „%1$s“ obsahuje úvodní nebo koncové prázdné znaky (mezery nebo tabulátory). Pokud název sítě nemá tyto znaky obsahovat, vaše zařízení se k síti nebude moci připojit. Chcete ponechat, nebo odstranit úvodní nebo koncové prázdné znaky?</string>
+  <string name="state_dialog_last_known_state">Offline – poslední známý stav:</string>
 </resources>

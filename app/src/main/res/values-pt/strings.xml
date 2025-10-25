@@ -727,4 +727,5 @@
   <string name="add_wizard_spaces_modify">Remover espaços</string>
   <string name="add_wizard_spaces_title">Espaço no nome da rede?</string>
   <string name="add_wizard_spaces_message">O nome de rede introduzido \"%1$s\" contém espaços em branco iniciais ou finais (espaços ou tabuladores). Se o nome da rede não incluir esses carateres, o seu dispositivo não conseguirá ligar-se à rede. Quer manter ou remover os espaços em branco iniciais ou finais?</string>
+  <string name="state_dialog_last_known_state">Offline – último estado conhecido:</string>
 </resources>
