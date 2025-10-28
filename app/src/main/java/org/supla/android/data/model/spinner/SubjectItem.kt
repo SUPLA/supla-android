@@ -287,6 +287,8 @@ interface SubjectItemConversionScope {
       SuplaFunction.FLOOD_SENSOR,
       SuplaFunction.PUMP_SWITCH,
       SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH,
+      SuplaFunction.MOTION_SENSOR,
+      SuplaFunction.BINARY_SENSOR,
       SuplaFunction.NONE -> emptyList()
 
       SuplaFunction.CONTROLLING_THE_DOOR_LOCK,

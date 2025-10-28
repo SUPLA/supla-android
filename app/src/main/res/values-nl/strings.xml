@@ -725,6 +725,8 @@
   <string name="profiles_list_sorting_default">Standaard</string>
   <string name="profiles_list_sorting_name">Naam</string>
   <string name="profiles_list_sorting_added">Laatst toegevoegd</string>
+  <string name="channel_caption_water_tank">Watertank</string>
+  <string name="channel_caption_container_level_sensor">Niveausensor voor container</string>
   <string name="state_opened">open</string>
   <string name="state_closed">gesloten</string>
   <string name="state_partially_opened">gedeeltelijk open</string>
@@ -739,4 +741,12 @@
   <string name="add_wizard_spaces_title">Spatie in netwerknaam?</string>
   <string name="add_wizard_spaces_message">De ingevoerde netwerknaam \"%1$s\" bevat inleidende of afsluitende witruimtetekens (spaties of tabs). Als uw netwerknaam deze tekens niet mag bevatten, kan uw apparaat geen verbinding maken met het netwerk. Wilt u de inleidende of afsluitende witruimtetekens behouden of verwijderen?</string>
   <string name="state_dialog_last_known_state">Offline - laatst bekende status:</string>
+  <string name="channel_caption_flood_sensor">Vloedsensor</string>
+  <string name="channel_caption_motion_sensor">Bewegingssensor</string>
+  <string name="channel_caption_binary_sensor">Binaire sensor</string>
+  <string name="valve_detail_sensors">Verbonden sensoren</string>
+  <string name="valve_error_sensor_offline">Watermelder niet beschikbaar – risico op onopgemerkte overstroming.</string>
+  <string name="container_invalid_sensor_state">Ongeldige sensorstatus.</string>
+  <string name="channel_caption_container">Container</string>
+  <string name="channel_caption_septic_tank">Septic tank</string>
 </resources>

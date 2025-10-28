@@ -137,7 +137,9 @@ fun SuplaFunction.hasCustomFilters(): Boolean =
     SuplaFunction.SEPTIC_TANK,
     SuplaFunction.WATER_TANK,
     SuplaFunction.CONTAINER_LEVEL_SENSOR,
-    SuplaFunction.FLOOD_SENSOR -> false
+    SuplaFunction.FLOOD_SENSOR,
+    SuplaFunction.MOTION_SENSOR,
+    SuplaFunction.BINARY_SENSOR -> false
 
     SuplaFunction.ELECTRICITY_METER,
     SuplaFunction.POWER_SWITCH,

@@ -144,7 +144,9 @@ private fun OnOffWidgetCommandWorker.getAction(configuration: WidgetConfiguratio
     SuplaFunction.FLOOD_SENSOR,
     SuplaFunction.PUMP_SWITCH,
     SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH,
-    SuplaFunction.NONE -> null
+    SuplaFunction.NONE,
+    SuplaFunction.MOTION_SENSOR,
+    SuplaFunction.BINARY_SENSOR -> null
 
     SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
     SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK -> ActionId.OPEN

@@ -722,6 +722,8 @@
   <string name="profiles_list_sorting_default">Privzeto</string>
   <string name="profiles_list_sorting_name">Ime</string>
   <string name="profiles_list_sorting_added">Zadnje dodano</string>
+  <string name="channel_caption_water_tank">Rezervoar za vodo</string>
+  <string name="channel_caption_container_level_sensor">Senzor nivoja posode</string>
   <string name="state_opened">odprto</string>
   <string name="state_closed">zaprto</string>
   <string name="state_partially_opened">delno odprto</string>
@@ -736,4 +738,12 @@
   <string name="add_wizard_spaces_title">Presledek v imenu omrežja?</string>
   <string name="add_wizard_spaces_message">Vneseno ime omrežja »%1$s« vsebuje vodilne ali končne bele znake (presledke ali tabulatorje). Če ime omrežja ne bi smelo vsebovati teh znakov, se vaša naprava ne bo mogla povezati z omrežjem. Ali želite obdržati ali odstraniti vodilne ali končne bele znake?</string>
   <string name="state_dialog_last_known_state">Brez povezave – zadnje znano stanje:</string>
+  <string name="channel_caption_flood_sensor">Senzor poplave</string>
+  <string name="channel_caption_motion_sensor">Senzor gibanja</string>
+  <string name="channel_caption_binary_sensor">Binarni senzor</string>
+  <string name="valve_detail_sensors">Povezani senzorji</string>
+  <string name="valve_error_sensor_offline">Senzor poplave ni na voljo – tveganje za neodkrito poplavo.</string>
+  <string name="container_invalid_sensor_state">Neveljavno stanje senzorja.</string>
+  <string name="channel_caption_container">Posoda</string>
+  <string name="channel_caption_septic_tank">Greznica</string>
 </resources>

@@ -22,6 +22,7 @@ import org.supla.android.R
 import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.model.general.IconType
 import org.supla.android.usecases.icon.producers.AlarmArmamentSensorIconResourceProducer
+import org.supla.android.usecases.icon.producers.BinarySensorIconResourceProducer
 import org.supla.android.usecases.icon.producers.ContainerIconResourceProducer
 import org.supla.android.usecases.icon.producers.ContainerLevelSensorIconResourceProducer
 import org.supla.android.usecases.icon.producers.CurtainIconResourceProducer
@@ -45,6 +46,7 @@ import org.supla.android.usecases.icon.producers.HumidityAndTemperatureIconResou
 import org.supla.android.usecases.icon.producers.LightSwitchIconResourceProducer
 import org.supla.android.usecases.icon.producers.LiquidSensorIconResourceProducer
 import org.supla.android.usecases.icon.producers.MailSensorIconResourceProducer
+import org.supla.android.usecases.icon.producers.MotionSensorIconResourceProducer
 import org.supla.android.usecases.icon.producers.PowerSwitchIconResourceProducer
 import org.supla.android.usecases.icon.producers.ProjectorScreenIconResourceProducer
 import org.supla.android.usecases.icon.producers.PumpSwitchIconResourceProducer
@@ -120,7 +122,9 @@ class GetDefaultIconResourceUseCase @Inject constructor() {
     FloodSensorIconResourceProducer,
     WaterTankIconResourceProducer,
     SepticTankIconResourceProducer,
-    ContainerLevelSensorIconResourceProducer
+    ContainerLevelSensorIconResourceProducer,
+    MotionSensorIconResourceProducer,
+    BinarySensorIconResourceProducer
   )
 
   @DrawableRes
@@ -149,7 +153,11 @@ data class IconData(
   val altIcon: Int,
   val state: ChannelState = ChannelState(ChannelState.Value.NOT_USED),
   val type: IconType = IconType.SINGLE
-)
+) {
+  @DrawableRes
+  fun stateIcon(@DrawableRes activeIcon: Int, @DrawableRes inactiveIcon: Int): Int =
+    if (state.isActive()) activeIcon else inactiveIcon
+}
 
 private fun static(function: SuplaFunction, @DrawableRes day: Int) =
   StaticIconResourceProducer(function, day)

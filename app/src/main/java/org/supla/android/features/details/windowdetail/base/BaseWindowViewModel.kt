@@ -143,7 +143,12 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
             // During calibration the open/close time is not known so it's not possible to open window at expected position
             state
           } else {
-            executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, itemType.toSubjectType(), remoteId, action.position.roundToInt()).runIt()
+            executeShadingSystemActionUseCase.invoke(
+              ActionId.SHUT_PARTIALLY,
+              itemType.toSubjectType(),
+              remoteId,
+              action.position.roundToInt()
+            ).runIt()
             stateCopy(state, moveStartTime = null, manualMoving = false) { it.copy(touchTime = null) }
           }
         }

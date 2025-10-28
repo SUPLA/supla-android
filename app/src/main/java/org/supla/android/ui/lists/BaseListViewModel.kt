@@ -151,7 +151,9 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
       SuplaFunction.PUMP_SWITCH,
       SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH,
       SuplaFunction.CONTAINER_LEVEL_SENSOR,
-      SuplaFunction.FLOOD_SENSOR -> false
+      SuplaFunction.FLOOD_SENSOR,
+      SuplaFunction.MOTION_SENSOR,
+      SuplaFunction.BINARY_SENSOR -> false
     }
 
   protected fun loadServerUrl(handler: (CloudUrl) -> Unit) {

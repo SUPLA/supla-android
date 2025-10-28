@@ -724,6 +724,8 @@
   <string name="profiles_list_sorting_default">Alapértelmezett</string>
   <string name="profiles_list_sorting_name">Név</string>
   <string name="profiles_list_sorting_added">Utoljára hozzáadott</string>
+  <string name="channel_caption_water_tank">Víztartály</string>
+  <string name="channel_caption_container_level_sensor">Konténer szintérzékelő</string>
   <string name="state_opened">nyitva</string>
   <string name="state_closed">zárva</string>
   <string name="state_partially_opened">részben nyitva</string>
@@ -738,4 +740,12 @@
   <string name="add_wizard_spaces_title">Szóköz van a hálózatnévben?</string>
   <string name="add_wizard_spaces_message">A megadott hálózatnév \"%1$s\" kezdő vagy záró szóközöket (szóköz vagy tabulátor) tartalmaz. Ha a hálózatnév nem tartalmazhat ilyen karaktereket, az eszköze nem fog tudni csatlakozni a hálózathoz. Meg szeretné tartani vagy el szeretné távolítani a kezdő vagy záró szóközöket?</string>
   <string name="state_dialog_last_known_state">Offline – utolsó ismert állapot:</string>
+  <string name="channel_caption_flood_sensor">Árvízérzékelő</string>
+  <string name="channel_caption_motion_sensor">Mozgásérzékelő</string>
+  <string name="channel_caption_binary_sensor">Bináris érzékelő</string>
+  <string name="valve_detail_sensors">Csatlakoztatott érzékelők</string>
+  <string name="valve_error_sensor_offline">Árvízérzékelő nem elérhető – észrevétlen áradás veszélye.</string>
+  <string name="container_invalid_sensor_state">Érvénytelen érzékelő állapot.</string>
+  <string name="channel_caption_container">Konténer</string>
+  <string name="channel_caption_septic_tank">Szeptikus tartály</string>
 </resources>

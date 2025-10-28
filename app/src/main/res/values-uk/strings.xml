@@ -698,6 +698,8 @@
   <string name="profiles_list_sorting_default">За замовчуванням</string>
   <string name="profiles_list_sorting_name">Назва</string>
   <string name="profiles_list_sorting_added">Останнє додавання</string>
+  <string name="channel_caption_water_tank">Бак для води</string>
+  <string name="channel_caption_container_level_sensor">Датчик рівня контейнера</string>
   <string name="state_opened">відкрито</string>
   <string name="state_closed">закрито</string>
   <string name="state_partially_opened">частково відкрито</string>
@@ -712,4 +714,12 @@
   <string name="add_wizard_spaces_title">Пробіл в імені мережі?</string>
   <string name="add_wizard_spaces_message">Введене ім’я мережі «%1$s» містить провідні або кінцеві пробіли (пробіли або знаки табуляції). Якщо ваше ім’я мережі не повинно включати ці символи, ваш пристрій не зможе підключитися до мережі. Чи бажаєте ви зберегти або видалити провідні або кінцеві пробіли?</string>
   <string name="state_dialog_last_known_state">Офлайн – останній відомий стан:</string>
+  <string name="channel_caption_flood_sensor">Датчик затоплення</string>
+  <string name="channel_caption_motion_sensor">Датчик руху</string>
+  <string name="channel_caption_binary_sensor">Бінарний датчик</string>
+  <string name="valve_detail_sensors">Підключені датчики</string>
+  <string name="valve_error_sensor_offline">Датчик затоплення недоступний – ризик невиявленого затоплення.</string>
+  <string name="container_invalid_sensor_state">Недійсний стан датчика.</string>
+  <string name="channel_caption_container">Контейнер</string>
+  <string name="channel_caption_septic_tank">Септик</string>
 </resources>

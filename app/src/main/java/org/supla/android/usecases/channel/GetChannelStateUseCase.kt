@@ -119,7 +119,9 @@ class GetChannelStateUseCase @Inject constructor(
       SuplaFunction.PUMP_SWITCH,
       SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH,
       SuplaFunction.CONTAINER_LEVEL_SENSOR,
-      SuplaFunction.FLOOD_SENSOR -> getOnOff(value.isClosed)
+      SuplaFunction.FLOOD_SENSOR,
+      SuplaFunction.MOTION_SENSOR,
+      SuplaFunction.BINARY_SENSOR -> getOnOff(value.isClosed)
 
       SuplaFunction.DIMMER -> getOnOff(value.brightness > 0)
       SuplaFunction.RGB_LIGHTING -> getOnOff(value.colorBrightness > 0)
@@ -247,7 +249,9 @@ class GetChannelStateUseCase @Inject constructor(
         SuplaFunction.PUMP_SWITCH,
         SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH,
         SuplaFunction.CONTAINER_LEVEL_SENSOR,
-        SuplaFunction.FLOOD_SENSOR -> ChannelState(ChannelState.Value.OFF)
+        SuplaFunction.FLOOD_SENSOR,
+        SuplaFunction.MOTION_SENSOR,
+        SuplaFunction.BINARY_SENSOR -> ChannelState(ChannelState.Value.OFF)
 
         SuplaFunction.DIMMER_AND_RGB_LIGHTING ->
           ChannelState(ChannelState.Value.COMPLEX, listOf(ChannelState.Value.OFF, ChannelState.Value.OFF))
@@ -345,7 +349,9 @@ class GetChannelStateUseCase @Inject constructor(
         SuplaFunction.PUMP_SWITCH,
         SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH,
         SuplaFunction.CONTAINER_LEVEL_SENSOR,
-        SuplaFunction.FLOOD_SENSOR ->
+        SuplaFunction.FLOOD_SENSOR,
+        SuplaFunction.MOTION_SENSOR,
+        SuplaFunction.BINARY_SENSOR ->
           if (actionId == ActionId.TURN_OFF) {
             ChannelState(ChannelState.Value.OFF)
           } else {

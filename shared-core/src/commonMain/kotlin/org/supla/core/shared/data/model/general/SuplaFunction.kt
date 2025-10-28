@@ -86,7 +86,9 @@ enum class SuplaFunction(val value: Int) {
   SEPTIC_TANK(981),
   WATER_TANK(982),
   CONTAINER_LEVEL_SENSOR(990),
-  FLOOD_SENSOR(1000);
+  FLOOD_SENSOR(1000),
+  MOTION_SENSOR(1010),
+  BINARY_SENSOR(1020);
 
   companion object {
     fun from(value: Int): SuplaFunction {

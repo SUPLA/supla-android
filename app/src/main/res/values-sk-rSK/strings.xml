@@ -725,6 +725,8 @@
   <string name="profiles_list_sorting_default">Predvolené</string>
   <string name="profiles_list_sorting_name">Názov</string>
   <string name="profiles_list_sorting_added">Naposledy pridané</string>
+  <string name="channel_caption_water_tank">Nádrž na vodu</string>
+  <string name="channel_caption_container_level_sensor">Senzor hladiny kontajnera</string>
   <string name="state_opened">otvorené</string>
   <string name="state_closed">zatvorené</string>
   <string name="state_partially_opened">čiastočne otvorené</string>
@@ -739,4 +741,12 @@
   <string name="add_wizard_spaces_title">Medzera v názve siete?</string>
   <string name="add_wizard_spaces_message">Zadaný názov siete „%1$s“ obsahuje úvodné alebo koncové prázdne znaky (medzery alebo tabulátory). Ak názov siete nemá obsahovať tieto znaky, vaše zariadenie sa nebude môcť pripojiť k sieti. Chcete ponechať alebo odstrániť úvodné alebo koncové prázdne znaky?</string>
   <string name="state_dialog_last_known_state">Offline – posledný známy stav:</string>
+  <string name="channel_caption_flood_sensor">Senzor zaplavenia</string>
+  <string name="channel_caption_motion_sensor">Senzor pohybu</string>
+  <string name="channel_caption_binary_sensor">Binárny senzor</string>
+  <string name="valve_detail_sensors">Pripojené senzory</string>
+  <string name="valve_error_sensor_offline">Senzor zaplavenia nedostupný – riziko nezistenej záplavy.</string>
+  <string name="container_invalid_sensor_state">Neplatný stav senzora.</string>
+  <string name="channel_caption_container">Kontajner</string>
+  <string name="channel_caption_septic_tank">Septik</string>
 </resources>
