@@ -55,6 +55,7 @@ import org.supla.core.shared.data.model.shadingsystem.SuplaShadingSystemFlag
 import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.extensions.ifLet
 import kotlin.math.abs
+import kotlin.math.roundToInt
 
 abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
   private val executeShadingSystemActionUseCase: ExecuteShadingSystemActionUseCase,
@@ -142,7 +143,7 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
             // During calibration the open/close time is not known so it's not possible to open window at expected position
             state
           } else {
-            executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, itemType.toSubjectType(), remoteId, action.position).runIt()
+            executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, itemType.toSubjectType(), remoteId, action.position.roundToInt()).runIt()
             stateCopy(state, moveStartTime = null, manualMoving = false) { it.copy(touchTime = null) }
           }
         }

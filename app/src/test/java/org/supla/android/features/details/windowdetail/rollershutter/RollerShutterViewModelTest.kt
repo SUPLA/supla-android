@@ -480,7 +480,7 @@ class RollerShutterViewModelTest :
     // given
     val remoteId = 122
     every {
-      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 45f)
+      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 45)
     } returns Completable.complete()
 
     // when
@@ -488,7 +488,7 @@ class RollerShutterViewModelTest :
 
     // then
     verify {
-      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 45f)
+      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 45)
     }
     assertThat(states).isEmpty()
   }

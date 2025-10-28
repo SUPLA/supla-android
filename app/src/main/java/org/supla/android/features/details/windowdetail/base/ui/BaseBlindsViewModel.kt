@@ -50,6 +50,7 @@ import org.supla.core.shared.extensions.guardLet
 import timber.log.Timber
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.roundToInt
 
 abstract class BaseBlindsViewModel<S : BaseBlindsViewModelState>(
   private val channelConfigEventsManager: ChannelConfigEventsManager,
@@ -134,7 +135,7 @@ abstract class BaseBlindsViewModel<S : BaseBlindsViewModelState>(
               actionId = ActionId.SHUT_PARTIALLY,
               type = itemType.toSubjectType(),
               remoteId = remoteId,
-              tilt = action.tilt
+              tilt = action.tilt.roundToInt()
             ).runIt()
             stateCopy(it, manualMoving = false)
           }
@@ -166,7 +167,7 @@ abstract class BaseBlindsViewModel<S : BaseBlindsViewModelState>(
             it
           } else {
             val tilt = when {
-              it.windowState.slatTilt == null -> VALUE_IGNORE
+              it.windowState.slatTilt == null -> VALUE_IGNORE.toFloat()
               it.tiltControlType == SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING -> limitTilt(action.tilt, action.position, it)
               it.tiltControlType != SuplaTiltControlType.TILTS_ONLY_WHEN_FULLY_CLOSED || action.position == 100f -> action.tilt
               else -> 0f
@@ -175,8 +176,8 @@ abstract class BaseBlindsViewModel<S : BaseBlindsViewModelState>(
               ActionId.SHUT_PARTIALLY,
               itemType.toSubjectType(),
               remoteId,
-              percentage = action.position,
-              tilt = tilt
+              percentage = action.position.roundToInt(),
+              tilt = tilt.roundToInt()
             ).runIt()
             stateCopy(it, manualMoving = false)
           }
