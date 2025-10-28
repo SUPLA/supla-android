@@ -331,7 +331,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
     val remoteId = 123
 
     every {
-      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, tilt = 95f)
+      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, tilt = 95)
     } returns Completable.complete()
 
     // when
@@ -353,7 +353,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
     assertThat(states).containsExactly(state1, state2)
 
     verify {
-      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, tilt = 95f)
+      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, tilt = 95)
     }
     confirmVerified(executeShadingSystemActionUseCase)
   }
@@ -530,7 +530,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
     )
     viewModel.setState(initialState)
     every {
-      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, percentage = 75f, tilt = 50f)
+      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, percentage = 75, tilt = 50)
     } returns Completable.complete()
 
     // when
@@ -541,7 +541,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
     assertThat(states).containsExactly(initialState, finalState)
 
     verify {
-      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, percentage = 75f, tilt = 50f)
+      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, percentage = 75, tilt = 50)
     }
   }
 
@@ -563,7 +563,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
     )
     viewModel.setState(initialState)
     every {
-      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, percentage = 95f, tilt = 50f)
+      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, percentage = 95, tilt = 50)
     } returns Completable.complete()
 
     // when
@@ -576,7 +576,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
     assertThat(states).containsExactly(initialState, finalState)
 
     verify {
-      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, percentage = 95f, tilt = 50f)
+      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, percentage = 95, tilt = 50)
     }
   }
 
@@ -598,7 +598,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
     )
     viewModel.setState(initialState)
     every {
-      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 2.5f, tilt = 25f)
+      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 3, tilt = 25)
     } returns Completable.complete()
 
     // when
@@ -610,7 +610,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
     )
     assertThat(states).containsExactly(initialState, finalState)
     verify {
-      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 2.5f, tilt = 25f)
+      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 3, tilt = 25)
     }
   }
 
@@ -632,7 +632,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
     )
     viewModel.setState(initialState)
     every {
-      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 50f, tilt = 0f)
+      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 50, tilt = 0)
     } returns Completable.complete()
 
     // when
@@ -645,7 +645,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
     )
     assertThat(states).containsExactly(initialState, finalState)
     verify {
-      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 50f, tilt = 0f)
+      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 50, tilt = 0)
     }
   }
 
@@ -667,7 +667,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
     )
     viewModel.setState(initialState)
     every {
-      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 100f, tilt = 80f)
+      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 100, tilt = 80)
     } returns Completable.complete()
 
     // when
@@ -679,7 +679,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
     )
     assertThat(states).containsExactly(initialState, finalState)
     verify {
-      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 100f, tilt = 80f)
+      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 100, tilt = 80)
     }
   }
 

@@ -37,7 +37,7 @@ class ExecuteShadingSystemActionUseCaseTest {
     val actionId = ActionId.TURN_ON
     val type = SubjectType.CHANNEL
     val remoteId = 123
-    val percentage = 23f
+    val percentage = 23
 
     val suplaClient: SuplaClientApi = mock()
     whenever(suplaClient.executeAction(any())).thenReturn(true)
@@ -69,7 +69,7 @@ class ExecuteShadingSystemActionUseCaseTest {
     val actionId = ActionId.TURN_ON
     val type = SubjectType.CHANNEL
     val remoteId = 123
-    val percentage = 23f
+    val percentage = 23
 
     val suplaClient: SuplaClientApi = mock()
     whenever(suplaClient.executeAction(any())).thenReturn(false)
@@ -101,7 +101,7 @@ class ExecuteShadingSystemActionUseCaseTest {
     val actionId = ActionId.TURN_ON
     val type = SubjectType.CHANNEL
     val remoteId = 123
-    val percentage = 23f
+    val percentage = 23
 
     whenever(suplaClientProvider.provide()).thenReturn(null)
 
