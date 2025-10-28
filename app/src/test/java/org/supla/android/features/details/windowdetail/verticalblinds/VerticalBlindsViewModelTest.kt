@@ -17,21 +17,19 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import io.mockk.MockKAnnotations
+import io.mockk.confirmVerified
 import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.mockk
+import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
@@ -41,6 +39,7 @@ import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.custom.GroupOnlineSummary
 import org.supla.android.data.source.remote.ConfigResult
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
@@ -61,72 +60,74 @@ import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
+import org.supla.android.usecases.channel.ObserveChannelWithChildrenUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.CallSuplaClientOperationUseCase
 import org.supla.android.usecases.client.ExecuteShadingSystemActionUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.client.LoginUseCase
 import org.supla.android.usecases.group.GetGroupOnlineSummaryUseCase
-import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
+import org.supla.android.usecases.group.ObserveChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.group.ReadGroupTiltingDetailsUseCase
 import org.supla.android.usecases.group.totalvalue.ShadowingBlindGroupValue
 import org.supla.core.shared.data.model.function.facadeblind.FacadeBlindValue
 import org.supla.core.shared.data.model.shadingsystem.SuplaShadingSystemFlag
 
-@RunWith(MockitoJUnitRunner::class)
-class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelState, BaseWindowViewEvent, VerticalBlindsViewModel>() {
+class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelState, BaseWindowViewEvent, VerticalBlindsViewModel>(
+  MockSchedulers.MOCKK
+) {
 
-  @Mock
+  @RelaxedMockK
   private lateinit var channelConfigEventsManager: ChannelConfigEventsManager
 
-  @Mock
+  @RelaxedMockK
   private lateinit var executeShadingSystemActionUseCase: ExecuteShadingSystemActionUseCase
 
-  @Mock
+  @RelaxedMockK
   private lateinit var readGroupTiltingDetailsUseCase: ReadGroupTiltingDetailsUseCase
 
-  @Mock
+  @RelaxedMockK
   private lateinit var suplaClientProvider: SuplaClientProvider
 
-  @Mock
+  @RelaxedMockK
   private lateinit var executeSimpleActionUseCase: ExecuteSimpleActionUseCase
 
-  @Mock
+  @RelaxedMockK
   private lateinit var callSuplaClientOperationUseCase: CallSuplaClientOperationUseCase
 
-  @Mock
-  private lateinit var readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase
+  @RelaxedMockK
+  private lateinit var observeChannelWithChildrenUseCase: ObserveChannelWithChildrenUseCase
 
-  @Mock
-  private lateinit var readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase
+  @RelaxedMockK
+  private lateinit var observeChannelGroupByRemoteIdUseCase: ObserveChannelGroupByRemoteIdUseCase
 
-  @Mock
+  @RelaxedMockK
   private lateinit var getGroupOnlineSummaryUseCase: GetGroupOnlineSummaryUseCase
 
-  @Mock
+  @RelaxedMockK
   private lateinit var preferences: Preferences
 
-  @Mock
+  @RelaxedMockK
   private lateinit var dateProvider: DateProvider
 
-  @Mock
+  @RelaxedMockK
   private lateinit var profileRepository: RoomProfileRepository
 
-  @Mock
+  @RelaxedMockK
   private lateinit var loginUseCase: LoginUseCase
 
-  @Mock
+  @RelaxedMockK
   private lateinit var authorizeUseCase: AuthorizeUseCase
 
-  @Mock
+  @RelaxedMockK
   override lateinit var schedulers: SuplaSchedulers
 
-  @InjectMocks
+  @InjectMockKs
   override lateinit var viewModel: VerticalBlindsViewModel
 
   @Before
   override fun setUp() {
+    MockKAnnotations.init(this)
     super.setUp()
   }
 
@@ -138,11 +139,11 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
     val tilt = 33
     val channelData = mockChannel(remoteId, position, tilt)
 
-    whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
-    whenever(preferences.isShowOpeningPercent).thenReturn(false)
+    every { observeChannelWithChildrenUseCase.invoke(remoteId) } returns Observable.just(channelData)
+    every { preferences.isShowOpeningPercent } returns false
 
     // when
-    viewModel.loadData(remoteId, ItemType.CHANNEL)
+    viewModel.observeData(remoteId, ItemType.CHANNEL)
 
     // then
     assertThat(states).containsExactly(
@@ -171,11 +172,11 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
     val tilt = 33
     val channelData = mockChannel(remoteId, position, tilt, status = SuplaChannelAvailabilityStatus.OFFLINE)
 
-    whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
-    whenever(preferences.isShowOpeningPercent).thenReturn(false)
+    every { observeChannelWithChildrenUseCase.invoke(remoteId) } returns Observable.just(channelData)
+    every { preferences.isShowOpeningPercent } returns false
 
     // when
-    viewModel.loadData(remoteId, ItemType.CHANNEL)
+    viewModel.observeData(remoteId, ItemType.CHANNEL)
 
     // then
     assertThat(states).containsExactly(
@@ -204,11 +205,11 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
     val tilt = 33
     val channelData = mockChannel(remoteId, position, tilt, flags = emptyList())
 
-    whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
-    whenever(preferences.isShowOpeningPercent).thenReturn(false)
+    every { observeChannelWithChildrenUseCase.invoke(remoteId) } returns Observable.just(channelData)
+    every { preferences.isShowOpeningPercent } returns false
 
     // when
-    viewModel.loadData(remoteId, ItemType.CHANNEL)
+    viewModel.observeData(remoteId, ItemType.CHANNEL)
 
     // then
     assertThat(states).containsExactly(
@@ -235,8 +236,9 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
     val remoteId = 123
     val config = mockConfig()
 
-    whenever(channelConfigEventsManager.observerConfig(remoteId))
-      .thenReturn(Observable.just(ChannelConfigEventsManager.ConfigEvent(ConfigResult.RESULT_TRUE, config)))
+    every {
+      channelConfigEventsManager.observerConfig(remoteId)
+    } returns Observable.just(ChannelConfigEventsManager.ConfigEvent(ConfigResult.RESULT_TRUE, config))
 
     // when
     viewModel.observeConfig(remoteId, ItemType.CHANNEL)
@@ -323,8 +325,9 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
     // given
     val remoteId = 123
 
-    whenever(executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, tilt = 95f))
-      .thenReturn(Completable.complete())
+    every {
+      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, tilt = 95f)
+    } returns Completable.complete()
 
     // when
     viewModel.handleAction(ShadingSystemAction.TiltTo(95f), remoteId, ItemType.CHANNEL)
@@ -344,8 +347,10 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
     )
     assertThat(states).containsExactly(state1, state2)
 
-    verify(executeShadingSystemActionUseCase).invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, tilt = 95f)
-    verifyNoMoreInteractions(executeShadingSystemActionUseCase)
+    verify {
+      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, tilt = 95f)
+    }
+    confirmVerified(executeShadingSystemActionUseCase)
   }
 
   @Test
@@ -519,8 +524,9 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
       manualMoving = true
     )
     viewModel.setState(initialState)
-    whenever(executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, percentage = 75f, tilt = 50f))
-      .thenReturn(Completable.complete())
+    every {
+      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, percentage = 75f, tilt = 50f)
+    } returns Completable.complete()
 
     // when
     viewModel.handleAction(ShadingSystemAction.MoveAndTiltSetTo(75f, 50f), remoteId, ItemType.CHANNEL)
@@ -529,7 +535,9 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
     val finalState = initialState.copy(manualMoving = false)
     assertThat(states).containsExactly(initialState, finalState)
 
-    verify(executeShadingSystemActionUseCase).invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, percentage = 75f, tilt = 50f)
+    verify {
+      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, percentage = 75f, tilt = 50f)
+    }
   }
 
   @Test
@@ -549,8 +557,9 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
       manualMoving = true
     )
     viewModel.setState(initialState)
-    whenever(executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, percentage = 95f, tilt = 50f))
-      .thenReturn(Completable.complete())
+    every {
+      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, percentage = 95f, tilt = 50f)
+    } returns Completable.complete()
 
     // when
     viewModel.handleAction(ShadingSystemAction.MoveAndTiltSetTo(95f, 0f), remoteId, ItemType.CHANNEL)
@@ -561,7 +570,9 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
     )
     assertThat(states).containsExactly(initialState, finalState)
 
-    verify(executeShadingSystemActionUseCase).invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, percentage = 95f, tilt = 50f)
+    verify {
+      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, percentage = 95f, tilt = 50f)
+    }
   }
 
   @Test
@@ -581,8 +592,9 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
       manualMoving = true
     )
     viewModel.setState(initialState)
-    whenever(executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 2.5f, tilt = 25f))
-      .thenReturn(Completable.complete())
+    every {
+      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 2.5f, tilt = 25f)
+    } returns Completable.complete()
 
     // when
     viewModel.handleAction(ShadingSystemAction.MoveAndTiltSetTo(2.5f, 80f), remoteId, ItemType.CHANNEL)
@@ -592,7 +604,9 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
       manualMoving = false
     )
     assertThat(states).containsExactly(initialState, finalState)
-    verify(executeShadingSystemActionUseCase).invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 2.5f, tilt = 25f)
+    verify {
+      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 2.5f, tilt = 25f)
+    }
   }
 
   @Test
@@ -612,8 +626,9 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
       manualMoving = true
     )
     viewModel.setState(initialState)
-    whenever(executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 50f, tilt = 0f))
-      .thenReturn(Completable.complete())
+    every {
+      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 50f, tilt = 0f)
+    } returns Completable.complete()
 
     // when
     viewModel.handleAction(ShadingSystemAction.MoveAndTiltSetTo(50f, 80f), remoteId, ItemType.CHANNEL)
@@ -624,7 +639,9 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
       manualMoving = false
     )
     assertThat(states).containsExactly(initialState, finalState)
-    verify(executeShadingSystemActionUseCase).invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 50f, tilt = 0f)
+    verify {
+      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 50f, tilt = 0f)
+    }
   }
 
   @Test
@@ -644,8 +661,9 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
       manualMoving = true
     )
     viewModel.setState(initialState)
-    whenever(executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 100f, tilt = 80f))
-      .thenReturn(Completable.complete())
+    every {
+      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 100f, tilt = 80f)
+    } returns Completable.complete()
 
     // when
     viewModel.handleAction(ShadingSystemAction.MoveAndTiltSetTo(100f, 80f), remoteId, ItemType.CHANNEL)
@@ -655,7 +673,9 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
       manualMoving = false
     )
     assertThat(states).containsExactly(initialState, finalState)
-    verify(executeShadingSystemActionUseCase).invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 100f, tilt = 80f)
+    verify {
+      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 100f, tilt = 80f)
+    }
   }
 
   @Test
@@ -665,12 +685,12 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
     val group = mockGroup(remoteId, status = SuplaChannelAvailabilityStatus.ONLINE)
     val onlineSummary = GroupOnlineSummary(2, 5)
 
-    whenever(readChannelGroupByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(group))
-    whenever(getGroupOnlineSummaryUseCase.invoke(321L)).thenReturn(Maybe.just(onlineSummary))
-    whenever(preferences.isShowOpeningPercent).thenReturn(false)
+    every { observeChannelGroupByRemoteIdUseCase.invoke(remoteId) } returns Observable.just(group)
+    every { getGroupOnlineSummaryUseCase.invoke(321L) } returns Maybe.just(onlineSummary)
+    every { preferences.isShowOpeningPercent } returns false
 
     // when
-    viewModel.loadData(remoteId, ItemType.GROUP)
+    viewModel.observeData(remoteId, ItemType.GROUP)
 
     // then
     assertThat(states).containsExactly(
@@ -701,12 +721,12 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
     val group = mockGroup(remoteId, status = SuplaChannelAvailabilityStatus.OFFLINE)
     val onlineSummary = GroupOnlineSummary(2, 5)
 
-    whenever(readChannelGroupByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(group))
-    whenever(getGroupOnlineSummaryUseCase.invoke(321L)).thenReturn(Maybe.just(onlineSummary))
-    whenever(preferences.isShowOpeningPercent).thenReturn(false)
+    every { observeChannelGroupByRemoteIdUseCase.invoke(remoteId) } returns Observable.just(group)
+    every { getGroupOnlineSummaryUseCase.invoke(321L) } returns Maybe.just(onlineSummary)
+    every { preferences.isShowOpeningPercent } returns false
 
     // when
-    viewModel.loadData(remoteId, ItemType.GROUP)
+    viewModel.observeData(remoteId, ItemType.GROUP)
 
     // then
     assertThat(states).containsExactly(
@@ -735,7 +755,7 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
     tilt: Int,
     status: SuplaChannelAvailabilityStatus = SuplaChannelAvailabilityStatus.ONLINE,
     flags: List<SuplaShadingSystemFlag> = listOf(SuplaShadingSystemFlag.TILT_IS_SET)
-  ): ChannelDataEntity {
+  ): ChannelWithChildren {
     val facadeBlindValue: FacadeBlindValue = mockk {
       every { this@mockk.position } returns position
       every { this@mockk.tilt } returns tilt
@@ -747,10 +767,14 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
     val value: ChannelValueEntity = mockk {
       every { asFacadeBlindValue() } returns facadeBlindValue
     }
-    return mockk {
+    val channelData: ChannelDataEntity = mockk {
       every { this@mockk.remoteId } returns remoteId
       every { channelValueEntity } returns value
       every { this@mockk.flags } returns 0
+    }
+
+    return mockk {
+      every { channel } returns channelData
     }
   }
 

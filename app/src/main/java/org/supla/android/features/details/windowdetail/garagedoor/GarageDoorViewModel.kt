@@ -31,14 +31,14 @@ import org.supla.android.features.details.windowdetail.base.data.WindowGroupedVa
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.AuthorizationDialogState
-import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
+import org.supla.android.usecases.channel.ObserveChannelWithChildrenUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.CallSuplaClientOperationUseCase
 import org.supla.android.usecases.client.ExecuteShadingSystemActionUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.client.LoginUseCase
 import org.supla.android.usecases.group.GetGroupOnlineSummaryUseCase
-import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
+import org.supla.android.usecases.group.ObserveChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.group.totalvalue.ShadingSystemGroupValue
 import org.supla.core.shared.extensions.guardLet
 import javax.inject.Inject
@@ -48,8 +48,8 @@ class GarageDoorViewModel @Inject constructor(
   executeShadingSystemActionUseCase: ExecuteShadingSystemActionUseCase,
   executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
   callSuplaClientOperationUseCase: CallSuplaClientOperationUseCase,
-  readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
-  readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
+  observeChannelWithChildrenUseCase: ObserveChannelWithChildrenUseCase,
+  observeChannelGroupByRemoteIdUseCase: ObserveChannelGroupByRemoteIdUseCase,
   getGroupOnlineSummaryUseCase: GetGroupOnlineSummaryUseCase,
   preferences: Preferences,
   dateProvider: DateProvider,
@@ -62,8 +62,8 @@ class GarageDoorViewModel @Inject constructor(
   executeShadingSystemActionUseCase,
   executeSimpleActionUseCase,
   callSuplaClientOperationUseCase,
-  readChannelByRemoteIdUseCase,
-  readChannelGroupByRemoteIdUseCase,
+  observeChannelWithChildrenUseCase,
+  observeChannelGroupByRemoteIdUseCase,
   getGroupOnlineSummaryUseCase,
   preferences,
   dateProvider,

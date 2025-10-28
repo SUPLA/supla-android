@@ -19,17 +19,16 @@ package org.supla.android.features.details.windowdetail.curtain
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import io.mockk.MockKAnnotations
 import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
 import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
@@ -39,6 +38,7 @@ import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.custom.GroupOnlineSummary
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
@@ -53,14 +53,14 @@ import org.supla.android.features.details.windowdetail.base.ui.windowview.Shadin
 import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.tools.VibrationHelper
-import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
+import org.supla.android.usecases.channel.ObserveChannelWithChildrenUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.CallSuplaClientOperationUseCase
 import org.supla.android.usecases.client.ExecuteShadingSystemActionUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.client.LoginUseCase
 import org.supla.android.usecases.group.GetGroupOnlineSummaryUseCase
-import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
+import org.supla.android.usecases.group.ObserveChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.group.totalvalue.GroupTotalValue
 import org.supla.core.shared.data.model.function.rollershutter.RollerShutterValue
 import org.supla.core.shared.data.model.general.SuplaFunction
@@ -68,59 +68,59 @@ import org.supla.core.shared.data.model.lists.ChannelIssueItem
 import org.supla.core.shared.data.model.shadingsystem.SuplaShadingSystemFlag
 import org.supla.core.shared.infrastructure.LocalizedStringId
 
-@RunWith(MockitoJUnitRunner::class)
-class CurtainViewModelTest : BaseViewModelTest<CurtainViewModelState, BaseWindowViewEvent, CurtainViewModel>() {
+class CurtainViewModelTest : BaseViewModelTest<CurtainViewModelState, BaseWindowViewEvent, CurtainViewModel>(MockSchedulers.MOCKK) {
 
-  @Mock
+  @RelaxedMockK
   lateinit var loadingTimeoutManager: LoadingTimeoutManager
 
-  @Mock
+  @RelaxedMockK
   lateinit var executeShadingSystemActionUseCase: ExecuteShadingSystemActionUseCase
 
-  @Mock
+  @RelaxedMockK
   lateinit var executeSimpleActionUseCase: ExecuteSimpleActionUseCase
 
-  @Mock
+  @RelaxedMockK
   lateinit var callSuplaClientOperationUseCase: CallSuplaClientOperationUseCase
 
-  @Mock
-  lateinit var readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase
+  @RelaxedMockK
+  lateinit var observeChannelWithChildrenUseCase: ObserveChannelWithChildrenUseCase
 
-  @Mock
-  lateinit var readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase
+  @RelaxedMockK
+  lateinit var observeChannelGroupByRemoteIdUseCase: ObserveChannelGroupByRemoteIdUseCase
 
-  @Mock
+  @RelaxedMockK
   lateinit var getGroupOnlineSummaryUseCase: GetGroupOnlineSummaryUseCase
 
-  @Mock
+  @RelaxedMockK
   lateinit var vibrationHelper: VibrationHelper
 
-  @Mock
+  @RelaxedMockK
   lateinit var preferences: Preferences
 
-  @Mock
+  @RelaxedMockK
   lateinit var dateProvider: DateProvider
 
-  @Mock
+  @RelaxedMockK
   lateinit var suplaClientProvider: SuplaClientProvider
 
-  @Mock
+  @RelaxedMockK
   lateinit var profileRepository: RoomProfileRepository
 
-  @Mock
+  @RelaxedMockK
   lateinit var loginUseCase: LoginUseCase
 
-  @Mock
+  @RelaxedMockK
   lateinit var authorizeUseCase: AuthorizeUseCase
 
-  @Mock
+  @RelaxedMockK
   override lateinit var schedulers: SuplaSchedulers
 
-  @InjectMocks
+  @InjectMockKs
   override lateinit var viewModel: CurtainViewModel
 
   @Before
   override fun setUp() {
+    MockKAnnotations.init(this)
     super.setUp()
   }
 
@@ -138,7 +138,7 @@ class CurtainViewModelTest : BaseViewModelTest<CurtainViewModelState, BaseWindow
     )
 
     // when
-    viewModel.loadData(remoteId, ItemType.CHANNEL)
+    viewModel.observeData(remoteId, ItemType.CHANNEL)
 
     // then
     Assertions.assertThat(states).containsExactly(
@@ -166,7 +166,7 @@ class CurtainViewModelTest : BaseViewModelTest<CurtainViewModelState, BaseWindow
     mockOnlineGroup(remoteId, "10:1|80:1|20:0")
 
     // when
-    viewModel.loadData(remoteId, ItemType.GROUP)
+    viewModel.observeData(remoteId, ItemType.GROUP)
 
     // then
     Assertions.assertThat(states).containsExactly(
@@ -215,8 +215,11 @@ class CurtainViewModelTest : BaseViewModelTest<CurtainViewModelState, BaseWindow
       every { channelValueEntity } returns value
       every { flags } returns channelFlags.fold(0L) { result, flag -> result or flag.rawValue }
     }
+    val channelWithChildren: ChannelWithChildren = mockk {
+      every { channel } returns channelData
+    }
 
-    whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
+    every { observeChannelWithChildrenUseCase.invoke(remoteId) } returns Observable.just(channelWithChildren)
   }
 
   private fun mockOnlineGroup(
@@ -237,7 +240,7 @@ class CurtainViewModelTest : BaseViewModelTest<CurtainViewModelState, BaseWindow
       every { status } returns SuplaChannelAvailabilityStatus.ONLINE
     }
 
-    whenever(readChannelGroupByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(groupData))
-    whenever(getGroupOnlineSummaryUseCase.invoke(groupId)).thenReturn(Maybe.just(GroupOnlineSummary(2, 4)))
+    every { observeChannelGroupByRemoteIdUseCase.invoke(remoteId) } returns Observable.just(groupData)
+    every { getGroupOnlineSummaryUseCase.invoke(groupId) } returns Maybe.just(GroupOnlineSummary(2, 4))
   }
 }

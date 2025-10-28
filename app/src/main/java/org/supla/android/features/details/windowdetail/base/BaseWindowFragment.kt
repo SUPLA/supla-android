@@ -21,64 +21,53 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
-import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import org.supla.android.R
-import org.supla.android.core.ui.BaseFragment
+import org.supla.android.core.ui.BaseComposeFragment
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.data.source.runtime.ItemType
-import org.supla.android.databinding.FragmentComposeBinding
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
 import org.supla.android.features.details.windowdetail.base.ui.WindowView
 import org.supla.android.ui.dialogs.AlertDialog
 import org.supla.android.ui.dialogs.AuthorizationDialog
-import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 
-abstract class BaseWindowFragment<S : BaseWindowViewModelState> : BaseFragment<S, BaseWindowViewEvent>(R.layout.fragment_compose) {
+abstract class BaseWindowFragment<S : BaseWindowViewModelState> : BaseComposeFragment<S, BaseWindowViewEvent>() {
 
   abstract override val viewModel: BaseWindowViewModel<S>
   protected abstract val item: ItemBundle
 
-  private val binding by viewBinding(FragmentComposeBinding::bind)
-
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    viewModel.observeData(item.remoteId, item.itemType)
+  }
 
-    binding.composeContent.setContent {
-      val modelState by viewModel.getViewState().collectAsState()
-      SuplaTheme {
-        if (modelState.showCalibrationDialog) {
-          AlertDialog(
-            title = stringResource(id = R.string.roller_shutter_calibration),
-            message = stringResource(id = R.string.roller_shutter_start_calibration_message),
-            positiveButtonTitle = stringResource(id = R.string.yes),
-            negativeButtonTitle = stringResource(id = R.string.no),
-            onPositiveClick = { viewModel.startCalibration() },
-            onNegativeClick = { viewModel.cancelCalibration() }
-          )
-        }
-        modelState.authorizationDialogState?.let {
-          viewModel.AuthorizationDialog(state = it)
-        }
+  @Composable
+  override fun ComposableContent(modelState: S) {
+    SuplaTheme {
+      if (modelState.showCalibrationDialog) {
+        AlertDialog(
+          title = stringResource(id = R.string.roller_shutter_calibration),
+          message = stringResource(id = R.string.roller_shutter_start_calibration_message),
+          positiveButtonTitle = stringResource(id = R.string.yes),
+          negativeButtonTitle = stringResource(id = R.string.no),
+          onPositiveClick = { viewModel.startCalibration() },
+          onNegativeClick = { viewModel.cancelCalibration() }
+        )
+      }
+      modelState.authorizationDialogState?.let {
+        viewModel.AuthorizationDialog(state = it)
+      }
 
-        Box {
-          WindowView(
-            windowState = modelState.windowState,
-            viewState = modelState.viewState
-          ) {
-            viewModel.handleAction(it, item.remoteId, item.itemType)
-          }
+      Box {
+        WindowView(
+          windowState = modelState.windowState,
+          viewState = modelState.viewState
+        ) {
+          viewModel.handleAction(it, item.remoteId, item.itemType)
         }
       }
     }
-  }
-
-  override fun onStart() {
-    super.onStart()
-
-    viewModel.loadData(item.remoteId, item.itemType)
   }
 
   override fun handleEvents(event: BaseWindowViewEvent) {
@@ -91,18 +80,5 @@ abstract class BaseWindowFragment<S : BaseWindowViewModelState> : BaseFragment<S
   }
 
   override fun handleViewState(state: S) {
-  }
-
-  override fun onSuplaMessage(message: SuplaClientMessage) {
-    (message as? SuplaClientMessage.ChannelDataChanged)?.let {
-      if (it.channelId == item.remoteId && item.itemType == ItemType.CHANNEL) {
-        viewModel.loadData(item.remoteId, item.itemType)
-      }
-    }
-    (message as? SuplaClientMessage.GroupDataChanged)?.let {
-      if (it.groupId == item.remoteId && item.itemType == ItemType.GROUP) {
-        viewModel.loadData(item.remoteId, item.itemType)
-      }
-    }
   }
 }

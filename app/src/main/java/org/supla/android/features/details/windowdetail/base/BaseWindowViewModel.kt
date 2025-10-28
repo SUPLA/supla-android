@@ -41,7 +41,7 @@ import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
 import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModel
-import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
+import org.supla.android.usecases.channel.ObserveChannelWithChildrenUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.CallSuplaClientOperationUseCase
 import org.supla.android.usecases.client.ExecuteShadingSystemActionUseCase
@@ -49,7 +49,7 @@ import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.client.LoginUseCase
 import org.supla.android.usecases.client.SuplaClientOperation
 import org.supla.android.usecases.group.GetGroupOnlineSummaryUseCase
-import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
+import org.supla.android.usecases.group.ObserveChannelGroupByRemoteIdUseCase
 import org.supla.core.shared.data.model.shadingsystem.ShadingSystemValue
 import org.supla.core.shared.data.model.shadingsystem.SuplaShadingSystemFlag
 import org.supla.core.shared.extensions.guardLet
@@ -60,8 +60,8 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
   private val executeShadingSystemActionUseCase: ExecuteShadingSystemActionUseCase,
   private val executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
   private val callSuplaClientOperationUseCase: CallSuplaClientOperationUseCase,
-  private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
-  private val readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
+  private val observeChannelWithChildrenUseCase: ObserveChannelWithChildrenUseCase,
+  private val observeChannelGroupByRemoteIdUseCase: ObserveChannelGroupByRemoteIdUseCase,
   private val getGroupOnlineSummaryUseCase: GetGroupOnlineSummaryUseCase,
   private val preferences: Preferences,
   private val dateProvider: DateProvider,
@@ -100,10 +100,10 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
     viewStateUpdater: (WindowViewState) -> WindowViewState = { it }
   ): S
 
-  fun loadData(remoteId: Int, itemType: ItemType) {
+  fun observeData(remoteId: Int, itemType: ItemType) {
     when (itemType) {
-      ItemType.CHANNEL -> loadChannelData(remoteId)
-      ItemType.GROUP -> loadGroupData(remoteId)
+      ItemType.CHANNEL -> observeChannelData(remoteId)
+      ItemType.GROUP -> observeGroupData(remoteId)
     }
   }
 
@@ -186,22 +186,26 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
       .disposeBySelf()
   }
 
-  private fun loadGroupData(remoteId: Int) {
-    readChannelGroupByRemoteIdUseCase(remoteId)
-      .flatMap { groupData -> getGroupOnlineSummaryUseCase.invoke(groupData.id!!).map { GroupData(groupData, it) } }
+  private fun observeGroupData(remoteId: Int) {
+    observeChannelGroupByRemoteIdUseCase(remoteId)
+      .flatMap { groupData ->
+        getGroupOnlineSummaryUseCase.invoke(groupData.id!!)
+          .toObservable()
+          .map { GroupData(groupData, it) }
+      }
       .attachSilent()
       .subscribeBy(
-        onSuccess = { handleGroup(it) },
+        onNext = { handleGroup(it) },
         onError = defaultErrorHandler("loadGroupData")
       )
       .disposeBySelf()
   }
 
-  protected open fun loadChannelData(remoteId: Int) {
-    readChannelByRemoteIdUseCase(remoteId)
+  protected open fun observeChannelData(remoteId: Int) {
+    observeChannelWithChildrenUseCase(remoteId)
       .attachSilent()
       .subscribeBy(
-        onSuccess = { handleChannel(it) },
+        onNext = { handleChannel(it.channel) },
         onError = defaultErrorHandler("loadChannelData")
       )
       .disposeBySelf()

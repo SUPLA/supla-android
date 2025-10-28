@@ -17,19 +17,18 @@ package org.supla.android.usecases.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import io.mockk.MockKAnnotations
+import io.mockk.confirmVerified
 import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import io.mockk.slot
+import io.mockk.verify
 import io.reactivex.rxjava3.core.Observable
 import org.assertj.core.api.Assertions
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.core.networking.suplaclient.SuplaClientApi
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.data.source.ChannelGroupRepository
@@ -39,16 +38,20 @@ import org.supla.android.lib.actions.ActionParameters
 import org.supla.android.lib.actions.SubjectType
 import org.supla.core.shared.data.model.general.SuplaFunction
 
-@RunWith(MockitoJUnitRunner::class)
 class GroupActionUseCaseTest {
-  @Mock
+  @MockK
   private lateinit var channelGroupRepository: ChannelGroupRepository
 
-  @Mock
+  @MockK
   private lateinit var suplaClientProvider: SuplaClientProvider
 
-  @InjectMocks
+  @InjectMockKs
   private lateinit var useCase: GroupActionUseCase
+
+  @Before
+  fun setup() {
+    MockKAnnotations.init(this)
+  }
 
   @Test
   fun `should turn off RGB lighting`() {
@@ -131,13 +134,13 @@ class GroupActionUseCaseTest {
     every { group.function } returns channelFunc
     every { group.flags } returns 0
 
-    whenever(channelGroupRepository.findGroupDataEntity(groupId)).thenReturn(Observable.just(group))
+    every { channelGroupRepository.findGroupDataEntity(groupId) } returns Observable.just(group)
 
     val parametersSlot = slot<ActionParameters>()
     val suplaClient: SuplaClientApi = mockk()
     every { suplaClient.executeAction(capture(parametersSlot)) } returns true
 
-    whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
+    every { suplaClientProvider.provide() } returns suplaClient
 
     // when
     val testObserver = useCase(groupId, buttonType).test()
@@ -147,9 +150,11 @@ class GroupActionUseCaseTest {
 
     actionAssertion(parametersSlot.captured)
 
-    verify(channelGroupRepository).findGroupDataEntity(groupId)
-    verify(suplaClientProvider).provide()
-    verifyNoMoreInteractions(channelGroupRepository, suplaClientProvider)
+    verify {
+      channelGroupRepository.findGroupDataEntity(groupId)
+      suplaClientProvider.provide()
+    }
+    confirmVerified(channelGroupRepository, suplaClientProvider)
   }
 
   private fun testOpenClose(groupId: Int, channelFunc: SuplaFunction, buttonType: ButtonType, openValue: Int) {
@@ -158,12 +163,12 @@ class GroupActionUseCaseTest {
     every { group.remoteId } returns groupId
     every { group.function } returns channelFunc
 
-    whenever(channelGroupRepository.findGroupDataEntity(groupId)).thenReturn(Observable.just(group))
+    every { channelGroupRepository.findGroupDataEntity(groupId) } returns Observable.just(group)
 
     val suplaClient: SuplaClientApi = mockk()
     every { suplaClient.open(groupId, true, openValue) } returns true
 
-    whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
+    every { suplaClientProvider.provide() } returns suplaClient
 
     // when
     val testObserver = useCase(groupId, buttonType).test()
@@ -171,8 +176,10 @@ class GroupActionUseCaseTest {
     // then
     testObserver.assertComplete()
 
-    verify(channelGroupRepository).findGroupDataEntity(groupId)
-    verify(suplaClientProvider).provide()
-    verifyNoMoreInteractions(channelGroupRepository, suplaClientProvider)
+    verify {
+      channelGroupRepository.findGroupDataEntity(groupId)
+      suplaClientProvider.provide()
+    }
+    confirmVerified(channelGroupRepository, suplaClientProvider)
   }
 }
