@@ -42,3 +42,10 @@ fun Float.limit(min: Float = 0f, max: Float = 1f): Float {
     this
   }
 }
+
+fun <T> Float?.ifNumber(callback: (Float) -> T): T? =
+  if (this != null && !this.isNaN()) {
+    callback(this)
+  } else {
+    null
+  }

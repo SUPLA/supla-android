@@ -545,7 +545,7 @@
   <string name="details_timer_cancel_turn_off">off</string>
   <string name="details_timer_cancel_turn_on">on</string>
   <string name="offline" translatable="false">offline</string>
-  <string name="thermostat_detail_off" translatable="false">Off</string>
+  <string name="thermostat_detail_off" translatable="false">off</string>
   <string name="thermostat_detail_mode_manual">Manual</string>
   <string name="thermostat_detail_mode_weekly_schedule">Program</string>
   <string name="monday">Monday</string>

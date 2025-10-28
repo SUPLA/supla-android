@@ -45,6 +45,7 @@ import org.supla.android.di.FORMATTER_THERMOMETER
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
+import org.supla.android.extensions.ifNumber
 import org.supla.android.features.details.thermostatdetail.general.data.SensorIssue
 import org.supla.android.features.details.thermostatdetail.general.data.ThermostatProgramInfo
 import org.supla.android.features.details.thermostatdetail.general.data.build
@@ -66,6 +67,8 @@ import org.supla.core.shared.data.model.lists.ChannelIssueItem
 import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.extensions.ifLet
 import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.channel.issues.ThermostatIssuesProvider
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import timber.log.Timber
@@ -268,17 +271,17 @@ class ThermostatGeneralViewModel @Inject constructor(
     }
   }
 
-  override fun getTemperatureText(minPercentage: Float?, maxPercentage: Float?, state: ThermostatGeneralViewState): StringProvider {
-    val minTemperature = minPercentage?.let {
+  override fun getTemperatureText(minPercentage: Float?, maxPercentage: Float?, state: ThermostatGeneralViewState): LocalizedString {
+    val minTemperature = minPercentage.ifNumber {
       getTemperatureForPosition(it, state.viewModelState!!)
     }
-    val maxTemperature = maxPercentage?.let {
+    val maxTemperature = maxPercentage.ifNumber {
       getTemperatureForPosition(it, state.viewModelState!!)
     }
 
     return state.viewModelState?.let {
       calculateTemperatureControlText(state.isOffline, it.mode, minTemperature, maxTemperature)
-    } ?: { "" }
+    } ?: LocalizedString.Empty
   }
 
   override fun markChanging() {
@@ -468,28 +471,25 @@ class ThermostatGeneralViewModel @Inject constructor(
     mode: SuplaHvacMode,
     setpointMinTemperature: Float?,
     setpointMaxTemperature: Float?
-  ): StringProvider {
+  ): LocalizedString {
     return when {
-      isOffline -> { resources -> resources.getString(R.string.offline) }
-      mode == SuplaHvacMode.NOT_SET || mode == SuplaHvacMode.OFF -> { resources ->
-        resources.getString(R.string.thermostat_detail_off).lowercase()
-      }
-
-      else -> { _ -> getOnlineTemperatureText(setpointMinTemperature, setpointMaxTemperature) }
+      isOffline -> localizedString(R.string.offline)
+      mode == SuplaHvacMode.NOT_SET || mode == SuplaHvacMode.OFF -> localizedString(R.string.thermostat_detail_off)
+      else -> getOnlineTemperatureText(setpointMinTemperature, setpointMaxTemperature)
     }
   }
 
-  private fun getOnlineTemperatureText(setpointMinTemperature: Float?, setpointMaxTemperature: Float?): String {
+  private fun getOnlineTemperatureText(setpointMinTemperature: Float?, setpointMaxTemperature: Float?): LocalizedString {
     val setPointMinTemperatureString = setpointMinTemperature?.let { thermometerValueFormatter.format(it.toDouble()) }
     val setPointMaxTemperatureString = setpointMaxTemperature?.let { thermometerValueFormatter.format(it.toDouble()) }
 
     return when {
       setPointMinTemperatureString != null && setPointMaxTemperatureString != null ->
-        "$setPointMinTemperatureString - $setPointMaxTemperatureString"
+        LocalizedString.Constant("$setPointMinTemperatureString - $setPointMaxTemperatureString")
 
-      setPointMinTemperatureString != null -> setPointMinTemperatureString
-      setPointMaxTemperatureString != null -> setPointMaxTemperatureString
-      else -> ""
+      setPointMinTemperatureString != null -> LocalizedString.Constant(setPointMinTemperatureString)
+      setPointMaxTemperatureString != null -> LocalizedString.Constant(setPointMaxTemperatureString)
+      else -> LocalizedString.Empty
     }
   }
 
