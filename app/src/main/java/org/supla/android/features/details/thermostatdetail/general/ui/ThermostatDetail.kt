@@ -27,7 +27,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -58,7 +57,6 @@ import org.supla.android.R
 import org.supla.android.core.shared.data.model.lists.resource
 import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.BaseViewProxy
-import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.formatting.LocalPercentageFormatter
@@ -80,6 +78,7 @@ import org.supla.android.ui.views.tools.ShadowOrientation
 import org.supla.android.ui.views.tools.ThermostatControl
 import org.supla.android.usecases.thermostat.MeasurementValue
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
+import org.supla.core.shared.infrastructure.LocalizedString
 
 interface ThermostatGeneralViewProxy : BaseViewProxy<ThermostatGeneralViewState> {
   fun heatingModeChanged()
@@ -89,7 +88,7 @@ interface ThermostatGeneralViewProxy : BaseViewProxy<ThermostatGeneralViewState>
   fun turnOnOffClicked()
   fun manualModeClicked()
   fun weeklyScheduledModeClicked()
-  fun getTemperatureText(minPercentage: Float?, maxPercentage: Float?, state: ThermostatGeneralViewState): StringProvider
+  fun getTemperatureText(minPercentage: Float?, maxPercentage: Float?, state: ThermostatGeneralViewState): LocalizedString
   fun markChanging()
 }
 
@@ -128,7 +127,6 @@ fun ThermostatDetail(viewProxy: ThermostatGeneralViewProxy) {
   }
 }
 
-context (ColumnScope)
 @Composable
 private fun ThermostatView(viewState: ThermostatGeneralViewState, viewProxy: ThermostatGeneralViewProxy, modifier: Modifier = Modifier) {
   BoxWithConstraints(modifier = modifier) {
@@ -643,7 +641,7 @@ private class PreviewProxy(private var initialState: ThermostatGeneralViewState 
     minPercentage: Float?,
     maxPercentage: Float?,
     state: ThermostatGeneralViewState
-  ): StringProvider = { "25,0°" }
+  ) = LocalizedString.Constant("25,0°")
 
   override fun markChanging() {}
 }
