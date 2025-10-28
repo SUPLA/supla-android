@@ -705,6 +705,8 @@
   <string name="profiles_list_sorting_default">Výchozí</string>
   <string name="profiles_list_sorting_name">Název</string>
   <string name="profiles_list_sorting_added">Naposledy přidáno</string>
+  <string name="channel_caption_water_tank">Nádrž na vodu</string>
+  <string name="channel_caption_container_level_sensor">Snímač hladiny kontejneru</string>
   <string name="state_opened">otevřeno</string>
   <string name="state_closed">zavřeno</string>
   <string name="state_partially_opened">částečně otevřeno</string>
@@ -719,4 +721,12 @@
   <string name="add_wizard_spaces_title">Mezera v názvu sítě?</string>
   <string name="add_wizard_spaces_message">Zadaný název sítě „%1$s“ obsahuje úvodní nebo koncové prázdné znaky (mezery nebo tabulátory). Pokud název sítě nemá tyto znaky obsahovat, vaše zařízení se k síti nebude moci připojit. Chcete ponechat, nebo odstranit úvodní nebo koncové prázdné znaky?</string>
   <string name="state_dialog_last_known_state">Offline – poslední známý stav:</string>
+  <string name="channel_caption_flood_sensor">Povodňový senzor</string>
+  <string name="channel_caption_motion_sensor">Pohybový senzor</string>
+  <string name="channel_caption_binary_sensor">Binární senzor</string>
+  <string name="valve_detail_sensors">Připojené senzory</string>
+  <string name="valve_error_sensor_offline">Povodňový senzor nedostupný – riziko nezjištěné povodně.</string>
+  <string name="container_invalid_sensor_state">Neplatný stav senzoru.</string>
+  <string name="channel_caption_container">Kontejner</string>
+  <string name="channel_caption_septic_tank">Septik</string>
 </resources>

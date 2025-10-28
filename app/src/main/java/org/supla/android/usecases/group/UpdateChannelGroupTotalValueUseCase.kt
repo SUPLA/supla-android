@@ -172,7 +172,9 @@ private fun ChannelGroupEntity.getGroupValue(value: ChannelValueEntity): GroupVa
     SuplaFunction.SEPTIC_TANK,
     SuplaFunction.WATER_TANK,
     SuplaFunction.CONTAINER_LEVEL_SENSOR,
-    SuplaFunction.FLOOD_SENSOR -> null
+    SuplaFunction.FLOOD_SENSOR,
+    SuplaFunction.MOTION_SENSOR,
+    SuplaFunction.BINARY_SENSOR -> null
   }
 }
 

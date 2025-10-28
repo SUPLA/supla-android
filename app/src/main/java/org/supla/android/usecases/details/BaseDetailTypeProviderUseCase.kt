@@ -136,6 +136,8 @@ abstract class BaseDetailTypeProviderUseCase {
     SuplaFunction.VALVE_PERCENTAGE,
     SuplaFunction.CONTAINER_LEVEL_SENSOR,
     SuplaFunction.FLOOD_SENSOR,
-    SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS -> null
+    SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS,
+    SuplaFunction.MOTION_SENSOR,
+    SuplaFunction.BINARY_SENSOR -> null
   }
 }

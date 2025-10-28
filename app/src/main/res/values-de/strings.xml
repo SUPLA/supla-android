@@ -732,7 +732,7 @@
   <string name="channel_caption_flood_sensor">Flutsensor</string>
   <string name="flooding_alarm_message">Der Sensor meldet eine Überschwemmung!</string>
   <string name="valve_warning_flooding_short">Das Ventil wurde wegen einer erkannten Überschwemmung geschlossen.</string>
-  <string name="channel_caption_septic_tank">Septischer Tank</string>
+  <string name="channel_caption_septic_tank">Sickergrube</string>
   <string name="channel_caption_water_tank">Wassertank</string>
   <string name="channel_caption_container_level_sensor">Behälterfüllstandssensor</string>
   <string name="state_opened">geöffnet</string>
@@ -820,4 +820,6 @@
   <string name="add_wizard_spaces_title">Leerzeichen im Netzwerknamen?</string>
   <string name="add_wizard_spaces_message">Der eingegebene Netzwerkname „%1$s“ enthält führende oder nachgestellte Leerzeichen oder Tabulatoren. Wenn Ihr Netzwerkname diese Zeichen nicht enthalten soll, kann Ihr Gerät keine Verbindung mit dem Netzwerk herstellen. Möchten Sie die führenden oder nachgestellten Leerzeichen beibehalten oder entfernen?</string>
   <string name="state_dialog_last_known_state">Offline – letzter bekannter Status:</string>
+  <string name="channel_caption_motion_sensor">Bewegungssensor</string>
+  <string name="channel_caption_binary_sensor">Binärsensor</string>
 </resources>

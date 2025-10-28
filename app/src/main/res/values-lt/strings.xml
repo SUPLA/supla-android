@@ -702,6 +702,8 @@
   <string name="profiles_list_sorting_default">Numatytasis</string>
   <string name="profiles_list_sorting_name">Pavadinimas</string>
   <string name="profiles_list_sorting_added">Paskiausiai pridėtas</string>
+  <string name="channel_caption_water_tank">Vandens talpykla</string>
+  <string name="channel_caption_container_level_sensor">Konteinerio lygio jutiklis</string>
   <string name="state_opened">atidaryta</string>
   <string name="state_closed">uždaryta</string>
   <string name="state_partially_opened">iš dalies atidaryta</string>
@@ -716,4 +718,12 @@
   <string name="add_wizard_spaces_title">Tarpas tinklo pavadinime?</string>
   <string name="add_wizard_spaces_message">Įvestame tinklo pavadinime „%1$s“ yra pradžios ar pabaigos tuščiųjų simbolių (tarpų ar tabuliatorių). Jei tinklo pavadinime neturi būti šių simbolių, jūsų įrenginys negalės prisijungti prie tinklo. Ar norite palikti, ar pašalinti pradžios ar pabaigos tuščiuosius simbolius?</string>
   <string name="state_dialog_last_known_state">Neprisijungęs – paskutinė žinoma būsena:</string>
+  <string name="channel_caption_flood_sensor">Potvynio jutiklis</string>
+  <string name="channel_caption_motion_sensor">Judesio jutiklis</string>
+  <string name="channel_caption_binary_sensor">Dvejetainis jutiklis</string>
+  <string name="valve_detail_sensors">Prijungti jutikliai</string>
+  <string name="valve_error_sensor_offline">Potvynio jutiklis nepasiekiamas – neaptikto potvynio rizika.</string>
+  <string name="container_invalid_sensor_state">Neteisinga jutiklio būsena.</string>
+  <string name="channel_caption_container">Konteineris</string>
+  <string name="channel_caption_septic_tank">Septikas</string>
 </resources>

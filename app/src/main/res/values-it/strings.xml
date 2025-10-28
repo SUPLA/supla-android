@@ -348,7 +348,6 @@
   <string name="diw_cfg_info_in_options">Opzioni Ingresso</string>
   <string name="diw_cfg_info_mono_option">Questa opzione modifica il comportamento del dimmer con ingresso impostato come Monostabile. Con opzione disabilitata, il dimmer smette di regolare la luce una volta raggiunto il livello di luminosità massima o minima. Abilitando questa opzione, la regolazione sarà continua passando dal livello minimo al massimo e viceversa. La regolazione della luminosità continuerà finché il pulsante sarà premuto.</string>
   <string name="diw_cfg_info_bi_option">Questa opzione modifica il comportamento del dimmer con ingresso impostato come bistabile. Con opzione abilitata, il dimmer imposterà il livello di luminosità massima subito dopo aver acceso l\'illuminazione. Se l\'opzione è disabilitata, all\’accensione il dimmer imposterà il livello di luminosità salvato prima dello spegnimento.</string>
-  <string name="channel_caption_digiglass">Digiglass</string>
   <string name="channel_func_digiglass">Digiglass</string>
   <string name="wizard_done_explentations">Se il tuo nuovo dispositivo I/O non viene visualizzato nell\'app Comelit WiFree, esegui nuovamente la procedura guidata \"Aggiungi dispositivo I/O\" e fai riferimento alle informazioni sullo \"Stato precedente\" in questa pagina per la risoluzione dei problemi. Viene visualizzato \"SSID non trovato\" quando la rete Wi-Fi scelta non è disponibile o il suo nome non è corretto.</string>
   <string name="incorrect_email_or_password">Indirizzo Mail o Password errato</string>
@@ -753,6 +752,8 @@
   <string name="profiles_list_sorting_default">Predefinito</string>
   <string name="profiles_list_sorting_name">Nome</string>
   <string name="profiles_list_sorting_added">Ultimo aggiunto</string>
+  <string name="channel_caption_water_tank">Serbatoio dell\'acqua</string>
+  <string name="channel_caption_container_level_sensor">Sensore di livello contenitore</string>
   <string name="state_opened">aperto</string>
   <string name="state_closed">chiuso</string>
   <string name="state_partially_opened">parzialmente aperto</string>
@@ -763,4 +764,12 @@
   <string name="add_wizard_spaces_title">Spazio nel nome della rete?</string>
   <string name="add_wizard_spaces_message">Il nome della rete immesso \"%1$s\" contiene caratteri spazi bianchi iniziali o finali (spazi o tabulatori). Se il nome della rete non deve includere questi caratteri, il dispositivo non sarà in grado di connettersi alla rete. Vuoi mantenere o rimuovere i caratteri spazi bianchi iniziali o finali?</string>
   <string name="state_dialog_last_known_state">Offline – ultimo stato noto:</string>
+  <string name="channel_caption_flood_sensor">Sensore allagamento</string>
+  <string name="channel_caption_motion_sensor">Sensore di movimento</string>
+  <string name="channel_caption_binary_sensor">Sensore binario</string>
+  <string name="valve_detail_sensors">Sensori collegati</string>
+  <string name="valve_error_sensor_offline">Sensore allagamento non disponibile – rischio di allagamento non rilevato.</string>
+  <string name="container_invalid_sensor_state">Stato del sensore non valido.</string>
+  <string name="channel_caption_container">Contenitore</string>
+  <string name="channel_caption_septic_tank">Fossa settica</string>
 </resources>

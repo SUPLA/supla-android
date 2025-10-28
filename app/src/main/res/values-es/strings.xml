@@ -712,6 +712,8 @@
   <string name="profiles_list_sorting_default">Predeterminado</string>
   <string name="profiles_list_sorting_name">Nombre</string>
   <string name="profiles_list_sorting_added">Último añadido</string>
+  <string name="channel_caption_water_tank">Tanque de agua</string>
+  <string name="channel_caption_container_level_sensor">Sensor de nivel de contenedor</string>
   <string name="state_opened">abierto</string>
   <string name="state_closed">cerrado</string>
   <string name="state_partially_opened">parcialmente abierto</string>
@@ -726,4 +728,12 @@
   <string name="add_wizard_spaces_title">¿Espacio en el nombre de red?</string>
   <string name="add_wizard_spaces_message">El nombre de red introducido \"%1$s\" contiene espacios en blanco iniciales o finales (espacios o tabulaciones). Si el nombre de red no debe incluir estos caracteres, el dispositivo no podrá conectarse a la red. ¿Quiere mantener o quitar los espacios en blanco iniciales o finales?</string>
   <string name="state_dialog_last_known_state">Sin conexión – último estado conocido:</string>
+  <string name="channel_caption_flood_sensor">Sensor de inundación</string>
+  <string name="channel_caption_motion_sensor">Sensor de movimiento</string>
+  <string name="channel_caption_binary_sensor">Sensor binario</string>
+  <string name="valve_detail_sensors">Sensores conectados</string>
+  <string name="valve_error_sensor_offline">Sensor de inundación no disponible – riesgo de inundación no detectada.</string>
+  <string name="container_invalid_sensor_state">Estado del sensor no válido.</string>
+  <string name="channel_caption_container">Contenedor</string>
+  <string name="channel_caption_septic_tank">Fosa séptica</string>
 </resources>

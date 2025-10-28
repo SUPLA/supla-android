@@ -726,6 +726,8 @@
   <string name="profiles_list_sorting_default">Implicit</string>
   <string name="profiles_list_sorting_name">Nume</string>
   <string name="profiles_list_sorting_added">Adăugat cel mai recent</string>
+  <string name="channel_caption_water_tank">Rezervor de apă</string>
+  <string name="channel_caption_container_level_sensor">Senzor de nivel al recipientului</string>
   <string name="state_opened">deschis</string>
   <string name="state_closed">închis</string>
   <string name="state_partially_opened">parțial deschis</string>
@@ -740,4 +742,12 @@
   <string name="add_wizard_spaces_title">Spațiu în numele rețelei?</string>
   <string name="add_wizard_spaces_message">Numele de rețea introdus „%1$s” conține spații albe inițiale sau finale (spații sau tabulatori). Dacă numele rețelei nu ar trebui să includă aceste caractere, dispozitivul nu se va putea conecta la rețea. Doriți să păstrați sau să eliminați spațiile albe inițiale sau finale?</string>
   <string name="state_dialog_last_known_state">Offline – ultima stare cunoscută:</string>
+  <string name="channel_caption_flood_sensor">Senzor de inundație</string>
+  <string name="channel_caption_motion_sensor">Senzor de mișcare</string>
+  <string name="channel_caption_binary_sensor">Senzor binar</string>
+  <string name="valve_detail_sensors">Senzori conectați</string>
+  <string name="valve_error_sensor_offline">Senzor de inundație indisponibil – risc de inundație nedetectată.</string>
+  <string name="container_invalid_sensor_state">Stare senzor nevalidă.</string>
+  <string name="channel_caption_container">Container</string>
+  <string name="channel_caption_septic_tank">Fosa septică</string>
 </resources>

@@ -724,6 +724,8 @@
   <string name="profiles_list_sorting_default">Standard</string>
   <string name="profiles_list_sorting_name">Navn</string>
   <string name="profiles_list_sorting_added">Sist lagt til</string>
+  <string name="channel_caption_water_tank">Vanntank</string>
+  <string name="channel_caption_container_level_sensor">Beholder nivåsensor</string>
   <string name="state_opened">åpen</string>
   <string name="state_closed">lukket</string>
   <string name="state_partially_opened">delvis åpen</string>
@@ -738,4 +740,12 @@
   <string name="add_wizard_spaces_title">Mellomrom i nettverksnavnet?</string>
   <string name="add_wizard_spaces_message">Det angitte nettverksnavnet «%1$s» inneholder innledende eller avsluttende mellomrom (mellomrom eller tabulatorer). Hvis nettverksnavnet ikke skal inneholde disse tegnene, kan ikke enheten din koble til nettverket. Vil du beholde eller fjerne de innledende eller avsluttende mellomrommene?</string>
   <string name="state_dialog_last_known_state">Frakoblet – siste kjente status:</string>
+  <string name="channel_caption_flood_sensor">Flomsensor</string>
+  <string name="channel_caption_motion_sensor">Bevegelsessensor</string>
+  <string name="channel_caption_binary_sensor">Binærsensor</string>
+  <string name="valve_detail_sensors">Tilkoblede sensorer</string>
+  <string name="valve_error_sensor_offline">Flomsensor utilgjengelig – risiko for uoppdaget flom.</string>
+  <string name="container_invalid_sensor_state">Ugyldig sensorstatus.</string>
+  <string name="channel_caption_container">Beholder</string>
+  <string name="channel_caption_septic_tank">Septiktank</string>
 </resources>

@@ -721,6 +721,8 @@
   <string name="profiles_list_sorting_default">Προεπιλογή</string>
   <string name="profiles_list_sorting_name">Όνομα</string>
   <string name="profiles_list_sorting_added">Τελευταία προσθήκη</string>
+  <string name="channel_caption_water_tank">Δεξαμενή νερού</string>
+  <string name="channel_caption_container_level_sensor">Αισθητήρας στάθμης δοχείου</string>
   <string name="state_opened">ανοιχτό</string>
   <string name="state_closed">κλειστό</string>
   <string name="state_partially_opened">μερικώς ανοιχτό</string>
@@ -735,4 +737,12 @@
   <string name="add_wizard_spaces_title">Κενό στο όνομα δικτύου;</string>
   <string name="add_wizard_spaces_message">Το όνομα δικτύου που καταχωρίσατε \"%1$s\" περιέχει αρχικά ή τελικά κενά (διαστήματα ή χαρακτήρες tab). Αν το όνομα δικτύου δεν πρέπει να περιλαμβάνει αυτούς τους χαρακτήρες, η συσκευή σας δεν θα μπορέσει να συνδεθεί στο δίκτυο. Θέλετε να διατηρήσετε ή να αφαιρέσετε τους αρχικούς ή τελικούς κενούς χαρακτήρες;</string>
   <string name="state_dialog_last_known_state">Εκτός σύνδεσης – τελευταία γνωστή κατάσταση:</string>
+  <string name="channel_caption_flood_sensor">Αισθητήρας πλημμύρας</string>
+  <string name="channel_caption_motion_sensor">Αισθητήρας κίνησης</string>
+  <string name="channel_caption_binary_sensor">Δυαδικός αισθητήρας</string>
+  <string name="valve_detail_sensors">Συνδεδεμένοι αισθητήρες</string>
+  <string name="valve_error_sensor_offline">Ο αισθητήρας πλημμύρας δεν είναι διαθέσιμος – κίνδυνος μη ανίχνευσης πλημμύρας.</string>
+  <string name="container_invalid_sensor_state">Μη έγκυρη κατάσταση αισθητήρα.</string>
+  <string name="channel_caption_container">Δοχείο</string>
+  <string name="channel_caption_septic_tank">Βόθρος</string>
 </resources>
