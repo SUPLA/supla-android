@@ -17,33 +17,37 @@ package org.supla.android.cfg
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import io.mockk.MockKAnnotations
+import io.mockk.confirmVerified
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.RelaxedMockK
+import io.mockk.mockk
+import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito.mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.db.Location
 
-@RunWith(MockitoJUnitRunner::class)
 class LocationReorderViewModelTest {
-  @Mock
+  @RelaxedMockK
   private lateinit var channelRepository: ChannelRepository
 
-  @InjectMocks
+  @InjectMockKs
   private lateinit var viewModel: LocationReorderViewModel
+
+  @Before
+  fun setup() {
+    MockKAnnotations.init(this)
+  }
 
   @Test
   fun `should load locations from repository`() {
     // given
-    val location1 = mock(Location::class.java)
-    val location2 = mock(Location::class.java)
-    whenever(channelRepository.allLocations).thenReturn(listOf(location1, location2))
+    val location1: Location = mockk()
+    val location2: Location = mockk()
+    every { channelRepository.allLocations } returns listOf(location1, location2)
 
     // when
     val result = viewModel.getLocations()
@@ -55,17 +59,19 @@ class LocationReorderViewModelTest {
   @Test
   fun `should update locations`() {
     // given
-    val location1 = mock(Location::class.java)
-    val location2 = mock(Location::class.java)
+    val location1: Location = mockk(relaxed = true)
+    val location2: Location = mockk(relaxed = true)
 
     // when
     viewModel.onLocationsUpdate(arrayOf(location1, location2))
 
     // then
-    verify(location1).sortOrder = 0
-    verify(location2).sortOrder = 1
-    verify(channelRepository).updateLocation(location1)
-    verify(channelRepository).updateLocation(location2)
-    verifyNoMoreInteractions(channelRepository, location1, location2)
+    verify {
+      location1.sortOrder = 0
+      location2.sortOrder = 1
+      channelRepository.updateLocation(location1)
+      channelRepository.updateLocation(location2)
+    }
+    confirmVerified(channelRepository, location1, location2)
   }
 }

@@ -17,21 +17,18 @@ syays GNU General Public License for more details.
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import io.mockk.MockKAnnotations
+import io.mockk.confirmVerified
 import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
+import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.data.source.local.entity.NotificationEntity
 import org.supla.android.tools.SuplaSchedulers
@@ -39,26 +36,28 @@ import org.supla.android.usecases.notifications.DeleteNotificationUseCase
 import org.supla.android.usecases.notifications.DeleteNotificationsUseCase
 import org.supla.android.usecases.notifications.LoadAllNotificationsUseCase
 
-@RunWith(MockitoJUnitRunner::class)
-class NotificationsLogViewModelTest : BaseViewModelTest<NotificationsLogViewState, NotificationsLogViewEvent, NotificationsLogViewModel>() {
+class NotificationsLogViewModelTest : BaseViewModelTest<NotificationsLogViewState, NotificationsLogViewEvent, NotificationsLogViewModel>(
+  MockSchedulers.MOCKK
+) {
 
-  @Mock
+  @MockK
   private lateinit var loadAllNotificationsUseCase: LoadAllNotificationsUseCase
 
-  @Mock
+  @MockK
   private lateinit var deleteNotificationUseCase: DeleteNotificationUseCase
 
-  @Mock
+  @MockK
   private lateinit var deleteNotificationsUseCase: DeleteNotificationsUseCase
 
-  @Mock
+  @MockK
   override lateinit var schedulers: SuplaSchedulers
 
-  @InjectMocks
+  @InjectMockKs
   override lateinit var viewModel: NotificationsLogViewModel
 
   @Before
   override fun setUp() {
+    MockKAnnotations.init(this)
     super.setUp()
   }
 
@@ -71,7 +70,7 @@ class NotificationsLogViewModelTest : BaseViewModelTest<NotificationsLogViewStat
     assertThat(states).containsExactly(
       NotificationsLogViewState(showDeletionDialog = true, deleteAction = DeleteNotificationsUseCase.Action.ALL)
     )
-    verifyNoInteractions(loadAllNotificationsUseCase, deleteNotificationUseCase, deleteNotificationsUseCase)
+    confirmVerified(loadAllNotificationsUseCase, deleteNotificationUseCase, deleteNotificationsUseCase)
   }
 
   @Test
@@ -87,7 +86,7 @@ class NotificationsLogViewModelTest : BaseViewModelTest<NotificationsLogViewStat
       NotificationsLogViewState(showDeletionDialog = true, deleteAction = DeleteNotificationsUseCase.Action.ALL),
       NotificationsLogViewState()
     )
-    verifyNoInteractions(loadAllNotificationsUseCase, deleteNotificationUseCase, deleteNotificationsUseCase)
+    confirmVerified(loadAllNotificationsUseCase, deleteNotificationUseCase, deleteNotificationsUseCase)
   }
 
   @Test
@@ -96,7 +95,7 @@ class NotificationsLogViewModelTest : BaseViewModelTest<NotificationsLogViewStat
     val entityId = 123L
     val entity = mockk<NotificationEntity> { every { id } returns entityId }
     val list = listOf(entity)
-    whenever(loadAllNotificationsUseCase.invoke()).thenReturn(Observable.just(list))
+    every { loadAllNotificationsUseCase.invoke() } returns Observable.just(list)
 
     // when
     viewModel.onViewCreated()
@@ -111,7 +110,7 @@ class NotificationsLogViewModelTest : BaseViewModelTest<NotificationsLogViewStat
   fun `should delete all notifications`() {
     // given
     viewModel.askDeleteAll()
-    whenever(deleteNotificationsUseCase.invoke(DeleteNotificationsUseCase.Action.ALL)).thenReturn(Completable.complete())
+    every { deleteNotificationsUseCase.invoke(DeleteNotificationsUseCase.Action.ALL) } returns Completable.complete()
 
     // when
     viewModel.deleteAll()
@@ -127,7 +126,7 @@ class NotificationsLogViewModelTest : BaseViewModelTest<NotificationsLogViewStat
   fun `should delete notifications older than month`() {
     // given
     viewModel.askDeleteOlderThanMonth()
-    whenever(deleteNotificationsUseCase.invoke(DeleteNotificationsUseCase.Action.OLDER_THAN_MONTH)).thenReturn(Completable.complete())
+    every { deleteNotificationsUseCase.invoke(DeleteNotificationsUseCase.Action.OLDER_THAN_MONTH) } returns Completable.complete()
 
     // when
     viewModel.deleteAll()
@@ -147,8 +146,8 @@ class NotificationsLogViewModelTest : BaseViewModelTest<NotificationsLogViewStat
       every { id } returns notificationId
     }
 
-    whenever(loadAllNotificationsUseCase.invoke()).thenReturn(Observable.just(listOf(entity)))
-    whenever(deleteNotificationUseCase.invoke(notificationId)).thenReturn(Completable.complete())
+    every { loadAllNotificationsUseCase.invoke() } returns Observable.just(listOf(entity))
+    every { deleteNotificationUseCase.invoke(notificationId) } returns Completable.complete()
 
     // when
     viewModel.onViewCreated()
@@ -161,8 +160,10 @@ class NotificationsLogViewModelTest : BaseViewModelTest<NotificationsLogViewStat
     )
     assertThat(events).containsExactly(NotificationsLogViewEvent.ShowDeleteNotification(notificationId))
 
-    verify(loadAllNotificationsUseCase).invoke()
-    verify(deleteNotificationUseCase).invoke(notificationId)
-    verifyNoMoreInteractions(loadAllNotificationsUseCase, deleteNotificationsUseCase)
+    verify {
+      loadAllNotificationsUseCase.invoke()
+      deleteNotificationUseCase.invoke(notificationId)
+    }
+    confirmVerified(loadAllNotificationsUseCase, deleteNotificationsUseCase)
   }
 }

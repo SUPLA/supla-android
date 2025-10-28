@@ -18,20 +18,18 @@ package org.supla.android.data.source
  */
 
 import com.google.gson.GsonBuilder
+import io.mockk.MockKAnnotations
+import io.mockk.confirmVerified
 import io.mockk.every
+import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
+import io.mockk.slot
+import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.argumentCaptor
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.data.source.local.dao.ChannelConfigDao
 import org.supla.android.data.source.local.entity.ChannelConfigEntity
 import org.supla.android.data.source.remote.ChannelConfigType
@@ -44,10 +42,9 @@ import org.supla.android.data.source.remote.rollershutter.SuplaChannelFacadeBlin
 import org.supla.android.data.source.remote.rollershutter.SuplaTiltControlType
 import org.supla.android.lib.SuplaConst
 
-@RunWith(MockitoJUnitRunner::class)
 class ChannelConfigRepositoryTest {
 
-  @Mock
+  @MockK
   private lateinit var channelConfigDao: ChannelConfigDao
 
   private val gson = GsonBuilder().create()
@@ -56,6 +53,7 @@ class ChannelConfigRepositoryTest {
 
   @Before
   fun setUp() {
+    MockKAnnotations.init(this)
     repository = ChannelConfigRepository(channelConfigDao, gson)
   }
 
@@ -86,14 +84,16 @@ class ChannelConfigRepositoryTest {
       chartType = SuplaChannelConfigMeasurementChartType.BAR
     )
 
+    val captor = slot<ChannelConfigEntity>()
+    every { channelConfigDao.insertOrUpdate(capture(captor)) } returns Completable.complete()
+
     // when
     repository.insertOrUpdate(profileId, config)
 
     // then
-    val captor = argumentCaptor<ChannelConfigEntity>()
-    verify(channelConfigDao).insertOrUpdate(captor.capture())
+    val entity = captor.captured
+    verify { channelConfigDao.insertOrUpdate(entity) }
 
-    val entity = captor.firstValue
     assertThat(entity.channelId).isEqualTo(123)
     assertThat(entity.profileId).isEqualTo(profileId)
     assertThat(entity.configType).isEqualTo(ChannelConfigType.GENERAL_PURPOSE_MEASUREMENT)
@@ -152,14 +152,15 @@ class ChannelConfigRepositoryTest {
       fillMissingData = false,
     )
 
+    val captor = slot<ChannelConfigEntity>()
+    every { channelConfigDao.insertOrUpdate(capture(captor)) } returns Completable.complete()
     // when
     repository.insertOrUpdate(profileId, config)
 
     // then
-    val captor = argumentCaptor<ChannelConfigEntity>()
-    verify(channelConfigDao).insertOrUpdate(captor.capture())
+    val entity = captor.captured
+    verify { channelConfigDao.insertOrUpdate(entity) }
 
-    val entity = captor.firstValue
     assertThat(entity.channelId).isEqualTo(123)
     assertThat(entity.profileId).isEqualTo(profileId)
     assertThat(entity.configType).isEqualTo(ChannelConfigType.GENERAL_PURPOSE_METER)
@@ -210,14 +211,16 @@ class ChannelConfigRepositoryTest {
       type = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING
     )
 
+    val captor = slot<ChannelConfigEntity>()
+    every { channelConfigDao.insertOrUpdate(capture(captor)) } returns Completable.complete()
+
     // when
     repository.insertOrUpdate(profileId, config)
 
     // then
-    val captor = argumentCaptor<ChannelConfigEntity>()
-    verify(channelConfigDao).insertOrUpdate(captor.capture())
+    val entity = captor.captured
+    verify { channelConfigDao.insertOrUpdate(entity) }
 
-    val entity = captor.firstValue
     assertThat(entity.channelId).isEqualTo(123)
     assertThat(entity.profileId).isEqualTo(profileId)
     assertThat(entity.configType).isEqualTo(ChannelConfigType.FACADE_BLIND)
@@ -273,7 +276,7 @@ class ChannelConfigRepositoryTest {
       every { this@apply.config } returns config
     }
 
-    whenever(channelConfigDao.read(profileId, channelId, type)).thenReturn(Single.just(entity))
+    every { channelConfigDao.read(profileId, channelId, type) } returns Single.just(entity)
 
     // when
     val testObserver = repository.findChannelConfig(profileId, channelId, type).test()
@@ -343,7 +346,7 @@ class ChannelConfigRepositoryTest {
       every { this@apply.config } returns config
     }
 
-    whenever(channelConfigDao.read(profileId, channelId, type)).thenReturn(Single.just(entity))
+    every { channelConfigDao.read(profileId, channelId, type) } returns Single.just(entity)
 
     // when
     val testObserver = repository.findChannelConfig(profileId, channelId, type).test()
@@ -407,7 +410,7 @@ class ChannelConfigRepositoryTest {
       every { this@apply.config } returns config
     }
 
-    whenever(channelConfigDao.read(profileId, channelId, type)).thenReturn(Single.just(entity))
+    every { channelConfigDao.read(profileId, channelId, type) } returns Single.just(entity)
 
     // when
     val testObserver = repository.findChannelConfig(profileId, channelId, type).test()
@@ -438,14 +441,16 @@ class ChannelConfigRepositoryTest {
     // given
     val profileId = 123L
     val channelId = 321
-    whenever(channelConfigDao.delete(profileId, channelId)).thenReturn(Completable.complete())
+    every { channelConfigDao.delete(profileId, channelId) } returns Completable.complete()
 
     // when
     val result = repository.delete(profileId, channelId).test()
 
     // then
     result.assertComplete()
-    verify(channelConfigDao).delete(profileId, channelId)
-    verifyNoMoreInteractions(channelConfigDao)
+    verify {
+      channelConfigDao.delete(profileId, channelId)
+    }
+    confirmVerified(channelConfigDao)
   }
 }

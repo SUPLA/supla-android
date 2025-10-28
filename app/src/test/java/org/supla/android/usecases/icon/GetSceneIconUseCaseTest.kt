@@ -1,28 +1,30 @@
 package org.supla.android.usecases.icon
 
+import io.mockk.MockKAnnotations
 import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.eq
-import org.mockito.kotlin.whenever
 import org.supla.android.R
 import org.supla.android.data.source.local.entity.SceneEntity
 import org.supla.android.images.ImageCacheProxy
 import org.supla.android.images.ImageId
 
-@RunWith(MockitoJUnitRunner::class)
 class GetSceneIconUseCaseTest {
 
-  @Mock
+  @MockK
   private lateinit var imageCacheProxy: ImageCacheProxy
 
-  @InjectMocks
+  @InjectMockKs
   private lateinit var useCase: GetSceneIconUseCase
+
+  @Before
+  fun setup() {
+    MockKAnnotations.init(this)
+  }
 
   @Test
   fun `should get alt icon`() {
@@ -65,7 +67,7 @@ class GetSceneIconUseCaseTest {
       every { this@mockk.profileId } returns profileId
     }
 
-    whenever(imageCacheProxy.bitmapExists(eq(ImageId(userIconId, 1, 123L)))).thenReturn(true)
+    every { imageCacheProxy.bitmapExists(eq(ImageId(userIconId, 1, 123L))) } returns true
 
     // when
     val imageId = useCase.invoke(scene)

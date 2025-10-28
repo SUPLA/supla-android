@@ -18,17 +18,16 @@ package org.supla.android.features.details.thermostatdetail.general.data
  */
 
 import android.content.Context
+import io.mockk.MockKAnnotations
+import io.mockk.every
+import io.mockk.impl.annotations.MockK
+import io.mockk.mockk
+import io.mockk.verify
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.tuple
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.Mockito.anyInt
-import org.mockito.Mockito.mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.ui.StringProvider
@@ -45,11 +44,15 @@ import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
 import org.supla.core.shared.data.model.function.thermostat.SuplaThermostatFlag
 import java.util.EnumSet
 
-@RunWith(MockitoJUnitRunner::class)
 class ThermostatProgramInfoTest {
 
-  @Mock
+  @MockK
   private lateinit var dateProvider: DateProvider
+
+  @Before
+  fun setup() {
+    MockKAnnotations.init(this)
+  }
 
   @Test
   fun `should fail when date provider not set`() {
@@ -198,9 +201,9 @@ class ThermostatProgramInfoTest {
     builder.currentTemperature = 18.4f
     builder.channelOnline = true
 
-    whenever(dateProvider.currentDayOfWeek()).thenReturn(DayOfWeek.THURSDAY)
-    whenever(dateProvider.currentHour()).thenReturn(0)
-    whenever(dateProvider.currentMinute()).thenReturn(0)
+    every { dateProvider.currentDayOfWeek() } returns DayOfWeek.THURSDAY
+    every { dateProvider.currentHour() } returns 0
+    every { dateProvider.currentMinute() } returns 0
 
     // when
     val list = builder.build()
@@ -220,9 +223,9 @@ class ThermostatProgramInfoTest {
     builder.currentTemperature = 18.4f
     builder.channelOnline = true
 
-    whenever(dateProvider.currentDayOfWeek()).thenReturn(DayOfWeek.MONDAY)
-    whenever(dateProvider.currentHour()).thenReturn(0)
-    whenever(dateProvider.currentMinute()).thenReturn(35)
+    every { dateProvider.currentDayOfWeek() } returns DayOfWeek.MONDAY
+    every { dateProvider.currentHour() } returns 0
+    every { dateProvider.currentMinute() } returns 35
 
     // when
     val list = builder.build()
@@ -247,9 +250,9 @@ class ThermostatProgramInfoTest {
     builder.currentTemperature = 18.4f
     builder.channelOnline = true
 
-    whenever(dateProvider.currentDayOfWeek()).thenReturn(DayOfWeek.MONDAY)
-    whenever(dateProvider.currentHour()).thenReturn(0)
-    whenever(dateProvider.currentMinute()).thenReturn(35)
+    every { dateProvider.currentDayOfWeek() } returns DayOfWeek.MONDAY
+    every { dateProvider.currentHour() } returns 0
+    every { dateProvider.currentMinute() } returns 35
 
     // when
     val list = builder.build()
@@ -272,9 +275,9 @@ class ThermostatProgramInfoTest {
     builder.currentTemperature = 18.4f
     builder.channelOnline = true
 
-    whenever(dateProvider.currentDayOfWeek()).thenReturn(DayOfWeek.MONDAY)
-    whenever(dateProvider.currentHour()).thenReturn(0)
-    whenever(dateProvider.currentMinute()).thenReturn(35)
+    every { dateProvider.currentDayOfWeek() } returns DayOfWeek.MONDAY
+    every { dateProvider.currentHour() } returns 0
+    every { dateProvider.currentMinute() } returns 35
 
     // when
     val list = builder.build()
@@ -298,9 +301,9 @@ class ThermostatProgramInfoTest {
     builder.currentTemperature = 18.4f
     builder.channelOnline = true
 
-    whenever(dateProvider.currentDayOfWeek()).thenReturn(DayOfWeek.MONDAY)
-    whenever(dateProvider.currentHour()).thenReturn(0)
-    whenever(dateProvider.currentMinute()).thenReturn(35)
+    every { dateProvider.currentDayOfWeek() } returns DayOfWeek.MONDAY
+    every { dateProvider.currentHour() } returns 0
+    every { dateProvider.currentMinute() } returns 35
 
     // when
     val list = builder.build()
@@ -387,9 +390,11 @@ class ThermostatProgramInfoTest {
   )
 
   private fun assertStringProvider(stringProvider: StringProvider) {
-    val context = mock(Context::class.java)
-    whenever(context.getString(anyInt())).thenReturn("")
+    val context: Context = mockk()
+    every { context.getString(any()) } returns ""
     stringProvider(context)
-    verify(context).getString(R.string.thermostat_clock_error)
+    verify {
+      context.getString(R.string.thermostat_clock_error)
+    }
   }
 }

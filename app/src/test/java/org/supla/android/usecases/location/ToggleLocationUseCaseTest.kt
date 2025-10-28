@@ -1,28 +1,30 @@
 package org.supla.android.usecases.location
 
+import io.mockk.MockKAnnotations
+import io.mockk.confirmVerified
 import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
+import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable
-import org.junit.Assert.*
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.data.source.LocationRepository
 import org.supla.android.data.source.local.entity.LocationEntity
 
-@RunWith(MockitoJUnitRunner::class)
 class ToggleLocationUseCaseTest {
 
-  @Mock
+  @MockK
   private lateinit var locationRepository: LocationRepository
 
-  @InjectMocks
+  @InjectMockKs
   private lateinit var useCase: ToggleLocationUseCase
+
+  @Before
+  fun setup() {
+    MockKAnnotations.init(this)
+  }
 
   @Test
   fun `should close location in channels`() {
@@ -69,7 +71,7 @@ class ToggleLocationUseCaseTest {
     val locationResult: LocationEntity = mockk()
     every { location.copy(collapsed = resultValue) } returns locationResult
 
-    whenever(locationRepository.updateLocation(locationResult)).thenReturn(Completable.complete())
+    every { locationRepository.updateLocation(locationResult) } returns Completable.complete()
 
     // when
     val testObserver = useCase(location, flag).test()
@@ -77,7 +79,9 @@ class ToggleLocationUseCaseTest {
     // then
     testObserver.assertComplete()
 
-    verify(locationRepository).updateLocation(locationResult)
-    verifyNoMoreInteractions(locationRepository)
+    verify {
+      locationRepository.updateLocation(locationResult)
+    }
+    confirmVerified(locationRepository)
   }
 }
