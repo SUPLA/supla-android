@@ -148,6 +148,8 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       state.copy(channels = list)
     )
     assertThat(events).isEmpty()
+
+    verify { createProfileChannelsListUseCase() }
     confirmDependenciesVerified()
   }
 
@@ -168,6 +170,11 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       state.copy(channels = list)
     )
     assertThat(events).isEmpty()
+
+    verify {
+      toggleLocationUseCase(location, CollapsedFlag.CHANNEL)
+      createProfileChannelsListUseCase()
+    }
     confirmDependenciesVerified()
   }
 
@@ -222,6 +229,8 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       )
     )
     assertThat(events).isEmpty()
+
+    verify { channelActionUseCase(channelId, buttonType) }
     confirmDependenciesVerified()
   }
 
@@ -247,6 +256,8 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
         )
       )
     )
+
+    verify { channelActionUseCase(channelId, buttonType) }
     confirmDependenciesVerified()
   }
 
@@ -289,6 +300,8 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenSwitchDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), detailType.pages)
     )
+
+    verify { provideDetailTypeUseCase(channel) }
     confirmDependenciesVerified()
   }
 
@@ -314,6 +327,8 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenThermometerDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), detailType.pages)
     )
+
+    verify { provideDetailTypeUseCase(channel) }
     confirmDependenciesVerified()
   }
 
@@ -340,6 +355,8 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenThermostatDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
+
+    verify { provideDetailTypeUseCase(channel) }
     confirmDependenciesVerified()
   }
 
@@ -366,6 +383,8 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenThermostatDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
+
+    verify { provideDetailTypeUseCase(channel) }
     confirmDependenciesVerified()
   }
 
@@ -392,6 +411,8 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenGpmDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
+
+    verify { provideDetailTypeUseCase(channel) }
     confirmDependenciesVerified()
   }
 
@@ -418,6 +439,8 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenGpmDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
+
+    verify { provideDetailTypeUseCase(channel) }
     confirmDependenciesVerified()
   }
 
@@ -444,6 +467,8 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenGpmDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
+
+    verify { provideDetailTypeUseCase(channel) }
     confirmDependenciesVerified()
   }
 
@@ -470,6 +495,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenGpmDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
+    verify { provideDetailTypeUseCase(channel) }
     confirmDependenciesVerified()
   }
 
@@ -496,6 +522,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenWindowDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
+    verify { provideDetailTypeUseCase(channel) }
     confirmDependenciesVerified()
   }
 
@@ -522,6 +549,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenWindowDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
+    verify { provideDetailTypeUseCase(channel) }
     confirmDependenciesVerified()
   }
 
@@ -558,6 +586,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       state.copy(channels = list)
     )
     assertThat(events).isEmpty()
+    verify { createProfileChannelsListUseCase() }
     confirmDependenciesVerified()
   }
 
