@@ -29,7 +29,7 @@ import org.supla.android.R
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.databinding.FragmentComposeBinding
-import org.supla.android.features.details.detailbase.history.ui.HistoryDetail
+import org.supla.android.features.details.detailbase.history.ui.View
 import org.supla.android.ui.ToolbarItemsClickHandler
 
 private const val ARG_REMOTE_ID = "ARG_REMOTE_ID"
@@ -55,7 +55,7 @@ abstract class BaseHistoryDetailFragment :
 
   @Composable
   open fun Content(viewState: HistoryDetailViewState) {
-    HistoryDetail(viewModel, viewState)
+    viewModel.View(viewState)
   }
 
   override fun onResume() {

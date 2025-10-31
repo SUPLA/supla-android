@@ -34,8 +34,6 @@ import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.extensions.toTimestamp
 import org.supla.android.lib.SuplaChannelElectricityMeterValue.Measurement
 import org.supla.android.usecases.channel.measurementsprovider.MeasurementsProvider
-import org.supla.android.usecases.icon.GetChannelIconUseCase
-import org.supla.core.shared.extensions.ifTrue
 import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
 import org.supla.core.shared.usecase.channel.valueformatter.formatters.VoltageValueFormatter
 import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
@@ -44,7 +42,6 @@ import org.supla.core.shared.usecase.channel.valueformatter.types.custom
 import javax.inject.Named
 
 open class ElectricityMeasurementsProvider<T : ElectricityBaseLogEntity>(
-  private val getChannelIconUseCase: GetChannelIconUseCase,
   @Named(GSON_FOR_REPO) gson: Gson,
   preferences: ApplicationPreferences
 ) : MeasurementsProvider(preferences, gson) {
@@ -91,14 +88,13 @@ open class ElectricityMeasurementsProvider<T : ElectricityBaseLogEntity>(
   protected fun historyDataSet(
     channelWithChildren: ChannelWithChildren,
     phase: Phase,
-    isFirst: Boolean,
     type: ChartEntryType,
     aggregation: ChartDataAggregation,
     measurements: List<AggregatedEntity>
   ): HistoryDataSet =
     HistoryDataSet(
       type = type,
-      label = createLabel(channelWithChildren.channel, phase, isFirst),
+      label = createLabel(channelWithChildren.channel, phase),
       valueFormatter = getValueFormatter(type, channelWithChildren),
       entities = divideSetToSubsets(
         entities = measurements,
@@ -106,8 +102,7 @@ open class ElectricityMeasurementsProvider<T : ElectricityBaseLogEntity>(
       )
     )
 
-  private fun createLabel(channel: ChannelDataEntity, phase: Phase, isFirst: Boolean): HistoryDataSet.Label {
-    val icon = isFirst.ifTrue { getChannelIconUseCase(channel) }
+  private fun createLabel(channel: ChannelDataEntity, phase: Phase): HistoryDataSet.Label {
     val electricity = channel.Electricity
     val phases = electricity.phases
 
@@ -117,10 +112,10 @@ open class ElectricityMeasurementsProvider<T : ElectricityBaseLogEntity>(
           value = labelValueExtractor(it.getMeasurement(phase.value, 0)),
           format = ValueFormat(precision = custom(ValuePrecision.exact(1)), withUnit = false),
         )
-        return HistoryDataSet.Label.Single(HistoryDataSet.LabelData(icon, value, phase.color))
+        return HistoryDataSet.Label.Single(HistoryDataSet.LabelData(null, value, phase.color))
       }
     }
 
-    return HistoryDataSet.Label.Single(HistoryDataSet.LabelData(icon, NO_VALUE_TEXT, R.color.disabled))
+    return HistoryDataSet.Label.Single(HistoryDataSet.LabelData(null, NO_VALUE_TEXT, R.color.disabled))
   }
 }

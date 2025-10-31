@@ -72,7 +72,8 @@ import org.supla.android.extensions.yearEnd
 import org.supla.android.extensions.yearNo
 import org.supla.android.extensions.yearStart
 import org.supla.android.features.details.detailbase.history.ui.ChartDataSelectionDialogState
-import org.supla.android.features.details.detailbase.history.ui.HistoryDetailProxy
+import org.supla.android.features.details.detailbase.history.ui.CheckboxItem
+import org.supla.android.features.details.detailbase.history.ui.HistoryDetailScope
 import org.supla.android.features.details.electricitymeterdetail.history.IntroductionPage
 import org.supla.android.profile.ProfileManager
 import org.supla.android.tools.SuplaSchedulers
@@ -96,7 +97,7 @@ abstract class BaseHistoryDetailViewModel(
   private val profileManager: ProfileManager,
   private val dateProvider: DateProvider,
   schedulers: SuplaSchedulers
-) : BaseViewModel<HistoryDetailViewState, HistoryDetailViewEvent>(HistoryDetailViewState(), schedulers), HistoryDetailProxy {
+) : BaseViewModel<HistoryDetailViewState, HistoryDetailViewEvent>(HistoryDetailViewState(), schedulers), HistoryDetailScope {
 
   open fun loadData(remoteId: Int) {
     updateState { state ->
@@ -173,6 +174,10 @@ abstract class BaseHistoryDetailViewModel(
     if (spinnerItem is ChartDataAggregation) {
       changeAggregation(spinnerItem)
     }
+  }
+
+  override fun confirmSelection(spinnerItem: SpinnerItem?, checkboxItems: Set<CheckboxItem>?) {
+    // Used only in electricity history
   }
 
   private fun changeAggregation(aggregation: ChartDataAggregation) {
