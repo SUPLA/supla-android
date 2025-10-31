@@ -736,4 +736,9 @@
   <string name="container_invalid_sensor_state">Estado del sensor no válido.</string>
   <string name="channel_caption_container">Contenedor</string>
   <string name="channel_caption_septic_tank">Fosa séptica</string>
+
+  <plurals name="rest_time_days_pattern">
+    <item quantity="one">%1$d día ⏱️</item>
+    <item quantity="many">%1$d días ⏱️</item>
+  </plurals>
 </resources>

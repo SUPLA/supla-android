@@ -29,6 +29,7 @@ import org.supla.android.core.ui.ViewState
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.views.forms.PIN_LENGTH
 import org.supla.android.usecases.lock.CheckPinUseCase
+import org.supla.core.shared.infrastructure.localizedString
 import javax.inject.Inject
 
 private const val BIOMETRIC_ERROR_CANCEL_BUTTON_PRESSED = 13
@@ -85,7 +86,7 @@ class LockScreenViewModel @Inject constructor(
       updateState {
         it.copy(
           viewState = it.viewState.copy(
-            authenticatorError = { context -> context.getString(R.string.lock_screen_biometric_error, errorMessage) }
+            authenticatorError = localizedString(R.string.lock_screen_biometric_error, errorMessage)
           )
         )
       }

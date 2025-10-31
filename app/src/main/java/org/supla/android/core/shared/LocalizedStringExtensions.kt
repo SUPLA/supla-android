@@ -20,7 +20,6 @@ package org.supla.android.core.shared
 import android.content.Context
 import android.text.format.DateFormat
 import org.supla.android.R
-import org.supla.android.core.ui.StringProvider
 import org.supla.core.shared.infrastructure.LocalizedString
 import java.util.Date
 
@@ -72,10 +71,11 @@ operator fun LocalizedString.invoke(context: Context): String {
       val format = context.getString(R.string.hour_string_format)
       context.getString(id, DateFormat.format(format, Date(timestamp)))
     }
+
+    is LocalizedString.Merge -> texts.joinToString(delimiter) { it(context) }
+    is LocalizedString.Quantity -> context.resources.getQuantityString(id, quantity, quantity)
   }
 }
-
-fun LocalizedString.provider(): StringProvider = { context -> invoke(context) }
 
 private val List<Any>.hasAllowedTypes: Boolean
   get() = fold(true) { acc, item ->

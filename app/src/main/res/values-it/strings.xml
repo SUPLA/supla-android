@@ -772,4 +772,10 @@
   <string name="container_invalid_sensor_state">Stato del sensore non valido.</string>
   <string name="channel_caption_container">Contenitore</string>
   <string name="channel_caption_septic_tank">Fossa settica</string>
+
+  <plurals name="rest_time_days_pattern">
+    <item quantity="one">%1$d giorno ⏱️</item>
+    <item quantity="many">%1$d giorni ⏱️</item>
+    <item quantity="other">%1$d giorni ⏱️</item>
+  </plurals>
 </resources>

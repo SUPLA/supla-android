@@ -20,7 +20,6 @@ package org.supla.android.features.details.electricitymeterdetail.settings
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.R
-import org.supla.android.core.shared.provider
 import org.supla.android.core.shared.shareable
 import org.supla.android.core.storage.UserStateHolder
 import org.supla.android.core.ui.BaseViewModel
@@ -91,7 +90,7 @@ class ElectricityMeterSettingsViewModel @Inject constructor(
         remoteId = channelData.remoteId,
         profileId = channelData.profileId,
         viewState = ElectricityMeterSettingsViewState(
-          channelName = getCaptionUseCase(channelData.shareable).provider(),
+          channelName = getCaptionUseCase(channelData.shareable),
           onListOptions = SingleSelectionList(
             selected = settings.showOnListSafe,
             items = ElectricityMeterSettings.showOnListAllItems.filter { measuredValues.contains(it) },

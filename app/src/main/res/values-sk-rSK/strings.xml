@@ -749,4 +749,11 @@
   <string name="container_invalid_sensor_state">Neplatný stav senzora.</string>
   <string name="channel_caption_container">Kontajner</string>
   <string name="channel_caption_septic_tank">Septik</string>
+
+  <plurals name="rest_time_days_pattern">
+    <item quantity="one">%1$d deň ⏱️</item>
+    <item quantity="few">%1$d dni ⏱️</item>
+    <item quantity="many">%1$d dní ⏱️</item>
+    <item quantity="other">%1$d dňa ⏱️</item>
+  </plurals>
 </resources>

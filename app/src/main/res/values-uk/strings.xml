@@ -722,4 +722,11 @@
   <string name="container_invalid_sensor_state">Недійсний стан датчика.</string>
   <string name="channel_caption_container">Контейнер</string>
   <string name="channel_caption_septic_tank">Септик</string>
+
+  <plurals name="rest_time_days_pattern">
+    <item quantity="one">%1$d день ⏱️</item>
+    <item quantity="few">%1$d дні ⏱️</item>
+    <item quantity="many">%1$d днів ⏱️</item>
+    <item quantity="other">%1$d дня ⏱️</item>
+  </plurals>
 </resources>

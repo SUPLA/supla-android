@@ -37,17 +37,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.branding.Configuration
-import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.ui.views.BodyMedium
 import org.supla.android.ui.views.buttons.BlueTextButton
 import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.buttons.OutlinedButton
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 
 data class StatusViewState(
   val stateText: StatusViewStateText = StatusViewStateText.INITIALIZING,
-  val errorDescription: StringProvider? = null,
+  val errorDescription: LocalizedString? = null,
 )
 
 enum class StatusViewStateText(val stringRes: Int, val showAccountButton: Boolean) {
@@ -146,7 +147,7 @@ private fun PreviewError() {
   SuplaTheme {
     ErrorStatusView(
       StatusViewState(
-        errorDescription = { it.getString(R.string.err_hostnotfound) }
+        errorDescription = localizedString(R.string.err_hostnotfound)
       )
     )
   }

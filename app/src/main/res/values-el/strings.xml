@@ -745,4 +745,9 @@
   <string name="container_invalid_sensor_state">Μη έγκυρη κατάσταση αισθητήρα.</string>
   <string name="channel_caption_container">Δοχείο</string>
   <string name="channel_caption_septic_tank">Βόθρος</string>
+
+  <plurals name="rest_time_days_pattern">
+    <item quantity="one">%1$d ημέρα ⏱️</item>
+    <item quantity="other">%1$d ημέρες ⏱️</item>
+  </plurals>
 </resources>

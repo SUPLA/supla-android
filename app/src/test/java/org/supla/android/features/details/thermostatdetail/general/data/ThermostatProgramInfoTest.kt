@@ -17,20 +17,15 @@ package org.supla.android.features.details.thermostatdetail.general.data
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.content.Context
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import io.mockk.mockk
-import io.mockk.verify
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.tuple
 import org.junit.Before
 import org.junit.Test
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
-import org.supla.android.core.ui.StringProvider
 import org.supla.android.data.source.local.calendar.DayOfWeek
 import org.supla.android.data.source.local.calendar.QuarterOfHour
 import org.supla.android.data.source.remote.AutomaticTimeSyncField
@@ -42,9 +37,16 @@ import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleEntry
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
 import org.supla.core.shared.data.model.function.thermostat.SuplaThermostatFlag
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
 import java.util.EnumSet
 
 class ThermostatProgramInfoTest {
+
+  @MockK
+  private lateinit var valueFormatter: ValueFormatter
 
   @MockK
   private lateinit var dateProvider: DateProvider
@@ -58,14 +60,14 @@ class ThermostatProgramInfoTest {
   fun `should fail when date provider not set`() {
     // when
     Assertions.assertThatThrownBy {
-      ThermostatProgramInfo.Builder().build()
+      ThermostatProgramInfo.Builder(valueFormatter).build()
     }.hasMessageContaining("Date provider cannot be null")
   }
 
   @Test
   fun `should fail when config not set`() {
     // given
-    val builder = ThermostatProgramInfo.Builder()
+    val builder = ThermostatProgramInfo.Builder(valueFormatter)
     builder.dateProvider = dateProvider
 
     // when
@@ -77,7 +79,7 @@ class ThermostatProgramInfoTest {
   @Test
   fun `should fail when flags not set`() {
     // given
-    val builder = ThermostatProgramInfo.Builder()
+    val builder = ThermostatProgramInfo.Builder(valueFormatter)
     builder.dateProvider = dateProvider
     builder.weeklyScheduleConfig = SuplaChannelWeeklyScheduleConfig(123, null, 1L, emptyList(), emptyList())
 
@@ -90,7 +92,7 @@ class ThermostatProgramInfoTest {
   @Test
   fun `should fail when mode not set`() {
     // given
-    val builder = ThermostatProgramInfo.Builder()
+    val builder = ThermostatProgramInfo.Builder(valueFormatter)
     builder.dateProvider = dateProvider
     builder.weeklyScheduleConfig = SuplaChannelWeeklyScheduleConfig(123, null, 1L, emptyList(), emptyList())
     builder.thermostatFlags = emptyList()
@@ -104,7 +106,7 @@ class ThermostatProgramInfoTest {
   @Test
   fun `should fail when temperature not set`() {
     // given
-    val builder = ThermostatProgramInfo.Builder()
+    val builder = ThermostatProgramInfo.Builder(valueFormatter)
     builder.dateProvider = dateProvider
     builder.weeklyScheduleConfig = SuplaChannelWeeklyScheduleConfig(123, null, 1L, emptyList(), emptyList())
     builder.thermostatFlags = emptyList()
@@ -119,7 +121,7 @@ class ThermostatProgramInfoTest {
   @Test
   fun `should fail when online not set`() {
     // given
-    val builder = ThermostatProgramInfo.Builder()
+    val builder = ThermostatProgramInfo.Builder(valueFormatter)
     builder.dateProvider = dateProvider
     builder.weeklyScheduleConfig = SuplaChannelWeeklyScheduleConfig(123, null, 1L, emptyList(), emptyList())
     builder.thermostatFlags = emptyList()
@@ -135,7 +137,7 @@ class ThermostatProgramInfoTest {
   @Test
   fun `should get empty list when channel is offline`() {
     // given
-    val builder = ThermostatProgramInfo.Builder()
+    val builder = ThermostatProgramInfo.Builder(valueFormatter)
     builder.dateProvider = dateProvider
     builder.weeklyScheduleConfig = mockWeeklyScheduleConfig()
     builder.thermostatFlags = emptyList()
@@ -153,7 +155,7 @@ class ThermostatProgramInfoTest {
   @Test
   fun `should get empty list when weekly schedule is not active`() {
     // given
-    val builder = ThermostatProgramInfo.Builder()
+    val builder = ThermostatProgramInfo.Builder(valueFormatter)
     builder.dateProvider = dateProvider
     builder.weeklyScheduleConfig = mockWeeklyScheduleConfig()
     builder.thermostatFlags = emptyList()
@@ -171,7 +173,8 @@ class ThermostatProgramInfoTest {
   @Test
   fun `should get error list when clock error set`() {
     // given
-    val builder = ThermostatProgramInfo.Builder()
+    val temperatureString = "18.4"
+    val builder = ThermostatProgramInfo.Builder(valueFormatter)
     builder.dateProvider = dateProvider
     builder.weeklyScheduleConfig = mockWeeklyScheduleConfig()
     builder.thermostatFlags = listOf(SuplaThermostatFlag.WEEKLY_SCHEDULE, SuplaThermostatFlag.CLOCK_ERROR)
@@ -179,21 +182,28 @@ class ThermostatProgramInfoTest {
     builder.currentTemperature = 18.4f
     builder.channelOnline = true
 
+    every { valueFormatter.format(builder.currentTemperature, ValueFormat.WithoutUnit) } returns temperatureString
+
     // when
     val list = builder.build()
 
     // then
-    assertThat(list).hasSize(1)
-    assertThat(list).extracting({ it.type }, { it.icon }, { it.iconColor }, { it.manualActive })
-      .containsExactly(tuple(ThermostatProgramInfo.Type.CURRENT, R.drawable.ic_heat, R.color.red, false))
-
-    assertStringProvider(list[0].time!!)
+    assertThat(list).containsExactly(
+      ThermostatProgramInfo(
+        type = ThermostatProgramInfo.Type.CURRENT,
+        time = localizedString(R.string.thermostat_clock_error),
+        icon = R.drawable.ic_heat,
+        iconColor = R.color.red,
+        manualActive = false,
+        descriptionProvider = LocalizedString.Constant("18.4")
+      )
+    )
   }
 
   @Test
   fun `should get empty list when could not find needed data`() {
     // given
-    val builder = ThermostatProgramInfo.Builder()
+    val builder = ThermostatProgramInfo.Builder(valueFormatter)
     builder.dateProvider = dateProvider
     builder.weeklyScheduleConfig = mockWeeklyScheduleConfig()
     builder.thermostatFlags = listOf(SuplaThermostatFlag.WEEKLY_SCHEDULE)
@@ -215,7 +225,8 @@ class ThermostatProgramInfoTest {
   @Test
   fun `should get filled list`() {
     // given
-    val builder = ThermostatProgramInfo.Builder()
+    val temperatureString = "18.4"
+    val builder = ThermostatProgramInfo.Builder(valueFormatter)
     builder.dateProvider = dateProvider
     builder.weeklyScheduleConfig = mockWeeklyScheduleConfig()
     builder.thermostatFlags = listOf(SuplaThermostatFlag.WEEKLY_SCHEDULE)
@@ -227,21 +238,41 @@ class ThermostatProgramInfoTest {
     every { dateProvider.currentHour() } returns 0
     every { dateProvider.currentMinute() } returns 35
 
+    every { valueFormatter.format(builder.currentTemperature, ValueFormat.WithoutUnit) } returns temperatureString
+    every { valueFormatter.format(22.0, ValueFormat.WithoutUnit) } returns "22.0"
+
     // when
     val list = builder.build()
 
     // then
-    assertThat(list).extracting({ it.type }, { it.icon }, { it.iconColor }, { it.manualActive })
-      .containsExactly(
-        tuple(ThermostatProgramInfo.Type.CURRENT, R.drawable.ic_heat, R.color.red, false),
-        tuple(ThermostatProgramInfo.Type.NEXT, R.drawable.ic_cool, R.color.blue, false)
+    assertThat(list).containsExactly(
+      ThermostatProgramInfo(
+        type = ThermostatProgramInfo.Type.CURRENT,
+        time = LocalizedString.WithResourceAndArguments(
+          id = R.string.thermostat_detail_program_time,
+          arguments = listOf(LocalizedString.WithResourceAndArguments(R.string.time_just_minutes, listOf(55)))
+        ),
+        icon = R.drawable.ic_heat,
+        iconColor = R.color.red,
+        manualActive = false,
+        descriptionProvider = LocalizedString.Constant("18.4")
+      ),
+      ThermostatProgramInfo(
+        type = ThermostatProgramInfo.Type.NEXT,
+        time = null,
+        icon = R.drawable.ic_cool,
+        iconColor = R.color.blue,
+        manualActive = false,
+        descriptionProvider = LocalizedString.Constant("22.0")
       )
+    )
   }
 
   @Test
   fun `should get only current program when time sync disabled`() {
     // given
-    val builder = ThermostatProgramInfo.Builder()
+    val temperatureString = "18.4"
+    val builder = ThermostatProgramInfo.Builder(valueFormatter)
     builder.dateProvider = dateProvider
     builder.weeklyScheduleConfig = mockWeeklyScheduleConfig()
     builder.deviceConfig = mockDeviceConfigWithDisabledTimeSync()
@@ -254,20 +285,29 @@ class ThermostatProgramInfoTest {
     every { dateProvider.currentHour() } returns 0
     every { dateProvider.currentMinute() } returns 35
 
+    every { valueFormatter.format(builder.currentTemperature, ValueFormat.WithoutUnit) } returns temperatureString
+
     // when
     val list = builder.build()
 
     // then
-    assertThat(list).extracting({ it.type }, { it.icon }, { it.iconColor }, { it.manualActive })
-      .containsExactly(
-        tuple(ThermostatProgramInfo.Type.CURRENT, R.drawable.ic_heat, R.color.red, false)
+    assertThat(list).containsExactly(
+      ThermostatProgramInfo(
+        type = ThermostatProgramInfo.Type.CURRENT,
+        time = null,
+        icon = R.drawable.ic_heat,
+        iconColor = R.color.red,
+        manualActive = false,
+        descriptionProvider = LocalizedString.Constant("18.4")
       )
+    )
   }
 
   @Test
   fun `should get filled list with active temporary schedule change`() {
     // given
-    val builder = ThermostatProgramInfo.Builder()
+    val temperatureString = "18.4"
+    val builder = ThermostatProgramInfo.Builder(valueFormatter)
     builder.dateProvider = dateProvider
     builder.weeklyScheduleConfig = mockWeeklyScheduleConfig()
     builder.thermostatFlags = listOf(SuplaThermostatFlag.WEEKLY_SCHEDULE, SuplaThermostatFlag.WEEKLY_SCHEDULE_TEMPORAL_OVERRIDE)
@@ -279,21 +319,40 @@ class ThermostatProgramInfoTest {
     every { dateProvider.currentHour() } returns 0
     every { dateProvider.currentMinute() } returns 35
 
+    every { valueFormatter.format(builder.currentTemperature, ValueFormat.WithoutUnit) } returns temperatureString
+    every { valueFormatter.format(22.0, ValueFormat.WithoutUnit) } returns "22.0"
+
     // when
     val list = builder.build()
 
     // then
-    assertThat(list).extracting({ it.type }, { it.icon }, { it.iconColor }, { it.manualActive })
-      .containsExactly(
-        tuple(ThermostatProgramInfo.Type.CURRENT, R.drawable.ic_heat, R.color.red, true),
-        tuple(ThermostatProgramInfo.Type.NEXT, R.drawable.ic_cool, R.color.blue, false)
+    assertThat(list).containsExactly(
+      ThermostatProgramInfo(
+        type = ThermostatProgramInfo.Type.CURRENT,
+        time = LocalizedString.WithResourceAndArguments(
+          id = R.string.thermostat_detail_program_time,
+          arguments = listOf(LocalizedString.WithResourceAndArguments(R.string.time_just_minutes, listOf(55)))
+        ),
+        icon = R.drawable.ic_heat,
+        iconColor = R.color.red,
+        manualActive = true,
+        descriptionProvider = LocalizedString.Constant(temperatureString)
+      ),
+      ThermostatProgramInfo(
+        type = ThermostatProgramInfo.Type.NEXT,
+        time = null,
+        icon = R.drawable.ic_cool,
+        iconColor = R.color.blue,
+        manualActive = false,
+        descriptionProvider = LocalizedString.Constant("22.0")
       )
+    )
   }
 
   @Test
   fun `should get empty list when only one program`() {
     // given
-    val builder = ThermostatProgramInfo.Builder()
+    val builder = ThermostatProgramInfo.Builder(valueFormatter)
     builder.dateProvider = dateProvider
     builder.weeklyScheduleConfig = mockWeeklyScheduleConfig(SuplaScheduleProgram.PROGRAM_1)
     builder.thermostatFlags = listOf(SuplaThermostatFlag.WEEKLY_SCHEDULE, SuplaThermostatFlag.WEEKLY_SCHEDULE_TEMPORAL_OVERRIDE)
@@ -388,13 +447,4 @@ class ThermostatProgramInfoTest {
     availableFields = EnumSet.of(FieldType.AUTOMATIC_TIME_SYNC),
     fields = listOf(AutomaticTimeSyncField(FieldType.AUTOMATIC_TIME_SYNC, false))
   )
-
-  private fun assertStringProvider(stringProvider: StringProvider) {
-    val context: Context = mockk()
-    every { context.getString(any()) } returns ""
-    stringProvider(context)
-    verify {
-      context.getString(R.string.thermostat_clock_error)
-    }
-  }
 }

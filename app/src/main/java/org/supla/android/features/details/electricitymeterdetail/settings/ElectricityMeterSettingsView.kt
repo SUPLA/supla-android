@@ -35,7 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
-import org.supla.android.core.ui.StringProvider
+import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.model.electricitymeter.ElectricityMeterBalanceType
@@ -43,9 +43,10 @@ import org.supla.android.data.model.general.SingleSelectionList
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 import org.supla.android.ui.views.spinner.SpinnerItem
 import org.supla.android.ui.views.spinner.TextSpinner
+import org.supla.core.shared.infrastructure.LocalizedString
 
 data class ElectricityMeterSettingsViewState(
-  val channelName: StringProvider = { "" },
+  val channelName: LocalizedString = LocalizedString.Empty,
   val onListOptions: SingleSelectionList<SuplaElectricityMeasurementType>? = null,
   val balancing: SingleSelectionList<ElectricityMeterBalanceType>? = null
 )
@@ -104,7 +105,7 @@ private fun Preview() {
   SuplaTheme {
     ElectricityMeterSettingsView(
       state = ElectricityMeterSettingsViewState(
-        channelName = { "Electricity meter" },
+        channelName = LocalizedString.Constant("Electricity meter"),
         onListOptions = SingleSelectionList(
           selected = SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY,
           items = listOf(

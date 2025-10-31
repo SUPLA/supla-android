@@ -59,7 +59,6 @@ import kotlinx.coroutines.delay
 import org.supla.android.R
 import org.supla.android.core.branding.Configuration
 import org.supla.android.core.infrastructure.LocalDateProvider
-import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.formatting.LocalTimeFormatter
@@ -71,12 +70,13 @@ import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.buttons.TextButton
 import org.supla.android.ui.views.forms.PinTextField
 import org.supla.core.shared.extensions.guardLet
+import org.supla.core.shared.infrastructure.LocalizedString
 
 data class LockScreenViewState(
   val pin: String = "",
   val wrongPin: Boolean = false,
   val unlockAction: UnlockAction = UnlockAction.AuthorizeApplication,
-  val authenticatorError: StringProvider? = null,
+  val authenticatorError: LocalizedString? = null,
   val lockedTime: Long? = null,
   val biometricAllowed: Boolean = false
 ) {
@@ -194,7 +194,7 @@ private fun BoxScope.AuthenticationView(viewState: LockScreenViewState, onClick:
       )
     }
     if (viewState.authenticatorError != null) {
-      BodyMedium(stringProvider = viewState.authenticatorError)
+      BodyMedium(localizedString = viewState.authenticatorError)
     }
   }
 }
@@ -221,7 +221,7 @@ private fun Preview() {
 @Composable
 private fun Preview_Error() {
   SuplaTheme {
-    LockScreenView(LockScreenViewState(pin = "1234", wrongPin = true, authenticatorError = { "error" }))
+    LockScreenView(LockScreenViewState(pin = "1234", wrongPin = true, authenticatorError = LocalizedString.Constant("error")))
   }
 }
 

@@ -19,7 +19,6 @@ package org.supla.android.data
 
 import android.annotation.SuppressLint
 import org.supla.android.R
-import org.supla.android.core.ui.StringProvider
 import org.supla.android.data.source.local.calendar.Hour
 import org.supla.android.di.FORMATTER_THERMOMETER
 import org.supla.android.extensions.days
@@ -27,6 +26,8 @@ import org.supla.android.extensions.hours
 import org.supla.android.extensions.minutesInHour
 import org.supla.android.extensions.secondsInMinute
 import org.supla.android.usecases.channel.valueprovider.ThermometerValueProvider
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import org.supla.core.shared.usecase.channel.valueformatter.types.withUnit
 import java.text.SimpleDateFormat
@@ -37,7 +38,7 @@ import javax.inject.Singleton
 
 @Singleton
 class ValuesFormatter @Inject constructor(
-  @Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter
+  @param:Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter
 ) {
 
   fun isTemperatureDefined(rawValue: Double?): Boolean {
@@ -49,59 +50,6 @@ class ValuesFormatter @Inject constructor(
   fun getTemperatureString(rawValue: Double?, withUnit: Boolean = false) =
     thermometerValueFormatter.format(rawValue, withUnit(withUnit))
 
-  fun getHourWithMinutes(minutes: Int): StringProvider {
-    val hours = minutes.div(60)
-
-    if (hours < 1) {
-      return { context -> context.getString(R.string.time_just_minutes, minutes) }
-    } else {
-      return { context -> context.getString(R.string.time_hours_and_minutes, hours, (minutes % 60)) }
-    }
-  }
-
-  fun getHourString(hour: Hour): String {
-    return getTimeString(hour = hour.hour, minute = hour.minute)
-  }
-
-  fun getTimeString(hour: Int? = null, minute: Int? = null, second: Int? = null): String {
-    var result = ""
-
-    hour?.let { result = if (it < 10) "0$it" else "$it" }
-    minute?.let {
-      if (result.isNotEmpty()) {
-        result += ":"
-      }
-      result += if (it < 10) "0$it" else "$it"
-    }
-    second?.let {
-      if (result.isNotEmpty()) {
-        result += ":"
-      }
-      result += if (it < 10) "0$it" else "$it"
-    }
-
-    return result
-  }
-
-  @SuppressLint("SimpleDateFormat")
-  fun getFullDateString(date: Date?): String? =
-    date?.let {
-      val formatter = SimpleDateFormat("dd.MM.yyyy HH:mm")
-      formatter.format(it)
-    }
-
-  fun getPercentageString(value: Float): String =
-    "${value.times(100).toInt()}%"
-
-  fun getTimerRestTime(time: Int): StringProvider {
-    val days = time.days
-    return if (days > 0) {
-      { it.resources.getQuantityString(R.plurals.day_pattern, days, days) + " ⏱️" }
-    } else {
-      { getTimeString(time.hours, time.minutesInHour, time.secondsInMinute) }
-    }
-  }
-
   companion object {
     /**
      * Special magic constant used to represent temperature value representing
@@ -109,5 +57,58 @@ class ValuesFormatter @Inject constructor(
      * at some point in future.
      */
     private const val TEMPERATURE_NA_VALUE = ThermometerValueProvider.UNKNOWN_VALUE
+
+    fun getPercentageString(value: Float): String =
+      "${value.times(100).toInt()}%"
+
+    fun getHourWithMinutes(minutes: Int): LocalizedString {
+      val hours = minutes.div(60)
+
+      return if (hours < 1) {
+        localizedString(R.string.time_just_minutes, minutes)
+      } else {
+        localizedString(R.string.time_hours_and_minutes, hours, (minutes % 60))
+      }
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    fun getFullDateString(date: Date?): String? =
+      date?.let {
+        val formatter = SimpleDateFormat("dd.MM.yyyy HH:mm")
+        formatter.format(it)
+      }
+
+    fun getTimerRestTime(time: Int): LocalizedString {
+      val days = time.days
+      return if (days > 0) {
+        LocalizedString.Quantity(R.plurals.day_pattern, days)
+      } else {
+        LocalizedString.Constant(getTimeString(time.hours, time.minutesInHour, time.secondsInMinute))
+      }
+    }
+
+    fun getHourString(hour: Hour): String {
+      return getTimeString(hour = hour.hour, minute = hour.minute)
+    }
+
+    fun getTimeString(hour: Int? = null, minute: Int? = null, second: Int? = null): String {
+      var result = ""
+
+      hour?.let { result = if (it < 10) "0$it" else "$it" }
+      minute?.let {
+        if (result.isNotEmpty()) {
+          result += ":"
+        }
+        result += if (it < 10) "0$it" else "$it"
+      }
+      second?.let {
+        if (result.isNotEmpty()) {
+          result += ":"
+        }
+        result += if (it < 10) "0$it" else "$it"
+      }
+
+      return result
+    }
   }
 }

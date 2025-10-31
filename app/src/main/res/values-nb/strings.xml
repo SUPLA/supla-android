@@ -748,4 +748,9 @@
   <string name="container_invalid_sensor_state">Ugyldig sensorstatus.</string>
   <string name="channel_caption_container">Beholder</string>
   <string name="channel_caption_septic_tank">Septiktank</string>
+
+  <plurals name="rest_time_days_pattern">
+    <item quantity="one">%1$d dag ⏱️</item>
+    <item quantity="other">%1$d dager ⏱️</item>
+  </plurals>
 </resources>

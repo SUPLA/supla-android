@@ -25,7 +25,6 @@ import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.BaseViewModel
-import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.ValuesFormatter
@@ -65,6 +64,8 @@ import org.supla.android.usecases.client.ExecuteThermostatActionUseCase
 import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
 import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import java.util.Date
 import javax.inject.Inject
@@ -78,8 +79,7 @@ class TimerDetailViewModel @Inject constructor(
   private val suplaClientProvider: SuplaClientProvider,
   private val dateProvider: DateProvider,
   private val loadingTimeoutManager: LoadingTimeoutManager,
-  private val valuesFormatter: ValuesFormatter,
-  @Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter,
+  @param:Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<TimerDetailViewState, TimerDetailViewEvent>(TimerDetailViewState(), schedulers), TimerDetailViewProxy {
 
@@ -283,26 +283,28 @@ class TimerDetailViewModel @Inject constructor(
     updateState { it.copy(editTime = false) }
   }
 
-  override fun formatLeftTime(leftTime: Int?): StringProvider {
+  override fun formatLeftTime(leftTime: Int?): LocalizedString {
     if (leftTime == null) {
-      return { "" }
+      return LocalizedString.Empty
     }
 
     val days = leftTime.div(DAY_IN_SEC)
-    val timeString = valuesFormatter.getTimeString(
+    val timeString = ValuesFormatter.getTimeString(
       hour = leftTime.hoursInDay,
       minute = leftTime.minutesInHour,
       second = leftTime.secondsInMinute
     )
 
     if (days > 0) {
-      return { context ->
-        val daysString = context.resources.getQuantityString(R.plurals.day_pattern, days, days)
-        "$daysString\n$timeString"
-      }
+      return LocalizedString.Merge(
+        listOf(
+          LocalizedString.Quantity(R.plurals.day_pattern, days),
+          LocalizedString.Constant(timeString)
+        )
+      )
     }
 
-    return { timeString }
+    return LocalizedString.Constant(timeString)
   }
 
   private fun handleData(channel: Channel, config: ChannelConfigEventsManager.ConfigEvent) {
@@ -428,34 +430,32 @@ data class TimerDetailViewState(
       } ?: true
     }
 
-  val timerInfoText: StringProvider
+  val timerInfoText: LocalizedString
     get() {
-      val (timeDiff) = guardLet(getTimerDuration(currentDate)) { return { "" } }
+      val (timeDiff) = guardLet(getTimerDuration(currentDate)) { return LocalizedString.Empty }
 
       val days = timeDiff.days
       val hours = timeDiff.hoursInDay
       val minutes = timeDiff.minutesInHour
 
-      return { context ->
-        val daysString = context.resources.getQuantityString(R.plurals.day_pattern, days, days)
-        val hoursString = context.resources.getQuantityString(R.plurals.hour_pattern, hours, hours)
-        val minutesString = context.resources.getQuantityString(R.plurals.minute_pattern, minutes, minutes)
-        val timeString = "$daysString $hoursString $minutesString"
+      val daysString = LocalizedString.Quantity(R.plurals.day_pattern, days)
+      val hoursString = LocalizedString.Quantity(R.plurals.hour_pattern, hours)
+      val minutesString = LocalizedString.Quantity(R.plurals.minute_pattern, minutes)
+      val timeString = LocalizedString.Merge(listOf(daysString, hoursString, minutesString), delimiter = " ")
 
-        when {
-          selectedMode == DeviceMode.OFF ->
-            context.getString(R.string.details_timer_info_thermostat_off, timeString)
+      return when {
+        selectedMode == DeviceMode.OFF ->
+          localizedString(R.string.details_timer_info_thermostat_off, timeString)
 
-          channelFunction == SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER ||
-            subfunction == ThermostatSubfunction.HEAT ->
-            context.getString(R.string.details_timer_info_thermostat_heating, timeString)
+        channelFunction == SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER ||
+          subfunction == ThermostatSubfunction.HEAT ->
+          localizedString(R.string.details_timer_info_thermostat_heating, timeString)
 
-          else -> context.getString(R.string.details_timer_info_thermostat_cooling, timeString)
-        }
+        else -> localizedString(R.string.details_timer_info_thermostat_cooling, timeString)
       }
     }
 
-  override val endDateText: StringProvider
+  override val endDateText: LocalizedString
     get() = TimerHeaderState.endDateText(timerEndDate)
 
   override val currentStateIcon: Int?
@@ -464,8 +464,13 @@ data class TimerDetailViewState(
   override val currentStateIconColor: Int
     get() = TimerHeaderState.currentStateIconColor(currentMode)
 
-  override val currentStateValue: StringProvider
-    get() = TimerHeaderState.currentStateValue(currentMode, currentTemperature, currentTemperature)
+  override fun currentStateValue(thermometerValuesFormatter: ValueFormatter): LocalizedString =
+    TimerHeaderState.currentStateValue(
+      currentMode,
+      currentTemperature,
+      currentTemperature,
+      thermometerValuesFormatter
+    )
 
   val startEnabled: Boolean =
     isChannelOnline && getTimerDuration(Date())?.let { it > 0 } ?: false

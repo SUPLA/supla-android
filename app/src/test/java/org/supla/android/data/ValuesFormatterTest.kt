@@ -18,25 +18,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import io.mockk.MockKAnnotations
-import io.mockk.impl.annotations.InjectMockKs
-import io.mockk.impl.annotations.MockK
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.local.calendar.Hour
-import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 
 class ValuesFormatterTest {
-
-  @MockK
-  private lateinit var preferences: ApplicationPreferences
-
-  @MockK
-  private lateinit var valueFormatter: ValueFormatter
-
-  @InjectMockKs
-  private lateinit var formatter: ValuesFormatter
 
   @Before
   fun setUp() {
@@ -50,7 +37,7 @@ class ValuesFormatterTest {
     val minute = 10
 
     // when
-    val text = formatter.getTimeString(hour, minute)
+    val text = ValuesFormatter.getTimeString(hour, minute)
 
     // then
     assertThat(text).isEqualTo("03:10")
@@ -64,7 +51,7 @@ class ValuesFormatterTest {
     val second = 5
 
     // when
-    val text = formatter.getTimeString(hour, minute, second)
+    val text = ValuesFormatter.getTimeString(hour, minute, second)
 
     // then
     assertThat(text).isEqualTo("12:03:05")
@@ -76,7 +63,7 @@ class ValuesFormatterTest {
     val hour = Hour(14, 15)
 
     // when
-    val text = formatter.getHourString(hour)
+    val text = ValuesFormatter.getHourString(hour)
 
     // then
     assertThat(text).isEqualTo("14:15")

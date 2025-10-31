@@ -42,7 +42,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -265,7 +264,7 @@ private fun CalendarWeeks(state: CalendarPickerState, visibleDate: Date, onDaySe
       Spacer(modifier = Modifier.weight(1f))
 
       var date = dateRange.start
-      (0..6).forEach { i ->
+      (0..6).forEach { _ ->
         val day = date.dayStart()
         CalendarDayBox(
           text = day.dayOfMonth.toString(),
@@ -294,9 +293,8 @@ private fun CalendarHourInput(
   onHourSelected: (Hour, RangeValueType?) -> Unit
 ) {
   if (state is CalendarRangePickerState) {
-    val context = LocalContext.current
-    var startHour by remember { mutableStateOf(initialStartHour.toString(context)) }
-    var endHour by remember { mutableStateOf(initialEndHour.toString(context)) }
+    var startHour by remember { mutableStateOf(initialStartHour.string) }
+    var endHour by remember { mutableStateOf(initialEndHour.string) }
 
     Row(
       modifier = Modifier.padding(

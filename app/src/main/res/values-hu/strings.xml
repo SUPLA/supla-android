@@ -748,4 +748,9 @@
   <string name="container_invalid_sensor_state">Érvénytelen érzékelő állapot.</string>
   <string name="channel_caption_container">Konténer</string>
   <string name="channel_caption_septic_tank">Szeptikus tartály</string>
+
+  <plurals name="rest_time_days_pattern">
+    <item quantity="one">%1$d nap ⏱️</item>
+    <item quantity="other">%1$d nap ⏱️</item>
+  </plurals>
 </resources>

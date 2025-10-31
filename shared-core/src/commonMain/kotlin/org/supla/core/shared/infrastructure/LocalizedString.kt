@@ -42,6 +42,12 @@ sealed interface LocalizedString {
 
   @HiddenFromObjC
   data class WithResourceAndDate(val id: Int, val timestamp: Long) : LocalizedString
+
+  @HiddenFromObjC
+  data class Quantity(val id: Int, val quantity: Int) : LocalizedString
+
+  @HiddenFromObjC
+  data class Merge(val texts: List<LocalizedString>, val delimiter: String = "") : LocalizedString
 }
 
 fun localizedString(id: LocalizedStringId?): LocalizedString = id?.let { LocalizedString.WithId(it) } ?: LocalizedString.Empty
