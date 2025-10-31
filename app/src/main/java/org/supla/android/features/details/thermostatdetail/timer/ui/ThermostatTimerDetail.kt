@@ -24,13 +24,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.supla.android.core.ui.BaseViewProxy
-import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.model.temperature.TemperatureCorrection
 import org.supla.android.data.source.local.calendar.Hour
 import org.supla.android.features.details.thermostatdetail.timer.DeviceMode
 import org.supla.android.features.details.thermostatdetail.timer.TimerDetailViewState
 import org.supla.android.ui.dialogs.TimePickerDialog
+import org.supla.core.shared.infrastructure.LocalizedString
 
 interface TimerDetailViewProxy : BaseViewProxy<TimerDetailViewState> {
   val timerLeftTime: Int?
@@ -47,7 +47,7 @@ interface TimerDetailViewProxy : BaseViewProxy<TimerDetailViewState> {
   fun onTemperatureChange(temperature: Float) {}
   fun onTemperatureChange(step: TemperatureCorrection) {}
   fun onStartTimer() {}
-  fun formatLeftTime(leftTime: Int?): StringProvider = { "" }
+  fun formatLeftTime(leftTime: Int?): LocalizedString = LocalizedString.Empty
   fun cancelTimerStartManual() {}
   fun cancelTimerStartProgram() {}
   fun editTimer() {}

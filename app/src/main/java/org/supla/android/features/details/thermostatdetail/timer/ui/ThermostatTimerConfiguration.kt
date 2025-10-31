@@ -60,11 +60,12 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.supla.android.R
+import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.core.ui.theme.gray
+import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.model.temperature.TemperatureCorrection
-import org.supla.android.extensions.valuesFormatter
 import org.supla.android.features.details.thermostatdetail.timer.DeviceMode
 import org.supla.android.features.details.thermostatdetail.timer.TimerDetailViewState
 import org.supla.android.ui.views.LoadingScrim
@@ -175,9 +176,8 @@ private fun TemperatureSelector(state: TimerDetailViewState, viewProxy: TimerDet
   }
 }
 
-context(RowScope)
 @Composable
-private fun TemperatureSlider(state: TimerDetailViewState, viewProxy: TimerDetailViewProxy) {
+private fun RowScope.TemperatureSlider(state: TimerDetailViewState, viewProxy: TimerDetailViewProxy) {
   val lightGrayColor = colorResource(id = R.color.gray_light)
   val colors = SliderDefaults.colors(
     activeTrackColor = lightGrayColor,
@@ -290,7 +290,7 @@ fun TimerSelectorCalendar(state: TimerDetailViewState, viewProxy: TimerDetailVie
   )
 
   TextField(
-    value = state.calendarTimeValue?.let { LocalContext.current.valuesFormatter.getHourString(it) } ?: "12:00",
+    value = state.calendarTimeValue?.let { ValuesFormatter.getHourString(it) } ?: "12:00",
     trailingIcon = {
       Icon(painter = painterResource(id = R.drawable.ic_timer), contentDescription = null)
     },

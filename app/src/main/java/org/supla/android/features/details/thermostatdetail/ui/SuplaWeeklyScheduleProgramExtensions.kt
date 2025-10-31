@@ -18,33 +18,34 @@ package org.supla.android.features.details.thermostatdetail.ui
  */
 
 import org.supla.android.R
-import org.supla.android.core.ui.StringProvider
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
-import org.supla.android.extensions.valuesFormatter
 import org.supla.core.shared.extensions.fromSuplaTemperature
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
 
-val SuplaWeeklyScheduleProgram.description: StringProvider
-  get() = { context ->
-    val heatTemperature = setpointTemperatureHeat?.fromSuplaTemperature()?.toDouble()
-    val coolTemperature = setpointTemperatureCool?.fromSuplaTemperature()?.toDouble()
-    when {
-      program == SuplaScheduleProgram.OFF ->
-        context.resources.getString(R.string.turn_off)
-      mode == SuplaHvacMode.HEAT ->
-        context.valuesFormatter.getTemperatureString(heatTemperature)
-      mode == SuplaHvacMode.COOL ->
-        context.valuesFormatter.getTemperatureString(coolTemperature)
-      mode == SuplaHvacMode.HEAT_COOL -> {
-        val minTemperature = context.valuesFormatter.getTemperatureString(heatTemperature)
-        val maxTemperature = context.valuesFormatter.getTemperatureString(coolTemperature)
-        "$minTemperature - $maxTemperature"
-      }
-      else -> NO_VALUE_TEXT
+fun SuplaWeeklyScheduleProgram.description(thermometerValuesFormatter: ValueFormatter): LocalizedString {
+  val heatTemperature = setpointTemperatureHeat?.fromSuplaTemperature()?.toDouble()
+  val coolTemperature = setpointTemperatureCool?.fromSuplaTemperature()?.toDouble()
+  return when {
+    program == SuplaScheduleProgram.OFF ->
+      localizedString(R.string.turn_off)
+    mode == SuplaHvacMode.HEAT ->
+      LocalizedString.Constant(thermometerValuesFormatter.format(heatTemperature, ValueFormat.WithoutUnit))
+    mode == SuplaHvacMode.COOL ->
+      LocalizedString.Constant(thermometerValuesFormatter.format(coolTemperature, ValueFormat.WithoutUnit))
+    mode == SuplaHvacMode.HEAT_COOL -> {
+      val minTemperature = thermometerValuesFormatter.format(heatTemperature, ValueFormat.WithoutUnit)
+      val maxTemperature = thermometerValuesFormatter.format(coolTemperature, ValueFormat.WithoutUnit)
+      LocalizedString.Constant("$minTemperature - $maxTemperature")
     }
+    else -> LocalizedString.Constant(NO_VALUE_TEXT)
   }
+}
 
 val SuplaWeeklyScheduleProgram.Companion.OFF: SuplaWeeklyScheduleProgram
   get() = SuplaWeeklyScheduleProgram(

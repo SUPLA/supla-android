@@ -27,7 +27,6 @@ import org.supla.android.core.networking.suplaclient.DelayableState
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.shared.shareable
 import org.supla.android.core.ui.BaseViewModel
-import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.temperature.TemperatureCorrection
@@ -443,7 +442,7 @@ class ThermostatGeneralViewModel @Inject constructor(
     value: ThermostatValue,
     channelOnline: Boolean
   ) =
-    ThermostatProgramInfo.Builder().also {
+    ThermostatProgramInfo.Builder(thermometerValueFormatter).also {
       it.dateProvider = this@ThermostatGeneralViewModel.dateProvider
       it.weeklyScheduleConfig = weeklyConfig
       it.deviceConfig = deviceConfig
@@ -761,7 +760,7 @@ data class ThermostatGeneralViewState(
       return false
     }
 
-  override val endDateText: StringProvider
+  override val endDateText: LocalizedString
     get() = TimerHeaderState.endDateText(viewModelState?.timerEndDate)
 
   override val currentStateIcon: Int?
@@ -770,11 +769,12 @@ data class ThermostatGeneralViewState(
   override val currentStateIconColor: Int
     get() = TimerHeaderState.currentStateIconColor(viewModelState?.mode)
 
-  override val currentStateValue: StringProvider
-    get() = TimerHeaderState.currentStateValue(
+  override fun currentStateValue(thermometerValuesFormatter: ValueFormatter): LocalizedString =
+    TimerHeaderState.currentStateValue(
       viewModelState?.mode,
       viewModelState?.setpointHeatTemperature,
-      viewModelState?.setpointCoolTemperature
+      viewModelState?.setpointCoolTemperature,
+      thermometerValuesFormatter
     )
 }
 

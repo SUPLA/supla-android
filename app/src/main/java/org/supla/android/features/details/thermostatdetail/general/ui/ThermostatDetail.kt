@@ -544,10 +544,10 @@ private fun PreviewTemporaryOverride() {
           temporaryProgramInfo = listOf(
             ThermostatProgramInfo(
               ThermostatProgramInfo.Type.CURRENT,
-              { "vor 7 hours 10 min." },
+              LocalizedString.Constant("vor 7 hours 10 min."),
               R.drawable.ic_heat,
               R.color.red,
-              { "22.7" },
+              LocalizedString.Constant("22.7"),
               true
             ),
             ThermostatProgramInfo(
@@ -555,7 +555,7 @@ private fun PreviewTemporaryOverride() {
               null,
               R.drawable.ic_power_button,
               R.color.on_surface_variant,
-              { "Turn off" }
+              LocalizedString.Constant("Turn off")
             )
           ),
           coolingModeActive = true,

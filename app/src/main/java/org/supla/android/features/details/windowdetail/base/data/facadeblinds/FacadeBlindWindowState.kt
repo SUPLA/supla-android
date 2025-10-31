@@ -18,12 +18,13 @@ package org.supla.android.features.details.windowdetail.base.data.facadeblinds
  */
 
 import org.supla.android.R
-import org.supla.android.core.ui.StringProvider
 import org.supla.android.features.details.windowdetail.base.data.ShadingBlindMarker
 import org.supla.android.features.details.windowdetail.base.data.ShadingBlindWindowState
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValueFormat
 import org.supla.core.shared.extensions.guardLet
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 
 data class FacadeBlindWindowState(
   /**
@@ -61,11 +62,11 @@ data class FacadeBlindWindowState(
       return tilt.asAngle(tilt0, tilt100)
     }
 
-  fun slatTiltText(): StringProvider {
+  fun slatTiltText(): LocalizedString {
     val (tilt) = guardLet(slatTilt) {
-      return { it.getString(R.string.facade_blinds_no_tilt) }
+      return localizedString(R.string.facade_blinds_no_tilt)
     }
-    return { tilt.asString(tiltTextFormat, tilt0Angle, tilt100Angle) }
+    return LocalizedString.Constant(tilt.asString(tiltTextFormat, tilt0Angle, tilt100Angle))
   }
 
   companion object {

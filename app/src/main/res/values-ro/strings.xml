@@ -750,4 +750,10 @@
   <string name="container_invalid_sensor_state">Stare senzor nevalidă.</string>
   <string name="channel_caption_container">Container</string>
   <string name="channel_caption_septic_tank">Fosa septică</string>
+
+  <plurals name="rest_time_days_pattern">
+    <item quantity="one">%1$d zi ⏱️</item>
+    <item quantity="few">%1$d zile ⏱️</item>
+    <item quantity="other">%1$d de zile ⏱️</item>
+  </plurals>
 </resources>

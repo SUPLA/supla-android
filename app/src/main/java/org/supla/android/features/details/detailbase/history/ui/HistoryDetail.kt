@@ -58,6 +58,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
+import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.formatting.LocalDateFormatter
@@ -367,7 +368,7 @@ private fun HistoryDetailScope.FiltersColumn(viewState: HistoryDetailViewState) 
     modifier = Modifier.padding(top = Distance.tiny).widthIn(max = 140.dp),
     verticalArrangement = Arrangement.spacedBy(Distance.small)
   ) {
-    viewState.filters.values.forEachIndexed { index, selectableList ->
+    viewState.filters.values.forEach { selectableList ->
       TextSpinner(
         options = selectableList,
         onOptionSelected = { changeFilter(it) },

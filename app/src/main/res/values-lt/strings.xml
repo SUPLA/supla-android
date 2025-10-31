@@ -726,4 +726,11 @@
   <string name="container_invalid_sensor_state">Neteisinga jutiklio būsena.</string>
   <string name="channel_caption_container">Konteineris</string>
   <string name="channel_caption_septic_tank">Septikas</string>
+
+  <plurals name="rest_time_days_pattern">
+    <item quantity="one">%1$d diena ⏱️</item>
+    <item quantity="few">%1$d dienos ⏱️</item>
+    <item quantity="many">%1$d dienų ⏱️</item>
+    <item quantity="other">%1$d dienų ⏱️</item>
+  </plurals>
 </resources>

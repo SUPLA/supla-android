@@ -746,4 +746,11 @@
   <string name="container_invalid_sensor_state">Neveljavno stanje senzorja.</string>
   <string name="channel_caption_container">Posoda</string>
   <string name="channel_caption_septic_tank">Greznica</string>
+
+  <plurals name="rest_time_days_pattern">
+    <item quantity="one">%1$d dan ⏱️</item>
+    <item quantity="two">%1$d dneva ⏱️</item>
+    <item quantity="few">%1$d dnevi ⏱️</item>
+    <item quantity="other">%1$d dni ⏱️</item>
+  </plurals>
 </resources>

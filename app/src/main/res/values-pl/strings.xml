@@ -831,6 +831,11 @@
     <item quantity="few">%1$d dni</item>
     <item quantity="many">%1$d dni</item>
   </plurals>
+  <plurals name="rest_time_days_pattern">
+    <item quantity="one">%1$d dzień ⏱️</item>
+    <item quantity="few">%1$d dni ⏱️</item>
+    <item quantity="many">%1$d dni ⏱️</item>
+  </plurals>
   <plurals name="hour_pattern" tools:ignore="MissingQuantity">
     <item quantity="other">%1$d godz.</item>
   </plurals>

@@ -19,7 +19,6 @@ package org.supla.android.features.details.thermostatdetail.schedule.data
 
 import androidx.annotation.DrawableRes
 import org.supla.android.R
-import org.supla.android.core.ui.StringProvider
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
@@ -30,6 +29,8 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
 import org.supla.core.shared.extensions.fromSuplaTemperature
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 
 data class ScheduleDetailProgramBox(
   val channelFunction: Int,
@@ -44,8 +45,8 @@ data class ScheduleDetailProgramBox(
   val setpointTemperatureCool: Float?
     get() = scheduleProgram.setpointTemperatureCool?.fromSuplaTemperature()
 
-  val textProvider: StringProvider
-    get() = scheduleProgram.description
+  fun textProvider(thermometerValuesFormatter: ValueFormatter): LocalizedString =
+    scheduleProgram.description(thermometerValuesFormatter)
 
   val modeForModify: SuplaHvacMode
     get() = if (scheduleProgram.mode == SuplaHvacMode.NOT_SET) {

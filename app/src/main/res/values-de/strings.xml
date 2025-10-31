@@ -822,4 +822,9 @@
   <string name="state_dialog_last_known_state">Offline – letzter bekannter Status:</string>
   <string name="channel_caption_motion_sensor">Bewegungssensor</string>
   <string name="channel_caption_binary_sensor">Binärsensor</string>
+
+  <plurals name="rest_time_days_pattern">
+    <item quantity="one">%1$d Tag ⏱️</item>
+    <item quantity="other">%1$d Tage ⏱️</item>
+  </plurals>
 </resources>

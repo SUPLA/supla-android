@@ -23,19 +23,19 @@ import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import dagger.hilt.android.EntryPointAccessors
 import org.supla.android.Preferences
-import org.supla.android.data.ValuesFormatter
 import org.supla.android.di.entrypoints.GetChannelDefaultCaptionUseCaseEntryPoint
 import org.supla.android.di.entrypoints.GetChannelIconUseCaseEntryPoint
 import org.supla.android.di.entrypoints.PreferencesEntryPoint
-import org.supla.android.di.entrypoints.ValuesFormatterEntryPoint
+import org.supla.android.di.entrypoints.ThermometerValuesFormatterEntryPoint
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.usecase.channel.GetChannelDefaultCaptionUseCase
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 
-val Context.valuesFormatter: ValuesFormatter
+val Context.thermometerValuesFormatter: ValueFormatter
   get() = EntryPointAccessors.fromApplication(
     applicationContext,
-    ValuesFormatterEntryPoint::class.java
-  ).provideValuesFormatter()
+    ThermometerValuesFormatterEntryPoint::class.java
+  ).provideThermometerValueFormatter()
 
 val Context.preferences: Preferences
   get() = EntryPointAccessors.fromApplication(

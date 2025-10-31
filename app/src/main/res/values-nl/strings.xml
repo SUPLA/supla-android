@@ -749,4 +749,9 @@
   <string name="container_invalid_sensor_state">Ongeldige sensorstatus.</string>
   <string name="channel_caption_container">Container</string>
   <string name="channel_caption_septic_tank">Septic tank</string>
+
+  <plurals name="rest_time_days_pattern">
+    <item quantity="one">%1$d dag ⏱️</item>
+    <item quantity="other">%1$d dagen ⏱️</item>
+  </plurals>
 </resources>

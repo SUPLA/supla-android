@@ -17,12 +17,4 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import android.content.Context
-
 open class ViewState
-
-typealias StringProvider = (context: Context) -> String
-
-fun stringProvider(provider: (context: Context) -> String): StringProvider {
-  return { context -> provider(context) }
-}
