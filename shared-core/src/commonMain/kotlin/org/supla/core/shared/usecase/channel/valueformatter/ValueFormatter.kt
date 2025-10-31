@@ -63,7 +63,7 @@ abstract class ValueFormatter {
       return NO_VALUE_TEXT
     }
 
-    val stringValue = precision.valueToString(value)
+    val stringValue = precision.valueToString(preprocessValue(value))
 
     return when {
       predecessor != null && unit != null ->
