@@ -20,7 +20,6 @@ package org.supla.android.usecases.channel.measurementsprovider.electricity
 import com.google.gson.Gson
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
-import org.supla.android.core.shared.provider
 import org.supla.android.core.shared.shareable
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.model.chart.ChannelChartSets
@@ -47,10 +46,10 @@ data class VoltageChartCustomData(
 class VoltageMeasurementsProvider @Inject constructor(
   private val voltageLogRepository: VoltageLogRepository,
   private val getCaptionUseCase: GetCaptionUseCase,
-  getChannelIconUseCase: GetChannelIconUseCase,
+  private val getChannelIconUseCase: GetChannelIconUseCase,
   @Named(GSON_FOR_REPO) gson: Gson,
   preferences: ApplicationPreferences
-) : ElectricityMeasurementsProvider<VoltageHistoryLogEntity>(getChannelIconUseCase, gson, preferences) {
+) : ElectricityMeasurementsProvider<VoltageHistoryLogEntity>(gson, preferences) {
 
   override val labelValueExtractor: (SuplaChannelElectricityMeterValue.Measurement?) -> Double
     get() = { it?.voltage ?: 0.0 }
@@ -61,13 +60,13 @@ class VoltageMeasurementsProvider @Inject constructor(
   ): Single<ChannelChartSets> {
     val observables: MutableList<Observable<Pair<Phase, HistoryDataSet>>> = mutableListOf()
     spec.customFilters?.ifPhase1 {
-      observables.add(findMeasurementsForPhase(channelWithChildren, spec, observables.isEmpty(), Phase.PHASE_1))
+      observables.add(findMeasurementsForPhase(channelWithChildren, spec, Phase.PHASE_1))
     }
     spec.customFilters?.ifPhase2 {
-      observables.add(findMeasurementsForPhase(channelWithChildren, spec, observables.isEmpty(), Phase.PHASE_2))
+      observables.add(findMeasurementsForPhase(channelWithChildren, spec, Phase.PHASE_2))
     }
     spec.customFilters?.ifPhase3 {
-      observables.add(findMeasurementsForPhase(channelWithChildren, spec, observables.isEmpty(), Phase.PHASE_3))
+      observables.add(findMeasurementsForPhase(channelWithChildren, spec, Phase.PHASE_3))
     }
 
     val channel = channelWithChildren.channel
@@ -76,12 +75,13 @@ class VoltageMeasurementsProvider @Inject constructor(
     ) { it.filterIsInstance<Pair<Phase, HistoryDataSet>>() }
       .map { historyDataSets ->
         ChannelChartSets(
-          channel,
-          getCaptionUseCase(channel.shareable).provider(),
-          spec.aggregation,
-          historyDataSets.map { it.second },
-          VoltageChartCustomData(historyDataSets.map { it.first }),
-          (spec.customFilters as? ElectricityChartFilters)?.type?.labelWithUnit
+          channel = channel,
+          name = getCaptionUseCase(channel.shareable),
+          aggregation = spec.aggregation,
+          dataSets = historyDataSets.map { it.second },
+          icon = getChannelIconUseCase(channel),
+          customData = VoltageChartCustomData(historyDataSets.map { it.first }),
+          typeNameRes = (spec.customFilters as? ElectricityChartFilters)?.type?.labelWithUnit
         )
       }
       .firstOrError()
@@ -90,10 +90,9 @@ class VoltageMeasurementsProvider @Inject constructor(
   private fun findMeasurementsForPhase(
     channelWithChildren: ChannelWithChildren,
     spec: ChartDataSpec,
-    isFirst: Boolean,
     phase: Phase
   ): Observable<Pair<Phase, HistoryDataSet>> =
     voltageLogRepository.findMeasurements(channelWithChildren.remoteId, channelWithChildren.profileId, spec.startDate, spec.endDate, phase)
       .map { aggregating(it, spec.aggregation) }
-      .map { Pair(phase, historyDataSet(channelWithChildren, phase, isFirst, ChartEntryType.VOLTAGE, spec.aggregation, it)) }
+      .map { Pair(phase, historyDataSet(channelWithChildren, phase, ChartEntryType.VOLTAGE, spec.aggregation, it)) }
 }

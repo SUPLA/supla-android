@@ -19,6 +19,7 @@ package org.supla.android.ui.extensions
 
 import android.content.res.Configuration
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.Dp
 
 @Composable
 fun <T> Configuration.ifLandscape(composable: @Composable () -> T): T? =
@@ -27,3 +28,7 @@ fun <T> Configuration.ifLandscape(composable: @Composable () -> T): T? =
 @Composable
 fun <T> Configuration.ifPortrait(composable: @Composable () -> T): T? =
   (orientation == Configuration.ORIENTATION_PORTRAIT).ifTrue { composable() }
+
+@Composable
+fun Configuration.orientated(portrait: Dp, landscape: Dp): Dp =
+  if (orientation == Configuration.ORIENTATION_LANDSCAPE) landscape else portrait

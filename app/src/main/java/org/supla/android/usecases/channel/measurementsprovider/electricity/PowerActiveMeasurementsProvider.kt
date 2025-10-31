@@ -20,7 +20,6 @@ package org.supla.android.usecases.channel.measurementsprovider.electricity
 import com.google.gson.Gson
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
-import org.supla.android.core.shared.provider
 import org.supla.android.core.shared.shareable
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.model.chart.ChannelChartSets
@@ -47,10 +46,10 @@ data class PowerActiveChartCustomData(
 class PowerActiveMeasurementsProvider @Inject constructor(
   private val powerActiveLogRepository: PowerActiveLogRepository,
   private val getCaptionUseCase: GetCaptionUseCase,
-  getChannelIconUseCase: GetChannelIconUseCase,
+  private val getChannelIconUseCase: GetChannelIconUseCase,
   @Named(GSON_FOR_REPO) gson: Gson,
   preferences: ApplicationPreferences
-) : ElectricityMeasurementsProvider<PowerActiveHistoryLogEntity>(getChannelIconUseCase, gson, preferences) {
+) : ElectricityMeasurementsProvider<PowerActiveHistoryLogEntity>(gson, preferences) {
 
   override val labelValueExtractor: (SuplaChannelElectricityMeterValue.Measurement?) -> Double
     get() = { it?.powerActive ?: 0.0 }
@@ -76,12 +75,13 @@ class PowerActiveMeasurementsProvider @Inject constructor(
     ) { it.filterIsInstance<Pair<Phase, HistoryDataSet>>() }
       .map { historyDataSets ->
         ChannelChartSets(
-          channel,
-          getCaptionUseCase(channel.shareable).provider(),
-          spec.aggregation,
-          historyDataSets.map { it.second },
-          PowerActiveChartCustomData(historyDataSets.map { it.first }),
-          (spec.customFilters as? ElectricityChartFilters)?.type?.labelWithUnit
+          channel = channel,
+          name = getCaptionUseCase(channel.shareable),
+          aggregation = spec.aggregation,
+          dataSets = historyDataSets.map { it.second },
+          icon = getChannelIconUseCase(channel),
+          customData = PowerActiveChartCustomData(historyDataSets.map { it.first }),
+          typeNameRes = (spec.customFilters as? ElectricityChartFilters)?.type?.labelWithUnit
         )
       }
       .firstOrError()
@@ -101,5 +101,5 @@ class PowerActiveMeasurementsProvider @Inject constructor(
       phase
     )
       .map { aggregating(it, spec.aggregation) }
-      .map { Pair(phase, historyDataSet(channelWithChildren, phase, isFirst, ChartEntryType.POWER_ACTIVE, spec.aggregation, it)) }
+      .map { Pair(phase, historyDataSet(channelWithChildren, phase, ChartEntryType.POWER_ACTIVE, spec.aggregation, it)) }
 }

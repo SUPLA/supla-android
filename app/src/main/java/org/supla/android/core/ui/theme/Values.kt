@@ -17,7 +17,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import android.content.res.Configuration
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -36,6 +38,14 @@ object Distance {
   val tiny: Dp
     @Composable
     get() = dimensionResource(id = R.dimen.distance_tiny)
+
+  val horizontal: Dp
+    @Composable
+    get() = 24.dp
+
+  val vertical: Dp
+    @Composable
+    get() = if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT) 24.dp else 16.dp
 
   @Composable
   fun toStatic(): Static = Static(default, small, tiny)
