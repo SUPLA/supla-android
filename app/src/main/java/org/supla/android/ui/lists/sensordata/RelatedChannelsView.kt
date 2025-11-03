@@ -17,12 +17,14 @@ package org.supla.android.ui.lists.sensordata
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import org.supla.android.core.ui.theme.Distance
+import org.supla.android.ui.views.EmptyListInfoView
 
 @Composable
 fun RelatedChannelsView(
@@ -46,5 +48,10 @@ fun RelatedChannelsView(
         )
       }
     }
+  } else {
+    EmptyListInfoView(
+      modifier = modifier.fillMaxWidth()
+        .padding(Distance.default)
+    )
   }
 }

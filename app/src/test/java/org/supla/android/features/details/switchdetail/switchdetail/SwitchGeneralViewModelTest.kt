@@ -155,6 +155,7 @@ class SwitchGeneralViewModelTest :
     every { electricityMeterGeneralStateHandler.updateState(any(), any(), any()) } answers { firstArg() }
     every { impulseCounterGeneralStateHandler.updateState(any(), any(), any()) } answers { firstArg() }
     every { getAllChannelIssuesUseCase.invoke(any()) } returns emptyList()
+    every { preferences.scale } returns 1f
 
     // when
     viewModel.loadData(remoteId, ItemType.CHANNEL)
@@ -216,6 +217,7 @@ class SwitchGeneralViewModelTest :
     every { electricityMeterGeneralStateHandler.updateState(any(), any(), any()) } answers { firstArg() }
     every { impulseCounterGeneralStateHandler.updateState(any(), any(), any()) } answers { firstArg() }
     every { getAllChannelIssuesUseCase.invoke(any()) } returns emptyList()
+    every { preferences.scale } returns 1f
 
     // when
     viewModel.loadData(remoteId, ItemType.CHANNEL)
@@ -280,6 +282,7 @@ class SwitchGeneralViewModelTest :
     every { getChannelStateUseCase.invoke(group) } returns mockk { every { isActive() } returns true }
     every { getChannelIconUseCase.invoke(group, channelStateValue = ChannelState.Value.ON) } returns onIcon
     every { getChannelIconUseCase.invoke(group, channelStateValue = ChannelState.Value.OFF) } returns offIcon
+    every { preferences.scale } returns 1f
 
     // when
     viewModel.loadData(remoteId, ItemType.GROUP)
@@ -349,6 +352,7 @@ class SwitchGeneralViewModelTest :
     every { electricityMeterGeneralStateHandler.updateState(any(), any(), any()) } answers { firstArg() }
     every { impulseCounterGeneralStateHandler.updateState(any(), any(), any()) } answers { firstArg() }
     every { getAllChannelIssuesUseCase.invoke(any()) } returns emptyList()
+    every { preferences.scale } returns 1f
 
     // when
     viewModel.loadData(remoteId, ItemType.CHANNEL)
@@ -421,6 +425,7 @@ class SwitchGeneralViewModelTest :
     every { electricityMeterGeneralStateHandler.updateState(any(), any(), any()) } answers { firstArg() }
     every { impulseCounterGeneralStateHandler.updateState(any(), any(), any()) } answers { firstArg() }
     every { getAllChannelIssuesUseCase.invoke(any()) } returns emptyList()
+    every { preferences.scale } returns 1f
 
     // when
     viewModel.loadData(remoteId, ItemType.CHANNEL)
