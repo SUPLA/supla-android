@@ -203,7 +203,8 @@ class SwitchGeneralViewModel @Inject constructor(
           ?.copy(currentMonthDownloading = downloading),
         impulseCounterState = impulseCounterGeneralStateHandler
           .updateState(state.impulseCounterState, data, measurements)
-          ?.copy(currentMonthDownloading = downloading)
+          ?.copy(currentMonthDownloading = downloading),
+        scale = preferences.scale
       )
     }
   }
@@ -298,7 +299,8 @@ class SwitchGeneralViewModel @Inject constructor(
         ),
         electricityMeterState = null,
         impulseCounterState = null,
-        relatedChannelsData = groupWithChannels.relatedChannelData
+        relatedChannelsData = groupWithChannels.relatedChannelData,
+        scale = preferences.scale
       )
     }
   }
@@ -335,7 +337,9 @@ data class SwitchGeneralViewState(
   val impulseCounterState: ImpulseCounterState? = null,
   val relatedChannelsData: List<RelatedChannelData>? = null,
   val leftButtonState: SwitchButtonState? = null,
-  val rightButtonState: SwitchButtonState? = null
+  val rightButtonState: SwitchButtonState? = null,
+
+  val scale: Float = 1f
 ) : ViewState()
 
 private val SuplaFunction.switchWithButtons: Boolean

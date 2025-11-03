@@ -43,6 +43,7 @@ fun EmptyListInfoView(modifier: Modifier = Modifier) =
     Text(
       text = stringResource(R.string.main_no_entries),
       style = MaterialTheme.typography.headlineLarge,
+      color = MaterialTheme.colorScheme.onSurfaceVariant,
       textAlign = TextAlign.Center
     )
   }

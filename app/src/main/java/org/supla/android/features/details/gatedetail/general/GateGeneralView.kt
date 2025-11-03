@@ -61,7 +61,8 @@ data class GateGeneralViewState(
   val closeButtonState: SwitchButtonState? = null,
   val openButtonState: SwitchButtonState? = null,
   val showOpenAndCloseWarning: Boolean = false,
-  val offline: Boolean = false
+  val offline: Boolean = false,
+  val scale: Float = 1f
 )
 
 interface GateGeneralScope {
@@ -93,7 +94,8 @@ fun GateGeneralScope.View(
         channels = relatedChannels,
         onInfoClick = { onInfoClick(it) },
         onCaptionLongPress = { onCaptionLongPress(it) },
-        modifier = Modifier.weight(1f)
+        modifier = Modifier.weight(1f),
+        scale = state.scale
       )
     }
 
@@ -101,7 +103,7 @@ fun GateGeneralScope.View(
       ChannelIssueView(
         iconId = R.drawable.channel_warning_level1,
         message = stringResource(R.string.gate_general_open_and_close_warning),
-        modifier = Modifier.padding(all = Distance.default)
+        modifier = Modifier.padding(all = Distance.default),
       )
     }
     if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT) {

@@ -85,7 +85,8 @@ fun SwitchGeneralScope.View(
         channels = state.relatedChannelsData,
         onInfoClick = onInfoClick,
         onCaptionLongPress = onCaptionLongPress,
-        modifier = Modifier.weight(1f)
+        modifier = Modifier.weight(1f),
+        scale = state.scale
       )
       state.channelIssues?.let { ChannelIssuesView(it, modifier = Modifier.padding(top = Distance.default)) }
     } else if (state.deviceStateData != null) {

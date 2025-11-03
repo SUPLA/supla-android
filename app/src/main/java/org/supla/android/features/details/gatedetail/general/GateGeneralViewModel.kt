@@ -19,6 +19,7 @@ package org.supla.android.features.details.gatedetail.general
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
@@ -54,6 +55,7 @@ class GateGeneralViewModel @Inject constructor(
   override val getChannelStateUseCase: GetChannelStateUseCase,
   override val getChannelIconUseCase: GetChannelIconUseCase,
   override val getCaptionUseCase: GetCaptionUseCase,
+  private val preferences: Preferences,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<GateGeneralModelState, GateGeneralViewEvent>(GateGeneralModelState(), schedulers),
   GateGeneralScope,
@@ -118,7 +120,8 @@ class GateGeneralViewModel @Inject constructor(
               textRes = R.string.channel_btn_close,
               pressed = channelState.value == ChannelState.Value.CLOSED
             )
-          }
+          },
+          scale = preferences.scale
         )
       )
     }
@@ -174,7 +177,8 @@ class GateGeneralViewModel @Inject constructor(
               pressed = groupState == ChannelState.Value.CLOSED
             )
           },
-          showOpenAndCloseWarning = groupWithChannels.group.function.supportsOpenAndClose && showOpenAndClose && gateWithoutSensor
+          showOpenAndCloseWarning = groupWithChannels.group.function.supportsOpenAndClose && showOpenAndClose && gateWithoutSensor,
+          scale = preferences.scale
         )
       )
     }
