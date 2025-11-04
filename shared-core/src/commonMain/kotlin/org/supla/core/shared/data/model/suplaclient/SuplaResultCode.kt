@@ -82,7 +82,7 @@ enum class SuplaResultCode(val value: Int) {
         localizedString(
           if (isLogin) LocalizedStringId.RESULT_CODE_INCORRECT_EMAIL_OR_PASSWORD else LocalizedStringId.RESULT_CODE_BAD_CREDENTIALS
         )
-      else -> LocalizedString.WithIdAndString(LocalizedStringId.RESULT_CODE_UNKNOWN_ERROR, " ($value)")
+      else -> localizedString("%s ($value)", localizedString(LocalizedStringId.RESULT_CODE_UNKNOWN_ERROR))
     }
 
   companion object {

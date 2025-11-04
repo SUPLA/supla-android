@@ -1,4 +1,4 @@
-package org.supla.core.shared.data.model.channel
+package org.supla.android.testhelpers
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,13 +17,25 @@ package org.supla.core.shared.data.model.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.core.shared.data.model.general.Channel
+import timber.log.Timber
 
-data class ChannelChild(
-  val channel: Channel,
-  val relation: ChannelRelation,
-  val children: List<ChannelChild> = emptyList()
-) {
-  val asChannelWithChildren: ChannelWithChildren
-    get() = ChannelWithChildren(channel, children)
+class StdoutTree : Timber.Tree() {
+  override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
+    val level = when (priority) {
+      2 -> "VERBOSE"
+      3 -> "DEBUG"
+      4 -> "INFO"
+      5 -> "WARN"
+      6 -> "ERROR"
+      7 -> "ASSERT"
+      else -> priority.toString()
+    }
+    val prefix = buildString {
+      append('[').append(level).append(']')
+      if (!tag.isNullOrBlank()) append('[').append(tag).append(']')
+      append(' ')
+    }
+    println(prefix + message)
+    t?.printStackTrace(System.out)
+  }
 }

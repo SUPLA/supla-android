@@ -87,6 +87,7 @@ class ThermostatGeneralViewModel @Inject constructor(
   private val checkIsSlaveThermostatUseCase: CheckIsSlaveThermostatUseCase,
   private val channelConfigEventsManager: ChannelConfigEventsManager,
   private val deviceConfigEventsManager: DeviceConfigEventsManager,
+  private val thermostatIssuesProvider: ThermostatIssuesProvider,
   private val getChannelValueUseCase: GetChannelValueUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val loadingTimeoutManager: LoadingTimeoutManager,
@@ -98,7 +99,6 @@ class ThermostatGeneralViewModel @Inject constructor(
   ThermostatGeneralViewProxy {
 
   private val updateSubject: BehaviorSubject<Int> = BehaviorSubject.createDefault(0)
-  private val thermostatIssuesProvider = ThermostatIssuesProvider()
 
   override fun onViewCreated() {
     loadingTimeoutManager.watch({ currentState().loadingState }) {

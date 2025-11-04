@@ -680,7 +680,7 @@ data class HistoryDetailViewState(
 
       is DownloadEventsManager.State.InProgress -> {
         val percentage = ValuesFormatter.getPercentageString(downloadState.progress)
-        LocalizedString.WithResourceAndString(R.string.retrieving_data_from_the_server, percentage)
+        localizedString("%s %s", localizedString(R.string.retrieving_data_from_the_server), percentage)
       }
 
       is DownloadEventsManager.State.Finished -> {

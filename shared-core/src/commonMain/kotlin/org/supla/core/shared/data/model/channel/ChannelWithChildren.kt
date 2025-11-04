@@ -22,4 +22,16 @@ import org.supla.core.shared.data.model.general.Channel
 data class ChannelWithChildren(
   val channel: Channel,
   val children: List<ChannelChild>
-)
+) {
+  val allChildrenFlat: List<ChannelWithChildren>
+    get() = getChildren(children)
+
+  private fun getChildren(tree: List<ChannelChild>): List<ChannelWithChildren> =
+    tree.flatMap { child ->
+      if (child.children.isEmpty()) {
+        mutableListOf(child.asChannelWithChildren)
+      } else {
+        getChildren(child.children).also { (it as MutableList).add(child.asChannelWithChildren) }
+      }
+    }
+}

@@ -681,7 +681,8 @@
   <string name="thermostat_detail_main_thermostat">Hoofdthermostaat</string>
   <string name="thermostat_detail_other_thermostats">Afhankelijke thermostaten</string>
   <string name="thermostat_battery_cover_open">Batterijklep openen</string>
-  <string name="channel_battery_level">Batterijniveau (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_battery_level">Batterijniveau: %1$d%%</string>
+  <string name="channel_battery_level_with_info">Batterijniveau (%1$d - %2$s): %3$d%%</string>
   <string name="channel_btn_stop">Stoppen</string>
   <string name="android_auto_action">Actie: %1$s</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Als u een QR-code heeft, gebruik dan de scanner. Druk voor apparaten zonder een QR-code op <b>Volgende</b> om verder te gaan.]]></string>
@@ -754,4 +755,5 @@
     <item quantity="one">%1$d dag ⏱️</item>
     <item quantity="other">%1$d dagen ⏱️</item>
   </plurals>
+  <string name="thermostat_calibration_error">Kalibratiefout</string>
 </resources>

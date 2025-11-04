@@ -680,7 +680,8 @@
   <string name="thermostat_detail_main_thermostat">Hovedtermostat</string>
   <string name="thermostat_detail_other_thermostats">Avhengige termostater</string>
   <string name="thermostat_battery_cover_open">Åpne batteridekselet</string>
-  <string name="channel_battery_level">Batterinivå (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_battery_level">Batterinivå: %1$d%%</string>
+  <string name="channel_battery_level_with_info">Batterinivå (%1$d - %2$s): %3$d%%</string>
   <string name="channel_btn_stop">Stopp</string>
   <string name="android_auto_action">Handling: %1$s</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Hvis du har en QR-kode, bruk skanneren. For enheter uten QR-kode, trykk <b>Neste</b> for å fortsette.]]></string>
@@ -753,4 +754,5 @@
     <item quantity="one">%1$d dag ⏱️</item>
     <item quantity="other">%1$d dager ⏱️</item>
   </plurals>
+  <string name="thermostat_calibration_error">Kalibreringsfeil</string>
 </resources>

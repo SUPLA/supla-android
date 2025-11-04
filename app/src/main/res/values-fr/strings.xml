@@ -668,7 +668,8 @@
   <string name="thermostat_detail_other_thermostats">Thermostats dépendants</string>
   <string name="thermostat_battery_cover_open">Couvercle de batterie ouvert</string>
 
-  <string name="channel_battery_level">Niveau de batterie (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_battery_level">Niveau de batterie: %1$d%%</string>
+  <string name="channel_battery_level_with_info">Niveau de batterie (%1$d - %2$s): %3$d%%</string>
   <string name="channel_btn_stop">Arrêter</string>
   <string name="android_auto_action">Action: %1$s</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Si vous avez un code QR, utilisez le scanner. Pour les appareils sans code QR, appuyez sur <b>Suivant</b> pour continuer.]]></string>
@@ -741,4 +742,5 @@
     <item quantity="one">%1$d jour ⏱️</item>
     <item quantity="many">%1$d jours ⏱️</item>
   </plurals>
+  <string name="thermostat_calibration_error">Erreur d’étalonnage</string>
 </resources>

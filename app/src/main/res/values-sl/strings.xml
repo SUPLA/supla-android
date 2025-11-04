@@ -678,7 +678,8 @@
   <string name="thermostat_detail_main_thermostat">Glavni termostat</string>
   <string name="thermostat_detail_other_thermostats">Odvisni termostati</string>
   <string name="thermostat_battery_cover_open">Odprt pokrov baterije</string>
-  <string name="channel_battery_level">Raven baterije (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_battery_level">Raven baterije: %1$d%%</string>
+  <string name="channel_battery_level_with_info">Raven baterije (%1$d - %2$s): %3$d%%</string>
   <string name="channel_btn_stop">Ustavi</string>
   <string name="android_auto_action">Dejanje: %1$s</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Če imate QR kodo, uporabite skener. Za naprave brez QR kode pritisnite <b>Naprej</b> za nadaljevanje.]]></string>
@@ -753,4 +754,5 @@
     <item quantity="few">%1$d dnevi ⏱️</item>
     <item quantity="other">%1$d dni ⏱️</item>
   </plurals>
+  <string name="thermostat_calibration_error">Napaka kalibracije</string>
 </resources>

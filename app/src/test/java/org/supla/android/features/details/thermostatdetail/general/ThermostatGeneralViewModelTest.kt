@@ -33,6 +33,7 @@ import org.junit.Test
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
+import org.supla.android.core.shared.shareable
 import org.supla.android.data.model.temperature.TemperatureCorrection
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
@@ -69,6 +70,7 @@ import org.supla.core.shared.data.model.function.thermostat.ThermostatState
 import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.usecase.channel.issues.ThermostatIssuesProvider
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import java.util.Date
 import java.util.concurrent.TimeUnit
@@ -114,6 +116,9 @@ class ThermostatGeneralViewModelTest :
 
   @MockK
   lateinit var valueFormatter: ValueFormatter
+
+  @MockK
+  private lateinit var thermostatIssuesProvider: ThermostatIssuesProvider
 
   @InjectMockKs
   override lateinit var viewModel: ThermostatGeneralViewModel
@@ -198,6 +203,8 @@ class ThermostatGeneralViewModelTest :
     every { valueFormatter.format(10f) } returns "10,0"
     every { valueFormatter.format(40f) } returns "40,0"
     every { checkIsSlaveThermostatUseCase(remoteId) } returns Single.just(false)
+    val shareable = channelWithChildren.shareable
+    every { thermostatIssuesProvider.provide(shareable) } returns emptyList()
 
     // when
     viewModel.observeData(remoteId, deviceId)
@@ -753,6 +760,9 @@ class ThermostatGeneralViewModelTest :
     every { createTemperaturesListUseCase.invoke(channelWithChildren) } returns emptyList()
     every { valueFormatter.format(10f) } returns "10,0"
     every { valueFormatter.format(40f) } returns "40,0"
+
+    val shareable = channelWithChildren.shareable
+    every { thermostatIssuesProvider.provide(shareable) } returns emptyList()
   }
 
   private fun mockCoolThermostat(remoteId: Int, deviceId: Int, setpointTemperature: Float, weeklyScheduleActive: Boolean = false) {
@@ -786,6 +796,9 @@ class ThermostatGeneralViewModelTest :
     every { createTemperaturesListUseCase.invoke(channelWithChildren) } returns emptyList()
     every { valueFormatter.format(10f) } returns "10,0"
     every { valueFormatter.format(40f) } returns "40,0"
+
+    val shareable = channelWithChildren.shareable
+    every { thermostatIssuesProvider.provide(shareable) } returns emptyList()
   }
 
   private fun mockChannelWithChildren(

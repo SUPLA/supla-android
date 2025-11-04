@@ -31,6 +31,14 @@ sealed class ChannelIssueItem(
   val message: LocalizedString
     get() = messages.firstOrNull() ?: LocalizedString.Empty
 
+  fun extendOn(remoteId: Int, name: LocalizedString): ChannelIssueItem =
+    when (this) {
+      is Error -> Error(messages.firstOrNull()?.let { localizedString("%s (%d - %s)", it, remoteId, name) })
+      is Warning -> Warning(messages.firstOrNull()?.let { localizedString("%s (%d - %s)", it, remoteId, name) })
+      is SoundAlarm -> SoundAlarm(messages.firstOrNull()?.let { localizedString("%s (%d - %s)", it, remoteId, name) })
+      is LowBattery -> LowBattery(messages.map { localizedString("%s (%d - %s)", it, remoteId, name) })
+    }
+
   data class Error(private val string: LocalizedString? = null) : ChannelIssueItem(IssueIcon.Error) {
     override val messages: List<LocalizedString>
       get() = string?.let { listOf(it) } ?: emptyList()

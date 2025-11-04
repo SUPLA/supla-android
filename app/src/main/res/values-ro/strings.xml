@@ -682,7 +682,8 @@
   <string name="thermostat_detail_main_thermostat">Termostat principal</string>
   <string name="thermostat_detail_other_thermostats">Termostate dependente</string>
   <string name="thermostat_battery_cover_open">Deschideți capacul bateriei</string>
-  <string name="channel_battery_level">Nivelul bateriei (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_battery_level">Nivelul bateriei: %1$d%%</string>
+  <string name="channel_battery_level_with_info">Nivelul bateriei (%1$d - %2$s): %3$d%%</string>
   <string name="channel_btn_stop">Oprește</string>
   <string name="android_auto_action">Acțiune: %1$s</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Dacă aveți un cod QR, utilizați scanerul. Pentru dispozitivele fără un cod QR, apăsați <b>Următorul</b> pentru a continua.]]></string>
@@ -756,4 +757,5 @@
     <item quantity="few">%1$d zile ⏱️</item>
     <item quantity="other">%1$d de zile ⏱️</item>
   </plurals>
+  <string name="thermostat_calibration_error">Eroare de calibrare</string>
 </resources>

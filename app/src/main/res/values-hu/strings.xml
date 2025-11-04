@@ -680,7 +680,8 @@
   <string name="thermostat_detail_main_thermostat">Fő termosztát</string>
   <string name="thermostat_detail_other_thermostats">Mellék termosztátok</string>
   <string name="thermostat_battery_cover_open">Elemfedél nyitva</string>
-  <string name="channel_battery_level">Az akkumulátor töltöttségi szintje (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_battery_level">Az akkumulátor töltöttségi szintje: %1$d%%</string>
+  <string name="channel_battery_level_with_info">Az akkumulátor töltöttségi szintje (%1$d - %2$s): %3$d%%</string>
   <string name="channel_btn_stop">Állj</string>
   <string name="android_auto_action">Akció: %1$s</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Ha van QR-kódja, használja a szkennert. QR-kód nélküli eszközök esetén nyomja meg a <b>Tovább</b> gombot a folytatáshoz.]]></string>
@@ -753,4 +754,5 @@
     <item quantity="one">%1$d nap ⏱️</item>
     <item quantity="other">%1$d nap ⏱️</item>
   </plurals>
+  <string name="thermostat_calibration_error">Kalibrációs hiba</string>
 </resources>

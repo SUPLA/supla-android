@@ -42,6 +42,7 @@ import org.supla.core.shared.usecase.channel.GetChannelIssuesForSlavesUseCase
 import org.supla.core.shared.usecase.channel.GetChannelLowBatteryIssueUseCase
 import org.supla.core.shared.usecase.channel.GetChannelSpecificIssuesUseCase
 import org.supla.core.shared.usecase.channel.StoreChannelOcrPhotoUseCase
+import org.supla.core.shared.usecase.channel.issues.ThermostatIssuesProvider
 import org.supla.core.shared.usecase.channel.ocr.OcrImageNamingProvider
 import org.supla.core.shared.usecase.file.StoreFileInDirectoryUseCase
 import javax.inject.Singleton
@@ -77,6 +78,10 @@ class CoreSharedModule {
 
   @Singleton
   @Provides
+  fun provideThermostatIssuesProvider() = ThermostatIssuesProvider()
+
+  @Singleton
+  @Provides
   fun provideGetChannelSpecificIssuesUseCase() = GetChannelSpecificIssuesUseCase()
 
   @Singleton
@@ -84,8 +89,14 @@ class CoreSharedModule {
   fun provideGetChannelIssuesForListUseCase(
     getChannelLowBatteryIssueUseCase: GetChannelLowBatteryIssueUseCase,
     getChannelBatteryIconUseCase: GetChannelBatteryIconUseCase,
-    getChannelSpecificIssuesUseCase: GetChannelSpecificIssuesUseCase
-  ) = GetChannelIssuesForListUseCase(getChannelLowBatteryIssueUseCase, getChannelBatteryIconUseCase, getChannelSpecificIssuesUseCase)
+    getChannelSpecificIssuesUseCase: GetChannelSpecificIssuesUseCase,
+    getCaptionUseCase: GetCaptionUseCase
+  ) = GetChannelIssuesForListUseCase(
+    getChannelLowBatteryIssueUseCase,
+    getChannelSpecificIssuesUseCase,
+    getChannelBatteryIconUseCase,
+    getCaptionUseCase
+  )
 
   @Singleton
   @Provides
