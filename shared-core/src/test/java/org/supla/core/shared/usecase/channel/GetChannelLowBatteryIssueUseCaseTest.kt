@@ -31,6 +31,7 @@ import org.supla.core.shared.data.model.general.Channel
 import org.supla.core.shared.data.model.lists.IssueIcon
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.LocalizedStringId
+import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.infrastructure.storage.ApplicationPreferences
 import org.supla.core.shared.usecase.GetCaptionUseCase
 
@@ -80,8 +81,8 @@ class GetChannelLowBatteryIssueUseCaseTest {
     assertThat(issue?.icon).isEqualTo(IssueIcon.Battery0)
     assertThat(issue?.messages).isEqualTo(
       listOf(
-        LocalizedString.WithIdIntStringInt(LocalizedStringId.CHANNEL_BATTERY_LEVEL, 1, LocalizedString.Constant("Main"), 4),
-        LocalizedString.WithIdIntStringInt(LocalizedStringId.CHANNEL_BATTERY_LEVEL, 2, LocalizedString.Constant("Child"), 5)
+        localizedString(LocalizedStringId.CHANNEL_BATTERY_LEVEL_WITH_INFO, 1, LocalizedString.Constant("Main"), 4),
+        localizedString(LocalizedStringId.CHANNEL_BATTERY_LEVEL_WITH_INFO, 2, LocalizedString.Constant("Child"), 5)
       )
     )
     assertThat(issue?.priority).isEqualTo(4)
@@ -146,8 +147,8 @@ class GetChannelLowBatteryIssueUseCaseTest {
     assertThat(issue?.icon).isEqualTo(IssueIcon.Battery0)
     assertThat(issue?.messages).isEqualTo(
       listOf(
-        LocalizedString.WithIdIntStringInt(LocalizedStringId.CHANNEL_BATTERY_LEVEL, 2, LocalizedString.Constant("Child 1"), 5),
-        LocalizedString.WithIdIntStringInt(LocalizedStringId.CHANNEL_BATTERY_LEVEL, 3, LocalizedString.Constant("Child 2"), 4)
+        localizedString(LocalizedStringId.CHANNEL_BATTERY_LEVEL_WITH_INFO, 2, LocalizedString.Constant("Child 1"), 5),
+        localizedString(LocalizedStringId.CHANNEL_BATTERY_LEVEL_WITH_INFO, 3, LocalizedString.Constant("Child 2"), 4)
       )
     )
     assertThat(issue?.priority).isEqualTo(4)

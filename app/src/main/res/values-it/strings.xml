@@ -674,7 +674,8 @@
   <string name="thermostat_battery_cover_open">Coperchio della batteria aperto</string>
 
   <string name="settings_battery_level_warning">Allarme batteria scarica</string>
-  <string name="channel_battery_level">Livello batteria (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_battery_level">Livello batteria: %1$d%%</string>
+  <string name="channel_battery_level_with_info">Livello batteria (%1$d - %2$s): %3$d%%</string>
   <string name="details_em_reverse_reactive_energy_short">Reattiva restituita</string>
   <string name="details_em_energy_label">Energia</string>
   <string name="channel_btn_shut">Chiudi</string>
@@ -778,4 +779,5 @@
     <item quantity="many">%1$d giorni ⏱️</item>
     <item quantity="other">%1$d giorni ⏱️</item>
   </plurals>
+  <string name="thermostat_calibration_error">Errore di calibrazione</string>
 </resources>

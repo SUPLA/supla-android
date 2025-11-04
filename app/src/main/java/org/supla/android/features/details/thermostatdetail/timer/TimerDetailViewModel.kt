@@ -296,12 +296,7 @@ class TimerDetailViewModel @Inject constructor(
     )
 
     if (days > 0) {
-      return LocalizedString.Merge(
-        listOf(
-          LocalizedString.Quantity(R.plurals.day_pattern, days),
-          LocalizedString.Constant(timeString)
-        )
-      )
+      return localizedString("%s %s", LocalizedString.Quantity(R.plurals.day_pattern, days), LocalizedString.Constant(timeString))
     }
 
     return LocalizedString.Constant(timeString)
@@ -441,7 +436,7 @@ data class TimerDetailViewState(
       val daysString = LocalizedString.Quantity(R.plurals.day_pattern, days)
       val hoursString = LocalizedString.Quantity(R.plurals.hour_pattern, hours)
       val minutesString = LocalizedString.Quantity(R.plurals.minute_pattern, minutes)
-      val timeString = LocalizedString.Merge(listOf(daysString, hoursString, minutesString), delimiter = " ")
+      val timeString = localizedString("%s %s %s", daysString, hoursString, minutesString)
 
       return when {
         selectedMode == DeviceMode.OFF ->

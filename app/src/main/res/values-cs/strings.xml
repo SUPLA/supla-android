@@ -661,7 +661,8 @@
   <string name="thermostat_detail_other_thermostats">Závislé termostaty</string>
   <string name="thermostat_battery_cover_open">Otevřený kryt baterie</string>
 
-  <string name="channel_battery_level">Stav baterie (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_battery_level">Stav baterie: %1$d%%</string>
+  <string name="channel_battery_level_with_info">Stav baterie (%1$d - %2$s): %3$d%%</string>
   <string name="channel_btn_stop">Zastavit</string>
   <string name="android_auto_action">Akce: %1$s</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Pokud máte QR kód, použijte skener. Pro zařízení bez QR kódu stiskněte <b>Další</b> pro pokračování.]]></string>
@@ -736,4 +737,5 @@
     <item quantity="many">%1$d dní ⏱️</item>
     <item quantity="other">%1$d dne ⏱️</item>
   </plurals>
+  <string name="thermostat_calibration_error">Chyba kalibrace</string>
 </resources>

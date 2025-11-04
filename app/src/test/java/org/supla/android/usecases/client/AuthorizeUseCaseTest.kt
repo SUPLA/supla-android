@@ -130,7 +130,7 @@ class AuthorizeUseCaseTest {
   fun `should authorize with unknown error`() {
     val message = SuplaClientMessage.AuthorizationResult(false, SuplaResultCode.FALSE)
 
-    doAuthorizationTestWithError(message, LocalizedString.WithIdAndString(LocalizedStringId.RESULT_CODE_UNKNOWN_ERROR, " (2)"))
+    doAuthorizationTestWithError(message, localizedString("%s (2)", localizedString(LocalizedStringId.RESULT_CODE_UNKNOWN_ERROR)))
   }
 
   private fun doAuthorizationTestWithError(message: SuplaClientMessage, errorMessage: LocalizedString) {

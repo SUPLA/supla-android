@@ -662,7 +662,8 @@
   <string name="channel_btn_collapse">Einklappen</string>
   <string name="channel_btn_expand">Ausklappen</string>
   <string name="settings_battery_level_warning">Batteriestandswarnung</string>
-  <string name="channel_battery_level">Batteriefüllstand (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_battery_level">Batteriefüllstand: %1$d%%</string>
+  <string name="channel_battery_level_with_info">Batteriefüllstand (%1$d - %2$s): %3$d%%</string>
   <string name="counter_photo_counter_area">Zählerbereich</string>
   <string name="counter_photo_original_photo">Originalbild</string>
   <string name="counter_photo_settings">Cloudkonfiguration</string>

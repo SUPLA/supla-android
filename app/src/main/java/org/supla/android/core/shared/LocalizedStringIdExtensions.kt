@@ -99,6 +99,7 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.CHANNEL_STATUS_NOT_AVAILABLE -> R.string.channel_not_available
 
     LocalizedStringId.CHANNEL_BATTERY_LEVEL -> R.string.channel_battery_level
+    LocalizedStringId.CHANNEL_BATTERY_LEVEL_WITH_INFO -> R.string.channel_battery_level_with_info
 
     LocalizedStringId.MOTOR_PROBLEM -> R.string.motor_problem
     LocalizedStringId.CALIBRATION_LOST -> R.string.calibration_lost

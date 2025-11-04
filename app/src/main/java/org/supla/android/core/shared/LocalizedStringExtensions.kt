@@ -45,10 +45,24 @@ operator fun LocalizedString.invoke(context: Context): String {
       }
     }
 
-    is LocalizedString.WithIdAndString -> "${context.getString(id.resourceId)} $text"
+    is LocalizedString.WithFormat -> {
+      val parsed = arguments.map { if (it is LocalizedString) it(context) else it }
+      if (parsed.hasAllowedTypes) {
+        when (parsed.size) {
+          0 -> format
+          1 -> String.format(format, parsed[0])
+          2 -> String.format(format, parsed[0], parsed[1])
+          3 -> String.format(format, parsed[0], parsed[1], parsed[2])
+          4 -> String.format(format, parsed[0], parsed[1], parsed[2], parsed[3])
+          5 -> String.format(format, parsed[0], parsed[1], parsed[2], parsed[3], parsed[4])
+          6 -> String.format(format, parsed[0], parsed[1], parsed[2], parsed[3], parsed[4], parsed[5])
+          else -> throw IllegalStateException("To many arguments: ${arguments.size}")
+        }
+      } else {
+        throw IllegalStateException("Arguments contain unsupported type: $arguments")
+      }
+    }
 
-    is LocalizedString.WithIdIntStringInt -> context.getString(id.resourceId, arg1, arg2(context), arg3)
-    is LocalizedString.WithResourceAndString -> "${context.getString(id)} $value"
     is LocalizedString.WithResourceAndArguments -> {
       val parsed = arguments.map { if (it is LocalizedString) it(context) else it }
       if (parsed.hasAllowedTypes) {
@@ -72,7 +86,6 @@ operator fun LocalizedString.invoke(context: Context): String {
       context.getString(id, DateFormat.format(format, Date(timestamp)))
     }
 
-    is LocalizedString.Merge -> texts.joinToString(delimiter) { it(context) }
     is LocalizedString.Quantity -> context.resources.getQuantityString(id, quantity, quantity)
   }
 }

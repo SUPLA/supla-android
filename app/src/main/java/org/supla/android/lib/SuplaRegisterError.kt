@@ -48,7 +48,7 @@ class SuplaRegisterError {
       SuplaConst.SUPLA_RESULTCODE_REGISTRATION_DISABLED -> localizedString(R.string.status_reg_disabled)
       SuplaConst.SUPLA_RESULTCODE_ACCESSID_NOT_ASSIGNED -> localizedString(R.string.status_access_id_not_assigned)
       SuplaConst.SUPLA_RESULTCODE_ACCESSID_INACTIVE -> localizedString(R.string.status_accessid_inactive)
-      else -> LocalizedString.WithResourceAndString(R.string.status_unknown_err, " ($ResultCode)")
+      else -> localizedString("%s ($ResultCode)", R.string.status_unknown_err)
     }
   }
 

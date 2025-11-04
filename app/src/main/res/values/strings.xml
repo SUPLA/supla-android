@@ -739,7 +739,8 @@
   <string name="channel_btn_collapse">Collapse</string>
   <string name="channel_btn_expand">Expand</string>
   <string name="settings_battery_level_warning" translatable="false">Low battery alert</string>
-  <string name="channel_battery_level">Battery level (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_battery_level">Battery level: %1$d%%</string>
+  <string name="channel_battery_level_with_info">Battery level (%1$d - %2$s): %3$d%%</string>
   <string name="counter_photo_counter_area" translatable="false">Counter area</string>
   <string name="counter_photo_original_photo" translatable="false">Original photo</string>
   <string name="counter_photo_settings" translatable="false">Cloud configuration</string>
@@ -787,7 +788,7 @@
   <string name="channel_not_available" translatable="false">The channel is not available due to the configuration. We recommend hiding the channel so it is not visible in the app.</string>
   <string name="channel_status_awaiting" translatable="false">This device cannot be remotely awakened. We are awaiting communication from the device…</string>
   <string name="channel_status_updating" translatable="false">Software update in progress…</string>
-  <string name="thermostat_calibration_error" translatable="false">Calibration error</string>
+  <string name="thermostat_calibration_error">Calibration error</string>
   <string name="state_dialog_index" translatable="false">(%1$d of %2$d)</string>
   <string name="state_switch_cycle_count" translatable="false">Switch cycles</string>
   <string name="settings_android_auto_label" translatable="false">Android Auto</string>

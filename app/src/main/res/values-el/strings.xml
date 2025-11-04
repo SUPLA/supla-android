@@ -677,7 +677,8 @@
   <string name="thermostat_detail_other_thermostats">Εξαρτώμενοι θερμοστάτες</string>
   <string name="thermostat_battery_cover_open">Το κάλυμμα της μπαταρίας είναι ανοιχτό</string>
 
-  <string name="channel_battery_level">Επίπεδο μπαταρίας (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_battery_level">Επίπεδο μπαταρίας: %1$d%%</string>
+  <string name="channel_battery_level_with_info">Επίπεδο μπαταρίας (%1$d - %2$s): %3$d%%</string>
   <string name="channel_btn_stop">Σταμάτημα</string>
   <string name="android_auto_action">Ενέργεια: %1$s</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Εάν έχετε κωδικό QR, χρησιμοποιήστε τον σαρωτή. Για συσκευές χωρίς κωδικό QR, πατήστε <b>Επόμενο</b> για να συνεχίσετε.]]></string>
@@ -750,4 +751,5 @@
     <item quantity="one">%1$d ημέρα ⏱️</item>
     <item quantity="other">%1$d ημέρες ⏱️</item>
   </plurals>
+  <string name="thermostat_calibration_error">Σφάλμα βαθμονόμησης</string>
 </resources>
