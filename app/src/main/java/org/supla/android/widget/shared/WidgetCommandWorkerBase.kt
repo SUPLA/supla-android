@@ -346,14 +346,15 @@ abstract class WidgetCommandWorkerBase(
 
   private fun createForegroundInfo(widgetCaption: String?): ForegroundInfo {
     notificationsHelper.setupBackgroundNotificationChannel(applicationContext)
+    val notificationText = applicationContext.getString(R.string.widget_processing_notification_text)
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
       ForegroundInfo(
         notificationId,
-        notificationsHelper.createBackgroundNotification(applicationContext, widgetCaption),
+        notificationsHelper.createBackgroundNotification(applicationContext, widgetCaption, notificationText),
         ServiceInfo.FOREGROUND_SERVICE_TYPE_SHORT_SERVICE
       )
     } else {
-      ForegroundInfo(notificationId, notificationsHelper.createBackgroundNotification(applicationContext, widgetCaption))
+      ForegroundInfo(notificationId, notificationsHelper.createBackgroundNotification(applicationContext, widgetCaption, notificationText))
     }
   }
 }
