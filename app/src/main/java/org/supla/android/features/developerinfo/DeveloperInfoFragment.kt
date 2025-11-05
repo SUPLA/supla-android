@@ -24,15 +24,11 @@ import androidx.compose.runtime.Composable
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.core.infrastructure.storage.DebugFileLoggingTree
-import org.supla.android.core.infrastructure.storage.FileExporter
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.BaseComposeFragment
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.db.room.measurements.MeasurementsDatabase
 import org.supla.android.extensions.setupOrientationLock
 import org.supla.android.navigator.MainNavigator
-import org.supla.android.usecases.db.MakeAnonymizedDatabaseCopyUseCase
-import java.io.File
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -45,23 +41,17 @@ class DeveloperInfoFragment : BaseComposeFragment<DeveloperInfoViewModelState, D
   @Inject
   internal lateinit var applicationPreferences: ApplicationPreferences
 
-  @Inject
-  internal lateinit var debugFileLoggingTree: DebugFileLoggingTree
-
-  @Inject
-  internal lateinit var makeAnonymizedDatabaseCopyUseCase: MakeAnonymizedDatabaseCopyUseCase
-
   private val exportSuplaDbLauncher = registerForActivityResult(
     ActivityResultContracts.CreateDocument("application/octet-stream")
-  ) { uri: Uri? -> performFileExport(uri, makeAnonymizedDatabaseCopyUseCase.file) }
+  ) { uri: Uri? -> viewModel.writeSuplaDatabaseFile(uri) }
 
   private val exportMeasurementsDbLauncher = registerForActivityResult(
     ActivityResultContracts.CreateDocument("application/octet-stream")
-  ) { uri: Uri? -> performMeasurementsDabataseExport(uri) }
+  ) { uri: Uri? -> viewModel.writeMeasurementsDatabaseFile(uri) }
 
   private val exportLogFileLauncher = registerForActivityResult(
     ActivityResultContracts.CreateDocument("application/octet-stream")
-  ) { uri: Uri? -> performFileExport(uri, debugFileLoggingTree.logFile) }
+  ) { uri: Uri? -> viewModel.writeLogFile(uri) }
 
   @Composable
   override fun ComposableContent(modelState: DeveloperInfoViewModelState) {
@@ -94,32 +84,11 @@ class DeveloperInfoFragment : BaseComposeFragment<DeveloperInfoViewModelState, D
 
       DeveloperInfoViewEvent.SuplaExportNotPossible ->
         Toast.makeText(requireContext(), "Export failed", Toast.LENGTH_SHORT).show()
+
+      DeveloperInfoViewEvent.ExportCanceled ->
+        Toast.makeText(requireContext(), "File export cancelled.", Toast.LENGTH_SHORT).show()
     }
   }
 
   override fun handleViewState(state: DeveloperInfoViewModelState) {}
-
-  private fun performMeasurementsDabataseExport(uri: Uri?) {
-    if (uri != null) {
-      if (FileExporter.copyDatabaseToUri(requireContext(), MeasurementsDatabase.NAME, uri)) {
-        Toast.makeText(requireContext(), "Database successfully exported.", Toast.LENGTH_SHORT).show()
-      } else {
-        Toast.makeText(requireContext(), "Export failed!", Toast.LENGTH_LONG).show()
-      }
-    } else {
-      Toast.makeText(requireContext(), "Database export cancelled.", Toast.LENGTH_SHORT).show()
-    }
-  }
-
-  private fun performFileExport(uri: Uri?, file: File) {
-    if (uri != null) {
-      if (FileExporter.copyFileToUri(requireContext(), file, uri)) {
-        Toast.makeText(requireContext(), "File successfully exported.", Toast.LENGTH_SHORT).show()
-      } else {
-        Toast.makeText(requireContext(), "Export failed!", Toast.LENGTH_LONG).show()
-      }
-    } else {
-      Toast.makeText(requireContext(), "File export cancelled.", Toast.LENGTH_SHORT).show()
-    }
-  }
 }

@@ -43,7 +43,7 @@ private const val NOTIFICATION_BACKGROUND_CHANNEL_ID = BuildConfig.APPLICATION_I
 
 @Singleton
 class NotificationsHelper @Inject constructor(
-  @ApplicationContext private val context: Context,
+  @param:ApplicationContext private val context: Context,
   private val encryptedPreferences: EncryptedPreferences,
   private val preferences: Preferences,
   private val notificationManager: NotificationManager,
@@ -135,15 +135,25 @@ class NotificationsHelper @Inject constructor(
     // when it may happen that's why we always try to create the channel
     setupNotificationChannel(context)
 
-    notificationManager.notify(notificationIdRandomizer.nextInt() % MAX_NOTIFICATION_ID, buildNotification(title, text))
+    notificationManager.notify(generateNotificationId(), buildNotification(title, text))
     notificationRepository.insert(title, text, profileName).blockingSubscribe()
   }
 
-  fun createBackgroundNotification(context: Context, widgetCaption: String?): Notification {
+  fun showBackgroundNotification(context: Context, title: String, text: String? = null, notificationId: Int? = null): Int? {
+    if (!notificationManager.areNotificationsEnabled()) {
+      return null
+    }
+
+    val id = notificationId ?: generateNotificationId()
+    notificationManager.notify(id, createBackgroundNotification(context, title, text))
+    return id
+  }
+
+  fun createBackgroundNotification(context: Context, title: String? = null, text: String? = null): Notification {
     setupBackgroundNotificationChannel(context)
     return buildNotification(
-      title = widgetCaption ?: context.getString(R.string.widget_processing_notification_title),
-      text = context.getString(R.string.widget_processing_notification_text),
+      title = title ?: context.getString(R.string.widget_processing_notification_title),
+      text = text ?: context.getString(R.string.widget_processing_notification_text),
       channel = NOTIFICATION_BACKGROUND_CHANNEL_ID
     )
   }
@@ -163,6 +173,9 @@ class NotificationsHelper @Inject constructor(
       .setStyle(NotificationCompat.BigTextStyle().bigText(text))
       .build()
   }
+
+  /* First 100 IDs are reserved for dedicated notifications */
+  private fun generateNotificationId(): Int = (notificationIdRandomizer.nextInt() % MAX_NOTIFICATION_ID) + 100
 
   companion object {
     fun areNotificationsEnabled(notificationManager: NotificationManager): Boolean {

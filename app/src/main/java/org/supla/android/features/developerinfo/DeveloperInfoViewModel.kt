@@ -18,13 +18,16 @@ package org.supla.android.features.developerinfo
  */
 
 import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.viewModelScope
+import androidx.work.ExistingWorkPolicy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.supla.android.core.infrastructure.WorkManagerProxy
 import org.supla.android.core.infrastructure.storage.DebugFileLoggingTree
 import org.supla.android.core.infrastructure.storage.FileUtils
 import org.supla.android.core.notifications.NotificationsHelper
@@ -33,6 +36,7 @@ import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
+import org.supla.android.db.room.measurements.MeasurementsDatabase
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.db.MakeAnonymizedDatabaseCopyUseCase
 import org.supla.android.usecases.developerinfo.LoadDatabaseDetailsUseCase
@@ -47,10 +51,11 @@ class DeveloperInfoViewModel @Inject constructor(
   private val loadDatabaseDetailsUseCase: LoadDatabaseDetailsUseCase,
   private val applicationPreferences: ApplicationPreferences,
   private val encryptedPreferences: EncryptedPreferences,
-  private val notificationsHelper: NotificationsHelper,
   private val debugFileLoggingTree: DebugFileLoggingTree,
+  private val notificationsHelper: NotificationsHelper,
+  private val workManagerProxy: WorkManagerProxy,
   private val fileUtils: FileUtils,
-  @ApplicationContext private val context: Context,
+  @param:ApplicationContext private val context: Context,
   suplaSchedulers: SuplaSchedulers
 ) : BaseViewModel<DeveloperInfoViewModelState, DeveloperInfoViewEvent>(DeveloperInfoViewModelState(), suplaSchedulers),
   DeveloperInfoScope {
@@ -122,6 +127,19 @@ class DeveloperInfoViewModel @Inject constructor(
     sendEvent(DeveloperInfoViewEvent.ExportLogFile)
   }
 
+  fun writeLogFile(uri: Uri?) {
+    if (uri == null) {
+      sendEvent(DeveloperInfoViewEvent.ExportCanceled)
+      return
+    }
+
+    workManagerProxy.enqueueUniqueWork(
+      ExportFileWorker.workId(ExportFileWorker.ExportType.LOG),
+      ExistingWorkPolicy.KEEP,
+      ExportFileWorker.build(debugFileLoggingTree.logFile, uri, ExportFileWorker.ExportType.LOG)
+    )
+  }
+
   override fun deleteLogFile() {
     if (debugFileLoggingTree.cleanup()) {
       sendEvent(DeveloperInfoViewEvent.LogFileRemoved)
@@ -151,8 +169,36 @@ class DeveloperInfoViewModel @Inject constructor(
     }
   }
 
+  fun writeSuplaDatabaseFile(uri: Uri?) {
+    if (uri == null) {
+      sendEvent(DeveloperInfoViewEvent.ExportCanceled)
+      return
+    }
+
+    val type = ExportFileWorker.ExportType.DATABASE
+    workManagerProxy.enqueueUniqueWork(
+      ExportFileWorker.workId(type),
+      ExistingWorkPolicy.KEEP,
+      ExportFileWorker.build(makeAnonymizedDatabaseCopyUseCase.file, uri, type)
+    )
+  }
+
   override fun exportMeasurementsDatabase() {
     sendEvent(DeveloperInfoViewEvent.ExportMeasurementsDatabase)
+  }
+
+  fun writeMeasurementsDatabaseFile(uri: Uri?) {
+    if (uri == null) {
+      sendEvent(DeveloperInfoViewEvent.ExportCanceled)
+      return
+    }
+
+    val type = ExportFileWorker.ExportType.MEASUREMENTS_DATABASE
+    workManagerProxy.enqueueUniqueWork(
+      ExportFileWorker.workId(type),
+      ExistingWorkPolicy.KEEP,
+      ExportFileWorker.build(context.getDatabasePath(MeasurementsDatabase.NAME), uri, type)
+    )
   }
 
   private fun setupLoggingCheckbox(enabled: Boolean) {
@@ -184,6 +230,7 @@ sealed class DeveloperInfoViewEvent : ViewEvent {
   data object SuplaExportNotPossible : DeveloperInfoViewEvent()
   data object ExportMeasurementsDatabase : DeveloperInfoViewEvent()
   data object ExportLogFile : DeveloperInfoViewEvent()
+  data object ExportCanceled : DeveloperInfoViewEvent()
 
   data object LogFileRemoved : DeveloperInfoViewEvent()
   data object LogFileRemovalFailed : DeveloperInfoViewEvent()
