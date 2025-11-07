@@ -17,27 +17,27 @@ package org.supla.android.features.details.gpmdetail
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import io.mockk.MockKAnnotations
+import io.mockk.confirmVerified
 import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
+import io.mockk.verify
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.UpdateEventsManager
+import org.supla.android.features.details.detailbase.StandardDetailViewEvent
+import org.supla.android.features.details.detailbase.StandardDetailViewModel
+import org.supla.android.features.details.detailbase.StandardDetailViewState
 import org.supla.android.testhelpers.extensions.mockShareable
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
@@ -46,32 +46,34 @@ import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.usecase.GetCaptionUseCase
 
-@RunWith(MockitoJUnitRunner::class)
-class GpmDetailViewModelTest : BaseViewModelTest<GpmDetailViewState, GpmDetailViewEvent, GpmDetailViewModel>() {
+class StandardDetailViewModelTest : BaseViewModelTest<StandardDetailViewState, StandardDetailViewEvent, StandardDetailViewModel>(
+  MockSchedulers.MOCKK
+) {
 
-  @Mock
+  @MockK
   private lateinit var getCaptionUseCase: GetCaptionUseCase
 
-  @Mock
+  @MockK
   private lateinit var readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase
 
-  @Mock
+  @MockK
   private lateinit var readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase
 
-  @Mock
+  @MockK
   private lateinit var updateEventsManager: UpdateEventsManager
 
-  @Mock
+  @MockK
   private lateinit var preferences: Preferences
 
-  @Mock
+  @MockK
   override lateinit var schedulers: SuplaSchedulers
 
-  @InjectMocks
-  override lateinit var viewModel: GpmDetailViewModel
+  @InjectMockKs
+  override lateinit var viewModel: StandardDetailViewModel
 
   @Before
   override fun setUp() {
+    MockKAnnotations.init(this)
     super.setUp()
   }
 
@@ -85,19 +87,19 @@ class GpmDetailViewModelTest : BaseViewModelTest<GpmDetailViewState, GpmDetailVi
     channelData.mockShareable(function = function)
     val caption: LocalizedString = mockk()
 
-    whenever(getCaptionUseCase.invoke(channelData.shareable)).thenReturn(caption)
-    whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
+    val shareable = channelData.shareable
+    every { getCaptionUseCase.invoke(shareable) } returns caption
+    every { readChannelByRemoteIdUseCase.invoke(remoteId) } returns Maybe.just(channelData)
 
     // when
     viewModel.loadData(remoteId, ItemType.CHANNEL, function)
 
     // then
     Assertions.assertThat(events).isEmpty()
-    Assertions.assertThat(states).containsExactly(GpmDetailViewState(caption))
+    Assertions.assertThat(states).containsExactly(StandardDetailViewState(caption))
 
-    verify(readChannelByRemoteIdUseCase).invoke(remoteId)
-    verifyNoMoreInteractions(readChannelByRemoteIdUseCase)
-    verifyNoInteractions(readChannelGroupByRemoteIdUseCase, updateEventsManager)
+    verify { readChannelByRemoteIdUseCase.invoke(remoteId) }
+    confirmVerified(readChannelByRemoteIdUseCase, readChannelGroupByRemoteIdUseCase, updateEventsManager)
   }
 
   @Test
@@ -108,18 +110,17 @@ class GpmDetailViewModelTest : BaseViewModelTest<GpmDetailViewState, GpmDetailVi
     val channelData: ChannelDataEntity = mockk()
     every { channelData.visible } returns 0
     every { channelData.function } returns function
-    whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
+    every { readChannelByRemoteIdUseCase.invoke(remoteId) } returns Maybe.just(channelData)
 
     // when
     viewModel.loadData(remoteId, ItemType.CHANNEL, function)
 
     // then
-    Assertions.assertThat(events).containsExactly(GpmDetailViewEvent.Close)
+    Assertions.assertThat(events).containsExactly(StandardDetailViewEvent.Close)
     Assertions.assertThat(states).isEmpty()
 
-    verify(readChannelByRemoteIdUseCase).invoke(remoteId)
-    verifyNoMoreInteractions(readChannelByRemoteIdUseCase)
-    verifyNoInteractions(readChannelGroupByRemoteIdUseCase, updateEventsManager)
+    verify { readChannelByRemoteIdUseCase.invoke(remoteId) }
+    confirmVerified(readChannelByRemoteIdUseCase, readChannelGroupByRemoteIdUseCase, updateEventsManager)
   }
 
   @Test
@@ -130,18 +131,17 @@ class GpmDetailViewModelTest : BaseViewModelTest<GpmDetailViewState, GpmDetailVi
     val channelData: ChannelDataEntity = mockk()
     every { channelData.visible } returns 1
     every { channelData.function } returns function
-    whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
+    every { readChannelByRemoteIdUseCase.invoke(remoteId) } returns Maybe.just(channelData)
 
     // when
     viewModel.loadData(remoteId, ItemType.CHANNEL, SuplaFunction.LIGHTSWITCH)
 
     // then
-    Assertions.assertThat(events).containsExactly(GpmDetailViewEvent.Close)
+    Assertions.assertThat(events).containsExactly(StandardDetailViewEvent.Close)
     Assertions.assertThat(states).isEmpty()
 
-    verify(readChannelByRemoteIdUseCase).invoke(remoteId)
-    verifyNoMoreInteractions(readChannelByRemoteIdUseCase)
-    verifyNoInteractions(readChannelGroupByRemoteIdUseCase, updateEventsManager)
+    verify { readChannelByRemoteIdUseCase.invoke(remoteId) }
+    confirmVerified(readChannelByRemoteIdUseCase, readChannelGroupByRemoteIdUseCase, updateEventsManager)
   }
 
   @Test
@@ -152,22 +152,24 @@ class GpmDetailViewModelTest : BaseViewModelTest<GpmDetailViewState, GpmDetailVi
     val channelData: ChannelDataEntity = mockk()
     every { channelData.visible } returns 1
     channelData.mockShareable(function = function)
-    whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
-    whenever(updateEventsManager.observeChannelEvents(remoteId)).thenReturn(Observable.just(UpdateEventsManager.State.Channel))
+    every { readChannelByRemoteIdUseCase.invoke(remoteId) } returns Maybe.just(channelData)
+    every { updateEventsManager.observeChannelEvents(remoteId) } returns Observable.just(UpdateEventsManager.State.Channel)
 
+    val shareable = channelData.shareable
     val caption: LocalizedString = mockk()
-    whenever(getCaptionUseCase.invoke(channelData.shareable)).thenReturn(caption)
+    every { getCaptionUseCase.invoke(shareable) } returns caption
 
     // when
     viewModel.observeUpdates(remoteId, ItemType.CHANNEL, function)
 
     // then
     Assertions.assertThat(events).isEmpty()
-    Assertions.assertThat(states).containsExactly(GpmDetailViewState(caption))
+    Assertions.assertThat(states).containsExactly(StandardDetailViewState(caption))
 
-    verify(readChannelByRemoteIdUseCase).invoke(remoteId)
-    verify(updateEventsManager).observeChannelEvents(remoteId)
-    verifyNoMoreInteractions(readChannelByRemoteIdUseCase, updateEventsManager)
-    verifyNoInteractions(readChannelGroupByRemoteIdUseCase)
+    verify {
+      readChannelByRemoteIdUseCase.invoke(remoteId)
+      updateEventsManager.observeChannelEvents(remoteId)
+    }
+    confirmVerified(readChannelByRemoteIdUseCase, updateEventsManager, readChannelGroupByRemoteIdUseCase)
   }
 }

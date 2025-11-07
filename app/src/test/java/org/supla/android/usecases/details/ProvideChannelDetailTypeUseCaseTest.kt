@@ -28,7 +28,7 @@ import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
-import org.supla.android.features.details.detailbase.standarddetail.DetailPage
+import org.supla.android.features.details.detailbase.base.DetailPage
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
 import org.supla.core.shared.data.model.general.SuplaFunction

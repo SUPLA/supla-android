@@ -1,4 +1,4 @@
-package org.supla.android.features.details.electricitymeterdetail
+package org.supla.android.features.details.detailbase
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -22,9 +22,9 @@ import org.supla.android.Preferences
 import org.supla.android.core.shared.shareable
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.events.UpdateEventsManager
-import org.supla.android.features.details.detailbase.standarddetail.StandardDetailViewEvent
-import org.supla.android.features.details.detailbase.standarddetail.StandardDetailViewModel
-import org.supla.android.features.details.detailbase.standarddetail.StandardDetailViewState
+import org.supla.android.features.details.detailbase.base.BaseDetailViewEvent
+import org.supla.android.features.details.detailbase.base.BaseDetailViewModel
+import org.supla.android.features.details.detailbase.base.BaseDetailViewState
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
@@ -33,32 +33,32 @@ import org.supla.core.shared.usecase.GetCaptionUseCase
 import javax.inject.Inject
 
 @HiltViewModel
-class ElectricityMeterDetailViewModel @Inject constructor(
+class StandardDetailViewModel @Inject constructor(
   private val getCaptionUseCase: GetCaptionUseCase,
   readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   updateEventsManager: UpdateEventsManager,
   preferences: Preferences,
   schedulers: SuplaSchedulers
-) : StandardDetailViewModel<ElectricityMeterDetailViewState, ElectricityMeterDetailViewEvent>(
+) : BaseDetailViewModel<StandardDetailViewState, StandardDetailViewEvent>(
   readChannelByRemoteIdUseCase,
   readChannelGroupByRemoteIdUseCase,
   updateEventsManager,
   preferences,
-  ElectricityMeterDetailViewState(),
+  StandardDetailViewState(),
   schedulers
 ) {
 
-  override fun closeEvent() = ElectricityMeterDetailViewEvent.Close
+  override fun closeEvent() = StandardDetailViewEvent.Close
 
-  override fun updatedState(state: ElectricityMeterDetailViewState, channelDataBase: ChannelDataBase) =
+  override fun updatedState(state: StandardDetailViewState, channelDataBase: ChannelDataBase) =
     state.copy(caption = getCaptionUseCase(channelDataBase.shareable))
 }
 
-sealed interface ElectricityMeterDetailViewEvent : StandardDetailViewEvent {
-  data object Close : ElectricityMeterDetailViewEvent
+sealed interface StandardDetailViewEvent : BaseDetailViewEvent {
+  data object Close : StandardDetailViewEvent
 }
 
-data class ElectricityMeterDetailViewState(
+data class StandardDetailViewState(
   override val caption: LocalizedString? = null
-) : StandardDetailViewState(caption)
+) : BaseDetailViewState(caption)

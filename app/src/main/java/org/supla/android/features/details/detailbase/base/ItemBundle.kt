@@ -1,4 +1,4 @@
-package org.supla.android.features.details.detailbase.standarddetail
+package org.supla.android.features.details.detailbase.base
 /*
 Copyright (C) AC SOFTWARE SP. Z O.O.
 

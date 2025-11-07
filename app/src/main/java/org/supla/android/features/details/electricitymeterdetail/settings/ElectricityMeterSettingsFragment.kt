@@ -18,13 +18,12 @@ package org.supla.android.features.details.electricitymeterdetail.settings
  */
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.core.ui.BaseComposeFragment
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
+import org.supla.android.features.details.detailbase.base.ItemBundle
 
 private const val ARG_ITEM_BUNDLE = "ARG_ITEM_BUNDLE"
 

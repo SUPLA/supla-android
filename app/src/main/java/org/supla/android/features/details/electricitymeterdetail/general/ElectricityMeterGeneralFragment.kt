@@ -25,7 +25,7 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.core.ui.BaseComposeFragment
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
+import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 
 private const val ARG_ITEM_BUNDLE = "ARG_ITEM_BUNDLE"

@@ -1,4 +1,4 @@
-package org.supla.android.features.details.humiditydetail
+package org.supla.android.features.details.detailbase
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -26,15 +26,15 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.core.shared.invoke
 import org.supla.android.databinding.FragmentStandardDetailBinding
-import org.supla.android.features.details.detailbase.standarddetail.DetailPage
-import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
-import org.supla.android.features.details.detailbase.standarddetail.StandardDetailFragment
+import org.supla.android.features.details.detailbase.base.BaseDetailFragment
+import org.supla.android.features.details.detailbase.base.DetailPage
+import org.supla.android.features.details.detailbase.base.ItemBundle
 
 @AndroidEntryPoint
-class HumidityDetailFragment :
-  StandardDetailFragment<HumidityDetailViewState, HumidityDetailViewEvent>(R.layout.fragment_standard_detail) {
+class StandardDetailFragment :
+  BaseDetailFragment<StandardDetailViewState, StandardDetailViewEvent>(R.layout.fragment_standard_detail) {
 
-  override val viewModel: HumidityDetailViewModel by viewModels()
+  override val viewModel: StandardDetailViewModel by viewModels()
 
   private val binding by viewBinding(FragmentStandardDetailBinding::bind)
 
@@ -45,14 +45,14 @@ class HumidityDetailFragment :
   override val detailViewPager: ViewPager2
     get() = binding.detailViewPager
 
-  override fun isCloseEvent(event: HumidityDetailViewEvent) = event == HumidityDetailViewEvent.Close
+  override fun isCloseEvent(event: StandardDetailViewEvent) = event == StandardDetailViewEvent.Close
 
-  override fun updateToolbarTitle(state: HumidityDetailViewState) {
+  override fun updateToolbarTitle(state: StandardDetailViewState) {
     state.caption?.let { setToolbarTitle(it(requireContext())) }
   }
 
-  companion object {
+  companion object Companion {
     fun bundle(itemBundle: ItemBundle, pages: Array<DetailPage>) =
-      StandardDetailFragment.bundle(itemBundle, pages)
+      BaseDetailFragment.bundle(itemBundle, pages)
   }
 }

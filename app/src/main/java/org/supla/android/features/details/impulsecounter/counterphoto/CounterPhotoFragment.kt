@@ -18,13 +18,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.core.ui.BaseComposeFragment
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
+import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.navigator.MainNavigator
 import javax.inject.Inject
 
