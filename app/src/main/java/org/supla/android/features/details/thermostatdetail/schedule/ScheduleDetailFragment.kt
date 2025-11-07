@@ -10,7 +10,7 @@ import org.supla.android.R
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.databinding.FragmentComposeBinding
-import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
+import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.features.details.thermostatdetail.schedule.ui.ScheduleDetail
 
 private const val ARG_ITEM_BUNDLE = "ARG_ITEM_BUNDLE"

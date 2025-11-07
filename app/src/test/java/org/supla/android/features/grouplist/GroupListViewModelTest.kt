@@ -30,8 +30,8 @@ import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.UpdateEventsManager
-import org.supla.android.features.details.detailbase.standarddetail.DetailPage
-import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
+import org.supla.android.features.details.detailbase.base.DetailPage
+import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.ActionAlertDialogState
@@ -320,7 +320,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     // then
     Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).containsExactly(
-      GroupListViewEvent.OpenRollerShutterDetail(ItemBundle(remoteId, 0, ItemType.GROUP, function), detailType.pages)
+      GroupListViewEvent.OpenStandardDetail(ItemBundle(remoteId, 0, ItemType.GROUP, function), detailType.pages)
     )
     verifyNoInteractionsExcept(provideGroupDetailTypeUseCase)
   }

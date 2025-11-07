@@ -26,13 +26,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.core.shared.invoke
 import org.supla.android.databinding.FragmentStandardDetailBinding
-import org.supla.android.features.details.detailbase.standarddetail.DetailPage
-import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
-import org.supla.android.features.details.detailbase.standarddetail.StandardDetailFragment
+import org.supla.android.features.details.detailbase.base.BaseDetailFragment
+import org.supla.android.features.details.detailbase.base.DetailPage
+import org.supla.android.features.details.detailbase.base.ItemBundle
 
 @AndroidEntryPoint
 class GateDetailFragment :
-  StandardDetailFragment<GateDetailViewState, GateDetailViewEvent>(R.layout.fragment_standard_detail) {
+  BaseDetailFragment<GateDetailViewState, GateDetailViewEvent>(R.layout.fragment_standard_detail) {
 
   override val viewModel: GateDetailViewModel by viewModels()
 
@@ -53,6 +53,6 @@ class GateDetailFragment :
 
   companion object Companion {
     fun bundle(itemBundle: ItemBundle, pages: Array<DetailPage>) =
-      StandardDetailFragment.bundle(itemBundle, pages)
+      BaseDetailFragment.bundle(itemBundle, pages)
   }
 }

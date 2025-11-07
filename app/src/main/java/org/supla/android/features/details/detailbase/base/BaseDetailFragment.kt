@@ -1,4 +1,4 @@
-package org.supla.android.features.details.detailbase.standarddetail
+package org.supla.android.features.details.detailbase.base
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -37,7 +37,7 @@ import javax.inject.Inject
 private const val ARG_SUBJECT_BUNDLE = "ARG_SUBJECT_BUNDLE"
 private const val ARG_PAGES = "ARG_PAGES"
 
-abstract class StandardDetailFragment<S : StandardDetailViewState, E : StandardDetailViewEvent>(@LayoutRes contentLayoutId: Int) :
+abstract class BaseDetailFragment<S : BaseDetailViewState, E : BaseDetailViewEvent>(@LayoutRes contentLayoutId: Int) :
   BaseFragment<S, E>(contentLayoutId) {
 
   @Inject
@@ -59,7 +59,7 @@ abstract class StandardDetailFragment<S : StandardDetailViewState, E : StandardD
   protected abstract val detailShadow: View
   protected abstract val detailViewPager: ViewPager2
 
-  abstract override val viewModel: StandardDetailViewModel<S, E>
+  abstract override val viewModel: BaseDetailViewModel<S, E>
 
   @CallSuper
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -123,7 +123,7 @@ abstract class StandardDetailFragment<S : StandardDetailViewState, E : StandardD
     }
   }
 
-  companion object {
+  companion object Companion {
     fun bundle(subjectBundle: ItemBundle, pages: Array<DetailPage>) = bundleOf(
       ARG_SUBJECT_BUNDLE to subjectBundle,
       ARG_PAGES to pages

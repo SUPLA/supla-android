@@ -25,9 +25,9 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.isHvacThermostat
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.events.UpdateEventsManager
-import org.supla.android.features.details.detailbase.standarddetail.StandardDetailViewEvent
-import org.supla.android.features.details.detailbase.standarddetail.StandardDetailViewModel
-import org.supla.android.features.details.detailbase.standarddetail.StandardDetailViewState
+import org.supla.android.features.details.detailbase.base.BaseDetailViewEvent
+import org.supla.android.features.details.detailbase.base.BaseDetailViewModel
+import org.supla.android.features.details.detailbase.base.BaseDetailViewState
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
@@ -44,7 +44,7 @@ class ThermostatDetailViewModel @Inject constructor(
   updateEventsManager: UpdateEventsManager,
   preferences: Preferences,
   schedulers: SuplaSchedulers
-) : StandardDetailViewModel<ThermostatDetailViewState, ThermostatDetailViewEvent>(
+) : BaseDetailViewModel<ThermostatDetailViewState, ThermostatDetailViewEvent>(
   readChannelByRemoteIdUseCase,
   readChannelGroupByRemoteIdUseCase,
   updateEventsManager,
@@ -82,11 +82,11 @@ class ThermostatDetailViewModel @Inject constructor(
     }
 }
 
-sealed interface ThermostatDetailViewEvent : StandardDetailViewEvent {
+sealed interface ThermostatDetailViewEvent : BaseDetailViewEvent {
   object Close : ThermostatDetailViewEvent
 }
 
 data class ThermostatDetailViewState(
   override val caption: LocalizedString? = null,
   val subfunction: ThermostatSubfunction? = null
-) : StandardDetailViewState(caption)
+) : BaseDetailViewState(caption)

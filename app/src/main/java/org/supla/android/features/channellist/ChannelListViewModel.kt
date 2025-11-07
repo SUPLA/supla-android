@@ -31,18 +31,11 @@ import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.events.UpdateEventsManager
-import org.supla.android.features.details.detailbase.standarddetail.DetailPage
-import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
-import org.supla.android.features.details.electricitymeterdetail.ElectricityMeterDetailFragment
-import org.supla.android.features.details.gatedetail.GateDetailFragment
-import org.supla.android.features.details.gpmdetail.GpmDetailFragment
-import org.supla.android.features.details.humiditydetail.HumidityDetailFragment
+import org.supla.android.features.details.detailbase.StandardDetailFragment
+import org.supla.android.features.details.detailbase.base.DetailPage
+import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.features.details.impulsecounter.ImpulseCounterDetailFragment
-import org.supla.android.features.details.switchdetail.SwitchDetailFragment
-import org.supla.android.features.details.thermometerdetail.ThermometerDetailFragment
 import org.supla.android.features.details.thermostatdetail.ThermostatDetailFragment
-import org.supla.android.features.details.valveDetail.ValveDetailFragment
-import org.supla.android.features.details.windowdetail.WindowDetailFragment
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
@@ -200,17 +193,19 @@ class ChannelListViewModel @Inject constructor(
     }
 
     when (val detailType = provideChannelDetailTypeUseCase(data)) {
-      is SwitchDetailType -> sendEvent(ChannelListViewEvent.OpenSwitchDetail(ItemBundle.from(channel), detailType.pages))
+      is ThermometerDetailType -> sendEvent(ChannelListViewEvent.OpenSingleHistoryDetail(ItemBundle.from(channel), detailType.pages))
+      is GpmDetailType -> sendEvent(ChannelListViewEvent.OpenSingleHistoryDetail(ItemBundle.from(channel), detailType.pages))
+      is HumidityDetailType -> sendEvent(ChannelListViewEvent.OpenSingleHistoryDetail(ItemBundle.from(channel), detailType.pages))
+
+      is SwitchDetailType -> sendEvent(ChannelListViewEvent.OpenStandardDetail(ItemBundle.from(channel), detailType.pages))
+      is WindowDetailType -> sendEvent(ChannelListViewEvent.OpenStandardDetail(ItemBundle.from(channel), detailType.pages))
+      is EmDetailType -> sendEvent(ChannelListViewEvent.OpenStandardDetail(ItemBundle.from(channel), detailType.pages))
+      is ContainerDetailType -> sendEvent(ChannelListViewEvent.OpenStandardDetail(ItemBundle.from(channel), detailType.pages))
+      is ValveDetailType -> sendEvent(ChannelListViewEvent.OpenStandardDetail(ItemBundle.from(channel), detailType.pages))
+      is GateDetailType -> sendEvent(ChannelListViewEvent.OpenStandardDetail(ItemBundle.from(channel), detailType.pages))
+
       is ThermostatDetailType -> sendEvent(ChannelListViewEvent.OpenThermostatDetail(ItemBundle.from(channel), detailType.pages))
-      is ThermometerDetailType -> sendEvent(ChannelListViewEvent.OpenThermometerDetail(ItemBundle.from(channel), detailType.pages))
-      is GpmDetailType -> sendEvent(ChannelListViewEvent.OpenGpmDetail(ItemBundle.from(channel), detailType.pages))
-      is WindowDetailType -> sendEvent(ChannelListViewEvent.OpenWindowDetail(ItemBundle.from(channel), detailType.pages))
-      is EmDetailType -> sendEvent(ChannelListViewEvent.OpenEmDetail(ItemBundle.from(channel), detailType.pages))
       is IcDetailType -> sendEvent(ChannelListViewEvent.OpenIcDetail(ItemBundle.from(channel), detailType.pages))
-      is ContainerDetailType -> sendEvent(ChannelListViewEvent.OpenContainerDetail(ItemBundle.from(channel), detailType.pages))
-      is HumidityDetailType -> sendEvent(ChannelListViewEvent.OpenHumidityDetail(ItemBundle.from(channel), detailType.pages))
-      is ValveDetailType -> sendEvent(ChannelListViewEvent.OpenValveDetail(ItemBundle.from(channel), detailType.pages))
-      is GateDetailType -> sendEvent(ChannelListViewEvent.OpenGateDetail(ItemBundle.from(channel), detailType.pages))
       is LegacyDetailType -> sendEvent(ChannelListViewEvent.OpenLegacyDetails(channel.remoteId, detailType))
       null -> {} // no action
     }
@@ -219,43 +214,23 @@ class ChannelListViewModel @Inject constructor(
 
 sealed class ChannelListViewEvent : ViewEvent {
   data class OpenLegacyDetails(val remoteId: Int, val type: LegacyDetailType) : ChannelListViewEvent()
-  data class OpenSwitchDetail(private val itemBundle: ItemBundle, private val pages: List<DetailPage>) :
-    OpenStandardDetail(R.id.switch_detail_fragment, SwitchDetailFragment.bundle(itemBundle, pages.toTypedArray()))
 
   data class OpenThermostatDetail(private val itemBundle: ItemBundle, private val pages: List<DetailPage>) :
-    OpenStandardDetail(R.id.thermostat_detail_fragment, ThermostatDetailFragment.bundle(itemBundle, pages.toTypedArray()))
-
-  data class OpenThermometerDetail(private val itemBundle: ItemBundle, private val pages: List<DetailPage>) :
-    OpenStandardDetail(R.id.thermometer_detail_fragment, ThermometerDetailFragment.bundle(itemBundle, pages.toTypedArray()))
-
-  data class OpenHumidityDetail(private val itemBundle: ItemBundle, private val pages: List<DetailPage>) :
-    OpenStandardDetail(R.id.humidity_detail_fragment, HumidityDetailFragment.bundle(itemBundle, pages.toTypedArray()))
-
-  data class OpenGpmDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
-    OpenStandardDetail(R.id.gpm_detail_fragment, GpmDetailFragment.bundle(itemBundle, pages.toTypedArray()))
-
-  data class OpenWindowDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
-    OpenStandardDetail(R.id.window_detail_fragment, WindowDetailFragment.bundle(itemBundle, pages.toTypedArray()))
-
-  data class OpenEmDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
-    OpenStandardDetail(R.id.electricity_meter_detail_fragment, ElectricityMeterDetailFragment.bundle(itemBundle, pages.toTypedArray()))
+    BaseDetail(R.id.thermostat_detail_fragment, ThermostatDetailFragment.bundle(itemBundle, pages.toTypedArray()))
 
   data class OpenIcDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
-    OpenStandardDetail(R.id.impulse_counter_detail_fragment, ImpulseCounterDetailFragment.bundle(itemBundle, pages.toTypedArray()))
+    BaseDetail(R.id.impulse_counter_detail_fragment, ImpulseCounterDetailFragment.bundle(itemBundle, pages.toTypedArray()))
 
-  data class OpenContainerDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
-    OpenStandardDetail(R.id.container_detail_fragment, ImpulseCounterDetailFragment.bundle(itemBundle, pages.toTypedArray()))
+  data class OpenStandardDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
+    BaseDetail(R.id.standard_detail_fragment, StandardDetailFragment.bundle(itemBundle, pages.toTypedArray()))
 
-  data class OpenValveDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
-    OpenStandardDetail(R.id.container_detail_fragment, ValveDetailFragment.bundle(itemBundle, pages.toTypedArray()))
-
-  data class OpenGateDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
-    OpenStandardDetail(R.id.container_detail_fragment, GateDetailFragment.bundle(itemBundle, pages.toTypedArray()))
+  data class OpenSingleHistoryDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
+    BaseDetail(R.id.single_history_detail_fragment, StandardDetailFragment.bundle(itemBundle, pages.toTypedArray()))
 
   data object ReassignAdapter : ChannelListViewEvent()
 
-  abstract class OpenStandardDetail(
-    @IdRes val fragmentId: Int,
+  abstract class BaseDetail(
+    @param:IdRes val fragmentId: Int,
     val fragmentArguments: Bundle
   ) : ChannelListViewEvent()
 }

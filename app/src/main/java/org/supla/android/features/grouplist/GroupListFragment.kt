@@ -101,7 +101,7 @@ class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R
         binding.groupsList.adapter = adapter
       }
 
-      is GroupListViewEvent.OpenStandardDetail -> navigator.navigateTo(
+      is GroupListViewEvent.BaseDetail -> navigator.navigateTo(
         destinationId = event.fragmentId,
         bundle = event.fragmentArguments
       )

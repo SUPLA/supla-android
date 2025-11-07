@@ -18,7 +18,7 @@ package org.supla.android.usecases.details
  */
 
 import org.supla.android.data.model.general.ChannelDataBase
-import org.supla.android.features.details.detailbase.standarddetail.DetailPage
+import org.supla.android.features.details.detailbase.base.DetailPage
 import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
 import javax.inject.Singleton

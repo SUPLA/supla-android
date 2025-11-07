@@ -47,8 +47,8 @@ import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.UpdateEventsManager
-import org.supla.android.features.details.detailbase.standarddetail.DetailPage
-import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
+import org.supla.android.features.details.detailbase.base.DetailPage
+import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaSchedulers
@@ -298,7 +298,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenSwitchDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), detailType.pages)
+      ChannelListViewEvent.OpenStandardDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), detailType.pages)
     )
 
     verify { provideDetailTypeUseCase(channel) }
@@ -306,7 +306,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   }
 
   @Test
-  fun `should open legacy detail fragment`() {
+  fun `should open thermometer detail fragment`() {
     // given
     val remoteId = 123
     val channelId = 123
@@ -325,7 +325,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenThermometerDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), detailType.pages)
+      ChannelListViewEvent.OpenSingleHistoryDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), detailType.pages)
     )
 
     verify { provideDetailTypeUseCase(channel) }
@@ -409,7 +409,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenGpmDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
+      ChannelListViewEvent.OpenSingleHistoryDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
 
     verify { provideDetailTypeUseCase(channel) }
@@ -437,7 +437,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenGpmDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
+      ChannelListViewEvent.OpenSingleHistoryDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
 
     verify { provideDetailTypeUseCase(channel) }
@@ -465,7 +465,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenGpmDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
+      ChannelListViewEvent.OpenSingleHistoryDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
 
     verify { provideDetailTypeUseCase(channel) }
@@ -493,7 +493,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenGpmDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
+      ChannelListViewEvent.OpenSingleHistoryDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
     verify { provideDetailTypeUseCase(channel) }
     confirmDependenciesVerified()
@@ -520,7 +520,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenWindowDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
+      ChannelListViewEvent.OpenStandardDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
     verify { provideDetailTypeUseCase(channel) }
     confirmDependenciesVerified()
@@ -547,7 +547,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenWindowDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
+      ChannelListViewEvent.OpenStandardDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
     verify { provideDetailTypeUseCase(channel) }
     confirmDependenciesVerified()

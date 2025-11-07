@@ -1,4 +1,4 @@
-package org.supla.android.features.details.detailbase.standarddetail
+package org.supla.android.features.details.detailbase.base
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -33,7 +33,7 @@ import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.infrastructure.LocalizedString
 
-abstract class StandardDetailViewModel<S : StandardDetailViewState, E : StandardDetailViewEvent>(
+abstract class BaseDetailViewModel<S : BaseDetailViewState, E : BaseDetailViewEvent>(
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   private val readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   private val updateEventsManager: UpdateEventsManager,
@@ -97,8 +97,8 @@ abstract class StandardDetailViewModel<S : StandardDetailViewState, E : Standard
   }
 }
 
-interface StandardDetailViewEvent : ViewEvent
+interface BaseDetailViewEvent : ViewEvent
 
-open class StandardDetailViewState(
+open class BaseDetailViewState(
   open val caption: LocalizedString?
 ) : ViewState()

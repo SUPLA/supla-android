@@ -17,17 +17,16 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import io.mockk.MockKAnnotations
+import io.mockk.confirmVerified
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
+import io.mockk.verify
 import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.runtime.ItemType
@@ -35,20 +34,22 @@ import org.supla.android.db.Channel
 import org.supla.android.db.ChannelGroup
 import org.supla.android.tools.SuplaSchedulers
 
-@RunWith(MockitoJUnitRunner::class)
-class LegacyDetailViewModelTest : BaseViewModelTest<LegacyDetailViewState, LegacyDetailViewEvent, LegacyDetailViewModel>() {
+class LegacyDetailViewModelTest : BaseViewModelTest<LegacyDetailViewState, LegacyDetailViewEvent, LegacyDetailViewModel>(
+  MockSchedulers.MOCKK
+) {
 
-  @Mock
+  @MockK
   private lateinit var channelRepository: ChannelRepository
 
-  @Mock
+  @MockK
   override lateinit var schedulers: SuplaSchedulers
 
-  @InjectMocks
+  @InjectMockKs
   override lateinit var viewModel: LegacyDetailViewModel
 
   @Before
   override fun setUp() {
+    MockKAnnotations.init(this)
     super.setUp()
   }
 
@@ -59,7 +60,7 @@ class LegacyDetailViewModelTest : BaseViewModelTest<LegacyDetailViewState, Legac
     val itemType = ItemType.CHANNEL
 
     val legacyChannel: Channel = mockk()
-    whenever(channelRepository.getChannel(channelId)).thenReturn(legacyChannel)
+    every { channelRepository.getChannel(channelId) } returns legacyChannel
 
     // when
     viewModel.loadData(channelId, itemType)
@@ -69,8 +70,8 @@ class LegacyDetailViewModelTest : BaseViewModelTest<LegacyDetailViewState, Legac
     Assertions.assertThat(events).containsExactly(
       LegacyDetailViewEvent.LoadDetailView(legacyChannel)
     )
-    verify(channelRepository).getChannel(channelId)
-    verifyNoMoreInteractions(channelRepository)
+    verify { channelRepository.getChannel(channelId) }
+    confirmVerified(channelRepository)
   }
 
   @Test
@@ -80,7 +81,7 @@ class LegacyDetailViewModelTest : BaseViewModelTest<LegacyDetailViewState, Legac
     val itemType = ItemType.GROUP
 
     val legacyGroup: ChannelGroup = mockk()
-    whenever(channelRepository.getChannelGroup(groupId)).thenReturn(legacyGroup)
+    every { channelRepository.getChannelGroup(groupId) } returns legacyGroup
 
     // when
     viewModel.loadData(groupId, itemType)
@@ -90,7 +91,7 @@ class LegacyDetailViewModelTest : BaseViewModelTest<LegacyDetailViewState, Legac
     Assertions.assertThat(events).containsExactly(
       LegacyDetailViewEvent.LoadDetailView(legacyGroup)
     )
-    verify(channelRepository).getChannelGroup(groupId)
-    verifyNoMoreInteractions(channelRepository)
+    verify { channelRepository.getChannelGroup(groupId) }
+    confirmVerified(channelRepository)
   }
 }

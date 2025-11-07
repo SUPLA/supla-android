@@ -32,11 +32,9 @@ import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.events.UpdateEventsManager
-import org.supla.android.features.details.detailbase.standarddetail.DetailPage
-import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
-import org.supla.android.features.details.gatedetail.GateDetailFragment
-import org.supla.android.features.details.switchdetail.SwitchDetailFragment
-import org.supla.android.features.details.windowdetail.WindowDetailFragment
+import org.supla.android.features.details.detailbase.StandardDetailFragment
+import org.supla.android.features.details.detailbase.base.DetailPage
+import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
@@ -206,10 +204,10 @@ class GroupListViewModel @Inject constructor(
 
     when (val detailType = provideGroupDetailTypeUseCase(group)) {
       is LegacyDetailType -> sendEvent(GroupListViewEvent.OpenLegacyDetails(group.remoteId, detailType))
-      is WindowDetailType -> sendEvent(GroupListViewEvent.OpenRollerShutterDetail(ItemBundle.from(group), detailType.pages))
-      is ThermostatDetailType -> sendEvent(GroupListViewEvent.OpenHeatpolThermostatDetail(ItemBundle.from(group), detailType.pages))
-      is GateDetailType -> sendEvent(GroupListViewEvent.OpenGateDetail(ItemBundle.from(group), detailType.pages))
-      is SwitchDetailType -> sendEvent(GroupListViewEvent.OpenSwitchDetail(ItemBundle.from(group), detailType.pages))
+      is WindowDetailType -> sendEvent(GroupListViewEvent.OpenStandardDetail(ItemBundle.from(group), detailType.pages))
+      is ThermostatDetailType -> sendEvent(GroupListViewEvent.OpenStandardDetail(ItemBundle.from(group), detailType.pages))
+      is GateDetailType -> sendEvent(GroupListViewEvent.OpenStandardDetail(ItemBundle.from(group), detailType.pages))
+      is SwitchDetailType -> sendEvent(GroupListViewEvent.OpenStandardDetail(ItemBundle.from(group), detailType.pages))
       else -> {} // no action
     }
   }
@@ -222,19 +220,10 @@ sealed class GroupListViewEvent : ViewEvent {
   data object NavigateToSuplaBetaCloud : GroupListViewEvent()
   data class NavigateToPrivateCloud(val url: Uri) : GroupListViewEvent()
 
-  data class OpenRollerShutterDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
-    OpenStandardDetail(R.id.window_detail_fragment, WindowDetailFragment.bundle(itemBundle, pages.toTypedArray()))
+  data class OpenStandardDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
+    BaseDetail(R.id.standard_detail_fragment, StandardDetailFragment.bundle(itemBundle, pages.toTypedArray()))
 
-  data class OpenHeatpolThermostatDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
-    OpenStandardDetail(R.id.window_detail_fragment, WindowDetailFragment.bundle(itemBundle, pages.toTypedArray()))
-
-  data class OpenGateDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
-    OpenStandardDetail(R.id.container_detail_fragment, GateDetailFragment.bundle(itemBundle, pages.toTypedArray()))
-
-  data class OpenSwitchDetail(private val itemBundle: ItemBundle, private val pages: List<DetailPage>) :
-    OpenStandardDetail(R.id.switch_detail_fragment, SwitchDetailFragment.bundle(itemBundle, pages.toTypedArray()))
-
-  abstract class OpenStandardDetail(
+  abstract class BaseDetail(
     @IdRes val fragmentId: Int,
     val fragmentArguments: Bundle
   ) : GroupListViewEvent()

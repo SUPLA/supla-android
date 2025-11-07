@@ -28,7 +28,7 @@ import org.supla.android.R
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.databinding.FragmentComposeBinding
-import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
+import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.features.details.thermostatdetail.timer.ui.ThermostatTimerDetail
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 

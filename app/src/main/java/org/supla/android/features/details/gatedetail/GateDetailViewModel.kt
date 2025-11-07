@@ -22,9 +22,9 @@ import org.supla.android.Preferences
 import org.supla.android.core.shared.shareable
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.events.UpdateEventsManager
-import org.supla.android.features.details.detailbase.standarddetail.StandardDetailViewEvent
-import org.supla.android.features.details.detailbase.standarddetail.StandardDetailViewModel
-import org.supla.android.features.details.detailbase.standarddetail.StandardDetailViewState
+import org.supla.android.features.details.detailbase.base.BaseDetailViewEvent
+import org.supla.android.features.details.detailbase.base.BaseDetailViewModel
+import org.supla.android.features.details.detailbase.base.BaseDetailViewState
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
@@ -40,7 +40,7 @@ class GateDetailViewModel @Inject constructor(
   updateEventsManager: UpdateEventsManager,
   preferences: Preferences,
   schedulers: SuplaSchedulers
-) : StandardDetailViewModel<GateDetailViewState, GateDetailViewEvent>(
+) : BaseDetailViewModel<GateDetailViewState, GateDetailViewEvent>(
   readChannelByRemoteIdUseCase,
   readChannelGroupByRemoteIdUseCase,
   updateEventsManager,
@@ -55,10 +55,10 @@ class GateDetailViewModel @Inject constructor(
     state.copy(caption = getCaptionUseCase(channelDataBase.shareable))
 }
 
-sealed interface GateDetailViewEvent : StandardDetailViewEvent {
+sealed interface GateDetailViewEvent : BaseDetailViewEvent {
   data object Close : GateDetailViewEvent
 }
 
 data class GateDetailViewState(
   override val caption: LocalizedString? = null
-) : StandardDetailViewState(caption)
+) : BaseDetailViewState(caption)
