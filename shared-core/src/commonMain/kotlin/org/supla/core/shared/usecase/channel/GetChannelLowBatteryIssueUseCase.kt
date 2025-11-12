@@ -34,6 +34,7 @@ class GetChannelLowBatteryIssueUseCase(
 ) {
   operator fun invoke(channelWithChildren: ChannelWithChildren): ChannelIssueItem? {
     val mainBatteryInfo = channelWithChildren.channel.batteryInfo
+    // childrenIds is used to eliminate cycles in children
     val childrenIds: MutableList<Int> = mutableListOf(channelWithChildren.channel.remoteId)
     val childrenIssues = getChildrenIssues(childrenIds, channelWithChildren.children)
 
@@ -43,17 +44,26 @@ class GetChannelLowBatteryIssueUseCase(
     }
 
     val messages = mutableListOf<LocalizedString>()
+    // collectedChannelIds is used to eliminate duplications
+    val collectedChannelIds = mutableListOf(channelWithChildren.channel.remoteId)
     mainBatteryIssue.ifTrue {
       val id = channelWithChildren.channel.remoteId
       val name = getCaptionUseCase(channelWithChildren.channel)
       val level = mainBatteryInfo?.level ?: 0
 
-      messages.add(localizedString(LocalizedStringId.CHANNEL_BATTERY_LEVEL, id, name, level))
+      if (childrenIssues.isEmpty()) {
+        messages.add(localizedString(LocalizedStringId.CHANNEL_BATTERY_LEVEL, level))
+      } else {
+        messages.add(localizedString(LocalizedStringId.CHANNEL_BATTERY_LEVEL_WITH_INFO, id, name, level))
+      }
     }
 
     childrenIssues.forEach { issue ->
-      issue.batteryInfo.level?.let { level ->
-        messages.add(localizedString(LocalizedStringId.CHANNEL_BATTERY_LEVEL, issue.id, issue.name, level))
+      if (!collectedChannelIds.contains(issue.id)) {
+        issue.batteryInfo.level?.let { level ->
+          messages.add(localizedString(LocalizedStringId.CHANNEL_BATTERY_LEVEL_WITH_INFO, issue.id, issue.name, level))
+        }
+        collectedChannelIds.add(issue.id)
       }
     }
 

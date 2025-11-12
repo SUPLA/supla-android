@@ -677,7 +677,9 @@
   <string name="thermostat_detail_other_thermostats">Εξαρτώμενοι θερμοστάτες</string>
   <string name="thermostat_battery_cover_open">Το κάλυμμα της μπαταρίας είναι ανοιχτό</string>
 
-  <string name="channel_battery_level">Επίπεδο μπαταρίας (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_battery_level">Επίπεδο μπαταρίας: %1$d%%</string>
+  <string name="channel_battery_level_with_info">Επίπεδο μπαταρίας (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_btn_stop">Σταμάτημα</string>
   <string name="android_auto_action">Ενέργεια: %1$s</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Εάν έχετε κωδικό QR, χρησιμοποιήστε τον σαρωτή. Για συσκευές χωρίς κωδικό QR, πατήστε <b>Επόμενο</b> για να συνεχίσετε.]]></string>
   <string name="add_wizard_network_name">Όνομα δικτύου</string>
@@ -716,4 +718,38 @@
   <string name="developer_info_activated">Λειτουργία προγραμματιστή ενεργοποιήθηκε</string>
   <string name="developer_info_screen_orientation">Ενεργοποιήθηκε η περιστροφή οθόνης</string>
   <string name="developer_info_settings">Πειραματικές ρυθμίσεις</string>
+  <string name="profiles_list_sorting">Ταξινόμηση</string>
+  <string name="profiles_list_sorting_default">Προεπιλογή</string>
+  <string name="profiles_list_sorting_name">Όνομα</string>
+  <string name="profiles_list_sorting_added">Τελευταία προσθήκη</string>
+  <string name="channel_caption_water_tank">Δεξαμενή νερού</string>
+  <string name="channel_caption_container_level_sensor">Αισθητήρας στάθμης δοχείου</string>
+  <string name="state_opened">ανοιχτό</string>
+  <string name="state_closed">κλειστό</string>
+  <string name="state_partially_opened">μερικώς ανοιχτό</string>
+  <string name="channel_btn_step_by_step">Άνοιγμα/Κλείσιμο (βήμα προς βήμα)</string>
+  <string name="channel_btn_shut">Κλείσιμο</string>
+  <string name="channel_btn_reveal">Άνοιγμα</string>
+  <string name="channel_btn_collapse">Μαζεύω</string>
+  <string name="channel_btn_expand">Ξεδιπλώνω</string>
+  <string name="gate_general_open_and_close_warning">Δεν έχουν όλες οι πύλες ρυθμισμένο αισθητήρα ανοίγματος – τα κουμπιά «Άνοιγμα» και «Κλείσιμο» ενδέχεται να μην λειτουργούν σωστά.</string>
+  <string name="add_wizard_spaces_accept">Διατήρηση</string>
+  <string name="add_wizard_spaces_modify">Αφαίρεση κενών</string>
+  <string name="add_wizard_spaces_title">Κενό στο όνομα δικτύου;</string>
+  <string name="add_wizard_spaces_message">Το όνομα δικτύου που καταχωρίσατε \"%1$s\" περιέχει αρχικά ή τελικά κενά (διαστήματα ή χαρακτήρες tab). Αν το όνομα δικτύου δεν πρέπει να περιλαμβάνει αυτούς τους χαρακτήρες, η συσκευή σας δεν θα μπορέσει να συνδεθεί στο δίκτυο. Θέλετε να διατηρήσετε ή να αφαιρέσετε τους αρχικούς ή τελικούς κενούς χαρακτήρες;</string>
+  <string name="state_dialog_last_known_state">Εκτός σύνδεσης – τελευταία γνωστή κατάσταση:</string>
+  <string name="channel_caption_flood_sensor">Αισθητήρας πλημμύρας</string>
+  <string name="channel_caption_motion_sensor">Αισθητήρας κίνησης</string>
+  <string name="channel_caption_binary_sensor">Δυαδικός αισθητήρας</string>
+  <string name="valve_detail_sensors">Συνδεδεμένοι αισθητήρες</string>
+  <string name="valve_error_sensor_offline">Ο αισθητήρας πλημμύρας δεν είναι διαθέσιμος – κίνδυνος μη ανίχνευσης πλημμύρας.</string>
+  <string name="container_invalid_sensor_state">Μη έγκυρη κατάσταση αισθητήρα.</string>
+  <string name="channel_caption_container">Δοχείο</string>
+  <string name="channel_caption_septic_tank">Βόθρος</string>
+
+  <plurals name="rest_time_days_pattern">
+    <item quantity="one">%1$d ημέρα ⏱️</item>
+    <item quantity="other">%1$d ημέρες ⏱️</item>
+  </plurals>
+  <string name="thermostat_calibration_error">Σφάλμα βαθμονόμησης</string>
 </resources>

@@ -25,7 +25,7 @@ import androidx.compose.material3.ExposedDropdownMenuBoxScope
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import org.supla.android.ui.views.TextField
+import org.supla.android.ui.views.forms.TextField
 
 @Composable
 fun ExposedDropdownMenuBoxScope.SpinnerTextField(text: String, expanded: Boolean, enabled: Boolean = true, fillMaxWidth: Boolean = false) {

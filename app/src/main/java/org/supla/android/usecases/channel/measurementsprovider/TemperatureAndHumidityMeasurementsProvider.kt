@@ -19,7 +19,6 @@ package org.supla.android.usecases.channel.measurementsprovider
 
 import com.google.gson.Gson
 import io.reactivex.rxjava3.core.Single
-import org.supla.android.core.shared.provider
 import org.supla.android.core.shared.shareable
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.model.chart.ChannelChartSets
@@ -80,7 +79,7 @@ class TemperatureAndHumidityMeasurementsProvider @Inject constructor(
         ChannelChartSets(
           channel.remoteId,
           channel.function,
-          getCaptionUseCase(channel.shareable).provider(),
+          getCaptionUseCase(channel.shareable),
           spec.aggregation,
           it
         )

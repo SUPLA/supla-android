@@ -20,7 +20,6 @@ package org.supla.android.usecases.channel.measurementsprovider
 import com.google.gson.Gson
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.R
-import org.supla.android.core.shared.provider
 import org.supla.android.core.shared.shareable
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.model.chart.AggregatedEntity
@@ -69,11 +68,11 @@ class ImpulseCounterMeasurementsProvider @Inject constructor(
       .map { result -> toHistoryDataSet(channelWithChildren, result, spec) }
       .map {
         ChannelChartSets(
-          channel,
-          getCaptionUseCase(channel.shareable).provider(),
-          spec.aggregation,
-          it,
-          ImpulseCounterCustomData(
+          channel = channel,
+          name = getCaptionUseCase(channel.shareable),
+          aggregation = spec.aggregation,
+          dataSets = it,
+          customData = ImpulseCounterCustomData(
             channel.ImpulseCounter.value?.unit,
             channel.ImpulseCounter.value?.pricePerUnit?.toFloat(),
             channel.ImpulseCounter.value?.currency

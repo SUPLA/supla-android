@@ -681,7 +681,9 @@
   <string name="thermostat_detail_main_thermostat">Hoofdthermostaat</string>
   <string name="thermostat_detail_other_thermostats">Afhankelijke thermostaten</string>
   <string name="thermostat_battery_cover_open">Batterijklep openen</string>
-  <string name="channel_battery_level">Batterijniveau (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_battery_level">Batterijniveau: %1$d%%</string>
+  <string name="channel_battery_level_with_info">Batterijniveau (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_btn_stop">Stoppen</string>
   <string name="android_auto_action">Actie: %1$s</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Als u een QR-code heeft, gebruik dan de scanner. Druk voor apparaten zonder een QR-code op <b>Volgende</b> om verder te gaan.]]></string>
   <string name="add_wizard_network_name">Netwerknaam</string>
@@ -720,4 +722,38 @@
   <string name="developer_info_activated">Ontwikkelaarsmodus geactiveerd</string>
   <string name="developer_info_screen_orientation">Schermrotatie ingeschakeld</string>
   <string name="developer_info_settings">Experimentele instellingen</string>
+  <string name="profiles_list_sorting">Sorteren</string>
+  <string name="profiles_list_sorting_default">Standaard</string>
+  <string name="profiles_list_sorting_name">Naam</string>
+  <string name="profiles_list_sorting_added">Laatst toegevoegd</string>
+  <string name="channel_caption_water_tank">Watertank</string>
+  <string name="channel_caption_container_level_sensor">Niveausensor voor container</string>
+  <string name="state_opened">open</string>
+  <string name="state_closed">gesloten</string>
+  <string name="state_partially_opened">gedeeltelijk open</string>
+  <string name="channel_btn_step_by_step">Openen/Sluiten (stap voor stap)</string>
+  <string name="channel_btn_shut">Sluiten</string>
+  <string name="channel_btn_reveal">Openen</string>
+  <string name="channel_btn_collapse">Inklappen</string>
+  <string name="channel_btn_expand">Uitklappen</string>
+  <string name="gate_general_open_and_close_warning">Niet alle poorten hebben een openingssensor geconfigureerd – de knoppen \"Openen\" en \"Sluiten\" werken mogelijk niet correct.</string>
+  <string name="add_wizard_spaces_accept">Onveranderd laten</string>
+  <string name="add_wizard_spaces_modify">Spaties verwijderen</string>
+  <string name="add_wizard_spaces_title">Spatie in netwerknaam?</string>
+  <string name="add_wizard_spaces_message">De ingevoerde netwerknaam \"%1$s\" bevat inleidende of afsluitende witruimtetekens (spaties of tabs). Als uw netwerknaam deze tekens niet mag bevatten, kan uw apparaat geen verbinding maken met het netwerk. Wilt u de inleidende of afsluitende witruimtetekens behouden of verwijderen?</string>
+  <string name="state_dialog_last_known_state">Offline - laatst bekende status:</string>
+  <string name="channel_caption_flood_sensor">Vloedsensor</string>
+  <string name="channel_caption_motion_sensor">Bewegingssensor</string>
+  <string name="channel_caption_binary_sensor">Binaire sensor</string>
+  <string name="valve_detail_sensors">Verbonden sensoren</string>
+  <string name="valve_error_sensor_offline">Watermelder niet beschikbaar – risico op onopgemerkte overstroming.</string>
+  <string name="container_invalid_sensor_state">Ongeldige sensorstatus.</string>
+  <string name="channel_caption_container">Container</string>
+  <string name="channel_caption_septic_tank">Septic tank</string>
+
+  <plurals name="rest_time_days_pattern">
+    <item quantity="one">%1$d dag ⏱️</item>
+    <item quantity="other">%1$d dagen ⏱️</item>
+  </plurals>
+  <string name="thermostat_calibration_error">Kalibratiefout</string>
 </resources>

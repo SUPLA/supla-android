@@ -18,11 +18,22 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import org.supla.android.R
-import org.supla.android.lib.SuplaChannelState
-import org.supla.android.lib.lightSourceLifespanString
-import org.supla.android.lib.lightSourceOperatingTimeString
-import org.supla.core.shared.extensions.localizedString
+import org.supla.android.lib.SuplaChannelStatePrintable
+import org.supla.android.lib.batteryHealthString
+import org.supla.android.lib.batteryLevelString
+import org.supla.android.lib.batteryPoweredString
+import org.supla.android.lib.bridgeNodeOnlineString
+import org.supla.android.lib.bridgeNodeSignalStrengthString
+import org.supla.android.lib.channelIdString
+import org.supla.android.lib.connectionUptimeString
+import org.supla.android.lib.lastConnectionResetCauseString
+import org.supla.android.lib.lightSourceOperatingTimePercentLeft
+import org.supla.android.lib.switchCycleCountString
+import org.supla.android.lib.uptimeString
+import org.supla.android.lib.wifiRssiString
+import org.supla.android.lib.wifiSignalStrengthString
 import org.supla.core.shared.infrastructure.LocalizedString
+import java.util.Locale
 
 enum class StateDialogItem(val captionResource: Int) {
   CHANNEL_ID(R.string.channel_id),
@@ -42,24 +53,49 @@ enum class StateDialogItem(val captionResource: Int) {
   LIGHT_SOURCE_LIFESPAN(R.string.light_source_lifespan),
   LIGHT_SOURCE_OPERATING_TIME(R.string.light_source_operatingtime);
 
-  val extractor: (SuplaChannelState) -> LocalizedString?
+  val extractor: (SuplaChannelStatePrintable) -> LocalizedString?
     get() = when (this) {
-      CHANNEL_ID -> { state -> LocalizedString.Constant("${state.channelId}") }
+      CHANNEL_ID -> { state -> state.channelIdString }
       IP_ADDRESS -> { state -> state.ipV4?.let { LocalizedString.Constant(it) } }
       MAC_ADDRESS -> { state -> state.macAddress?.let { LocalizedString.Constant(it) } }
-      BATTERY_LEVEL -> { state -> state.batteryLevelString?.let { LocalizedString.Constant(it) } }
+      BATTERY_LEVEL -> { state -> state.batteryLevelString }
       POWER_SUPPLY -> { state -> state.batteryPoweredString }
-
-      WIFI_RSSI -> { state -> state.wifiRssiString?.let { LocalizedString.Constant(it) } }
-      WIFI_SIGNAL -> { state -> state.wifiSignalStrengthString?.let { LocalizedString.Constant(it) } }
-      BRIDGE_NODE -> { state -> state.bridgeNodeOnline?.localizedString }
-      BRIDGE_SIGNAL -> { state -> state.bridgeNodeSignalStrengthString?.let { LocalizedString.Constant(it) } }
+      WIFI_RSSI -> { state -> state.wifiRssiString }
+      WIFI_SIGNAL -> { state -> state.wifiSignalStrengthString }
+      BRIDGE_NODE -> { state -> state.bridgeNodeOnlineString }
+      BRIDGE_SIGNAL -> { state -> state.bridgeNodeSignalStrengthString }
       UPTIME -> { state -> state.uptimeString }
       CONNECTION_TIME -> { state -> state.connectionUptimeString }
-      BATTERY_HEALTH -> { state -> state.batteryHealthString?.let { LocalizedString.Constant(it) } }
+      BATTERY_HEALTH -> { state -> state.batteryHealthString }
       CONNECTION_RESET -> { state -> state.lastConnectionResetCauseString }
-      SWITCH_CYCLE_COUNT -> { state -> state.switchCycleCountString?.let { LocalizedString.Constant(it) } }
-      LIGHT_SOURCE_LIFESPAN -> { state -> state.lightSourceLifespanString?.let { LocalizedString.Constant(it) } }
-      LIGHT_SOURCE_OPERATING_TIME -> { state -> state.lightSourceOperatingTimeString?.let { LocalizedString.Constant(it) } }
+      SWITCH_CYCLE_COUNT -> { state -> state.switchCycleCountString }
+      LIGHT_SOURCE_LIFESPAN -> { state -> state.lightSourceLifespanString }
+      LIGHT_SOURCE_OPERATING_TIME -> { state -> state.lightSourceOperatingTimeString }
     }
+
+  private val SuplaChannelStatePrintable.lightSourceLifespanString: LocalizedString?
+    get() = lightSourceLifespanForPrintable?.let { lightSourceLifespan ->
+      val left = lightSourceLifespanLeftForPrintable ?: lightSourceOperatingTimePercentLeft
+
+      val string = if (left != null) {
+        String.format(Locale.getDefault(), "%dh (%.2f%%)", lightSourceLifespan, left)
+      } else {
+        String.format(Locale.getDefault(), "%dh", lightSourceLifespan)
+      }
+
+      LocalizedString.Constant(string)
+    }
+
+  val SuplaChannelStatePrintable.lightSourceOperatingTimeString: LocalizedString?
+    get() = lightSourceOperatingTimeForPrintable?.let {
+      val string = String.format(Locale.getDefault(), "%02dh %02d:%02d", it / 3600, it % 3600 / 60, it % 60)
+      LocalizedString.Constant(string)
+    }
+
+  companion object {
+    fun values(state: SuplaChannelStatePrintable): Map<StateDialogItem, LocalizedString> =
+      entries.associateWith { it.extractor(state) }
+        .filter { it.value != null }
+        .mapValues { it.value!! }
+  }
 }

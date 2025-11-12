@@ -29,15 +29,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -53,6 +50,7 @@ import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.BACKGROUND_COLOR
 import org.supla.android.ui.views.EmptyListInfoView
 import org.supla.android.ui.views.Image
+import org.supla.android.ui.views.buttons.FloatingAddButton
 import org.supla.android.ui.views.list.components.ListItemIcon
 import org.supla.android.ui.views.list.components.ListItemTitle
 import org.supla.android.ui.views.settings.SettingsListItem
@@ -209,19 +207,12 @@ private fun ListItemProfile(profileName: String) {
 }
 
 @Composable
-private fun AndroidAutoItemsViewScope.AddButton(modifier: Modifier = Modifier) {
-  FloatingActionButton(
-    onClick = { onAddClick() },
-    modifier = modifier
-      .padding(Distance.default)
-  ) {
-    Icon(
-      painter = painterResource(R.drawable.ic_plus),
-      contentDescription = stringResource(R.string.android_auto_add),
-      tint = MaterialTheme.colorScheme.onPrimary
-    )
-  }
-}
+private fun AndroidAutoItemsViewScope.AddButton(modifier: Modifier = Modifier) =
+  FloatingAddButton(
+    modifier = modifier.padding(Distance.default),
+    contentDescription = stringResource(R.string.android_auto_add),
+    onClick = { onAddClick() }
+  )
 
 private val emptyScope = object : AndroidAutoItemsViewScope {
   override fun onItemClick(item: AndroidAutoItem) {}

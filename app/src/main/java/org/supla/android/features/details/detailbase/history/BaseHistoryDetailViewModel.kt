@@ -27,9 +27,9 @@ import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.storage.UserStateHolder
 import org.supla.android.core.ui.BaseViewModel
-import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
+import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.formatting.DateFormatter
 import org.supla.android.data.model.Optional
 import org.supla.android.data.model.chart.ChannelChartSets
@@ -65,14 +65,14 @@ import org.supla.android.extensions.quarterStart
 import org.supla.android.extensions.setDay
 import org.supla.android.extensions.setHour
 import org.supla.android.extensions.shift
-import org.supla.android.extensions.valuesFormatter
 import org.supla.android.extensions.weekEnd
 import org.supla.android.extensions.weekStart
 import org.supla.android.extensions.yearEnd
 import org.supla.android.extensions.yearNo
 import org.supla.android.extensions.yearStart
 import org.supla.android.features.details.detailbase.history.ui.ChartDataSelectionDialogState
-import org.supla.android.features.details.detailbase.history.ui.HistoryDetailProxy
+import org.supla.android.features.details.detailbase.history.ui.CheckboxItem
+import org.supla.android.features.details.detailbase.history.ui.HistoryDetailScope
 import org.supla.android.features.details.electricitymeterdetail.history.IntroductionPage
 import org.supla.android.profile.ProfileManager
 import org.supla.android.tools.SuplaSchedulers
@@ -83,6 +83,8 @@ import org.supla.android.usecases.migration.GroupingStringMigrationUseCase
 import org.supla.core.shared.data.model.rest.channel.ChannelDto
 import org.supla.core.shared.data.model.rest.channel.DefaultChannelDto
 import org.supla.core.shared.extensions.guardLet
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 import timber.log.Timber
 import java.util.Calendar
 import java.util.Date
@@ -96,7 +98,7 @@ abstract class BaseHistoryDetailViewModel(
   private val profileManager: ProfileManager,
   private val dateProvider: DateProvider,
   schedulers: SuplaSchedulers
-) : BaseViewModel<HistoryDetailViewState, HistoryDetailViewEvent>(HistoryDetailViewState(), schedulers), HistoryDetailProxy {
+) : BaseViewModel<HistoryDetailViewState, HistoryDetailViewEvent>(HistoryDetailViewState(), schedulers), HistoryDetailScope {
 
   open fun loadData(remoteId: Int) {
     updateState { state ->
@@ -173,6 +175,10 @@ abstract class BaseHistoryDetailViewModel(
     if (spinnerItem is ChartDataAggregation) {
       changeAggregation(spinnerItem)
     }
+  }
+
+  override fun confirmSelection(spinnerItem: SpinnerItem?, checkboxItems: Set<CheckboxItem>?) {
+    // Used only in electricity history
   }
 
   private fun changeAggregation(aggregation: ChartDataAggregation) {
@@ -668,36 +674,35 @@ data class HistoryDetailViewState(
       return startDate > minDate
     }
 
-  val emptyChartMessage: StringProvider
+  val emptyChartMessage: LocalizedString
     get() = when (downloadState) {
-      is DownloadEventsManager.State.Started -> { context -> context.getString(R.string.history_refreshing) }
+      is DownloadEventsManager.State.Started -> localizedString(R.string.history_refreshing)
 
-      is DownloadEventsManager.State.InProgress -> { context ->
-        val description = context.getString(R.string.retrieving_data_from_the_server)
-        val percentage = context.valuesFormatter.getPercentageString(downloadState.progress)
-        "$description $percentage"
+      is DownloadEventsManager.State.InProgress -> {
+        val percentage = ValuesFormatter.getPercentageString(downloadState.progress)
+        localizedString("%s %s", localizedString(R.string.retrieving_data_from_the_server), percentage)
       }
 
-      is DownloadEventsManager.State.Finished -> { context ->
+      is DownloadEventsManager.State.Finished -> {
         if (loading) {
-          context.getString(R.string.history_refreshing)
+          localizedString(R.string.history_refreshing)
         } else if (chartData.sets.firstOrNull { it.active } == null) {
-          context.getString(R.string.history_no_data_selected)
+          localizedString(R.string.history_no_data_selected)
         } else if (minDate == null && maxDate == null) {
-          context.getString(R.string.history_no_data_available)
+          localizedString(R.string.history_no_data_available)
         } else if (range?.start?.after(range.end) == true) {
-          context.getString(R.string.history_wrong_range)
+          localizedString(R.string.history_wrong_range)
         } else {
-          context.getString(R.string.no_chart_data_available)
+          localizedString(R.string.no_chart_data_available)
         }
       }
 
-      is DownloadEventsManager.State.Failed -> { context -> context.getString(R.string.history_refreshing_failed) }
-      else -> { context ->
+      is DownloadEventsManager.State.Failed -> localizedString(R.string.history_refreshing_failed)
+      else -> {
         if (loading.not() && chartData.sets.isEmpty()) {
-          context.getString(R.string.history_no_data_available)
+          localizedString(R.string.history_no_data_available)
         } else {
-          context.getString(R.string.retrieving_data_from_the_server)
+          localizedString(R.string.retrieving_data_from_the_server)
         }
       }
     }

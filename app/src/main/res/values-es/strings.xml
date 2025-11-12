@@ -668,7 +668,9 @@
   <string name="thermostat_detail_main_thermostat">Termostato principal</string>
   <string name="thermostat_detail_other_thermostats">Termostatos dependientes</string>
   <string name="thermostat_battery_cover_open">Tapa de la batería abierta</string>
-  <string name="channel_battery_level">Nivel de batería (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_battery_level">Nivel de batería: %1$d%%</string>
+  <string name="channel_battery_level_with_info">Nivel de batería (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_btn_stop">Parar</string>
   <string name="android_auto_action">Acción: %1$s</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Si tiene un código QR, use el escáner. Para dispositivos sin código QR, presione <b>Siguiente</b> para continuar.]]></string>
   <string name="add_wizard_network_name">Nombre de la red</string>
@@ -707,4 +709,38 @@
   <string name="developer_info_activated">Modo de desarrollador activado</string>
   <string name="developer_info_screen_orientation">Rotación de pantalla activada</string>
   <string name="developer_info_settings">Ajustes experimentales</string>
+  <string name="profiles_list_sorting">Ordenar</string>
+  <string name="profiles_list_sorting_default">Predeterminado</string>
+  <string name="profiles_list_sorting_name">Nombre</string>
+  <string name="profiles_list_sorting_added">Último añadido</string>
+  <string name="channel_caption_water_tank">Tanque de agua</string>
+  <string name="channel_caption_container_level_sensor">Sensor de nivel de contenedor</string>
+  <string name="state_opened">abierto</string>
+  <string name="state_closed">cerrado</string>
+  <string name="state_partially_opened">parcialmente abierto</string>
+  <string name="channel_btn_step_by_step">Abrir/Cerrar (paso a paso)</string>
+  <string name="channel_btn_shut">Cerrar</string>
+  <string name="channel_btn_reveal">Abrir</string>
+  <string name="channel_btn_collapse">Recoger</string>
+  <string name="channel_btn_expand">Desplegar</string>
+  <string name="gate_general_open_and_close_warning">No todas las puertas tienen un sensor de apertura configurado; es posible que los botones \"Abrir\" y \"Cerrar\" no funcionen correctamente.</string>
+  <string name="add_wizard_spaces_accept">Mantener sin cambios</string>
+  <string name="add_wizard_spaces_modify">Quitar espacios</string>
+  <string name="add_wizard_spaces_title">¿Espacio en el nombre de red?</string>
+  <string name="add_wizard_spaces_message">El nombre de red introducido \"%1$s\" contiene espacios en blanco iniciales o finales (espacios o tabulaciones). Si el nombre de red no debe incluir estos caracteres, el dispositivo no podrá conectarse a la red. ¿Quiere mantener o quitar los espacios en blanco iniciales o finales?</string>
+  <string name="state_dialog_last_known_state">Sin conexión – último estado conocido:</string>
+  <string name="channel_caption_flood_sensor">Sensor de inundación</string>
+  <string name="channel_caption_motion_sensor">Sensor de movimiento</string>
+  <string name="channel_caption_binary_sensor">Sensor binario</string>
+  <string name="valve_detail_sensors">Sensores conectados</string>
+  <string name="valve_error_sensor_offline">Sensor de inundación no disponible – riesgo de inundación no detectada.</string>
+  <string name="container_invalid_sensor_state">Estado del sensor no válido.</string>
+  <string name="channel_caption_container">Contenedor</string>
+  <string name="channel_caption_septic_tank">Fosa séptica</string>
+
+  <plurals name="rest_time_days_pattern">
+    <item quantity="one">%1$d día ⏱️</item>
+    <item quantity="many">%1$d días ⏱️</item>
+  </plurals>
+  <string name="thermostat_calibration_error">Error de calibración</string>
 </resources>

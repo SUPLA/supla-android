@@ -348,7 +348,6 @@
   <string name="diw_cfg_info_in_options">Opzioni Ingresso</string>
   <string name="diw_cfg_info_mono_option">Questa opzione modifica il comportamento del dimmer con ingresso impostato come Monostabile. Con opzione disabilitata, il dimmer smette di regolare la luce una volta raggiunto il livello di luminosità massima o minima. Abilitando questa opzione, la regolazione sarà continua passando dal livello minimo al massimo e viceversa. La regolazione della luminosità continuerà finché il pulsante sarà premuto.</string>
   <string name="diw_cfg_info_bi_option">Questa opzione modifica il comportamento del dimmer con ingresso impostato come bistabile. Con opzione abilitata, il dimmer imposterà il livello di luminosità massima subito dopo aver acceso l\'illuminazione. Se l\'opzione è disabilitata, all\’accensione il dimmer imposterà il livello di luminosità salvato prima dello spegnimento.</string>
-  <string name="channel_caption_digiglass">Digiglass</string>
   <string name="channel_func_digiglass">Digiglass</string>
   <string name="wizard_done_explentations">Se il tuo nuovo dispositivo I/O non viene visualizzato nell\'app Comelit WiFree, esegui nuovamente la procedura guidata \"Aggiungi dispositivo I/O\" e fai riferimento alle informazioni sullo \"Stato precedente\" in questa pagina per la risoluzione dei problemi. Viene visualizzato \"SSID non trovato\" quando la rete Wi-Fi scelta non è disponibile o il suo nome non è corretto.</string>
   <string name="incorrect_email_or_password">Indirizzo Mail o Password errato</string>
@@ -675,7 +674,8 @@
   <string name="thermostat_battery_cover_open">Coperchio della batteria aperto</string>
 
   <string name="settings_battery_level_warning">Allarme batteria scarica</string>
-  <string name="channel_battery_level">Livello batteria (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_battery_level">Livello batteria: %1$d%%</string>
+  <string name="channel_battery_level_with_info">Livello batteria (%1$d - %2$s): %3$d%%</string>
   <string name="details_em_reverse_reactive_energy_short">Reattiva restituita</string>
   <string name="details_em_energy_label">Energia</string>
   <string name="channel_btn_shut">Chiudi</string>
@@ -710,6 +710,7 @@
   <plurals name="second_pattern" tools:ignore="MissingQuantity">
   <item quantity="other">%1$d sec</item>
   </plurals>
+  <string name="channel_btn_stop">Fermare</string>
   <string name="android_auto_action">Azione: %1$s</string>
   <string name="add_wizard_network_name">Nome rete</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Se hai un codice QR, usa lo scanner. Per i dispositivi senza codice QR, premi <b>Avanti</b> per continuare.]]></string>
@@ -748,4 +749,35 @@
   <string name="developer_info_activated">Modalità sviluppatore attivata</string>
   <string name="developer_info_screen_orientation">Rotazione schermo abilitata</string>
   <string name="developer_info_settings">Impostazioni sperimentali</string>
+  <string name="profiles_list_sorting">Ordinamento</string>
+  <string name="profiles_list_sorting_default">Predefinito</string>
+  <string name="profiles_list_sorting_name">Nome</string>
+  <string name="profiles_list_sorting_added">Ultimo aggiunto</string>
+  <string name="channel_caption_water_tank">Serbatoio dell\'acqua</string>
+  <string name="channel_caption_container_level_sensor">Sensore di livello contenitore</string>
+  <string name="state_opened">aperto</string>
+  <string name="state_closed">chiuso</string>
+  <string name="state_partially_opened">parzialmente aperto</string>
+  <string name="channel_btn_step_by_step">Apri/Chiudi (passo dopo passo)</string>
+  <string name="gate_general_open_and_close_warning">Non tutti i cancelli hanno un sensore di apertura configurato: i pulsanti \"Apri\" e \"Chiudi\" potrebbero non funzionare correttamente.</string>
+  <string name="add_wizard_spaces_accept">Mantieni invariato</string>
+  <string name="add_wizard_spaces_modify">Rimuovi spazi</string>
+  <string name="add_wizard_spaces_title">Spazio nel nome della rete?</string>
+  <string name="add_wizard_spaces_message">Il nome della rete immesso \"%1$s\" contiene caratteri spazi bianchi iniziali o finali (spazi o tabulatori). Se il nome della rete non deve includere questi caratteri, il dispositivo non sarà in grado di connettersi alla rete. Vuoi mantenere o rimuovere i caratteri spazi bianchi iniziali o finali?</string>
+  <string name="state_dialog_last_known_state">Offline – ultimo stato noto:</string>
+  <string name="channel_caption_flood_sensor">Sensore allagamento</string>
+  <string name="channel_caption_motion_sensor">Sensore di movimento</string>
+  <string name="channel_caption_binary_sensor">Sensore binario</string>
+  <string name="valve_detail_sensors">Sensori collegati</string>
+  <string name="valve_error_sensor_offline">Sensore allagamento non disponibile – rischio di allagamento non rilevato.</string>
+  <string name="container_invalid_sensor_state">Stato del sensore non valido.</string>
+  <string name="channel_caption_container">Contenitore</string>
+  <string name="channel_caption_septic_tank">Fossa settica</string>
+
+  <plurals name="rest_time_days_pattern">
+    <item quantity="one">%1$d giorno ⏱️</item>
+    <item quantity="many">%1$d giorni ⏱️</item>
+    <item quantity="other">%1$d giorni ⏱️</item>
+  </plurals>
+  <string name="thermostat_calibration_error">Errore di calibrazione</string>
 </resources>

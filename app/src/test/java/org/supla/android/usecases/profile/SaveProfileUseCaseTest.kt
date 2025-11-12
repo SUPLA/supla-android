@@ -219,7 +219,8 @@ class SaveProfileUseCaseTest {
         accessIDpwd = ""
       ),
       advancedAuthSetup = false,
-      isActive = false
+      isActive = false,
+      position = 0
     )
   }
 }

@@ -21,7 +21,6 @@ import com.google.gson.Gson
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.R
-import org.supla.android.core.shared.provider
 import org.supla.android.core.shared.shareable
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.model.chart.AggregatedEntity
@@ -69,19 +68,20 @@ class ElectricityConsumptionProvider @Inject constructor(
   ): Single<ChannelChartSets> {
     val channel = channelWithChildren.channel
     return getGroupedMeasurements(channel, spec)
-      .map { listOf(historyDataSet(channelWithChildren, labels(spec, getChannelIconUseCase(channel), it), spec.aggregation, it.list)) }
+      .map { listOf(historyDataSet(channelWithChildren, labels(spec, it), spec.aggregation, it.list)) }
       .map { historyDataSets ->
         ChannelChartSets(
-          channel,
-          getCaptionUseCase(channel.shareable).provider(),
-          spec.aggregation,
-          historyDataSets,
-          ElectricityMarkerCustomData(
+          channel = channel,
+          name = getCaptionUseCase(channel.shareable),
+          aggregation = spec.aggregation,
+          dataSets = historyDataSets,
+          icon = getChannelIconUseCase(channel),
+          customData = ElectricityMarkerCustomData(
             spec.customFilters as? ElectricityChartFilters,
             channel.Electricity.value?.pricePerUnit?.toFloat(),
             channel.Electricity.value?.currency
           ),
-          (spec.customFilters as? ElectricityChartFilters)?.type?.labelWithUnit
+          typeNameRes = (spec.customFilters as? ElectricityChartFilters)?.type?.labelWithUnit
         )
       }
       .firstOrError()
@@ -112,33 +112,32 @@ class ElectricityConsumptionProvider @Inject constructor(
           .map { aggregating(it, spec) }
     }
 
-  private fun labels(spec: ChartDataSpec, icon: ImageId, result: AggregationResult): HistoryDataSet.Label {
+  private fun labels(spec: ChartDataSpec, result: AggregationResult): HistoryDataSet.Label {
     return when ((spec.customFilters as? ElectricityChartFilters)?.type) {
       ElectricityMeterChartType.BALANCE_VECTOR,
       ElectricityMeterChartType.BALANCE_ARITHMETIC,
       ElectricityMeterChartType.BALANCE_HOURLY -> HistoryDataSet.Label.Multiple(
-        mutableListOf<HistoryDataSet.LabelData>().apply {
-          add(HistoryDataSet.LabelData(icon, "", R.color.on_surface_variant, presentColor = false, useColor = false))
-          add(HistoryDataSet.LabelData.forwarded(formatter.format(result.nextSum())))
-          add(HistoryDataSet.LabelData.reversed(formatter.format(result.nextSum())))
-        }
+        values = listOf(
+          HistoryDataSet.LabelData.forwarded(formatter.format(result.nextSum())),
+          HistoryDataSet.LabelData.reversed(formatter.format(result.nextSum()))
+        )
       )
 
       ElectricityMeterChartType.BALANCE_CHART_AGGREGATED -> HistoryDataSet.Label.Multiple(
-        mutableListOf<HistoryDataSet.LabelData>().apply {
-          add(HistoryDataSet.LabelData(icon, "", R.color.on_surface_variant, presentColor = false))
-          add(HistoryDataSet.LabelData.forwarded(formatter.format(result.nextSum())))
-          add(HistoryDataSet.LabelData.reversed(formatter.format(result.nextSum())))
-          add(HistoryDataSet.LabelData(R.color.on_surface_variant))
-        }
+        values = listOf(
+          HistoryDataSet.LabelData(R.color.on_surface_variant),
+          HistoryDataSet.LabelData.forwarded(formatter.format(result.nextSum())),
+          HistoryDataSet.LabelData.reversed(formatter.format(result.nextSum())),
+          HistoryDataSet.LabelData(R.color.on_surface_variant)
+        )
       )
 
       else -> HistoryDataSet.Label.Multiple(
-        mutableListOf<HistoryDataSet.LabelData>().apply {
+        values = mutableListOf<HistoryDataSet.LabelData>().apply {
           spec.customFilters?.ifPhase1 {
             add(
               HistoryDataSet.LabelData(
-                icon,
+                null,
                 formatter.format(result.nextSum()),
                 R.color.phase1
               )
@@ -147,7 +146,7 @@ class ElectricityConsumptionProvider @Inject constructor(
           spec.customFilters?.ifPhase2 {
             add(
               HistoryDataSet.LabelData(
-                if (size == 0) icon else null,
+                null,
                 formatter.format(result.nextSum()),
                 R.color.phase2
               )
@@ -156,7 +155,7 @@ class ElectricityConsumptionProvider @Inject constructor(
           spec.customFilters?.ifPhase3 {
             add(
               HistoryDataSet.LabelData(
-                if (size == 0) icon else null,
+                null,
                 formatter.format(result.nextSum()),
                 R.color.phase3
               )

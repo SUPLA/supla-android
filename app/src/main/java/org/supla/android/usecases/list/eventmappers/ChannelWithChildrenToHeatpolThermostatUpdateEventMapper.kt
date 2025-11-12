@@ -19,7 +19,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import org.supla.android.core.shared.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.di.FORMATTER_THERMOMETER
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
@@ -71,7 +70,7 @@ class ChannelWithChildrenToHeatpolThermostatUpdateEventMapper @Inject constructo
       indicatorIcon = null,
       issues = getChannelIssuesForListUseCase(channelWithChildren.shareable),
       estimatedTimerEndDate = null,
-      infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channelData.flags)
+      infoSupported = channelWithChildren.showInfo
     )
   }
 }

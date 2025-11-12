@@ -32,6 +32,7 @@ class ReadChannelWithChildrenUseCase @Inject constructor(
 
   operator fun invoke(remoteId: Int): Maybe<ChannelWithChildren> =
     roomChannelRepository.findChannelDataEntity(remoteId)
+      .firstElement()
       .flatMap { channel ->
         channelRelationRepository.findChildrenForParent(remoteId).map { ChannelWithChildren(channel, it) }
       }

@@ -25,6 +25,5 @@ import javax.inject.Singleton
 class ReadAllProfilesUseCase @Inject constructor(
   private val profileRepository: RoomProfileRepository
 ) {
-
   operator fun invoke() = profileRepository.findAllProfiles()
 }

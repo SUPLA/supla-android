@@ -65,8 +65,7 @@ data class OcrPhoto(
 
 @Singleton
 class LoadLatestOcrPhotoUseCase @Inject constructor(
-  private val suplaCloudServiceProvider: SuplaCloudService.Provider,
-  private val valuesFormatter: ValuesFormatter
+  private val suplaCloudServiceProvider: SuplaCloudService.Provider
 ) {
 
   operator fun invoke(remoteId: Int): Observable<OcrPhoto> =
@@ -76,7 +75,7 @@ class LoadLatestOcrPhotoUseCase @Inject constructor(
         .map { photoDto ->
           val localDateTime = LocalDateTime.parse(photoDto.createdAt, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
           val date = Date.from(localDateTime.atZone(ZoneId.of("UTC")).toInstant())
-            ?.let { valuesFormatter.getFullDateString(it) } ?: NO_VALUE_TEXT
+            ?.let { ValuesFormatter.getFullDateString(it) } ?: NO_VALUE_TEXT
 
           OcrPhoto(
             date = date,

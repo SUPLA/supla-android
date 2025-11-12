@@ -23,6 +23,7 @@ import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.ActionParameters
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.VibrationHelper
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -35,6 +36,7 @@ class ExecuteSimpleActionUseCase @Inject constructor(
   operator fun invoke(actionId: ActionId, type: SubjectType, remoteId: Int): Completable =
     Completable.fromRunnable {
       suplaClientProvider.provide()?.run {
+        Timber.i("Executing action ($actionId) of $type with id: $remoteId")
         if (executeAction(ActionParameters(actionId, type, remoteId))) {
           vibrationHelper.vibrate()
         }

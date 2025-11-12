@@ -27,7 +27,8 @@ data class AuthProfileItem(
   var name: String = "",
   var authInfo: AuthInfo,
   var advancedAuthSetup: Boolean,
-  var isActive: Boolean
+  var isActive: Boolean,
+  var position: Int
 ) : DbItem() {
 
   override fun AssignCursorData(cur: Cursor) {
@@ -40,21 +41,25 @@ data class AuthProfileItem(
       return stringOrNull(cur, idx) ?: default
     }
 
-    name = cur.getString(1)
+    val guidColumnId = cur.getColumnIndexOrThrow(ProfileEntity.COLUMN_GUID)
+    val authKeyColumnId = cur.getColumnIndexOrThrow(ProfileEntity.COLUMN_AUTH_KEY)
+
+    name = cur.getString(cur.getColumnIndexOrThrow(ProfileEntity.COLUMN_NAME))
     authInfo = AuthInfo(
-      emailAddress = string(cur, 2),
-      serverForAccessID = string(cur, 3),
-      serverForEmail = string(cur, 4),
-      serverAutoDetect = cur.getInt(5) > 0,
-      emailAuth = cur.getInt(6) > 0,
-      accessID = cur.getInt(7),
-      accessIDpwd = string(cur, 8),
-      preferredProtocolVersion = cur.getInt(9),
-      guid = if (cur.isNull(12)) byteArrayOf() else cur.getBlob(12),
-      authKey = if (cur.isNull(13)) byteArrayOf() else cur.getBlob(13)
+      emailAddress = string(cur, cur.getColumnIndexOrThrow(ProfileEntity.COLUMN_EMAIL)),
+      serverForAccessID = string(cur, cur.getColumnIndexOrThrow(ProfileEntity.COLUMN_SERVER_FOR_ACCESS_ID)),
+      serverForEmail = string(cur, cur.getColumnIndexOrThrow(ProfileEntity.COLUMN_SERVER_FOR_EMAIL)),
+      serverAutoDetect = cur.getInt(cur.getColumnIndexOrThrow(ProfileEntity.COLUMN_SERVER_AUTO_DETECT)) > 0,
+      emailAuth = cur.getInt(cur.getColumnIndexOrThrow(ProfileEntity.COLUMN_EMAIL_AUTH)) > 0,
+      accessID = cur.getInt(cur.getColumnIndexOrThrow(ProfileEntity.COLUMN_ACCESS_ID)),
+      accessIDpwd = string(cur, cur.getColumnIndexOrThrow(ProfileEntity.COLUMN_ACCESS_ID_PASSWORD)),
+      preferredProtocolVersion = cur.getInt(cur.getColumnIndexOrThrow(ProfileEntity.COLUMN_PREFERRED_PROTOCOL_VERSION)),
+      guid = if (cur.isNull(guidColumnId)) byteArrayOf() else cur.getBlob(guidColumnId),
+      authKey = if (cur.isNull(authKeyColumnId)) byteArrayOf() else cur.getBlob(authKeyColumnId)
     )
-    isActive = cur.getInt(10) > 0
-    advancedAuthSetup = cur.getInt(11) > 0
+    isActive = cur.getInt(cur.getColumnIndexOrThrow(ProfileEntity.COLUMN_ACTIVE)) > 0
+    advancedAuthSetup = cur.getInt(cur.getColumnIndexOrThrow(ProfileEntity.COLUMN_ADVANCED_MODE)) > 0
+    position = cur.getInt(cur.getColumnIndexOrThrow(ProfileEntity.COLUMN_POSITION))
   }
 
   fun getContentValuesV22(): ContentValues {
@@ -76,14 +81,11 @@ data class AuthProfileItem(
 
   override fun getContentValues(): ContentValues {
     val vals = getContentValuesV22()
+    vals.put(ProfileEntity.COLUMN_POSITION, position)
     vals.put(ProfileEntity.COLUMN_GUID, authInfo.guid)
     vals.put(ProfileEntity.COLUMN_AUTH_KEY, authInfo.authKey)
 
     return vals
-  }
-
-  fun isEmailAuthorizationEnabled(): Boolean {
-    return authInfo.emailAuth
   }
 
   fun authInfoChanged(other: AuthProfileItem): Boolean {

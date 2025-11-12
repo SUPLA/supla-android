@@ -25,7 +25,6 @@ import org.supla.android.core.networking.suplaclient.SuplaClientEvent
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientState
 import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
-import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.lib.SuplaConst.SUPLA_RESULT_HOST_NOT_FOUND
@@ -37,6 +36,8 @@ import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModel
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.DisconnectUseCase
 import org.supla.android.usecases.client.LoginUseCase
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -147,16 +148,16 @@ class StatusViewModel @Inject constructor(
     }
   }
 
-  private fun getErrorDescription(reason: SuplaClientState.Reason): StringProvider? {
+  private fun getErrorDescription(reason: SuplaClientState.Reason): LocalizedString? {
     return when (reason) {
       is SuplaClientState.Reason.ConnectionError ->
         if (reason.error.Code == SUPLA_RESULT_HOST_NOT_FOUND) {
-          { context -> context.getString(R.string.err_hostnotfound) }
+          localizedString(R.string.err_hostnotfound)
         } else {
           null
         }
 
-      is SuplaClientState.Reason.RegisterError -> { context -> reason.error.codeToString(context, true) }
+      is SuplaClientState.Reason.RegisterError -> reason.error.codeToString(true)
       SuplaClientState.Reason.NoNetwork,
       SuplaClientState.Reason.VersionError,
       SuplaClientState.Reason.AppInBackground,

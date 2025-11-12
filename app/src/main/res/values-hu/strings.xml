@@ -680,7 +680,9 @@
   <string name="thermostat_detail_main_thermostat">Fő termosztát</string>
   <string name="thermostat_detail_other_thermostats">Mellék termosztátok</string>
   <string name="thermostat_battery_cover_open">Elemfedél nyitva</string>
-  <string name="channel_battery_level">Az akkumulátor töltöttségi szintje (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_battery_level">Az akkumulátor töltöttségi szintje: %1$d%%</string>
+  <string name="channel_battery_level_with_info">Az akkumulátor töltöttségi szintje (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_btn_stop">Állj</string>
   <string name="android_auto_action">Akció: %1$s</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Ha van QR-kódja, használja a szkennert. QR-kód nélküli eszközök esetén nyomja meg a <b>Tovább</b> gombot a folytatáshoz.]]></string>
   <string name="add_wizard_network_name">Hálózat neve</string>
@@ -719,4 +721,38 @@
   <string name="developer_info_activated">Fejlesztői mód aktiválva</string>
   <string name="developer_info_screen_orientation">Képernyőforgatás engedélyezve</string>
   <string name="developer_info_settings">Kísérleti beállítások</string>
+  <string name="profiles_list_sorting">Rendezés</string>
+  <string name="profiles_list_sorting_default">Alapértelmezett</string>
+  <string name="profiles_list_sorting_name">Név</string>
+  <string name="profiles_list_sorting_added">Utoljára hozzáadott</string>
+  <string name="channel_caption_water_tank">Víztartály</string>
+  <string name="channel_caption_container_level_sensor">Konténer szintérzékelő</string>
+  <string name="state_opened">nyitva</string>
+  <string name="state_closed">zárva</string>
+  <string name="state_partially_opened">részben nyitva</string>
+  <string name="channel_btn_step_by_step">Nyitás/Bezárás (lépésről lépésre)</string>
+  <string name="channel_btn_shut">Bezár</string>
+  <string name="channel_btn_reveal">Kinyit</string>
+  <string name="channel_btn_collapse">Összecsuk</string>
+  <string name="channel_btn_expand">Kinyit</string>
+  <string name="gate_general_open_and_close_warning">Nem minden kapuhoz van beállítva nyitásérzékelő – előfordulhat, hogy az „Nyitás” és „Zárás” gombok nem működnek megfelelően.</string>
+  <string name="add_wizard_spaces_accept">Tartsa változatlanul</string>
+  <string name="add_wizard_spaces_modify">Szóközök eltávolítása</string>
+  <string name="add_wizard_spaces_title">Szóköz van a hálózatnévben?</string>
+  <string name="add_wizard_spaces_message">A megadott hálózatnév \"%1$s\" kezdő vagy záró szóközöket (szóköz vagy tabulátor) tartalmaz. Ha a hálózatnév nem tartalmazhat ilyen karaktereket, az eszköze nem fog tudni csatlakozni a hálózathoz. Meg szeretné tartani vagy el szeretné távolítani a kezdő vagy záró szóközöket?</string>
+  <string name="state_dialog_last_known_state">Offline – utolsó ismert állapot:</string>
+  <string name="channel_caption_flood_sensor">Árvízérzékelő</string>
+  <string name="channel_caption_motion_sensor">Mozgásérzékelő</string>
+  <string name="channel_caption_binary_sensor">Bináris érzékelő</string>
+  <string name="valve_detail_sensors">Csatlakoztatott érzékelők</string>
+  <string name="valve_error_sensor_offline">Árvízérzékelő nem elérhető – észrevétlen áradás veszélye.</string>
+  <string name="container_invalid_sensor_state">Érvénytelen érzékelő állapot.</string>
+  <string name="channel_caption_container">Konténer</string>
+  <string name="channel_caption_septic_tank">Szeptikus tartály</string>
+
+  <plurals name="rest_time_days_pattern">
+    <item quantity="one">%1$d nap ⏱️</item>
+    <item quantity="other">%1$d nap ⏱️</item>
+  </plurals>
+  <string name="thermostat_calibration_error">Kalibrációs hiba</string>
 </resources>

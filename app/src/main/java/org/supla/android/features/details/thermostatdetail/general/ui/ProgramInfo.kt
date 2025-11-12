@@ -42,6 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
+import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.gray
 import org.supla.android.features.details.thermostatdetail.general.data.ThermostatProgramInfo
 
@@ -57,16 +58,16 @@ fun ProgramInfoRow(infos: List<ThermostatProgramInfo>) {
       ),
     verticalArrangement = Arrangement.spacedBy(10.dp)
   ) {
-    infos.forEach {
+    infos.forEach { info ->
       Row(horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.distance_tiny))) {
-        ProgramInfoLabel(stringResource(id = it.type.stringRes))
-        if (it.icon != null && it.iconColor != null) {
-          ProgramInfoIcon(it.icon, it.iconColor)
+        ProgramInfoLabel(stringResource(id = info.type.stringRes))
+        if (info.icon != null && info.iconColor != null) {
+          ProgramInfoIcon(info.icon, info.iconColor)
         }
-        it.descriptionProvider?.let {
+        info.descriptionProvider?.let {
           ProgramInfoDescription(it(LocalContext.current))
         }
-        it.time?.let {
+        info.time?.let {
           Text(
             text = it(LocalContext.current),
             style = MaterialTheme.typography.bodyMedium,
@@ -75,7 +76,7 @@ fun ProgramInfoRow(infos: List<ThermostatProgramInfo>) {
             overflow = TextOverflow.Ellipsis
           )
         }
-        if (it.manualActive) {
+        if (info.manualActive) {
           ProgramInfoManual()
         }
       }

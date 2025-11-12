@@ -47,7 +47,7 @@ import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
 import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModel
-import org.supla.android.ui.lists.sensordata.SensorItemData
+import org.supla.android.ui.lists.sensordata.RelatedChannelData
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
@@ -75,7 +75,6 @@ class ContainerGeneralDetailViewModel @Inject constructor(
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val getCaptionUseCase: GetCaptionUseCase,
   private val vibrationHelper: VibrationHelper,
-  private val valuesFormatter: ValuesFormatter,
   private val preferences: Preferences,
   override val updateEventsManager: UpdateEventsManager,
   override val schedulers: SuplaSchedulers,
@@ -141,7 +140,7 @@ class ContainerGeneralDetailViewModel @Inject constructor(
     val levelString = when {
       value.status.offline -> "offline"
       level == null -> "---"
-      else -> valuesFormatter.getPercentageString(level)
+      else -> ValuesFormatter.getPercentageString(level)
     }
     updateState { state ->
       state.copy(
@@ -163,13 +162,13 @@ class ContainerGeneralDetailViewModel @Inject constructor(
     }
   }
 
-  private fun ChannelChildEntity.toSensorData(channelToLevelMap: Map<Int, Int>?): SensorItemData {
+  private fun ChannelChildEntity.toSensorData(channelToLevelMap: Map<Int, Int>?): RelatedChannelData {
     val caption = getCaptionUseCase(channelDataEntity.shareable)
     val captionWithPercentage = channelToLevelMap?.get(channel.remoteId)?.let {
       LocalizedString.WithResourceAndArguments(R.string.container_caption, caption, it)
     }
 
-    return SensorItemData(
+    return RelatedChannelData(
       channelId = channel.remoteId,
       profileId = channel.profileId,
       onlineState = channelDataEntity.channelValueEntity.onlineState,
@@ -177,7 +176,7 @@ class ContainerGeneralDetailViewModel @Inject constructor(
       caption = captionWithPercentage ?: caption,
       userCaption = channel.caption,
       batteryIcon = getChannelBatteryIconUseCase(channelDataEntity.shareable),
-      showChannelStateIcon = channelDataEntity.channelValueEntity.status.online && SuplaChannelFlag.CHANNEL_STATE inside channel.flags
+      showChannelStateIcon = SuplaChannelFlag.CHANNEL_STATE inside channel.flags && channelDataEntity.stateEntity != null
     )
   }
 
@@ -202,12 +201,12 @@ class ContainerGeneralDetailViewModel @Inject constructor(
 
   private fun errorLevel(level: Int, type: ControlLevel.Type) =
     level.minus(1).div(100f).let {
-      ErrorLevel(it, valuesFormatter.getPercentageString(it), type)
+      ErrorLevel(it, ValuesFormatter.getPercentageString(it), type)
     }
 
   private fun warningLevel(level: Int, type: ControlLevel.Type) =
     level.minus(1).div(100f).let {
-      WarningLevel(it, valuesFormatter.getPercentageString(it), type)
+      WarningLevel(it, ValuesFormatter.getPercentageString(it), type)
     }
 
   private fun muteAlarmSound() {

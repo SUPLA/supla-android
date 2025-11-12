@@ -30,10 +30,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import org.supla.android.R
-import org.supla.android.ui.views.DatePicker
 import org.supla.android.ui.views.Separator
 import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.buttons.TextButton
+import org.supla.android.ui.views.forms.DatePicker
 import java.util.Date
 
 @Composable

@@ -54,12 +54,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import org.supla.android.R
+import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.core.ui.theme.gray
+import org.supla.android.data.ValuesFormatter
 import org.supla.android.extensions.differenceInSeconds
 import org.supla.android.extensions.preferences
-import org.supla.android.extensions.valuesFormatter
 import org.supla.android.ui.lists.ListOnlineState
 import org.supla.android.ui.views.Separator
 import org.supla.android.ui.views.list.components.ListItemInfoIcon
@@ -118,7 +119,7 @@ fun ListItemScaffold(
     ) {
       ListItemDotLeading(onlineState, hasLeftButton)
 
-      if (onlineState.online && showInfoIcon) {
+      if (showInfoIcon) {
         ListItemInfoIcon(onInfoClick, modifier = Modifier.padding(start = dimensionResource(id = R.dimen.list_horizontal_spacing)))
       } else {
         ListItemIssueIconSpacing()
@@ -205,7 +206,7 @@ private fun BoxScope.ListItemTimerText(date: Date, scale: Float) {
     if (date.after(currentDate)) {
       do {
         val leftTimeSeconds = date.differenceInSeconds(currentDate)
-        text = context.valuesFormatter.getTimerRestTime(leftTimeSeconds)(context)
+        text = ValuesFormatter.getTimerRestTime(leftTimeSeconds)(context)
         delay(1.seconds)
         currentDate = Date()
       } while (currentDate.before(date))

@@ -22,7 +22,6 @@ import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.SceneDataEntity
-import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.images.ImageId
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.core.shared.data.model.lists.ListItemIssues
@@ -72,7 +71,7 @@ sealed interface ListItem {
         value = value,
         issues = issues,
         estimatedTimerEndDate = null,
-        infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channel.flags)
+        infoSupported = channel.showInfo
       )
     }
   }
@@ -107,7 +106,7 @@ sealed interface ListItem {
         value = value ?: NO_VALUE_TEXT,
         subValue = subValue,
         indicatorIcon = indicatorIcon,
-        infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channel.flags)
+        infoSupported = channel.showInfo
       )
     }
   }
@@ -132,7 +131,7 @@ sealed interface ListItem {
         value = value ?: NO_VALUE_TEXT,
         subValue = subValue,
         indicatorIcon = null,
-        infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channel.flags)
+        infoSupported = channel.showInfo
       )
     }
   }
@@ -155,7 +154,7 @@ sealed interface ListItem {
         icon = icon,
         issues = issues,
         value = value ?: NO_VALUE_TEXT,
-        infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channel.flags),
+        infoSupported = channel.showInfo,
         secondIcon = secondIcon,
         secondValue = secondValue
       )
@@ -190,7 +189,7 @@ sealed interface ListItem {
         value = value,
         issues = issues,
         estimatedTimerEndDate = estimatedTimerEndDate,
-        infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channel.flags)
+        infoSupported = channel.showInfo
       )
     }
   }
@@ -213,7 +212,7 @@ sealed interface ListItem {
         value = value,
         issues = issues,
         estimatedTimerEndDate = estimatedTimerEndDate,
-        infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channel.flags)
+        infoSupported = channel.showInfo
       )
     }
   }

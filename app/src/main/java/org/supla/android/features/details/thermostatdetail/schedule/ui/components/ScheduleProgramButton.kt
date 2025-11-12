@@ -46,8 +46,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
+import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.extensions.thermometerValuesFormatter
 import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailProgramBox
 import org.supla.android.features.details.thermostatdetail.schedule.extensions.colorRes
 
@@ -61,7 +63,7 @@ fun ScheduleProgramButton(
 ) {
   Button(
     contentColor = colorResource(id = programBox.scheduleProgram.program.colorRes()),
-    text = programBox.textProvider(LocalContext.current),
+    text = programBox.textProvider(LocalContext.current.thermometerValuesFormatter)(LocalContext.current),
     iconRes = programBox.iconRes,
     active = active,
     onClick = onClick,
@@ -84,8 +86,6 @@ private fun Button(
   val shape = RoundedCornerShape(size = radius)
   val onBackgroundColor = MaterialTheme.colorScheme.onBackground
 
-  var pressed by remember { mutableStateOf(false) }
-
   var borderColor by remember(active) { mutableStateOf(if (active) onBackgroundColor else contentColor) }
 
   Box(
@@ -99,11 +99,8 @@ private fun Button(
           onLongPress = { onLongClick() },
           onPress = {
             if (!active) {
-              pressed = true
               borderColor = onBackgroundColor
-
               tryAwaitRelease()
-              pressed = false
               borderColor = contentColor
             }
           }

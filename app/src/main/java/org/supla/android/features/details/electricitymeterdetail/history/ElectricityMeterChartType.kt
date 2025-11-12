@@ -39,17 +39,17 @@ enum class ElectricityMeterChartType(override val label: LocalizedString) : Spin
 
   val labelWithUnit: LocalizedString
     get() = when (this) {
-      FORWARDED_ACTIVE_ENERGY -> LocalizedString.WithResourceAndString(R.string.details_em_forward_active_energy, KWH)
-      REVERSED_ACTIVE_ENERGY -> LocalizedString.WithResourceAndString(R.string.details_em_reverse_active_energy, KWH)
-      FORWARDED_REACTIVE_ENERGY -> LocalizedString.WithResourceAndString(R.string.details_em_forward_reactive_energy, "[kvarh]")
-      REVERSED_REACTIVE_ENERGY -> LocalizedString.WithResourceAndString(R.string.details_em_reverse_reactive_energy, "[kvarh]")
-      BALANCE_ARITHMETIC -> LocalizedString.WithResourceAndString(R.string.details_em_balance_arithmetic, KWH)
-      BALANCE_VECTOR -> LocalizedString.WithResourceAndString(R.string.details_em_balance_vector, KWH)
-      BALANCE_HOURLY -> LocalizedString.WithResourceAndString(R.string.details_em_balance_hourly, KWH)
-      BALANCE_CHART_AGGREGATED -> LocalizedString.WithResourceAndString(R.string.details_em_balance_chart_aggregated, KWH)
-      VOLTAGE -> LocalizedString.WithResourceAndString(R.string.details_em_voltage, "[V]")
-      CURRENT -> LocalizedString.WithResourceAndString(R.string.details_em_current, "[A]")
-      POWER_ACTIVE -> LocalizedString.WithResourceAndString(R.string.details_em_power_active, "[W]")
+      FORWARDED_ACTIVE_ENERGY -> localizedString("%s $KWH", localizedString(R.string.details_em_forward_active_energy))
+      REVERSED_ACTIVE_ENERGY -> localizedString("%s $KWH", localizedString(R.string.details_em_reverse_active_energy))
+      FORWARDED_REACTIVE_ENERGY -> localizedString("%s [kvarh]", localizedString(R.string.details_em_forward_reactive_energy))
+      REVERSED_REACTIVE_ENERGY -> localizedString("%s [kvarh]", localizedString(R.string.details_em_reverse_reactive_energy))
+      BALANCE_ARITHMETIC -> localizedString("%s $KWH", localizedString(R.string.details_em_balance_arithmetic))
+      BALANCE_VECTOR -> localizedString("%s $KWH", localizedString(R.string.details_em_balance_vector))
+      BALANCE_HOURLY -> localizedString("%s $KWH", localizedString(R.string.details_em_balance_hourly))
+      BALANCE_CHART_AGGREGATED -> localizedString("%s $KWH", localizedString(R.string.details_em_balance_chart_aggregated))
+      VOLTAGE -> localizedString("%s [V]", localizedString(R.string.details_em_voltage))
+      CURRENT -> localizedString("%s [A]", localizedString(R.string.details_em_current))
+      POWER_ACTIVE -> localizedString("%s [W]", localizedString(R.string.details_em_power_active))
     }
 
   val needsPhases: Boolean

@@ -1,19 +1,17 @@
 package org.supla.android.usecases.channel
 
+import io.mockk.MockKAnnotations
+import io.mockk.confirmVerified
 import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import io.mockk.slot
-import io.reactivex.rxjava3.core.Maybe
+import io.mockk.verify
+import io.reactivex.rxjava3.core.Observable
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.core.networking.suplaclient.SuplaClientApi
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.data.source.RoomChannelRepository
@@ -28,16 +26,20 @@ import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.data.model.valve.SuplaValveFlag
 import org.supla.core.shared.data.model.valve.ValveValue
 
-@RunWith(MockitoJUnitRunner::class)
 class ChannelActionUseCaseTest {
-  @Mock
+  @MockK
   private lateinit var channelRepository: RoomChannelRepository
 
-  @Mock
+  @MockK
   private lateinit var suplaClientProvider: SuplaClientProvider
 
-  @InjectMocks
+  @InjectMockKs
   private lateinit var useCase: ChannelActionUseCase
+
+  @Before
+  fun setup() {
+    MockKAnnotations.init(this)
+  }
 
   @Test
   fun `should not perform action when power switch channel turned off because of high amperage`() {
@@ -213,14 +215,14 @@ class ChannelActionUseCaseTest {
     every { channel.channelValueEntity } returns channelValue
     every { channel.function } returns channelFunc
 
-    whenever(channelRepository.findChannelDataEntity(channelId)).thenReturn(Maybe.just(channel))
+    every { channelRepository.findChannelDataEntity(channelId) } returns Observable.just(channel)
 
     // when
     val testObserver = useCase(channelId, ButtonType.RIGHT).test()
 
     // then
     testObserver.assertError(ActionException.ChannelExceedAmperage(channelId))
-    verifyNoInteractions(suplaClientProvider)
+    confirmVerified(suplaClientProvider)
   }
 
   private fun testValveException(channelFunc: SuplaFunction, exception: ActionException, channelValueSetup: (ValveValue) -> Unit) {
@@ -238,14 +240,14 @@ class ChannelActionUseCaseTest {
     every { channelValue.asValveValue() } returns valveValue
     every { channel.channelValueEntity } returns channelValue
 
-    whenever(channelRepository.findChannelDataEntity(channelId)).thenReturn(Maybe.just(channel))
+    every { channelRepository.findChannelDataEntity(channelId) } returns Observable.just(channel)
 
     // when
     val testObserver = useCase(channelId, ButtonType.RIGHT).test()
 
     // then
     testObserver.assertError(exception)
-    verifyNoInteractions(suplaClientProvider)
+    confirmVerified(suplaClientProvider)
   }
 
   private fun testActionExecution(
@@ -261,13 +263,13 @@ class ChannelActionUseCaseTest {
     every { channel.function } returns channelFunc
     every { channel.flags } returns (flag?.rawValue ?: 0L)
 
-    whenever(channelRepository.findChannelDataEntity(channelId)).thenReturn(Maybe.just(channel))
+    every { channelRepository.findChannelDataEntity(channelId) } returns Observable.just(channel)
 
     val parametersSlot = slot<ActionParameters>()
     val suplaClient: SuplaClientApi = mockk()
     every { suplaClient.executeAction(capture(parametersSlot)) } returns true
 
-    whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
+    every { suplaClientProvider.provide() } returns suplaClient
 
     // when
     val testObserver = useCase(channelId, buttonType).test()
@@ -277,9 +279,11 @@ class ChannelActionUseCaseTest {
 
     actionAssertion(parametersSlot.captured)
 
-    verify(channelRepository).findChannelDataEntity(channelId)
-    verify(suplaClientProvider).provide()
-    verifyNoMoreInteractions(channelRepository, suplaClientProvider)
+    verify {
+      channelRepository.findChannelDataEntity(channelId)
+      suplaClientProvider.provide()
+    }
+    confirmVerified(channelRepository, suplaClientProvider)
   }
 
   private fun testOpenClose(channelId: Int, channelFunc: SuplaFunction, buttonType: ButtonType, openValue: Int) {
@@ -295,12 +299,12 @@ class ChannelActionUseCaseTest {
     every { channel.function } returns channelFunc
     every { channel.channelValueEntity } returns channelValue
 
-    whenever(channelRepository.findChannelDataEntity(channelId)).thenReturn(Maybe.just(channel))
+    every { channelRepository.findChannelDataEntity(channelId) } returns Observable.just(channel)
 
     val suplaClient: SuplaClientApi = mockk()
     every { suplaClient.open(channelId, false, openValue) } returns true
 
-    whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
+    every { suplaClientProvider.provide() } returns suplaClient
 
     // when
     val testObserver = useCase(channelId, buttonType).test()
@@ -308,8 +312,10 @@ class ChannelActionUseCaseTest {
     // then
     testObserver.assertComplete()
 
-    verify(channelRepository).findChannelDataEntity(channelId)
-    verify(suplaClientProvider).provide()
-    verifyNoMoreInteractions(channelRepository, suplaClientProvider)
+    verify {
+      channelRepository.findChannelDataEntity(channelId)
+      suplaClientProvider.provide()
+    }
+    confirmVerified(channelRepository, suplaClientProvider)
   }
 }

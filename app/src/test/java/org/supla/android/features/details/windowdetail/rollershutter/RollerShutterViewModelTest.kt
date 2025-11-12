@@ -17,22 +17,20 @@ package org.supla.android.features.details.windowdetail.rollershutter
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import io.mockk.MockKAnnotations
+import io.mockk.confirmVerified
 import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.mockk
+import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
@@ -43,6 +41,7 @@ import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.custom.GroupOnlineSummary
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
@@ -61,7 +60,7 @@ import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.AuthorizationReason
-import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
+import org.supla.android.usecases.channel.ObserveChannelWithChildrenUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.CallSuplaClientOperationUseCase
 import org.supla.android.usecases.client.ExecuteShadingSystemActionUseCase
@@ -69,7 +68,7 @@ import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.client.LoginUseCase
 import org.supla.android.usecases.client.SuplaClientOperation
 import org.supla.android.usecases.group.GetGroupOnlineSummaryUseCase
-import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
+import org.supla.android.usecases.group.ObserveChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.group.totalvalue.GroupTotalValue
 import org.supla.core.shared.data.model.function.rollershutter.RollerShutterValue
 import org.supla.core.shared.data.model.general.SuplaFunction
@@ -77,60 +76,60 @@ import org.supla.core.shared.data.model.lists.ChannelIssueItem
 import org.supla.core.shared.data.model.shadingsystem.SuplaShadingSystemFlag
 import org.supla.core.shared.infrastructure.LocalizedStringId
 
-@RunWith(MockitoJUnitRunner::class)
 class RollerShutterViewModelTest :
-  BaseViewModelTest<RollerShutterViewModelState, BaseWindowViewEvent, RollerShutterViewModel>() {
+  BaseViewModelTest<RollerShutterViewModelState, BaseWindowViewEvent, RollerShutterViewModel>(MockSchedulers.MOCKK) {
 
-  @Mock
+  @RelaxedMockK
   lateinit var loadingTimeoutManager: LoadingTimeoutManager
 
-  @Mock
+  @RelaxedMockK
   lateinit var executeShadingSystemActionUseCase: ExecuteShadingSystemActionUseCase
 
-  @Mock
+  @RelaxedMockK
   lateinit var executeSimpleActionUseCase: ExecuteSimpleActionUseCase
 
-  @Mock
+  @RelaxedMockK
   lateinit var callSuplaClientOperationUseCase: CallSuplaClientOperationUseCase
 
-  @Mock
-  lateinit var readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase
+  @RelaxedMockK
+  lateinit var observeChannelWithChildrenUseCase: ObserveChannelWithChildrenUseCase
 
-  @Mock
-  lateinit var readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase
+  @RelaxedMockK
+  lateinit var observeChannelGroupByRemoteIdUseCase: ObserveChannelGroupByRemoteIdUseCase
 
-  @Mock
+  @RelaxedMockK
   lateinit var getGroupOnlineSummaryUseCase: GetGroupOnlineSummaryUseCase
 
-  @Mock
+  @RelaxedMockK
   lateinit var vibrationHelper: VibrationHelper
 
-  @Mock
+  @RelaxedMockK
   lateinit var preferences: Preferences
 
-  @Mock
+  @RelaxedMockK
   lateinit var dateProvider: DateProvider
 
-  @Mock
+  @RelaxedMockK
   lateinit var suplaClientProvider: SuplaClientProvider
 
-  @Mock
+  @RelaxedMockK
   lateinit var profileRepository: RoomProfileRepository
 
-  @Mock
+  @RelaxedMockK
   lateinit var loginUseCase: LoginUseCase
 
-  @Mock
+  @RelaxedMockK
   lateinit var authorizeUseCase: AuthorizeUseCase
 
-  @Mock
+  @RelaxedMockK
   override lateinit var schedulers: SuplaSchedulers
 
-  @InjectMocks
+  @InjectMockKs
   override lateinit var viewModel: RollerShutterViewModel
 
   @Before
   override fun setUp() {
+    MockKAnnotations.init(this)
     super.setUp()
   }
 
@@ -150,7 +149,7 @@ class RollerShutterViewModelTest :
     )
 
     // when
-    viewModel.loadData(remoteId, ItemType.CHANNEL)
+    viewModel.observeData(remoteId, ItemType.CHANNEL)
 
     // then
     assertThat(states).containsExactly(
@@ -177,7 +176,7 @@ class RollerShutterViewModelTest :
     mockOnlineGroup(remoteId, "10:1|80:1|20:0")
 
     // when
-    viewModel.loadData(remoteId, ItemType.GROUP)
+    viewModel.observeData(remoteId, ItemType.GROUP)
 
     // then
     assertThat(states).containsExactly(
@@ -208,7 +207,7 @@ class RollerShutterViewModelTest :
     mockOnlineGroup(remoteId, "25:0|25:0|25:0")
 
     // when
-    viewModel.loadData(remoteId, ItemType.GROUP)
+    viewModel.observeData(remoteId, ItemType.GROUP)
 
     // then
     assertThat(states).containsExactly(
@@ -250,10 +249,13 @@ class RollerShutterViewModelTest :
       every { channelValueEntity } returns value
       every { flags } returns 0
     }
-    whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
+    val channelWithChildren: ChannelWithChildren = mockk {
+      every { channel } returns channelData
+    }
+    every { observeChannelWithChildrenUseCase.invoke(remoteId) } returns Observable.just(channelWithChildren)
 
     // when
-    viewModel.loadData(remoteId, ItemType.CHANNEL)
+    viewModel.observeData(remoteId, ItemType.CHANNEL)
 
     // then
     assertThat(states).containsExactly(
@@ -275,14 +277,15 @@ class RollerShutterViewModelTest :
   fun `should reveal roller shutter`() {
     // given
     val remoteId = 122
-    whenever(executeSimpleActionUseCase.invoke(ActionId.REVEAL, SubjectType.CHANNEL, remoteId))
-      .thenReturn(Completable.complete())
+    every { executeSimpleActionUseCase.invoke(ActionId.REVEAL, SubjectType.CHANNEL, remoteId) } returns Completable.complete()
 
     // when
     viewModel.handleAction(ShadingSystemAction.Open, remoteId, ItemType.CHANNEL)
 
     // then
-    verify(executeSimpleActionUseCase).invoke(ActionId.REVEAL, SubjectType.CHANNEL, remoteId)
+    verify {
+      executeSimpleActionUseCase.invoke(ActionId.REVEAL, SubjectType.CHANNEL, remoteId)
+    }
     assertThat(states).isEmpty()
   }
 
@@ -290,14 +293,15 @@ class RollerShutterViewModelTest :
   fun `should shut roller shutter`() {
     // given
     val remoteId = 122
-    whenever(executeSimpleActionUseCase.invoke(ActionId.SHUT, SubjectType.CHANNEL, remoteId))
-      .thenReturn(Completable.complete())
+    every { executeSimpleActionUseCase.invoke(ActionId.SHUT, SubjectType.CHANNEL, remoteId) } returns Completable.complete()
 
     // when
     viewModel.handleAction(ShadingSystemAction.Close, remoteId, ItemType.CHANNEL)
 
     // then
-    verify(executeSimpleActionUseCase).invoke(ActionId.SHUT, SubjectType.CHANNEL, remoteId)
+    verify {
+      executeSimpleActionUseCase.invoke(ActionId.SHUT, SubjectType.CHANNEL, remoteId)
+    }
     assertThat(states).isEmpty()
   }
 
@@ -305,14 +309,17 @@ class RollerShutterViewModelTest :
   fun `should move up roller shutter`() {
     // given
     val remoteId = 122
-    whenever(callSuplaClientOperationUseCase.invoke(remoteId, ItemType.GROUP, SuplaClientOperation.MoveUp))
-      .thenReturn(Completable.complete())
+    every {
+      callSuplaClientOperationUseCase.invoke(remoteId, ItemType.GROUP, SuplaClientOperation.MoveUp)
+    } returns Completable.complete()
 
     // when
     viewModel.handleAction(ShadingSystemAction.MoveUp, remoteId, ItemType.GROUP)
 
     // then
-    verify(callSuplaClientOperationUseCase).invoke(remoteId, ItemType.GROUP, SuplaClientOperation.MoveUp)
+    verify {
+      callSuplaClientOperationUseCase.invoke(remoteId, ItemType.GROUP, SuplaClientOperation.MoveUp)
+    }
     assertThat(states).isEmpty()
   }
 
@@ -321,17 +328,18 @@ class RollerShutterViewModelTest :
     // given
     val remoteId = 122
     val timestamp = 22232L
-    whenever(callSuplaClientOperationUseCase.invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.MoveUp))
-      .thenReturn(Completable.complete())
-    whenever(dateProvider.currentTimestamp()).thenReturn(timestamp)
+    every {
+      callSuplaClientOperationUseCase.invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.MoveUp)
+    } returns Completable.complete()
+    every { dateProvider.currentTimestamp() } returns timestamp
     mockOnlineChannel(remoteId, hasValidPosition = false)
 
     // when
-    viewModel.loadData(remoteId, ItemType.CHANNEL)
+    viewModel.observeData(remoteId, ItemType.CHANNEL)
     viewModel.handleAction(ShadingSystemAction.MoveUp, remoteId, ItemType.CHANNEL)
 
     // then
-    verify(callSuplaClientOperationUseCase).invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.MoveUp)
+    verify { callSuplaClientOperationUseCase.invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.MoveUp) }
     val state = RollerShutterViewModelState(
       remoteId = remoteId,
       windowState = RollerShutterWindowState(WindowGroupedValue.Similar(0f)),
@@ -352,14 +360,15 @@ class RollerShutterViewModelTest :
   fun `should move down roller shutter`() {
     // given
     val remoteId = 122
-    whenever(callSuplaClientOperationUseCase.invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.MoveDown))
-      .thenReturn(Completable.complete())
+    every {
+      callSuplaClientOperationUseCase.invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.MoveDown)
+    } returns Completable.complete()
 
     // when
     viewModel.handleAction(ShadingSystemAction.MoveDown, remoteId, ItemType.CHANNEL)
 
     // then
-    verify(callSuplaClientOperationUseCase).invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.MoveDown)
+    verify { callSuplaClientOperationUseCase.invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.MoveDown) }
     assertThat(states).isEmpty()
   }
 
@@ -368,17 +377,18 @@ class RollerShutterViewModelTest :
     // given
     val remoteId = 122
     val timestamp = 22232L
-    whenever(callSuplaClientOperationUseCase.invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.MoveDown))
-      .thenReturn(Completable.complete())
-    whenever(dateProvider.currentTimestamp()).thenReturn(timestamp)
+    every {
+      callSuplaClientOperationUseCase.invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.MoveDown)
+    } returns Completable.complete()
+    every { dateProvider.currentTimestamp() } returns timestamp
     mockOnlineChannel(remoteId, hasValidPosition = false, channelFlags = listOf(SuplaChannelFlag.CALCFG_RECALIBRATE))
 
     // when
-    viewModel.loadData(remoteId, ItemType.CHANNEL)
+    viewModel.observeData(remoteId, ItemType.CHANNEL)
     viewModel.handleAction(ShadingSystemAction.MoveDown, remoteId, ItemType.CHANNEL)
 
     // then
-    verify(callSuplaClientOperationUseCase).invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.MoveDown)
+    verify { callSuplaClientOperationUseCase.invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.MoveDown) }
     val state = RollerShutterViewModelState(
       remoteId = remoteId,
       windowState = RollerShutterWindowState(WindowGroupedValue.Similar(0f)),
@@ -400,14 +410,13 @@ class RollerShutterViewModelTest :
   fun `should stop roller shutter`() {
     // given
     val remoteId = 122
-    whenever(executeSimpleActionUseCase.invoke(ActionId.STOP, SubjectType.CHANNEL, remoteId))
-      .thenReturn(Completable.complete())
+    every { executeSimpleActionUseCase.invoke(ActionId.STOP, SubjectType.CHANNEL, remoteId) } returns Completable.complete()
 
     // when
     viewModel.handleAction(ShadingSystemAction.Stop, remoteId, ItemType.CHANNEL)
 
     // then
-    verify(executeSimpleActionUseCase).invoke(ActionId.STOP, SubjectType.CHANNEL, remoteId)
+    verify { executeSimpleActionUseCase.invoke(ActionId.STOP, SubjectType.CHANNEL, remoteId) }
     assertThat(states).isEmpty()
   }
 
@@ -417,21 +426,23 @@ class RollerShutterViewModelTest :
     val remoteId = 122
     val timestamp = 22232L
     val afterTimestamp = 25232L
-    whenever(callSuplaClientOperationUseCase.invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.MoveDown))
-      .thenReturn(Completable.complete())
-    whenever(executeSimpleActionUseCase.invoke(ActionId.STOP, SubjectType.CHANNEL, remoteId))
-      .thenReturn(Completable.complete())
-    whenever(dateProvider.currentTimestamp()).thenReturn(timestamp, afterTimestamp)
+    every {
+      callSuplaClientOperationUseCase.invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.MoveDown)
+    } returns Completable.complete()
+    every { executeSimpleActionUseCase.invoke(ActionId.STOP, SubjectType.CHANNEL, remoteId) } returns Completable.complete()
+    every { dateProvider.currentTimestamp() } returns timestamp andThen afterTimestamp
     mockOnlineChannel(remoteId, hasValidPosition = false)
 
     // when
-    viewModel.loadData(remoteId, ItemType.CHANNEL)
+    viewModel.observeData(remoteId, ItemType.CHANNEL)
     viewModel.handleAction(ShadingSystemAction.MoveDown, remoteId, ItemType.CHANNEL)
     viewModel.handleAction(ShadingSystemAction.Stop, remoteId, ItemType.CHANNEL)
 
     // then
-    verify(callSuplaClientOperationUseCase).invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.MoveDown)
-    verify(executeSimpleActionUseCase).invoke(ActionId.STOP, SubjectType.CHANNEL, remoteId)
+    verify {
+      callSuplaClientOperationUseCase.invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.MoveDown)
+      executeSimpleActionUseCase.invoke(ActionId.STOP, SubjectType.CHANNEL, remoteId)
+    }
     val state = RollerShutterViewModelState(
       remoteId = remoteId,
       windowState = RollerShutterWindowState(WindowGroupedValue.Similar(0f)),
@@ -461,21 +472,24 @@ class RollerShutterViewModelTest :
     assertThat(states).containsExactly(
       RollerShutterViewModelState(showCalibrationDialog = true)
     )
-    verifyNoInteractions(executeSimpleActionUseCase, executeShadingSystemActionUseCase)
+    confirmVerified(executeSimpleActionUseCase, executeShadingSystemActionUseCase)
   }
 
   @Test
   fun `should open roller shutter at specified position`() {
     // given
     val remoteId = 122
-    whenever(executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 45f))
-      .thenReturn(Completable.complete())
+    every {
+      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 45)
+    } returns Completable.complete()
 
     // when
     viewModel.handleAction(ShadingSystemAction.OpenAt(45f), remoteId, ItemType.CHANNEL)
 
     // then
-    verify(executeShadingSystemActionUseCase).invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 45f)
+    verify {
+      executeShadingSystemActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 45)
+    }
     assertThat(states).isEmpty()
   }
 
@@ -494,7 +508,7 @@ class RollerShutterViewModelTest :
         manualMoving = true
       )
     )
-    verifyNoInteractions(executeShadingSystemActionUseCase, executeSimpleActionUseCase)
+    confirmVerified(executeShadingSystemActionUseCase, executeSimpleActionUseCase)
   }
 
   @Test
@@ -504,7 +518,7 @@ class RollerShutterViewModelTest :
     mockOnlineChannel(remoteId, valueFlags = listOf(SuplaShadingSystemFlag.CALIBRATION_IN_PROGRESS))
 
     // when
-    viewModel.loadData(remoteId, ItemType.CHANNEL)
+    viewModel.observeData(remoteId, ItemType.CHANNEL)
     viewModel.handleAction(ShadingSystemAction.OpenAt(45f), remoteId, ItemType.CHANNEL)
 
     // then
@@ -519,7 +533,7 @@ class RollerShutterViewModelTest :
       )
     )
     assertThat(states).containsExactly(state)
-    verifyNoInteractions(executeShadingSystemActionUseCase, executeSimpleActionUseCase)
+    confirmVerified(executeShadingSystemActionUseCase, executeSimpleActionUseCase)
   }
 
   @Test
@@ -529,7 +543,7 @@ class RollerShutterViewModelTest :
     mockOnlineChannel(remoteId, valueFlags = listOf(SuplaShadingSystemFlag.CALIBRATION_IN_PROGRESS))
 
     // when
-    viewModel.loadData(remoteId, ItemType.CHANNEL)
+    viewModel.observeData(remoteId, ItemType.CHANNEL)
     viewModel.handleAction(ShadingSystemAction.MoveTo(45f), remoteId, ItemType.CHANNEL)
 
     // then
@@ -544,7 +558,7 @@ class RollerShutterViewModelTest :
       )
     )
     assertThat(states).containsExactly(state)
-    verifyNoInteractions(executeShadingSystemActionUseCase, executeSimpleActionUseCase)
+    confirmVerified(executeShadingSystemActionUseCase, executeSimpleActionUseCase)
   }
 
   @Test
@@ -561,7 +575,7 @@ class RollerShutterViewModelTest :
       RollerShutterViewModelState(showCalibrationDialog = true),
       RollerShutterViewModelState(showCalibrationDialog = false)
     )
-    verifyNoInteractions(executeSimpleActionUseCase, executeShadingSystemActionUseCase)
+    confirmVerified(executeSimpleActionUseCase, executeShadingSystemActionUseCase)
   }
 
   @Test
@@ -573,7 +587,7 @@ class RollerShutterViewModelTest :
       every { email } returns "some-email@supla.org"
       every { isCloudAccount } returns true
     }
-    whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profile))
+    every { profileRepository.findActiveProfile() } returns Single.just(profile)
 
     // when
     viewModel.handleAction(ShadingSystemAction.Calibrate, remoteId, ItemType.CHANNEL)
@@ -591,9 +605,8 @@ class RollerShutterViewModelTest :
         )
       )
     )
-    verify(profileRepository).findActiveProfile()
-    verifyNoInteractions(executeSimpleActionUseCase, executeShadingSystemActionUseCase)
-    verifyNoMoreInteractions(profileRepository)
+    verify { profileRepository.findActiveProfile() }
+    confirmVerified(executeSimpleActionUseCase, executeShadingSystemActionUseCase, profileRepository)
   }
 
   @Test
@@ -601,11 +614,12 @@ class RollerShutterViewModelTest :
     // given
     val remoteId = 122
     mockOnlineChannel(remoteId)
-    whenever(callSuplaClientOperationUseCase.invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.Command.Recalibrate))
-      .thenReturn(Completable.complete())
+    every {
+      callSuplaClientOperationUseCase.invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.Command.Recalibrate)
+    } returns Completable.complete()
 
     // when
-    viewModel.loadData(remoteId, ItemType.CHANNEL)
+    viewModel.observeData(remoteId, ItemType.CHANNEL)
     viewModel.onAuthorized(AuthorizationReason.Default)
 
     // then
@@ -620,8 +634,10 @@ class RollerShutterViewModelTest :
       )
     )
     assertThat(states).containsExactly(state)
-    verify(callSuplaClientOperationUseCase).invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.Command.Recalibrate)
-    verifyNoInteractions(executeShadingSystemActionUseCase, executeSimpleActionUseCase)
+    verify {
+      callSuplaClientOperationUseCase.invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.Command.Recalibrate)
+    }
+    confirmVerified(executeShadingSystemActionUseCase, executeSimpleActionUseCase)
   }
 
   private fun mockOnlineChannel(
@@ -649,8 +665,10 @@ class RollerShutterViewModelTest :
       every { channelValueEntity } returns value
       every { flags } returns channelFlags.fold(0L) { result, flag -> result or flag.rawValue }
     }
-
-    whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
+    val channelWithChildren: ChannelWithChildren = mockk {
+      every { channel } returns channelData
+    }
+    every { observeChannelWithChildrenUseCase.invoke(remoteId) } returns Observable.just(channelWithChildren)
   }
 
   private fun mockOnlineGroup(
@@ -669,7 +687,7 @@ class RollerShutterViewModelTest :
       every { status } returns SuplaChannelAvailabilityStatus.ONLINE
     }
 
-    whenever(readChannelGroupByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(groupData))
-    whenever(getGroupOnlineSummaryUseCase.invoke(groupId)).thenReturn(Maybe.just(GroupOnlineSummary(2, 4)))
+    every { observeChannelGroupByRemoteIdUseCase.invoke(remoteId) } returns Observable.just(groupData)
+    every { getGroupOnlineSummaryUseCase.invoke(groupId) } returns Maybe.just(GroupOnlineSummary(2, 4))
   }
 }

@@ -25,9 +25,13 @@ import io.reactivex.rxjava3.core.Single
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity
+import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity.Companion.COLUMN_CHANNEL_ID
+import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity.Companion.COLUMN_GROUP_ID
 import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity.Companion.COLUMN_ID
 import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity.Companion.COLUMN_PROFILE_ID
+import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity.Companion.COLUMN_VISIBLE
 import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity.Companion.TABLE_NAME
+import org.supla.android.data.source.local.entity.ChannelStateEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupRelationDataEntity
@@ -73,21 +77,41 @@ interface ChannelGroupRelationDao {
         value.${ChannelValueEntity.COLUMN_SUB_VALUE_TYPE} value_${ChannelValueEntity.COLUMN_SUB_VALUE_TYPE},
         value.${ChannelValueEntity.COLUMN_SUB_VALUE} value_${ChannelValueEntity.COLUMN_SUB_VALUE},
         value.${ChannelValueEntity.COLUMN_VALUE} value_${ChannelValueEntity.COLUMN_VALUE},
-        value.${ChannelValueEntity.COLUMN_PROFILE_ID} value_${ChannelValueEntity.COLUMN_PROFILE_ID}
+        value.${ChannelValueEntity.COLUMN_PROFILE_ID} value_${ChannelValueEntity.COLUMN_PROFILE_ID},
+        state.${ChannelStateEntity.COLUMN_BATTERY_HEALTH} state_${ChannelStateEntity.COLUMN_BATTERY_HEALTH},
+        state.${ChannelStateEntity.COLUMN_BATTERY_LEVEL} state_${ChannelStateEntity.COLUMN_BATTERY_LEVEL},
+        state.${ChannelStateEntity.COLUMN_BATTERY_POWERED} state_${ChannelStateEntity.COLUMN_BATTERY_POWERED},
+        state.${ChannelStateEntity.COLUMN_BRIDGE_NODE_ONLINE} state_${ChannelStateEntity.COLUMN_BRIDGE_NODE_ONLINE},
+        state.${ChannelStateEntity.COLUMN_BRIDGE_NODE_SIGNAL_STRENGTH} state_${ChannelStateEntity.COLUMN_BRIDGE_NODE_SIGNAL_STRENGTH},
+        state.${ChannelStateEntity.COLUMN_CONNECTION_UPTIME} state_${ChannelStateEntity.COLUMN_CONNECTION_UPTIME},
+        state.${ChannelStateEntity.COLUMN_IP_V4} state_${ChannelStateEntity.COLUMN_IP_V4},
+        state.${ChannelStateEntity.COLUMN_LAST_CONNECTION_RESET_CAUSE} state_${ChannelStateEntity.COLUMN_LAST_CONNECTION_RESET_CAUSE},
+        state.${ChannelStateEntity.COLUMN_LIGHT_SOURCE_LIFESPAN} state_${ChannelStateEntity.COLUMN_LIGHT_SOURCE_LIFESPAN},
+        state.${ChannelStateEntity.COLUMN_LIGHT_SOURCE_LIFESPAN_LEFT} state_${ChannelStateEntity.COLUMN_LIGHT_SOURCE_LIFESPAN_LEFT},
+        state.${ChannelStateEntity.COLUMN_LIGHT_SOURCE_OPERATING_TIME} state_${ChannelStateEntity.COLUMN_LIGHT_SOURCE_OPERATING_TIME},
+        state.${ChannelStateEntity.COLUMN_MAC_ADDRESS} state_${ChannelStateEntity.COLUMN_MAC_ADDRESS},
+        state.${ChannelStateEntity.COLUMN_UPTIME} state_${ChannelStateEntity.COLUMN_UPTIME},
+        state.${ChannelStateEntity.COLUMN_WIFI_RSSI} state_${ChannelStateEntity.COLUMN_WIFI_RSSI},
+        state.${ChannelStateEntity.COLUMN_WIFI_SIGNAL_STRENGTH} state_${ChannelStateEntity.COLUMN_WIFI_SIGNAL_STRENGTH},
+        state.${ChannelStateEntity.COLUMN_CHANNEL_ID} state_${ChannelStateEntity.COLUMN_CHANNEL_ID},
+        state.${ChannelStateEntity.COLUMN_PROFILE_ID} state_${ChannelStateEntity.COLUMN_PROFILE_ID}
       FROM $TABLE_NAME relation
       JOIN ${ChannelGroupEntity.TABLE_NAME} channel_group
-        ON channel_group.${ChannelGroupEntity.COLUMN_REMOTE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_GROUP_ID}
-          AND channel_group.${ChannelGroupEntity.COLUMN_PROFILE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_PROFILE_ID}
+        ON channel_group.${ChannelGroupEntity.COLUMN_REMOTE_ID} = relation.$COLUMN_GROUP_ID
+          AND channel_group.${ChannelGroupEntity.COLUMN_PROFILE_ID} = relation.$COLUMN_PROFILE_ID
       JOIN ${ChannelEntity.TABLE_NAME} channel
-        ON channel.${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_CHANNEL_ID}
-          AND channel.${ChannelEntity.COLUMN_PROFILE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_PROFILE_ID}
+        ON channel.${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID} = relation.$COLUMN_CHANNEL_ID
+          AND channel.${ChannelEntity.COLUMN_PROFILE_ID} = relation.$COLUMN_PROFILE_ID
       JOIN ${ChannelValueEntity.TABLE_NAME} value
-        ON value.${ChannelValueEntity.COLUMN_CHANNEL_REMOTE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_CHANNEL_ID}
-          AND value.${ChannelValueEntity.COLUMN_PROFILE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_PROFILE_ID}
-      WHERE relation.${ChannelGroupRelationEntity.COLUMN_VISIBLE} > 0
+        ON value.${ChannelValueEntity.COLUMN_CHANNEL_REMOTE_ID} = relation.$COLUMN_CHANNEL_ID
+          AND value.${ChannelValueEntity.COLUMN_PROFILE_ID} = relation.$COLUMN_PROFILE_ID
+      LEFT JOIN ${ChannelStateEntity.TABLE_NAME} state
+        ON state.${ChannelStateEntity.COLUMN_CHANNEL_ID} = relation.$COLUMN_CHANNEL_ID
+          AND state.${ChannelStateEntity.COLUMN_PROFILE_ID} = relation.$COLUMN_PROFILE_ID
+      WHERE relation.$COLUMN_VISIBLE > 0
           AND channel_group.${ChannelGroupEntity.COLUMN_VISIBLE} > 0  
-          AND relation.${ChannelGroupRelationEntity.COLUMN_PROFILE_ID} = ${ProfileEntity.SUBQUERY_ACTIVE}
-      ORDER BY relation.${ChannelGroupRelationEntity.COLUMN_GROUP_ID}
+          AND relation.$COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
+      ORDER BY relation.$COLUMN_GROUP_ID
     """
   )
   fun allVisibleRelations(): Single<List<ChannelGroupRelationDataEntity>>
@@ -130,24 +154,60 @@ interface ChannelGroupRelationDao {
         value.${ChannelValueEntity.COLUMN_SUB_VALUE_TYPE} value_${ChannelValueEntity.COLUMN_SUB_VALUE_TYPE},
         value.${ChannelValueEntity.COLUMN_SUB_VALUE} value_${ChannelValueEntity.COLUMN_SUB_VALUE},
         value.${ChannelValueEntity.COLUMN_VALUE} value_${ChannelValueEntity.COLUMN_VALUE},
-        value.${ChannelValueEntity.COLUMN_PROFILE_ID} value_${ChannelValueEntity.COLUMN_PROFILE_ID}
+        value.${ChannelValueEntity.COLUMN_PROFILE_ID} value_${ChannelValueEntity.COLUMN_PROFILE_ID},
+        state.${ChannelStateEntity.COLUMN_BATTERY_HEALTH} state_${ChannelStateEntity.COLUMN_BATTERY_HEALTH},
+        state.${ChannelStateEntity.COLUMN_BATTERY_LEVEL} state_${ChannelStateEntity.COLUMN_BATTERY_LEVEL},
+        state.${ChannelStateEntity.COLUMN_BATTERY_POWERED} state_${ChannelStateEntity.COLUMN_BATTERY_POWERED},
+        state.${ChannelStateEntity.COLUMN_BRIDGE_NODE_ONLINE} state_${ChannelStateEntity.COLUMN_BRIDGE_NODE_ONLINE},
+        state.${ChannelStateEntity.COLUMN_BRIDGE_NODE_SIGNAL_STRENGTH} state_${ChannelStateEntity.COLUMN_BRIDGE_NODE_SIGNAL_STRENGTH},
+        state.${ChannelStateEntity.COLUMN_CONNECTION_UPTIME} state_${ChannelStateEntity.COLUMN_CONNECTION_UPTIME},
+        state.${ChannelStateEntity.COLUMN_IP_V4} state_${ChannelStateEntity.COLUMN_IP_V4},
+        state.${ChannelStateEntity.COLUMN_LAST_CONNECTION_RESET_CAUSE} state_${ChannelStateEntity.COLUMN_LAST_CONNECTION_RESET_CAUSE},
+        state.${ChannelStateEntity.COLUMN_LIGHT_SOURCE_LIFESPAN} state_${ChannelStateEntity.COLUMN_LIGHT_SOURCE_LIFESPAN},
+        state.${ChannelStateEntity.COLUMN_LIGHT_SOURCE_LIFESPAN_LEFT} state_${ChannelStateEntity.COLUMN_LIGHT_SOURCE_LIFESPAN_LEFT},
+        state.${ChannelStateEntity.COLUMN_LIGHT_SOURCE_OPERATING_TIME} state_${ChannelStateEntity.COLUMN_LIGHT_SOURCE_OPERATING_TIME},
+        state.${ChannelStateEntity.COLUMN_MAC_ADDRESS} state_${ChannelStateEntity.COLUMN_MAC_ADDRESS},
+        state.${ChannelStateEntity.COLUMN_UPTIME} state_${ChannelStateEntity.COLUMN_UPTIME},
+        state.${ChannelStateEntity.COLUMN_WIFI_RSSI} state_${ChannelStateEntity.COLUMN_WIFI_RSSI},
+        state.${ChannelStateEntity.COLUMN_WIFI_SIGNAL_STRENGTH} state_${ChannelStateEntity.COLUMN_WIFI_SIGNAL_STRENGTH},
+        state.${ChannelStateEntity.COLUMN_CHANNEL_ID} state_${ChannelStateEntity.COLUMN_CHANNEL_ID},
+        state.${ChannelStateEntity.COLUMN_PROFILE_ID} state_${ChannelStateEntity.COLUMN_PROFILE_ID}
       FROM $TABLE_NAME relation
       JOIN ${ChannelGroupEntity.TABLE_NAME} channel_group
-        ON channel_group.${ChannelGroupEntity.COLUMN_REMOTE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_GROUP_ID}
-          AND channel_group.${ChannelGroupEntity.COLUMN_PROFILE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_PROFILE_ID}
+        ON channel_group.${ChannelGroupEntity.COLUMN_REMOTE_ID} = relation.$COLUMN_GROUP_ID
+          AND channel_group.${ChannelGroupEntity.COLUMN_PROFILE_ID} = relation.$COLUMN_PROFILE_ID
       JOIN ${ChannelEntity.TABLE_NAME} channel
-        ON channel.${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_CHANNEL_ID}
-          AND channel.${ChannelEntity.COLUMN_PROFILE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_PROFILE_ID}
+        ON channel.${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID} = relation.$COLUMN_CHANNEL_ID
+          AND channel.${ChannelEntity.COLUMN_PROFILE_ID} = relation.$COLUMN_PROFILE_ID
       JOIN ${ChannelValueEntity.TABLE_NAME} value
-        ON value.${ChannelValueEntity.COLUMN_CHANNEL_REMOTE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_CHANNEL_ID}
-          AND value.${ChannelValueEntity.COLUMN_PROFILE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_PROFILE_ID}
-      WHERE relation.${ChannelGroupRelationEntity.COLUMN_VISIBLE} > 0
+        ON value.${ChannelValueEntity.COLUMN_CHANNEL_REMOTE_ID} = relation.$COLUMN_CHANNEL_ID
+          AND value.${ChannelValueEntity.COLUMN_PROFILE_ID} = relation.$COLUMN_PROFILE_ID
+      LEFT JOIN ${ChannelStateEntity.TABLE_NAME} state
+        ON state.${ChannelStateEntity.COLUMN_CHANNEL_ID} = relation.$COLUMN_CHANNEL_ID
+          AND state.${ChannelStateEntity.COLUMN_PROFILE_ID} = relation.$COLUMN_PROFILE_ID
+      WHERE relation.$COLUMN_VISIBLE > 0
           AND channel_group.${ChannelGroupEntity.COLUMN_VISIBLE} > 0  
-          AND relation.${ChannelGroupRelationEntity.COLUMN_PROFILE_ID} = ${ProfileEntity.SUBQUERY_ACTIVE}
-          AND relation.${ChannelGroupRelationEntity.COLUMN_GROUP_ID} = :remoteId
+          AND relation.$COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
+          AND relation.$COLUMN_GROUP_ID = :remoteId
     """
   )
-  fun findGroupRelations(remoteId: Int): Single<List<ChannelGroupRelationDataEntity>>
+  fun findGroupRelationsData(remoteId: Int): Observable<List<ChannelGroupRelationDataEntity>>
+
+  @Query(
+    """
+      SELECT 
+        relation.$COLUMN_ID, relation.$COLUMN_CHANNEL_ID, relation.$COLUMN_GROUP_ID, relation.$COLUMN_VISIBLE, relation.$COLUMN_PROFILE_ID
+      FROM $TABLE_NAME relation
+      JOIN ${ChannelGroupEntity.TABLE_NAME} channel_group
+        ON channel_group.${ChannelGroupEntity.COLUMN_REMOTE_ID} = relation.$COLUMN_GROUP_ID
+          AND channel_group.${ChannelGroupEntity.COLUMN_PROFILE_ID} = relation.$COLUMN_PROFILE_ID
+      WHERE relation.$COLUMN_VISIBLE > 0
+          AND channel_group.${ChannelGroupEntity.COLUMN_VISIBLE} > 0  
+          AND relation.$COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
+          AND relation.$COLUMN_GROUP_ID = :remoteId
+    """
+  )
+  fun findGroupRelations(remoteId: Int): Observable<List<ChannelGroupRelationEntity>>
 
   @Query("SELECT COUNT($COLUMN_ID) FROM $TABLE_NAME")
   fun count(): Observable<Int>

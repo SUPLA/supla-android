@@ -34,6 +34,7 @@ import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
 import org.supla.android.features.details.electricitymeterdetail.ElectricityMeterDetailFragment
+import org.supla.android.features.details.gatedetail.GateDetailFragment
 import org.supla.android.features.details.gpmdetail.GpmDetailFragment
 import org.supla.android.features.details.humiditydetail.HumidityDetailFragment
 import org.supla.android.features.details.impulsecounter.ImpulseCounterDetailFragment
@@ -57,6 +58,7 @@ import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.details.ContainerDetailType
 import org.supla.android.usecases.details.EmDetailType
+import org.supla.android.usecases.details.GateDetailType
 import org.supla.android.usecases.details.GpmDetailType
 import org.supla.android.usecases.details.HumidityDetailType
 import org.supla.android.usecases.details.IcDetailType
@@ -208,6 +210,7 @@ class ChannelListViewModel @Inject constructor(
       is ContainerDetailType -> sendEvent(ChannelListViewEvent.OpenContainerDetail(ItemBundle.from(channel), detailType.pages))
       is HumidityDetailType -> sendEvent(ChannelListViewEvent.OpenHumidityDetail(ItemBundle.from(channel), detailType.pages))
       is ValveDetailType -> sendEvent(ChannelListViewEvent.OpenValveDetail(ItemBundle.from(channel), detailType.pages))
+      is GateDetailType -> sendEvent(ChannelListViewEvent.OpenGateDetail(ItemBundle.from(channel), detailType.pages))
       is LegacyDetailType -> sendEvent(ChannelListViewEvent.OpenLegacyDetails(channel.remoteId, detailType))
       null -> {} // no action
     }
@@ -245,6 +248,9 @@ sealed class ChannelListViewEvent : ViewEvent {
 
   data class OpenValveDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
     OpenStandardDetail(R.id.container_detail_fragment, ValveDetailFragment.bundle(itemBundle, pages.toTypedArray()))
+
+  data class OpenGateDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
+    OpenStandardDetail(R.id.container_detail_fragment, GateDetailFragment.bundle(itemBundle, pages.toTypedArray()))
 
   data object ReassignAdapter : ChannelListViewEvent()
 

@@ -110,7 +110,7 @@ fun CounterPhotoView(
       isRefreshing = state.refreshing,
       modifier = Modifier.align(Alignment.TopCenter),
       color = MaterialTheme.colorScheme.primary,
-      threshold = 58.dp
+      maxDistance = 58.dp
     )
   }
 }

@@ -17,17 +17,18 @@ package org.supla.android.data.model.chart
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.core.ui.StringProvider
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.images.ImageId
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.infrastructure.LocalizedString
 
 data class ChannelChartSets(
   val remoteId: Int,
   val function: SuplaFunction,
-  val name: StringProvider,
+  val name: LocalizedString,
   val aggregation: ChartDataAggregation,
   val dataSets: List<HistoryDataSet>,
+  val icon: ImageId? = null,
   val customData: Any? = null,
   val typeName: LocalizedString? = null
 ) {
@@ -65,12 +66,13 @@ data class ChannelChartSets(
   companion object {
     operator fun invoke(
       channel: ChannelDataEntity,
-      name: StringProvider,
+      name: LocalizedString,
       aggregation: ChartDataAggregation,
       dataSets: List<HistoryDataSet>,
+      icon: ImageId? = null,
       customData: Any? = null,
       typeNameRes: LocalizedString? = null
-    ) = ChannelChartSets(channel.remoteId, channel.function, name, aggregation, dataSets, customData, typeNameRes)
+    ) = ChannelChartSets(channel.remoteId, channel.function, name, aggregation, dataSets, icon, customData, typeNameRes)
   }
 }
 
@@ -137,7 +139,9 @@ fun SuplaFunction.hasCustomFilters(): Boolean =
     SuplaFunction.SEPTIC_TANK,
     SuplaFunction.WATER_TANK,
     SuplaFunction.CONTAINER_LEVEL_SENSOR,
-    SuplaFunction.FLOOD_SENSOR -> false
+    SuplaFunction.FLOOD_SENSOR,
+    SuplaFunction.MOTION_SENSOR,
+    SuplaFunction.BINARY_SENSOR -> false
 
     SuplaFunction.ELECTRICITY_METER,
     SuplaFunction.POWER_SWITCH,

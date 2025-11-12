@@ -17,36 +17,39 @@ package org.supla.android.data.source
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import io.mockk.MockKAnnotations
+import io.mockk.confirmVerified
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
+import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.data.source.local.dao.measurements.TemperatureLogDao
 import org.supla.android.data.source.local.entity.measurements.TemperatureLogEntity
 import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.android.extensions.date
 
-@RunWith(MockitoJUnitRunner::class)
 class TemperatureLogRepositoryTest {
 
-  @Mock
+  @MockK
   private lateinit var temperatureLogDao: TemperatureLogDao
 
-  @Mock
+  @MockK
   private lateinit var suplaCloudServiceProvider: SuplaCloudService.Provider
 
-  @InjectMocks
+  @InjectMockKs
   private lateinit var repository: TemperatureLogRepository
+
+  @Before
+  fun setup() {
+    MockKAnnotations.init(this)
+  }
 
   @Test
   fun `should find measurements in DB`() {
@@ -56,8 +59,9 @@ class TemperatureLogRepositoryTest {
     val startDate = date(2023, 1, 1)
     val endDate = date(2023, 2, 1)
     val entity: TemperatureLogEntity = mockk()
-    whenever(temperatureLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time))
-      .thenReturn(Observable.just(listOf(entity)))
+    every {
+      temperatureLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)
+    } returns Observable.just(listOf(entity))
 
     // when
     val testObserver = repository.findMeasurements(remoteId, profileId, startDate, endDate).test()
@@ -66,9 +70,10 @@ class TemperatureLogRepositoryTest {
     testObserver.assertComplete()
     testObserver.assertResult(listOf(entity))
 
-    verify(temperatureLogDao).findMeasurements(remoteId, profileId, startDate.time, endDate.time)
-    verifyNoMoreInteractions(temperatureLogDao)
-    verifyNoInteractions(suplaCloudServiceProvider)
+    verify {
+      temperatureLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)
+    }
+    confirmVerified(temperatureLogDao, suplaCloudServiceProvider)
   }
 
   @Test
@@ -76,7 +81,7 @@ class TemperatureLogRepositoryTest {
     // given
     val remoteId = 123
     val profileId = 234L
-    whenever(temperatureLogDao.delete(remoteId, profileId)).thenReturn(Completable.complete())
+    every { temperatureLogDao.delete(remoteId, profileId) } returns Completable.complete()
 
     // when
     val testObserver = repository.delete(remoteId, profileId).test()
@@ -84,9 +89,10 @@ class TemperatureLogRepositoryTest {
     // then
     testObserver.assertComplete()
 
-    verify(temperatureLogDao).delete(remoteId, profileId)
-    verifyNoMoreInteractions(temperatureLogDao)
-    verifyNoInteractions(suplaCloudServiceProvider)
+    verify {
+      temperatureLogDao.delete(remoteId, profileId)
+    }
+    confirmVerified(temperatureLogDao, suplaCloudServiceProvider)
   }
 
   @Test
@@ -95,8 +101,7 @@ class TemperatureLogRepositoryTest {
     val remoteId = 123
     val profileId = 234L
     val count = 123
-    whenever(temperatureLogDao.findCount(remoteId, profileId))
-      .thenReturn(Maybe.just(count))
+    every { temperatureLogDao.findCount(remoteId, profileId) } returns Maybe.just(count)
 
     // when
     val testObserver = repository.findCount(remoteId, profileId).test()
@@ -105,9 +110,10 @@ class TemperatureLogRepositoryTest {
     testObserver.assertComplete()
     testObserver.assertResult(count)
 
-    verify(temperatureLogDao).findCount(remoteId, profileId)
-    verifyNoMoreInteractions(temperatureLogDao)
-    verifyNoInteractions(suplaCloudServiceProvider)
+    verify {
+      temperatureLogDao.findCount(remoteId, profileId)
+    }
+    confirmVerified(temperatureLogDao, suplaCloudServiceProvider)
   }
 
   @Test
@@ -116,8 +122,7 @@ class TemperatureLogRepositoryTest {
     val remoteId = 123
     val profileId = 234L
     val timestamp = 123L
-    whenever(temperatureLogDao.findMinTimestamp(remoteId, profileId))
-      .thenReturn(Single.just(timestamp))
+    every { temperatureLogDao.findMinTimestamp(remoteId, profileId) } returns Single.just(timestamp)
 
     // when
     val testObserver = repository.findMinTimestamp(remoteId, profileId).test()
@@ -126,9 +131,10 @@ class TemperatureLogRepositoryTest {
     testObserver.assertComplete()
     testObserver.assertResult(timestamp)
 
-    verify(temperatureLogDao).findMinTimestamp(remoteId, profileId)
-    verifyNoMoreInteractions(temperatureLogDao)
-    verifyNoInteractions(suplaCloudServiceProvider)
+    verify {
+      temperatureLogDao.findMinTimestamp(remoteId, profileId)
+    }
+    confirmVerified(temperatureLogDao, suplaCloudServiceProvider)
   }
 
   @Test
@@ -137,8 +143,7 @@ class TemperatureLogRepositoryTest {
     val remoteId = 123
     val profileId = 234L
     val timestamp = 123L
-    whenever(temperatureLogDao.findMaxTimestamp(remoteId, profileId))
-      .thenReturn(Single.just(timestamp))
+    every { temperatureLogDao.findMaxTimestamp(remoteId, profileId) } returns Single.just(timestamp)
 
     // when
     val testObserver = repository.findMaxTimestamp(remoteId, profileId).test()
@@ -147,17 +152,17 @@ class TemperatureLogRepositoryTest {
     testObserver.assertComplete()
     testObserver.assertResult(timestamp)
 
-    verify(temperatureLogDao).findMaxTimestamp(remoteId, profileId)
-    verifyNoMoreInteractions(temperatureLogDao)
-    verifyNoInteractions(suplaCloudServiceProvider)
+    verify {
+      temperatureLogDao.findMaxTimestamp(remoteId, profileId)
+    }
+    confirmVerified(temperatureLogDao, suplaCloudServiceProvider)
   }
 
   @Test
   fun `should insert to DB`() {
     // given
     val entity: TemperatureLogEntity = mockk()
-    whenever(temperatureLogDao.insert(listOf(entity)))
-      .thenReturn(Completable.complete())
+    every { temperatureLogDao.insert(listOf(entity)) } returns Completable.complete()
 
     // when
     val testObserver = repository.insert(listOf(entity)).test()
@@ -165,8 +170,9 @@ class TemperatureLogRepositoryTest {
     // then
     testObserver.assertComplete()
 
-    verify(temperatureLogDao).insert(listOf(entity))
-    verifyNoMoreInteractions(temperatureLogDao)
-    verifyNoInteractions(suplaCloudServiceProvider)
+    verify {
+      temperatureLogDao.insert(listOf(entity))
+    }
+    confirmVerified(temperatureLogDao, suplaCloudServiceProvider)
   }
 }

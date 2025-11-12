@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag
 import java.util.Date
 
 plugins {
@@ -27,8 +26,8 @@ android {
     minSdk = libs.versions.minSdk.get().toInt()
     targetSdk = libs.versions.targetSdk.get().toInt()
     multiDexEnabled = true
-    versionCode = 304
-    versionName = "25.10"
+    versionCode = 308
+    versionName = "25.11"
 
     ndk {
       moduleName = "suplaclient"

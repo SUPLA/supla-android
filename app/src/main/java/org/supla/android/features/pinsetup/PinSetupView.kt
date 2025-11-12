@@ -42,10 +42,10 @@ import org.supla.android.core.infrastructure.BiometricUtils
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.ui.views.BodyMedium
-import org.supla.android.ui.views.PIN_LENGTH
-import org.supla.android.ui.views.PinTextField
 import org.supla.android.ui.views.Switch
 import org.supla.android.ui.views.buttons.Button
+import org.supla.android.ui.views.forms.PIN_LENGTH
+import org.supla.android.ui.views.forms.PinTextField
 
 data class PinSetupViewState(
   val pin: String = "",

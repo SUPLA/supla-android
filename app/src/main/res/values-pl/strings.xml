@@ -715,7 +715,8 @@
   <string name="channel_btn_collapse">Zwiń</string>
   <string name="channel_btn_expand">Rozwiń</string>
   <string name="settings_battery_level_warning">Sygnalizacja słabej baterii</string>
-  <string name="channel_battery_level">Poziom baterii (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_battery_level">Poziom baterii: %1$d%%</string>
+  <string name="channel_battery_level_with_info">Poziom baterii (%1$d - %2$s): %3$d%%</string>
   <string name="counter_photo_counter_area">Obszar licznika</string>
   <string name="counter_photo_original_photo">Zdjęcie oryginalne</string>
   <string name="counter_photo_settings">Konfiguracja w Cloud</string>
@@ -766,6 +767,7 @@
   <string name="state_dialog_index">(%1$d z %2$d)</string>
   <string name="state_switch_cycle_count">Przełączenia przekaźnika</string>
   <string name="android_auto_add">Dodaj element Android Auto</string>
+  <string name="channel_btn_stop">Stop</string>
   <string name="android_auto_action">Akcja: %1$s</string>
   <string name="android_auto_empty">Android Auto nie jest skonfigurowany. Otwórz aplikację Supla -> Ustawienia -> Android Auto i przygotuj swoją konfigurację.</string>
   <string name="android_auto_executing">Wykonywanie…</string>
@@ -830,6 +832,11 @@
     <item quantity="few">%1$d dni</item>
     <item quantity="many">%1$d dni</item>
   </plurals>
+  <plurals name="rest_time_days_pattern">
+    <item quantity="one">%1$d dzień ⏱️</item>
+    <item quantity="few">%1$d dni ⏱️</item>
+    <item quantity="many">%1$d dni ⏱️</item>
+  </plurals>
   <plurals name="hour_pattern" tools:ignore="MissingQuantity">
     <item quantity="other">%1$d godz.</item>
   </plurals>
@@ -839,4 +846,18 @@
   <plurals name="second_pattern" tools:ignore="MissingQuantity">
     <item quantity="other">%1$d sek.</item>
   </plurals>
+  <string name="profiles_list_sorting">Sortowanie</string>
+  <string name="profiles_list_sorting_default">Domyślne</string>
+  <string name="profiles_list_sorting_name">Nazwa</string>
+  <string name="profiles_list_sorting_added">Ostatnio dodane</string>
+  <string name="state_partially_opened">częściowo otwarty</string>
+  <string name="channel_btn_step_by_step">Otwórz/Zamknij (krok po kroku)</string>
+  <string name="gate_general_open_and_close_warning">Nie wszystkie bramy mają skonfigurowany czujnik otwarcia — przyciski „Otwórz” i „Zamknij” mogą nie działać prawidłowo.</string>
+  <string name="add_wizard_spaces_accept">Zachowaj bez zmian</string>
+  <string name="add_wizard_spaces_modify">Usuń spacje</string>
+  <string name="add_wizard_spaces_title">Spacja w nazwie sieci?</string>
+  <string name="add_wizard_spaces_message">Wprowadzona nazwa sieci „%1$s” zawiera wiodące lub końcowe białe znaki (spacje lub tabulatory). Jeśli nazwa sieci nie powinna zawierać tych znaków, urządzenie nie będzie w stanie połączyć się z siecią. Czy chcesz zachować, czy usunąć wiodące lub końcowe białe znaki?</string>
+  <string name="state_dialog_last_known_state">Offline – ostatni znany stan:</string>
+  <string name="channel_caption_motion_sensor">Czujnik ruchu</string>
+  <string name="channel_caption_binary_sensor">Czujnik binarny</string>
 </resources>

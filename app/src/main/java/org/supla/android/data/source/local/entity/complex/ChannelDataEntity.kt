@@ -27,7 +27,9 @@ import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
 import org.supla.android.data.source.local.entity.ChannelStateEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.LocationEntity
+import org.supla.android.data.source.local.entity.batteryInfo
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
+import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelExtendedValue
 import org.supla.android.db.ChannelValue
@@ -85,6 +87,9 @@ data class ChannelDataEntity(
       thermostatSubfunction = function.hasThermostatSubfunction.ifTrue { channelValueEntity.asThermostatValue().subfunction }
     )
 
+  val showInfo: Boolean
+    get() = (status.online && SuplaChannelFlag.CHANNEL_STATE.inside(flags)) || stateEntity != null
+
   @Deprecated("Please use channelDataEntity if possible")
   fun getLegacyChannel(): Channel = Channel().also { channel ->
     channel.id = channelEntity.id
@@ -139,11 +144,4 @@ val ChannelDataEntity.shareable: org.supla.core.shared.data.model.general.Channe
   )
 
 val ChannelDataEntity.batteryInfo: BatteryInfo?
-  get() = stateEntity?.let {
-    val batteryPowered = it.batteryPowered
-    val level = it.batteryLevel
-
-    (batteryPowered != null || level != null).ifTrue {
-      BatteryInfo(batteryPowered, level, it.batteryHealth)
-    }
-  }
+  get() = stateEntity?.batteryInfo

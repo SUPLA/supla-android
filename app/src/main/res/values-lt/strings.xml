@@ -658,7 +658,9 @@
   <string name="thermostat_detail_main_thermostat">Pagrindinis termostatas</string>
   <string name="thermostat_detail_other_thermostats">Priklausomi termostatai</string>
   <string name="thermostat_battery_cover_open">Baterijos dangtelis atidarytas</string>
-  <string name="channel_battery_level">Baterijos lygis (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_battery_level">Baterijos lygis: %1$d%%</string>
+  <string name="channel_battery_level_with_info">Baterijos lygis (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_btn_stop">Sustabdyti</string>
   <string name="android_auto_action">Veiksmas: %1$s</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Jei turite QR kodą, naudokite skaitytuvą. Įrenginiams be QR kodo, paspauskite <b>Kitas</b>, kad tęstumėte.]]></string>
   <string name="add_wizard_network_name">Tinklo pavadinimas</string>
@@ -697,4 +699,40 @@
   <string name="developer_info_activated">Kūrėjo režimas aktyvuotas</string>
   <string name="developer_info_screen_orientation">Ekrano pasukimas įjungtas</string>
   <string name="developer_info_settings">Eksperimentiniai nustatymai</string>
+  <string name="profiles_list_sorting">Rūšiavimas</string>
+  <string name="profiles_list_sorting_default">Numatytasis</string>
+  <string name="profiles_list_sorting_name">Pavadinimas</string>
+  <string name="profiles_list_sorting_added">Paskiausiai pridėtas</string>
+  <string name="channel_caption_water_tank">Vandens talpykla</string>
+  <string name="channel_caption_container_level_sensor">Konteinerio lygio jutiklis</string>
+  <string name="state_opened">atidaryta</string>
+  <string name="state_closed">uždaryta</string>
+  <string name="state_partially_opened">iš dalies atidaryta</string>
+  <string name="channel_btn_step_by_step">Atidaryti/Uždaryti (žingsnis po žingsnio)</string>
+  <string name="channel_btn_shut">Uždaryti</string>
+  <string name="channel_btn_reveal">Atidaryti</string>
+  <string name="channel_btn_collapse">Sutraukti</string>
+  <string name="channel_btn_expand">Išskleisti</string>
+  <string name="gate_general_open_and_close_warning">Ne visi vartai turi sukonfigūruotą atidarymo jutiklį – mygtukai „Atidaryti“ ir „Uždaryti“ gali neveikti tinkamai.</string>
+  <string name="add_wizard_spaces_accept">Palikti nepakeistą</string>
+  <string name="add_wizard_spaces_modify">Pašalinti tarpus</string>
+  <string name="add_wizard_spaces_title">Tarpas tinklo pavadinime?</string>
+  <string name="add_wizard_spaces_message">Įvestame tinklo pavadinime „%1$s“ yra pradžios ar pabaigos tuščiųjų simbolių (tarpų ar tabuliatorių). Jei tinklo pavadinime neturi būti šių simbolių, jūsų įrenginys negalės prisijungti prie tinklo. Ar norite palikti, ar pašalinti pradžios ar pabaigos tuščiuosius simbolius?</string>
+  <string name="state_dialog_last_known_state">Neprisijungęs – paskutinė žinoma būsena:</string>
+  <string name="channel_caption_flood_sensor">Potvynio jutiklis</string>
+  <string name="channel_caption_motion_sensor">Judesio jutiklis</string>
+  <string name="channel_caption_binary_sensor">Dvejetainis jutiklis</string>
+  <string name="valve_detail_sensors">Prijungti jutikliai</string>
+  <string name="valve_error_sensor_offline">Potvynio jutiklis nepasiekiamas – neaptikto potvynio rizika.</string>
+  <string name="container_invalid_sensor_state">Neteisinga jutiklio būsena.</string>
+  <string name="channel_caption_container">Konteineris</string>
+  <string name="channel_caption_septic_tank">Septikas</string>
+
+  <plurals name="rest_time_days_pattern">
+    <item quantity="one">%1$d diena ⏱️</item>
+    <item quantity="few">%1$d dienos ⏱️</item>
+    <item quantity="many">%1$d dienų ⏱️</item>
+    <item quantity="other">%1$d dienų ⏱️</item>
+  </plurals>
+  <string name="thermostat_calibration_error">Kalibravimo klaida</string>
 </resources>

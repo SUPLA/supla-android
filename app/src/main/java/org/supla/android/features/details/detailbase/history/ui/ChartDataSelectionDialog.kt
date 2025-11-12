@@ -33,7 +33,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import org.supla.android.R
-import org.supla.android.core.ui.StringProvider
+import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.model.general.MultipleSelectionList
@@ -42,18 +42,19 @@ import org.supla.android.features.details.electricitymeterdetail.history.Electri
 import org.supla.android.ui.dialogs.Dialog
 import org.supla.android.ui.dialogs.DialogButtonsRow
 import org.supla.android.ui.dialogs.DialogHeader
-import org.supla.android.ui.views.Checkbox
 import org.supla.android.ui.views.Separator
 import org.supla.android.ui.views.SeparatorStyle
 import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.buttons.OutlinedButton
+import org.supla.android.ui.views.forms.Checkbox
 import org.supla.android.ui.views.spinner.SpinnerItem
 import org.supla.android.ui.views.spinner.TextSpinner
 import org.supla.android.usecases.channel.measurementsprovider.electricity.PhaseItem
+import org.supla.core.shared.infrastructure.LocalizedString
 
 @Immutable
 data class ChartDataSelectionDialogState(
-  val channelName: StringProvider,
+  val channelName: LocalizedString,
   val spinner: SingleSelectionList<SpinnerItem>? = null,
   val checkbox: MultipleSelectionList<CheckboxItem>? = null,
   val checkboxSelector: ((SpinnerItem, Set<CheckboxItem>?) -> MultipleSelectionList<CheckboxItem>?)? = null
@@ -159,7 +160,7 @@ private fun Preview() {
   SuplaTheme {
     ChartDataSelectionDialog(
       state = ChartDataSelectionDialogState(
-        channelName = { "EM" },
+        channelName = LocalizedString.Constant("EM"),
         spinner = SingleSelectionList(
           ElectricityMeterChartType.FORWARDED_ACTIVE_ENERGY,
           ElectricityMeterChartType.entries,

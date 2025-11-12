@@ -34,7 +34,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.supla.android.R
-import org.supla.android.core.ui.stringProvider
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.model.chart.ChannelChartSets
@@ -43,7 +42,7 @@ import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.ChartRange
 import org.supla.android.data.model.chart.HistoryDataSet
 import org.supla.android.data.model.general.SingleSelectionList
-import org.supla.android.features.details.detailbase.history.ui.DataSetContainer
+import org.supla.android.features.details.detailbase.history.ui.DataSetContainerRow
 import org.supla.android.images.ImageId
 import org.supla.android.ui.views.buttons.IconButton
 import org.supla.android.ui.views.spinner.TextSpinner
@@ -101,16 +100,15 @@ fun ElectricityMeterHistoryIntroduction(
   }
 }
 
-context(BoxScope)
 @Composable
-private fun FirstPageMultiplePhase(onClick: () -> Unit) {
+private fun BoxScope.FirstPageMultiplePhase(onClick: () -> Unit) {
   IconButton(
     icon = R.drawable.ic_arrow_right,
     onClick = onClick,
     tint = MaterialTheme.colorScheme.onPrimary,
     modifier = Modifier.align(Alignment.TopEnd)
   )
-  DataSetContainer(
+  DataSetContainerRow(
     data = mockDataSetContainerDataMultiplePhases(),
     showHistory = true,
     modifier = Modifier
@@ -129,16 +127,15 @@ private fun FirstPageMultiplePhase(onClick: () -> Unit) {
   )
 }
 
-context(BoxScope)
 @Composable
-private fun FirstPageSinglePhase(onClick: () -> Unit) {
+private fun BoxScope.FirstPageSinglePhase(onClick: () -> Unit) {
   IconButton(
     icon = R.drawable.ic_arrow_right,
     onClick = onClick,
     tint = MaterialTheme.colorScheme.onPrimary,
     modifier = Modifier.align(Alignment.TopEnd)
   )
-  DataSetContainer(
+  DataSetContainerRow(
     data = mockDataSetContainerDataSinglePhases(),
     showHistory = true,
     modifier = Modifier
@@ -157,9 +154,8 @@ private fun FirstPageSinglePhase(onClick: () -> Unit) {
   )
 }
 
-context(BoxScope)
 @Composable
-private fun SecondPage(onClick: () -> Unit) {
+private fun BoxScope.SecondPage(onClick: () -> Unit) {
   IconButton(
     icon = R.drawable.ic_close,
     onClick = onClick,
@@ -227,13 +223,13 @@ private fun mockDataSetContainerDataMultiplePhases(): ChannelChartSets =
   ChannelChartSets(
     remoteId = 0,
     function = SuplaFunction.NONE,
-    name = stringProvider { it.getString(R.string.channel_caption_electricitymeter) },
+    name = localizedString(R.string.channel_caption_electricitymeter),
     aggregation = ChartDataAggregation.DAYS,
     dataSets = listOf(
       HistoryDataSet(
         type = ChartEntryType.ELECTRICITY,
         label = HistoryDataSet.Label.Multiple(
-          listOf(
+          values = listOf(
             HistoryDataSet.LabelData(ImageId(R.drawable.fnc_electricity_meter), "78,08", R.color.phase1),
             HistoryDataSet.LabelData(null, "73,45", R.color.phase2),
             HistoryDataSet.LabelData(null, "28,66", R.color.phase3)
@@ -249,13 +245,13 @@ private fun mockDataSetContainerDataSinglePhases(): ChannelChartSets =
   ChannelChartSets(
     remoteId = 0,
     function = SuplaFunction.NONE,
-    name = stringProvider { it.getString(R.string.channel_caption_electricitymeter) },
+    name = localizedString(R.string.channel_caption_electricitymeter),
     aggregation = ChartDataAggregation.DAYS,
     dataSets = listOf(
       HistoryDataSet(
         type = ChartEntryType.ELECTRICITY,
         label = HistoryDataSet.Label.Multiple(
-          listOf(
+          values = listOf(
             HistoryDataSet.LabelData(ImageId(R.drawable.fnc_electricity_meter), "78,08", R.color.phase1)
           )
         ),

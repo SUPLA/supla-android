@@ -34,5 +34,5 @@ class GroupActionUseCase @Inject constructor(
   operator fun invoke(groupId: Int, buttonType: ButtonType): Completable =
     getGroup(groupId).flatMapCompletable { performActionCompletable(it, buttonType, true) }
 
-  private fun getGroup(groupId: Int): Maybe<ChannelGroupDataEntity> = channelGroupRepository.findGroupDataEntity(groupId)
+  private fun getGroup(groupId: Int): Maybe<ChannelGroupDataEntity> = channelGroupRepository.findGroupDataEntity(groupId).firstElement()
 }

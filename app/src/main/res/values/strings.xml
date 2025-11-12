@@ -545,7 +545,7 @@
   <string name="details_timer_cancel_turn_off">off</string>
   <string name="details_timer_cancel_turn_on">on</string>
   <string name="offline" translatable="false">offline</string>
-  <string name="thermostat_detail_off" translatable="false">Off</string>
+  <string name="thermostat_detail_off" translatable="false">off</string>
   <string name="thermostat_detail_mode_manual">Manual</string>
   <string name="thermostat_detail_mode_weekly_schedule">Program</string>
   <string name="monday">Monday</string>
@@ -734,12 +734,13 @@
   <string name="details_em_forward_reactive_energy_short" translatable="false">Forward reactive</string>
   <string name="details_em_reverse_reactive_energy_short" translatable="false">Reverse reactive</string>
   <string name="details_em_energy_label" translatable="false">Energy</string>
-  <string name="channel_btn_shut" translatable="false">Shut</string>
-  <string name="channel_btn_reveal" translatable="false">Reveal</string>
-  <string name="channel_btn_collapse" translatable="false">Collapse</string>
-  <string name="channel_btn_expand" translatable="false">Expand</string>
+  <string name="channel_btn_shut">Shut</string>
+  <string name="channel_btn_reveal">Reveal</string>
+  <string name="channel_btn_collapse">Collapse</string>
+  <string name="channel_btn_expand">Expand</string>
   <string name="settings_battery_level_warning" translatable="false">Low battery alert</string>
-  <string name="channel_battery_level">Battery level (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_battery_level">Battery level: %1$d%%</string>
+  <string name="channel_battery_level_with_info">Battery level (%1$d - %2$s): %3$d%%</string>
   <string name="counter_photo_counter_area" translatable="false">Counter area</string>
   <string name="counter_photo_original_photo" translatable="false">Original photo</string>
   <string name="counter_photo_settings" translatable="false">Cloud configuration</string>
@@ -753,46 +754,46 @@
   <string name="details_em_voltage_phase_sequence" translatable="false">Voltage phase sequence</string>
   <string name="details_em_current_phase_sequence" translatable="false">Current phase sequence</string>
   <string name="em_electric_grid_parameters" translatable="false">Electric grid parameters</string>
-  <string name="channel_caption_container" translatable="false">Container</string>
+  <string name="channel_caption_container">Container</string>
   <string name="developer_info_database_section" translatable="false">Database details</string>
-  <string name="developer_info_activated" translatable="false">Developer mode activated</string>
+  <string name="developer_info_activated">Developer mode activated</string>
   <string name="developer_info_title" translatable="false">App information</string>
   <string name="counter_photo_photos" translatable="false">Photo history</string>
   <string name="counter_photo_loading_error" translatable="false">Loading failed.</string>
   <string name="counter_photo_error" translatable="false">Error</string>
   <string name="valve_warning_flooding" translatable="false">The valve has been closed due to detected flooding. Before opening the valve, ensure that the cause has been resolved. Opening the valve clears the alarm. Are you sure you want to open it?</string>
-  <string name="channel_caption_flood_sensor" translatable="false">Flood sensor</string>
+  <string name="channel_caption_flood_sensor">Flood sensor</string>
   <string name="flooding_alarm_message" translatable="false">The sensor reports flooding!</string>
   <string name="valve_warning_flooding_short" translatable="false">The valve has been closed due to detected flooding.</string>
-  <string name="channel_caption_septic_tank" translatable="false">Septic tank</string>
-  <string name="channel_caption_water_tank" translatable="false">Water tank</string>
-  <string name="channel_caption_container_level_sensor" translatable="false">Container level sensor</string>
-  <string name="state_opened" translatable="false">opened</string>
-  <string name="state_closed" translatable="false">closed</string>
-  <string name="valve_detail_sensors" translatable="false">Connected sensors</string>
+  <string name="channel_caption_septic_tank">Septic tank</string>
+  <string name="channel_caption_water_tank">Water tank</string>
+  <string name="channel_caption_container_level_sensor">Container level sensor</string>
+  <string name="state_opened">opened</string>
+  <string name="state_closed">closed</string>
+  <string name="valve_detail_sensors">Connected sensors</string>
   <string name="valve_action_error" translatable="false">Communication error occurred. Please try again later.</string>
   <string name="valve_warning_motor_problem_opening" translatable="false">A motor problem has been detected. Make sure nothing is blocking the valve. The valve may be partially open. Are you sure you want to open it?</string>
   <string name="valve_warning_motor_problem_closing" translatable="false">A motor problem has been detected. Make sure nothing is blocking the valve. The valve may be partially open. Are you sure you want to close it?</string>
   <string name="valve_warning_motor_problem" translatable="false">A motor problem has been detected. Make sure nothing is blocking the valve. The valve may be partially open.</string>
-  <string name="valve_error_sensor_offline" translatable="false">Flood sensor unavailable - risk of undetected flooding</string>
+  <string name="valve_error_sensor_offline">Flood sensor unavailable - risk of undetected flooding</string>
   <string name="change_caption_header" translatable="false">Caption Change</string>
   <string name="group_name" translatable="false">Group name</string>
   <string name="caption_change_failed" translatable="false">Caption change failed!</string>
   <string name="container_fill_level" translatable="false">Fill level</string>
   <string name="container_warning_level" translatable="false">Container level warning</string>
   <string name="container_alarm_level" translatable="false">Container level alarm!</string>
-  <string name="container_invalid_sensor_state" translatable="false">Invalid sensor state</string>
+  <string name="container_invalid_sensor_state">Invalid sensor state</string>
   <string name="container_sound_alarm" translatable="false">Sound alarm active</string>
   <string name="container_caption" translatable="false">%1$s (%2$d%%)</string>
   <string name="channel_not_available" translatable="false">The channel is not available due to the configuration. We recommend hiding the channel so it is not visible in the app.</string>
   <string name="channel_status_awaiting" translatable="false">This device cannot be remotely awakened. We are awaiting communication from the device…</string>
   <string name="channel_status_updating" translatable="false">Software update in progress…</string>
-  <string name="thermostat_calibration_error" translatable="false">Calibration error</string>
+  <string name="thermostat_calibration_error">Calibration error</string>
   <string name="state_dialog_index" translatable="false">(%1$d of %2$d)</string>
   <string name="state_switch_cycle_count" translatable="false">Switch cycles</string>
   <string name="settings_android_auto_label" translatable="false">Android Auto</string>
   <string name="android_auto_add" translatable="false">Add Android Auto item</string>
-  <string name="channel_btn_stop" translatable="false">Stop</string>
+  <string name="channel_btn_stop">Stop</string>
   <string name="android_auto_action">Action: %1$s</string>
   <string name="android_auto_empty" translatable="false">Android Auto not configured. Go to Supla App -> Settings -> Android Auto and prepare configuration.</string>
   <string name="android_auto_executing" translatable="false">Executing…</string>
@@ -855,6 +856,11 @@
     <item quantity="one">%1$d day</item>
     <item quantity="other">%1$d days</item>
   </plurals>
+  <plurals name="rest_time_days_pattern" translatable="false">
+    <item quantity="zero">%1$d days ⏱️</item>
+    <item quantity="one">%1$d day ⏱️</item>
+    <item quantity="other">%1$d days ⏱️</item>
+  </plurals>
   <plurals name="hour_pattern" translatable="false">
     <item quantity="zero">%1$d hours</item>
     <item quantity="one">%1$d hour</item>
@@ -866,4 +872,18 @@
   <plurals name="second_pattern" translatable="false">
     <item quantity="other">%1$d sec</item>
   </plurals>
+  <string name="profiles_list_sorting">Sorting</string>
+  <string name="profiles_list_sorting_default">Default</string>
+  <string name="profiles_list_sorting_name">Name</string>
+  <string name="profiles_list_sorting_added">Last added</string>
+  <string name="state_partially_opened">Partially opened</string>
+  <string name="channel_btn_step_by_step">Open/Close (step by step)</string>
+  <string name="gate_general_open_and_close_warning">Not all gates have an opening sensor configured - the \"Open\" and \"Close\" buttons may not function correctly.</string>
+  <string name="add_wizard_spaces_accept">Keep unchanged</string>
+  <string name="add_wizard_spaces_modify">Remove spaces</string>
+  <string name="add_wizard_spaces_title">Space in network name?</string>
+  <string name="add_wizard_spaces_message">Entered network name \"%1$s\" contains leading or trailing white characters (spaces or tabulators). If your network name should not include those characters, your device will not be able to connect to the network. Do you want to keep or remove the leading or trailing white characters?</string>
+  <string name="state_dialog_last_known_state">Offline - last known state:</string>
+  <string name="channel_caption_motion_sensor">Motion sensor</string>
+  <string name="channel_caption_binary_sensor">Binary sensor</string>
 </resources>

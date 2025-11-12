@@ -131,6 +131,7 @@ abstract class AndroidAutoItemDao {
         profile.${ProfileEntity.COLUMN_PREFERRED_PROTOCOL_VERSION} profile_${ProfileEntity.COLUMN_PREFERRED_PROTOCOL_VERSION},
         profile.${ProfileEntity.COLUMN_ACTIVE} profile_${ProfileEntity.COLUMN_ACTIVE},
         profile.${ProfileEntity.COLUMN_ADVANCED_MODE} profile_${ProfileEntity.COLUMN_ADVANCED_MODE},
+        profile.${ProfileEntity.COLUMN_POSITION} profile_${ProfileEntity.COLUMN_POSITION},
         profile.${ProfileEntity.COLUMN_GUID} profile_${ProfileEntity.COLUMN_GUID},
         profile.${ProfileEntity.COLUMN_AUTH_KEY} profile_${ProfileEntity.COLUMN_AUTH_KEY}
       FROM $TABLE_NAME item

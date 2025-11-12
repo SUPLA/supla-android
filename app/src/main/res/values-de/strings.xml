@@ -662,7 +662,8 @@
   <string name="channel_btn_collapse">Einklappen</string>
   <string name="channel_btn_expand">Ausklappen</string>
   <string name="settings_battery_level_warning">Batteriestandswarnung</string>
-  <string name="channel_battery_level">Batteriefüllstand (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_battery_level">Batteriefüllstand: %1$d%%</string>
+  <string name="channel_battery_level_with_info">Batteriefüllstand (%1$d - %2$s): %3$d%%</string>
   <string name="counter_photo_counter_area">Zählerbereich</string>
   <string name="counter_photo_original_photo">Originalbild</string>
   <string name="counter_photo_settings">Cloudkonfiguration</string>
@@ -732,7 +733,7 @@
   <string name="channel_caption_flood_sensor">Flutsensor</string>
   <string name="flooding_alarm_message">Der Sensor meldet eine Überschwemmung!</string>
   <string name="valve_warning_flooding_short">Das Ventil wurde wegen einer erkannten Überschwemmung geschlossen.</string>
-  <string name="channel_caption_septic_tank">Septischer Tank</string>
+  <string name="channel_caption_septic_tank">Sickergrube</string>
   <string name="channel_caption_water_tank">Wassertank</string>
   <string name="channel_caption_container_level_sensor">Behälterfüllstandssensor</string>
   <string name="state_opened">geöffnet</string>
@@ -757,6 +758,7 @@
   <string name="state_dialog_index">(%1$d von %2$d)</string>
   <string name="state_switch_cycle_count">Schaltzyklusanzahl</string>
   <string name="android_auto_add">Android Auto Eintrag hinzufügen</string>
+  <string name="channel_btn_stop">Stoppen</string>
   <string name="android_auto_action">Aktion: %1$s</string>
   <string name="android_auto_empty">Android Auto nicht konfiguriert. Öffnen Sie bitte Supla App -> Einstelllungen -> Android Auto und konfiguriere dort.</string>
   <string name="android_auto_executing">Ausführen…</string>
@@ -807,4 +809,23 @@
   <string name="developer_option">Entwickleroptionen</string>
   <string name="developer_info_screen_orientation">Bildschirmdrehung aktiviert</string>
   <string name="developer_info_settings">Experimentelle Einstellungen</string>
+  <string name="profiles_list_sorting">Sortierung</string>
+  <string name="profiles_list_sorting_default">Standard</string>
+  <string name="profiles_list_sorting_name">Name</string>
+  <string name="profiles_list_sorting_added">Zuletzt hinzugefügt</string>
+  <string name="state_partially_opened">teilweise offen</string>
+  <string name="channel_btn_step_by_step">Öffnen/Schließen (schritt für schritt)</string>
+  <string name="gate_general_open_and_close_warning">Nicht alle Tore haben ein Öffnungssensor konfiguriert – die Schaltflächen „Öffnen“ und „Schließen“ können falsch funktionieren.</string>
+  <string name="add_wizard_spaces_accept">Unverändert lassen</string>
+  <string name="add_wizard_spaces_modify">Leerzeichen entfernen</string>
+  <string name="add_wizard_spaces_title">Leerzeichen im Netzwerknamen?</string>
+  <string name="add_wizard_spaces_message">Der eingegebene Netzwerkname „%1$s“ enthält führende oder nachgestellte Leerzeichen oder Tabulatoren. Wenn Ihr Netzwerkname diese Zeichen nicht enthalten soll, kann Ihr Gerät keine Verbindung mit dem Netzwerk herstellen. Möchten Sie die führenden oder nachgestellten Leerzeichen beibehalten oder entfernen?</string>
+  <string name="state_dialog_last_known_state">Offline – letzter bekannter Status:</string>
+  <string name="channel_caption_motion_sensor">Bewegungssensor</string>
+  <string name="channel_caption_binary_sensor">Binärsensor</string>
+
+  <plurals name="rest_time_days_pattern">
+    <item quantity="one">%1$d Tag ⏱️</item>
+    <item quantity="other">%1$d Tage ⏱️</item>
+  </plurals>
 </resources>

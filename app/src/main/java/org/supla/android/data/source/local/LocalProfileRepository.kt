@@ -118,7 +118,8 @@ class LocalProfileRepository(provider: DatabaseAccessProvider) : ProfileReposito
         serverAutoDetect = true
       ),
       advancedAuthSetup = false,
-      isActive = false
+      isActive = false,
+      position = 0
     )
   }
 

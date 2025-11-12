@@ -25,7 +25,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.res.ResourcesCompat
@@ -68,7 +68,7 @@ fun CombinedChart(
   modifier: Modifier = Modifier
 ) {
   val dateFormatter = LocalDateFormatter.current
-  val combinedData = data.combinedData(LocalContext.current.resources)
+  val combinedData = data.combinedData(LocalResources.current)
   val xAxisFormatter by remember { mutableStateOf(CombinedChartAxisXFormatter(dateFormatter)) }
   var rememberedChartStyle by remember { mutableStateOf(chartStyle) }
   xAxisFormatter.converter = data

@@ -22,7 +22,6 @@ import org.supla.android.core.shared.shareable
 import org.supla.android.data.source.local.entity.complex.indicatorIcon
 import org.supla.android.data.source.local.entity.complex.isHvacThermostat
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.remote.hvac.filterRelationType
 import org.supla.android.data.source.remote.thermostat.getIndicatorIcon
 import org.supla.android.data.source.remote.thermostat.getSetpointText
@@ -82,7 +81,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapper @Inject constructor(
       indicatorIcon = indicatorIcon.resource,
       issues = getChannelIssuesForListUseCase(channelWithChildren.shareable),
       estimatedTimerEndDate = channelData.channelExtendedValueEntity?.getSuplaValue()?.TimerStateValue?.countdownEndsAt,
-      infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channelData.flags)
+      infoSupported = channelWithChildren.showInfo
     )
   }
 }

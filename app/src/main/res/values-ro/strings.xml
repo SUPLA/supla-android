@@ -682,7 +682,9 @@
   <string name="thermostat_detail_main_thermostat">Termostat principal</string>
   <string name="thermostat_detail_other_thermostats">Termostate dependente</string>
   <string name="thermostat_battery_cover_open">Deschideți capacul bateriei</string>
-  <string name="channel_battery_level">Nivelul bateriei (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_battery_level">Nivelul bateriei: %1$d%%</string>
+  <string name="channel_battery_level_with_info">Nivelul bateriei (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_btn_stop">Oprește</string>
   <string name="android_auto_action">Acțiune: %1$s</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Dacă aveți un cod QR, utilizați scanerul. Pentru dispozitivele fără un cod QR, apăsați <b>Următorul</b> pentru a continua.]]></string>
   <string name="add_wizard_network_name">Nume rețea</string>
@@ -721,4 +723,39 @@
   <string name="developer_info_activated">Modul dezvoltator a fost activat</string>
   <string name="developer_info_screen_orientation">Rotirea ecranului activată</string>
   <string name="developer_info_settings">Setări experimentale</string>
+  <string name="profiles_list_sorting">Sortare</string>
+  <string name="profiles_list_sorting_default">Implicit</string>
+  <string name="profiles_list_sorting_name">Nume</string>
+  <string name="profiles_list_sorting_added">Adăugat cel mai recent</string>
+  <string name="channel_caption_water_tank">Rezervor de apă</string>
+  <string name="channel_caption_container_level_sensor">Senzor de nivel al recipientului</string>
+  <string name="state_opened">deschis</string>
+  <string name="state_closed">închis</string>
+  <string name="state_partially_opened">parțial deschis</string>
+  <string name="channel_btn_step_by_step">Deschide/Închide (pas cu pas)</string>
+  <string name="channel_btn_shut">Închide</string>
+  <string name="channel_btn_reveal">Deschide</string>
+  <string name="channel_btn_collapse">Strânge</string>
+  <string name="channel_btn_expand">Extinde</string>
+  <string name="gate_general_open_and_close_warning">Nu toate porțile au un senzor de deschidere configurat – butoanele „Deschide” și „Închide” s-ar putea să nu funcționeze corect.</string>
+  <string name="add_wizard_spaces_accept">Păstrează neschimbat</string>
+  <string name="add_wizard_spaces_modify">Elimină spațiile</string>
+  <string name="add_wizard_spaces_title">Spațiu în numele rețelei?</string>
+  <string name="add_wizard_spaces_message">Numele de rețea introdus „%1$s” conține spații albe inițiale sau finale (spații sau tabulatori). Dacă numele rețelei nu ar trebui să includă aceste caractere, dispozitivul nu se va putea conecta la rețea. Doriți să păstrați sau să eliminați spațiile albe inițiale sau finale?</string>
+  <string name="state_dialog_last_known_state">Offline – ultima stare cunoscută:</string>
+  <string name="channel_caption_flood_sensor">Senzor de inundație</string>
+  <string name="channel_caption_motion_sensor">Senzor de mișcare</string>
+  <string name="channel_caption_binary_sensor">Senzor binar</string>
+  <string name="valve_detail_sensors">Senzori conectați</string>
+  <string name="valve_error_sensor_offline">Senzor de inundație indisponibil – risc de inundație nedetectată.</string>
+  <string name="container_invalid_sensor_state">Stare senzor nevalidă.</string>
+  <string name="channel_caption_container">Container</string>
+  <string name="channel_caption_septic_tank">Fosa septică</string>
+
+  <plurals name="rest_time_days_pattern">
+    <item quantity="one">%1$d zi ⏱️</item>
+    <item quantity="few">%1$d zile ⏱️</item>
+    <item quantity="other">%1$d de zile ⏱️</item>
+  </plurals>
+  <string name="thermostat_calibration_error">Eroare de calibrare</string>
 </resources>

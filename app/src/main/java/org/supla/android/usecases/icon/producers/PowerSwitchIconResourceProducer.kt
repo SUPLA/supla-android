@@ -18,7 +18,6 @@ package org.supla.android.usecases.icon.producers
  */
 
 import org.supla.android.R
-import org.supla.android.data.model.general.ChannelState
 import org.supla.android.usecases.icon.IconData
 import org.supla.android.usecases.icon.IconResourceProducer
 import org.supla.core.shared.data.model.general.SuplaFunction
@@ -29,34 +28,13 @@ class PowerSwitchIconResourceProducer : IconResourceProducer {
 
   override fun produce(data: IconData): Int =
     when (data.altIcon) {
-      1 -> if (data.state.value == ChannelState.Value.ON) {
-        R.drawable.fnc_switch_1_on
-      } else {
-        R.drawable.fnc_switch_1_off
-      }
-
-      2 -> if (data.state.value == ChannelState.Value.ON) {
-        R.drawable.fnc_switch_2_on
-      } else {
-        R.drawable.fnc_switch_2_off
-      }
-
-      3 -> if (data.state.value == ChannelState.Value.ON) {
-        R.drawable.fnc_switch_3_on
-      } else {
-        R.drawable.fnc_switch_3_off
-      }
-
-      4 -> if (data.state.value == ChannelState.Value.ON) {
-        R.drawable.fnc_switch_4_on
-      } else {
-        R.drawable.fnc_switch_4_off
-      }
-
-      else -> if (data.state.value == ChannelState.Value.ON) {
-        R.drawable.fnc_switch_on
-      } else {
-        R.drawable.fnc_switch_off
-      }
+      1 -> data.stateIcon(R.drawable.fnc_switch_1_on, R.drawable.fnc_switch_1_off)
+      2 -> data.stateIcon(R.drawable.fnc_switch_2_on, R.drawable.fnc_switch_2_off)
+      3 -> data.stateIcon(R.drawable.fnc_switch_3_on, R.drawable.fnc_switch_3_off)
+      4 -> data.stateIcon(R.drawable.fnc_switch_4_on, R.drawable.fnc_switch_4_off)
+      5 -> data.stateIcon(R.drawable.fnc_binary_sensor_1_on, R.drawable.fnc_binary_sensor_1_off)
+      6 -> data.stateIcon(R.drawable.fnc_binary_sensor_2_on, R.drawable.fnc_binary_sensor_2_off)
+      7 -> data.stateIcon(R.drawable.fnc_switch_5_on, R.drawable.fnc_switch_5_off)
+      else -> data.stateIcon(R.drawable.fnc_switch_on, R.drawable.fnc_switch_off)
     }
 }

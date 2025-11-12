@@ -33,7 +33,9 @@ import org.mockito.kotlin.whenever
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
+import org.supla.android.testhelpers.StdoutTree
 import org.supla.android.tools.SuplaSchedulers
+import timber.log.Timber
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.isAccessible
 
@@ -52,6 +54,8 @@ abstract class BaseViewModelTest<S : ViewState, E : ViewEvent, VM : BaseViewMode
 
   @CallSuper
   open fun setUp() {
+    Timber.uprootAll()
+    Timber.plant(StdoutTree())
     states.clear()
     events.clear()
 

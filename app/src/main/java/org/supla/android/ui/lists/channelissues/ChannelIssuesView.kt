@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
@@ -40,19 +41,29 @@ import org.supla.core.shared.data.model.lists.ChannelIssueItem
 fun ChannelIssuesView(issues: List<ChannelIssueItem>, modifier: Modifier = Modifier) {
   issues.forEach {
     it.messages.forEach { message ->
-      Row(
+      ChannelIssueView(
+        iconId = it.icon.resource,
+        message = message.invoke(LocalContext.current),
         modifier = modifier
           .fillMaxWidth()
-          .padding(horizontal = Distance.default),
-        horizontalArrangement = Arrangement.spacedBy(Distance.tiny)
-      ) {
-        Image(drawableId = it.icon.resource, modifier = Modifier.size(dimensionResource(R.dimen.icon_default_size)))
-        Text(
-          text = message.invoke(LocalContext.current),
-          textAlign = TextAlign.Justify,
-          style = MaterialTheme.typography.bodyMedium
-        )
-      }
+          .padding(horizontal = Distance.default)
+      )
     }
+  }
+}
+
+@Composable
+fun ChannelIssueView(iconId: Int, message: String, modifier: Modifier = Modifier) {
+  Row(
+    modifier = modifier,
+    horizontalArrangement = Arrangement.spacedBy(Distance.tiny),
+    verticalAlignment = Alignment.CenterVertically
+  ) {
+    Image(drawableId = iconId, modifier = Modifier.size(dimensionResource(R.dimen.icon_default_size)))
+    Text(
+      text = message,
+      textAlign = TextAlign.Justify,
+      style = MaterialTheme.typography.bodyMedium
+    )
   }
 }

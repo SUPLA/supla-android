@@ -21,13 +21,10 @@ import kotlinx.serialization.Serializable
 import org.supla.core.shared.extensions.ifTrue
 import org.supla.core.shared.extensions.ipV4String
 import org.supla.core.shared.extensions.toHex
-import org.supla.core.shared.infrastructure.LocalizedString
-import org.supla.core.shared.infrastructure.LocalizedStringId
-import org.supla.core.shared.infrastructure.localizedString
 
 @Serializable
 data class SuplaChannelState(
-  val channelId: Int,
+  override val channelId: Int,
   private val fields: Int,
   val rawDefaultIconField: Int,
   val rawIpv4: Int,
@@ -44,39 +41,25 @@ data class SuplaChannelState(
   val rawLastConnectionResetCause: Byte,
   val rawLightSourceLifespan: Int,
   val rawLightSourceLifespanLeft: Int
-) {
+) : SuplaChannelStatePrintable {
 
-  val ipV4: String?
+  override val ipV4: String?
     get() = hasField(FIELD_IPV4).ifTrue { rawIpv4.ipV4String }
 
-  val macAddress: String?
+  override val macAddress: String?
     get() = hasField(FIELD_MAC).ifTrue { rawMacAddress.toHex(":") }
 
   val batteryLevel: Int?
     get() = hasField(FIELD_BATTERYLEVEL).ifTrue { rawBatteryLevel.toInt() }
 
-  val batteryLevelString: String?
-    get() = batteryLevel?.let { "$it%" }
-
   val batteryPowered: Boolean?
     get() = hasField(FIELD_BATTERYPOWERED).ifTrue { rawBatteryPowered > 0 }
-
-  val batteryPoweredString: LocalizedString?
-    get() = batteryPowered?.let {
-      localizedString(if (it) LocalizedStringId.CHANNEL_STATE_BATTERY_POWERED else LocalizedStringId.CHANNEL_STATE_MAINS_POWERED)
-    }
 
   val wifiRssi: Int?
     get() = hasField(FIELD_WIFIRSSI).ifTrue { rawWifiRssi.toInt() }
 
-  val wifiRssiString: String?
-    get() = wifiRssi?.let { "$it" }
-
   val wifiSignalStrength: Int?
     get() = hasField(FIELD_WIFISIGNALSTRENGTH).ifTrue { rawWifiSignalStrength.toInt() }
-
-  val wifiSignalStrengthString: String?
-    get() = wifiSignalStrength?.let { "$it%" }
 
   val bridgeNodeOnline: Boolean?
     get() = hasField(FIELD_BRIDGENODEONLINE).ifTrue { rawBridgeNodeOnline > 0 }
@@ -84,43 +67,20 @@ data class SuplaChannelState(
   val bridgeNodeSignalStrength: Int?
     get() = hasField(FIELD_BRIDGENODESIGNALSTRENGTH).ifTrue { rawBridgeNodeSignalStrength.toInt() }
 
-  val bridgeNodeSignalStrengthString: String?
-    get() = bridgeNodeSignalStrength?.let { "$it%" }
-
   val uptime: Int?
     get() = hasField(FIELD_UPTIME).ifTrue { rawUptime }
-
-  val uptimeString: LocalizedString?
-    get() = uptime?.let { getUptimeString(it) }
 
   val connectionUptime: Int?
     get() = hasField(FIELD_CONNECTIONUPTIME).ifTrue { rawConnectionUptime }
 
-  val connectionUptimeString: LocalizedString?
-    get() = connectionUptime?.let { getUptimeString(it) }
-
   val batteryHealth: Int?
     get() = hasField(FIELD_BATTERYHEALTH).ifTrue { rawBatteryHealth.toInt() }
-
-  val batteryHealthString: String?
-    get() = batteryHealth?.let { "$it%" }
 
   val lastConnectionResetCause: Int?
     get() = hasField(FIELD_LASTCONNECTIONRESETCAUSE).ifTrue { rawLastConnectionResetCause.toInt() }
 
-  val lastConnectionResetCauseString: LocalizedString?
-    get() = lastConnectionResetCause?.let { cause ->
-      val causeResources = listOf(
-        LocalizedStringId.LAST_CONNECTION_RESET_CAUSE_UNKNOWN,
-        LocalizedStringId.LAST_CONNECTION_RESET_CAUSE_ACTIVITY_TIMEOUT,
-        LocalizedStringId.LAST_CONNECTION_RESET_CAUSE_WIFI_CONNECTION_LOST,
-        LocalizedStringId.LAST_CONNECTION_RESET_CAUSE_SERVER_CONNECTION_LOST
-      )
-      causeResources.getOrNull(cause)?.let { localizedString(it) } ?: LocalizedString.Constant("$cause")
-    }
-
-  val switchCycleCountString: String?
-    get() = hasField(FIELD_SWITCH_CYCLE_COUNT).ifTrue { "$rawDefaultIconField" }
+  val switchCycleCount: Int?
+    get() = hasField(FIELD_SWITCH_CYCLE_COUNT).ifTrue { rawDefaultIconField }
 
   val lightSourceLifespan: Int?
     get() = hasField(FIELD_LIGHTSOURCELIFESPAN).ifTrue { rawLightSourceLifespan }
@@ -135,25 +95,36 @@ data class SuplaChannelState(
   val lightSourceOperatingTime: Int?
     get() = hasField(FIELD_LIGHTSOURCELIFEOPERATINGTIME).ifTrue { rawLightSourceLifespanLeft }
 
-  val lightSourceOperatingTimePercent: Float?
-    get() = lightSourceOperatingTime?.let { lightSourceOperatingTime ->
-      lightSourceLifespan?.let { lightSourceLifespan ->
-        (lightSourceLifespan > 0).ifTrue { lightSourceOperatingTime / 36f / lightSourceLifespan }
-      }
-    }
-
-  val lightSourceOperatingTimePercentLeft: Float?
-    get() = lightSourceOperatingTimePercent?.let { 100 - it }
+  override val batteryLevelForPrintable: Int?
+    get() = batteryLevel
+  override val batteryPoweredForPrintable: Boolean?
+    get() = batteryPowered
+  override val wifiRssiForPrintable: Int?
+    get() = wifiRssi
+  override val wifiSignalStrengthForPrintable: Int?
+    get() = wifiSignalStrength
+  override val bridgeNodeOnlineForPrintable: Boolean?
+    get() = bridgeNodeOnline
+  override val bridgeNodeSignalStrengthForPrintable: Int?
+    get() = bridgeNodeSignalStrength
+  override val uptimeForPrintable: Int?
+    get() = uptime
+  override val connectionUptimeForPrintable: Int?
+    get() = connectionUptime
+  override val batteryHealthForPrintable: Int?
+    get() = batteryHealth
+  override val lastConnectionResetCauseForPrintable: Int?
+    get() = lastConnectionResetCause
+  override val switchCycleCountForPrintable: Int?
+    get() = switchCycleCount
+  override val lightSourceLifespanForPrintable: Int?
+    get() = lightSourceLifespan
+  override val lightSourceLifespanLeftForPrintable: Float?
+    get() = lightSourceLifespanLeft
+  override val lightSourceOperatingTimeForPrintable: Int?
+    get() = lightSourceOperatingTime
 
   private fun hasField(field: Int): Boolean = (fields and field) > 0
-
-  private fun getUptimeString(time: Int): LocalizedString = localizedString(
-    LocalizedStringId.CHANNEL_STATE_UPTIME,
-    arg1 = time / 86400,
-    arg2 = time % 86400 / 3600,
-    arg3 = time % 3600 / 60,
-    arg4 = time % 60
-  )
 
   companion object {
     const val FIELD_IPV4: Int = 0x0001

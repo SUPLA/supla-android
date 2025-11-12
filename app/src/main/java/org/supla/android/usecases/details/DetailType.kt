@@ -67,3 +67,7 @@ data class ContainerDetailType(
 data class ValveDetailType(
   val pages: List<DetailPage>
 ) : DetailType
+
+data class GateDetailType(
+  val pages: List<DetailPage>
+) : DetailType

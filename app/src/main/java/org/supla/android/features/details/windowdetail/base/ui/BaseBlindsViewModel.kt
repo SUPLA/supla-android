@@ -35,7 +35,7 @@ import org.supla.android.features.details.windowdetail.base.data.WindowGroupedVa
 import org.supla.android.features.details.windowdetail.base.data.facadeblinds.FacadeBlindWindowState
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
+import org.supla.android.usecases.channel.ObserveChannelWithChildrenUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.CallSuplaClientOperationUseCase
 import org.supla.android.usecases.client.ExecuteShadingSystemActionUseCase
@@ -43,13 +43,14 @@ import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.client.LoginUseCase
 import org.supla.android.usecases.client.VALUE_IGNORE
 import org.supla.android.usecases.group.GetGroupOnlineSummaryUseCase
-import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
+import org.supla.android.usecases.group.ObserveChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.group.ReadGroupTiltingDetailsUseCase
 import org.supla.android.usecases.group.TiltingDetails
 import org.supla.core.shared.extensions.guardLet
 import timber.log.Timber
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.roundToInt
 
 abstract class BaseBlindsViewModel<S : BaseBlindsViewModelState>(
   private val channelConfigEventsManager: ChannelConfigEventsManager,
@@ -58,8 +59,8 @@ abstract class BaseBlindsViewModel<S : BaseBlindsViewModelState>(
   private val readGroupTiltingDetailsUseCase: ReadGroupTiltingDetailsUseCase,
   executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
   callSuplaClientOperationUseCase: CallSuplaClientOperationUseCase,
-  readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
-  readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
+  observeChannelWithChildrenUseCase: ObserveChannelWithChildrenUseCase,
+  observeChannelGroupByRemoteIdUseCase: ObserveChannelGroupByRemoteIdUseCase,
   getGroupOnlineSummaryUseCase: GetGroupOnlineSummaryUseCase,
   preferences: Preferences,
   dateProvider: DateProvider,
@@ -72,8 +73,8 @@ abstract class BaseBlindsViewModel<S : BaseBlindsViewModelState>(
   executeShadingSystemActionUseCase,
   executeSimpleActionUseCase,
   callSuplaClientOperationUseCase,
-  readChannelByRemoteIdUseCase,
-  readChannelGroupByRemoteIdUseCase,
+  observeChannelWithChildrenUseCase,
+  observeChannelGroupByRemoteIdUseCase,
   getGroupOnlineSummaryUseCase,
   preferences,
   dateProvider,
@@ -134,7 +135,7 @@ abstract class BaseBlindsViewModel<S : BaseBlindsViewModelState>(
               actionId = ActionId.SHUT_PARTIALLY,
               type = itemType.toSubjectType(),
               remoteId = remoteId,
-              tilt = action.tilt
+              tilt = action.tilt.roundToInt()
             ).runIt()
             stateCopy(it, manualMoving = false)
           }
@@ -166,7 +167,7 @@ abstract class BaseBlindsViewModel<S : BaseBlindsViewModelState>(
             it
           } else {
             val tilt = when {
-              it.windowState.slatTilt == null -> VALUE_IGNORE
+              it.windowState.slatTilt == null -> VALUE_IGNORE.toFloat()
               it.tiltControlType == SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING -> limitTilt(action.tilt, action.position, it)
               it.tiltControlType != SuplaTiltControlType.TILTS_ONLY_WHEN_FULLY_CLOSED || action.position == 100f -> action.tilt
               else -> 0f
@@ -175,8 +176,8 @@ abstract class BaseBlindsViewModel<S : BaseBlindsViewModelState>(
               ActionId.SHUT_PARTIALLY,
               itemType.toSubjectType(),
               remoteId,
-              percentage = action.position,
-              tilt = tilt
+              percentage = action.position.roundToInt(),
+              tilt = tilt.roundToInt()
             ).runIt()
             stateCopy(it, manualMoving = false)
           }

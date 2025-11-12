@@ -52,6 +52,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.shared.invoke
@@ -114,7 +115,11 @@ fun StateDialogScope.Dialog(
 
     Box(modifier = Modifier.height(IntrinsicSize.Max)) {
       Column {
-        Spacer(modifier = Modifier.height(Distance.small))
+        if (!state.online) {
+          OfflineView()
+        } else {
+          Spacer(modifier = Modifier.height(Distance.small))
+        }
         state.function?.let { ValueRow(R.string.function, it) }
         state.values.forEach { ValueRow(it.key.captionResource, it.value) }
 
@@ -127,8 +132,6 @@ fun StateDialogScope.Dialog(
 
       if (state.loading) {
         Loader()
-      } else if (!state.online) {
-        OfflineView()
       }
     }
 
@@ -157,17 +160,14 @@ private fun OfflineView() =
   Row(
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.spacedBy(Distance.tiny),
-    modifier = Modifier
-      .fillMaxSize()
-      .padding(vertical = Distance.small)
-      .background(MaterialTheme.colorScheme.surface)
+    modifier = Modifier.padding(vertical = Distance.tiny, horizontal = Distance.tiny)
   ) {
     Spacer(modifier = Modifier.weight(1f))
     Image(R.drawable.ic_offline, tint = MaterialTheme.colorScheme.gray)
     Text(
-      text = "offline",
+      text = stringResource(R.string.state_dialog_last_known_state),
       textAlign = TextAlign.Center,
-      style = MaterialTheme.typography.bodyMedium,
+      style = MaterialTheme.typography.bodySmall,
       color = MaterialTheme.colorScheme.gray
     )
     Spacer(modifier = Modifier.weight(1f))
@@ -352,6 +352,7 @@ private fun Preview_ManyIds() {
 }
 
 @Composable
+@PreviewFontScale
 @Preview
 private fun Preview_Offline() {
   SuplaTheme {

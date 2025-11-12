@@ -131,7 +131,7 @@ interface ChannelGroupDao {
         AND channel_group.$COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
     """
   )
-  fun findGroupDataEntity(groupRemoteId: Int): Maybe<ChannelGroupDataEntity>
+  fun findGroupDataEntity(groupRemoteId: Int): Observable<ChannelGroupDataEntity>
 
   @Query(
     """

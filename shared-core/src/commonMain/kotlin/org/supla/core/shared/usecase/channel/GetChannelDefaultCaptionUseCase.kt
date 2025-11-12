@@ -19,6 +19,7 @@ package org.supla.core.shared.usecase.channel
 
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_ALARM_ARMAMENT_SENSOR
+import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_BINARY_SENSOR
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_CONTAINER
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_CONTAINER_LEVEL_SENSOR
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_CONTROLLING_THE_DOOR_LOCK
@@ -47,6 +48,7 @@ import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_IC
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_IC_WATER_METER
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_LIGHTSWITCH
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_MAIL_SENSOR
+import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_MOTION_SENSOR
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_NO_LIQUID_SENSOR
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_OPENING_SENSOR_WINDOW
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_OPEN_SENSOR_DOOR
@@ -142,6 +144,8 @@ class GetChannelDefaultCaptionUseCase {
       SuplaFunction.WATER_TANK -> localizedString(CHANNEL_CAPTION_WATER_TANK)
       SuplaFunction.CONTAINER_LEVEL_SENSOR -> localizedString(CHANNEL_CAPTION_CONTAINER_LEVEL_SENSOR)
       SuplaFunction.FLOOD_SENSOR -> localizedString(CHANNEL_CAPTION_FLOOD_SENSOR)
+      SuplaFunction.MOTION_SENSOR -> localizedString(CHANNEL_CAPTION_MOTION_SENSOR)
+      SuplaFunction.BINARY_SENSOR -> localizedString(CHANNEL_CAPTION_BINARY_SENSOR)
 
       SuplaFunction.UNKNOWN,
       SuplaFunction.NONE,

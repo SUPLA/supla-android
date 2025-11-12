@@ -19,6 +19,9 @@ package org.supla.android.data.source.local.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import org.supla.android.lib.SuplaChannelStatePrintable
+import org.supla.core.shared.data.model.battery.BatteryInfo
+import org.supla.core.shared.extensions.ifTrue
 
 @Entity(
   tableName = ChannelStateEntity.TABLE_NAME,
@@ -31,18 +34,48 @@ data class ChannelStateEntity(
   @ColumnInfo(name = COLUMN_BRIDGE_NODE_ONLINE) val bridgeNodeOnline: Boolean?,
   @ColumnInfo(name = COLUMN_BRIDGE_NODE_SIGNAL_STRENGTH) val bridgeNodeSignalStrength: Int?,
   @ColumnInfo(name = COLUMN_CONNECTION_UPTIME) val connectionUptime: Int?,
-  @ColumnInfo(name = COLUMN_IP_V4) val ipV4: String?,
+  @ColumnInfo(name = COLUMN_IP_V4) override val ipV4: String?,
   @ColumnInfo(name = COLUMN_LAST_CONNECTION_RESET_CAUSE) val lastConnectionResetCause: Int?,
   @ColumnInfo(name = COLUMN_LIGHT_SOURCE_LIFESPAN) val lightSourceLifespan: Int?,
   @ColumnInfo(name = COLUMN_LIGHT_SOURCE_LIFESPAN_LEFT) val lightSourceLifespanLeft: Float?,
   @ColumnInfo(name = COLUMN_LIGHT_SOURCE_OPERATING_TIME) val lightSourceOperatingTime: Int?,
-  @ColumnInfo(name = COLUMN_MAC_ADDRESS) val macAddress: String?,
+  @ColumnInfo(name = COLUMN_MAC_ADDRESS) override val macAddress: String?,
   @ColumnInfo(name = COLUMN_UPTIME) val uptime: Int?,
   @ColumnInfo(name = COLUMN_WIFI_RSSI) val wifiRssi: Int?,
   @ColumnInfo(name = COLUMN_WIFI_SIGNAL_STRENGTH) val wifiSignalStrength: Int?,
-  @ColumnInfo(name = COLUMN_CHANNEL_ID) val channelId: Int,
+  @ColumnInfo(name = COLUMN_CHANNEL_ID) override val channelId: Int,
   @ColumnInfo(name = COLUMN_PROFILE_ID) val profileId: Long
-) {
+) : SuplaChannelStatePrintable {
+
+  override val batteryLevelForPrintable: Int?
+    get() = batteryLevel
+  override val batteryPoweredForPrintable: Boolean?
+    get() = batteryPowered
+  override val wifiRssiForPrintable: Int?
+    get() = wifiRssi
+  override val wifiSignalStrengthForPrintable: Int?
+    get() = wifiSignalStrength
+  override val bridgeNodeOnlineForPrintable: Boolean?
+    get() = bridgeNodeOnline
+  override val bridgeNodeSignalStrengthForPrintable: Int?
+    get() = bridgeNodeSignalStrength
+  override val uptimeForPrintable: Int?
+    get() = uptime
+  override val connectionUptimeForPrintable: Int?
+    get() = connectionUptime
+  override val batteryHealthForPrintable: Int?
+    get() = batteryHealth
+  override val lastConnectionResetCauseForPrintable: Int?
+    get() = lastConnectionResetCause
+  override val switchCycleCountForPrintable: Int?
+    get() = null
+  override val lightSourceLifespanForPrintable: Int?
+    get() = lightSourceLifespan
+  override val lightSourceLifespanLeftForPrintable: Float?
+    get() = lightSourceLifespanLeft
+  override val lightSourceOperatingTimeForPrintable: Int?
+    get() = lightSourceOperatingTime
+
   companion object {
     const val TABLE_NAME = "channel_state"
     const val COLUMN_BATTERY_HEALTH = "battery_health"
@@ -89,3 +122,9 @@ data class ChannelStateEntity(
       )
   }
 }
+
+val ChannelStateEntity.batteryInfo: BatteryInfo?
+  get() =
+    (batteryPowered != null || batteryLevel != null).ifTrue {
+      BatteryInfo(batteryPowered, batteryLevel, batteryHealth)
+    }

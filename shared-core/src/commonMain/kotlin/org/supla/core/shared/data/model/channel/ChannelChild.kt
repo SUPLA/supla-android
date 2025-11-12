@@ -23,4 +23,7 @@ data class ChannelChild(
   val channel: Channel,
   val relation: ChannelRelation,
   val children: List<ChannelChild> = emptyList()
-)
+) {
+  val asChannelWithChildren: ChannelWithChildren
+    get() = ChannelWithChildren(channel, children)
+}

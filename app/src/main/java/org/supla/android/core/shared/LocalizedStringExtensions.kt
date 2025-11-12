@@ -18,8 +18,10 @@ package org.supla.android.core.shared
  */
 
 import android.content.Context
-import org.supla.android.core.ui.StringProvider
+import android.text.format.DateFormat
+import org.supla.android.R
 import org.supla.core.shared.infrastructure.LocalizedString
+import java.util.Date
 
 operator fun LocalizedString.invoke(context: Context): String {
   return when (this) {
@@ -42,10 +44,25 @@ operator fun LocalizedString.invoke(context: Context): String {
         throw IllegalStateException("Arguments contain unsupported type: $arguments")
       }
     }
-    is LocalizedString.WithIdAndString -> "${context.getString(id.resourceId)} $text"
 
-    is LocalizedString.WithIdIntStringInt -> context.getString(id.resourceId, arg1, arg2(context), arg3)
-    is LocalizedString.WithResourceAndString -> "${context.getString(id)} $value"
+    is LocalizedString.WithFormat -> {
+      val parsed = arguments.map { if (it is LocalizedString) it(context) else it }
+      if (parsed.hasAllowedTypes) {
+        when (parsed.size) {
+          0 -> format
+          1 -> String.format(format, parsed[0])
+          2 -> String.format(format, parsed[0], parsed[1])
+          3 -> String.format(format, parsed[0], parsed[1], parsed[2])
+          4 -> String.format(format, parsed[0], parsed[1], parsed[2], parsed[3])
+          5 -> String.format(format, parsed[0], parsed[1], parsed[2], parsed[3], parsed[4])
+          6 -> String.format(format, parsed[0], parsed[1], parsed[2], parsed[3], parsed[4], parsed[5])
+          else -> throw IllegalStateException("To many arguments: ${arguments.size}")
+        }
+      } else {
+        throw IllegalStateException("Arguments contain unsupported type: $arguments")
+      }
+    }
+
     is LocalizedString.WithResourceAndArguments -> {
       val parsed = arguments.map { if (it is LocalizedString) it(context) else it }
       if (parsed.hasAllowedTypes) {
@@ -63,10 +80,15 @@ operator fun LocalizedString.invoke(context: Context): String {
         throw IllegalStateException("Arguments contain unsupported type: $arguments")
       }
     }
+
+    is LocalizedString.WithResourceAndDate -> {
+      val format = context.getString(R.string.hour_string_format)
+      context.getString(id, DateFormat.format(format, Date(timestamp)))
+    }
+
+    is LocalizedString.Quantity -> context.resources.getQuantityString(id, quantity, quantity)
   }
 }
-
-fun LocalizedString.provider(): StringProvider = { context -> invoke(context) }
 
 private val List<Any>.hasAllowedTypes: Boolean
   get() = fold(true) { acc, item ->

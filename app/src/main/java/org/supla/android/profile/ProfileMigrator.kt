@@ -83,6 +83,7 @@ class ProfileMigrator @Inject constructor(
       preferredProtocolVersion = protoVer,
       active = true,
       advancedMode = isAdvanced,
+      position = 0,
       guid = getClientGUID(),
       // because of a bug in old version we need to take guid as auth key
       // see for more: https://github.com/SUPLA/supla-android/commit/22a741cef3ae3805fcf8eca19c55aa6b160ccd4b

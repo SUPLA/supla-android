@@ -24,7 +24,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import org.supla.android.core.ui.StringProvider
+import org.supla.android.core.shared.invoke
+import org.supla.core.shared.infrastructure.LocalizedString
 
 @Composable
 fun HeadlineSmall(stringRes: Int, color: Color = MaterialTheme.colorScheme.onSurface) =
@@ -62,12 +63,12 @@ fun BodyMedium(stringRes: Int, color: Color = MaterialTheme.colorScheme.onSurfac
 
 @Composable
 fun BodyMedium(
-  stringProvider: StringProvider,
+  localizedString: LocalizedString,
   color: Color = MaterialTheme.colorScheme.onSurface,
   textAlign: TextAlign = TextAlign.Center
 ) =
   BodyMedium(
-    text = stringProvider(LocalContext.current),
+    text = localizedString(LocalContext.current),
     color = color,
     textAlign = textAlign
   )

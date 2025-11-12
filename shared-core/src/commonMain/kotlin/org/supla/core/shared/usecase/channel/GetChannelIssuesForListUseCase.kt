@@ -24,11 +24,13 @@ import org.supla.core.shared.data.model.lists.IssueIcon
 import org.supla.core.shared.data.model.lists.ListItemIssues
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.LocalizedStringId
+import org.supla.core.shared.usecase.GetCaptionUseCase
 
 class GetChannelIssuesForListUseCase(
   private val getChannelLowBatteryIssueUseCase: GetChannelLowBatteryIssueUseCase,
+  private val getChannelSpecificIssuesUseCase: GetChannelSpecificIssuesUseCase,
   private val getChannelBatteryIconUseCase: GetChannelBatteryIconUseCase,
-  private val getChannelSpecificIssuesUseCase: GetChannelSpecificIssuesUseCase
+  private val getCaptionUseCase: GetCaptionUseCase
 ) {
 
   operator fun invoke(channelWithChildren: ChannelWithChildren): ListItemIssues {
@@ -54,7 +56,7 @@ class GetChannelIssuesForListUseCase(
   private fun provideIssues(channelWithChildren: ChannelWithChildren): ListItemIssues {
     val batteryIssue = getChannelLowBatteryIssueUseCase(channelWithChildren)
     val otherIssues = mutableListOf<ChannelIssueItem>()
-    otherIssues.addAll(getChannelSpecificIssuesUseCase(channelWithChildren))
+    otherIssues.addAll(provideOtherIssues(channelWithChildren))
     getAvailabilityIssues(channelWithChildren)?.let { otherIssues.add(it) }
 
     val icons = mutableListOf<IssueIcon>()
@@ -88,6 +90,24 @@ class GetChannelIssuesForListUseCase(
     }
 
     return null
+  }
+
+  private fun provideOtherIssues(channelWithChildren: ChannelWithChildren): List<ChannelIssueItem> {
+    val childrenIssues = channelWithChildren.allChildrenFlat
+      .flatMap { channelWithChildren ->
+        getChannelSpecificIssuesUseCase(channelWithChildren)
+          .map { it.extendOn(channelWithChildren.channel.remoteId, getCaptionUseCase(channelWithChildren.channel)) }
+      }
+
+    val channelIssues = getChannelSpecificIssuesUseCase(channelWithChildren)
+
+    return if (childrenIssues.isEmpty()) {
+      channelIssues
+    } else {
+      channelIssues.map {
+        it.extendOn(channelWithChildren.channel.remoteId, getCaptionUseCase(channelWithChildren.channel))
+      } + childrenIssues
+    }
   }
 }
 

@@ -64,7 +64,8 @@ class ChannelActionUseCase @Inject constructor(
     super.performAction(channelBase, buttonType, forGroup)
   }
 
-  private fun getChannel(channelId: Int): Maybe<ChannelDataEntity> = channelRepository.findChannelDataEntity(channelId)
+  private fun getChannel(channelId: Int): Maybe<ChannelDataEntity> =
+    channelRepository.findChannelDataEntity(channelId).firstElement()
 
   private fun isOnOff(channelFunction: Int): Boolean =
     channelFunction == SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH ||

@@ -86,10 +86,7 @@
   <string name="add_wizard_step_1_welcome">Dobrodošli v čarovniku za dodajanje naprav, ki vam bo pomagal hitro in enostavno dodati novo napravo v sistem.</string>
   <string name="add_wizard_step_1_continue"><![CDATA[Če želite nadaljevati, pritisnite <b> Naprej </b>.]]></string>
   <string name="next">Naprej</string>
-  <string name="start">START</string><![CDATA[>
-
-
-    ]]>
+  <string name="start">START</string>
   <string name="add_wizard_remember_passwd">Shranite geslo</string>
 
   <string name="add_wizard_step_3_message_3"><![CDATA[Pritisnite tipko <b>START</b> da začnete konfiguracijo.]]></string>
@@ -681,7 +678,9 @@
   <string name="thermostat_detail_main_thermostat">Glavni termostat</string>
   <string name="thermostat_detail_other_thermostats">Odvisni termostati</string>
   <string name="thermostat_battery_cover_open">Odprt pokrov baterije</string>
-  <string name="channel_battery_level">Raven baterije (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_battery_level">Raven baterije: %1$d%%</string>
+  <string name="channel_battery_level_with_info">Raven baterije (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_btn_stop">Ustavi</string>
   <string name="android_auto_action">Dejanje: %1$s</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Če imate QR kodo, uporabite skener. Za naprave brez QR kode pritisnite <b>Naprej</b> za nadaljevanje.]]></string>
   <string name="add_wizard_network_name">Ime omrežja</string>
@@ -720,4 +719,40 @@
   <string name="developer_info_activated">Razvijalski način aktiviran</string>
   <string name="developer_info_screen_orientation">Omogočeno vrtenje zaslona</string>
   <string name="developer_info_settings">Eksperimentalne nastavitve</string>
+  <string name="profiles_list_sorting">Razvrščanje</string>
+  <string name="profiles_list_sorting_default">Privzeto</string>
+  <string name="profiles_list_sorting_name">Ime</string>
+  <string name="profiles_list_sorting_added">Zadnje dodano</string>
+  <string name="channel_caption_water_tank">Rezervoar za vodo</string>
+  <string name="channel_caption_container_level_sensor">Senzor nivoja posode</string>
+  <string name="state_opened">odprto</string>
+  <string name="state_closed">zaprto</string>
+  <string name="state_partially_opened">delno odprto</string>
+  <string name="channel_btn_step_by_step">Odprite/Zaprite (korak za korakom)</string>
+  <string name="channel_btn_shut">Zapri</string>
+  <string name="channel_btn_reveal">Odpri</string>
+  <string name="channel_btn_collapse">Zvij</string>
+  <string name="channel_btn_expand">Razvij</string>
+  <string name="gate_general_open_and_close_warning">Nimajo vsa vrata konfiguriranega senzorja odpiranja – gumba »Odpri« in »Zapri« morda ne bosta delovala pravilno.</string>
+  <string name="add_wizard_spaces_accept">Ohrani nespremenjeno</string>
+  <string name="add_wizard_spaces_modify">Odstrani presledke</string>
+  <string name="add_wizard_spaces_title">Presledek v imenu omrežja?</string>
+  <string name="add_wizard_spaces_message">Vneseno ime omrežja »%1$s« vsebuje vodilne ali končne bele znake (presledke ali tabulatorje). Če ime omrežja ne bi smelo vsebovati teh znakov, se vaša naprava ne bo mogla povezati z omrežjem. Ali želite obdržati ali odstraniti vodilne ali končne bele znake?</string>
+  <string name="state_dialog_last_known_state">Brez povezave – zadnje znano stanje:</string>
+  <string name="channel_caption_flood_sensor">Senzor poplave</string>
+  <string name="channel_caption_motion_sensor">Senzor gibanja</string>
+  <string name="channel_caption_binary_sensor">Binarni senzor</string>
+  <string name="valve_detail_sensors">Povezani senzorji</string>
+  <string name="valve_error_sensor_offline">Senzor poplave ni na voljo – tveganje za neodkrito poplavo.</string>
+  <string name="container_invalid_sensor_state">Neveljavno stanje senzorja.</string>
+  <string name="channel_caption_container">Posoda</string>
+  <string name="channel_caption_septic_tank">Greznica</string>
+
+  <plurals name="rest_time_days_pattern">
+    <item quantity="one">%1$d dan ⏱️</item>
+    <item quantity="two">%1$d dneva ⏱️</item>
+    <item quantity="few">%1$d dnevi ⏱️</item>
+    <item quantity="other">%1$d dni ⏱️</item>
+  </plurals>
+  <string name="thermostat_calibration_error">Napaka kalibracije</string>
 </resources>

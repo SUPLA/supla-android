@@ -46,7 +46,7 @@ import org.supla.android.tools.BACKGROUND_COLOR
 import org.supla.android.ui.lists.ListOnlineState
 import org.supla.android.ui.lists.channelissues.ChannelIssuesView
 import org.supla.android.ui.lists.data.error
-import org.supla.android.ui.lists.sensordata.SensorItemData
+import org.supla.android.ui.lists.sensordata.RelatedChannelData
 import org.supla.android.ui.lists.sensordata.SensorsItemsView
 import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.buttons.SwitchButtonState
@@ -59,7 +59,7 @@ data class ValveGeneralDetailViewState(
   val icon: ImageId? = null,
   val stateStringRes: Int? = null,
   val issues: List<ChannelIssueItem> = emptyList(),
-  val sensors: List<SensorItemData> = emptyList(),
+  val sensors: List<RelatedChannelData> = emptyList(),
   val offline: Boolean = false,
   val scale: Float = 1f,
 
@@ -70,10 +70,10 @@ data class ValveGeneralDetailViewState(
 @Composable
 fun ValveGeneralDetailView(
   state: ValveGeneralDetailViewState,
-  onInfoClick: (SensorItemData) -> Unit = {},
+  onInfoClick: (RelatedChannelData) -> Unit = {},
   onCloseClick: () -> Unit = {},
   onOpenClick: () -> Unit = {},
-  onCaptionLongPress: (SensorItemData) -> Unit = {}
+  onCaptionLongPress: (RelatedChannelData) -> Unit = {}
 ) {
   Column(
     horizontalAlignment = Alignment.CenterHorizontally,
@@ -155,7 +155,7 @@ private fun Preview() {
           ChannelIssueItem.LowBattery(listOf(LocalizedString.Constant("Low battery 1"), LocalizedString.Constant("Low battery 2")))
         ),
         sensors = listOf(
-          SensorItemData(
+          RelatedChannelData(
             channelId = 123,
             profileId = 1L,
             onlineState = ListOnlineState.ONLINE,
@@ -165,7 +165,7 @@ private fun Preview() {
             batteryIcon = IssueIcon.Battery50,
             showChannelStateIcon = true
           ),
-          SensorItemData(
+          RelatedChannelData(
             channelId = 123,
             profileId = 1L,
             onlineState = ListOnlineState.OFFLINE,
@@ -175,7 +175,7 @@ private fun Preview() {
             batteryIcon = IssueIcon.Battery25,
             showChannelStateIcon = false
           ),
-          SensorItemData(
+          RelatedChannelData(
             channelId = 123,
             profileId = 1L,
             onlineState = ListOnlineState.ONLINE,
@@ -185,7 +185,7 @@ private fun Preview() {
             batteryIcon = IssueIcon.Battery50,
             showChannelStateIcon = true
           ),
-          SensorItemData(
+          RelatedChannelData(
             channelId = 123,
             profileId = 1L,
             onlineState = ListOnlineState.OFFLINE,
@@ -195,7 +195,7 @@ private fun Preview() {
             batteryIcon = IssueIcon.Battery25,
             showChannelStateIcon = false
           ),
-          SensorItemData(
+          RelatedChannelData(
             channelId = 123,
             profileId = 1L,
             onlineState = ListOnlineState.ONLINE,
@@ -205,7 +205,7 @@ private fun Preview() {
             batteryIcon = IssueIcon.Battery50,
             showChannelStateIcon = true
           ),
-          SensorItemData(
+          RelatedChannelData(
             channelId = 123,
             profileId = 1L,
             onlineState = ListOnlineState.OFFLINE,

@@ -1,10 +1,4 @@
 package org.supla.android.data.source.local.calendar
-
-import android.annotation.TargetApi
-import android.content.Context
-import android.os.Build
-import org.supla.android.extensions.valuesFormatter
-
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -23,12 +17,16 @@ import org.supla.android.extensions.valuesFormatter
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.annotation.TargetApi
+import android.os.Build
+import org.supla.android.data.ValuesFormatter
+
 data class Hour(
   val hour: Int,
   val minute: Int
 ) {
 
-  fun toString(context: Context) = context.valuesFormatter.getHourString(this)
+  val string = ValuesFormatter.getHourString(this)
 
   companion object {
     @TargetApi(Build.VERSION_CODES.O)

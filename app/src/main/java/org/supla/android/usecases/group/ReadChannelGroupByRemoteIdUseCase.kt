@@ -28,5 +28,5 @@ class ReadChannelGroupByRemoteIdUseCase @Inject constructor(
   private val channelGroupRepository: ChannelGroupRepository
 ) {
   operator fun invoke(remoteId: Int): Maybe<ChannelGroupDataEntity> =
-    channelGroupRepository.findGroupDataEntity(remoteId)
+    channelGroupRepository.findGroupDataEntity(remoteId).firstElement()
 }

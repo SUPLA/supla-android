@@ -27,11 +27,7 @@ sealed interface LocalizedString {
   data object Empty : LocalizedString
   data class Constant(val text: String) : LocalizedString
   data class WithId(val id: LocalizedStringId, val arguments: List<Any> = emptyList()) : LocalizedString
-  data class WithIdAndString(val id: LocalizedStringId, val text: String) : LocalizedString
-  data class WithIdIntStringInt(val id: LocalizedStringId, val arg1: Int, val arg2: LocalizedString, val arg3: Int) : LocalizedString
-
-  @HiddenFromObjC
-  data class WithResourceAndString(val id: Int, val value: String) : LocalizedString
+  data class WithFormat(val format: String, val arguments: List<Any> = emptyList()) : LocalizedString
 
   @HiddenFromObjC
   data class WithResourceAndArguments(val id: Int, val arguments: List<Any> = emptyList()) : LocalizedString {
@@ -39,15 +35,39 @@ sealed interface LocalizedString {
       operator fun invoke(id: Int, arg1: LocalizedString, arg2: Int) = WithResourceAndArguments(id, listOf(arg1, arg2))
     }
   }
+
+  @HiddenFromObjC
+  data class WithResourceAndDate(val id: Int, val timestamp: Long) : LocalizedString
+
+  @HiddenFromObjC
+  data class Quantity(val id: Int, val quantity: Int) : LocalizedString
 }
 
 fun localizedString(id: LocalizedStringId?): LocalizedString = id?.let { LocalizedString.WithId(it) } ?: LocalizedString.Empty
 
+fun localizedString(id: LocalizedStringId, arg1: Any): LocalizedString =
+  LocalizedString.WithId(id, listOf(arg1))
+
+fun localizedString(id: LocalizedStringId, arg1: Any, arg2: Any): LocalizedString =
+  LocalizedString.WithId(id, listOf(arg1, arg2))
+
+fun localizedString(id: LocalizedStringId, arg1: Any, arg2: Any, arg3: Any): LocalizedString =
+  LocalizedString.WithId(id, listOf(arg1, arg2, arg3))
+
 fun localizedString(id: LocalizedStringId, arg1: Any, arg2: Any, arg3: Any, arg4: Any): LocalizedString =
   LocalizedString.WithId(id, listOf(arg1, arg2, arg3, arg4))
 
-fun localizedString(id: LocalizedStringId, arg1: Int, arg2: LocalizedString, arg3: Int): LocalizedString =
-  LocalizedString.WithIdIntStringInt(id, arg1, arg2, arg3)
+fun localizedString(format: String, arg1: Any): LocalizedString =
+  LocalizedString.WithFormat(format, listOf(arg1))
+
+fun localizedString(format: String, arg1: Any, arg2: Any): LocalizedString =
+  LocalizedString.WithFormat(format, listOf(arg1, arg2))
+
+fun localizedString(format: String, arg1: Any, arg2: Any, arg3: Any): LocalizedString =
+  LocalizedString.WithFormat(format, listOf(arg1, arg2, arg3))
+
+fun localizedString(format: String, arg1: Any, arg2: Any, arg3: Any, arg4: Any): LocalizedString =
+  LocalizedString.WithFormat(format, listOf(arg1, arg2, arg3, arg4))
 
 @HiddenFromObjC
 fun localizedString(id: Int?): LocalizedString = id?.let { LocalizedString.WithResourceAndArguments(it) } ?: LocalizedString.Empty

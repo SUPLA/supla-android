@@ -35,7 +35,37 @@ data class Channel(
   val batteryInfo: BatteryInfo?,
   val channelState: ChannelState?,
   val value: ByteArray?
-) : BaseData
+) : BaseData {
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other == null || this::class != other::class) return false
+
+    other as Channel
+
+    if (remoteId != other.remoteId) return false
+    if (altIcon != other.altIcon) return false
+    if (caption != other.caption) return false
+    if (status != other.status) return false
+    if (function != other.function) return false
+    if (batteryInfo != other.batteryInfo) return false
+    if (channelState != other.channelState) return false
+    if (!value.contentEquals(other.value)) return false
+
+    return true
+  }
+
+  override fun hashCode(): Int {
+    var result = remoteId
+    result = 31 * result + altIcon
+    result = 31 * result + caption.hashCode()
+    result = 31 * result + status.hashCode()
+    result = 31 * result + function.hashCode()
+    result = 31 * result + (batteryInfo?.hashCode() ?: 0)
+    result = 31 * result + (channelState?.hashCode() ?: 0)
+    result = 31 * result + (value?.contentHashCode() ?: 0)
+    return result
+  }
+}
 
 data class Group(
   override val remoteId: Int,

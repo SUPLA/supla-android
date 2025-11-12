@@ -30,8 +30,7 @@ import javax.inject.Singleton
 
 @Singleton
 class LoadOcrPhotosUseCase @Inject constructor(
-  private val suplaCloudServiceProvider: SuplaCloudService.Provider,
-  private val valuesFormatter: ValuesFormatter
+  private val suplaCloudServiceProvider: SuplaCloudService.Provider
 ) {
 
   operator fun invoke(remoteId: Int): Observable<List<OcrPhoto>> =
@@ -42,7 +41,7 @@ class LoadOcrPhotosUseCase @Inject constructor(
           photo.imageCropped?.let { imageCropped ->
             val localDateTime = LocalDateTime.parse(photo.createdAt, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
             Date.from(localDateTime.atZone(ZoneId.of("UTC")).toInstant())?.let { date ->
-              valuesFormatter.getFullDateString(date)?.let { formattedDate ->
+              ValuesFormatter.getFullDateString(date)?.let { formattedDate ->
                 OcrPhoto(formattedDate, null, Base64.decode(imageCropped, Base64.DEFAULT), photo.toValue())
               }
             }

@@ -26,7 +26,7 @@ import org.supla.android.tools.VibrationHelper
 import javax.inject.Inject
 import javax.inject.Singleton
 
-const val VALUE_IGNORE = -1f
+const val VALUE_IGNORE = -1
 
 @Singleton
 class ExecuteShadingSystemActionUseCase @Inject constructor(
@@ -38,9 +38,9 @@ class ExecuteShadingSystemActionUseCase @Inject constructor(
     actionId: ActionId,
     type: SubjectType,
     remoteId: Int,
-    percentage: Float = VALUE_IGNORE,
+    percentage: Int = VALUE_IGNORE,
     percentageAsDelta: Boolean = false,
-    tilt: Float = VALUE_IGNORE,
+    tilt: Int = VALUE_IGNORE,
     tiltAsDelta: Boolean = false
   ): Completable =
     Completable.fromRunnable {
@@ -50,9 +50,9 @@ class ExecuteShadingSystemActionUseCase @Inject constructor(
               actionId,
               type,
               remoteId,
-              percentage.toInt().toShort(),
+              percentage.toShort(),
               percentageAsDelta,
-              tilt.toInt().toShort(),
+              tilt.toShort(),
               tiltAsDelta
             )
           )

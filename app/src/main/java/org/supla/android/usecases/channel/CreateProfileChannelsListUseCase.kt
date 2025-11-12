@@ -179,7 +179,9 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       SuplaFunction.RING,
       SuplaFunction.ALARM,
       SuplaFunction.NOTIFICATION,
-      SuplaFunction.WEATHER_STATION -> toIconValueItem(channelData, childrenMap)
+      SuplaFunction.WEATHER_STATION,
+      SuplaFunction.MOTION_SENSOR,
+      SuplaFunction.BINARY_SENSOR -> toIconValueItem(channelData, childrenMap)
     }
 
   private fun toIconValueItem(

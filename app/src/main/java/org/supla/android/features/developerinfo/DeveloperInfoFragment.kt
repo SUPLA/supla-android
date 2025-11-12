@@ -18,33 +18,22 @@ package org.supla.android.features.developerinfo
  */
 
 import android.net.Uri
-import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.Composable
 import androidx.fragment.app.viewModels
-import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import org.supla.android.R
 import org.supla.android.core.infrastructure.storage.DebugFileLoggingTree
-import org.supla.android.core.infrastructure.storage.FileExporter
 import org.supla.android.core.storage.ApplicationPreferences
-import org.supla.android.core.ui.BaseFragment
+import org.supla.android.core.ui.BaseComposeFragment
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.databinding.FragmentComposeBinding
-import org.supla.android.db.room.measurements.MeasurementsDatabase
 import org.supla.android.extensions.setupOrientationLock
 import org.supla.android.navigator.MainNavigator
-import org.supla.android.usecases.db.MakeAnonymizedDatabaseCopyUseCase
-import java.io.File
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class DeveloperInfoFragment : BaseFragment<DeveloperInfoViewModelState, DeveloperInfoViewEvent>(R.layout.fragment_compose) {
+class DeveloperInfoFragment : BaseComposeFragment<DeveloperInfoViewModelState, DeveloperInfoViewEvent>() {
   override val viewModel: DeveloperInfoViewModel by viewModels()
-  private val binding by viewBinding(FragmentComposeBinding::bind)
 
   @Inject
   internal lateinit var navigator: MainNavigator
@@ -52,34 +41,24 @@ class DeveloperInfoFragment : BaseFragment<DeveloperInfoViewModelState, Develope
   @Inject
   internal lateinit var applicationPreferences: ApplicationPreferences
 
-  @Inject
-  internal lateinit var debugFileLoggingTree: DebugFileLoggingTree
-
-  @Inject
-  internal lateinit var makeAnonymizedDatabaseCopyUseCase: MakeAnonymizedDatabaseCopyUseCase
-
   private val exportSuplaDbLauncher = registerForActivityResult(
     ActivityResultContracts.CreateDocument("application/octet-stream")
-  ) { uri: Uri? -> performFileExport(uri, makeAnonymizedDatabaseCopyUseCase.file) }
+  ) { uri: Uri? -> viewModel.writeSuplaDatabaseFile(uri) }
 
   private val exportMeasurementsDbLauncher = registerForActivityResult(
     ActivityResultContracts.CreateDocument("application/octet-stream")
-  ) { uri: Uri? -> performMeasurementsDabataseExport(uri) }
+  ) { uri: Uri? -> viewModel.writeMeasurementsDatabaseFile(uri) }
 
   private val exportLogFileLauncher = registerForActivityResult(
     ActivityResultContracts.CreateDocument("application/octet-stream")
-  ) { uri: Uri? -> performFileExport(uri, debugFileLoggingTree.logFile) }
+  ) { uri: Uri? -> viewModel.writeLogFile(uri) }
 
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-
-    binding.composeContent.setContent {
-      val modelState by viewModel.getViewState().collectAsState()
-      SuplaTheme {
-        viewModel.View(
-          viewState = modelState.state
-        )
-      }
+  @Composable
+  override fun ComposableContent(modelState: DeveloperInfoViewModelState) {
+    SuplaTheme {
+      viewModel.View(
+        viewState = modelState.state
+      )
     }
   }
 
@@ -105,32 +84,11 @@ class DeveloperInfoFragment : BaseFragment<DeveloperInfoViewModelState, Develope
 
       DeveloperInfoViewEvent.SuplaExportNotPossible ->
         Toast.makeText(requireContext(), "Export failed", Toast.LENGTH_SHORT).show()
+
+      DeveloperInfoViewEvent.ExportCanceled ->
+        Toast.makeText(requireContext(), "File export cancelled.", Toast.LENGTH_SHORT).show()
     }
   }
 
   override fun handleViewState(state: DeveloperInfoViewModelState) {}
-
-  private fun performMeasurementsDabataseExport(uri: Uri?) {
-    if (uri != null) {
-      if (FileExporter.copyDatabaseToUri(requireContext(), MeasurementsDatabase.NAME, uri)) {
-        Toast.makeText(requireContext(), "Database successfully exported.", Toast.LENGTH_SHORT).show()
-      } else {
-        Toast.makeText(requireContext(), "Export failed!", Toast.LENGTH_LONG).show()
-      }
-    } else {
-      Toast.makeText(requireContext(), "Database export cancelled.", Toast.LENGTH_SHORT).show()
-    }
-  }
-
-  private fun performFileExport(uri: Uri?, file: File) {
-    if (uri != null) {
-      if (FileExporter.copyFileToUri(requireContext(), file, uri)) {
-        Toast.makeText(requireContext(), "File successfully exported.", Toast.LENGTH_SHORT).show()
-      } else {
-        Toast.makeText(requireContext(), "Export failed!", Toast.LENGTH_LONG).show()
-      }
-    } else {
-      Toast.makeText(requireContext(), "File export cancelled.", Toast.LENGTH_SHORT).show()
-    }
-  }
 }

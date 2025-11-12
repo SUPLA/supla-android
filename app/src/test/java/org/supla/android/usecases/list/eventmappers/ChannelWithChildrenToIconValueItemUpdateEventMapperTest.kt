@@ -103,7 +103,7 @@ class ChannelWithChildrenToIconValueItemUpdateEventMapperTest {
       every { this@mockk.status } returns status
       every { getValueAsByteArray() } returns byteArrayOf()
     }
-    every { channel.flags } returns 0
+    every { channel.showInfo } returns false
 
     val imageId = ImageId(123)
     val channelWithChildren = ChannelWithChildren(channel, emptyList())

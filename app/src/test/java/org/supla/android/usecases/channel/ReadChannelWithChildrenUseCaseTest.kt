@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -51,7 +52,7 @@ class ReadChannelWithChildrenUseCaseTest {
     val remoteId = 234
 
     val entity = mockk<ChannelDataEntity>()
-    whenever(channelRepository.findChannelDataEntity(remoteId)).thenReturn(Maybe.just(entity))
+    whenever(channelRepository.findChannelDataEntity(remoteId)).thenReturn(Observable.just(entity))
 
     val child = mockk<ChannelChildEntity>()
     whenever(channelRelationRepository.findChildrenForParent(remoteId)).thenReturn(Maybe.just(listOf(child)))

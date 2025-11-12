@@ -33,27 +33,30 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
-import org.supla.android.core.ui.StringProvider
+import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.gray
+import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
-import org.supla.android.extensions.valuesFormatter
+import org.supla.android.extensions.thermometerValuesFormatter
 import org.supla.core.shared.extensions.guardLet
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
 import java.util.Date
 
 interface TimerHeaderState {
-  val endDateText: StringProvider
+  val endDateText: LocalizedString
   val currentStateIcon: Int?
   val currentStateIconColor: Int
-  val currentStateValue: StringProvider
+
+  fun currentStateValue(thermometerValuesFormatter: ValueFormatter): LocalizedString
 
   companion object {
-    fun endDateText(timerEndDate: Date?): StringProvider {
-      val (endDate) = guardLet(timerEndDate) { return { "" } }
+    fun endDateText(timerEndDate: Date?): LocalizedString {
+      val (endDate) = guardLet(timerEndDate) { return LocalizedString.Empty }
 
-      return { context ->
-        val date = context.valuesFormatter.getFullDateString(endDate)
-        context.getString(R.string.details_timer_state_label_for_timer_days, date)
-      }
+      return localizedString(R.string.details_timer_state_label_for_timer_days, ValuesFormatter.getFullDateString(endDate) ?: "")
     }
 
     fun currentStateIcon(mode: SuplaHvacMode?): Int? =
@@ -70,18 +73,17 @@ interface TimerHeaderState {
         else -> R.color.disabled
       }
 
-    fun currentStateValue(mode: SuplaHvacMode?, heatSetpoint: Float?, coolSetpoint: Float?): StringProvider =
+    fun currentStateValue(
+      mode: SuplaHvacMode?,
+      heatSetpoint: Float?,
+      coolSetpoint: Float?,
+      thermometerValuesFormatter: ValueFormatter
+    ): LocalizedString =
       when (mode) {
-        SuplaHvacMode.OFF -> { _ -> "OFF" }
-        SuplaHvacMode.HEAT -> { context ->
-          context.valuesFormatter.getTemperatureString(heatSetpoint)
-        }
-
-        SuplaHvacMode.COOL -> { context ->
-          context.valuesFormatter.getTemperatureString(coolSetpoint)
-        }
-
-        else -> { _ -> "" }
+        SuplaHvacMode.OFF -> LocalizedString.Constant("OFF")
+        SuplaHvacMode.HEAT -> LocalizedString.Constant(thermometerValuesFormatter.format(heatSetpoint, ValueFormat.WithoutUnit))
+        SuplaHvacMode.COOL -> LocalizedString.Constant(thermometerValuesFormatter.format(coolSetpoint, ValueFormat.WithoutUnit))
+        else -> LocalizedString.Empty
       }
   }
 }
@@ -108,7 +110,7 @@ fun TimerHeader(state: TimerHeaderState, modifier: Modifier = Modifier) {
       )
     }
     Text(
-      text = state.currentStateValue(LocalContext.current),
+      text = state.currentStateValue(LocalContext.current.thermometerValuesFormatter)(LocalContext.current),
       style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
     )
     Spacer(modifier = Modifier.weight(1f))

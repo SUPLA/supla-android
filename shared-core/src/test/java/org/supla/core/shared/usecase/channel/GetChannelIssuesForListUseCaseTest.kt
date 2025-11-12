@@ -34,6 +34,7 @@ import org.supla.core.shared.data.model.lists.IssueIcon
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.LocalizedStringId
 import org.supla.core.shared.infrastructure.localizedString
+import org.supla.core.shared.usecase.GetCaptionUseCase
 
 class GetChannelIssuesForListUseCaseTest {
   @MockK
@@ -44,6 +45,9 @@ class GetChannelIssuesForListUseCaseTest {
 
   @MockK
   private lateinit var getChannelSpecificIssuesUseCase: GetChannelSpecificIssuesUseCase
+
+  @MockK
+  private lateinit var getCaptionUseCase: GetCaptionUseCase
 
   @InjectMockKs
   private lateinit var useCase: GetChannelIssuesForListUseCase
@@ -61,6 +65,7 @@ class GetChannelIssuesForListUseCaseTest {
         every { function } returns SuplaFunction.POWER_SWITCH
         every { status } returns SuplaChannelAvailabilityStatus.ONLINE
       }
+      every { allChildrenFlat } returns emptyList()
     }
 
     every { getChannelLowBatteryIssueUseCase.invoke(channelWithChildren) } returns null
@@ -172,12 +177,73 @@ class GetChannelIssuesForListUseCaseTest {
     assertThat(issues.issuesStrings).containsExactly(localizedString(LocalizedStringId.CHANNEL_STATUS_NOT_AVAILABLE))
   }
 
+  @Test
+  fun `should get channel issues without extension if there are no children issues`() {
+    // given
+    val channelWithChildren: ChannelWithChildren = mockChannelWithChildren()
+    val channelIssue: ChannelIssueItem = ChannelIssueItem.Error(LocalizedStringId.THERMOSTAT_CALIBRATION_ERROR)
+
+    every { getChannelLowBatteryIssueUseCase(channelWithChildren) } returns null
+    every { getChannelBatteryIconUseCase(channelWithChildren) } returns null
+    every { getChannelSpecificIssuesUseCase(channelWithChildren) } returns listOf(channelIssue)
+
+    // when
+    val issues = useCase(channelWithChildren)
+
+    // then
+    assertThat(issues.icons).containsExactly(IssueIcon.Error)
+    assertThat(issues.issuesStrings).containsExactly(localizedString(LocalizedStringId.THERMOSTAT_CALIBRATION_ERROR))
+  }
+
+  @Test
+  fun `should get channel issues with extension if there are children issues`() {
+    // given
+    val childCaption = LocalizedString.Constant("caption child")
+    val childChannel: Channel = mockk {
+      every { remoteId } returns 2
+      every { status } returns SuplaChannelAvailabilityStatus.ONLINE
+    }
+    val child: ChannelWithChildren = mockk {
+      every { channel } returns childChannel
+      every { allChildrenFlat } returns emptyList()
+    }
+
+    val mainCaption = LocalizedString.Constant("caption main")
+    val mainChannel: Channel = mockk {
+      every { remoteId } returns 1
+      every { status } returns SuplaChannelAvailabilityStatus.ONLINE
+    }
+    val channelWithChildren: ChannelWithChildren = mockk {
+      every { channel } returns mainChannel
+      every { allChildrenFlat } returns listOf(child)
+    }
+    val channelIssue: ChannelIssueItem = ChannelIssueItem.Error(LocalizedStringId.THERMOSTAT_CALIBRATION_ERROR)
+
+    every { getChannelLowBatteryIssueUseCase(channelWithChildren) } returns null
+    every { getChannelBatteryIconUseCase(channelWithChildren) } returns null
+    every { getChannelSpecificIssuesUseCase(channelWithChildren) } returns listOf(channelIssue)
+    every { getChannelSpecificIssuesUseCase(child) } returns listOf(channelIssue)
+    every { getCaptionUseCase(mainChannel) } returns mainCaption
+    every { getCaptionUseCase(childChannel) } returns childCaption
+
+    // when
+    val issues = useCase(channelWithChildren)
+
+    // then
+    assertThat(issues.icons).containsExactly(IssueIcon.Error)
+    assertThat(issues.issuesStrings).containsExactly(
+      localizedString("%s (%d - %s)", localizedString(LocalizedStringId.THERMOSTAT_CALIBRATION_ERROR), 1, mainCaption),
+      localizedString("%s (%d - %s)", localizedString(LocalizedStringId.THERMOSTAT_CALIBRATION_ERROR), 2, childCaption)
+    )
+  }
+
   private fun mockChannelWithChildren(status: SuplaChannelAvailabilityStatus = SuplaChannelAvailabilityStatus.ONLINE): ChannelWithChildren {
     val channel: Channel = mockk {
       every { this@mockk.status } returns status
     }
     return mockk {
       every { this@mockk.channel } returns channel
+      every { this@mockk.allChildrenFlat } returns emptyList()
     }
   }
 }

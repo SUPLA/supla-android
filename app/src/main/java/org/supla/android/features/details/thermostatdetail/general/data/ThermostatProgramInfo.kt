@@ -22,7 +22,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
-import org.supla.android.core.ui.StringProvider
+import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.local.calendar.DayOfWeek
 import org.supla.android.data.source.local.calendar.QuarterOfHour
 import org.supla.android.data.source.remote.SuplaDeviceConfig
@@ -33,25 +33,30 @@ import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
 import org.supla.android.data.source.remote.hvac.icon
 import org.supla.android.data.source.remote.hvac.iconColor
 import org.supla.android.data.source.remote.isAutomaticTimeSyncDisabled
-import org.supla.android.extensions.valuesFormatter
 import org.supla.android.features.details.thermostatdetail.ui.OFF
 import org.supla.android.features.details.thermostatdetail.ui.description
 import org.supla.core.shared.data.model.function.thermostat.SuplaThermostatFlag
 import org.supla.core.shared.extensions.guardLet
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
 
 data class ThermostatProgramInfo(
   val type: Type,
-  val time: StringProvider? = null,
+  val time: LocalizedString? = null,
   @DrawableRes val icon: Int?,
   @ColorRes val iconColor: Int?,
-  val descriptionProvider: StringProvider?,
+  val descriptionProvider: LocalizedString?,
   val manualActive: Boolean = false
 ) {
   enum class Type(@StringRes val stringRes: Int) {
     CURRENT(R.string.thermostat_detail_program_current), NEXT(R.string.thermostat_detail_program_next)
   }
 
-  class Builder {
+  class Builder(
+    val thermometerValueFormatter: ValueFormatter
+  ) {
     // external
     var dateProvider: DateProvider? = null
     var weeklyScheduleConfig: SuplaChannelWeeklyScheduleConfig? = null
@@ -60,6 +65,9 @@ data class ThermostatProgramInfo(
     var currentMode: SuplaHvacMode? = null
     var currentTemperature: Float? = null
     var channelOnline: Boolean? = null
+
+    val currentTemperatureString: String
+      get() = thermometerValueFormatter.format(currentTemperature, ValueFormat.WithoutUnit)
 
     // internal
     internal var currentDayOfWeek: DayOfWeek? = null
@@ -132,17 +140,17 @@ private fun ThermostatProgramInfo.Builder.clockErrorList() =
   listOf(
     ThermostatProgramInfo(
       type = ThermostatProgramInfo.Type.CURRENT,
-      time = { context -> context.getString(R.string.thermostat_clock_error) },
+      time = localizedString(R.string.thermostat_clock_error),
       icon = currentMode!!.icon,
       iconColor = currentMode!!.iconColor,
-      descriptionProvider = { context -> context.valuesFormatter.getTemperatureString(currentTemperature) }
+      descriptionProvider = LocalizedString.Constant(currentTemperatureString)
     )
   )
 
 private fun ThermostatProgramInfo.Builder.createList(): List<ThermostatProgramInfo> {
   val minutesToNextProgram = quartersToNextProgram!! * 15 + (15 - (currentMinute!! % 15))
   val nextScheduleProgram = getProgram(foundNextProgram)
-  val descriptionProvider: StringProvider = { context -> context.valuesFormatter.getTemperatureString(currentTemperature) }
+  val descriptionProvider: LocalizedString = LocalizedString.Constant(currentTemperatureString)
 
   // If time synchronization disabled show only current program
   if (deviceConfig.isAutomaticTimeSyncDisabled()) {
@@ -160,12 +168,7 @@ private fun ThermostatProgramInfo.Builder.createList(): List<ThermostatProgramIn
   return listOf(
     ThermostatProgramInfo(
       type = ThermostatProgramInfo.Type.CURRENT,
-      time = { context ->
-        context.getString(
-          R.string.thermostat_detail_program_time,
-          context.valuesFormatter.getHourWithMinutes(minutesToNextProgram)(context)
-        )
-      },
+      time = localizedString(R.string.thermostat_detail_program_time, ValuesFormatter.getHourWithMinutes(minutesToNextProgram)),
       icon = currentMode!!.icon,
       iconColor = currentMode!!.iconColor,
       descriptionProvider = if (currentMode == SuplaHvacMode.OFF) null else descriptionProvider,
@@ -175,7 +178,7 @@ private fun ThermostatProgramInfo.Builder.createList(): List<ThermostatProgramIn
       type = ThermostatProgramInfo.Type.NEXT,
       icon = nextScheduleProgram?.mode?.icon,
       iconColor = nextScheduleProgram?.mode?.iconColor,
-      descriptionProvider = nextScheduleProgram?.description
+      descriptionProvider = nextScheduleProgram?.description(thermometerValueFormatter)
     )
   )
 }

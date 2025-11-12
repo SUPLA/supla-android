@@ -680,7 +680,9 @@
   <string name="thermostat_detail_main_thermostat">Hovedtermostat</string>
   <string name="thermostat_detail_other_thermostats">Avhengige termostater</string>
   <string name="thermostat_battery_cover_open">Åpne batteridekselet</string>
-  <string name="channel_battery_level">Batterinivå (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_battery_level">Batterinivå: %1$d%%</string>
+  <string name="channel_battery_level_with_info">Batterinivå (%1$d - %2$s): %3$d%%</string>
+  <string name="channel_btn_stop">Stopp</string>
   <string name="android_auto_action">Handling: %1$s</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Hvis du har en QR-kode, bruk skanneren. For enheter uten QR-kode, trykk <b>Neste</b> for å fortsette.]]></string>
   <string name="add_wizard_network_name">Nettverksnavn</string>
@@ -719,4 +721,38 @@
   <string name="developer_info_activated">Utviklermodus aktivert</string>
   <string name="developer_info_screen_orientation">Skjermrotasjon aktivert</string>
   <string name="developer_info_settings">Eksperimentelle innstillinger</string>
+  <string name="profiles_list_sorting">Sortering</string>
+  <string name="profiles_list_sorting_default">Standard</string>
+  <string name="profiles_list_sorting_name">Navn</string>
+  <string name="profiles_list_sorting_added">Sist lagt til</string>
+  <string name="channel_caption_water_tank">Vanntank</string>
+  <string name="channel_caption_container_level_sensor">Beholder nivåsensor</string>
+  <string name="state_opened">åpen</string>
+  <string name="state_closed">lukket</string>
+  <string name="state_partially_opened">delvis åpen</string>
+  <string name="channel_btn_step_by_step">Åpne/Steng (steg for steg)</string>
+  <string name="channel_btn_shut">Lukk</string>
+  <string name="channel_btn_reveal">Åpne</string>
+  <string name="channel_btn_collapse">Rull inn</string>
+  <string name="channel_btn_expand">Rull ut</string>
+  <string name="gate_general_open_and_close_warning">Ikke alle porter har en åpningssensor konfigurert – «Åpne»- og «Lukk»-knappene fungerer kanskje ikke riktig.</string>
+  <string name="add_wizard_spaces_accept">Behold uendret</string>
+  <string name="add_wizard_spaces_modify">Fjern mellomrom</string>
+  <string name="add_wizard_spaces_title">Mellomrom i nettverksnavnet?</string>
+  <string name="add_wizard_spaces_message">Det angitte nettverksnavnet «%1$s» inneholder innledende eller avsluttende mellomrom (mellomrom eller tabulatorer). Hvis nettverksnavnet ikke skal inneholde disse tegnene, kan ikke enheten din koble til nettverket. Vil du beholde eller fjerne de innledende eller avsluttende mellomrommene?</string>
+  <string name="state_dialog_last_known_state">Frakoblet – siste kjente status:</string>
+  <string name="channel_caption_flood_sensor">Flomsensor</string>
+  <string name="channel_caption_motion_sensor">Bevegelsessensor</string>
+  <string name="channel_caption_binary_sensor">Binærsensor</string>
+  <string name="valve_detail_sensors">Tilkoblede sensorer</string>
+  <string name="valve_error_sensor_offline">Flomsensor utilgjengelig – risiko for uoppdaget flom.</string>
+  <string name="container_invalid_sensor_state">Ugyldig sensorstatus.</string>
+  <string name="channel_caption_container">Beholder</string>
+  <string name="channel_caption_septic_tank">Septiktank</string>
+
+  <plurals name="rest_time_days_pattern">
+    <item quantity="one">%1$d dag ⏱️</item>
+    <item quantity="other">%1$d dager ⏱️</item>
+  </plurals>
+  <string name="thermostat_calibration_error">Kalibreringsfeil</string>
 </resources>

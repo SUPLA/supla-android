@@ -37,7 +37,7 @@ import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.tools.VibrationHelper
-import org.supla.android.ui.lists.sensordata.SensorItemData
+import org.supla.android.ui.lists.sensordata.RelatedChannelData
 import org.supla.android.ui.views.buttons.SwitchButtonState
 import org.supla.android.usecases.channel.ActionException
 import org.supla.android.usecases.channel.ButtonType
@@ -154,7 +154,7 @@ class ValveGeneralDetailViewModel @Inject constructor(
   }
 
   private fun ChannelChildEntity.toSensor() =
-    SensorItemData(
+    RelatedChannelData(
       channelId = channel.remoteId,
       profileId = channel.profileId,
       onlineState = channelDataEntity.channelValueEntity.onlineState,
@@ -162,7 +162,7 @@ class ValveGeneralDetailViewModel @Inject constructor(
       caption = getCaptionUseCase(channelDataEntity.shareable),
       userCaption = channel.caption,
       batteryIcon = getChannelBatteryIconUseCase(channelDataEntity.shareable),
-      showChannelStateIcon = channelDataEntity.channelValueEntity.status.online && SuplaChannelFlag.CHANNEL_STATE inside channel.flags
+      showChannelStateIcon = SuplaChannelFlag.CHANNEL_STATE inside channel.flags && channelDataEntity.stateEntity != null
     )
 
   private fun ValveValue.getStateStringRes(): Int =

@@ -27,7 +27,6 @@ import org.supla.android.core.networking.suplaclient.DelayableState
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.shared.shareable
 import org.supla.android.core.ui.BaseViewModel
-import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.temperature.TemperatureCorrection
@@ -45,6 +44,7 @@ import org.supla.android.di.FORMATTER_THERMOMETER
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
+import org.supla.android.extensions.ifNumber
 import org.supla.android.features.details.thermostatdetail.general.data.SensorIssue
 import org.supla.android.features.details.thermostatdetail.general.data.ThermostatProgramInfo
 import org.supla.android.features.details.thermostatdetail.general.data.build
@@ -66,6 +66,8 @@ import org.supla.core.shared.data.model.lists.ChannelIssueItem
 import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.extensions.ifLet
 import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.channel.issues.ThermostatIssuesProvider
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import timber.log.Timber
@@ -85,6 +87,7 @@ class ThermostatGeneralViewModel @Inject constructor(
   private val checkIsSlaveThermostatUseCase: CheckIsSlaveThermostatUseCase,
   private val channelConfigEventsManager: ChannelConfigEventsManager,
   private val deviceConfigEventsManager: DeviceConfigEventsManager,
+  private val thermostatIssuesProvider: ThermostatIssuesProvider,
   private val getChannelValueUseCase: GetChannelValueUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val loadingTimeoutManager: LoadingTimeoutManager,
@@ -96,7 +99,6 @@ class ThermostatGeneralViewModel @Inject constructor(
   ThermostatGeneralViewProxy {
 
   private val updateSubject: BehaviorSubject<Int> = BehaviorSubject.createDefault(0)
-  private val thermostatIssuesProvider = ThermostatIssuesProvider()
 
   override fun onViewCreated() {
     loadingTimeoutManager.watch({ currentState().loadingState }) {
@@ -268,17 +270,17 @@ class ThermostatGeneralViewModel @Inject constructor(
     }
   }
 
-  override fun getTemperatureText(minPercentage: Float?, maxPercentage: Float?, state: ThermostatGeneralViewState): StringProvider {
-    val minTemperature = minPercentage?.let {
+  override fun getTemperatureText(minPercentage: Float?, maxPercentage: Float?, state: ThermostatGeneralViewState): LocalizedString {
+    val minTemperature = minPercentage.ifNumber {
       getTemperatureForPosition(it, state.viewModelState!!)
     }
-    val maxTemperature = maxPercentage?.let {
+    val maxTemperature = maxPercentage.ifNumber {
       getTemperatureForPosition(it, state.viewModelState!!)
     }
 
     return state.viewModelState?.let {
       calculateTemperatureControlText(state.isOffline, it.mode, minTemperature, maxTemperature)
-    } ?: { "" }
+    } ?: LocalizedString.Empty
   }
 
   override fun markChanging() {
@@ -440,7 +442,7 @@ class ThermostatGeneralViewModel @Inject constructor(
     value: ThermostatValue,
     channelOnline: Boolean
   ) =
-    ThermostatProgramInfo.Builder().also {
+    ThermostatProgramInfo.Builder(thermometerValueFormatter).also {
       it.dateProvider = this@ThermostatGeneralViewModel.dateProvider
       it.weeklyScheduleConfig = weeklyConfig
       it.deviceConfig = deviceConfig
@@ -468,28 +470,25 @@ class ThermostatGeneralViewModel @Inject constructor(
     mode: SuplaHvacMode,
     setpointMinTemperature: Float?,
     setpointMaxTemperature: Float?
-  ): StringProvider {
+  ): LocalizedString {
     return when {
-      isOffline -> { resources -> resources.getString(R.string.offline) }
-      mode == SuplaHvacMode.NOT_SET || mode == SuplaHvacMode.OFF -> { resources ->
-        resources.getString(R.string.thermostat_detail_off).lowercase()
-      }
-
-      else -> { _ -> getOnlineTemperatureText(setpointMinTemperature, setpointMaxTemperature) }
+      isOffline -> localizedString(R.string.offline)
+      mode == SuplaHvacMode.NOT_SET || mode == SuplaHvacMode.OFF -> localizedString(R.string.thermostat_detail_off)
+      else -> getOnlineTemperatureText(setpointMinTemperature, setpointMaxTemperature)
     }
   }
 
-  private fun getOnlineTemperatureText(setpointMinTemperature: Float?, setpointMaxTemperature: Float?): String {
+  private fun getOnlineTemperatureText(setpointMinTemperature: Float?, setpointMaxTemperature: Float?): LocalizedString {
     val setPointMinTemperatureString = setpointMinTemperature?.let { thermometerValueFormatter.format(it.toDouble()) }
     val setPointMaxTemperatureString = setpointMaxTemperature?.let { thermometerValueFormatter.format(it.toDouble()) }
 
     return when {
       setPointMinTemperatureString != null && setPointMaxTemperatureString != null ->
-        "$setPointMinTemperatureString - $setPointMaxTemperatureString"
+        LocalizedString.Constant("$setPointMinTemperatureString - $setPointMaxTemperatureString")
 
-      setPointMinTemperatureString != null -> setPointMinTemperatureString
-      setPointMaxTemperatureString != null -> setPointMaxTemperatureString
-      else -> ""
+      setPointMinTemperatureString != null -> LocalizedString.Constant(setPointMinTemperatureString)
+      setPointMaxTemperatureString != null -> LocalizedString.Constant(setPointMaxTemperatureString)
+      else -> LocalizedString.Empty
     }
   }
 
@@ -761,7 +760,7 @@ data class ThermostatGeneralViewState(
       return false
     }
 
-  override val endDateText: StringProvider
+  override val endDateText: LocalizedString
     get() = TimerHeaderState.endDateText(viewModelState?.timerEndDate)
 
   override val currentStateIcon: Int?
@@ -770,11 +769,12 @@ data class ThermostatGeneralViewState(
   override val currentStateIconColor: Int
     get() = TimerHeaderState.currentStateIconColor(viewModelState?.mode)
 
-  override val currentStateValue: StringProvider
-    get() = TimerHeaderState.currentStateValue(
+  override fun currentStateValue(thermometerValuesFormatter: ValueFormatter): LocalizedString =
+    TimerHeaderState.currentStateValue(
       viewModelState?.mode,
       viewModelState?.setpointHeatTemperature,
-      viewModelState?.setpointCoolTemperature
+      viewModelState?.setpointCoolTemperature,
+      thermometerValuesFormatter
     )
 }
 

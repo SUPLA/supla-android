@@ -30,11 +30,10 @@ import io.reactivex.rxjava3.core.Single
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
+import org.supla.android.core.shared.shareable
 import org.supla.android.data.model.temperature.TemperatureCorrection
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
@@ -70,11 +69,12 @@ import org.supla.core.shared.data.model.function.thermostat.SuplaThermostatFlag
 import org.supla.core.shared.data.model.function.thermostat.ThermostatState
 import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.usecase.channel.issues.ThermostatIssuesProvider
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
-@RunWith(MockitoJUnitRunner::class)
 class ThermostatGeneralViewModelTest :
   BaseViewModelTest<ThermostatGeneralViewState, ThermostatGeneralViewEvent, ThermostatGeneralViewModel>(MockSchedulers.MOCKK) {
 
@@ -116,6 +116,9 @@ class ThermostatGeneralViewModelTest :
 
   @MockK
   lateinit var valueFormatter: ValueFormatter
+
+  @MockK
+  private lateinit var thermostatIssuesProvider: ThermostatIssuesProvider
 
   @InjectMockKs
   override lateinit var viewModel: ThermostatGeneralViewModel
@@ -200,6 +203,8 @@ class ThermostatGeneralViewModelTest :
     every { valueFormatter.format(10f) } returns "10,0"
     every { valueFormatter.format(40f) } returns "40,0"
     every { checkIsSlaveThermostatUseCase(remoteId) } returns Single.just(false)
+    val shareable = channelWithChildren.shareable
+    every { thermostatIssuesProvider.provide(shareable) } returns emptyList()
 
     // when
     viewModel.observeData(remoteId, deviceId)
@@ -641,6 +646,47 @@ class ThermostatGeneralViewModelTest :
     )
   }
 
+  @Test
+  fun `should get temperature text when NaN exists`() {
+    // given
+    val remoteId = 123
+    val deviceId = 321
+    mockHeatThermostat(remoteId, deviceId, 23.4f)
+    every { checkIsSlaveThermostatUseCase(remoteId) } returns Single.just(false)
+    val date = date(2025, 9, 8, 11, 39)
+    every { dateProvider.currentDate() } returns date
+
+    // when
+    viewModel.observeData(remoteId, deviceId)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
+    val temperatureText = viewModel.getTemperatureText(null, Float.NaN, states.last())
+
+    // then
+    assertThat(temperatureText).isSameAs(LocalizedString.Empty)
+    assertThat(events).isEmpty()
+    assertThat(states).containsExactly(
+      ThermostatGeneralViewState(
+        viewModelState = ThermostatGeneralViewModelState(
+          remoteId = remoteId,
+          function = SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
+          lastChangedHeat = true,
+          configMinTemperature = 10f,
+          configMaxTemperature = 40f,
+          mode = SuplaHvacMode.HEAT,
+          setpointHeatTemperature = 23.4f,
+          setpointCoolTemperature = null,
+          subfunction = ThermostatSubfunction.HEAT,
+          relatedRemoteIds = listOf(999, 998)
+        ),
+        currentTemperaturePercentage = 0.17666666f,
+        configMinTemperatureString = "10,0",
+        configMaxTemperatureString = "40,0",
+        manualModeActive = true,
+        loadingState = LoadingTimeoutManager.LoadingState(initialLoading = false, loading = false)
+      )
+    )
+  }
+
   private fun thermostatDefaultState(
     remoteId: Int,
     setpointTemperatureHeat: Float? = null,
@@ -714,6 +760,9 @@ class ThermostatGeneralViewModelTest :
     every { createTemperaturesListUseCase.invoke(channelWithChildren) } returns emptyList()
     every { valueFormatter.format(10f) } returns "10,0"
     every { valueFormatter.format(40f) } returns "40,0"
+
+    val shareable = channelWithChildren.shareable
+    every { thermostatIssuesProvider.provide(shareable) } returns emptyList()
   }
 
   private fun mockCoolThermostat(remoteId: Int, deviceId: Int, setpointTemperature: Float, weeklyScheduleActive: Boolean = false) {
@@ -747,6 +796,9 @@ class ThermostatGeneralViewModelTest :
     every { createTemperaturesListUseCase.invoke(channelWithChildren) } returns emptyList()
     every { valueFormatter.format(10f) } returns "10,0"
     every { valueFormatter.format(40f) } returns "40,0"
+
+    val shareable = channelWithChildren.shareable
+    every { thermostatIssuesProvider.provide(shareable) } returns emptyList()
   }
 
   private fun mockChannelWithChildren(
