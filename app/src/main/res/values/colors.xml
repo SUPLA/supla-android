@@ -17,7 +17,6 @@
     <color name="dialog_scrim">#80F5F6F7</color>
     <color name="info_scrim">#CC000000</color>
     <color name="secondary_container">#E7F2FF</color>
-    <color name="error_container">#FAEAE9</color>
     <color name="outline">#E1E2E3</color>
     <color name="outline_variant">#14282828</color>
 
@@ -101,7 +100,6 @@
     <color name="phase2">@color/chart_pie_16</color>
     <color name="phase3">#fed191</color>
 
-    <color name="hp_chart_room_temperature">#00c2fc</color>
     <color name="chart_color_value_positive">#e74c3c</color>
     <color name="chart_color_value_negative">#2dcc71</color>
 
@@ -114,8 +112,6 @@
     <color name="zwave_info_label_bg">#FFE804</color>
     <color name="zwave_info_label_text">#000000</color>
 
-    <color name="channelstate_infoline">@color/disabled</color>
-
     <color name="wake_up_settings_infotitle">#000000</color>
 
     <color name="cell_bg_new">@color/surface</color>
@@ -124,10 +120,8 @@
 
     <!-- New colors with day/night support -->
 
-    <color name="layout_background">#F5F6F7</color>
     <color name="field_background">#FFFFFF</color>
     <color name="segmented_field_background">@color/gray_lighter</color>
 
     <color name="widget_fields_border">#3078801F</color>
-    <color name="widget_spinner_item_background">@color/background</color>
 </resources>

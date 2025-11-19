@@ -41,8 +41,8 @@ import org.supla.android.usecases.channel.ButtonType
 import org.supla.android.usecases.channel.GroupActionUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.details.ProvideGroupDetailTypeUseCase
+import org.supla.android.usecases.details.StandardDetailType
 import org.supla.android.usecases.details.ThermometerDetailType
-import org.supla.android.usecases.details.WindowDetailType
 import org.supla.android.usecases.group.CreateProfileGroupsListUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.location.CollapsedFlag
@@ -308,7 +308,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     every { groupData.function } returns function
     every { groupData.status } returns SuplaChannelAvailabilityStatus.OFFLINE
 
-    val detailType = WindowDetailType(listOf(DetailPage.ROLLER_SHUTTER))
+    val detailType = StandardDetailType(listOf(DetailPage.ROLLER_SHUTTER))
     whenever(provideGroupDetailTypeUseCase(groupData)).thenReturn(detailType)
 
     whenever(findGroupByRemoteIdUseCase(remoteId)).thenReturn(Maybe.just(groupData))

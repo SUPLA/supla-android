@@ -53,7 +53,7 @@ data class AndroidAutoDataEntity(
           thermostatSubfunction = thermostatSubfunction
         )
       } else {
-        ChannelState(ChannelState.Value.NOT_USED)
+        ChannelState.Default(ChannelState.Value.NOT_USED)
       }
     }
 

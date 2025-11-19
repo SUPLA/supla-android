@@ -63,6 +63,8 @@ data class ColorEntity(
     const val COLUMN_BRIGHTNESS = "brightness"
     const val COLUMN_PROFILE_ID = "profileid"
 
+    const val ALL_COLUMNS = "$COLUMN_ID,$COLUMN_REMOTE_ID,$COLUMN_GROUP,$COLUMN_IDX,$COLUMN_COLOR,$COLUMN_BRIGHTNESS,$COLUMN_PROFILE_ID"
+
     val SQL = arrayOf(
       """
         CREATE TABLE $TABLE_NAME

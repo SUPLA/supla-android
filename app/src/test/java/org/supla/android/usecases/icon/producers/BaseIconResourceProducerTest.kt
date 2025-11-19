@@ -32,10 +32,10 @@ abstract class BaseIconResourceProducerTest {
     stateValue: ChannelState.Value = ChannelState.Value.NOT_USED,
     altIcon: Int = 0,
     type: IconType = IconType.SINGLE
-  ) = mockIconData(ChannelState(stateValue), altIcon, type)
+  ) = mockIconData(ChannelState.Default(stateValue), altIcon, type)
 
   protected fun mockIconData(
-    state: ChannelState = ChannelState(ChannelState.Value.NOT_USED),
+    state: ChannelState = ChannelState.Default(ChannelState.Value.NOT_USED),
     altIcon: Int = 0,
     type: IconType = IconType.SINGLE
   ) =
@@ -47,10 +47,10 @@ abstract class BaseIconResourceProducerTest {
     )
 
   protected fun test(state: ChannelState.Value, altIcon: Int, function: SuplaFunction, expectedIcon: Int) =
-    test(mockIconData(ChannelState(state), altIcon), function, expectedIcon)
+    test(mockIconData(ChannelState.Default(state), altIcon), function, expectedIcon)
 
   protected fun test(state: ChannelState.Value, function: SuplaFunction, expectedIcon: Int) =
-    test(mockIconData(ChannelState(state)), function, expectedIcon)
+    test(mockIconData(ChannelState.Default(state)), function, expectedIcon)
 
   protected fun test(data: IconData, function: SuplaFunction, expectedIcon: Int?) {
     // when

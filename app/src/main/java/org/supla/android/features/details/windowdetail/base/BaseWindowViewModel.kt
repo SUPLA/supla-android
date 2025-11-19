@@ -209,6 +209,7 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
 
   protected open fun observeChannelData(remoteId: Int) {
     observeChannelWithChildrenUseCase(remoteId)
+      .distinctUntilChanged()
       .attachSilent()
       .subscribeBy(
         onNext = { handleChannel(it.channel) },

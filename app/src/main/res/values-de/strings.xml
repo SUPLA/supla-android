@@ -16,7 +16,6 @@
   <string name="status_temporarily_unavailable">Service momentan nicht verfügbar</string>
   <string name="status_bad_credentials">Schlechte Referenzen</string>
   <string name="status_climit_exceded">Klient-Grenze überschritten</string>
-  <string name="status_version_error">Nicht kompatible Server-Version</string>
   <string name="status_reg_disabled">Die Client-Registrierung ist deaktiviert. Bitte gehen Sie zu \"Smartphones\" auf \"Supla Cloud\" um es zu aktivieren.</string>
   <string name="status_access_id_not_assigned">Diesem Client wurde keine Zugriffskennung zugewiesen. Bitte gehen Sie zu \"Smartphones\" auf \"Supla Cloud\" und holen Sie sich eine gültige ID.</string>
   <string name="status_device_disabled">Gerät ist deaktiviert</string>
@@ -84,7 +83,6 @@
   <string name="add_wizard_step_1_continue"><![CDATA[Um fortzusetzen, drücken Sie <b>Weiter</b>.]]></string>
   <string name="add_device">Gerät hinzufügen</string>
   <string name="advanced_settings">Erweiterte Einstellungen</string>
-  <string name="wizard_result_param_error">Falsche Eingabeparameter!</string>
   <string name="wizard_iodev_data">Daten des Gerätes</string>
   <string name="email">E-MAIL-ADRESSE</string>
   <string name="wizard_done">Die Konfiguration wurde erfolgreich abgeschlossen :)</string>
@@ -93,10 +91,8 @@
   <string name="add_wizard_step_3_message_3"><![CDATA[Drücken Sie die Taste <b>START</b>, um die Konfiguration zu beginnen.]]></string>
   <string name="wizard_iodev_name">Name</string>
   <string name="next">Weiter</string>
-  <string name="wizard_addnetwork_error">Die Konfiguration des WiFi-Netzwerkes kann nicht hinzugefügt werden!</string>
   <string name="wizard_result_conn_error">Es gelang nicht, die Verbindung mit dem Gerät herzustellen!</string>
   <string name="wizard_iodevice_notfound">Die Suche nach irgendwelchen Geräten war erfolglos! Stellen Sie sicher, dass das Gerät, dass Sie konfigurieren lassen möchten im Konfigurationsmodus funktioniert und versuchen Sie erneut. WICHTIG - Bei manchen Android-Versionen muss das GPS aktiviert sein, damit die Apps die WiFi-Netzwerke durchsuchen könnten. Stellen Sie daher sicher, dass das GPS eingeschaltet ist.</string>
-  <string name="wizard_wifi_timeout">Für die Daten von dem aktuellen WiFi-Netzwerk wurde das Zeitlimit überschritten! Gehen Sie zu Ihren Android-WLAN-Einstellungen, wählen Sie erweiterte Einstellungen und aktivieren Sie dann eine Option: „WLAN automatisch aktivieren“.</string>
   <string name="wizard_connect_timeout">Für die Herstellung der Verbindung mit dem Betätigungsgerät wurde das Zeitlimit überschritten!</string>
   <string name="wizard_reconnect_timeout">Für die Rückkehr zum Grundversorgungs-WiFi-Netz wurde das Zeitlimit überschritten!</string>
   <string name="wizard_configure_timeout">Für den Abschluss der Konfiguration des Gerätes wurde das Zeitlimit überschritten!</string>
@@ -125,7 +121,6 @@
   <string name="hp_eco">ECO</string>
   <string name="hp_turbo">TURBO</string>
   <string name="hp_auto">AUTO</string>
-  <string name="hp_room_temperature">Raumtemperatur</string>
   <string name="hp_cfg_turbo_time">Dauer des TURBO-Modus</string>
   <string name="hp_cfg_water_max">Maximale Wassertemperatur</string>
   <string name="hp_cfg_eco_reduction">Temperaturabsenkung im ECO-Modus</string>
@@ -143,7 +138,6 @@
   <string name="ranking_of_hours">Ranking der Stunden</string>
   <string name="ranking_of_weekdays">Ranking der Wochentage</string>
   <string name="ranking_of_months">Ranking der Monate</string>
-  <string name="consumption_acording_to_phases">Verbrauch nach Phase</string>
   <string name="temperature">Temperatur</string>
   <string name="humidity">Feuchtigkeit</string>
   <string name="history_range_label">Umfang</string>
@@ -160,11 +154,6 @@
   <string name="all_available_history">Gesamte verfügbare Geschichte</string>
   <string name="retrieving_data_from_the_server">Daten werden vom Server heruntergeladen…</string>
   <string name="no_chart_data_available">Keine Daten für das Diagramm in ausgewälte Zeitraum.</string>
-  <string name="comparsion_minmin">Vergleich Minute zu Minute</string>
-  <string name="comparsion_hourhour">Vergleich Stunde zu Stunde</string>
-  <string name="comparsion_dayday">Vergleich Tag zu Tag</string>
-  <string name="comparsion_monthmonth">Vergleich Monat zu Monat</string>
-  <string name="comparsion_yearyear">Vergleich Jahr zu Jahr</string>
   <string name="hp_error_1">Wassermangel</string>
   <string name="hp_error_2">Heizgerät verbrannt</string>
   <string name="hp_error_3">Fehler des Wassertemperatursensors</string>
@@ -174,8 +163,6 @@
   <string name="channel_caption_rainsensor">Niederschlagsmessung</string>
   <string name="channel_caption_weightsensor">Gewicht</string>
   <string name="channel_caption_windsensor">Windgeschwindigkeit</string>
-  <string name="current_production">Produktion im laufenden Monat</string>
-  <string name="production_acording_to_phases">Produktion nach Phase</string>
   <string name="enter_superuser_credentials">Geben Sie die Superuser-Anmeldeinformationen ein</string>
 
   <string name="channel_func_none">Keine Funktion</string>
@@ -220,11 +207,6 @@
   <string name="channel_caption_heatmeter">Wärmezähler</string>
   <string name="z_wave">Brücke z-Wave</string>
   <string name="yes">Ja</string>
-  <string name="aritmetic_balance_days">arithmetisches Gleichgewicht - Tage</string>
-  <string name="aritmetic_balance_hours">arithmetisches Gleichgewicht - Stunden</string>
-  <string name="aritmetic_balance_minutes">arithmetisches Gleichgewicht - Minuten</string>
-  <string name="aritmetic_balance_months">arithmetisches Gleichgewicht - Monaten</string>
-  <string name="aritmetic_balance_years">arithmetisches Gleichgewicht - Jahre</string>
   <string name="associeted_with_scene_error">Sie können die Funktion eines Kanals, der einer Szene zugewiesen ist, nicht ändern.</string>
   <string name="battery_health">Batterielaufzeit</string>
   <string name="battery_level">Batteriefüllstand</string>
@@ -272,11 +254,6 @@
   <string name="channel_uv_error">Lebensdauer des UV-Strahlers beträgt %1$.01f%%. Den Strahler austauschen.</string>
   <string name="valve_warning_manually_closed">Das Ventil wurde manuell oder ferngesteuert geschlossen. Stellen Sie vor dem Öffnen sicher, dass es nicht wegen Überfluten geschlossen wurde. Öffnen Sie das Ventil manuell, um die Warnung zu deaktivieren. Sind Sie sicher, dass Sie das Ventil über die App öffnen möchten ?!</string>
   <string name="valve_warning">Das Ventil wurde manuell oder ferngesteuert geschlossen. Stellen Sie vor dem Öffnen sicher, dass es nicht wegen Ü Überfluten geschlossen wurde. Öffnen Sie das Ventil manuell, um die Warnung zu deaktivieren.</string>
-  <string name="vector_balance_days">Vektorgleichgewicht - Tage</string>
-  <string name="vector_balance_hours">Vektorgleichgewicht - Stunden</string>
-  <string name="vector_balance_minutes">Vektorgleichgewicht - Minuten</string>
-  <string name="vector_balance_months">Vektorgleichgewicht - Monaten</string>
-  <string name="vector_balance_years">Vektorgleichgewicht - Jahre</string>
   <string name="vl_cfg_auto">AUTO</string>
   <string name="vl_cfg_boost">Stärkung</string>
   <string name="vl_cfg_mode">Dimmmodus</string>
@@ -294,18 +271,11 @@
   <string name="vl_dimmer_cfg_info_txt6">Stärkung</string>
   <string name="vl_dimmer_cfg_info_txt7">Diese Funktion hilft dabei, die LED-Beleuchtung bei einer gespeicherten niedrigen Helligkeit einzuschalten und bietet einen Start an, um die Helligkeit zu erhöhen (zu stärken). Durch Bewegen des dunkelgrauen Schiebereglers um das Rad können Sie die Stärkung erhöhen oder verringern, die mit der grünen Linie gekennzeichnet ist. Beim Einschalten der Beleuchtung wird die Helligkeit auf den voreingestellten Wert erhöht (verbessert) und kehrt dann zu der vor dem Ausschalten der Beleuchtung gespeicherten Helligkeit zurück.</string>
   <string name="vl_dimmer_cfg_info_txt8">Weitere Informationen zum Dimmer finden Sie unter</string>
-  <string name="vl_dimmer_info_txt1">Steuerung mit Dimmer</string>
-  <string name="vl_dimmer_info_txt2">Um die Helligkeit zu ändern, schieben Sie mit Ihrem Finger auf die Anzeige am Schieberegler oder am Helligkeitsrad.</string>
-  <string name="vl_dimmer_info_txt3">Mit der Ein/Aus-Schaltfläche können Sie die Beleuchtung ein- oder ausschalten.</string>
-  <string name="vl_dimmer_info_txt4">Der Dimmer speichert die Helligkeit, bevor er die Beleuchtung ausschaltet.</string>
-  <string name="vl_dimmer_info_txt5">Drücken Sie die Einstellungen, um die Dimmerparameter anzupassen.</string>
   <string name="wake_up_frequency">Aufweckfrequenz</string>
   <string name="wakeup_info">*) Die eingegebenen Einstellungen werden beim nächsten Aufwachen des Knotens angewendet.</string>
   <string name="wheel">Rad</string>
   <string name="wifi_rssi">WLAN RSSI</string>
   <string name="wifi_signal_strength">WLAN-Signalstärke</string>
-  <string name="wifi_throttling">Warten Sie aufgrund der vom Android-System festgelegten Grenzen für das Scannen von WLAN-Netzwerken die oben angegebene Zeit ab.</string>
-  <string name="wizard_step1_txt2">Stellen Sie sicher, dass mobile Daten beim Hinzufügen von Geräten deaktiviert sind. Andernfalls kann das Hinzufügen fehlschlagen.</string>
   <string name="add_wizard_step_2_message">Geben Sie den Namen und das Kennwort Ihres Heim- oder Firmen-WLAN-Netzwerks ein, über das der Aktor eine Verbindung zum Server herstellen kann.</string>
   <string name="zwave_add_device">Gerät hinzufügen</string>
   <string name="zwave_before_search_message">Stellen Sie sicher, dass alle Ihre Z-Wave-Geräte online sind, bevor Sie fortfahren. Durch Drücken von \"Weiter\" wird Ihr Z-Wave-Netzwerk gescannt, was einige Sekunden bis einige Minuten dauern kann.</string>
@@ -391,7 +361,6 @@
   <string name="profile">Ihr Konto</string>
   <string name="profile_plural">Ihre Kontos</string>
   <string name="menubar_appsettings">Einstellungen</string>
-  <string name="em_chart_phase_n">Phase %d</string>
   <string name="em_chart_all_phases">Phase 1+2+3</string>
   <string name="widget_configure_no_scene">Keine Szene verfügbar</string>
   <string name="double_button_widget_description">Zweitasten-Widget</string>
@@ -410,7 +379,6 @@
   <string name="input">Eingang</string>
   <string name="monostable">Monostabil</string>
   <string name="bistable">Bistabil</string>
-  <string name="wizard_iodev_connect_failed">Der Versuch der Herstellung des WiFi-Kontakts mit dem Ausführungsgerät endete erfolglos.</string>
   <string name="diw_cfg_info_oprange">Passen Sie den Arbeitsbereich des Helligkeitsreglers durch Einstellung des minimalen und maximalen Helligkeitsniveaus an. Der Mindest- und Höchstwert kann man durch Verschiebung der Schieberregler an beiden Seiten des Rads.</string>
   <string name="diw_cfg_info_in_options">Eingangsoptionen</string>
   <string name="diw_cfg_info_mono_option">Die Option ändert das Verhalten des Eingangs, an den die monostabile Taste angeschlossen ist. Wenn die Option abgeschaltet ist, stoppt der Helligkeitsregler den Aufhellungsprozess beim Erreichen der höchsten Helligkeit und bei der Verdunkelung beim Erreichen des Mindestniveaus. Einschaltung dieser Option verursacht Übergang zum Mindestniveau gleich nach dem Erreichen maximaler Helligkeit und bei der Verdunkelung – nach dem Erreichen des Minimums. Aufhellung/Verdunkelung wird so lange dauern, wie die Taste gedrückt wird.</string>
@@ -423,7 +391,6 @@
   <string name="incorrect_password">Falsches Passwort</string>
   <string name="channel_name">Name des Kanals</string>
   <string name="location_name">Name der Lokalisierung</string>
-  <string name="str_default">Standard</string>
   <string name="overcurrent_warning">Die Versorgung wurde nach dem Überschreiten der eingestellten zulässigen Stromstärke abgeschaltet.</string>
   <string name="overcurrent_question">Die Versorgung wurde nach dem Überschreiten der eingestellten zulässigen Stromstärke abgeschaltet. Möchten Sie wirklich die Versorgung einschalten?</string>
   <string name="roller_shutter_start_calibration_message">Wollen Sie wirklich die Kalibrierung beginnen?</string>
@@ -634,7 +601,6 @@
   <string name="details_em_balance_hourly">Stundensaldo</string>
   <string name="details_em_balance_chart_aggregated">Diagramm aggregiertes Bilanz</string>
   <string name="details_em_sum">Summe</string>
-  <string name="details_em_select_range">Bereich auswählen</string>
   <string name="details_em_active_energy">Wirkenergie</string>
   <string name="details_em_forwarded_energy">Aufgenommen</string>
   <string name="details_em_reversed_energy">Zurückgegeben</string>
@@ -724,7 +690,6 @@
   <string name="channel_caption_container">Behälter</string>
   <string name="developer_info_database_section">Datenbankdetails</string>
   <string name="developer_info_activated">Entwicklermodus aktiviert</string>
-  <string name="developer_info_title">Anwendungsdaten</string>
   <string name="counter_photo_photos">Fotohistorie</string>
   <string name="counter_photo_loading_error">Das Laden ist fehlgeschlagen.</string>
   <string name="counter_photo_error">Fehler</string>
@@ -809,10 +774,6 @@
   <string name="developer_option">Entwickleroptionen</string>
   <string name="developer_info_screen_orientation">Bildschirmdrehung aktiviert</string>
   <string name="developer_info_settings">Experimentelle Einstellungen</string>
-  <string name="profiles_list_sorting">Sortierung</string>
-  <string name="profiles_list_sorting_default">Standard</string>
-  <string name="profiles_list_sorting_name">Name</string>
-  <string name="profiles_list_sorting_added">Zuletzt hinzugefügt</string>
   <string name="state_partially_opened">teilweise offen</string>
   <string name="channel_btn_step_by_step">Öffnen/Schließen (schritt für schritt)</string>
   <string name="gate_general_open_and_close_warning">Nicht alle Tore haben ein Öffnungssensor konfiguriert – die Schaltflächen „Öffnen“ und „Schließen“ können falsch funktionieren.</string>
@@ -828,4 +789,11 @@
     <item quantity="one">%1$d Tag ⏱️</item>
     <item quantity="other">%1$d Tage ⏱️</item>
   </plurals>
+  <string name="toolbar_dimmer">Dimmer</string>
+  <string name="rgb_detail_color">Farbe:</string>
+  <string name="rgb_detail_brightness">Helligkeit:</string>
+  <string name="rgb_detail_select_color">Farbe auswählen</string>
+  <string name="legacy_rgbw_settings_unauthorized_message">Autorisierung erforderlich, um die Konfiguration zu sehen!</string>
+  <string name="legacy_rgbw_settings_authorize_button">Autorisieren</string>
+  <string name="rgb_detail_colors_limit">Limit erreicht!</string>
 </resources>

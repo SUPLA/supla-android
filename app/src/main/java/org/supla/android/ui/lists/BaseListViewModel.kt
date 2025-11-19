@@ -116,7 +116,10 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
       SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
       SuplaFunction.CONTROLLING_THE_GATE,
       SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
-      SuplaFunction.CONTROLLING_THE_DOOR_LOCK -> true
+      SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
+      SuplaFunction.DIMMER,
+      SuplaFunction.RGB_LIGHTING,
+      SuplaFunction.DIMMER_AND_RGB_LIGHTING -> true
 
       SuplaFunction.UNKNOWN,
       SuplaFunction.NONE,
@@ -130,9 +133,6 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
       SuplaFunction.RING,
       SuplaFunction.ALARM,
       SuplaFunction.NOTIFICATION,
-      SuplaFunction.DIMMER,
-      SuplaFunction.RGB_LIGHTING,
-      SuplaFunction.DIMMER_AND_RGB_LIGHTING,
       SuplaFunction.DEPTH_SENSOR,
       SuplaFunction.DISTANCE_SENSOR,
       SuplaFunction.OPENING_SENSOR_WINDOW,

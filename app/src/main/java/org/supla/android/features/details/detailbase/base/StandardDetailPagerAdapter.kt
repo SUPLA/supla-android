@@ -33,6 +33,8 @@ import org.supla.android.features.details.impulsecounter.counterphoto.CounterPho
 import org.supla.android.features.details.impulsecounter.general.ImpulseCounterGeneralFragment
 import org.supla.android.features.details.impulsecounter.history.ImpulseCounterHistoryDetailFragment
 import org.supla.android.features.details.legacydetail.LegacyDetailFragment
+import org.supla.android.features.details.rgbanddimmer.dimmer.DimmerDetailFragment
+import org.supla.android.features.details.rgbanddimmer.rgb.RgbDetailFragment
 import org.supla.android.features.details.switchdetail.general.SwitchGeneralFragment
 import org.supla.android.features.details.switchdetail.timer.TimersDetailFragment
 import org.supla.android.features.details.thermometerdetail.history.ThermometerHistoryDetailFragment
@@ -117,6 +119,11 @@ class StandardDetailPagerAdapter(
     DetailPage.VALVE_GENERAL -> ValveGeneralDetailFragment().apply { arguments = ValveGeneralDetailFragment.bundle(itemBundle) }
 
     DetailPage.GATE_GENERAL -> GateGeneralFragment().apply { arguments = GateGeneralFragment.bundle(itemBundle) }
+    DetailPage.RGB -> RgbDetailFragment().apply { arguments = RgbDetailFragment.bundle(itemBundle) }
+    DetailPage.DIMMER -> DimmerDetailFragment().apply { arguments = DimmerDetailFragment.bundle(itemBundle) }
+    DetailPage.LEGACY_RGBW -> LegacyDetailFragment().apply {
+      arguments = LegacyDetailFragment.bundle(itemBundle.remoteId, LegacyDetailType.RGBW, itemBundle.itemType)
+    }
   }
 }
 
@@ -170,16 +177,23 @@ enum class DetailPage(val item: DetailBottomItem) {
   VALVE_GENERAL(DetailBottomItem.GENERAL),
 
   // Gate
-  GATE_GENERAL(DetailBottomItem.GENERAL)
+  GATE_GENERAL(DetailBottomItem.GENERAL),
+
+  // RGB and Dimmer
+  RGB(DetailBottomItem.RGB),
+  DIMMER(DetailBottomItem.DIMMER),
+  LEGACY_RGBW(DetailBottomItem.SETTINGS)
 }
 
-enum class DetailBottomItem(val menuId: Int, @DrawableRes val iconRes: Int, @StringRes val stringRes: Int) {
-  GENERAL(R.id.bottom_item_general, R.drawable.ic_general, R.string.details_general),
-  SCHEDULE(R.id.bottom_item_schedule, R.drawable.ic_schedule, R.string.details_schedule),
-  TIMER(R.id.bottom_item_timer, R.drawable.ic_timer, R.string.details_timer),
-  HISTORY(R.id.bottom_item_history, R.drawable.ic_history, R.string.details_history),
-  METRICS(R.id.bottom_item_metrics, R.drawable.ic_metrics, R.string.details_metrics),
-  SETTINGS(R.id.bottom_item_settings, R.drawable.ic_settings, R.string.settings),
-  LIST(R.id.bottom_item_list, R.drawable.list, R.string.details_list),
-  OCR(R.id.bottom_item_ocr, R.drawable.ic_ocr_photo, R.string.toolbar_ocr)
+enum class DetailBottomItem(val menuId: Int, @param:DrawableRes val iconRes: Int, @param:StringRes val stringRes: Int) {
+  GENERAL(R.id.bottom_item_general, R.drawable.ic_bottom_general, R.string.details_general),
+  SCHEDULE(R.id.bottom_item_schedule, R.drawable.ic_bottom_schedule, R.string.details_schedule),
+  TIMER(R.id.bottom_item_timer, R.drawable.ic_bottom_timer, R.string.details_timer),
+  HISTORY(R.id.bottom_item_history, R.drawable.ic_bottom_history, R.string.details_history),
+  METRICS(R.id.bottom_item_metrics, R.drawable.ic_bottom_metrics, R.string.details_metrics),
+  SETTINGS(R.id.bottom_item_settings, R.drawable.ic_bottom_settings, R.string.details_settings),
+  LIST(R.id.bottom_item_list, R.drawable.ic_bottom_list, R.string.details_list),
+  OCR(R.id.bottom_item_ocr, R.drawable.ic_bottom_ocr, R.string.toolbar_ocr),
+  RGB(R.id.bottom_item_rgb, R.drawable.ic_bottom_rgb, R.string.toolbar_rgb),
+  DIMMER(R.id.bottom_item_dimmer, R.drawable.ic_bottom_dimmer, R.string.toolbar_dimmer)
 }

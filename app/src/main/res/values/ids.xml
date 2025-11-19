@@ -12,4 +12,6 @@
   <item name="bottom_item_settings" type="id" />
   <item name="bottom_item_list" type="id" />
   <item name="bottom_item_ocr" type="id" />
+  <item name="bottom_item_rgb" type="id" />
+  <item name="bottom_item_dimmer" type="id" />
 </resources>

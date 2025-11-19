@@ -20,14 +20,14 @@ import org.supla.android.tools.UsedFromNativeCode
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-const val IGNORE_BRIGHTNESS = -1
-const val IGNORE_COLOR = 0
+const val IGNORE_BRIGHTNESS: Short = -1
+const val IGNORE_COLOR: Long = 0
 
 @UsedFromNativeCode
-class RgbwActionParameters(
-  action: ActionId,
-  subjectType: SubjectType,
-  subjectId: Int,
+data class RgbwActionParameters(
+  override val action: ActionId,
+  override val subjectType: SubjectType,
+  override val subjectId: Int,
   var brightness: Short,
   var colorBrightness: Short,
   var color: Long,

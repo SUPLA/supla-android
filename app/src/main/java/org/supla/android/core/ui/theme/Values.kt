@@ -1,5 +1,4 @@
-package org.supla.android.core.ui.theme
-/*
+package org.supla.android.core.ui.theme/*
 Copyright (C) AC SOFTWARE SP. Z O.O.
 
 This program is free software; you can redistribute it and/or
@@ -18,34 +17,44 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import android.content.res.Configuration
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.window.core.layout.WindowSizeClass
 import org.supla.android.R
 
 object Distance {
 
   val default: Dp
-    @Composable
-    get() = dimensionResource(id = R.dimen.distance_default)
+    @Composable get() = dimensionResource(id = R.dimen.distance_default)
 
   val small: Dp
-    @Composable
-    get() = dimensionResource(id = R.dimen.distance_small)
+    @Composable get() = dimensionResource(id = R.dimen.distance_small)
 
   val tiny: Dp
-    @Composable
-    get() = dimensionResource(id = R.dimen.distance_tiny)
+    @Composable get() = dimensionResource(id = R.dimen.distance_tiny)
 
   val horizontal: Dp
-    @Composable
-    get() = 24.dp
+    @Composable get() {
+      val isTablet = currentWindowAdaptiveInfo().windowSizeClass.isHeightAtLeastBreakpoint(WindowSizeClass.HEIGHT_DP_MEDIUM_LOWER_BOUND)
+      return if (isTablet) 36.dp else 24.dp
+    }
 
   val vertical: Dp
-    @Composable
-    get() = if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT) 24.dp else 16.dp
+    @Composable get() {
+      val isTablet = currentWindowAdaptiveInfo().windowSizeClass.isHeightAtLeastBreakpoint(WindowSizeClass.HEIGHT_DP_MEDIUM_LOWER_BOUND)
+
+      return if (isTablet) {
+        36.dp
+      } else if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT) {
+        24.dp
+      } else {
+        16.dp
+      }
+    }
 
   @Composable
   fun toStatic(): Static = Static(default, small, tiny)

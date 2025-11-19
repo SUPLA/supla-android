@@ -28,9 +28,9 @@ class AlarmArmamentSensorIconResourceProducer : IconResourceProducer {
 
   override fun produce(data: IconData): Int =
     when (data.altIcon) {
-      1 -> if (data.state.isActive()) R.drawable.fnc_alarm_armament_1_on else R.drawable.fnc_alarm_armament_1_off
-      2 -> if (data.state.isActive()) R.drawable.fnc_alarm_armament_2_on else R.drawable.fnc_alarm_armament_2_off
-      3 -> if (data.state.isActive()) R.drawable.fnc_alarm_armament_3_on else R.drawable.fnc_alarm_armament_3_off
-      else -> if (data.state.isActive()) R.drawable.fnc_alarm_armament_on else R.drawable.fnc_alarm_armament_off
+      1 -> if (data.state.isActive) R.drawable.fnc_alarm_armament_1_on else R.drawable.fnc_alarm_armament_1_off
+      2 -> if (data.state.isActive) R.drawable.fnc_alarm_armament_2_on else R.drawable.fnc_alarm_armament_2_off
+      3 -> if (data.state.isActive) R.drawable.fnc_alarm_armament_3_on else R.drawable.fnc_alarm_armament_3_off
+      else -> if (data.state.isActive) R.drawable.fnc_alarm_armament_on else R.drawable.fnc_alarm_armament_off
     }
 }

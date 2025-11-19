@@ -151,12 +151,12 @@ interface IconResourceProducer {
 data class IconData(
   val function: SuplaFunction,
   val altIcon: Int,
-  val state: ChannelState = ChannelState(ChannelState.Value.NOT_USED),
+  val state: ChannelState = ChannelState.Default(ChannelState.Value.NOT_USED),
   val type: IconType = IconType.SINGLE
 ) {
   @DrawableRes
   fun stateIcon(@DrawableRes activeIcon: Int, @DrawableRes inactiveIcon: Int): Int =
-    if (state.isActive()) activeIcon else inactiveIcon
+    if (state.isActive) activeIcon else inactiveIcon
 }
 
 private fun static(function: SuplaFunction, @DrawableRes day: Int) =

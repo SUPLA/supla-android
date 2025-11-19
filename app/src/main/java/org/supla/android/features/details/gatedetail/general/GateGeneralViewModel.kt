@@ -82,6 +82,7 @@ class GateGeneralViewModel @Inject constructor(
 
   private fun observeChannel(remoteId: Int) {
     observeChannelWithChildrenUseCase(remoteId)
+      .distinctUntilChanged()
       .attachSilent()
       .subscribeBy(
         onNext = this::handleChannel,
@@ -153,7 +154,7 @@ class GateGeneralViewModel @Inject constructor(
   private fun handleGroup(groupWithChannels: GroupWithChannels) {
     val showOpenAndClose = groupWithChannels.channels.firstOrNull { it.hasSensor && it.function.supportsOpenAndClose } != null
     val gateWithoutSensor = groupWithChannels.channels.firstOrNull { !it.hasSensor } != null
-    val groupState: ChannelState.Value? = groupWithChannels.aggregatedState(ChannelState.Value.CLOSED, ChannelState.Value.OPEN)
+    val groupState: ChannelState.Value? = groupWithChannels.aggregatedState(GroupWithChannels.Policy.OpenClosed)
 
     updateState { state ->
       state.copy(

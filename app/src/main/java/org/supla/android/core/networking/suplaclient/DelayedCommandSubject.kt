@@ -25,16 +25,25 @@ import org.supla.android.tools.SuplaSchedulers
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-const val DELAYED_COMMAND_DELAY_S = 2L
+private const val DELAYED_COMMAND_DELAY_MS = 2000L
 
 @SuppressLint("CheckResult")
-abstract class DelayedCommandSubject<T : DelayableState>(schedulers: SuplaSchedulers) {
+abstract class DelayedCommandSubject<T : DelayableState>(
+  schedulers: SuplaSchedulers,
+  delayMs: Long = DELAYED_COMMAND_DELAY_MS,
+  mode: Mode = Mode.DEBOUNCE
+) {
 
   private val delayedRequestsSubject = PublishSubject.create<T>()
 
   init {
     delayedRequestsSubject
-      .debounce(DELAYED_COMMAND_DELAY_S, TimeUnit.SECONDS)
+      .let {
+        when (mode) {
+          Mode.DEBOUNCE -> it.debounce(delayMs, TimeUnit.MILLISECONDS)
+          Mode.SAMPLE -> it.sample(delayMs, TimeUnit.MILLISECONDS)
+        }
+      }
       .flatMapCompletable { if (it.sent.not()) { execute(it) } else Completable.complete() }
       .subscribeOn(schedulers.io)
       .subscribeBy(
@@ -56,6 +65,10 @@ abstract class DelayedCommandSubject<T : DelayableState>(schedulers: SuplaSchedu
   }
 
   abstract fun execute(state: T): Completable
+
+  enum class Mode {
+    DEBOUNCE, SAMPLE
+  }
 }
 
 interface DelayableState {

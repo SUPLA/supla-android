@@ -62,10 +62,9 @@ import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.details.GpmDetailType
 import org.supla.android.usecases.details.ProvideChannelDetailTypeUseCase
-import org.supla.android.usecases.details.SwitchDetailType
+import org.supla.android.usecases.details.StandardDetailType
 import org.supla.android.usecases.details.ThermometerDetailType
 import org.supla.android.usecases.details.ThermostatDetailType
-import org.supla.android.usecases.details.WindowDetailType
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
@@ -262,19 +261,29 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   }
 
   @Test
-  fun `should not open RGB details when item is offline`() {
+  fun `should open RGB details when item is offline`() {
     // given
     val remoteId = 123
-    val channel = mockChannelData(remoteId, SuplaFunction.RGB_LIGHTING)
+    val deviceId = 234
+    val function = SuplaFunction.RGB_LIGHTING
+    val channel = mockChannelData(remoteId, function, deviceId)
     every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channel)
     every { dateProvider.currentTimestamp() } returns 500
+
+    val detailType = StandardDetailType(listOf())
+    every { provideDetailTypeUseCase(channel) } returns detailType
 
     // when
     viewModel.onListItemClick(remoteId)
 
     // then
     assertThat(states).isEmpty()
-    assertThat(events).isEmpty()
+    assertThat(events).containsExactly(
+      ChannelListViewEvent.OpenStandardDetail(ItemBundle(remoteId, deviceId, ItemType.CHANNEL, function), detailType.pages)
+    )
+
+    verify { provideDetailTypeUseCase(channel) }
+    confirmDependenciesVerified()
     confirmDependenciesVerified()
   }
 
@@ -288,7 +297,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val channel = mockChannelData(remoteId, function, deviceId, subValueType = SUBV_TYPE_IC_MEASUREMENTS.toShort())
     every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channel)
 
-    val detailType = SwitchDetailType(listOf())
+    val detailType = StandardDetailType(listOf())
     every { provideDetailTypeUseCase(channel) } returns detailType
     every { dateProvider.currentTimestamp() } returns 500
 
@@ -510,7 +519,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val channel = mockChannelData(remoteId, function, deviceId, SuplaChannelAvailabilityStatus.ONLINE)
     every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channel)
 
-    val rollerShutterDetail = WindowDetailType(pages)
+    val rollerShutterDetail = StandardDetailType(pages)
     every { provideDetailTypeUseCase(channel) } returns rollerShutterDetail
     every { dateProvider.currentTimestamp() } returns 500
 
@@ -537,7 +546,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val channel = mockChannelData(remoteId, function, deviceId)
     every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channel)
 
-    val rollerShutterDetail = WindowDetailType(pages)
+    val rollerShutterDetail = StandardDetailType(pages)
     every { provideDetailTypeUseCase(channel) } returns rollerShutterDetail
     every { dateProvider.currentTimestamp() } returns 500
 

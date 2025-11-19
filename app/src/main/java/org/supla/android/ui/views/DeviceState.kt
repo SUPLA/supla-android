@@ -55,7 +55,7 @@ fun DeviceState(stateLabel: String, icon: ImageId?, stateValue: String) =
   Row(
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.spacedBy(Distance.tiny),
-    modifier = Modifier.padding(top = Distance.default, bottom = Distance.default)
+    modifier = Modifier.padding(vertical = Distance.vertical)
   ) {
     Spacer(modifier = Modifier.weight(1f))
     Text(

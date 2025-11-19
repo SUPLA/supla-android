@@ -28,27 +28,20 @@ class DimmerAndRgbIconResourceProducer : IconResourceProducer {
     function == SuplaFunction.DIMMER_AND_RGB_LIGHTING
 
   override fun produce(data: IconData): Int? {
-    when (data.state.value) {
-      ChannelState.Value.COMPLEX -> {
-        if (data.state.complex?.size != 2) {
-          return null
-        }
-
-        val state1 = data.state.complex[0]
-        val state2 = data.state.complex[1]
-
-        return if (state1 == ChannelState.Value.ON && state2 == ChannelState.Value.ON) {
+    return when (data.state) {
+      is ChannelState.RgbAndDimmer -> {
+        if (data.state.dimmer == ChannelState.Value.ON && data.state.rgb == ChannelState.Value.ON) {
           R.drawable.fnc_dimmer_rgb_on_on
-        } else if (state1 == ChannelState.Value.OFF && state2 == ChannelState.Value.ON) {
+        } else if (data.state.dimmer == ChannelState.Value.OFF && data.state.rgb == ChannelState.Value.ON) {
           R.drawable.fnc_dimmer_rgb_off_on
-        } else if (state1 == ChannelState.Value.ON && state2 == ChannelState.Value.OFF) {
+        } else if (data.state.dimmer == ChannelState.Value.ON && data.state.rgb == ChannelState.Value.OFF) {
           R.drawable.fnc_dimmer_rgb_on_off
         } else {
           R.drawable.fnc_dimmer_rgb_off_off
         }
       }
 
-      else -> return null
+      else -> null
     }
   }
 }

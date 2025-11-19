@@ -24,6 +24,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
+import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
@@ -31,6 +32,9 @@ import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.features.details.detailbase.base.DetailPage
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
+import org.supla.android.lib.SuplaConst.SUPLA_MFR_DOYLETRATT
+import org.supla.android.lib.SuplaConst.SUPLA_MFR_ZAMEL
+import org.supla.android.lib.SuplaConst.ZAM_PRODID_DIW_01
 import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
@@ -41,39 +45,60 @@ class ProvideChannelDetailTypeUseCaseTest {
 
   @Test
   fun `should provide detail for dimmer`() {
-    testDetailType(SuplaFunction.DIMMER, LegacyDetailType.RGBW)
+    testDetailType(SuplaFunction.DIMMER, StandardDetailType(listOf(DetailPage.DIMMER)))
+  }
+
+  @Test
+  fun `should provide detail for dimmer with settings (DIW-01)`() {
+    testDetailType(SuplaFunction.DIMMER, StandardDetailType(listOf(DetailPage.DIMMER, DetailPage.LEGACY_RGBW))) {
+      val channel = it.channelEntity
+      every { channel.manufacturerId } returns SUPLA_MFR_ZAMEL.toShort()
+      every { channel.productId } returns ZAM_PRODID_DIW_01.toShort()
+    }
+  }
+
+  @Test
+  fun `should provide detail for dimmer with settings (Varilight)`() {
+    testDetailType(SuplaFunction.DIMMER, StandardDetailType(listOf(DetailPage.DIMMER, DetailPage.LEGACY_RGBW))) {
+      val channel = it.channelEntity
+      every { channel.manufacturerId } returns SUPLA_MFR_DOYLETRATT.toShort()
+      every { channel.productId } returns 1
+    }
   }
 
   @Test
   fun `should provide detail for dimmer and RGB`() {
-    testDetailType(SuplaFunction.DIMMER_AND_RGB_LIGHTING, LegacyDetailType.RGBW)
+    testDetailType(
+      SuplaFunction.DIMMER_AND_RGB_LIGHTING,
+      StandardDetailType(listOf(DetailPage.RGB, DetailPage.DIMMER))
+    )
   }
 
   @Test
   fun `should provide detail for RGB`() {
-    testDetailType(SuplaFunction.RGB_LIGHTING, LegacyDetailType.RGBW)
+    testDetailType(SuplaFunction.RGB_LIGHTING, StandardDetailType(listOf(DetailPage.RGB)))
   }
 
   @Test
   fun `should provide detail for roller shutter`() {
-    testDetailType(SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER, WindowDetailType(listOf(DetailPage.ROLLER_SHUTTER)))
+    testDetailType(SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER, StandardDetailType(listOf(DetailPage.ROLLER_SHUTTER)))
   }
 
   @Test
   fun `should provide detail for roof window`() {
-    testDetailType(SuplaFunction.CONTROLLING_THE_ROOF_WINDOW, WindowDetailType(listOf(DetailPage.ROOF_WINDOW)))
+    testDetailType(SuplaFunction.CONTROLLING_THE_ROOF_WINDOW, StandardDetailType(listOf(DetailPage.ROOF_WINDOW)))
   }
 
   @Test
   fun `should provide detail for facade blinds`() {
-    testDetailType(SuplaFunction.CONTROLLING_THE_FACADE_BLIND, WindowDetailType(listOf(DetailPage.FACADE_BLINDS)))
+    testDetailType(SuplaFunction.CONTROLLING_THE_FACADE_BLIND, StandardDetailType(listOf(DetailPage.FACADE_BLINDS)))
   }
 
   @Test
   fun `should provide detail for light switch with impulse counter`() {
     testDetailType(
       SuplaFunction.LIGHTSWITCH,
-      SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.IC_HISTORY))
+      StandardDetailType(listOf(DetailPage.SWITCH, DetailPage.IC_HISTORY))
     ) { channel ->
       val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_IC_MEASUREMENTS.toShort()
@@ -86,7 +111,7 @@ class ProvideChannelDetailTypeUseCaseTest {
   fun `should provide detail for power switch with impulse counter`() {
     testDetailType(
       SuplaFunction.POWER_SWITCH,
-      SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.IC_HISTORY))
+      StandardDetailType(listOf(DetailPage.SWITCH, DetailPage.IC_HISTORY))
     ) { channel ->
       val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_IC_MEASUREMENTS.toShort()
@@ -99,7 +124,7 @@ class ProvideChannelDetailTypeUseCaseTest {
   fun `should provide detail for stair case timer with impulse counter`() {
     testDetailType(
       SuplaFunction.STAIRCASE_TIMER,
-      SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.IC_HISTORY))
+      StandardDetailType(listOf(DetailPage.SWITCH, DetailPage.IC_HISTORY))
     ) { channel ->
       val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_IC_MEASUREMENTS.toShort()
@@ -112,7 +137,7 @@ class ProvideChannelDetailTypeUseCaseTest {
   fun `should provide detail for light switch with measurement`() {
     testDetailType(
       SuplaFunction.LIGHTSWITCH,
-      SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.EM_HISTORY, DetailPage.EM_SETTINGS))
+      StandardDetailType(listOf(DetailPage.SWITCH, DetailPage.EM_HISTORY, DetailPage.EM_SETTINGS))
     ) { channel ->
       val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
@@ -125,7 +150,7 @@ class ProvideChannelDetailTypeUseCaseTest {
   fun `should provide detail for power switch with measurement`() {
     testDetailType(
       SuplaFunction.POWER_SWITCH,
-      SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.EM_HISTORY, DetailPage.EM_SETTINGS))
+      StandardDetailType(listOf(DetailPage.SWITCH, DetailPage.EM_HISTORY, DetailPage.EM_SETTINGS))
     ) { channel ->
       val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
@@ -138,7 +163,7 @@ class ProvideChannelDetailTypeUseCaseTest {
   fun `should provide detail for stair case timer with measurement and without timer even if supported`() {
     testDetailType(
       SuplaFunction.STAIRCASE_TIMER,
-      SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.EM_HISTORY, DetailPage.EM_SETTINGS))
+      StandardDetailType(listOf(DetailPage.SWITCH, DetailPage.EM_HISTORY, DetailPage.EM_SETTINGS))
     ) { channel ->
       val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
@@ -151,7 +176,7 @@ class ProvideChannelDetailTypeUseCaseTest {
   fun `should provide detail for light switch with measurement and timer support`() {
     testDetailType(
       SuplaFunction.LIGHTSWITCH,
-      SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.SWITCH_TIMER, DetailPage.EM_HISTORY, DetailPage.EM_SETTINGS))
+      StandardDetailType(listOf(DetailPage.SWITCH, DetailPage.SWITCH_TIMER, DetailPage.EM_HISTORY, DetailPage.EM_SETTINGS))
     ) { channel ->
       val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
@@ -164,7 +189,7 @@ class ProvideChannelDetailTypeUseCaseTest {
   fun `should provide detail for power switch with measurement and timer support`() {
     testDetailType(
       SuplaFunction.POWER_SWITCH,
-      SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.SWITCH_TIMER, DetailPage.EM_HISTORY, DetailPage.EM_SETTINGS))
+      StandardDetailType(listOf(DetailPage.SWITCH, DetailPage.SWITCH_TIMER, DetailPage.EM_HISTORY, DetailPage.EM_SETTINGS))
     ) { channel ->
       val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
@@ -177,7 +202,7 @@ class ProvideChannelDetailTypeUseCaseTest {
   fun `should provide detail for stair case timer with measurement`() {
     testDetailType(
       SuplaFunction.STAIRCASE_TIMER,
-      SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.EM_HISTORY, DetailPage.EM_SETTINGS))
+      StandardDetailType(listOf(DetailPage.SWITCH, DetailPage.EM_HISTORY, DetailPage.EM_SETTINGS))
     ) { channel ->
       val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
@@ -188,7 +213,7 @@ class ProvideChannelDetailTypeUseCaseTest {
 
   @Test
   fun `should provide detail for light switch`() {
-    testDetailType(SuplaFunction.LIGHTSWITCH, SwitchDetailType(listOf(DetailPage.SWITCH))) { channel ->
+    testDetailType(SuplaFunction.LIGHTSWITCH, StandardDetailType(listOf(DetailPage.SWITCH))) { channel ->
       every { channel.channelValueEntity } returns mockk {
         every { subValueType } returns 0
       }
@@ -198,7 +223,7 @@ class ProvideChannelDetailTypeUseCaseTest {
 
   @Test
   fun `should provide detail for power switch`() {
-    testDetailType(SuplaFunction.POWER_SWITCH, SwitchDetailType(listOf(DetailPage.SWITCH))) { channel ->
+    testDetailType(SuplaFunction.POWER_SWITCH, StandardDetailType(listOf(DetailPage.SWITCH))) { channel ->
       every { channel.channelValueEntity } returns mockk {
         every { subValueType } returns 0
       }
@@ -208,7 +233,7 @@ class ProvideChannelDetailTypeUseCaseTest {
 
   @Test
   fun `should provide detail for stair case timer`() {
-    testDetailType(SuplaFunction.STAIRCASE_TIMER, SwitchDetailType(listOf(DetailPage.SWITCH))) { channel ->
+    testDetailType(SuplaFunction.STAIRCASE_TIMER, StandardDetailType(listOf(DetailPage.SWITCH))) { channel ->
       every { channel.channelValueEntity } returns mockk {
         every { subValueType } returns 0
       }
@@ -220,7 +245,7 @@ class ProvideChannelDetailTypeUseCaseTest {
   fun `should provide detail for electricity meter`() {
     testDetailType(
       SuplaFunction.ELECTRICITY_METER,
-      EmDetailType(listOf(DetailPage.EM_GENERAL, DetailPage.EM_HISTORY, DetailPage.EM_SETTINGS))
+      StandardDetailType(listOf(DetailPage.EM_GENERAL, DetailPage.EM_HISTORY, DetailPage.EM_SETTINGS))
     )
   }
 
@@ -295,10 +320,10 @@ class ProvideChannelDetailTypeUseCaseTest {
 
   @Test
   fun `should provide detail for gate`() {
-    testDetailType(SuplaFunction.CONTROLLING_THE_GATE, GateDetailType(listOf(DetailPage.GATE_GENERAL)))
-    testDetailType(SuplaFunction.CONTROLLING_THE_GARAGE_DOOR, GateDetailType(listOf(DetailPage.GATE_GENERAL)))
-    testDetailType(SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK, GateDetailType(listOf(DetailPage.GATE_GENERAL)))
-    testDetailType(SuplaFunction.CONTROLLING_THE_DOOR_LOCK, GateDetailType(listOf(DetailPage.GATE_GENERAL)))
+    testDetailType(SuplaFunction.CONTROLLING_THE_GATE, StandardDetailType(listOf(DetailPage.GATE_GENERAL)))
+    testDetailType(SuplaFunction.CONTROLLING_THE_GARAGE_DOOR, StandardDetailType(listOf(DetailPage.GATE_GENERAL)))
+    testDetailType(SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK, StandardDetailType(listOf(DetailPage.GATE_GENERAL)))
+    testDetailType(SuplaFunction.CONTROLLING_THE_DOOR_LOCK, StandardDetailType(listOf(DetailPage.GATE_GENERAL)))
   }
 
   @Test
@@ -326,32 +351,37 @@ class ProvideChannelDetailTypeUseCaseTest {
 
   @Test
   fun `should provide detail for terrace awning`() {
-    testDetailType(SuplaFunction.TERRACE_AWNING, WindowDetailType(listOf(DetailPage.TERRACE_AWNING)))
+    testDetailType(SuplaFunction.TERRACE_AWNING, StandardDetailType(listOf(DetailPage.TERRACE_AWNING)))
   }
 
   @Test
   fun `should provide detail for projector screen`() {
-    testDetailType(SuplaFunction.PROJECTOR_SCREEN, WindowDetailType(listOf(DetailPage.PROJECTOR_SCREEN)))
+    testDetailType(SuplaFunction.PROJECTOR_SCREEN, StandardDetailType(listOf(DetailPage.PROJECTOR_SCREEN)))
   }
 
   @Test
   fun `should provide detail for curtain`() {
-    testDetailType(SuplaFunction.CURTAIN, WindowDetailType(listOf(DetailPage.CURTAIN)))
+    testDetailType(SuplaFunction.CURTAIN, StandardDetailType(listOf(DetailPage.CURTAIN)))
   }
 
   @Test
   fun `should provide detail for vertical blind`() {
-    testDetailType(SuplaFunction.VERTICAL_BLIND, WindowDetailType(listOf(DetailPage.VERTICAL_BLIND)))
+    testDetailType(SuplaFunction.VERTICAL_BLIND, StandardDetailType(listOf(DetailPage.VERTICAL_BLIND)))
   }
 
   private fun testDetailType(function: SuplaFunction, result: DetailType?, extraMocks: ((ChannelDataEntity) -> Unit) = { }) {
     // given
-    val channel: ChannelDataEntity = mockk()
-    every { channel.function } returns function
-    extraMocks(channel)
+    val channel: ChannelEntity = mockk {
+      every { manufacturerId } returns 0
+      every { productId } returns 0
+    }
+    val channelData: ChannelDataEntity = mockk()
+    every { channelData.function } returns function
+    every { channelData.channelEntity } returns channel
+    extraMocks(channelData)
 
     // when
-    val detailType = useCase(ChannelWithChildren(channel, emptyList()))
+    val detailType = useCase(ChannelWithChildren(channelData, emptyList()))
 
     // then
     if (result == null) {

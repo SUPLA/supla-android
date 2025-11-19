@@ -230,7 +230,7 @@ class SwitchGeneralViewModel @Inject constructor(
 
   private fun getDeviceStateValue(data: ChannelDataBase) = when {
     data.status.offline -> localizedString(R.string.offline)
-    getChannelStateUseCase(data).isActive() -> localizedString(R.string.details_timer_device_on)
+    getChannelStateUseCase(data).isActive -> localizedString(R.string.details_timer_device_on)
     else -> localizedString(R.string.details_timer_device_off)
   }
 
@@ -276,7 +276,7 @@ class SwitchGeneralViewModel @Inject constructor(
   }
 
   private fun handleGroup(groupWithChannels: GroupWithChannels) {
-    val groupState: ChannelState.Value? = groupWithChannels.aggregatedState(ChannelState.Value.ON, ChannelState.Value.OFF)
+    val groupState: ChannelState.Value? = groupWithChannels.aggregatedState(GroupWithChannels.Policy.OnOff)
 
     updateState { state ->
       state.copy(
