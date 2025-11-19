@@ -54,6 +54,7 @@ import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.extensions.buttonBackground
 import org.supla.android.extensions.innerShadow
+import org.supla.android.images.ImageId
 
 @Composable
 fun SuplaButton(
@@ -81,6 +82,35 @@ fun SuplaButton(
         .size(dimensionResource(id = R.dimen.icon_default_size))
         .align(Alignment.Center),
       colorFilter = ColorFilter.tint(color = it),
+    )
+  }
+}
+
+@Composable
+fun SuplaButton(
+  icon: ImageId?,
+  modifier: Modifier = Modifier,
+  disabled: Boolean = false,
+  pressed: Boolean = false,
+  colors: SuplaButtonColors = SuplaButtonDefaults.buttonColors(),
+  shape: SuplaButtonShape = SuplaButtonDefaults.allRoundedShape(),
+  onClick: () -> Unit
+) {
+  SuplaButton(
+    onClick = onClick,
+    modifier = modifier,
+    disabled = disabled,
+    active = pressed,
+    shape = shape,
+    colors = colors
+  ) {
+    org.supla.android.ui.views.Image(
+      imageId = icon ?: ImageId(R.drawable.ic_unknown_channel),
+      contentDescription = null,
+      alignment = Alignment.Center,
+      modifier = Modifier
+        .size(dimensionResource(id = R.dimen.icon_default_size))
+        .align(Alignment.Center)
     )
   }
 }

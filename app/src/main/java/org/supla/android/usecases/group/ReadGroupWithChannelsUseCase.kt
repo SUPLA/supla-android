@@ -33,8 +33,13 @@ import org.supla.android.ui.lists.onlineState
 import org.supla.android.ui.lists.sensordata.RelatedChannelData
 import org.supla.android.usecases.channel.GetChannelChildrenTreeUseCase
 import org.supla.android.usecases.channel.GetChannelStateUseCase
+import org.supla.android.usecases.group.totalvalue.DimmerAndRgbGroupValue
+import org.supla.android.usecases.group.totalvalue.DimmerGroupValue
+import org.supla.android.usecases.group.totalvalue.GroupValue
 import org.supla.android.usecases.group.totalvalue.OpenedClosedGroupValue
+import org.supla.android.usecases.group.totalvalue.RgbGroupValue
 import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.core.shared.extensions.ifTrue
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import java.util.LinkedList
 import javax.inject.Inject
@@ -88,16 +93,9 @@ data class GroupWithChannels(
    * - `ChannelState.Value.NOT_USED` if there is a mixture of active and inactive channels
    * - null - if there is no channel in group
    */
-  fun aggregatedState(activeValue: ChannelState.Value, inactiveValue: ChannelState.Value): ChannelState.Value? =
+  fun aggregatedState(policy: Policy = Policy.OnOff): ChannelState.Value? =
     group.channelGroupEntity.groupTotalValues
-      .map { (it as? OpenedClosedGroupValue)?.active }
-      .map {
-        when (it) {
-          true -> activeValue
-          false -> inactiveValue
-          null -> ChannelState.Value.NOT_USED
-        }
-      }
+      .map { policy.map(it) }
       .fold(null) { acc, value ->
         when (acc) {
           null -> value
@@ -105,6 +103,38 @@ data class GroupWithChannels(
           else -> ChannelState.Value.NOT_USED
         }
       }
+
+  sealed interface Policy {
+    fun map(value: GroupValue): ChannelState.Value
+
+    object OnOff : Policy {
+      override fun map(value: GroupValue): ChannelState.Value =
+        (value as? OpenedClosedGroupValue)?.active?.ifTrue { ChannelState.Value.ON } ?: ChannelState.Value.OFF
+    }
+
+    object OpenClosed : Policy {
+      override fun map(value: GroupValue): ChannelState.Value =
+        (value as? OpenedClosedGroupValue)?.active?.ifTrue { ChannelState.Value.CLOSED } ?: ChannelState.Value.OPEN
+    }
+
+    object Dimmer : Policy {
+      override fun map(value: GroupValue): ChannelState.Value =
+        when (value) {
+          is DimmerGroupValue -> if (value.brightness == 0) ChannelState.Value.OFF else ChannelState.Value.ON
+          is DimmerAndRgbGroupValue -> if (value.brightness == 0) ChannelState.Value.OFF else ChannelState.Value.ON
+          else -> ChannelState.Value.OFF
+        }
+    }
+
+    object Rgb : Policy {
+      override fun map(value: GroupValue): ChannelState.Value =
+        when (value) {
+          is RgbGroupValue -> if (value.brightness == 0) ChannelState.Value.OFF else ChannelState.Value.ON
+          is DimmerAndRgbGroupValue -> if (value.brightnessColor == 0) ChannelState.Value.OFF else ChannelState.Value.ON
+          else -> ChannelState.Value.OFF
+        }
+    }
+  }
 }
 
 interface ChannelGroupRelationDataEntityConvertible {

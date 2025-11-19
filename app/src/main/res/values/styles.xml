@@ -54,28 +54,12 @@
     <item name="android:buttonTint">@color/primary</item>
   </style>
 
-  <style name="SegmentedButtonGroup">
-    <item name="android:background">@drawable/segment_group_background</item>
-  </style>
-
   <style name="SegmentedButtonGroupDayOnly">
     <item name="android:background">@drawable/segment_group_background_day_only</item>
   </style>
 
   <style name="SegmentedButton">
     <item name="android:background">@drawable/segmented_button_background</item>
-  </style>
-
-  <style name="Widget" />
-
-  <style name="Widget.SegmentedButton">
-    <item name="android:background">@drawable/segmented_button_widget_background</item>
-  </style>
-
-  <style name="Widget.SegmentedButton.Texted">
-    <item name="android:layout_margin">8dp</item>
-    <item name="android:padding">4dp</item>
-    <item name="android:textSize">16sp</item>
   </style>
 
   <style name="SuplaNumberPicker" parent="Theme.AppCompat.Light">

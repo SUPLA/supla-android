@@ -327,8 +327,7 @@ class GetChannelStateUseCaseTest {
     val state = useCase(channelData)
 
     // then
-    assertThat(state.value).isEqualTo(ChannelState.Value.COMPLEX)
-    assertThat(state.complex).containsExactly(ChannelState.Value.OFF, ChannelState.Value.OFF)
+    assertThat(state).isEqualTo(ChannelState.RgbAndDimmer(ChannelState.Value.OFF, ChannelState.Value.OFF))
   }
 
   @Test
@@ -340,8 +339,7 @@ class GetChannelStateUseCaseTest {
     val state = useCase(channelData)
 
     // then
-    assertThat(state.value).isEqualTo(ChannelState.Value.COMPLEX)
-    assertThat(state.complex).containsExactly(ChannelState.Value.OFF, ChannelState.Value.ON)
+    assertThat(state).isEqualTo(ChannelState.RgbAndDimmer(ChannelState.Value.OFF, ChannelState.Value.ON))
   }
 
   @Test
@@ -353,8 +351,7 @@ class GetChannelStateUseCaseTest {
     val state = useCase(channelData)
 
     // then
-    assertThat(state.value).isEqualTo(ChannelState.Value.COMPLEX)
-    assertThat(state.complex).containsExactly(ChannelState.Value.ON, ChannelState.Value.OFF)
+    assertThat(state).isEqualTo(ChannelState.RgbAndDimmer(ChannelState.Value.ON, ChannelState.Value.OFF))
   }
 
   @Test
@@ -366,8 +363,7 @@ class GetChannelStateUseCaseTest {
     val state = useCase(channelData)
 
     // then
-    assertThat(state.value).isEqualTo(ChannelState.Value.COMPLEX)
-    assertThat(state.complex).containsExactly(ChannelState.Value.ON, ChannelState.Value.ON)
+    assertThat(state).isEqualTo(ChannelState.RgbAndDimmer(ChannelState.Value.ON, ChannelState.Value.ON))
   }
 
   @Test
@@ -451,8 +447,7 @@ class GetChannelStateUseCaseTest {
     val state = useCase.invoke(channelData)
 
     // then
-    assertThat(state.value).isEqualTo(ChannelState.Value.COMPLEX)
-    assertThat(state.complex).containsExactly(ChannelState.Value.OFF, ChannelState.Value.OFF)
+    assertThat(state).isEqualTo(ChannelState.RgbAndDimmer(ChannelState.Value.OFF, ChannelState.Value.OFF))
   }
 
   @Test

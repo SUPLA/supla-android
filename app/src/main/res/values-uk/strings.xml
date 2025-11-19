@@ -25,7 +25,6 @@
   <string name="status_temporarily_unavailable">Послуга тимчасово недоступна</string>
   <string name="status_bad_credentials">Неправильні облікові дані</string>
   <string name="status_climit_exceded">Перевищено ліміт клієнтських додатків</string>
-  <string name="status_version_error">Несумісна версія сервера</string>
   <string name="status_reg_disabled">Реєстрація в даний час відключена. Увійдіть в \\\"Supla Cloud\\\" і переключіть реєстрацію клієнтів на АКТИВНУ на вкладці \\ \"Смартфони\\\".</string>
   <string name="status_access_id_not_assigned">Цьому пристрою не присвоєно ідентифікатор доступу. Перейдіть на сторінку \\\"Supla Cloud\\\" і на вкладці \\\"Смартфони\\\" призначте відповідний ідентифікатор.</string>
   <string name="status_device_disabled">Пристрій вимкнено. Увійдіть в \\\"Supla Cloud\\\" і включіть цей смартфон на вкладці \\\"Смартфони\\\".</string>
@@ -101,8 +100,6 @@
   <string name="wizard_no_internetwifi">Перш ніж почати, підключіться до Інтернету через Wi-Fi, який також використовуватиметься виконуючими пристроями для підключення до сервера.</string>
   <string name="wizard_wifi_error">Wi-Fi вимкнено або не може прочитати свій ідентифікатор чи назву!</string>
   <string name="wizard_location_error">Для коректної роботи майстра додавання повинна бути ввімкнена функція Місцезнаходження на цьому пристрої. Перейдіть до налаштувань системи, оберіть опцію "Місцезнаходження" та переконайтеся, що вона увімкнена.</string>
-  <string name="wizard_addnetwork_error">Неможливо додати конфігурацію Wi-Fi!</string>
-  <string name="wizard_wifi_timeout">Минув час очікування даних про поточну мережу Wi-Fi! Перейдіть до налаштувань Wi-Fi в системі Android, оберіть пункт "Додатково", а потім поставте галочку навпроти опції "Вмикати Wi-Fi автоматично".</string>
   <string name="wizard_scan_timeout">Минув час очікування завершення сканування мережі Wi-Fi!</string>
   <string name="wizard_connect_timeout">Минув час очікування встановлення з\'єднання з пристроєм виконання!</string>
   <string name="wizard_configure_timeout">Час очікування завершення налаштування пристрою минув!</string>
@@ -110,7 +107,6 @@
   <string name="device_reg_request_timeout">Минув час очікування інформації про наявність реєстрації пристрою!</string>
   <string name="wizard_iodev_name">Назва</string>
   <string name="wizard_iodev_laststate">Попередній статус</string>
-  <string name="wizard_result_param_error">Неправильні вхідні параметри!</string>
   <string name="wizard_result_compat_error">Підключений пристрій несумісний із цим майстром!</string>
   <string name="wizard_result_conn_error">Неможливо підключитися до пристрою!</string>
   <string name="wizard_result_failed">Помилка налаштування!</string>
@@ -118,7 +114,6 @@
   <string name="hp_on">УВІМКНЕНИЙ</string>
   <string name="hp_off">ВИМКНЕНИЙ</string>
   <string name="hp_eco">ЕКО</string>
-  <string name="hp_room_temperature">Температура в приміщенні</string>
   <string name="hp_cfg_temp_comfort_auto">Комфортна температура в режимі AUTO</string>
   <string name="hp_calendar_comfort">Комфорт</string>
   <string name="hp_calendar_eco">ЕКО</string>
@@ -133,7 +128,6 @@
   <string name="ranking_of_hours">Рейтинг годин</string>
   <string name="ranking_of_weekdays">Рейтинг днів тижня</string>
   <string name="ranking_of_months">Рейтинг місяців</string>
-  <string name="consumption_acording_to_phases">Споживання за фазою</string>
   <string name="humidity">Вологість</string>
   <string name="history_range_last_day">Останні 24 години</string>
   <string name="history_range_last_week">Останні 7 днів</string>
@@ -143,20 +137,12 @@
   <string name="all_available_history">Вся історія доступна</string>
   <string name="retrieving_data_from_the_server">Завантаження даних із сервера...</string>
   <string name="no_chart_data_available">Немає даних для діаграми.</string>
-  <string name="em_chart_phase_n">Фаза %d</string>
   <string name="em_chart_all_phases">Фаза 1+2+3</string>
-  <string name="comparsion_minmin">Похвилинне порівняння</string>
-  <string name="comparsion_hourhour">Погодинне порівняння</string>
-  <string name="comparsion_dayday">Порівняння за день</string>
-  <string name="comparsion_monthmonth">Порівняння за місяць</string>
-  <string name="comparsion_yearyear">Порівняння за рік</string>
   <string name="hp_error_1">Нестача води</string>
   <string name="hp_error_2">Згорів обігрівач</string>
   <string name="hp_error_3">Помилка датчика температури води</string>
   <string name="hp_error_4">Помилка датчика температури в приміщенні</string>
   <string name="hp_error_5">Відсутність перебоїв у роботі мережі</string>
-  <string name="current_production">Виробництво поточного місяця</string>
-  <string name="production_acording_to_phases">Виробництво за фазою</string>
   <string name="enter_superuser_credentials">Введіть облікові дані основного користувача</string>
   <string name="channel_func_none">Немає функції</string>
   <string name="channel_func_controllingthegatewaylock">Відкриття воріт</string>
@@ -234,25 +220,10 @@
   <string name="has_schedule_error">Ви не можете змінити функції каналу, який має розклад.</string>
   <string name="associeted_with_scene_error">Ви не можете змінити функцію каналу, пов’язаного зі сценою.</string>
   <string name="event_openedclosedthevalve">Відкриття/закриття клапана</string>
-  <string name="aritmetic_balance_minutes">Арифметичний баланс - Хвилини</string>
-  <string name="aritmetic_balance_hours">Арифметичний баланс - Години</string>
-  <string name="aritmetic_balance_days">Арифметичний баланс - Дні</string>
-  <string name="aritmetic_balance_months">Арифметичний баланс - Місяці</string>
-  <string name="aritmetic_balance_years">Арифметичний баланс - Роки</string>
-  <string name="vector_balance_minutes">Векторний баланс - Хвилини</string>
-  <string name="vector_balance_hours">Векторний баланс - Години</string>
-  <string name="vector_balance_days">Векторний баланс - Дні</string>
-  <string name="vector_balance_months">Векторний баланс - Місяці</string>
-  <string name="vector_balance_years">Векторний баланс - Роки</string>
   <string name="wheel">Коло</string>
   <string name="slider">Застібка</string>
   <string name="vl_cfg_boost">Посилення</string>
   <string name="information">Інформація</string>
-  <string name="vl_dimmer_info_txt1">Регулювання яскравості освітлення</string>
-  <string name="vl_dimmer_info_txt2">Щоб змінити рівень яскравості, проведіть пальцем по повзунку або колесу яскравості.</string>
-  <string name="vl_dimmer_info_txt3">За допомогою кнопки ввімкнути/вимкнути освітлення можна вимкнути або повністю ввімкнути.</string>
-  <string name="vl_dimmer_info_txt4">Регулятор освітлення запам\'ятає рівень яскравості перед тим, як вимкнути освітлення.</string>
-  <string name="vl_dimmer_info_txt5">Щоб налаштувати параметри регулятора освітлення, натисніть кнопку налаштувань.</string>
   <string name="vl_dimmer_cfg_info_txt1">Режим затемнення / Робочий діапазон</string>
   <string name="vl_dimmer_cfg_info_txt2">Відрегулюйте ефективність затемнення світлодіодного освітлення, вибравши відповідний режим. Також відрегулюйте робочий діапазон регулятора освітлення, встановивши мінімальний і максимальний рівень яскравості. Мінімальне і максимальне значення можна встановити, пересуваючи повзунки, розташовані по обидва боки колеса.</string>
   <string name="vl_dimmer_cfg_info_txt3">Режим 1: Затемнення по спадаючій лінії (V-Pro)</string>
@@ -279,13 +250,11 @@
   <string name="channel_uv_error">Термін служби УФ-випромінювача %1$.01f%%. Замінити випромінювач.</string>
   <string name="add_wizard_step_2_message">Введіть ім\'я та пароль вашої домашньої або корпоративної Wi-Fi мережі, через яку виконавчий пристрій зможе встановити з\'єднання з сервером.</string>
   <string name="enabling_registration_timeout">Час реєстрації минув!</string>
-  <string name="wifi_throttling">Через обмеження сканування мереж Wi-Fi, встановлені системою Android, будь ласка, зачекайте вказаний вище час.</string>
   <string name="enter_suplaorg_credentails">Введіть дані для входу в Supla Cloud.</string>
   <string name="save_without_saving">Ви впевнені, що хочете вийти без запису?</string>
   <string name="do_you_want_to_save">Хочете зберегти налаштування?</string>
   <string name="restoring_default_settings">Відновлення налаштувань за замовчуванням триває</string>
   <string name="mode_change_in_progress">Триває зміна режиму</string>
-  <string name="wizard_step1_txt2">Під час додавання пристроїв переконайтеся, що мобільний трансфер даних вимкнено. В іншому випадку додавання може завершитися помилкою.</string>
   <string name="zwave_waiting_for_resposne_timeout">Час очікування відповіді моста z-wave минув.</string>
   <string name="zwave_unexpected_answer">Несподівана відповідь з мосту. Код: %1$s</string>
   <string name="zwave_device_communication_error">Виникла проблема зв’язку з пристроєм z-wave. Переконайтеся, що ваш пристрій z-wave знаходиться в зоні дії шлюзу.</string>
@@ -326,7 +295,6 @@
   <string name="info_led_alwaysoff">Світлодіодний індикатор завжди вимкнений, якщо пристрій не перебуває в режимі налаштування Wi-Fi (режим AP).</string>
   <string name="monostable">Моностабільний</string>
   <string name="bistable">Бістабільний</string>
-  <string name="wizard_iodev_connect_failed">Спроба встановити Wi-Fi-з\'єднання з приводом не вдалася.</string>
   <string name="diw_cfg_info_oprange">Відрегулюйте робочий діапазон регулятора яскравості, встановивши мінімальний і максимальний рівень яскравості. Мінімальне і максимальне значення можна встановити, пересуваючи повзунки, розташовані по обидва боки колеса.</string>
   <string name="diw_cfg_info_in_options">Параметри введення</string>
   <string name="diw_cfg_info_mono_option">Параметр змінює поведінку входу, до якого підключено моностабільну кнопку. Коли опція вимкнена, регулятор припиняє процес освітлення, коли досягає максимального рівня яскравості, а в разі затемнення – коли досягає мінімального рівня. Увімкнення цієї опції призведе до переходу на мінімальний рівень одразу після досягнення максимальної яскравості, а у разі затемнення до максимального значення – відразу після досягнення мінімальної. Затухання триватиме, поки натиснуто кнопку.</string>
@@ -421,7 +389,6 @@
   <string name="widget_configure_type_channel_label">Каналу</string>
   <string name="status_led">Світлодіодний індикатор стану</string>
   <string name="input">Вхід</string>
-  <string name="str_default">За замовчуванням</string>
   <string name="overcurrent_warning">Відключення живлення відбулося після перевищення встановленого порогу допустимої сили струму.</string>
   <string name="overcurrent_question">Живлення відключено після перевищення встановленого порогу допустимої сили струму. Ви впевнені, що хочете увімкнути живлення ?</string>
   <string name="roller_shutter_start_calibration_message">Ви впевнені, що хочете почати калібрування?</string>
@@ -638,7 +605,6 @@
   <string name="details_em_balance_hourly">Погодинний баланс</string>
   <string name="details_em_balance_chart_aggregated">Агрегований баланс у вигляді діаграми</string>
   <string name="details_em_sum">Сума</string>
-  <string name="details_em_select_range">Виберіть період</string>
   <string name="details_em_active_energy">Активна енергія</string>
   <string name="details_em_forwarded_energy">Використана</string>
   <string name="details_em_reversed_energy">Повернена</string>
@@ -695,10 +661,6 @@
   <string name="developer_info_activated">Режим розробника активовано</string>
   <string name="developer_info_screen_orientation">Обертання екрана ввімкнено</string>
   <string name="developer_info_settings">Експериментальні налаштування</string>
-  <string name="profiles_list_sorting">Сортування</string>
-  <string name="profiles_list_sorting_default">За замовчуванням</string>
-  <string name="profiles_list_sorting_name">Назва</string>
-  <string name="profiles_list_sorting_added">Останнє додавання</string>
   <string name="channel_caption_water_tank">Бак для води</string>
   <string name="channel_caption_container_level_sensor">Датчик рівня контейнера</string>
   <string name="state_opened">відкрито</string>
@@ -731,4 +693,11 @@
     <item quantity="other">%1$d дня ⏱️</item>
   </plurals>
   <string name="thermostat_calibration_error">Помилка калібрування</string>
+  <string name="toolbar_dimmer">Диммер</string>
+  <string name="rgb_detail_color">Колір:</string>
+  <string name="rgb_detail_brightness">Яскравість:</string>
+  <string name="rgb_detail_select_color">Виберіть колір</string>
+  <string name="legacy_rgbw_settings_unauthorized_message">Необхідна авторизація для перегляду конфігурації!</string>
+  <string name="legacy_rgbw_settings_authorize_button">Авторизувати</string>
+  <string name="rgb_detail_colors_limit">Ліміт досягнуто!</string>
 </resources>

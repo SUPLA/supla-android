@@ -96,7 +96,7 @@ class GetChannelIconUseCaseTest {
     val function = SUPLA_CHANNELFNC_LIGHTSWITCH
     val userIconId = 0
     val altIcon = 1
-    val channelState = ChannelState(ChannelState.Value.ON)
+    val channelState = ChannelState.Default(ChannelState.Value.ON)
     val resourceId = 123
 
     val channelBase = mockChannelBase(function, userIconId, altIcon, 0)
@@ -121,7 +121,7 @@ class GetChannelIconUseCaseTest {
     val function = SuplaFunction.LIGHTSWITCH
     val userIconId = 0
     val altIcon = 1
-    val channelState = ChannelState(ChannelState.Value.ON)
+    val channelState = ChannelState.Default(ChannelState.Value.ON)
     val resourceId = 123
 
     val channelDataEntity = mockChannelDataEntity(function, userIconId, altIcon, 0)
@@ -146,7 +146,7 @@ class GetChannelIconUseCaseTest {
     val function = SUPLA_CHANNELFNC_LIGHTSWITCH
     val userIconId = 5
     val altIcon = 1
-    val channelState = ChannelState(ChannelState.Value.ON)
+    val channelState = ChannelState.Default(ChannelState.Value.ON)
     val profileId = 212L
 
     val channelBase = mockChannelBase(function, userIconId, altIcon, profileId)
@@ -171,7 +171,7 @@ class GetChannelIconUseCaseTest {
     val function = SuplaFunction.LIGHTSWITCH
     val userIconId = 5
     val altIcon = 1
-    val channelState = ChannelState(ChannelState.Value.ON)
+    val channelState = ChannelState.Default(ChannelState.Value.ON)
     val profileId = 212L
 
     val channelDataEntity = mockChannelDataEntity(function, userIconId, altIcon, profileId)
@@ -196,7 +196,7 @@ class GetChannelIconUseCaseTest {
     val function = SUPLA_CHANNELFNC_LIGHTSWITCH
     val userIconId = 5
     val altIcon = 1
-    val channelState = ChannelState(ChannelState.Value.OFF)
+    val channelState = ChannelState.Default(ChannelState.Value.OFF)
     val profileId = 212L
 
     val channelBase = mockChannelBase(function, userIconId, altIcon, profileId)
@@ -221,7 +221,7 @@ class GetChannelIconUseCaseTest {
     val function = SuplaFunction.LIGHTSWITCH
     val userIconId = 5
     val altIcon = 1
-    val channelState = ChannelState(ChannelState.Value.OFF)
+    val channelState = ChannelState.Default(ChannelState.Value.OFF)
     val profileId = 212L
 
     val channelDataEntity = mockChannelDataEntity(function, userIconId, altIcon, profileId)
@@ -246,7 +246,7 @@ class GetChannelIconUseCaseTest {
     val function = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
     val userIconId = 5
     val altIcon = 1
-    val channelState = ChannelState(ChannelState.Value.OFF)
+    val channelState = ChannelState.Default(ChannelState.Value.OFF)
     val profileId = 212L
 
     val stateWrapper: ValueStateWrapper = mockk()
@@ -272,7 +272,7 @@ class GetChannelIconUseCaseTest {
     val function = SuplaFunction.HUMIDITY_AND_TEMPERATURE
     val userIconId = 5
     val altIcon = 1
-    val channelState = ChannelState(ChannelState.Value.OFF)
+    val channelState = ChannelState.Default(ChannelState.Value.OFF)
     val profileId = 212L
 
     val channelDataEntity = mockChannelDataEntity(function, userIconId, altIcon, profileId)
@@ -297,7 +297,7 @@ class GetChannelIconUseCaseTest {
     val function = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
     val userIconId = 5
     val altIcon = 1
-    val channelState = ChannelState(ChannelState.Value.OFF)
+    val channelState = ChannelState.Default(ChannelState.Value.OFF)
     val profileId = 212L
 
     val channelBase = mockChannelBase(function, userIconId, altIcon, profileId)
@@ -322,7 +322,7 @@ class GetChannelIconUseCaseTest {
     val function = SuplaFunction.HUMIDITY_AND_TEMPERATURE
     val userIconId = 5
     val altIcon = 1
-    val channelState = ChannelState(ChannelState.Value.OFF)
+    val channelState = ChannelState.Default(ChannelState.Value.OFF)
     val profileId = 212L
 
     val channelDataEntity = mockChannelDataEntity(function, userIconId, altIcon, profileId)
@@ -347,7 +347,7 @@ class GetChannelIconUseCaseTest {
     val function = SUPLA_CHANNELFNC_THERMOMETER
     val userIconId = 5
     val altIcon = 1
-    val channelState = ChannelState(ChannelState.Value.OFF)
+    val channelState = ChannelState.Default(ChannelState.Value.OFF)
     val profileId = 212L
 
     val channelBase = mockChannelBase(function, userIconId, altIcon, profileId)
@@ -372,7 +372,7 @@ class GetChannelIconUseCaseTest {
     val function = SuplaFunction.THERMOMETER
     val userIconId = 5
     val altIcon = 1
-    val channelState = ChannelState(ChannelState.Value.OFF)
+    val channelState = ChannelState.Default(ChannelState.Value.OFF)
     val profileId = 212L
 
     val channelDataEntity = mockChannelDataEntity(function, userIconId, altIcon, profileId)
@@ -397,7 +397,7 @@ class GetChannelIconUseCaseTest {
     val function = SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR
     val userIconId = 5
     val altIcon = 1
-    val channelState = ChannelState(ChannelState.Value.CLOSED)
+    val channelState = ChannelState.Default(ChannelState.Value.CLOSED)
     val profileId = 212L
 
     val channelBase = mockChannelBase(function, userIconId, altIcon, profileId)
@@ -422,7 +422,7 @@ class GetChannelIconUseCaseTest {
     val function = SuplaFunction.CONTROLLING_THE_GARAGE_DOOR
     val userIconId = 5
     val altIcon = 1
-    val channelState = ChannelState(ChannelState.Value.CLOSED)
+    val channelState = ChannelState.Default(ChannelState.Value.CLOSED)
     val profileId = 212L
 
     val channelDataEntity = mockChannelDataEntity(function, userIconId, altIcon, profileId)
@@ -447,7 +447,7 @@ class GetChannelIconUseCaseTest {
     val function = SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR
     val userIconId = 5
     val altIcon = 1
-    val channelState = ChannelState(ChannelState.Value.OPEN)
+    val channelState = ChannelState.Default(ChannelState.Value.OPEN)
     val profileId = 212L
 
     val channelBase = mockChannelBase(function, userIconId, altIcon, profileId)
@@ -472,7 +472,7 @@ class GetChannelIconUseCaseTest {
     val function = SuplaFunction.CONTROLLING_THE_GARAGE_DOOR
     val userIconId = 5
     val altIcon = 1
-    val channelState = ChannelState(ChannelState.Value.OPEN)
+    val channelState = ChannelState.Default(ChannelState.Value.OPEN)
     val profileId = 212L
 
     val channelDataEntity = mockChannelDataEntity(function, userIconId, altIcon, profileId)
@@ -497,7 +497,7 @@ class GetChannelIconUseCaseTest {
     val function = SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR
     val userIconId = 5
     val altIcon = 1
-    val channelState = ChannelState(ChannelState.Value.PARTIALLY_OPENED)
+    val channelState = ChannelState.Default(ChannelState.Value.PARTIALLY_OPENED)
     val profileId = 212L
 
     val channelBase = mockChannelBase(function, userIconId, altIcon, profileId)
@@ -522,7 +522,7 @@ class GetChannelIconUseCaseTest {
     val function = SuplaFunction.CONTROLLING_THE_GARAGE_DOOR
     val userIconId = 5
     val altIcon = 1
-    val channelState = ChannelState(ChannelState.Value.PARTIALLY_OPENED)
+    val channelState = ChannelState.Default(ChannelState.Value.PARTIALLY_OPENED)
     val profileId = 212L
 
     val channelDataEntity = mockChannelDataEntity(function, userIconId, altIcon, profileId)
@@ -546,7 +546,7 @@ class GetChannelIconUseCaseTest {
     // given
     val function = SuplaFunction.DIMMER_AND_RGB_LIGHTING
     val userIconId = 5
-    val channelState = ChannelState(ChannelState.Value.COMPLEX, listOf(ChannelState.Value.OFF, ChannelState.Value.OFF))
+    val channelState = ChannelState.RgbAndDimmer(ChannelState.Value.OFF, ChannelState.Value.OFF)
     val profileId = 212L
 
     val channelDataEntity = mockChannelDataEntity(function, userIconId, 0, profileId)
@@ -570,7 +570,7 @@ class GetChannelIconUseCaseTest {
     // given
     val function = SuplaFunction.DIMMER_AND_RGB_LIGHTING
     val userIconId = 5
-    val channelState = ChannelState(ChannelState.Value.COMPLEX, listOf(ChannelState.Value.ON, ChannelState.Value.OFF))
+    val channelState = ChannelState.RgbAndDimmer(ChannelState.Value.ON, ChannelState.Value.OFF)
     val profileId = 212L
 
     val channelDataEntity = mockChannelDataEntity(function, userIconId, 0, profileId)
@@ -594,7 +594,7 @@ class GetChannelIconUseCaseTest {
     // given
     val function = SuplaFunction.DIMMER_AND_RGB_LIGHTING
     val userIconId = 5
-    val channelState = ChannelState(ChannelState.Value.COMPLEX, listOf(ChannelState.Value.OFF, ChannelState.Value.ON))
+    val channelState = ChannelState.RgbAndDimmer(ChannelState.Value.OFF, ChannelState.Value.ON)
     val profileId = 212L
 
     val channelDataEntity = mockChannelDataEntity(function, userIconId, 0, profileId)
@@ -618,7 +618,7 @@ class GetChannelIconUseCaseTest {
     // given
     val function = SuplaFunction.DIMMER_AND_RGB_LIGHTING
     val userIconId = 5
-    val channelState = ChannelState(ChannelState.Value.COMPLEX, listOf(ChannelState.Value.ON, ChannelState.Value.ON))
+    val channelState = ChannelState.RgbAndDimmer(ChannelState.Value.ON, ChannelState.Value.ON)
     val profileId = 212L
 
     val channelDataEntity = mockChannelDataEntity(function, userIconId, 0, profileId)
@@ -642,7 +642,7 @@ class GetChannelIconUseCaseTest {
     // given
     val function = SuplaFunction.DIMMER_AND_RGB_LIGHTING
     val userIconId = 5
-    val channelState = ChannelState(ChannelState.Value.ON)
+    val channelState = ChannelState.Default(ChannelState.Value.ON)
     val profileId = 212L
 
     val channelDataEntity = mockChannelDataEntity(function, userIconId, 0, profileId)

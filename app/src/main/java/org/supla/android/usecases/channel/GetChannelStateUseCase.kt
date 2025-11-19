@@ -92,11 +92,11 @@ class GetChannelStateUseCase @Inject constructor(
       SuplaFunction.CURTAIN,
       SuplaFunction.VERTICAL_BLIND,
       SuplaFunction.ROLLER_GARAGE_DOOR ->
-        if (value.shadingSystemClosed) ChannelState(ChannelState.Value.CLOSED) else ChannelState(ChannelState.Value.OPEN)
+        ChannelState.Default(if (value.shadingSystemClosed) ChannelState.Value.CLOSED else ChannelState.Value.OPEN)
 
       SuplaFunction.TERRACE_AWNING,
       SuplaFunction.PROJECTOR_SCREEN ->
-        if (value.shadingSystemReversedClosed) ChannelState(ChannelState.Value.CLOSED) else ChannelState(ChannelState.Value.OPEN)
+        ChannelState.Default(if (value.shadingSystemReversedClosed) ChannelState.Value.CLOSED else ChannelState.Value.OPEN)
 
       SuplaFunction.OPEN_SENSOR_GATEWAY,
       SuplaFunction.OPEN_SENSOR_GATE,
@@ -130,21 +130,21 @@ class GetChannelStateUseCase @Inject constructor(
         val first = if (value.brightness > 0) ChannelState.Value.ON else ChannelState.Value.OFF
         val second = if (value.colorBrightness > 0) ChannelState.Value.ON else ChannelState.Value.OFF
 
-        ChannelState(ChannelState.Value.COMPLEX, listOf(first, second))
+        ChannelState.RgbAndDimmer(first, second)
       }
 
       SuplaFunction.DIGIGLASS_HORIZONTAL,
       SuplaFunction.DIGIGLASS_VERTICAL ->
         if (value.transparent) {
-          ChannelState(ChannelState.Value.TRANSPARENT)
+          ChannelState.Default(ChannelState.Value.TRANSPARENT)
         } else {
-          ChannelState(ChannelState.Value.OPAQUE)
+          ChannelState.Default(ChannelState.Value.OPAQUE)
         }
 
       SuplaFunction.HVAC_THERMOSTAT -> {
         when (value.thermostatSubfunction) {
-          ThermostatSubfunction.HEAT -> ChannelState(ChannelState.Value.HEAT)
-          else -> ChannelState(ChannelState.Value.COOL)
+          ThermostatSubfunction.HEAT -> ChannelState.Default(ChannelState.Value.HEAT)
+          else -> ChannelState.Default(ChannelState.Value.COOL)
         }
       }
 
@@ -152,9 +152,9 @@ class GetChannelStateUseCase @Inject constructor(
       SuplaFunction.SEPTIC_TANK,
       SuplaFunction.WATER_TANK ->
         when {
-          value.containerValue.level > 80 -> ChannelState(ChannelState.Value.FULL)
-          value.containerValue.level > 20 -> ChannelState(ChannelState.Value.HALF)
-          else -> ChannelState(ChannelState.Value.EMPTY)
+          value.containerValue.level > 80 -> ChannelState.Default(ChannelState.Value.FULL)
+          value.containerValue.level > 20 -> ChannelState.Default(ChannelState.Value.HALF)
+          else -> ChannelState.Default(ChannelState.Value.EMPTY)
         }
 
       SuplaFunction.UNKNOWN,
@@ -180,31 +180,31 @@ class GetChannelStateUseCase @Inject constructor(
       SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
       SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
       SuplaFunction.GENERAL_PURPOSE_MEASUREMENT,
-      SuplaFunction.GENERAL_PURPOSE_METER -> ChannelState(ChannelState.Value.NOT_USED)
+      SuplaFunction.GENERAL_PURPOSE_METER -> ChannelState.Default(ChannelState.Value.NOT_USED)
     }
   }
 
   private fun getOpenClose(value: Int) =
     if ((value and 0x2) == 0x2 && (value and 0x1) == 0) {
-      ChannelState(ChannelState.Value.PARTIALLY_OPENED)
+      ChannelState.Default(ChannelState.Value.PARTIALLY_OPENED)
     } else if (value > 0) {
-      ChannelState(ChannelState.Value.CLOSED)
+      ChannelState.Default(ChannelState.Value.CLOSED)
     } else {
-      ChannelState(ChannelState.Value.OPEN)
+      ChannelState.Default(ChannelState.Value.OPEN)
     }
 
   private fun getOpenClose(isClosed: Boolean) =
     if (isClosed) {
-      ChannelState(ChannelState.Value.CLOSED)
+      ChannelState.Default(ChannelState.Value.CLOSED)
     } else {
-      ChannelState(ChannelState.Value.OPEN)
+      ChannelState.Default(ChannelState.Value.OPEN)
     }
 
   private fun getOnOff(isOn: Boolean) =
     if (isOn) {
-      ChannelState(ChannelState.Value.ON)
+      ChannelState.Default(ChannelState.Value.ON)
     } else {
-      ChannelState(ChannelState.Value.OFF)
+      ChannelState.Default(ChannelState.Value.OFF)
     }
 
   companion object {
@@ -231,10 +231,10 @@ class GetChannelStateUseCase @Inject constructor(
         SuplaFunction.VALVE_PERCENTAGE,
         SuplaFunction.CURTAIN,
         SuplaFunction.VERTICAL_BLIND,
-        SuplaFunction.ROLLER_GARAGE_DOOR -> ChannelState(ChannelState.Value.OPEN)
+        SuplaFunction.ROLLER_GARAGE_DOOR -> ChannelState.Default(ChannelState.Value.OPEN)
 
         SuplaFunction.TERRACE_AWNING,
-        SuplaFunction.PROJECTOR_SCREEN -> ChannelState(ChannelState.Value.CLOSED)
+        SuplaFunction.PROJECTOR_SCREEN -> ChannelState.Default(ChannelState.Value.CLOSED)
 
         SuplaFunction.POWER_SWITCH,
         SuplaFunction.STAIRCASE_TIMER,
@@ -251,24 +251,24 @@ class GetChannelStateUseCase @Inject constructor(
         SuplaFunction.CONTAINER_LEVEL_SENSOR,
         SuplaFunction.FLOOD_SENSOR,
         SuplaFunction.MOTION_SENSOR,
-        SuplaFunction.BINARY_SENSOR -> ChannelState(ChannelState.Value.OFF)
+        SuplaFunction.BINARY_SENSOR -> ChannelState.Default(ChannelState.Value.OFF)
 
         SuplaFunction.DIMMER_AND_RGB_LIGHTING ->
-          ChannelState(ChannelState.Value.COMPLEX, listOf(ChannelState.Value.OFF, ChannelState.Value.OFF))
+          ChannelState.RgbAndDimmer(ChannelState.Value.OFF, ChannelState.Value.OFF)
 
         SuplaFunction.DIGIGLASS_HORIZONTAL,
         SuplaFunction.DIGIGLASS_VERTICAL ->
-          ChannelState(ChannelState.Value.OPAQUE)
+          ChannelState.Default(ChannelState.Value.OPAQUE)
 
         SuplaFunction.HVAC_THERMOSTAT ->
           when (thermostatSubfunction) {
-            ThermostatSubfunction.HEAT -> ChannelState(ChannelState.Value.HEAT)
-            else -> ChannelState(ChannelState.Value.COOL)
+            ThermostatSubfunction.HEAT -> ChannelState.Default(ChannelState.Value.HEAT)
+            else -> ChannelState.Default(ChannelState.Value.COOL)
           }
 
         SuplaFunction.CONTAINER,
         SuplaFunction.SEPTIC_TANK,
-        SuplaFunction.WATER_TANK -> ChannelState(ChannelState.Value.EMPTY)
+        SuplaFunction.WATER_TANK -> ChannelState.Default(ChannelState.Value.EMPTY)
 
         SuplaFunction.UNKNOWN,
         SuplaFunction.NONE,
@@ -293,7 +293,7 @@ class GetChannelStateUseCase @Inject constructor(
         SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
         SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
         SuplaFunction.GENERAL_PURPOSE_MEASUREMENT,
-        SuplaFunction.GENERAL_PURPOSE_METER -> ChannelState(ChannelState.Value.NOT_USED)
+        SuplaFunction.GENERAL_PURPOSE_METER -> ChannelState.Default(ChannelState.Value.NOT_USED)
       }
     }
 
@@ -323,17 +323,17 @@ class GetChannelStateUseCase @Inject constructor(
         SuplaFunction.VERTICAL_BLIND,
         SuplaFunction.ROLLER_GARAGE_DOOR ->
           if (actionId == ActionId.CLOSE || actionId == ActionId.SHUT) {
-            ChannelState(ChannelState.Value.CLOSED)
+            ChannelState.Default(ChannelState.Value.CLOSED)
           } else {
-            ChannelState(ChannelState.Value.OPEN)
+            ChannelState.Default(ChannelState.Value.OPEN)
           }
 
         SuplaFunction.TERRACE_AWNING,
         SuplaFunction.PROJECTOR_SCREEN ->
           if (actionId == ActionId.COLLAPSE) {
-            ChannelState(ChannelState.Value.CLOSED)
+            ChannelState.Default(ChannelState.Value.CLOSED)
           } else {
-            ChannelState(ChannelState.Value.OPEN)
+            ChannelState.Default(ChannelState.Value.OPEN)
           }
 
         SuplaFunction.POWER_SWITCH,
@@ -353,31 +353,31 @@ class GetChannelStateUseCase @Inject constructor(
         SuplaFunction.MOTION_SENSOR,
         SuplaFunction.BINARY_SENSOR ->
           if (actionId == ActionId.TURN_OFF) {
-            ChannelState(ChannelState.Value.OFF)
+            ChannelState.Default(ChannelState.Value.OFF)
           } else {
-            ChannelState(ChannelState.Value.ON)
+            ChannelState.Default(ChannelState.Value.ON)
           }
 
         SuplaFunction.DIMMER_AND_RGB_LIGHTING ->
           if (actionId == ActionId.TURN_OFF) {
-            ChannelState(ChannelState.Value.COMPLEX, listOf(ChannelState.Value.OFF, ChannelState.Value.OFF))
+            ChannelState.RgbAndDimmer(ChannelState.Value.OFF, ChannelState.Value.OFF)
           } else {
-            ChannelState(ChannelState.Value.COMPLEX, listOf(ChannelState.Value.ON, ChannelState.Value.ON))
+            ChannelState.RgbAndDimmer(ChannelState.Value.ON, ChannelState.Value.ON)
           }
 
         SuplaFunction.DIGIGLASS_HORIZONTAL,
         SuplaFunction.DIGIGLASS_VERTICAL ->
-          ChannelState(ChannelState.Value.OPAQUE)
+          ChannelState.Default(ChannelState.Value.OPAQUE)
 
         SuplaFunction.HVAC_THERMOSTAT ->
           when (thermostatSubfunction) {
-            ThermostatSubfunction.HEAT -> ChannelState(ChannelState.Value.HEAT)
-            else -> ChannelState(ChannelState.Value.COOL)
+            ThermostatSubfunction.HEAT -> ChannelState.Default(ChannelState.Value.HEAT)
+            else -> ChannelState.Default(ChannelState.Value.COOL)
           }
 
         SuplaFunction.CONTAINER,
         SuplaFunction.SEPTIC_TANK,
-        SuplaFunction.WATER_TANK -> ChannelState(ChannelState.Value.EMPTY)
+        SuplaFunction.WATER_TANK -> ChannelState.Default(ChannelState.Value.EMPTY)
 
         SuplaFunction.UNKNOWN,
         SuplaFunction.NONE,
@@ -402,7 +402,7 @@ class GetChannelStateUseCase @Inject constructor(
         SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
         SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
         SuplaFunction.GENERAL_PURPOSE_MEASUREMENT,
-        SuplaFunction.GENERAL_PURPOSE_METER -> ChannelState(ChannelState.Value.NOT_USED)
+        SuplaFunction.GENERAL_PURPOSE_METER -> ChannelState.Default(ChannelState.Value.NOT_USED)
       }
     }
   }

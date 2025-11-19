@@ -28,7 +28,7 @@ enum class LegacyDetailType : DetailType {
   DIGIGLASS
 }
 
-data class SwitchDetailType(
+data class StandardDetailType(
   val pages: List<DetailPage>
 ) : DetailType
 
@@ -48,26 +48,6 @@ data class GpmDetailType(
   val pages: List<DetailPage>
 ) : DetailType
 
-data class WindowDetailType(
-  val pages: List<DetailPage>
-) : DetailType
-
-data class EmDetailType(
-  val pages: List<DetailPage>
-) : DetailType
-
 data class IcDetailType(
-  val pages: List<DetailPage>
-) : DetailType
-
-data class ContainerDetailType(
-  val pages: List<DetailPage>
-) : DetailType
-
-data class ValveDetailType(
-  val pages: List<DetailPage>
-) : DetailType
-
-data class GateDetailType(
   val pages: List<DetailPage>
 ) : DetailType

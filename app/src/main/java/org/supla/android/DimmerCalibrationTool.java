@@ -34,6 +34,7 @@ import androidx.core.content.res.ResourcesCompat;
 import java.util.Timer;
 import java.util.TimerTask;
 import org.supla.android.lib.AndroidSuplaClientMessageHandler;
+import org.supla.android.navigator.MainNavigator;
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage;
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage.CallConfigResult;
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessageHandler;
@@ -63,25 +64,27 @@ public abstract class DimmerCalibrationTool
   private Timer delayTimer2 = null;
   private boolean settingsChanged;
 
-  public DimmerCalibrationTool(ChannelDetailRGBW detailRGB) {
+  private final MainNavigator mainNavigator;
+
+  public DimmerCalibrationTool(ChannelDetailRGBW detailRGB, MainNavigator navigator) {
     if (detailRGB == null || !(detailRGB.getContext() instanceof ContextWrapper)) {
       throw new IllegalArgumentException("The detailRGB pattern is invalid");
     }
-
+    this.mainNavigator = navigator;
     this.detailRGB = detailRGB;
     mainView = (RelativeLayout) detailRGB.inflateLayout(getLayoutResId());
-    mainView.setVisibility(View.GONE);
+    mainView.setVisibility(View.VISIBLE);
+    getDetailContentView().setVisibility(View.GONE);
+
     detailRGB.addView(mainView);
   }
 
   @Override
   public void onSuperuserOnAuthorizarionResult(
       SuperuserAuthorizationDialog dialog, boolean Success, int Code) {
-    AndroidSuplaClientMessageHandler.Companion.getGlobalInstance().unregister(this);
     mSuperuserAuthorizationStarted = false;
 
     if (Success) {
-      AndroidSuplaClientMessageHandler.Companion.getGlobalInstance().register(this);
       onSuperuserOnAuthorizarionSuccess();
     }
   }
@@ -89,7 +92,8 @@ public abstract class DimmerCalibrationTool
   @Override
   public void authorizationCanceled() {
     mSuperuserAuthorizationStarted = false;
-    AndroidSuplaClientMessageHandler.Companion.getGlobalInstance().unregister(this);
+    mainView.setVisibility(View.GONE);
+    getDetailContentView().setVisibility(View.VISIBLE);
   }
 
   protected void setImgViews(int imgOnResId, int imgOffResId, int imgAlwaysOffResId) {
@@ -154,13 +158,7 @@ public abstract class DimmerCalibrationTool
 
   private void setConfigStarted(boolean started) {
     configStartedAtTime = started ? System.currentTimeMillis() : 0;
-    Activity activity = getActivity();
-    if (activity instanceof NavigationActivity) {
-      ((NavigationActivity) activity).showBackButton();
-    }
-
     authDialogClose();
-
     displayCfgParameters(true);
     getDetailContentView().setVisibility(View.GONE);
     getMainView().setVisibility(View.VISIBLE);
@@ -348,6 +346,8 @@ public abstract class DimmerCalibrationTool
   }
 
   public void Show() {
+    AndroidSuplaClientMessageHandler.Companion.getGlobalInstance().register(this);
+
     if (authDialog != null) {
       authDialog.close();
       authDialog = null;
@@ -359,14 +359,10 @@ public abstract class DimmerCalibrationTool
   }
 
   public void Hide() {
-    onHide();
-    closePreloaderPopup();
     AndroidSuplaClientMessageHandler.Companion.getGlobalInstance().unregister(this);
 
-    if (getMainView().getVisibility() == View.VISIBLE) {
-      getMainView().setVisibility(View.GONE);
-      getDetailContentView().setVisibility(View.VISIBLE);
-    }
+    onHide();
+    closePreloaderPopup();
 
     if (configStartedAtTime > 0) {
       configStartedAtTime = 0;
@@ -398,23 +394,21 @@ public abstract class DimmerCalibrationTool
   }
 
   public boolean onBackPressed() {
-
     if (!settingsChanged) {
-      Hide();
       return false;
     }
 
     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
     builder.setMessage(R.string.save_without_saving);
 
-    builder.setPositiveButton(R.string.yes, (dialog, id) -> Hide());
+    builder.setPositiveButton(R.string.yes, (dialog, id) -> mainNavigator.back());
 
     builder.setNeutralButton(R.string.no, (dialog, id) -> dialog.cancel());
 
     AlertDialog alert = builder.create();
     alert.show();
 
-    return false;
+    return true;
   }
 
   private void showRestoreConfirmDialog() {
@@ -438,9 +432,7 @@ public abstract class DimmerCalibrationTool
 
   public void onClick(View v) {
     if (v == btnOK) {
-
       if (!settingsChanged) {
-        Hide();
         return;
       }
 
@@ -452,13 +444,12 @@ public abstract class DimmerCalibrationTool
           (dialog, id) -> {
             setConfigStarted(false);
             saveChanges();
-            Hide();
+            setSettingsChanged(false);
           });
 
       builder.setNegativeButton(
           R.string.no,
           (dialog, id) -> {
-            Hide();
             dialog.cancel();
           });
 
@@ -480,6 +471,10 @@ public abstract class DimmerCalibrationTool
         onCalCfgResult(result.getCommand(), result.getResult(), result.getData());
       }
     }
+  }
+
+  public boolean isAuthorizationDialogOpened() {
+    return mSuperuserAuthorizationStarted;
   }
 
   private class DisplayDelayedTask extends TimerTask {

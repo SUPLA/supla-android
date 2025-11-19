@@ -12,6 +12,7 @@ import androidx.core.content.res.ResourcesCompat;
 import java.util.Timer;
 import java.util.TimerTask;
 import org.supla.android.lib.SuplaConst;
+import org.supla.android.navigator.MainNavigator;
 
 public class VLCalibrationTool extends DimmerCalibrationTool
     implements SuplaRangeCalibrationWheel.OnChangeListener {
@@ -46,8 +47,8 @@ public class VLCalibrationTool extends DimmerCalibrationTool
   private Timer startConfigurationRetryTimer;
   private final TextView tvPicFirmwareVersion;
 
-  public VLCalibrationTool(ChannelDetailRGBW detailRGB) {
-    super(detailRGB);
+  public VLCalibrationTool(ChannelDetailRGBW detailRGB, MainNavigator navigator) {
+    super(detailRGB, navigator);
 
     btnDmAuto = findBtnViewById(R.id.vlCfgDmAuto);
     btnDm1 = findBtnViewById(R.id.vlCfgDm1);

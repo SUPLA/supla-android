@@ -28,10 +28,6 @@ import timber.log.Timber;
 
 public class Preferences {
 
-  private static final String TAG = Preferences.class.getSimpleName();
-
-  private static final String pref_brightness_picker_type_slider =
-      "pref_brightness_picker_type_slider";
   private static final String pref_button_autohide = "pref_button_autohide";
   public static final String pref_channel_height = "pref_channel_height_percent";
   private static final String pref_show_channel_info = "pref_show_channel_info";
@@ -73,19 +69,6 @@ public class Preferences {
     }
 
     return id == null ? "unknown" : id;
-  }
-
-  public void setBrightnessPickerTypeToSlider(boolean slider) {
-    SharedPreferences.Editor editor = _prefs.edit();
-    editor.putBoolean(pref_brightness_picker_type_slider, slider);
-    editor.apply();
-  }
-
-  public Boolean isBrightnessPickerTypeSlider() {
-    if (_prefs.contains(pref_brightness_picker_type_slider)) {
-      return _prefs.getBoolean(pref_brightness_picker_type_slider, false);
-    }
-    return null;
   }
 
   public boolean isButtonAutohide() {

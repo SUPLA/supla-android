@@ -15,7 +15,6 @@
   <string name="status_temporarily_unavailable">Ce service est temporairement indisponible</string>
   <string name="status_bad_credentials">Informations d\u0027identification invalides</string>
   <string name="status_climit_exceded">Vous avez dépassé la limite des applications client-side</string>
-  <string name="status_version_error">Incompatibilité de la version du serveur</string>
   <string name="status_reg_disabled">L\'inscription est actuellement désactivée. Pour l\'activer, allez vers l\'onglet \"Smartphones\" à la page \"Supla Cloud\".</string>
   <string name="status_access_id_not_assigned">Ce dispositif n\'a pas d\'identifiant d\'accès attribué. Allez à la page \"Supla Cloud\" et dans l\'onglet \"Smartphones\"  attribuez l\'identifiant approprié.</string>
   <string name="status_device_disabled">Le dispositif est éteint</string>
@@ -77,7 +76,6 @@
   <string name="add_wizard_step_1_continue"><![CDATA[Pour continuer, appuyez sur <b>Continuer</b>.]]></string>
   <string name="add_device">Ajoutez un dispositif</string>
   <string name="advanced_settings">Paramètres avancés</string>
-  <string name="wizard_result_param_error">Paramètres d\'entrée erronés!</string>
   <string name="wizard_iodev_data">Données du dispositif</string>
   <string name="email">ADRESSE E-MAIL</string>
   <string name="wizard_done">Configuration du dispositif est terminée avec succès :)</string>
@@ -86,10 +84,8 @@
   <string name="add_wizard_step_3_message_3"><![CDATA[Appuyez sur <b>DÉMARRER</b> pour commencer la configuration.]]></string>
   <string name="wizard_iodev_name">Nom</string>
   <string name="next">Continuer</string>
-  <string name="wizard_addnetwork_error">Impossible d\'ajouter la configuration de réseau Wi-Fi !</string>
   <string name="wizard_result_conn_error">Impossible de se connecter au dispositif!</string>
   <string name="wizard_iodevice_notfound">Aucun dispositif n\'a été trouvé ! Assurez-vous que le dispositif que vous souhaitez configurer fonctionne en mode de configuration, puis essayez à nouveau. IMPORTANT - Certaines versions Android nécessitent l\'activation du GPS pour permettre aux applications de rechercher le Wi-Fi, assurez-vous donc que le GPS est activé.</string>
-  <string name="wizard_wifi_timeout">Le délai d\'attente pour les données sur le réseau Wi-Fi actuel est dépassé! Accédez aux Paramètres Wi-Fi sur Android, choisissez l\'Option Avancés et séléctionnez ensuite « Activez le Wi-Fi automatiquement »</string>
   <string name="wizard_connect_timeout">Le délai d\'attente pour établir une connexion avec le dispositif d\'entrée/sortie est dépassé!</string>
   <string name="wizard_reconnect_timeout">Le délai d\'attente pour revenir au réseau Wi-Fi de base est dépassé!</string>
   <string name="wizard_configure_timeout">Le délai d\'attente pour la configuration du dispositif est dépassé!</string>
@@ -116,7 +112,6 @@
   <string name="hp_eco">ECO</string>
   <string name="hp_turbo">TURBO</string>
   <string name="hp_auto">AUTO</string>
-  <string name="hp_room_temperature">Température ambiante</string>
   <string name="hp_cfg_turbo_time">Durée du mode TURBO</string>
   <string name="hp_cfg_water_max">Température maximale de l\'eau</string>
   <string name="hp_cfg_eco_reduction">Réduction de la température en mode ECO</string>
@@ -134,7 +129,6 @@
   <string name="ranking_of_hours">Classement des heures</string>
   <string name="ranking_of_weekdays">Classement des jours de la semaine</string>
   <string name="ranking_of_months">Classement des mois</string>
-  <string name="consumption_acording_to_phases">Consommation selon phases</string>
   <string name="temperature">Température</string>
   <string name="humidity">Humidité</string>
   <string name="history_range_last_day">Dernières 24 heures</string>
@@ -145,11 +139,6 @@
   <string name="all_available_history">Tout l\'historique disponible</string>
   <string name="retrieving_data_from_the_server">Téléchargement des données du serveur...</string>
   <string name="no_chart_data_available">Manquent les données pour pour le graphique</string>
-  <string name="comparsion_minmin">Comparaison minute par minute</string>
-  <string name="comparsion_hourhour">Comparaison heure par heure</string>
-  <string name="comparsion_dayday">Comparaison jour par jour</string>
-  <string name="comparsion_monthmonth">Comparaison mois par mois</string>
-  <string name="comparsion_yearyear">Comparaison année par année</string>
   <string name="hp_error_1">Manque d\'eau</string>
   <string name="hp_error_2">Chauffage brûlé</string>
   <string name="hp_error_3">Erreur du capteur de température de l\'eau</string>
@@ -159,8 +148,6 @@
   <string name="channel_caption_rainsensor">Mesure des précipitations</string>
   <string name="channel_caption_weightsensor">Poids</string>
   <string name="channel_caption_windsensor">Vitesse du vent</string>
-  <string name="current_production">Production dans le mois courant</string>
-  <string name="production_acording_to_phases">Production selon phases</string>
   <string name="enter_superuser_credentials">Entrez les informations d\'identification du superutilisateur</string>
 
   <string name="channel_func_none">Aucune fonction</string>
@@ -204,11 +191,6 @@
 
   <string name="channel_caption_heatmeter">Compteur de chaleur</string>
   <string name="add_wizard_step_2_message">Saisissez le nom et le mot de passe de votre réseau Wi-Fi domestique ou d\'entreprise via lequel l\'appareil exécutif pourra établir une connexion avec le serveur.</string>
-  <string name="aritmetic_balance_days">Bilan arithmétique - Jours</string>
-  <string name="aritmetic_balance_hours">Bilan arithmétique - Heures</string>
-  <string name="aritmetic_balance_minutes">Bilan arithmétique - Minutes</string>
-  <string name="aritmetic_balance_months">Bilan arithmétique - Mois</string>
-  <string name="aritmetic_balance_years">Bilan arithmétique - Années</string>
   <string name="associeted_with_scene_error">Vous ne pouvez pas changer la fonction d\'une chaîne associée à une scène.</string>
   <string name="battery_health">Vie de la batterie</string>
   <string name="battery_level">Niveau de batterie</string>
@@ -256,11 +238,6 @@
   <string name="channel_uv_error">La durée de vie de la lampe UV est de %1$.01f%%. Remplacez le radiateur.</string>
   <string name="valve_warning_manually_closed">La valve a été fermée manuellement ou par radio. Avant de l\'ouvrir, assurez-vous qu\'elle n\'a pas été fermée en raison d\'une inondation. Pour désactiver l\'avertissement, ouvrez la valve manuellement. Voulez-vous vraiment ouvrir la valve depuis l’application ?!</string>
   <string name="valve_warning">La valve a été fermée manuellement ou par radio. Avant de l\'ouvrir, assurez-vous qu\'elle n\'a pas été fermée en raison d\'une inondation. Pour désactiver l\'avertissement, ouvrez la valve manuellement.</string>
-  <string name="vector_balance_days">Bilan vectorielle - Jours</string>
-  <string name="vector_balance_hours">Bilan vectorielle - Heures</string>
-  <string name="vector_balance_minutes">Bilan vectorielle - Minutes</string>
-  <string name="vector_balance_months">Bilan vectorielle - Mois</string>
-  <string name="vector_balance_years">Bilan vectorielle - Années</string>
   <string name="vl_cfg_auto">AUTO</string>
   <string name="vl_cfg_boost">Renforcement</string>
   <string name="vl_cfg_mode">Mode de variation</string>
@@ -278,18 +255,11 @@
   <string name="vl_dimmer_cfg_info_txt6">Renforcement</string>
   <string name="vl_dimmer_cfg_info_txt7">Cette fonction permet d\'allumer l\'éclairage LED à un faible niveau de luminosité mémorisé, fournissant un démarrage pour augmenter (renforcer) le niveau de luminosité. En déplaçant le curseur gris foncé autour du cercle, vous pouvez augmenter ou diminuer le niveau de renforcement, qui est marqué par la ligne verte. Lors de l\'allumage de l\'éclairage, le niveau de luminosité sera augmenté (renforcé) jusqu\'à la valeur définie, puis il reviendra au niveau mémorisé avant d\'éteindre l\'éclairage.</string>
   <string name="vl_dimmer_cfg_info_txt8">Plus d\'informations sur le variateur sur</string>
-  <string name="vl_dimmer_info_txt1">Contrôle du variateur</string>
-  <string name="vl_dimmer_info_txt2">Pour modifier le niveau de luminosité, faites glisser votre doigt sur l\'indicateur du curseur ou sur la molette de luminosité.</string>
-  <string name="vl_dimmer_info_txt3">Avec le bouton marche / arrêt, vous pouvez éteindre ou allumer complètement l\'éclairage.</string>
-  <string name="vl_dimmer_info_txt4">Le variateur mémorise le niveau de luminosité avant d\'éteindre l\'éclairage.</string>
-  <string name="vl_dimmer_info_txt5">Pour régler les paramètres du variateur, appuyez sur le bouton de réglage.</string>
   <string name="wake_up_frequency">Fréquence de réveil</string>
   <string name="wakeup_info">*) Les paramètres saisis seront appliqués la prochaine fois que le nœud se réveillera.</string>
   <string name="wheel">Cercle</string>
   <string name="wifi_rssi">Wi-Fi RSSI</string>
   <string name="wifi_signal_strength">Force du signal Wi-Fi</string>
-  <string name="wifi_throttling">En raison des limites de l\'analyse du réseau Wi-Fi imposées par le système Android, vous devez attendre le temps présenté ci-dessus.</string>
-  <string name="wizard_step1_txt2">Assurez-vous que les données mobiles sont désactivées lors de l\'ajout d\'appareils. Sinon, l\'ajout peut échouer.</string>
   <string name="yes">Oui</string>
   <string name="z_wave">Pont z-wave</string>
   <string name="zwave_add_device">Ajouter un appareil</string>
@@ -355,7 +325,6 @@
   <string name="profile">Votre compte</string>
   <string name="profile_plural">Vos comptes</string>
   <string name="menubar_appsettings">Paramètres</string>
-  <string name="em_chart_phase_n">Phase %d</string>
   <string name="em_chart_all_phases">Phase 1+2+3</string>
   <string name="widget_configure_title">Configuration du widget</string>
   <string name="widget_configure_profile_label">Compte</string>
@@ -383,7 +352,6 @@
   <string name="input">Entrée</string>
   <string name="monostable">Monostable</string>
   <string name="bistable">Bistable</string>
-  <string name="wizard_iodev_connect_failed">Une tentative d\'établir une connexion Wi-Fi avec le dispositif déclencher a échoué.</string>
   <string name="diw_cfg_info_oprange">Ajustez la plage de fonctionnement du variateur en réglant les niveaux de luminosité minimum et maximum. Les valeurs minimales et maximales peuvent être définies en déplaçant les curseurs situés de part et d\'autre de la roue.</string>
   <string name="diw_cfg_info_in_options">Options d\'entrée</string>
   <string name="diw_cfg_info_mono_option">Cette option modifie le comportement de l\'entrée à laquelle le bouton monostable est connecté. Lorsque l\'option est désactivée, le variateur cessera d\'éclairer lorsqu\'il atteindra le niveau de luminosité maximal et d\'atténuer lorsqu\'il atteindra le niveau minimal. Si l\'option est activée, le variateur passe au niveau minimum dès que le niveau de luminosité maximum est atteint et, dans le cas d\'une gradation, à la valeur maximum dès que le minimum est atteint. L\'éclaircissement ou l\'atténuation se poursuit tant que le bouton est enfoncé.</string>
@@ -443,7 +411,6 @@
 
   <string name="turn_on">Activez</string>
   <string name="turn_off">Désactivez</string>
-  <string name="str_default">Par défaut</string>
   <string name="widget_configure_type_label">Widget pour :</string>
   <string name="widget_configure_type_channel_label">Chaîne</string>
   <string name="widget_configure_type_group_label">Groupes</string>
@@ -651,7 +618,6 @@
   <string name="details_em_balance_hourly">Solde horaire</string>
   <string name="details_em_balance_chart_aggregated">Bilan agrégé sous forme de graphique</string>
   <string name="details_em_sum">Total</string>
-  <string name="details_em_select_range">Sélectionner une période</string>
   <string name="details_em_active_energy">Énergie active</string>
   <string name="details_em_forwarded_energy">Prélevée</string>
   <string name="details_em_reversed_energy">Retournée</string>
@@ -709,10 +675,6 @@
   <string name="developer_info_activated">Mode développeur activé</string>
   <string name="developer_info_screen_orientation">Rotation de l\'écran activée</string>
   <string name="developer_info_settings">Paramètres expérimentaux</string>
-  <string name="profiles_list_sorting">Tri</string>
-  <string name="profiles_list_sorting_default">Par défaut</string>
-  <string name="profiles_list_sorting_name">Nom</string>
-  <string name="profiles_list_sorting_added">Dernier ajouté</string>
   <string name="channel_caption_water_tank">Réservoir d\'eau</string>
   <string name="channel_caption_container_level_sensor">Capteur de niveau de conteneur</string>
   <string name="state_opened">ouvert</string>
@@ -743,4 +705,11 @@
     <item quantity="many">%1$d jours ⏱️</item>
   </plurals>
   <string name="thermostat_calibration_error">Erreur d’étalonnage</string>
+  <string name="toolbar_dimmer">Variateur</string>
+  <string name="rgb_detail_color">Couleur:</string>
+  <string name="rgb_detail_brightness">Luminosité:</string>
+  <string name="rgb_detail_select_color">Sélectionner la couleur</string>
+  <string name="legacy_rgbw_settings_unauthorized_message">Autorisation nécessaire pour voir la configuration !</string>
+  <string name="legacy_rgbw_settings_authorize_button">Autoriser</string>
+  <string name="rgb_detail_colors_limit">Limite atteinte !</string>
 </resources>

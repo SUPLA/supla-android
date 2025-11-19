@@ -76,6 +76,7 @@ abstract class BaseDetailFragment<S : BaseDetailViewState, E : BaseDetailViewEve
     detailBottomBar.labelVisibilityMode = viewModel.getLabelVisibility()
     detailBottomBar.layoutParams = bottomBarHeightHandler.getLayoutParams(resources, visible = pages.count() > 1)
     detailBottomBar.visibleIf(pages.count() > 1)
+    detailBottomBar.itemIconTintList = null
     detailShadow.visibleIf(pages.count() > 1)
 
     detailViewPager.adapter = StandardDetailPagerAdapter(pages, item, this)

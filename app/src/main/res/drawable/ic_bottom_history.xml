@@ -1,0 +1,18 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+  <item android:state_checked="true">
+    <vector android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+      <path android:pathData="M2.5,21.5H21.5" android:strokeWidth="1.5" android:strokeColor="@color/primary" android:strokeLineCap="round" android:strokeLineJoin="round" />
+      <path android:pathData="M4.25,11.5h3.5v10h-3.5z" android:strokeWidth="1.5" android:strokeColor="@color/primary" android:strokeLineJoin="round" />
+      <path android:pathData="M10.25,7.5h3.5v14h-3.5z" android:strokeWidth="1.5" android:strokeColor="@color/primary" android:strokeLineJoin="round" />
+      <path android:pathData="M16.25,2.5h3.5v19h-3.5z" android:strokeWidth="1.5" android:strokeColor="@color/primary" android:strokeLineJoin="round" />
+    </vector>
+  </item>
+  <item>
+    <vector android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+      <path android:pathData="M2.5,21.5H21.5" android:strokeWidth="1.5" android:strokeColor="@color/on_background" android:strokeLineCap="round" android:strokeLineJoin="round" />
+      <path android:pathData="M4.25,11.5h3.5v10h-3.5z" android:strokeWidth="1.5" android:strokeColor="@color/on_background" android:strokeLineJoin="round" />
+      <path android:pathData="M10.25,7.5h3.5v14h-3.5z" android:strokeWidth="1.5" android:strokeColor="@color/on_background" android:strokeLineJoin="round" />
+      <path android:pathData="M16.25,2.5h3.5v19h-3.5z" android:strokeWidth="1.5" android:strokeColor="@color/on_background" android:strokeLineJoin="round" />
+    </vector>
+  </item>
+</selector>

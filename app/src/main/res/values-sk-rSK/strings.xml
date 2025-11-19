@@ -16,7 +16,6 @@
   <string name="status_temporarily_unavailable">Služba je dočasne nedostupná</string>
   <string name="status_bad_credentials">Nesprávne autentifikačné údaje</string>
   <string name="status_climit_exceded">Prekročený limit klientskych aplikácií</string>
-  <string name="status_version_error">Nekompatibilná verzia servera</string>
   <string name="status_reg_disabled">Registrácia je momentálne vypnutá. Ak ju chcete zapnúť, prejdite do záložky \"Smartfóny\" na  stránke  \"Supla Cloud\".</string>
   <string name="status_access_id_not_assigned">Toto zariadenie nemá priradený identifikátor prístupu. Prejdite na stránku \"Supla Cloud\" a v záložke \"Smartfóny\" priraďte príslušný identifikátor.</string>
   <string name="status_device_disabled">Zariadenie je vypnuté</string>
@@ -97,8 +96,6 @@
   <string name="wizard_no_internetwifi">Predtým, ako začnete, pripojte sa k internetu cez Wi-Fi sieť, ktorá bude používať aj vykonávacie zariadenia na pripojenie k serveru.</string>
   <string name="wizard_wifi_error">Wi-Fi sieť je vypnutá alebo sa nedá načítať jej identifikátor alebo názov!</string>
   <string name="wizard_location_error">Ak má sprievodca pridávania fungovať správne, musí byť na danom zariadení zapnutá služba lokalizácie. Prejdite na nastavenia systému, následne si vyberte možnosť „Lokalizácia” a uistite sa, že je zapnutá.</string>
-  <string name="wizard_addnetwork_error">Nedá sa pridať konfigurácia Wi-Fi siete!</string>
-  <string name="wizard_wifi_timeout">Bola prekročená lehota čakania na údaje o aktuálnej Wi-Fi sieti! Prejdite do nastavení Wi-Fi systému Android, vyberte Rozšírené a následne možnosť "Zapnúť Wi-Fi automaticky"</string>
   <string name="wizard_scan_timeout">Bola prekročená lehota čakana na dokončenie vyhľadávania Wi-Fi sietí!</string>
   <string name="wizard_connect_timeout">Bola prekročená lehota čakania na nadviazanie spojenia s vykonávacím zariadením!</string>
   <string name="wizard_configure_timeout">Bola prekročená lehota čakania na dokončenie konfigurácie zariadenia!</string>
@@ -113,7 +110,6 @@
   <string name="wizard_iodev_name">Názov</string>
   <string name="wizard_iodev_laststate">Predchádzajúci status</string>
 
-  <string name="wizard_result_param_error">Nesprávne vstupné parametre!</string>
   <string name="wizard_result_compat_error">Pripojené zariadenie nie je kompatibilné s týmto sprievodcom!</string>
   <string name="wizard_result_conn_error">Nedá sa pripojiť k tomuto zariadeniu!</string>
   <string name="wizard_result_failed">Konfigurácia zlyhala!</string>
@@ -133,7 +129,6 @@
   <string name="hp_eco">ECO</string>
   <string name="hp_turbo">TURBO</string>
   <string name="hp_auto">AUTO</string>
-  <string name="hp_room_temperature">Teplota v miestnosti</string>
   <string name="hp_cfg_turbo_time">Trvanie režimu TURBO</string>
   <string name="hp_cfg_water_max">Maximálna teplota vody</string>
   <string name="hp_cfg_eco_reduction">Zníženie teploty v režime EKO</string>
@@ -151,7 +146,6 @@
   <string name="ranking_of_hours">Rebríček hodín</string>
   <string name="ranking_of_weekdays">Rebríček dní týždňa</string>
   <string name="ranking_of_months">Rebríček mesiacov</string>
-  <string name="consumption_acording_to_phases">Spotreba podľa fáz</string>
   <string name="temperature">Teplota</string>
   <string name="humidity">Vlhkosť</string>
   <string name="history_range_last_day">Posledných 24 hodín</string>
@@ -162,18 +156,11 @@
   <string name="all_available_history">Celá dostupná história</string>
   <string name="retrieving_data_from_the_server">Údaje sa načítavajú zo servera...</string>
   <string name="no_chart_data_available">Žiadne údaje pre graf.</string>
-  <string name="comparsion_minmin">Porovnanie minúta po minúte</string>
-  <string name="comparsion_hourhour">Porovnanie hodina po hodine</string>
-  <string name="comparsion_dayday">Porovnanie deň po dni</string>
-  <string name="comparsion_monthmonth">Porovnanie mesiac po mesiaci</string>
-  <string name="comparsion_yearyear">Porovnanie rok po rokuu</string>
   <string name="hp_error_1">Žiadna voda</string>
   <string name="hp_error_2">Zhorená špirála</string>
   <string name="hp_error_3">Chyba snímača teploty vody</string>
   <string name="hp_error_4">Chyba snímača izbovej teploty</string>
   <string name="hp_error_5">Žiadne prerušenia el. napätia</string>
-  <string name="production_acording_to_phases">Výroba podľa fáz</string>
-  <string name="current_production">Výroba v aktuálnom mesiaci</string>
   <string name="enter_superuser_credentials">Zadajte poverenia superužívateľa</string>
 
   <string name="channel_func_none">Žiadna funkcia</string>
@@ -217,11 +204,6 @@
 
   <string name="channel_caption_heatmeter">Merač tepla</string>
   <string name="add_wizard_step_2_message">Zadaj názov a heslo svojej domácej alebo firemnej Wi-Fi siete prostredníctvom ktorej bude môcť ovládač nadviazať spojenie so serverom.</string>
-  <string name="aritmetic_balance_days">Aritmetická bilancia – dni</string>
-  <string name="aritmetic_balance_hours">Aritmetická bilancia – hodiny</string>
-  <string name="aritmetic_balance_minutes">Aritmetická bilancia – minúty</string>
-  <string name="aritmetic_balance_months">Aritmetická bilancia – mesiace</string>
-  <string name="aritmetic_balance_years">Aritmetická bilancia – roky</string>
   <string name="associeted_with_scene_error">Nedá sa zmeniť funkcia kanálu, ktorý je spojený so scénou.</string>
   <string name="battery_health">Životnosť batérií</string>
   <string name="battery_level">Úroveň batérie</string>
@@ -269,11 +251,6 @@
   <string name="channel_uv_error">Životnosť UV žiariča je %1$.01f%%. Vymeň žiarič.</string>
   <string name="valve_warning_manually_closed">Ventil bol zatvorený manuálne alebo rádiovo. Kým ho otvoríš, uisti sa, že nebol zatvorený kvôli zaplaveniu. Pre vypnutie upozornenia zavri ventil manuálne. Naozaj chceš otvoriť ventil pomocou aplikácie?!</string>
   <string name="valve_warning">Ventil bol zatvorený manuálne alebo rádiovo. Kým ho otvoríš, uisti sa, že nebol zatvorený kvôli zaplaveniu. Pre vypnutie upozornenia zavri ventil manuálne.</string>
-  <string name="vector_balance_days">Vektorová bilancia – dni</string>
-  <string name="vector_balance_hours">Vektorová bilancia – hodiny</string>
-  <string name="vector_balance_minutes">Vektorová bilancia – minúty</string>
-  <string name="vector_balance_months">Vektorová bilancia – mesiace</string>
-  <string name="vector_balance_years">Vektorová bilancia – roky</string>
   <string name="vl_cfg_auto">AUTO</string>
   <string name="vl_cfg_boost">Zosilnenie</string>
   <string name="vl_cfg_mode">Režim stmievania</string>
@@ -291,18 +268,11 @@
   <string name="vl_dimmer_cfg_info_txt6">Zosilnenie</string>
   <string name="vl_dimmer_cfg_info_txt7">Táto funkcia pomáha zapínať LED osvetlenie pri zapamätanej nízkej úrovni jasu, čo zaistí začiatočné zvýšenie (zosilnenie) úrovne jasu.  Presunutím tmavosivého bežca okolo kolieska môžeš zvýšiť alebo znížiť úroveň zosilnenia označenú zelenou líniou. Počas zapínania osvetlenia sa zvýši (zosilní) úroveň jasu na zadanú hodnotu a následne sa vráti na úroveň zapamätanú pred vypnutím osvetlenia.</string>
   <string name="vl_dimmer_cfg_info_txt8">Viac informácií vo veci stmievača nájdeš na</string>
-  <string name="vl_dimmer_info_txt1">Ovládanie stmievača</string>
-  <string name="vl_dimmer_info_txt2">Pre zmenu úrovne jasu presuň prstom indikátor nachádzajúci sa na bežcovi alebo koliesku jasu.</string>
-  <string name="vl_dimmer_info_txt3">Tlačidlom zapnúť/vypnúť môžeš úplne vypnúť alebo zapnúť osvetlenie.</string>
-  <string name="vl_dimmer_info_txt4">Stmievač si pamätá úroveň jasu spred vypnutia osvetlenia.</string>
-  <string name="vl_dimmer_info_txt5">Pre prispôsobenie vlastností stmievača stlač tlačidlo pre nastavenia.</string>
   <string name="wake_up_frequency">Frekvencia budenia</string>
   <string name="wakeup_info">*) Vložené nastavenia sa použijú pri najbližšom vybudení uzla.</string>
   <string name="wheel">Koliesko</string>
   <string name="wifi_rssi">Wi-Fi RSSI</string>
   <string name="wifi_signal_strength">Intenzita Wi-Fi signálu</string>
-  <string name="wifi_throttling">Kvôli limitom skenovania Wi-Fi siete predpísaným systémom Android je potrebné čakať po vyššie uvedený čas.</string>
-  <string name="wizard_step1_txt2">Uisti sa, že mobilné dáta sú počas pridávania zariadení vypnuté. V opačnom prípade sa pridávanie nemusí podariť.</string>
   <string name="yes">Áno</string>
   <string name="z_wave">Most z-wave</string>
   <string name="zwave_add_device">Pridaj zariadenie</string>
@@ -368,7 +338,6 @@
   <string name="profile">Váš účet</string>
   <string name="profile_plural">Vaše účty</string>
   <string name="menubar_appsettings">Nastavenie</string>
-  <string name="em_chart_phase_n">Fáza %d</string>
   <string name="em_chart_all_phases">Fáza 1+2+3</string>
   <string name="widget_configure_title">Konfigurácia widgetu</string>
   <string name="widget_configure_profile_label">Účet</string>
@@ -396,7 +365,6 @@
   <string name="input">Vstup</string>
   <string name="monostable">Monostabilný</string>
   <string name="bistable">Bistabilný</string>
-  <string name="wizard_iodev_connect_failed">Pokus o vytvorenie pripojenia Wi-Fi s vykonávacím zariadením zlyhal.</string>
   <string name="diw_cfg_info_oprange">Prispôsobte tiež rozsah činnosti stmievača nastavením minimálnej a maximálnej úrovne jasu. Minimálnu a maximálnu hodnotu môžete nastaviť presunutím bežcov umiestnených na oboch stranách kolieska.</string>
   <string name="diw_cfg_info_in_options">Možnosti vstupu</string>
   <string name="diw_cfg_info_mono_option">Táto možnosť mení správanie vstupu, ku ktorému je pripojené monostabilné tlačidlo. Ak je táto možnosť vypnutá, stmievač zastaví proces rozjasňovania pri dosiahnutí maximálnej úrovne jasu a v prípade stmievania, keď dosiahne minimálnu úroveň. Zapnutím tejto možnosti sa prepne na minimálnu úroveň hneď po dosiahnutí maximálneho jasu a v prípade stmievania na maximálnu hodnotu hneď po dosiahnutí minima. Rozjasňovanie/stmievanie bude pokračovať, kým bude stlačené tlačidlo.</string>
@@ -456,7 +424,6 @@
 
   <string name="turn_on">Zapnúť</string>
   <string name="turn_off">Vypnúť</string>
-  <string name="str_default">Predvolené</string>
   <string name="widget_configure_type_label">Widget pre:</string>
   <string name="widget_configure_type_channel_label">Kanál</string>
   <string name="widget_configure_type_group_label">Skupinu</string>
@@ -665,7 +632,6 @@
   <string name="details_em_balance_hourly">Hodinová bilancia</string>
   <string name="details_em_balance_chart_aggregated">Bilancia agregovaná podľa grafu</string>
   <string name="details_em_sum">Súčet</string>
-  <string name="details_em_select_range">Vyberte obdobie</string>
   <string name="details_em_active_energy">Aktívna energia</string>
   <string name="details_em_forwarded_energy">Prevzatá</string>
   <string name="details_em_reversed_energy">Vrátená</string>
@@ -722,10 +688,6 @@
   <string name="developer_info_activated">Režim pre vývojárov aktivovaný</string>
   <string name="developer_info_screen_orientation">Otočenie obrazovky povolené</string>
   <string name="developer_info_settings">Experimentálne nastavenia</string>
-  <string name="profiles_list_sorting">Zoradenie</string>
-  <string name="profiles_list_sorting_default">Predvolené</string>
-  <string name="profiles_list_sorting_name">Názov</string>
-  <string name="profiles_list_sorting_added">Naposledy pridané</string>
   <string name="channel_caption_water_tank">Nádrž na vodu</string>
   <string name="channel_caption_container_level_sensor">Senzor hladiny kontajnera</string>
   <string name="state_opened">otvorené</string>
@@ -758,4 +720,11 @@
     <item quantity="other">%1$d dňa ⏱️</item>
   </plurals>
   <string name="thermostat_calibration_error">Chyba kalibrácie</string>
+  <string name="toolbar_dimmer">Stmievač</string>
+  <string name="rgb_detail_color">Farba:</string>
+  <string name="rgb_detail_brightness">Jas:</string>
+  <string name="rgb_detail_select_color">Vyberte farbu</string>
+  <string name="legacy_rgbw_settings_unauthorized_message">Na zobrazenie konfigurácie je potrebné oprávnenie!</string>
+  <string name="legacy_rgbw_settings_authorize_button">Autorizovať</string>
+  <string name="rgb_detail_colors_limit">Limit bol dosiahnutý!</string>
 </resources>

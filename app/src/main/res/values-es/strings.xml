@@ -16,7 +16,6 @@
   <string name="status_temporarily_unavailable">Servicio temporalmente no disponible</string>
   <string name="status_bad_credentials">Credenciales incorrectas</string>
   <string name="status_climit_exceded">Se ha superado el límite de aplicaciones del cliente</string>
-  <string name="status_version_error">Versión del servidor incompatible</string>
   <string name="status_reg_disabled">El registro está actualmente desactivado. Para activarlo, vaya a la pestaña \"Smartphones\" en la página \"Supla Cloud\".</string>
   <string name="status_access_id_not_assigned">Este dispositivo no tiene un identificador de acceso asignado. Vaya a la página \"Supla Cloud\" y asigne el identificador adecuado en la pestaña \"Smartphones\".</string>
   <string name="status_device_disabled">El dispositivo está deshabilitado</string>
@@ -78,7 +77,6 @@
   <string name="add_wizard_step_1_continue"><![CDATA[Para continuar presiona <b>Siguiente</b>.]]></string>
   <string name="add_device">Añadir dispositivo</string>
   <string name="advanced_settings">Ajustes avanzados</string>
-  <string name="wizard_result_param_error">¡Parámetros de entrada erróneos!</string>
   <string name="wizard_iodev_data">Datos del dispositivo</string>
   <string name="email">DIRECCIÓN DE CORREO ELECTRÓNICO</string>
   <string name="wizard_done">Configuración del dispositivo completada con éxito :)</string>
@@ -86,11 +84,9 @@
   <string name="add_wizard_step_3_message_3"><![CDATA[Presiona la tecla <b>START</b> para iniciar la configuración.]]></string>
   <string name="wizard_iodev_name">Nombre</string>
   <string name="next">Siguiente</string>
-  <string name="wizard_addnetwork_error">¡No se puede añadir la configuración de la red Wi-Fi!</string>
   <string name="wizard_result_conn_error">¡No se puede establecer una conexión con el dispositivo!</string>
   <string name="wizard_iodevice_notfound">¡No se ha encontrado ningún dispositivo! Comprueba que el dispositivo que quiere configurar está en el modo de configuración y a continuación inténtelo de nuevo. IMPORTANTE – En algunas versiones de Android es necesario activar el GPS  para permitir la búsqueda de redes Wi-Fi a las aplicaciones, por lo tanto asegúrese de tener el GPS activado.</string>
   <string name="wizard_iodev_laststate">Estado anterior</string>
-  <string name="wizard_wifi_timeout">¡Se ha superado el tiempo de espera para los datos de la red Wi-Fi actual! Ve a los ajustes de Wi-Fi de Android, selecciona Avanzado, luego marca "Activar Wi-Fi automáticamente"</string>
   <string name="wizard_connect_timeout">¡Se ha superado el tiempo de espera para establecer la conexión con el dispositivo de entrada/salida!</string>
   <string name="wizard_reconnect_timeout">¡Se ha superado el tiempo de espera para reconectar a la red Wi-Fi Base!</string>
   <string name="wizard_configure_timeout">¡Se ha superado el tiempo de espera para completar la configuración del dispositivo!</string>
@@ -117,7 +113,6 @@
   <string name="hp_eco">ECO</string>
   <string name="hp_turbo">TURBO</string>
   <string name="hp_auto">AUTO</string>
-  <string name="hp_room_temperature">Temperatura en la habitación</string>
   <string name="hp_cfg_turbo_time">Duración del modo TURBO</string>
   <string name="hp_cfg_water_max">Temperatura máxima del agua</string>
   <string name="hp_cfg_eco_reduction">Reducción de la temperatura en modo ECO</string>
@@ -135,7 +130,6 @@
   <string name="ranking_of_hours">Ranking de horas</string>
   <string name="ranking_of_weekdays">Ranking de días de la semana</string>
   <string name="ranking_of_months">Ranking de meses</string>
-  <string name="consumption_acording_to_phases">Consumo por fases</string>
   <string name="temperature">Temperatura</string>
   <string name="humidity">Humedad</string>
   <string name="history_range_last_day">Últimas 24 horas</string>
@@ -146,11 +140,6 @@
   <string name="all_available_history">Todo el historial disponible</string>
   <string name="retrieving_data_from_the_server">Descargando datos del servidor...</string>
   <string name="no_chart_data_available">No hay datos para el gráfico.</string>
-  <string name="comparsion_minmin">Comparación minuto a minuto</string>
-  <string name="comparsion_hourhour">Comparación hora a hora</string>
-  <string name="comparsion_dayday">Comparación día a día</string>
-  <string name="comparsion_monthmonth">Comparación mes a mes</string>
-  <string name="comparsion_yearyear">Comparación año a año</string>
   <string name="hp_error_1">No hay agua</string>
   <string name="hp_error_2">Calentador quemado</string>
   <string name="hp_error_3">Error del sensor de temperatura del agua</string>
@@ -160,8 +149,6 @@
   <string name="channel_caption_rainsensor">Sensor de precipitaciones</string>
   <string name="channel_caption_weightsensor">Sensor de Peso</string>
   <string name="channel_caption_windsensor">Velocidad del viento</string>
-  <string name="current_production">Producción en el mes actual</string>
-  <string name="production_acording_to_phases">Producción por fases</string>
   <string name="enter_superuser_credentials">Ingrese las credenciales de superusuario</string>
 
   <string name="channel_func_none">No hay función</string>
@@ -205,11 +192,6 @@
 
   <string name="channel_caption_heatmeter">Medidor de calor</string>
   <string name="add_wizard_step_2_message">Introduzca el nombre y la contraseña de la red Wi-Fi de su casa o empresa a través de la cual el dispositivo ejecutivo podrá establecer una conexión con el servidor.</string>
-  <string name="aritmetic_balance_days">Balance aritmético – Días</string>
-  <string name="aritmetic_balance_hours">Balance aritmético – Horas</string>
-  <string name="aritmetic_balance_minutes">Balance aritmético – Minutos</string>
-  <string name="aritmetic_balance_months">Balance aritmético – Meses</string>
-  <string name="aritmetic_balance_years">Balance aritmético – Años</string>
   <string name="associeted_with_scene_error">No se puede cambiar la función del canal que está asociado con la escena.</string>
   <string name="battery_health">Duración de la batería</string>
   <string name="battery_level">Nivel de batería</string>
@@ -257,11 +239,6 @@
   <string name="channel_uv_error">Duración de la lámpara ultravioleta es %1$.01f%%. Reemplácela.</string>
   <string name="valve_warning_manually_closed">La válvula se ha cerrado manualmente o por radio. Antes de abrirla, asegúrese de que no se haya cerrado debido a una inundación. Para desactivar la advertencia, abra la válvula manualmente. ¿Está seguro de que quiere abrir la válvula desde la aplicación?</string>
   <string name="valve_warning">La válvula se ha cerrado manualmente o por radio. Antes de abrirla, asegúrese de que no se haya cerrado debido a una inundación. Para desactivar la advertencia, abra la válvula manualmente.</string>
-  <string name="vector_balance_days">Balance vectorial – Días</string>
-  <string name="vector_balance_hours">Balance vectorial – Horas</string>
-  <string name="vector_balance_minutes">Balance vectorial – Minutos</string>
-  <string name="vector_balance_months">Balance vectorial – Meses</string>
-  <string name="vector_balance_years">Balance vectorial – Años</string>
   <string name="vl_cfg_auto">AUTO</string>
   <string name="vl_cfg_boost">Intensificación</string>
   <string name="vl_cfg_mode">Modo de atenuación</string>
@@ -279,18 +256,11 @@
   <string name="vl_dimmer_cfg_info_txt6">Intensificación</string>
   <string name="vl_dimmer_cfg_info_txt7">Esta función ayuda a encender la iluminación LED a un nivel de brillo bajo memorizado, proporcionando un inicio para aumentar (intensificar) el nivel de brillo. Al mover la barra deslizante gris oscuro alrededor del círculo, puede aumentar o disminuir la intensificación marcada con la línea verde. Al encender la iluminación, el nivel de brillo aumentará (intensificará) al valor preestablecido, y luego volverá al nivel memorizado antes de apagar la iluminación.</string>
   <string name="vl_dimmer_cfg_info_txt8">Más información sobre el atenuador en:</string>
-  <string name="vl_dimmer_info_txt1">Control de atenuación</string>
-  <string name="vl_dimmer_info_txt2">Para cambiar el nivel de brillo desliza un dedo sobre la barra o en el círculo de brillo</string>
-  <string name="vl_dimmer_info_txt3">Con la tecla Encender/Apagar puede encender o apagar el alumbrado por completo.</string>
-  <string name="vl_dimmer_info_txt4">El atenuador recordará el nivel de alumbrado</string>
-  <string name="vl_dimmer_info_txt5">Para ajustar los parámetros del atenuador, presione la tecla de configuración.</string>
   <string name="wake_up_frequency">Frecuencia de activación</string>
   <string name="wakeup_info">*) La configuración ingresada se aplicará la próxima vez que el nodo se active.</string>
   <string name="wheel">Círculo</string>
   <string name="wifi_rssi">Wi-Fi RSSI</string>
   <string name="wifi_signal_strength">Intensidad de señal Wi-Fi</string>
-  <string name="wifi_throttling">Debido a los límites de escaneo de redes Wi-Fi impuestos por el sistema Android, espere el tiempo presentado anteriormente.</string>
-  <string name="wizard_step1_txt2">Al agregar dispositivos, asegúrese de que los datos móviles estén desactivados. De lo contrario, la acción puede fracasar.</string>
   <string name="yes">Sí</string>
   <string name="z_wave">Puente z-wave</string>
   <string name="zwave_add_device">Añadir dispositivo</string>
@@ -356,7 +326,6 @@
   <string name="profile">Tu cuenta</string>
   <string name="profile_plural">Tus cuentas</string>
   <string name="menubar_appsettings">Configuración</string>
-  <string name="em_chart_phase_n">Fase %d</string>
   <string name="em_chart_all_phases">Fase 1 + 2 + 3</string>
   <string name="widget_configure_title">Configuración de widgets</string>
   <string name="widget_configure_profile_label">Cuenta</string>
@@ -384,7 +353,6 @@
   <string name="input">Entrada</string>
   <string name="monostable">Monoestable</string>
   <string name="bistable">Biestable</string>
-  <string name="wizard_iodev_connect_failed">El intento de establecer una conexión Wi-Fi con el dispositivo ejecutivo ha fallado.</string>
   <string name="diw_cfg_info_oprange">Ajustar el rango de trabajo del atenuador configurando el nivel de brillo mínimo y máximo. El valor mínimo y máximo se puede establecer moviendo los controles deslizantes a ambos lados de la rueda.</string>
   <string name="diw_cfg_info_in_options">Opciones de entrada</string>
   <string name="diw_cfg_info_mono_option">Esta opción cambia el comportamiento de la entrada a la que está conectado el botón monoestable. Si la opción está desactivada, el dimmer detiene el proceso de aclarado cuando se alcanza el nivel máximo de brillo, y en el caso de atenuación, cuando alcanza el nivel mínimo. Encender esta opción cambiará al nivel mínimo tan pronto como se alcance el brillo máximo, y en el caso de atenuar al valor máximo, tan pronto como se alcance el mínimo. El brillo/atenuación continuará mientras se presione el botón.</string>
@@ -443,7 +411,6 @@
   <string name="cfg_profile_active_indicator">activo</string>
   <string name="turn_on">Activar</string>
   <string name="turn_off">Desactivar</string>
-  <string name="str_default">Por defecto</string>
   <string name="widget_configure_type_label">Widget para:</string>
   <string name="widget_configure_type_channel_label">Canal</string>
   <string name="widget_configure_type_group_label">Grupos</string>
@@ -652,7 +619,6 @@
   <string name="details_em_balance_hourly">Saldo horario</string>
   <string name="details_em_balance_chart_aggregated">Saldo agregado con gráfico</string>
   <string name="details_em_sum">Total</string>
-  <string name="details_em_select_range">Selecciona un período</string>
   <string name="details_em_active_energy">Energía activa</string>
   <string name="details_em_forwarded_energy">Tomada</string>
   <string name="details_em_reversed_energy">Devuelta</string>
@@ -709,10 +675,6 @@
   <string name="developer_info_activated">Modo de desarrollador activado</string>
   <string name="developer_info_screen_orientation">Rotación de pantalla activada</string>
   <string name="developer_info_settings">Ajustes experimentales</string>
-  <string name="profiles_list_sorting">Ordenar</string>
-  <string name="profiles_list_sorting_default">Predeterminado</string>
-  <string name="profiles_list_sorting_name">Nombre</string>
-  <string name="profiles_list_sorting_added">Último añadido</string>
   <string name="channel_caption_water_tank">Tanque de agua</string>
   <string name="channel_caption_container_level_sensor">Sensor de nivel de contenedor</string>
   <string name="state_opened">abierto</string>
@@ -743,4 +705,11 @@
     <item quantity="many">%1$d días ⏱️</item>
   </plurals>
   <string name="thermostat_calibration_error">Error de calibración</string>
+  <string name="toolbar_dimmer">Dimmer</string>
+  <string name="rgb_detail_color">Color:</string>
+  <string name="rgb_detail_brightness">Luminosidad:</string>
+  <string name="rgb_detail_select_color">Seleccionar color</string>
+  <string name="legacy_rgbw_settings_unauthorized_message">¡Se necesita autorización para ver la configuración!</string>
+  <string name="legacy_rgbw_settings_authorize_button">Autorizar</string>
+  <string name="rgb_detail_colors_limit">¡Límite alcanzado!</string>
 </resources>

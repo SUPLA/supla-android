@@ -52,7 +52,7 @@ class GetChannelIconUseCase @Inject constructor(
       throw IllegalArgumentException("Wrong icon type (iconType: '$type', function: '${channelDataBase.function}')!")
     }
 
-    val state = channelStateValue?.let { ChannelState(it) } ?: getChannelStateUseCase(channelDataBase)
+    val state = channelStateValue?.let { ChannelState.Default(it) } ?: getChannelStateUseCase(channelDataBase)
 
     ifLet(findUserIcon(channelDataBase, type, state)) { (id) ->
       return id
@@ -192,15 +192,20 @@ class GetChannelIconUseCase @Inject constructor(
         }
 
       SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING ->
-        when (state.complex) {
-          listOf(ChannelState.Value.OFF, ChannelState.Value.OFF) -> ImageId(userIconId, 1, profileId)
-          listOf(ChannelState.Value.ON, ChannelState.Value.OFF) -> ImageId(userIconId, 2, profileId)
-          listOf(ChannelState.Value.OFF, ChannelState.Value.ON) -> ImageId(userIconId, 3, profileId)
-          listOf(ChannelState.Value.ON, ChannelState.Value.ON) -> ImageId(userIconId, 4, profileId)
-          else -> ImageId(userIconId, if (state.isActive()) 4 else 1, profileId)
+        when (state) {
+          is ChannelState.RgbAndDimmer -> {
+            val subId = when {
+              state.dimmer == ChannelState.Value.OFF && state.rgb == ChannelState.Value.OFF -> 1
+              state.dimmer == ChannelState.Value.ON && state.rgb == ChannelState.Value.OFF -> 2
+              state.dimmer == ChannelState.Value.OFF && state.rgb == ChannelState.Value.ON -> 3
+              else -> 4
+            }
+            ImageId(userIconId, subId, profileId)
+          }
+          else -> ImageId(userIconId, if (state.isActive) 4 else 1, profileId)
         }
 
-      else -> ImageId(userIconId, if (state.isActive()) 2 else 1, profileId)
+      else -> ImageId(userIconId, if (state.isActive) 2 else 1, profileId)
     }
 
   // for java

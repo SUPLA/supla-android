@@ -34,7 +34,7 @@ class DimmerAndRgbIconResourceProducerTest : BaseIconResourceProducerTest() {
   @Test
   fun `should produce off off icon`() {
     test(
-      data = mockIconData(state = ChannelState(ChannelState.Value.COMPLEX, listOf(ChannelState.Value.OFF, ChannelState.Value.OFF))),
+      data = mockIconData(state = ChannelState.RgbAndDimmer(ChannelState.Value.OFF, ChannelState.Value.OFF)),
       function = SuplaFunction.DIMMER_AND_RGB_LIGHTING,
       expectedIcon = R.drawable.fnc_dimmer_rgb_off_off
     )
@@ -43,7 +43,7 @@ class DimmerAndRgbIconResourceProducerTest : BaseIconResourceProducerTest() {
   @Test
   fun `should produce on off icon`() {
     test(
-      data = mockIconData(state = ChannelState(ChannelState.Value.COMPLEX, listOf(ChannelState.Value.ON, ChannelState.Value.OFF))),
+      data = mockIconData(state = ChannelState.RgbAndDimmer(ChannelState.Value.ON, ChannelState.Value.OFF)),
       function = SuplaFunction.DIMMER_AND_RGB_LIGHTING,
       expectedIcon = R.drawable.fnc_dimmer_rgb_on_off
     )
@@ -52,7 +52,7 @@ class DimmerAndRgbIconResourceProducerTest : BaseIconResourceProducerTest() {
   @Test
   fun `should produce off on icon`() {
     test(
-      data = mockIconData(state = ChannelState(ChannelState.Value.COMPLEX, listOf(ChannelState.Value.OFF, ChannelState.Value.ON))),
+      data = mockIconData(state = ChannelState.RgbAndDimmer(ChannelState.Value.OFF, ChannelState.Value.ON)),
       function = SuplaFunction.DIMMER_AND_RGB_LIGHTING,
       expectedIcon = R.drawable.fnc_dimmer_rgb_off_on
     )
@@ -61,7 +61,7 @@ class DimmerAndRgbIconResourceProducerTest : BaseIconResourceProducerTest() {
   @Test
   fun `should produce on on icon`() {
     test(
-      data = mockIconData(state = ChannelState(ChannelState.Value.COMPLEX, listOf(ChannelState.Value.ON, ChannelState.Value.ON))),
+      data = mockIconData(state = ChannelState.RgbAndDimmer(ChannelState.Value.ON, ChannelState.Value.ON)),
       function = SuplaFunction.DIMMER_AND_RGB_LIGHTING,
       expectedIcon = R.drawable.fnc_dimmer_rgb_on_on
     )
@@ -70,7 +70,7 @@ class DimmerAndRgbIconResourceProducerTest : BaseIconResourceProducerTest() {
   @Test
   fun `should produce null icon`() {
     test(
-      data = mockIconData(state = ChannelState(ChannelState.Value.NOT_USED)),
+      data = mockIconData(state = ChannelState.Default(ChannelState.Value.NOT_USED)),
       function = SuplaFunction.DIMMER_AND_RGB_LIGHTING,
       expectedIcon = null
     )

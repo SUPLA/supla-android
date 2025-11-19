@@ -28,15 +28,12 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import org.supla.android.data.source.ChannelRepository;
-import org.supla.android.data.source.ColorListRepository;
 import org.supla.android.data.source.DefaultChannelRepository;
-import org.supla.android.data.source.DefaultColorListRepository;
 import org.supla.android.data.source.DefaultSceneRepository;
 import org.supla.android.data.source.DefaultUserIconRepository;
 import org.supla.android.data.source.SceneRepository;
 import org.supla.android.data.source.UserIconRepository;
 import org.supla.android.data.source.local.ChannelDao;
-import org.supla.android.data.source.local.ColorListDao;
 import org.supla.android.data.source.local.LocationDao;
 import org.supla.android.data.source.local.SceneDao;
 import org.supla.android.data.source.local.UserIconDao;
@@ -56,7 +53,6 @@ public class DbHelper extends BaseDbHelper {
   private static DbHelper instance;
 
   private final ChannelRepository channelRepository;
-  private final ColorListRepository colorListRepository;
   private final UserIconRepository userIconRepository;
   private final SceneRepository sceneRepository;
 
@@ -64,7 +60,6 @@ public class DbHelper extends BaseDbHelper {
     super(context, DATABASE_NAME, null, DATABASE_VERSION, profileIdProvider);
     this.channelRepository =
         new DefaultChannelRepository(new ChannelDao(this), new LocationDao(this));
-    this.colorListRepository = new DefaultColorListRepository(new ColorListDao(this));
     this.userIconRepository =
         new DefaultUserIconRepository(
             new UserIconDao(this), new ImageCacheProxy(), profileIdProvider);
@@ -157,14 +152,6 @@ public class DbHelper extends BaseDbHelper {
 
   public Cursor getChannelListCursorForGroup(int groupId) {
     return channelRepository.getChannelListCursorForGroup(groupId);
-  }
-
-  public ColorListItem getColorListItem(int id, boolean group, int idx) {
-    return colorListRepository.getColorListItem(id, group, idx);
-  }
-
-  public void updateColorListItemValue(ColorListItem item) {
-    colorListRepository.updateColorListItemValue(item);
   }
 
   public List<Integer> iconsToDownload() {

@@ -22,7 +22,6 @@
     <color name="separator">#000000</color>
     <color name="old_switch_track">#42d3d2d2</color>
     <color name="error">#EF6153</color>
-    <color name="error_container">#270603</color>
     <color name="supla_button_background_outside">#131313</color>
     <color name="supla_button_inner_shadow">#00000000</color>
 
@@ -59,7 +58,6 @@
     <color name="chart_pie_23">#6E5D00</color>
     <color name="chart_pie_24">#7D015A</color>
 
-    <color name="layout_background">#171717</color>
     <color name="field_background">#3D3D3E</color>
     <color name="segmented_field_background">#101010</color>
 

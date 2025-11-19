@@ -16,7 +16,6 @@
   <string name="status_temporarily_unavailable">Service tijdelijk niet beschikbaar</string>
   <string name="status_bad_credentials">Onjuiste inloggegevens</string>
   <string name="status_climit_exceded">Limiet clienttoepassing overschreden</string>
-  <string name="status_version_error">Incompatibele serverversie</string>
   <string name="status_reg_disabled">Registratie is momenteel uitgeschakeld. Om dit in te schakelen, gaat u naar het tabblad \"Smartphones\" op pagina \"Supla Cloud\".</string>
   <string name="status_access_id_not_assigned">Aan dit apparaat is geen toegangs-ID toegewezen. Ga naar de pagina \"Supla Cloud\" en wijs de juiste ID toe op het tabblad \"Smartphones\".</string>
   <string name="status_device_disabled">Het apparaat is uitgeschakeld</string>
@@ -97,8 +96,6 @@
   <string name="wizard_no_internetwifi">Voordat u begint, maakt u verbinding met internet via een WiFi-netwerk, dat ook door de uitvoerende apparaten wordt gebruikt om verbinding te maken met de server.</string>
   <string name="wizard_wifi_error">Het WiFi-netwerk is uitgeschakeld of de ID of naam kan niet worden gelezen!</string>
   <string name="wizard_location_error">De wizard Toevoegen werkt alleen correct als de Locatieservice op dit toestel is ingeschakeld. Ga naar je systeeminstellingen, selecteer dan "Locatie" en vergewis je ervan dat de optie ingeschakeld is.</string>
-  <string name="wizard_addnetwork_error">Kan geen WiFi-netwerkconfiguratie toevoegen!</string>
-  <string name="wizard_wifi_timeout">Wachttijd voor actuele WiFi-gegevens overschreden! Ga naar de Android WiFi-instellingen, selecteer "Geavanceerd" en vink vervolgens de optie "WiFi automatisch inschakelen" aan.</string>
   <string name="wizard_scan_timeout">Wachttijd overschreden wachten op WiFi zoeken voltooid!</string>
   <string name="wizard_connect_timeout">Wachttijd voor het tot stand brengen van een verbinding met het uitvoerende apparaat is overschreden!</string>
   <string name="wizard_configure_timeout">Wachttijd voor het voltooien van de apparaatconfiguratie overschreden!</string>
@@ -113,7 +110,6 @@
   <string name="wizard_iodev_name">Naam</string>
   <string name="wizard_iodev_laststate">Vorige status</string>
 
-  <string name="wizard_result_param_error">Ongeldige invoerparameters!</string>
   <string name="wizard_result_compat_error">Het apparaat waarmee u verbonden bent, is niet compatibel met deze wizard!</string>
   <string name="wizard_result_conn_error">Kan geen verbinding maken met het apparaat!</string>
   <string name="wizard_result_failed">Configuratie mislukt!</string>
@@ -133,7 +129,6 @@
   <string name="hp_eco">ECO</string>
   <string name="hp_turbo">TURBO</string>
   <string name="hp_auto">AUTO</string>
-  <string name="hp_room_temperature">Kamertemperatuur</string>
   <string name="hp_cfg_turbo_time">Duur van de TURBO-modus</string>
   <string name="hp_cfg_water_max">Maximale watertemperatuur</string>
   <string name="hp_cfg_eco_reduction">Temperatuurverlaging in ECO-modus</string>
@@ -151,7 +146,6 @@
   <string name="ranking_of_hours">Rangschikking van uren</string>
   <string name="ranking_of_weekdays">Rangorde van dagen van de week</string>
   <string name="ranking_of_months">Rangorde van maanden</string>
-  <string name="consumption_acording_to_phases">Verbruik volgens fase</string>
   <string name="temperature">Temperatuur</string>
   <string name="humidity">Vochtigheid</string>
   <string name="history_range_last_day">De laatste 24 uur</string>
@@ -162,18 +156,11 @@
   <string name="all_available_history">Volledige geschiedenis beschikbaar</string>
   <string name="retrieving_data_from_the_server">Gegevens downloaden van de server ...</string>
   <string name="no_chart_data_available">Er zijn geen gegevens voor de grafiek.</string>
-  <string name="comparsion_minmin">Vergelijking van minuut tot minuut</string>
-  <string name="comparsion_hourhour">Uur tot uur vergelijking</string>
-  <string name="comparsion_dayday">Dag tot dag vergelijking</string>
-  <string name="comparsion_monthmonth">Maand-tot-maand vergelijking</string>
-  <string name="comparsion_yearyear">Vergelijking jaar tot jaar</string>
   <string name="hp_error_1">Waterdeprivatie</string>
   <string name="hp_error_2">Verbrande verwarming</string>
   <string name="hp_error_3">Fout watertemperatuursensor</string>
   <string name="hp_error_4">Kamertemperatuursensor fout</string>
   <string name="hp_error_5">Geen netwerkonderbrekingen</string>
-  <string name="production_acording_to_phases">Productie door fase</string>
-  <string name="current_production">Productie in de huidige maand</string>
   <string name="enter_superuser_credentials">Voer de inloggegevens van de superuser in</string>
 
   <string name="channel_func_none">Geen functie beschikbaar</string>
@@ -216,11 +203,6 @@
   <string name="channel_func_valve_percentage">Valve</string>
 
   <string name="channel_caption_heatmeter">Warmtemeter</string>
-  <string name="aritmetic_balance_days">Rekenkundig saldo - Dagen</string>
-  <string name="aritmetic_balance_hours">Rekenkundig saldo - Uren</string>
-  <string name="aritmetic_balance_minutes">Rekenkundig saldo - Minuten</string>
-  <string name="aritmetic_balance_months">Rekenkundig saldo - Maanden</string>
-  <string name="aritmetic_balance_years">Rekenkundig saldo - Jaren</string>
   <string name="associeted_with_scene_error">U kunt de functie van het kanaal dat gerelateerd is aan de scène niet wijzigen.</string>
   <string name="battery_health">Levensduur van de batterij</string>
   <string name="battery_level">Batterijniveau</string>
@@ -268,11 +250,6 @@
   <string name="channel_uv_error">De levensduur van de uv-lamp is %1$.01f%%. Vervang de lamp.</string>
   <string name="valve_warning_manually_closed">De klep is handmatig of per radio gesloten. Voordat u het opent, moet u ervoor zorgen dat ze niet is gesloten vanwege wateroverlast. Om de waarschuwing uit te schakelen, opent u de klep handmatig. Weet u zeker dat u de klep vanuit de app wilt openen?!</string>
   <string name="valve_warning">De klep is handmatig of per radio gesloten. Voordat u ze opent, moet u ervoor zorgen dat het niet is gesloten vanwege wateroverlast. Om de waarschuwing uit te schakelen, opent u de klep handmatig.</string>
-  <string name="vector_balance_days">Vector saldo - Dagen</string>
-  <string name="vector_balance_hours">Vector saldo - Uren</string>
-  <string name="vector_balance_minutes">Vector saldo - Minuten</string>
-  <string name="vector_balance_months">Vector saldo - Maanden</string>
-  <string name="vector_balance_years">Vector saldo - Jaren</string>
   <string name="vl_cfg_auto">AUTO</string>
   <string name="vl_cfg_boost">Versterking</string>
   <string name="vl_cfg_mode">Dimmodus</string>
@@ -290,18 +267,11 @@
   <string name="vl_dimmer_cfg_info_txt6">Versterking</string>
   <string name="vl_dimmer_cfg_info_txt7">Deze functie helpt bij het inschakelen van de LED-verlichting bij een opgeslagen laag helderheidsniveau, waardoor het helderheidsniveau wordt verhoogd (versterkt). Door de donkergrijze schuifregelaar rond de cirkel te bewegen, kunt u het versterkingsniveau verhogen of verlagen, wat wordt aangegeven door de groene lijn. Bij het inschakelen van de verlichting wordt het helderheidsniveau verhoogd (versterkt) tot een vooraf ingestelde waarde en vervolgens teruggebracht naar het niveau dat was opgeslagen voordat de verlichting werd uitgeschakeld.</string>
   <string name="vl_dimmer_cfg_info_txt8">Meer informatie over de dimmer vindt u op</string>
-  <string name="vl_dimmer_info_txt1">Dimmerregeling</string>
-  <string name="vl_dimmer_info_txt2">Schuif met uw vinger over de indicator op de schuifregelaar of het helderheidscirkel om het helderheidsniveau te wijzigen.</string>
-  <string name="vl_dimmer_info_txt3">Met de aan/uit-knop kunt u de verlichting uit- of aanzetten.</string>
-  <string name="vl_dimmer_info_txt4">De dimmer onthoudt het helderheidsniveau voordat hij de verlichting uitschakelt.</string>
-  <string name="vl_dimmer_info_txt5">Om de dimmerparameters aan te passen, drukt u op de instelknop.</string>
   <string name="wake_up_frequency">Frequentie ontwakingsproces</string>
   <string name="wakeup_info">*) De ingevoerde instellingen worden toegepast de volgende keer dat het knooppunt ontwaakt.</string>
   <string name="wheel">Cirkel</string>
   <string name="wifi_rssi">WiFi RSSI</string>
   <string name="wifi_signal_strength">WiFi-signaalsterkte</string>
-  <string name="wifi_throttling">Wacht de hierboven weergegeven tijd vanwege de beperkingen van het scannen van WiFi-netwerken die worden opgelegd door het Android-systeem.</string>
-  <string name="wizard_step1_txt2">Zorg ervoor dat uw mobiele data is uitgeschakeld wanneer u apparaten toevoegt. Anders kan de toevoeging mislukken.</string>
   <string name="add_wizard_step_2_message">Voer de naam en het wachtwoord van uw thuis- of bedrijfs-WIFI-netwerk in waarmee het apparaat verbinding kan maken met de server.</string>
   <string name="yes">Ja</string>
   <string name="z_wave">Z-wave brug</string>
@@ -368,7 +338,6 @@
   <string name="profile">Uw rekening</string>
   <string name="profile_plural">Uw rekeningen</string>
   <string name="menubar_appsettings">Voorkeuren</string>
-  <string name="em_chart_phase_n">Fase %d</string>
   <string name="em_chart_all_phases">Fase 1+2+3</string>
   <string name="widget_configure_title">Widget configuratie</string>
   <string name="widget_configure_profile_label">Rekening</string>
@@ -396,7 +365,6 @@
   <string name="input">Ingang</string>
   <string name="monostable">Mono-stabiel</string>
   <string name="bistable">Bi-stabiel</string>
-  <string name="wizard_iodev_connect_failed">Een poging om een WiFi verbinding met de uitvoerende te maken is mislukt.</string>
   <string name="diw_cfg_info_oprange">Stel het werkingsbereik van de dimmer in door een minimum- en maximumhelderheidsniveau in te stellen. De minimum- en maximumwaarde kunnen worden ingesteld door de schuifregelaars aan weerszijden van het wiel te verplaatsen.</string>
   <string name="diw_cfg_info_in_options">Ingangsopties</string>
   <string name="diw_cfg_info_mono_option">Deze optie wijzigt het gedrag van de ingang waarop de mono-stabiele knop is aangesloten. Als de optie uit staat, stopt de dimmer met lichter worden als het maximum helderheidsniveau is bereikt, en met dimmen als het minimum helderheidsniveau is bereikt. Als de optie is ingeschakeld, schakelt de dimmer naar het minimumniveau zodra het maximale helderheidsniveau is bereikt en, in het geval van dimmen, naar de maximale waarde zodra het minumum is bereikt. Het oplichten/afvlakken gaat door zolang de toets wordt ingedrukt.</string>
@@ -456,7 +424,6 @@
 
   <string name="turn_on">Zet in</string>
   <string name="turn_off">Schakel uit</string>
-  <string name="str_default">Standaard</string>
   <string name="widget_configure_type_label">Widget voor:</string>
   <string name="widget_configure_type_channel_label">Kanaal</string>
   <string name="widget_configure_type_group_label">Groepen</string>
@@ -665,7 +632,6 @@
   <string name="details_em_balance_hourly">Uurbalans</string>
   <string name="details_em_balance_chart_aggregated">Grafiek-geaggregeerde balans</string>
   <string name="details_em_sum">Totaal</string>
-  <string name="details_em_select_range">Selecteer een periode</string>
   <string name="details_em_active_energy">Actieve energie</string>
   <string name="details_em_forwarded_energy">Gedownload</string>
   <string name="details_em_reversed_energy">Geretourneerd</string>
@@ -722,10 +688,6 @@
   <string name="developer_info_activated">Ontwikkelaarsmodus geactiveerd</string>
   <string name="developer_info_screen_orientation">Schermrotatie ingeschakeld</string>
   <string name="developer_info_settings">Experimentele instellingen</string>
-  <string name="profiles_list_sorting">Sorteren</string>
-  <string name="profiles_list_sorting_default">Standaard</string>
-  <string name="profiles_list_sorting_name">Naam</string>
-  <string name="profiles_list_sorting_added">Laatst toegevoegd</string>
   <string name="channel_caption_water_tank">Watertank</string>
   <string name="channel_caption_container_level_sensor">Niveausensor voor container</string>
   <string name="state_opened">open</string>
@@ -756,4 +718,11 @@
     <item quantity="other">%1$d dagen ⏱️</item>
   </plurals>
   <string name="thermostat_calibration_error">Kalibratiefout</string>
+  <string name="toolbar_dimmer">Dimmer</string>
+  <string name="rgb_detail_color">Kleur:</string>
+  <string name="rgb_detail_brightness">Helderheid:</string>
+  <string name="rgb_detail_select_color">Kleur selecteren</string>
+  <string name="legacy_rgbw_settings_unauthorized_message">Autorisatie nodig om de configuratie te zien!</string>
+  <string name="legacy_rgbw_settings_authorize_button">Autoriseren</string>
+  <string name="rgb_detail_colors_limit">Limiet bereikt!</string>
 </resources>

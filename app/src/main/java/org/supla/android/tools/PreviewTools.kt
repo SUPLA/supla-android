@@ -6,7 +6,7 @@ const val BACKGROUND_COLOR = 0x00F5F6F7L
 
 @Retention(AnnotationRetention.BINARY)
 @Target(AnnotationTarget.ANNOTATION_CLASS, AnnotationTarget.FUNCTION)
-@Preview(showBackground = true, backgroundColor = BACKGROUND_COLOR)
+@Preview(showBackground = true, backgroundColor = BACKGROUND_COLOR, showSystemUi = true)
 annotation class SuplaPreview
 
 @Retention(AnnotationRetention.BINARY)

@@ -32,6 +32,9 @@ import org.supla.core.shared.data.model.function.container.ContainerValue
 import org.supla.core.shared.data.model.function.digiglass.DigiglassValue
 import org.supla.core.shared.data.model.function.facadeblind.FacadeBlindValue
 import org.supla.core.shared.data.model.function.relay.RelayValue
+import org.supla.core.shared.data.model.function.rgbanddimmer.DimmerValue
+import org.supla.core.shared.data.model.function.rgbanddimmer.RgbValue
+import org.supla.core.shared.data.model.function.rgbanddimmer.RgbwValue
 import org.supla.core.shared.data.model.function.rollershutter.RollerShutterValue
 import org.supla.core.shared.data.model.function.thermostat.HomePlusThermostatValue
 import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
@@ -90,6 +93,12 @@ data class ChannelValueEntity(
 
   fun asContainerValue() = ContainerValue.from(status, getValueAsByteArray())
 
+  fun asRgbValue() = RgbValue.from(status, getValueAsByteArray())
+
+  fun asRgbwValue() = RgbwValue.from(status, getValueAsByteArray())
+
+  fun asDimmerValue() = DimmerValue.from(status, getValueAsByteArray())
+
   fun getSubValueHi(): Int =
     getSubValueAsByteArray().let {
       var result: Byte = 0
@@ -122,8 +131,8 @@ data class ChannelValueEntity(
   fun getSubValueAsByteArray(): ByteArray = toByteArray(subValue)
 
   fun differsFrom(suplaChannelValue: SuplaChannelValue, status: SuplaChannelAvailabilityStatus): Boolean {
-    val suplaValue = Companion.toString(suplaChannelValue.Value)
-    val suplaSubValue = Companion.toString(suplaChannelValue.SubValue)
+    val suplaValue = toString(suplaChannelValue.Value)
+    val suplaSubValue = toString(suplaChannelValue.SubValue)
 
     return value != suplaValue ||
       subValue != suplaSubValue ||
@@ -136,9 +145,9 @@ data class ChannelValueEntity(
       id = id,
       channelRemoteId = channelRemoteId,
       status = status,
-      subValue = if (status.online) Companion.toString(suplaChannelValue.SubValue) else subValue,
+      subValue = if (status.online) toString(suplaChannelValue.SubValue) else subValue,
       subValueType = if (status.online) suplaChannelValue.SubValueType else subValueType,
-      value = if (status.online) Companion.toString(suplaChannelValue.Value) else value,
+      value = if (status.online) toString(suplaChannelValue.Value) else value,
       profileId = profileId
     )
 

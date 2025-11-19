@@ -17,6 +17,7 @@ package org.supla.android.extensions
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.compose.ui.graphics.Color
 import java.util.Locale
 
 fun String.ucFirst(locale: Locale = Locale.getDefault()) = replaceFirstChar {
@@ -29,3 +30,35 @@ fun String.skipQuotation() =
   } else {
     this
   }
+
+/**
+ * Converts a hexadecimal string representation (e.g., "#RRGGBB") to an RGB Color object.
+ */
+fun String.toColor(): Color {
+  return toColorOrNull() ?: throw IllegalArgumentException("Invalid hex string format: $this. Must be RRGGBB.")
+}
+
+fun String.toColorOrNull(): Color? {
+  var hex = this
+  if (hex.startsWith("#")) {
+    hex = hex.substring(1)
+  }
+  if (hex.length == 6) {
+    val r = hex.take(2).toInt(16) / 255f
+    val g = hex.substring(2, 4).toInt(16) / 255f
+    val b = hex.substring(4, 6).toInt(16) / 255f
+    return Color(r, g, b)
+  }
+
+  if (hex.length == 3) {
+    val r = hex.take(1).toInt(16) / 255f
+    val g = hex[1].code / 255f
+    val b = hex[2].code / 255f
+    return Color(r, g, b)
+  }
+
+  return null
+}
+
+fun String.filterHexDigits(): String =
+  this.filter { it.isDigit() || it in 'a'..'f' || it in 'A'..'F' }

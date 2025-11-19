@@ -16,7 +16,6 @@
   <string name="status_temporarily_unavailable">Storitev trenutno ni na voljo</string>
   <string name="status_bad_credentials">Napačne poverilnice</string>
   <string name="status_climit_exceded">Omejitev odjemalskih aplikacij je presežena</string>
-  <string name="status_version_error">Nezdružljiva različica strežnika</string>
   <string name="status_reg_disabled">Registracija je trenutno izklopljena. Če jo želite omogočiti, pojdite na zavihek \"Pametni telefoni\" na strani \"Supla Cloud\".</string>
   <string name="status_access_id_not_assigned">Ta naprava nima dodeljenega identifikatorja dostopa. Pojdite na stran \"Supla Cloud\" in na zavihku \"Pametni telefoni\" dodelite ustrezen identifikator.</string>
   <string name="status_device_disabled">Naprava je izklopljena</string>
@@ -94,8 +93,6 @@
   <string name="wizard_no_internetwifi">Preden začnete, se povežite z internetom prek omrežja Wi-Fi, ki ga bodo tudi izvršne naprave uporabile za povezavo s strežnikom.</string>
   <string name="wizard_wifi_error">Omrežje Wi-Fi je izklopljeno ali njegovega identifikatorja ali imena ni mogoče prebrati!</string>
   <string name="wizard_location_error">Za pravilno delovanje čarovnika za dodajanje mora biti v tej napravi omogočena storitev lokacije. Pojdite v sistemske nastavitve, nato izberite »Lokacija« in se prepričajte, da je ta vklopljena.</string>
-  <string name="wizard_addnetwork_error">Konfiguracije omrežja Wi-Fi ni mogoče dodati!</string>
-  <string name="wizard_wifi_timeout">Čakalna doba za trenutne podatke Wi-Fi je prekoračena! Pojdite v nastavitve Wi-Fi v sistemu Android, izberite Dodatne nastavitve in potrdite polje »Samodejno vklopi Wi-Fi«.</string>
   <string name="wizard_scan_timeout">Čakalna doba za dokončanje iskanja Wi-Fi je prekoračena!</string>
   <string name="wizard_connect_timeout">Čakalna doba za vzpostavitev povezave z izvršilno napravo je prekoračena!</string>
   <string name="wizard_configure_timeout">Čakalna doba za dokončanje konfiguracije naprave je prekoračena!</string>
@@ -110,7 +107,6 @@
   <string name="wizard_iodev_name">Ime</string>
   <string name="wizard_iodev_laststate">Prejšnji status</string>
 
-  <string name="wizard_result_param_error">Napačni vhodni parametri!</string>
   <string name="wizard_result_compat_error">Naprava, na katero ste se povezali, ni združljiva s tem čarovnikom!</string>
   <string name="wizard_result_conn_error">Ni mogoče povezati z napravo!</string>
   <string name="wizard_result_failed">Konfiguracija ni bila uspešna!</string>
@@ -130,7 +126,6 @@
   <string name="hp_eco">ECO</string>
   <string name="hp_turbo">TURBO</string>
   <string name="hp_auto">AVTO</string>
-  <string name="hp_room_temperature">Temperatura v prostoru</string>
   <string name="hp_cfg_turbo_time">Čas trajanja načina TURBO</string>
   <string name="hp_cfg_water_max">Najvišja temperatura vode</string>
   <string name="hp_cfg_eco_reduction">Znižanje temperature v ECO načinu</string>
@@ -148,7 +143,6 @@
   <string name="ranking_of_hours">Razvrstitev ur</string>
   <string name="ranking_of_weekdays">Razvrstitev dni v tednu</string>
   <string name="ranking_of_months">Razvrstitev mesecev</string>
-  <string name="consumption_acording_to_phases">Poraba v skladu s fazami</string>
   <string name="temperature">Temperatura</string>
   <string name="humidity">Vlažnost</string>
   <string name="history_range_last_day">Zadnjih 24 ur</string>
@@ -159,18 +153,11 @@
   <string name="all_available_history">Vsa zgodovina je na voljo</string>
   <string name="retrieving_data_from_the_server">Prenos podatkov s strežnika...</string>
   <string name="no_chart_data_available">Za tabelo ni podatkov.</string>
-  <string name="comparsion_minmin">Primerjava iz minute v minuto</string>
-  <string name="comparsion_hourhour">Primerjava iz ure v uro</string>
-  <string name="comparsion_dayday">Primerjava iz dneva v dan</string>
-  <string name="comparsion_monthmonth">Primerjava iz meseca v mesec</string>
-  <string name="comparsion_yearyear">Primerjava iz leta v leto</string>
   <string name="hp_error_1">Brez vode</string>
   <string name="hp_error_2">Izgoreli grelec</string>
   <string name="hp_error_3">Napaka senzorja temperature vode</string>
   <string name="hp_error_4">Napaka senzorja sobne temperature</string>
   <string name="hp_error_5">Brez prekinitev omrežja</string>
-  <string name="production_acording_to_phases">Izdelava v skladu s fazami</string>
-  <string name="current_production">Proizvodnja v tekočem mesecu</string>
   <string name="enter_superuser_credentials">Vnesite poverilnice podupravitelja</string>
 
   <string name="channel_func_none">Brez funkcije</string>
@@ -214,11 +201,6 @@
 
   <string name="channel_caption_heatmeter">Merilnik toplote</string>
   <string name="add_wizard_step_2_message">Vnesite ime in geslo domačega ali službenega omrežja Wi-Fi, prek katerega bo izvrševalna naprava lahko vzpostavila povezavo s strežnikom.</string>
-  <string name="aritmetic_balance_days">Aritmetično ravnotežje - Dnevi</string>
-  <string name="aritmetic_balance_hours">Aritmetično ravnotežje - Ure</string>
-  <string name="aritmetic_balance_minutes">Aritmetično ravnotežje - Minute</string>
-  <string name="aritmetic_balance_months">Aritmetično ravnotežje - Meseci</string>
-  <string name="aritmetic_balance_years">Aritmetično ravnotežje - Leta</string>
   <string name="associeted_with_scene_error">Funkcije kanala, ki je povezan s sceno, ne morete spremeniti.</string>
   <string name="battery_health">Življenjska doba baterije</string>
   <string name="battery_level">Raven baterije</string>
@@ -266,11 +248,6 @@
   <string name="channel_uv_error">Življenjska doba infrardeče IR grelne žarnice znaša %1$.01f%%. Menjajte žarnico.</string>
   <string name="valve_warning_manually_closed">Ventil je bil zaprt ročno ali na daljavo. Preden ga odprete, se prepričajte, da ni zaprt zaradi poplave. Če želite onemogočiti opozorilo, ročno odprite ventil. Ali ste prepričani, da želite odpreti ventil z aplikacijo?!</string>
   <string name="valve_warning">Ventil je bil zaprt ročno ali na daljavo. Preden ga odprete, se prepričajte, da ni bil zaprt zaradi poplave. Če želite onemogočiti opozorilo, odprite ventil ročno.</string>
-  <string name="vector_balance_days">Vektorsko ravnotežje - Dnevi</string>
-  <string name="vector_balance_hours">Vektorsko ravnotežje - Ure</string>
-  <string name="vector_balance_minutes">Vektorsko ravnotežje - Minute</string>
-  <string name="vector_balance_months">Vektorsko ravnotežje - Meseci</string>
-  <string name="vector_balance_years">Vektorsko ravnotežje - Leta</string>
   <string name="vl_cfg_auto">AUTO</string>
   <string name="vl_cfg_boost">Okrepitev</string>
   <string name="vl_cfg_mode">Način zatemnitve</string>
@@ -288,18 +265,11 @@
   <string name="vl_dimmer_cfg_info_txt6">Okrepitev</string>
   <string name="vl_dimmer_cfg_info_txt7">Ta funkcija pomaga pri vklopu LED osvetlitve pri shranjeni nizki stopnji svetlobe, kar omogoča zagon večanja (jačanja) ravni svetlobe. S premikanjem temno sivega drsnika po krožcu lahko povečate ali zmanjšate stopnjo ojačanja, ki je označena z zeleno črto. Ko vklopite osvetlitev, se stopnja svetlosti poveča (ojača) na nastavljeno vrednost, nato pa se pred izklopom osvetlitve vrne na shranjeno raven.</string>
   <string name="vl_dimmer_cfg_info_txt8">Več informacij o zatemnilniku lahko najdete na</string>
-  <string name="vl_dimmer_info_txt1">Nadzor z zatemnilnikom</string>
-  <string name="vl_dimmer_info_txt2">Če želite spremeniti stopnjo svetlosti, s prstom potisnite indikator na drsniku ali koleščku za svetlost.</string>
-  <string name="vl_dimmer_info_txt3">Z gumbom za vklop/izklop lahko v celoti izklopite ali vklopite osvetlitev.</string>
-  <string name="vl_dimmer_info_txt4">Zatemnilnik si bo zapomnil stopnjo svetlosti, preden izklopite osvetlitev.</string>
-  <string name="vl_dimmer_info_txt5">Če želite prilagoditi parametre zatemnilnika, pritisnite gumb za nastavitve.</string>
   <string name="wake_up_frequency">Pogostost zbujanja</string>
   <string name="wakeup_info">*) Vnesene nastavitve bodo uporabljene naslednjič, ko se najbližje vozlišče zbudi.</string>
   <string name="wheel">Kolo</string>
   <string name="wifi_rssi">Wi-Fi RSSI</string>
   <string name="wifi_signal_strength">Moč Wi-Fi signala</string>
-  <string name="wifi_throttling">Zaradi omejitev skeniranja omrežja Wi-Fi, ki jih nalaga sistem Android, počakajte na zgoraj navedeni čas.</string>
-  <string name="wizard_step1_txt2">Pri dodajanju naprav se prepričajte, da so mobilni podatki izklopljeni. V nasprotnem primeru dodajanje morda ne bo uspešno.</string>
   <string name="yes">Da</string>
   <string name="z_wave">Most z-wave</string>
   <string name="zwave_add_device">Dodaj napravo</string>
@@ -365,7 +335,6 @@
   <string name="profile">Vaš račun</string>
   <string name="profile_plural">Vaši računi</string>
   <string name="menubar_appsettings">Nastavitve</string>
-  <string name="em_chart_phase_n">Faza %d</string>
   <string name="em_chart_all_phases">Faza 1+2+3</string>
   <string name="widget_configure_title">Konfiguracija pripomočka</string>
   <string name="widget_configure_profile_label">Račun</string>
@@ -393,7 +362,6 @@
   <string name="input">Vhod</string>
   <string name="monostable">Monostabilni</string>
   <string name="bistable">Bistabilni</string>
-  <string name="wizard_iodev_connect_failed">Poskus vzpostavitve Wi-Fi povezave z izvršno napravo ni uspel.</string>
   <string name="diw_cfg_info_oprange">Delovanje zatemnitve prilagodite tako, da nastavite najmanjšo in največjo raven svetlosti. Najmanjšo in največjo vrednost lahko nastavite s premikanjem drsnikov na obeh straneh kolesa.</string>
   <string name="diw_cfg_info_in_options">Možnosti vhoda</string>
   <string name="diw_cfg_info_mono_option">Možnost spremeni obnašanje vhoda, na katerega je priključen monostabilni gumb. Če je možnost onemogočena, zatemnilnik ustavi osvetljevanje, ko je dosežena najvišja raven svetlosti, v primeru zatemnitve pa, ko doseže minimalno stopnjo. Če omogočite to možnost, se preklopi na minimalno raven takoj, ko je dosežena največja raven svetlosti, v primeru zatemnitve na največjo vrednost pa takoj, ko je dosežena najmanjša. Osvetljevanje/zatemnitev se bo nadaljevalo do takrat ko je gumb pritisnjen.</string>
@@ -453,7 +421,6 @@
 
   <string name="turn_on">Vklopi</string>
   <string name="turn_off">Izklopi</string>
-  <string name="str_default">Privzeto</string>
   <string name="widget_configure_type_label">Pripomoček za:</string>
   <string name="widget_configure_type_channel_label">Kanal</string>
   <string name="widget_configure_type_group_label">Skupine</string>
@@ -662,7 +629,6 @@
   <string name="details_em_balance_hourly">Urna bilanca</string>
   <string name="details_em_balance_chart_aggregated">Pregledna bilanca stanja</string>
   <string name="details_em_sum">Skupaj</string>
-  <string name="details_em_select_range">Izberite obdobje</string>
   <string name="details_em_active_energy">Aktivna energija</string>
   <string name="details_em_forwarded_energy">Prenesena</string>
   <string name="details_em_reversed_energy">Vrnjena</string>
@@ -719,10 +685,6 @@
   <string name="developer_info_activated">Razvijalski način aktiviran</string>
   <string name="developer_info_screen_orientation">Omogočeno vrtenje zaslona</string>
   <string name="developer_info_settings">Eksperimentalne nastavitve</string>
-  <string name="profiles_list_sorting">Razvrščanje</string>
-  <string name="profiles_list_sorting_default">Privzeto</string>
-  <string name="profiles_list_sorting_name">Ime</string>
-  <string name="profiles_list_sorting_added">Zadnje dodano</string>
   <string name="channel_caption_water_tank">Rezervoar za vodo</string>
   <string name="channel_caption_container_level_sensor">Senzor nivoja posode</string>
   <string name="state_opened">odprto</string>
@@ -755,4 +717,11 @@
     <item quantity="other">%1$d dni ⏱️</item>
   </plurals>
   <string name="thermostat_calibration_error">Napaka kalibracije</string>
+  <string name="toolbar_dimmer">Zatemnilnik</string>
+  <string name="rgb_detail_color">Barva:</string>
+  <string name="rgb_detail_brightness">Svetlost:</string>
+  <string name="rgb_detail_select_color">Izberite barvo</string>
+  <string name="legacy_rgbw_settings_unauthorized_message">Za ogled konfiguracije je potrebna avtorizacija!</string>
+  <string name="legacy_rgbw_settings_authorize_button">Avtoriziraj</string>
+  <string name="rgb_detail_colors_limit">Omejitev dosežena!</string>
 </resources>

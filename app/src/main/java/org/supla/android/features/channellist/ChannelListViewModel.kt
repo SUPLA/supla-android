@@ -49,19 +49,14 @@ import org.supla.android.usecases.channel.ChannelActionUseCase
 import org.supla.android.usecases.channel.CreateProfileChannelsListUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
-import org.supla.android.usecases.details.ContainerDetailType
-import org.supla.android.usecases.details.EmDetailType
-import org.supla.android.usecases.details.GateDetailType
 import org.supla.android.usecases.details.GpmDetailType
 import org.supla.android.usecases.details.HumidityDetailType
 import org.supla.android.usecases.details.IcDetailType
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideChannelDetailTypeUseCase
-import org.supla.android.usecases.details.SwitchDetailType
+import org.supla.android.usecases.details.StandardDetailType
 import org.supla.android.usecases.details.ThermometerDetailType
 import org.supla.android.usecases.details.ThermostatDetailType
-import org.supla.android.usecases.details.ValveDetailType
-import org.supla.android.usecases.details.WindowDetailType
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 import javax.inject.Inject
@@ -197,12 +192,7 @@ class ChannelListViewModel @Inject constructor(
       is GpmDetailType -> sendEvent(ChannelListViewEvent.OpenSingleHistoryDetail(ItemBundle.from(channel), detailType.pages))
       is HumidityDetailType -> sendEvent(ChannelListViewEvent.OpenSingleHistoryDetail(ItemBundle.from(channel), detailType.pages))
 
-      is SwitchDetailType -> sendEvent(ChannelListViewEvent.OpenStandardDetail(ItemBundle.from(channel), detailType.pages))
-      is WindowDetailType -> sendEvent(ChannelListViewEvent.OpenStandardDetail(ItemBundle.from(channel), detailType.pages))
-      is EmDetailType -> sendEvent(ChannelListViewEvent.OpenStandardDetail(ItemBundle.from(channel), detailType.pages))
-      is ContainerDetailType -> sendEvent(ChannelListViewEvent.OpenStandardDetail(ItemBundle.from(channel), detailType.pages))
-      is ValveDetailType -> sendEvent(ChannelListViewEvent.OpenStandardDetail(ItemBundle.from(channel), detailType.pages))
-      is GateDetailType -> sendEvent(ChannelListViewEvent.OpenStandardDetail(ItemBundle.from(channel), detailType.pages))
+      is StandardDetailType -> sendEvent(ChannelListViewEvent.OpenStandardDetail(ItemBundle.from(channel), detailType.pages))
 
       is ThermostatDetailType -> sendEvent(ChannelListViewEvent.OpenThermostatDetail(ItemBundle.from(channel), detailType.pages))
       is IcDetailType -> sendEvent(ChannelListViewEvent.OpenIcDetail(ItemBundle.from(channel), detailType.pages))

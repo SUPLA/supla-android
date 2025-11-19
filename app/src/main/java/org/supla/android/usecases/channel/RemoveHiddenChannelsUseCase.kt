@@ -27,6 +27,7 @@ import org.supla.android.data.source.ChannelExtendedValueRepository
 import org.supla.android.data.source.ChannelRelationRepository
 import org.supla.android.data.source.ChannelStateRepository
 import org.supla.android.data.source.ChannelValueRepository
+import org.supla.android.data.source.ColorListRepository
 import org.supla.android.data.source.CurrentLogRepository
 import org.supla.android.data.source.ElectricityMeterLogRepository
 import org.supla.android.data.source.GeneralPurposeMeasurementLogRepository
@@ -36,7 +37,6 @@ import org.supla.android.data.source.HumidityLogRepository
 import org.supla.android.data.source.ImpulseCounterLogRepository
 import org.supla.android.data.source.PowerActiveLogRepository
 import org.supla.android.data.source.RoomChannelRepository
-import org.supla.android.data.source.RoomColorListRepository
 import org.supla.android.data.source.TemperatureAndHumidityLogRepository
 import org.supla.android.data.source.TemperatureLogRepository
 import org.supla.android.data.source.VoltageLogRepository
@@ -52,7 +52,7 @@ class RemoveHiddenChannelsUseCase @Inject constructor(
   channelRelationRepository: ChannelRelationRepository,
   channelStateRepository: ChannelStateRepository,
   channelValueRepository: ChannelValueRepository,
-  colorListRepository: RoomColorListRepository,
+  colorListRepository: ColorListRepository,
   currentLogRepository: CurrentLogRepository,
   androidAutoItemRepository: AndroidAutoItemRepository,
   electricityMeterLogRepository: ElectricityMeterLogRepository,

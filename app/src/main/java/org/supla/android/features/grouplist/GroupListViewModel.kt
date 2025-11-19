@@ -46,12 +46,10 @@ import org.supla.android.usecases.channel.ActionException
 import org.supla.android.usecases.channel.ButtonType
 import org.supla.android.usecases.channel.GroupActionUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
-import org.supla.android.usecases.details.GateDetailType
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideGroupDetailTypeUseCase
-import org.supla.android.usecases.details.SwitchDetailType
+import org.supla.android.usecases.details.StandardDetailType
 import org.supla.android.usecases.details.ThermostatDetailType
-import org.supla.android.usecases.details.WindowDetailType
 import org.supla.android.usecases.group.CreateProfileGroupsListUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.location.CollapsedFlag
@@ -204,10 +202,8 @@ class GroupListViewModel @Inject constructor(
 
     when (val detailType = provideGroupDetailTypeUseCase(group)) {
       is LegacyDetailType -> sendEvent(GroupListViewEvent.OpenLegacyDetails(group.remoteId, detailType))
-      is WindowDetailType -> sendEvent(GroupListViewEvent.OpenStandardDetail(ItemBundle.from(group), detailType.pages))
       is ThermostatDetailType -> sendEvent(GroupListViewEvent.OpenStandardDetail(ItemBundle.from(group), detailType.pages))
-      is GateDetailType -> sendEvent(GroupListViewEvent.OpenStandardDetail(ItemBundle.from(group), detailType.pages))
-      is SwitchDetailType -> sendEvent(GroupListViewEvent.OpenStandardDetail(ItemBundle.from(group), detailType.pages))
+      is StandardDetailType -> sendEvent(GroupListViewEvent.OpenStandardDetail(ItemBundle.from(group), detailType.pages))
       else -> {} // no action
     }
   }
