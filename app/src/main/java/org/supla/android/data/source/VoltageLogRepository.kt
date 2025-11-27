@@ -90,6 +90,9 @@ class VoltageLogRepository @Inject constructor(
       profileId = profileId
     )
 
+  override fun findCountWithoutGroupingString(remoteId: Int, profileId: Long): Single<Int> =
+    voltageLogDao.emptyGroupingStringCount(remoteId, profileId)
+
   override fun count(): Observable<Int> = voltageLogDao.count()
 
   override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = voltageLogDao.deleteKtx(remoteId, profileId)

@@ -90,6 +90,9 @@ class PowerActiveLogRepository @Inject constructor(
       profileId = profileId
     )
 
+  override fun findCountWithoutGroupingString(remoteId: Int, profileId: Long): Single<Int> =
+    powerActiveLogDao.emptyGroupingStringCount(remoteId, profileId)
+
   override fun count(): Observable<Int> = powerActiveLogDao.count()
 
   override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = powerActiveLogDao.deleteKtx(remoteId, profileId)

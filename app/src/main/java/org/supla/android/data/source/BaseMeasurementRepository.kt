@@ -40,6 +40,8 @@ abstract class BaseMeasurementRepository<T : Measurement, U : BaseLogEntity>(pri
 
   abstract fun map(entry: T, groupingString: String, remoteId: Int, profileId: Long): U
 
+  abstract fun findCountWithoutGroupingString(remoteId: Int, profileId: Long): Single<Int>
+
   abstract fun findMinTimestamp(remoteId: Int, profileId: Long): Single<Long>
 
   abstract fun findMaxTimestamp(remoteId: Int, profileId: Long): Single<Long>

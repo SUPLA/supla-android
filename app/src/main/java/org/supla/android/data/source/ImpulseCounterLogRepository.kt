@@ -80,6 +80,9 @@ class ImpulseCounterLogRepository @Inject constructor(
   override fun map(entry: ImpulseCounterMeasurement, groupingString: String, remoteId: Int, profileId: Long) =
     ImpulseCounterLogEntity.create(entry = entry, groupingString = groupingString, channelId = remoteId, profileId = profileId)
 
+  override fun findCountWithoutGroupingString(remoteId: Int, profileId: Long): Single<Int> =
+    impulseCounterLogDao.emptyGroupingStringCount(remoteId, profileId)
+
   override fun count(): Observable<Int> = impulseCounterLogDao.count()
 
   override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = impulseCounterLogDao.deleteKtx(remoteId, profileId)

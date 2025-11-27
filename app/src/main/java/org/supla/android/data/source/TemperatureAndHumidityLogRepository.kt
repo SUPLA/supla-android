@@ -89,6 +89,9 @@ class TemperatureAndHumidityLogRepository @Inject constructor(
       profileId = profileId
     )
 
+  override fun findCountWithoutGroupingString(remoteId: Int, profileId: Long): Single<Int> =
+    temperatureAndHumidityLogDao.emptyGroupingStringCount(remoteId, profileId)
+
   override fun count(): Observable<Int> = temperatureAndHumidityLogDao.count()
 
   override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = temperatureAndHumidityLogDao.deleteKtx(remoteId, profileId)

@@ -146,6 +146,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
     every { generalPurposeMeterLogRepository.findMinTimestamp(remoteId, profileId) } returns
       Single.just(date(2023, 10, 1).time)
     every { generalPurposeMeterLogRepository.findCount(remoteId, profileId) } returns Maybe.just(100)
+    every { generalPurposeMeterLogRepository.findCountWithoutGroupingString(remoteId, profileId) } returns Single.just(0)
 
     // when
     val testObserver = useCase.loadMeasurements(remoteId, profileId).test()
@@ -158,6 +159,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
       generalPurposeMeterLogRepository.findMinTimestamp(remoteId, profileId)
       generalPurposeMeterLogRepository.findCount(remoteId, profileId)
       generalPurposeMeterLogRepository.getInitialMeasurements(cloudService, remoteId)
+      generalPurposeMeterLogRepository.findCountWithoutGroupingString(remoteId, profileId)
     }
 
     confirmVerified(suplaCloudServiceProvider, generalPurposeMeterLogRepository)
@@ -177,6 +179,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
     every { generalPurposeMeterLogRepository.findMinTimestamp(remoteId, profileId) } returns
       Single.just(date(2023, 10, 1).time)
     every { generalPurposeMeterLogRepository.findCount(remoteId, profileId) } returns Maybe.just(100)
+    every { generalPurposeMeterLogRepository.findCountWithoutGroupingString(remoteId, profileId) } returns Single.just(0)
 
     // when
     val testObserver = useCase.loadMeasurements(remoteId, profileId).test()
@@ -189,6 +192,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
       generalPurposeMeterLogRepository.findMinTimestamp(remoteId, profileId)
       generalPurposeMeterLogRepository.findCount(remoteId, profileId)
       generalPurposeMeterLogRepository.getInitialMeasurements(cloudService, remoteId)
+      generalPurposeMeterLogRepository.findCountWithoutGroupingString(remoteId, profileId)
     }
 
     confirmVerified(suplaCloudServiceProvider, generalPurposeMeterLogRepository)
@@ -275,6 +279,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
     every { generalPurposeMeterLogRepository.findOldestEntity(remoteId, profileId) } returns Maybe.just(lastEntity)
     every { generalPurposeMeterLogRepository.findCount(remoteId, profileId) } returns Maybe.just(50)
     every { generalPurposeMeterLogRepository.insert(any()) } returns Completable.complete()
+    every { generalPurposeMeterLogRepository.findCountWithoutGroupingString(remoteId, profileId) } returns Single.just(0)
     mockChannelConfig(profileId, remoteId)
 
     // when
@@ -293,6 +298,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
       generalPurposeMeterLogRepository.getMeasurements(cloudService, remoteId, lastDbDate.toTimestamp())
       generalPurposeMeterLogRepository.getMeasurements(cloudService, remoteId, secondMeasurementDate.toTimestamp())
       generalPurposeMeterLogRepository.insert(capture(captor))
+      generalPurposeMeterLogRepository.findCountWithoutGroupingString(remoteId, profileId)
     }
 
     val result = captor.captured
@@ -349,6 +355,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
     every { generalPurposeMeterLogRepository.findOldestEntity(remoteId, profileId) } returns Maybe.just(lastEntity)
     every { generalPurposeMeterLogRepository.findCount(remoteId, profileId) } returns Maybe.just(50)
     every { generalPurposeMeterLogRepository.insert(any()) } returns Completable.complete()
+    every { generalPurposeMeterLogRepository.findCountWithoutGroupingString(remoteId, profileId) } returns Single.just(0)
     mockChannelConfig(profileId, remoteId, fillData = true)
 
     // when
@@ -367,6 +374,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
       generalPurposeMeterLogRepository.getMeasurements(cloudService, remoteId, lastDbDate.toTimestamp())
       generalPurposeMeterLogRepository.getMeasurements(cloudService, remoteId, secondMeasurementDate.toTimestamp())
       generalPurposeMeterLogRepository.insert(capture(captor))
+      generalPurposeMeterLogRepository.findCountWithoutGroupingString(remoteId, profileId)
     }
 
     val result = captor.captured
@@ -445,6 +453,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
     every { generalPurposeMeterLogRepository.findOldestEntity(remoteId, profileId) } returns Maybe.just(lastEntity)
     every { generalPurposeMeterLogRepository.findCount(remoteId, profileId) } returns Maybe.just(50)
     every { generalPurposeMeterLogRepository.insert(any()) } returns Completable.complete()
+    every { generalPurposeMeterLogRepository.findCountWithoutGroupingString(remoteId, profileId) } returns Single.just(0)
     mockChannelConfig(profileId, remoteId)
 
     // when
@@ -463,6 +472,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
       generalPurposeMeterLogRepository.getMeasurements(cloudService, remoteId, lastDbDate.toTimestamp())
       generalPurposeMeterLogRepository.getMeasurements(cloudService, remoteId, secondMeasurementDate.toTimestamp())
       generalPurposeMeterLogRepository.insert(capture(captor))
+      generalPurposeMeterLogRepository.findCountWithoutGroupingString(remoteId, profileId)
     }
 
     val result = captor.captured
@@ -519,6 +529,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
     every { generalPurposeMeterLogRepository.findOldestEntity(remoteId, profileId) } returns Maybe.just(lastEntity)
     every { generalPurposeMeterLogRepository.findCount(remoteId, profileId) } returns Maybe.just(50)
     every { generalPurposeMeterLogRepository.insert(any()) } returns Completable.complete()
+    every { generalPurposeMeterLogRepository.findCountWithoutGroupingString(remoteId, profileId) } returns Single.just(0)
     mockChannelConfig(profileId, remoteId, counterType = SuplaChannelConfigMeterCounterType.ALWAYS_INCREMENT)
 
     // when
@@ -537,6 +548,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
       generalPurposeMeterLogRepository.getMeasurements(cloudService, remoteId, lastDbDate.toTimestamp())
       generalPurposeMeterLogRepository.getMeasurements(cloudService, remoteId, secondMeasurementDate.toTimestamp())
       generalPurposeMeterLogRepository.insert(capture(captor))
+      generalPurposeMeterLogRepository.findCountWithoutGroupingString(remoteId, profileId)
     }
 
     val result = captor.captured
@@ -587,6 +599,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
     every { generalPurposeMeterLogRepository.findOldestEntity(remoteId, profileId) } returns Maybe.empty()
     every { generalPurposeMeterLogRepository.findCount(remoteId, profileId) } returns Maybe.just(50)
     every { generalPurposeMeterLogRepository.insert(any()) } returns Completable.complete()
+    every { generalPurposeMeterLogRepository.findCountWithoutGroupingString(remoteId, profileId) } returns Single.just(0)
     mockChannelConfig(profileId, remoteId, counterType = SuplaChannelConfigMeterCounterType.ALWAYS_DECREMENT)
 
     // when
@@ -605,6 +618,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
       generalPurposeMeterLogRepository.getMeasurements(cloudService, remoteId, 0)
       generalPurposeMeterLogRepository.getMeasurements(cloudService, remoteId, secondMeasurementDate.toTimestamp())
       generalPurposeMeterLogRepository.insert(capture(captor))
+      generalPurposeMeterLogRepository.findCountWithoutGroupingString(remoteId, profileId)
     }
 
     val result = captor.captured
