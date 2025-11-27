@@ -345,8 +345,6 @@
   <string name="widget_configure_action_label">Handling</string>
   <string name="widget_configure_name_label">Navn</string>
   <string name="widget_configure_error">Kanalkonfigurasjon mislyktes ...</string>
-  <string name="widget_configure_no_selection">Ingen kanal er valgt</string>
-  <string name="widget_configure_no_channel">Ingen tilgjengelige kanaler</string>
   <string name="double_button_widget_description">To-knapps widget</string>
   <string name="single_button_widget_description">En-knapps widget</string>
   <string name="widget_app_not_initialized">Vennligst logg inn!</string>
@@ -430,8 +428,6 @@
   <string name="widget_configure_type_scene_label">Scener</string>
   <string name="widget_configure_group_label">Gruppe for widget</string>
   <string name="widget_configure_scene_label">Scene for widget</string>
-  <string name="widget_configure_no_group">Ingen grupper tilgjengelig</string>
-  <string name="widget_configure_no_scene">Ingen scener tilgjengelig</string>
   <string name="widget_command_error">Det har oppstått en feil! (kode: %1$d)</string>
   <string name="widget_command_connection_failure">Tilkoblingsfeil! (kode: %1$d)</string>
   <string name="widget_command_subject_offline">%1$s er offline!</string>

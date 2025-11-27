@@ -379,10 +379,6 @@
   <string name="widget_configure_action_label">Action</string>
   <string name="widget_configure_name_label">Display name</string>
   <string name="widget_configure_error">Could not configure channel…</string>
-  <string name="widget_configure_no_selection">No channel selected</string>
-  <string name="widget_configure_no_channel">No channels available</string>
-  <string name="widget_configure_no_group">No groups available</string>
-  <string name="widget_configure_no_scene">No scenes available</string>
   <string name="double_button_widget_description">Double-button widget.</string>
   <string name="single_button_widget_description">Single-button widget.</string>
   <string name="extended_value_widget_description" translatable="false">Electricity meter preview widget.</string>

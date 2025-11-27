@@ -345,8 +345,6 @@
   <string name="widget_configure_action_label">Činnosť</string>
   <string name="widget_configure_name_label">Názov</string>
   <string name="widget_configure_error">Konfigurácia kanála zlyhala…</string>
-  <string name="widget_configure_no_selection">Nie je vybratý žiadny kanál</string>
-  <string name="widget_configure_no_channel">Žiadne dostupné kanály</string>
   <string name="double_button_widget_description">Widget s dvomi tlačidlami</string>
   <string name="single_button_widget_description">Widget s jedným tlačidlom</string>
   <string name="widget_app_not_initialized">Prihláste sa prosím!</string>
@@ -430,8 +428,6 @@
   <string name="widget_configure_type_scene_label">Scénu</string>
   <string name="widget_configure_group_label">Skupina pre widget</string>
   <string name="widget_configure_scene_label">Scéna pre widget</string>
-  <string name="widget_configure_no_group">Nie sú k dispozícii žiadne skupiny</string>
-  <string name="widget_configure_no_scene">Nie sú k dispozícii žiadne scény</string>
   <string name="widget_command_error">Vyskytla sa chyba! (kód: %1$d)</string>
   <string name="widget_command_connection_failure">Chyba spojenia! (kód: %1$d)</string>
   <string name="widget_command_subject_offline">%1$s je offline!</string>

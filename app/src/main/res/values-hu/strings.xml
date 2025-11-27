@@ -345,8 +345,6 @@
   <string name="widget_configure_action_label">Akció</string>
   <string name="widget_configure_name_label">Név</string>
   <string name="widget_configure_error">A csatorna konfiguráció sikertelen...</string>
-  <string name="widget_configure_no_selection">Nincs kiválasztott csatorna</string>
-  <string name="widget_configure_no_channel">Nincs elérhető csatorna</string>
   <string name="double_button_widget_description">Kétgombos widget</string>
   <string name="single_button_widget_description">Egygombos widget</string>
   <string name="widget_app_not_initialized">Kérjük jelentkezzen be!</string>
@@ -430,8 +428,6 @@
   <string name="widget_configure_type_scene_label">Jelenethez</string>
   <string name="widget_configure_group_label">Csoport a widgethez</string>
   <string name="widget_configure_scene_label">Jelenet a widgethez</string>
-  <string name="widget_configure_no_group">Nincsenek elérhető csoportok</string>
-  <string name="widget_configure_no_scene">Nincsenek elérhető jelenetek</string>
   <string name="widget_command_error">Hiba lépett fel! (kód: %1$d)</string>
   <string name="widget_command_connection_failure">Csatlakozási hiba! (kód: %1$d)</string>
   <string name="widget_command_subject_offline">offline állapotban%1$s van!</string>

@@ -56,6 +56,7 @@ import org.supla.android.images.ImageId
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.BACKGROUND_COLOR
+import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.views.EmptyListInfoView
 import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.SegmentedComponent
@@ -113,7 +114,11 @@ fun WidgetConfigurationScope.View(
       }
       viewState.profiles?.let { profiles ->
         Profiles(profiles)
-      }
+      } ?: Text(
+        text = stringResource(R.string.widget_app_not_initialized),
+        style = MaterialTheme.typography.labelMedium,
+        modifier = Modifier.padding(vertical = Distance.default)
+      )
       viewState.subjectTypes?.let { types ->
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
           Text(
@@ -258,7 +263,7 @@ private val emptyScope = object : WidgetConfigurationScope {
   override fun onOk() {}
 }
 
-@Preview(showBackground = true, backgroundColor = BACKGROUND_COLOR)
+@SuplaPreview
 @Composable
 private fun Preview() {
   val firstProfile = ProfileItem(1, LocalizedString.Constant("Default"))
@@ -292,6 +297,23 @@ private fun Preview() {
           label = R.string.widget_configure_action_label,
           items = listOf(ActionDetail(ActionId.OPEN))
         ),
+        showWarning = true,
+      )
+    )
+  }
+}
+
+@SuplaPreview
+@Composable
+private fun PreviewNoProfiles() {
+  SuplaTheme {
+    emptyScope.View(
+      WidgetConfigurationViewState(
+        profiles = null,
+        subjectTypes = null,
+        subjects = null,
+        caption = null,
+        subjectDetails = null,
         showWarning = true,
       )
     )

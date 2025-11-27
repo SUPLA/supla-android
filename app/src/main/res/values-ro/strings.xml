@@ -344,8 +344,6 @@
   <string name="widget_configure_action_label">Acțiune</string>
   <string name="widget_configure_name_label">Denumire</string>
   <string name="widget_configure_error">Configurarea canalului a eșuat...</string>
-  <string name="widget_configure_no_selection">Nu a fost selectat canalul</string>
-  <string name="widget_configure_no_channel">Nu există canale disponibile</string>
   <string name="double_button_widget_description">Widget cu două butoane</string>
   <string name="single_button_widget_description">Widget cu un singur buton</string>
   <string name="widget_app_not_initialized">Vă rugăm să te conectezi!</string>
@@ -432,8 +430,6 @@
   <string name="widget_configure_type_scene_label">Scene</string>
   <string name="widget_configure_group_label">Grup pentru widget</string>
   <string name="widget_configure_scene_label">Scenă pentru widget</string>
-  <string name="widget_configure_no_group">Nu există grupuri disponibile</string>
-  <string name="widget_configure_no_scene">Nu există scene disponibile</string>
   <string name="widget_command_error">A apărut o eroare! (cod: %1$d)</string>
   <string name="widget_command_connection_failure">Eroare de conectare! (cod: %1$d)</string>
   <string name="widget_command_subject_offline">%1$s este offline!</string>
