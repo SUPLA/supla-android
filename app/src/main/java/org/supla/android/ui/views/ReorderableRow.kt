@@ -49,6 +49,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.round
 import androidx.compose.ui.zIndex
 import org.supla.android.core.ui.theme.Distance
+import org.supla.android.extensions.toPx
 import org.supla.android.tools.ComponentPreview
 import timber.log.Timber
 import kotlin.math.roundToInt
@@ -78,6 +79,7 @@ fun <T> ReorderableRow(
   var overTrailingContent by remember { mutableStateOf(false) }
 
   val haptic = LocalHapticFeedback.current
+  val distanceDefault = Distance.default.toPx()
 
   LaunchedEffect(items) {
     if (!isDragging) {
@@ -95,8 +97,8 @@ fun <T> ReorderableRow(
 
     val dragItemEndPosition = dragItemRect.right + dragOffsetX
     val dragItemStartPosition = dragItemRect.left + dragOffsetX
-    overLeadingContent = leadingRect?.let { dragItemStartPosition < it.right } ?: false
-    overTrailingContent = trailingRect?.let { dragItemEndPosition > it.left } ?: false
+    overLeadingContent = leadingRect?.let { dragItemStartPosition < it.right - distanceDefault } ?: false
+    overTrailingContent = trailingRect?.let { dragItemEndPosition > it.left + distanceDefault } ?: false
 
     for (index in 0 ..< itemRects.size) {
       val currentItemRect = itemRects.getOrNull(index) ?: return
