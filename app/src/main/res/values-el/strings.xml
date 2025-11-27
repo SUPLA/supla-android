@@ -342,8 +342,6 @@
   <string name="widget_configure_action_label">Ενέργεια</string>
   <string name="widget_configure_name_label">Όνομα</string>
   <string name="widget_configure_error">Η ρύθμιση του καναλιού απέτυχε...</string>
-  <string name="widget_configure_no_selection">Το κανάλι δεν είναι επιλεγμένο</string>
-  <string name="widget_configure_no_channel">Δεν υπάρχουν διαθέσιμα κανάλια</string>
   <string name="double_button_widget_description">Γραφικό στοιχείο δύο κουμπιών</string>
   <string name="single_button_widget_description">Γραφικό στοιχείο με ένα κουμπί</string>
   <string name="widget_app_not_initialized">Παρακαλώ συνδεθείτε!</string>
@@ -426,8 +424,6 @@
   <string name="widget_configure_type_scene_label">Σκηνές</string>
   <string name="widget_configure_group_label">Ομάδα για γραφικό στοιχείο</string>
   <string name="widget_configure_scene_label">Σκηνή για γραφικό στοιχείο</string>
-  <string name="widget_configure_no_group">Δεν υπάρχουν διαθέσιμες ομάδες</string>
-  <string name="widget_configure_no_scene">Δεν υπάρχουν διαθέσιμες σκηνές</string>
   <string name="widget_command_error">Εμφανίστηκε σφάλμα! (κωδικός: %1$d)</string>
   <string name="widget_command_connection_failure">Σφάλμα σύνδεσης! (κωδικός: %1$d)</string>
   <string name="widget_command_subject_offline">%1$s είναι εκτός σύνδεσης!</string>

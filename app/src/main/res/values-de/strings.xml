@@ -333,9 +333,6 @@
   <string name="widget_configure_action_label">Aktion</string>
   <string name="widget_configure_name_label">Anzeigename</string>
   <string name="widget_configure_error">Die Konfiguration konnte nicht gesetzt werden…</string>
-  <string name="widget_configure_no_selection">Kein Schalter ausgewählt</string>
-  <string name="widget_configure_no_channel">Kein Schalter verfügbar</string>
-  <string name="widget_configure_no_group">Keine Gruppe verfügbar</string>
   <string name="widget_app_not_initialized">Bitte sich zuerst anmelden!</string>
   <string name="widget_command_no_connection">Keine Internetverbindung!</string>
   <string name="widget_command_no_access">Zugang fehlt! (Code: %1$d)</string>
@@ -362,7 +359,6 @@
   <string name="profile_plural">Ihre Kontos</string>
   <string name="menubar_appsettings">Einstellungen</string>
   <string name="em_chart_all_phases">Phase 1+2+3</string>
-  <string name="widget_configure_no_scene">Keine Szene verfügbar</string>
   <string name="double_button_widget_description">Zweitasten-Widget</string>
   <string name="single_button_widget_description">Eintasten-Widget</string>
   <string name="extended_value_widget_description">Energiezählerwertvorschau.</string>

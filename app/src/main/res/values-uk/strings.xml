@@ -268,9 +268,6 @@
   <string name="widget_configure_action_label">Подія</string>
   <string name="widget_configure_name_label">Назва</string>
   <string name="widget_configure_error">Помилка налаштування каналу…</string>
-  <string name="widget_configure_no_selection">Канал не вибрано</string>
-  <string name="widget_configure_no_channel">Немає доступних каналів</string>
-  <string name="widget_configure_no_group">Немає доступних груп</string>
   <string name="double_button_widget_description">Двокнопковий віджет</string>
   <string name="single_button_widget_description">"Одно кнопковий віджет "</string>
   <string name="widget_app_not_initialized">Будь ласка, увійдіть!</string>
@@ -420,7 +417,6 @@
   <string name="turn_on">Ввімкнути</string>
   <string name="turn_off">Вимкнути</string>
   <string name="widget_configure_scene_label">Сцена для віджету</string>
-  <string name="widget_configure_no_scene">Немає доступних сцен</string>
   <string name="associeted_with_push_error">Функцію каналу, пов\'язаного з PUSH-сповіщеннями, не можна змінити.</string>
   <string name="associeted_with_vbt_error">Функцію каналу, пов\'язаного з реакціями, не можна змінити.</string>
   <string name="rs_display_mode">Ролети, жалюзі, штори %</string>

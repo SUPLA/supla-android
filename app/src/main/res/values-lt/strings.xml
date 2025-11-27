@@ -323,8 +323,6 @@
   <string name="widget_configure_action_label">Veiksmas</string>
   <string name="widget_configure_name_label">Pavadinimas</string>
   <string name="widget_configure_error">Kanalo konfigūravimas nepavyko...</string>
-  <string name="widget_configure_no_selection">Nepasirinktas kanalas</string>
-  <string name="widget_configure_no_channel">Nėra pasiekiamų kanalų</string>
   <string name="double_button_widget_description">Dviejų mygtukų valdiklis</string>
   <string name="single_button_widget_description">Vieno mygtuko valdiklis</string>
   <string name="widget_app_not_initialized">Prašome prisijungti!</string>
@@ -408,8 +406,6 @@
   <string name="widget_configure_type_scene_label">Scenos</string>
   <string name="widget_configure_group_label">Valdiklio grupė</string>
   <string name="widget_configure_scene_label">Valdiklio scena</string>
-  <string name="widget_configure_no_group">Nėra prieinamų grupių</string>
-  <string name="widget_configure_no_scene">Nėra prieinamų scenų</string>
   <string name="widget_command_error">Įvyko klaida! (kodas: %1$d)</string>
   <string name="widget_command_connection_failure">Ryšio klaida! (kodas: %1$d)</string>
   <string name="widget_command_subject_offline">%1$s yra offline!</string>

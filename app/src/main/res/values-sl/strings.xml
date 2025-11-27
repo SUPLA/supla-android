@@ -342,8 +342,6 @@
   <string name="widget_configure_action_label">Dejanje</string>
   <string name="widget_configure_name_label">Ime</string>
   <string name="widget_configure_error">Konfiguracija kanala ni uspela…</string>
-  <string name="widget_configure_no_selection">Kanal ni bil izbran</string>
-  <string name="widget_configure_no_channel">Na voljo ni nobenega kanala</string>
   <string name="double_button_widget_description">Pripomoček z dvema gumboma</string>
   <string name="single_button_widget_description">Pripomoček z enim gumbom</string>
   <string name="widget_app_not_initialized">Prijavite se!</string>
@@ -427,8 +425,6 @@
   <string name="widget_configure_type_scene_label">Prizori</string>
   <string name="widget_configure_group_label">Skupina za pripomoček</string>
   <string name="widget_configure_scene_label">Prizor za pripomoček</string>
-  <string name="widget_configure_no_group">Skupine niso na voljo</string>
-  <string name="widget_configure_no_scene">Prizori niso na voljo</string>
   <string name="widget_command_error">Prišlo je do napake! (koda: %1$d)</string>
   <string name="widget_command_connection_failure">Napaka povezave! (koda: %1$d)</string>
   <string name="widget_command_subject_offline">%1$s je brez povezave!</string>

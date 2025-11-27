@@ -345,8 +345,6 @@
   <string name="widget_configure_action_label">Actie</string>
   <string name="widget_configure_name_label">Naam</string>
   <string name="widget_configure_error">Kanaal configuratie mislukt...</string>
-  <string name="widget_configure_no_selection">Geen kanaal geselecteerd</string>
-  <string name="widget_configure_no_channel">Geen kanalen beschikbaar</string>
   <string name="double_button_widget_description">Widget met twee knoppen</string>
   <string name="single_button_widget_description">Widget met één knop</string>
   <string name="widget_app_not_initialized">Log alsjeblieft in!</string>
@@ -430,8 +428,6 @@
   <string name="widget_configure_type_scene_label">Scènes</string>
   <string name="widget_configure_group_label">Groep voor widget</string>
   <string name="widget_configure_scene_label">Scène voor de widget</string>
-  <string name="widget_configure_no_group">Geen groepen beschikbaar</string>
-  <string name="widget_configure_no_scene">Geen scènes beschikbaar</string>
   <string name="widget_command_error">Er is een fout opgetreden! (code: %1$d)</string>
   <string name="widget_command_connection_failure">Verbindingsfout! (code: %1$d)</string>
   <string name="widget_command_subject_offline">%1$s is offline!</string>

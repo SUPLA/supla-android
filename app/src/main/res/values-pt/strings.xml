@@ -332,8 +332,6 @@
   <string name="widget_configure_action_label">Acção</string>
   <string name="widget_configure_name_label">Nome</string>
   <string name="widget_configure_error">A configuração do canal falhou...</string>
-  <string name="widget_configure_no_selection">Canal não selecionado</string>
-  <string name="widget_configure_no_channel">Não há canais disponíveis</string>
   <string name="double_button_widget_description">Widget de dois botões</string>
   <string name="single_button_widget_description">Widget de um botão</string>
   <string name="widget_app_not_initialized">Por favor, faça o login!</string>
@@ -418,8 +416,6 @@
   <string name="widget_configure_type_scene_label">Cena</string>
   <string name="widget_configure_group_label">Grupo para o widget</string>
   <string name="widget_configure_scene_label">Cena para o widget</string>
-  <string name="widget_configure_no_group">Sem grupos disponíveis</string>
-  <string name="widget_configure_no_scene">Sem cenas disponíveis</string>
   <string name="widget_command_error">Ocorreu um erro! (código: %1$d)</string>
   <string name="widget_command_connection_failure">Erro de conexão! (código: %1$d)</string>
   <string name="widget_command_subject_offline">%1$s está offline!</string>

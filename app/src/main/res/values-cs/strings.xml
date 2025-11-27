@@ -325,8 +325,6 @@
   <string name="widget_configure_action_label">Akce</string>
   <string name="widget_configure_name_label">Název</string>
   <string name="widget_configure_error">Nastavení kanálu se nezdařilo...</string>
-  <string name="widget_configure_no_selection">Není vybrán žádný kanál</string>
-  <string name="widget_configure_no_channel">Nejsou k dispozici žádné kanály</string>
   <string name="double_button_widget_description">Widget se dvěma tlačítky</string>
   <string name="single_button_widget_description">Widget s jedním tlačítkem</string>
   <string name="widget_app_not_initialized">Přihlaste se!</string>
@@ -408,8 +406,6 @@
   <string name="widget_configure_type_scene_label">Scény</string>
   <string name="widget_configure_group_label">Skupina pro widget</string>
   <string name="widget_configure_scene_label">Scéna pro widget</string>
-  <string name="widget_configure_no_group">Nejsou k dispozici žádné skupiny</string>
-  <string name="widget_configure_no_scene">Nejsou k dispozici žádné scény</string>
   <string name="widget_command_error">Vyskytla se chyba!  (kód: %1$d )</string>
   <string name="widget_command_connection_failure">Chyba připojení!  (kód: %1$d )</string>
   <string name="widget_command_subject_offline">%1$s je offline!</string>
