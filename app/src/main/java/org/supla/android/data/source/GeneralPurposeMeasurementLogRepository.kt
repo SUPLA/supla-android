@@ -96,6 +96,9 @@ class GeneralPurposeMeasurementLogRepository @Inject constructor(
       profileId = profileId
     )
 
+  override fun findCountWithoutGroupingString(remoteId: Int, profileId: Long): Single<Int> =
+    generalPurposeMeasurementLogDao.emptyGroupingStringCount(remoteId, profileId)
+
   override fun count(): Observable<Int> = generalPurposeMeasurementLogDao.count()
 
   override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = generalPurposeMeasurementLogDao.deleteKtx(remoteId, profileId)
