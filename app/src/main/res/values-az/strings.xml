@@ -1,0 +1,818 @@
+<resources>
+  <string name="dont_have_account_yet">Hələ Supla Cloud-da hesabınız yoxdur?</string>
+
+  <string name="profiles_title">Hesablar</string>
+  <string name="profile_name_label">HESAB ADI</string>
+  <string name="profile_default_name">Əsas hesab</string>
+  <string name="profile_select_active">Aktiv hesabı seçin</string>
+  <string name="profile_act_info">Daxil olmaq üçün hesaba toxunun.</string>
+  <string name="form_error">Xəta</string>
+  <string name="form_profile_name_missing">Hesab adı qeyd edilməyib</string>
+  <string name="form_profile_required_data_missing">Tələb olunan məlumat çatışmır</string>
+  <string name="form_profile_duplicate">Bu adda hesab artıq mövcuddur</string>
+  <string name="add_account">Hesab əlavə et</string>
+  <string name="edit_account">Hesabı redaktə et</string>
+  <string name="create_url">https://cloud.supla.org/register?lang=en</string>
+  <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=en</string>
+
+  <string name="version">versiya</string>
+
+  <string name="about">Haqqında</string>
+  <string name="settings">Tənzimləmələr</string>
+  <string name="add_device">I/O cihazı əlavə et</string>
+  <string name="z_wave">Z-Wave körpüsü</string>
+  <string name="help">Kömək</string>
+  <string name="menu_notifications">Bildirişlər jurnalı</string>
+  <string name="channel_state_uptime">%1$d gün %2$02d:%3$02d:%4$02d</string>
+
+  <string name="status_connecting">Qoşulur…</string>
+  <string name="status_unknown_err">Naməlum xəta</string>
+  <string name="status_temporarily_unavailable">Xidmət müvəqqəti əlçatmazdır</string>
+  <string name="status_bad_credentials">Yanlış giriş məlumatları</string>
+  <string name="status_climit_exceded">Müştəri limiti aşılmışdır</string>
+  <string name="status_reg_disabled">Yeni müştəri qeydiyyatı deaktivdir. Zəhmət olmasa \"Supla Cloud\"-a daxil olun və vebsaytdakı “Smartphone” bölməsində “Yeni müştəri qeydiyyatı”nı aktiv edin.</string>
+  <string name="status_access_id_not_assigned">Müştəri aktivləşdirməsi tələb olunur. Zəhmət olmasa \"Supla Cloud\"-a daxil olun və bu cihaz üçün vebsaytdakı “Smartphone” bölməsində “Access ID” təyin edin.</string>
+  <string name="status_device_disabled">Cihaz deaktivdir. Zəhmət olmasa \"Supla Cloud\"-a daxil olun və vebsaytdakı “Smartphone” bölməsində bu cihazı aktiv edin.</string>
+  <string name="status_accessid_disabled">Giriş identifikatoru deaktivdir</string>
+
+  <string name="err_hostnotfound">Host tapılmadı. İnternetə qoşulduğunuzdan və daxil edilmiş e-poçt ünvanı ilə hesab yaradıldığından əmin olun.</string>
+  <string name="err_cantconnecttohost">Hosta qoşulmaq mümkün olmadı</string>
+
+  <string name="channel_caption_gateway">Qovşaqlı cihaz</string>
+  <string name="channel_caption_gate">Qapı</string>
+  <string name="channel_caption_garagedoor">Qaraj qapısı</string>
+  <string name="channel_caption_door">Qapı</string>
+  <string name="channel_caption_rollershutter">Jalüz</string>
+  <string name="channel_caption_powerswith">Güc açarı</string>
+  <string name="channel_caption_lightswith">İşıq açarı</string>
+  <string name="channel_caption_thermometer">Termometr</string>
+  <string name="channel_caption_humidity">Rütubət</string>
+  <string name="channel_caption_humidityandtemperature">Temperatur və rütubət</string>
+  <string name="channel_caption_windsensor">Külək sensoru</string>
+  <string name="channel_caption_pressuresensor">Təzyiq sensoru</string>
+  <string name="channel_caption_rainsensor">Yağış sensoru</string>
+  <string name="channel_caption_weightsensor">Çəki sensoru</string>
+  <string name="channel_caption_dimmer">Dimmer</string>
+  <string name="channel_caption_rgblighting">RGB İşıqlandırma</string>
+  <string name="channel_caption_dimmerandrgblighting">Dimmer və RGB işıqlandırma</string>
+  <string name="channel_caption_noliquidsensor">Maye sensoru yoxdur</string>
+  <string name="channel_caption_gatewayopeningsensor">Qovşaqlı cihaz açılma sensoru</string>
+  <string name="channel_caption_gateopeningsensor">Qapı açılma sensoru</string>
+  <string name="channel_caption_garagedooropeningsensor">Qaraj qapısı açılma sensoru</string>
+  <string name="channel_caption_dooropeningsensor">Qapı açılma sensoru</string>
+  <string name="channel_caption_rsopeningsensor">Jalüz açılma sensoru</string>
+  <string name="channel_caption_depthsensor">Dərinlik sensoru</string>
+  <string name="channel_caption_distancesensor">Məsafə sensoru</string>
+  <string name="channel_caption_windowopeningsensor">Pəncərə açılma sensoru</string>
+  <string name="channel_caption_mailsensor">Poçt sensoru</string>
+  <string name="channel_caption_staircasetimer">Mərtəbə sayğacı</string>
+  <string name="channel_caption_electricitymeter">Elektrik sayğacı</string>
+  <string name="channel_caption_gasmeter">Qaz sayğacı</string>
+  <string name="channel_caption_watermeter">Su sayğacı</string>
+  <string name="channel_caption_thermostat">Termostat</string>
+  <string name="channel_caption_thermostat_hp_homeplus">Home+ Qızdırıcı</string>
+
+  <string name="channel_btn_open">Aç</string>
+  <string name="channel_btn_openclose">Aç / Bağla</string>
+  <string name="channel_btn_on">ON</string>
+  <string name="channel_btn_off">OFF</string>
+
+  <string name="event_openedthegateway">qovşaqlı cihazı açdı</string>
+  <string name="event_openedclosedthegate">qapını açdı / bağladı</string>
+  <string name="event_openedclosedthegatedoors">qapı qapılarını açdı / bağladı</string>
+  <string name="event_openedthedoor">qapını açdı</string>
+  <string name="event_openedcloserollershutter">jalüzü açdı / bağladı</string>
+  <string name="event_poweronoff">gücü ON/OFF vəziyyətinə gətirdi</string>
+  <string name="event_turnedthelightonoff">işığı ON/OFF vəziyyətinə gətirdi</string>
+
+  <string name="server_address">SERVER ÜNVANI</string>
+  <string name="access_id">GİRİŞ IDENTİFİKATORU</string>
+  <string name="password">ŞİFRƏ</string>
+  <string name="email">E-POÇT ÜNVANI</string>
+  <string name="advanced_settings">Ətraflı</string>
+  <string name="create_account">Yarat</string>
+  <string name="delete_account">Sil</string>
+
+  <!-- Configuration screen, profile name of current profile
+ (editable) -->
+  <string name="cfg_profile_active_indicator">aktiv</string>
+  <!-- default name for a profile (usually assigned for initial
+ account or when migrating settings from previous version of
+ the app. -->
+
+  <string name="cfg_label_access_id_auth">Access ID</string>
+  <string name="cfg_channel_height">Kanal hündürlüyü</string>
+  <string name="cfg_temperature_unit">Temperatur vahidi</string>
+  <string name="cfg_button_autohide">Avtomatik gizlət</string>
+
+  <string name="profile">Hesabınız</string>
+  <string name="profile_plural">Hesablarınız</string>
+  <string name="menubar_appsettings">Tətbiq Tənzimləmələri</string>
+
+  <string name="about_app">Bu proqram pulsuz proqram təminatıdır; onu GNU Ümumi İcazə Sazişi şərtlərinə uyğun olaraq yenidən paylaya və/və ya dəyişdirə bilərsiniz; Free Software Foundation tərəfindən nəşr edilmiş; ya Lisenziyanın 2-ci versiyası, ya da (sizin seçiminizlə) istənilən daha sonrakı versiya.\n\nBu proqram faydalı olacağı ümidilə paylanır, amma HEÇ BİR ZƏMANƏT olmadan; hətta TİCARİLİK və ya MÜƏYYƏN MƏQSƏD ÜÇÜN YARARLI OLMAZLIQ zəmanəti daxil deyil. Daha ətraflı məlumat üçün GNU Ümumi İcazə Sazişinə baxın.\n\nBu proqramla birlikdə GNU Ümumi İcazə Sazişi nüsxəsini almalı idiniz; əgər almamısınızsa, Free Software Foundation, Inc., 59 Temple Place – Suite 330, Boston, MA  02111–1307, ABŞ-a yazın.</string>
+
+  <string name="rate_msg">Bilirdinizmi ki, Supla açıq və pulsuz bir layihədir və icma tərəfindən hazırlanmışdır? Əgər tətbiqi bəyənirsinizsə, onu qiymətləndirməyə bir an ayırın. Dəstəyiniz üçün təşəkkürlər!</string>
+  <string name="rate_now">İndi Qiymətləndir</string>
+  <string name="rate_later">Sonra</string>
+  <string name="rate_no_thanks">Yox, təşəkkür</string>
+
+  <string name="roller_shutter_calibrating">Kalibrlənir…</string>
+
+  <string name="next">Növbəti</string>
+  <string name="start">BAŞLAT</string>
+  <string name="turn_on">Yandır</string>
+  <string name="turn_off">Söndür</string>
+
+  <string name="add_wizard_is_not_available">Add Wizard yalnız serverə qoşulma e-poçt ünvanına əsasən qurulduqda aktiv olur. (Hesab tənzimləmələrinizdə ətraflı seçimləri deaktiv edin)</string>
+  <string name="add_wizard_step_1_welcome">Yeni I/O cihazını bir neçə sadə addımda sisteminizə əlavə etməyə kömək edəcək Add I/O Device Wizard-a xoş gəlmisiniz.</string>
+  <string name="add_wizard_step_1_continue"><![CDATA[Davama davam etmək üçün <b>Növbəti</b>-yə basın.]]></string>
+  <string name="add_wizard_remember_passwd">Şifrəni yadda saxla</string>
+  <string name="add_wizard_step_3_message_3"><![CDATA[Konfiqurasiyaya başlamaq üçün <b>BAŞLAT</b>-a basın.]]></string>
+
+  <string name="wizard_no_internetwifi">Başlamazdan əvvəl, serverə qoşularkən I/O cihazının da istifadə etdiyi Wi-Fi ilə İnternet bağlantınızı qurun.</string>
+  <string name="wizard_wifi_error">Wi-Fi şəbəkəsi deaktivdir və ya onun identifikatorunu və ya adını oxumaq mümkün deyil!</string>
+  <string name="wizard_location_error">Add Device Wizard düzgün işləməsi üçün, bu cihazda Yer xidməti aktiv olmalıdır. Sistem tənzimləmələrinə gedin, sonra „Yer” seçin və onun aktiv olduğundan əmin olun.</string>
+  <string name="wizard_scan_timeout">Wi-Fi şəbəkə skanlamasının vaxt limiti bitdi!</string>
+  <string name="wizard_connect_timeout">I/O cihazının qoşulma vaxt limiti bitdi!</string>
+  <string name="wizard_configure_timeout">Cihazın konfiqurasiyasının tamamlanması vaxt limiti bitdi!</string>
+  <string name="wizard_reconnect_timeout">Əsas Wi-Fi şəbəkəsinə qayıtma vaxt limiti bitdi!</string>
+  <string name="device_reg_request_timeout">Cihaz qeydiyyatı mövcudluğu məlumatının vaxt limiti bitdi!</string>
+
+  <string name="wizard_iodevice_notfound">Heç bir I/O cihazı tapılmadı! Zəhmət olmasa I/O cihazınızın ON və konfiqurasiya rejimində olduğundan əmin olun.</string>
+
+  <string name="wizard_done">Tənzimləmələr I/O cihazına köçürüldü.</string>
+  <string name="wizard_iodev_data">Cihaz parametrləri</string>
+  <string name="wizard_iodev_name">Ad</string>
+  <string name="wizard_iodev_laststate">Əvvəlki vəziyyət</string>
+
+  <string name="wizard_result_compat_error">Qoşulmuş cihaz bu Wizard ilə uyğun deyil!</string>
+  <string name="wizard_result_conn_error">Cihazla qoşulma qurula bilmir!</string>
+  <string name="wizard_result_failed">Konfiqurasiya uğursuz oldu!</string>
+  <string name="wizard_not_enought_permissions">Bu tətbiq tam səlahiyyətli deyil. Sistem tənzimləmələrində Tətbiq Menecerinə gedin. %1$s tətbiqini tapın və bütün tələb olunan icazələri aktiv edin.</string>
+  <string name="hp_on">ON</string>
+  <string name="hp_off">OFF</string>
+  <string name="hp_normal">MANUAL</string>
+  <string name="hp_eco">ECO</string>
+  <string name="hp_turbo">TURBO</string>
+  <string name="hp_auto">AUTO</string>
+  <string name="hp_cfg_turbo_time">TURBO rejiminin müddəti</string>
+  <string name="hp_cfg_water_max">Maksimum su temperaturu</string>
+  <string name="hp_cfg_eco_reduction">ECO rejimində temperatur azaldılması</string>
+  <string name="hp_cfg_temp_comfort_auto">AUTO rejimində daha yüksək temperatur</string>
+  <string name="hp_calendar_comfort">Yüksək</string>
+  <string name="hp_calendar_eco">Aşağı</string>
+  <string name="hp_cfg_temp_eco">AUTO rejimində daha aşağı temperatur</string>
+  <string name="hp_hour">s</string>
+  <string name="details_ic_meter_value">Sayğac dəyəri</string>
+  <string name="details_ic_current_consumption">Cari ayın istehlakı</string>
+  <string name="minutes">Dəqiqə</string>
+  <string name="hours">Saat</string>
+  <string name="days">Günlər</string>
+  <string name="months">Aylar</string>
+  <string name="years">İllər</string>
+  <string name="ranking_of_hours">Saat üzrə sıralama</string>
+  <string name="ranking_of_weekdays">Həftənin günləri üzrə sıralama</string>
+  <string name="ranking_of_months">Aylar üzrə sıralama</string>
+  <string name="temperature">Temperatur</string>
+  <string name="humidity">Rütubət</string>
+  <string name="all_available_history">Bütün mövcud tarixçə</string>
+  <string name="retrieving_data_from_the_server">Serverdən məlumatlar alınır...</string>
+  <string name="no_chart_data_available">Seçilmiş vaxt intervalında qrafik məlumatı yoxdur.</string>
+  <string name="em_chart_all_phases">Faza 1+2+3</string>
+  <string name="hp_error_1">Su yoxdur</string>
+  <string name="hp_error_2">Qızdırıcı yanıb</string>
+  <string name="hp_error_3">Su temperatur sensoru xətası</string>
+  <string name="hp_error_4">Otaq temperatur sensoru xətası</string>
+  <string name="hp_error_5">Şəbəkə fasiləsi yoxdur</string>
+  <string name="enter_superuser_credentials">Superuser məlumatlarını daxil edin</string>
+
+  <string name="channel_func_none">Funksiya yoxdur</string>
+  <string name="channel_func_controllingthegatewaylock">Qovşaqlı cihaz kilid əməliyyatı</string>
+  <string name="channel_func_controllingthegate">Qapı əməliyyatı</string>
+  <string name="channel_func_controllingthegaragedoor">Qaraj qapısı əməliyyatı</string>
+  <string name="channel_func_thermometer">Termometr</string>
+  <string name="channel_func_humidity">Rütubət sensoru</string>
+  <string name="channel_func_humidityandtemperature">Temperatur və rütubət sensoru</string>
+  <string name="channel_func_opensensor_gateway">Qovşaqlı cihaz açılma sensoru</string>
+  <string name="channel_func_opensensor_gate">Qapı açılma sensoru</string>
+  <string name="channel_func_opensensor_garagedoor">Qaraj qapısı açılma sensoru</string>
+  <string name="channel_func_noliquidsensor">Maye sensoru yoxdur</string>
+  <string name="channel_func_controllingthedoorlock">Qapı kilidi əməliyyatı</string>
+  <string name="channel_func_opensensor_door">Qapı açılma sensoru</string>
+  <string name="channel_func_controllingtherollershutter">Jalüz əməliyyatı</string>
+  <string name="channel_func_opensensor_rollershutter">Jalüz açılma sensoru</string>
+  <string name="channel_func_powerswitch">On/Off açarı</string>
+  <string name="channel_func_lightswitch">İşıq açarı</string>
+  <string name="channel_func_dimmer">Dimmer</string>
+  <string name="channel_func_rgblighting">RGB işıqlandırma</string>
+  <string name="channel_func_dimmerandrgblighting">Dimmer və RGB işıqlandırma</string>
+  <string name="channel_func_depthsensor">Dərinlik sensoru</string>
+  <string name="channel_func_distancesensor">Məsafə sensoru</string>
+  <string name="channel_func_openingsensor_window">Pəncərə açılma sensoru</string>
+  <string name="channel_func_mailsensor">Poçt sensoru</string>
+  <string name="channel_func_windsensor">Külək sensoru</string>
+  <string name="channel_func_pressuresensor">Təzyiq sensoru</string>
+  <string name="channel_func_rainsensor">Yağış sensoru</string>
+  <string name="channel_func_weightsensor">Çəki sensoru</string>
+  <string name="channel_func_weather_station">Hava Stansiyası</string>
+  <string name="channel_func_staircasetimer">Mərtəbə sayğacı</string>
+  <string name="channel_func_electricity_meter">Elektrik sayğacı</string>
+  <string name="channel_func_gas_meter">Qaz sayğacı</string>
+  <string name="channel_func_water_meter">Su sayğacı</string>
+  <string name="channel_func_heat_meter">İstilik sayğacı</string>
+  <string name="channel_func_thermostat">Termostat</string>
+  <string name="channel_func_thermostat_heatpol_homeplus">Home+ Qızdırıcı</string>
+  <string name="channel_func_valve_openclose">Valf</string>
+  <string name="channel_func_valve_percentage">Valf</string>
+
+  <string name="channel_caption_valve">Valf</string>
+  <string name="channel_btn_close">Bağla</string>
+  <string name="valve_warning_manually_closed">Valf manual və ya radio rejimində bağlanıb. Açmazdan əvvəl, onun daşqın səbəbindən bağlanmadığından əmin olun. Xəbərdarlığı söndürmək üçün valfi manual olaraq açın. Tətbiqdən açmaq istədiyinizə əminsiniz ?!</string>
+  <string name="valve_warning">Valf manual və ya radio rejimində bağlanıb. Açmazdan əvvəl, onun daşqın səbəbindən bağlanmadığından əmin olun. Xəbərdarlığı söndürmək üçün valfi manual olaraq açın.</string>
+  <string name="yes">Bəli</string>
+  <string name="no">Xeyr</string>
+  <string name="exit">Çıxış</string>
+
+  <string name="channel_caption_heatmeter">İstilik sayğacı</string>
+  <string name="zwave_select_channel">Z-wave körpüsünü seçin, sonra konfiqurasiya etmək istədiyiniz kanalı seçin.</string>
+  <string name="device_name">Cihaz adı</string>
+  <string name="channel_number">Kanal nömrəsi</string>
+  <string name="device_id">Cihaz ID</string>
+  <string name="channel_id">Kanal ID</string>
+  <string name="soft_ver">Proqram təminatı versiyası</string>
+
+  <string name="function">Funksiya</string>
+  <string name="caption">Başlıq</string>
+  <string name="device">Cihaz</string>
+  <string name="zwave_welcome_title">Z-Wave sihirbazı</string>
+  <string name="zwave_welcome_message">Z-wave körpü konfiqurasiya sihirbazına xoş gəlmisiniz. Bu, z-wave cihazlarınızı Supla ilə qoşmağa imkan verəcək. Davam etmək üçün \"Next\" düyməsinə toxunun.</string>
+  <string name="zwave_before_search_title">Bir az vaxt aparacaq</string>
+  <string name="zwave_before_search_message">Davam etməzdən əvvəl, bütün z-wave cihazlarınızın onlayn olduğundan əmin olun. \"Next\" düyməsini basmaq z-wave şəbəkənizi axtaracaq, bu bir neçə saniyədən bir neçə dəqiqəyə qədər çəkə bilər.</string>
+  <string name="zwave_dialog_channel_detail_message">Aşağıda seçilmiş kanalın detalları göstərilmişdir. Xahiş olunur, müvafiq funksiyanı seçərək məqsədini göstərin.</string>
+  <string name="zwave_error_unexpected_response">Cihazın cavabı gözlənilən kimi deyil. Metod:%1$s Kod:%2$s</string>
+  <string name="zwave_error_function_change_error">Kanal funksiyasını dəyişmək mümkün olmadı. Kod %1$s</string>
+  <string name="zwave_error_caption_change_error">Kanal başlığını dəyişmək mümkün olmadı. Kod %1$s</string>
+  <string name="zwave_error_get_basic_cfg_timeout">Əsas kanal konfiqurasiya məlumatları üçün gözləmə müddəti bitdi.</string>
+  <string name="zwave_error_set_function_timeout">Kanal funksiyasını dəyişdirmək üçün gözləmə müddəti bitdi.</string>
+  <string name="zwave_error_set_caption_timeout">Kanal başlığını dəyişdirmək üçün gözləmə müddəti bitdi.</string>
+  <string name="zwave_error_get_assigned_node_id_timeout">Təyin olunmuş z-wave cihaz ID-si üçün gözləmə müddəti bitdi.</string>
+  <string name="zwave_error_get_node_list_timeout">Z-wave cihazlarının siyahısı üçün gözləmə müddəti bitdi.</string>
+  <string name="zwave_reset_and_clear">Şəbəkəni və tənzimləmələri sıfırla</string>
+  <string name="zwave_add_device">Cihaz əlavə et</string>
+  <string name="zwave_remove_device">Cihazı sil</string>
+  <string name="zwave_network">Z-wave şəbəkəsi</string>
+  <string name="zwave_select_node">Supla kanalı ilə əlaqələndiriləcək z-wave cihazını seçin.</string>
+  <string name="zwave_supla_channel">Kanal</string>
+  <string name="zwave_device">Z-Wave cihazı</string>
+  <string name="zwave_waiting_for_button_press">Z-wave cihazında düymə basılmasını gözləyir.</string>
+  <string name="zwave_button_press_timeout">Düymə basılması üçün gözləmə müddəti bitdi.</string>
+  <string name="zwave_node_searching">Cihazların siyahısını yaratmaq üçün z-wave şəbəkəsini axtarır.</string>
+  <string name="zwave_remove_device_timeout">Cihazı silmək üçün gözləmə müddəti bitdi.</string>
+  <string name="zwave_waiting_for_reset">Z-wave şəbəkəsinin sıfırlanması və tənzimləmələrin təmizlənməsinin təsdiqlənməsini gözləyir.</string>
+  <string name="zwave_waiting_for_reset_timeout">Z-wave şəbəkəsini sıfırlamaq üçün gözləmə müddəti bitdi.</string>
+  <string name="zwave_error_assign_node_id_timeout">Z-wave cihazının kanala təyin edilməsi üçün gözləmə müddəti bitdi.</string>
+  <string name="zwave_bridge_offline">Z-wave körpüsü cavab vermir. Körpünün serverə qoşulduğunu yoxlayın.</string>
+  <string name="zwave_waiting_for_add">Cihazın z-wave şəbəkəsinə əlavə olunmasını gözləyir.</string>
+  <string name="zwave_waiting_for_add_timeout">Cihazın z-wave şəbəkəsinə əlavə olunması üçün gözləmə müddəti bitdi.</string>
+  <string name="zwave_reset_confirm_question">Tənzimləmələri və z-wave şəbəkəsini sıfırlamaq istədiyinizə əminsiniz?</string>
+  <string name="zwave_offline">Offline ?</string>
+  <string name="zwave_used">Təyin olunmuş:</string>
+  <string name="zwave_node_assign_confirm_question">Seçilmiş z-wave cihazı artıq başqa kanalla əlaqələndirilib. Bu cihazı bu kanala köçürmək istədiyinizə əminsiniz?</string>
+  <string name="zwave_error_common_message">Əvvəlki mərhələyə qayıtmaq üçün geri düyməsini, ya da bitirmək üçün \"Exit\" düyməsini basın.</string>
+  <string name="zwave_error_slave_mode">Bu funksiya körpü köməkçi rejimində olduqda mövcud deyil.</string>
+  <string name="zwave_done">Tamamlandı! İndi konfiqurasiya prosesini \"OK\" düyməsini basaraq bitirə bilərsiniz və ya növbəti kanalı konfiqurasiya etmək və ya mövcud tənzimləmələri dəyişdirmək üçün geri düyməsini basa bilərsiniz.</string>
+
+  <string name="restore_question">Əminsiniz ki, standart tənzimləmələri bərpa etmək istəyirsiniz?</string>
+  <string name="belongs_to_group_error">Qrupa aid olan kanalın funksiyasını dəyişə bilməzsiniz.</string>
+  <string name="has_schedule_error">Cədvəli olan kanalın funksiyasını dəyişə bilməzsiniz.</string>
+  <string name="associeted_with_scene_error">Səhnə ilə əlaqəli olan kanalın funksiyasını dəyişə bilməzsiniz.</string>
+  <string name="event_openedclosedthevalve">şlanqı açdı / bağladı</string>
+  <string name="bridge">Körpü</string>
+  <string name="em_phase_to_phase_balance">Faza-faza vektor balansı</string>
+
+  <string name="wheel">Təkər</string>
+  <string name="slider">Slayder</string>
+
+  <string name="vl_cfg_mode">Dimmer rejimi</string>
+  <string name="vl_cfg_auto">AUTO</string>
+  <string name="vl_cfg_mode1">REJİM 1</string>
+  <string name="vl_cfg_mode2">REJİM 2</string>
+  <string name="vl_cfg_mode3">REJİM 3</string>
+  <string name="vl_cfg_yes">BƏLİ</string>
+  <string name="vl_cfg_no">Xeyr</string>
+  <string name="cfg_op_range">İşləmə diapazonu</string>
+  <string name="vl_cfg_boost">Boost</string>
+
+  <string name="information">Məlumat</string>
+  <string name="vl_dimmer_cfg_info_txt1">Dimmer rejimi / İşləmə diapazonu</string>
+  <string name="vl_dimmer_cfg_info_txt2">LED lampalarınızın performansını fərqli dimmer rejimi seçərək və ya təkərin ətrafında qaranlıq boz slayderləri hərəkət etdirərək minimum və maksimum parlaqlığı tənzimləyərək incə tənzimləyin.</string>
+  <string name="vl_dimmer_cfg_info_txt3">Rejim 1: V-Pro Trailing-Edge Dimming</string>
+  <string name="vl_dimmer_cfg_info_txt4">Rejim 2: Leading-Edge Dimming</string>
+  <string name="vl_dimmer_cfg_info_txt5">Rejim 3: Alternative Trailing-Edge Dimming</string>
+  <string name="vl_dimmer_cfg_info_txt6">Boost</string>
+  <string name="vl_dimmer_cfg_info_txt7">Bu funksiya LED lampaların aşağı parlaqlıqda açılmasını ilkin boost təmin edərək asanlaşdırır. Təkərin ətrafında qaranlıq boz slayderi hərəkət etdirərək açılma zamanı boost səviyyəsini artırın (yaşıl xətt ilə göstərilir). Boost-dan sonra parlaqlıq əvvəlki səviyyəyə qayıdacaq.</string>
+  <string name="vl_dimmer_cfg_info_txt8">Ətraflı məlumatı burada tapa bilərsiniz</string>
+
+  <string name="time_exceeded">Vaxt bitdi. Yenidən cəhd edin.</string>
+
+  <string name="battery_level">Batareya səviyyəsi</string>
+  <string name="state_power_supply">Enerji təchizatı</string>
+  <string name="wifi_rssi">Wi-Fi RSSI</string>
+  <string name="wifi_signal_strength">Wi-Fi siqnal gücü</string>
+  <string name="bridge_node_online">Bridge node – onlayn</string>
+  <string name="bridge_signal_strength">Radio siqnal gücü</string>
+  <string name="uptime">İşləmə müddəti</string>
+  <string name="connection_time">Qoşulma vaxtı</string>
+  <string name="battery_health">Batareya sağlamlığı</string>
+  <string name="connection_reset_cause">Qoşulma sıfırlanma səbəbi</string>
+  <string name="light_source_lifespan">İşıq mənbəyinin ömrü</string>
+  <string name="light_source_operatingtime">İşıq mənbəyinin işləmə müddəti</string>
+  <string name="chanel_lightsource_lifespan_settings">İşıq mənbəyinin ömrü parametrlərini dəyişdir</string>
+  <string name="light_source_lifespan_hours">İşıq mənbəyinin ömrü (saat)</string>
+  <string name="reset_lightsource_usage_counter">İşıq mənbəyi istifadə sayğacını sıfırla</string>
+  <string name="channel_lightsource_warning">İşıq mənbəyinin ömrü %1$.01f%% təşkil edir</string>
+  <string name="channel_uv_warning">UV radiatorunun ömrü %1$.01f%% təşkil edir. Onun əvəzini planlaşdırın.</string>
+  <string name="channel_uv_error">UV radiatorunun ömrü %1$.01f%% təşkil edir. Radiatoru dəyişdirin.</string>
+  <string name="add_wizard_step_2_message">Yeni I/O cihazı ilə istifadə üçün Wi-Fi şəbəkə adını və şifrəsini daxil edin</string>
+  <string name="enabling_registration_timeout">Qeydiyyatın aktivləşdirilməsi üçün vaxt bitdi!</string>
+  <string name="enter_suplaorg_credentails">Zəhmət olmasa Supla Cloud giriş məlumatlarınızı daxil edin.</string>
+  <string name="save_without_saving">Saxlamadan çıxmaq istəyirsiniz?</string>
+  <string name="do_you_want_to_save">Parametrləri saxlamaq istəyirsiniz?</string>
+  <string name="restoring_default_settings">Sabit parametrlər bərpa edilir</string>
+  <string name="mode_change_in_progress">Rejim dəyişikliyi davam edir</string>
+  <string name="wake_up_frequency">Oyanma tezliyi</string>
+  <string name="zwave_change_wake_up_settings">Aşağıdakı ikonaya toxunaraq oyanma parametrlərini dəyişə bilərsiniz.</string>
+  <string name="wakeup_info">*) Daxil edilən parametrlər növbəti oyanış zamanı tətbiq olunacaq.</string>
+  <string name="zwave_waiting_for_resposne_timeout">Z-wave bridge cavabı üçün gözləmə vaxtı bitdi.</string>
+  <string name="zwave_unexpected_answer">Gözlənilməz bridge cavabı. Kod: %1$s</string>
+  <string name="seconds">Saniyə</string>
+  <string name="zwave_device_communication_error">Z-wave cihazı ilə rabitədə problem yaranıb. Cihazın bridge-in əhatə dairəsində olduğundan əmin olun.</string>
+
+  <string name="widget_configure_title">Widget Konfiqurasiyası</string>
+  <string name="widget_configure_profile_label">Hesab</string>
+  <string name="widget_configure_type_label">Widget üçün:</string>
+  <string name="widget_configure_type_channel_label">Kanal</string>
+  <string name="widget_configure_type_group_label">Qrup</string>
+  <string name="widget_configure_type_scene_label">Səhnə</string>
+  <string name="widget_configure_channel_label">Widget kanalı</string>
+  <string name="widget_configure_group_label">Widget qrupu</string>
+  <string name="widget_configure_scene_label">Widget səhnəsi</string>
+  <string name="widget_configure_action_label">Əməliyyat</string>
+  <string name="widget_configure_name_label">Göstərilən ad</string>
+  <string name="widget_configure_error">Kanal konfiqurasiya edilə bilmədi…</string>
+  <string name="double_button_widget_description">İki düyməli widget.</string>
+  <string name="single_button_widget_description">Tək düyməli widget.</string>
+  <string name="extended_value_widget_description" translatable="false">Elektrik sayğacı önizləmə widget-ı.</string>
+  <string name="widget_app_not_initialized">Əvvəlcə daxil olun!</string>
+  <string name="widget_command_no_connection">İnternet bağlantısı yoxdur!</string>
+  <string name="widget_command_error">Problem baş verdi! (kod: %1$d)</string>
+  <string name="widget_command_connection_failure">Bağlantı uğursuz oldu! (kod: %1$d)</string>
+  <string name="widget_command_subject_offline">%1$s offline vəziyyətdədir!</string>
+  <string name="widget_command_subject_unavailable">%1$s mövcud deyil!</string>
+  <string name="widget_command_no_access">Giriş icazəsi yoxdur! (kod: %1$d)</string>
+  <string name="widget_command_started">Tamamlandı</string>
+  <string name="widget_removed_label">Kanal silindi</string>
+  <string name="widget_group">qrup</string>
+  <string name="widget_scene">səhnə</string>
+  <string name="channel_btn_toggle">Keçid</string>
+
+  <string name="channel_caption_roofwindowopeningsensor">Dam pəncərəsi açılma sensoru</string>
+  <string name="channel_caption_roofwindow">Dam pəncərəsi</string>
+  <string name="channel_func_controllingtheroofwindow">Dam pəncərəsi əməliyyatı</string>
+  <string name="channel_func_opensensor_roofwindow">Dam pəncərəsi açılma sensoru</string>
+  <string name="event_openedclosedtheroofwindow">Dam pəncərəsini açdı / bağladı</string>
+
+  <string name="status_led">LED vəziyyəti</string>
+  <string name="info_led_on">LED server ilə əlaqə varsa yanır.</string>
+  <string name="info_led_off">LED server ilə əlaqə varsa sönükdür.</string>
+  <string name="info_led_alwaysoff">LED həmişə sönükdür, cihaz Wi-Fi konfiqurasiya rejimində olmadığı halda (AP Mode).</string>
+  <string name="input">Giriş</string>
+  <string name="monostable">Monostable</string>
+  <string name="bistable">Bistable</string>
+  <string name="diw_cfg_info_oprange">Minimum və maksimum parlaqlığı tənzimləmək üçün tünd boz slayderləri fırlanan çarx ətrafında hərəkət etdirin.</string>
+  <string name="diw_cfg_info_in_options">Giriş seçimləri</string>
+  <string name="diw_cfg_info_mono_option">Bu seçim monostable düyməyə qoşulmuş girişin davranışını dəyişir. Seçim deaktivdirsə, dimmer tam parlaqlığa çatdıqda işıqlandırmanı artırmayı dayandırır, ən aşağı parlaqlıqda isə dimming edir. Seçim aktivdirsə, maksimum parlaqlığa çatanda minimum səviyyəyə keçilir və dimming zamanı minimuma çatanda maksimum səviyyəyə qayıdır. İşıqlandırma / dimming düymə basılı olduğu müddətcə davam edir.</string>
+  <string name="diw_cfg_info_bi_option">Bu seçim bistable düymə ilə işıqlandırma açıldıqda dimmerin davranışını dəyişir. Seçim aktivdirsə, işıqlandırma açıldıqdan sonra dimmer tam parlaqlıq səviyyəsini təyin edir. Deaktivdirsə, dimmer əvvəlki yadda saxlanmış parlaqlıq səviyyəsini təyin edir.</string>
+  <string name="dgf_too_long_operation_warning">Şüşə bölmələr 20 saatdan çox işləyib, bu ömrünə mənfi təsir göstərə bilər. Bərpa üçün bütün bölmələri minimum 4 saat örtmək tövsiyə olunur.</string>
+  <string name="dgf_planned_regeneration_in_progress">Planlaşdırılmış bərpa davam edir.</string>
+  <string name="dgf_regeneration_after20h">20 saatlıq işdən sonra başlanan bərpa davam edir.</string>
+  <string name="wizard_done_explentations">Yeni I/O cihazınız Supla tətbiqində görünmürsə, “Add I/O Device” wizard-ını yenidən işə salın və səhifədəki “Previous State” məlumatına baxın. “SSID Not Found” 2.4 GHz şəbəkənin əhatə dairəsində olmadığını və ya adının düzgün olmadığını göstərir.</string>
+  <string name="incorrect_email_or_password">Email ünvanı və ya şifrə yanlışdır</string>
+  <string name="incorrect_password">Şifrə yanlışdır</string>
+  <string name="channel_name">Kanal adı</string>
+  <string name="location_name">Yer adı</string>
+  <string name="overcurrent_warning">İcazə verilən cari həddi aşdıqdan sonra enerji söndürüldü.</string>
+  <string name="overcurrent_question">İcazə verilən cari həddi aşdıqdan sonra enerji söndürüldü. Yenidən açmaq istəyirsiniz?</string>
+  <string name="roller_shutter_start_calibration_message">Kalibrləməyə başlamaq istəyirsiniz?</string>
+  <string name="calibration_failed">Kalibrləmə uğursuz oldu.</string>
+  <string name="calibration_lost">Kalibrləmə itirildi.</string>
+  <string name="motor_problem">Motor problemi / Gözlənilməz dayandırma.</string>
+  <string name="lastconnectionresetcause_unknown">0: naməlum</string>
+  <string name="lastconnectionresetcause_activity_timeout">1: server vaxt aşımı</string>
+  <string name="lastconnectionresetcause_wifi_connection_lost">2: Wi-Fi bağlantısı itdi</string>
+  <string name="lastconnectionresetcause_server_connection_lost">3: server bağlantısı itdi</string>
+  <string name="basic_profile_warning">Parametr mövcud deyil</string>
+  <string name="basic_config_unavailable">Advanced rejimi söndürmədən əvvəl email autentifikasiyasına keçmək və avtomatik server aşkarlamasını aktivləşdirmək lazımdır.</string>
+  <string name="add_device_warning">Access ID autentifikasiya rejimində avtomatik "Add device" wizard-dan istifadə edə bilməyəcəksiniz. Lakin cihazı əl ilə əlavə edə biləcəksiniz.</string>
+  <string name="show_channel_info">ⓘ düyməsini göstər</string>
+  <string name="add_device_needs_cloud_title">Cihaz quraşdırması</string>
+  <string name="add_device_needs_cloud_message">Bu cihazda tətbiqdə görünən heç bir kanal yoxdur. Konfiqurasiyanı bitirmək üçün cloud.supla.org-a keçin</string>
+  <string name="add_device_needs_cloud_dismiss">Başa düşdüm</string>
+  <string name="add_device_needs_cloud_go">CLOUD-a keç</string>
+  <string name="associeted_with_at_error">Əməliyyat trigger-i ilə əlaqəli kanalın funksiyası dəyişdirilə bilməz.</string>
+  <string name="associeted_with_push_error">Push bildirişi ilə əlaqəli kanalın funksiyası dəyişdirilə bilməz.</string>
+  <string name="associeted_with_vbt_error">Reaksiyalarla əlaqəli kanal funksiyası dəyişdirilə bilməz.</string>
+  <string name="location_ordering">Yer sırası</string>
+  <string name="rs_display_mode">Rollet jalüz, fasad jalüz, pərdə %</string>
+  <string name="rs_display_mode_opening">Açılır</string>
+  <string name="rs_display_mode_closing">Bağlanır</string>
+  <string name="status_accessid_inactive">Access Identifier aktiv deyil</string>
+
+  <string name="navbar_channels">Kanallar</string>
+  <string name="navbar_groups">Qruplar</string>
+  <string name="navbar_scenes">Səhnələr</string>
+  <string name="btn_execute">İcra et</string>
+  <string name="btn_abort">Ləğv et</string>
+  <string name="btn_abort_and_execute">Ləğv et və icra et</string>
+  <string name="scene_name">Səhnə adı</string>
+
+  <string name="remove_account_title">Hesabı silmək istəyirsiniz?</string>
+  <string name="remove_account_locally">Bu cihazda unut</string>
+  <string name="remove_account_remotely">Cloud-da unut və sil</string>
+  <string name="cancel">Ləğv et</string>
+  <string name="form_profile_removal_failure">Hesabınızı silmək alınmadı, yenidən cəhd edin</string>
+  <string name="general_failure">Əməliyyat uğursuz oldu</string>
+  <string name="push_notification_limit_exceeded">%1$s saatlıq push bildiriş limiti aşılmışdır.</string>
+
+  <string name="new_gesture_description">Detalları açmaq üçün sürüşdürmə gesta silindi, müəyyən kanala toxunaraq açın.</string>
+  <string name="channel_offline">Kanal offline vəziyyətdədir</string>
+  <string name="notification_info_title">Bildirişlər alın!</string>
+  <string name="notification_info_message">Bildiriş almaq istəyirsinizsə, aktiv edin!\n\nSupla Cloud-da bildirişləri tənzimləyə bilərsiniz.</string>
+  <string name="skip">Keç</string>
+
+  <string name="settings_notifications">Bildirişlər</string>
+  <string name="settings_localization">Yerləşdirmə (dəqiq)</string>
+  <string name="settings_permissions">İcazələr</string>
+
+  <string name="details_general">Ümumi</string>
+  <string name="details_schedule">Həftə</string>
+  <string name="details_metrics">Metriklər</string>
+  <string name="details_settings">Parametrlər</string>
+  <string name="details_history">Tarixçə</string>
+  <string name="details_timer_wrong_time">Vaxt 0-dan böyük olmalıdır</string>
+  <string name="details_timer_text">Cihaz nə qədər işləməlidir:</string>
+  <string name="details_timer_turn_on_for">İşə salındı</string>
+  <string name="details_timer_turn_off_for">Söndürüldü</string>
+  <string name="details_timer_info">Cihaz %1$s müddətinə %2$s olacaq, sonra %3$s olacaq</string>
+  <string name="details_timer_leave_it">Burax %1$s</string>
+  <string name="details_timer_cancel_and">Ləğv et və %1$s et</string>
+  <string name="details_timer_end_hour">-ə qədər %1$s</string>
+  <string name="hour_string_format">hh:mm:ss a</string>
+  <string name="details_timer_state_label">Cari vəziyyət:</string>
+  <string name="details_timer_state_label_for_timer">%s qədər vəziyyət:</string>
+  <string name="details_timer_device_on">yanır</string>
+  <string name="details_timer_device_off">sönük</string>
+  <string name="details_timer_edit_time">Vaxtı redaktə et</string>
+  <string name="details_timer_edit_header">Turn %1$s vaxtını redaktə et</string>
+  <string name="details_timer_start">Başla</string>
+  <string name="details_timer_edit_cancel">Redaktəni ləğv et</string>
+  <string name="save">Yadda saxla</string>
+  <string name="details_timer_cancel_turn_off">sönük</string>
+  <string name="details_timer_cancel_turn_on">yanır</string>
+  <string name="thermostat_detail_mode_manual">Əl ilə</string>
+  <string name="thermostat_detail_mode_weekly_schedule">Proqram</string>
+  <string name="monday">Bazar ertəsi</string>
+  <string name="tuesday">Çərşənbə axşamı</string>
+  <string name="wednesday">Çərşənbə</string>
+  <string name="thursday">Cümə axşamı</string>
+  <string name="friday">Cümə</string>
+  <string name="saturday">Şənbə</string>
+  <string name="sunday">Bazar</string>
+  <string name="schedule_detail_quarters_dialog_header">Vaxt %1$02d:00</string>
+  <string name="schedule_detail_program_dialog_header">Proqram %1$d parametrləri</string>
+  <string name="hvac_mode_heating">İstilik</string>
+  <string name="hvac_mode_cooling">Soyutma</string>
+  <string name="hvac_mode_auto">İstilik və soyutma</string>
+  <string name="hvac_mode_no_caption">Naməlum</string>
+  <string name="hvac_mode_temperature_heating">İstilik temperaturu</string>
+  <string name="hvac_mode_temperature_cooling">Soyutma temperaturu</string>
+  <string name="monday_short">B.E.</string>
+  <string name="tuesday_short">Ç.A.</string>
+  <string name="wednesday_short">Ç.</string>
+  <string name="thursday_short">C.A.</string>
+  <string name="friday_short">C.</string>
+  <string name="saturday_short">Ş.</string>
+  <string name="sunday_short">B.</string>
+  <string name="thermostat_thermometer_error">Temperatur oxuma xətası</string>
+  <string name="thermostat_clock_error">Saat xətası</string>
+  <string name="channel_not_supported">Dəstəklənməyən funksiya</string>
+  <string name="thermostat_detail_program_current">Hazırda:</string>
+  <string name="thermostat_detail_program_next">Növbəti:</string>
+  <string name="time_just_minutes">%1$d dəq.</string>
+  <string name="time_hours_and_minutes">%1$d saat %2$d dəq.</string>
+  <string name="thermostat_detail_program_time">%1$s üçün</string>
+
+  <string name="history_range_label">Aralıq</string>
+  <string name="history_range_last_day">Son 24 saat</string>
+  <string name="history_range_last_week">Son 7 gün</string>
+  <string name="history_range_last_30_days">Son 30 gün</string>
+  <string name="history_range_last_90_days">Son 90 gün</string>
+  <string name="history_range_last_365_days">Son 365 gün</string>
+  <string name="history_range_current_day">Cari gün</string>
+  <string name="history_range_current_week">Cari həftə</string>
+  <string name="history_range_current_month">Cari ay</string>
+  <string name="history_range_current_quarter">Cari rüb</string>
+  <string name="history_range_current_year">Cari il</string>
+  <string name="history_range_custom">Xüsusi aralıq</string>
+  <string name="history_refreshing">Yenilənir…</string>
+  <string name="history_refreshing_failed">Yenilənmə uğursuz oldu</string>
+  <string name="history_no_data_selected">Heç bir məlumat seçilməyib.</string>
+  <string name="history_no_data_available">Hələ heç bir ölçü mövcud deyil</string>
+  <string name="channel_caption_hotelcard">Otel kartı sensoru</string>
+  <string name="thermostat_detail_off_by_window">Açıq pəncərə səbəbindən söndürülüb</string>
+  <string name="thermostat_detail_off_by_card">Otel kartının olmaması səbəbindən söndürülüb</string>
+  <string name="thermostat_detail_off_by_sensor">Sensor tərəfindən söndürülüb</string>
+  <string name="channel_caption_alarm_armament">Siqnalizasiya sensoru</string>
+  <string name="calendar_picker_start_hour">Başlama saatı</string>
+  <string name="calendar_picker_end_hour">Bitmə saatı</string>
+  <string name="history_wrong_range">Seçilmiş aralıq yanlışdır.</string>
+  <string name="details_timer_select_mode">Rejimi seç</string>
+  <string name="details_timer_manual_mode">Əl rejimi</string>
+  <string name="details_timer_info_thermostat_off">Termostat %1$s müddətində söndürülmüş qalacaq</string>
+  <string name="details_timer_info_thermostat_heating">Termostat %1$s müddətində isitmə rejimində qalacaq</string>
+  <string name="details_timer_info_thermostat_cooling">Termostat %1$s müddətində soyutma rejimində qalacaq</string>
+  <string name="details_timer_select_time">Vaxtı göstərin</string>
+  <string name="details_timer_counter">Sayğac</string>
+  <string name="details_timer_calendar">Təqvim</string>
+  <string name="details_timer_min_temp">Min. temp.</string>
+  <string name="details_timer_max_temp">Maks. temp.</string>
+  <string name="details_timer_state_label_for_timer_days">%1$s tarixinə qədər vəziyyət:</string>
+  <string name="details_timer_cancel_thermostat">Ləğv et və aç:</string>
+  <string name="widget_processing_notification_text">Emal olunur…</string>
+  <string name="widget_processing_notification_title">Arxa plan işi</string>
+  <string name="thermostat_detail_program_info">Seçmək üçün toxunun. Dəyişdirmək üçün uzun basın.</string>
+  <string name="thermostat_detail_box_info">Seçilmiş proqramı təyin etmək üçün toxunun. Rüb təyin etmək üçün uzun basın.</string>
+  <string name="thermostat_detail_arrow_info">Qara künc cari gün və saatı göstərir.</string>
+  <string name="channel_caption_general_purpose_measurement">Ölçmə kanalı</string>
+  <string name="chart_marker_opening">Açıq</string>
+  <string name="chart_marker_closing">Bağlı</string>
+  <string name="channel_caption_general_purpose_meter">Sayğac kanalı</string>
+  <string name="history_disabled">Bu kanal üçün tarix deaktivdir</string>
+  <string name="toolbar_delete_all">Hamısını sil</string>
+  <string name="toolbar_delete_older_than_month">30 gündən köhnələrini sil</string>
+  <string name="notification_delete_all_title">Qeydləri sil?</string>
+  <string name="notification_delete_all_message">Bu geri alınmayacaq</string>
+  <string name="notification_delete_all_proceed">Sil</string>
+  <string name="notifications_log_profile">Profil:</string>
+  <string name="notifications_log_date">Tarix:</string>
+  <string name="widget_warning_battery_limitations">Tətbiq batareya istifadəsində aktiv məhdudiyyətlərə malikdir. Widget düzgün işləməyə bilər. Məhdudiyyətsiz istifadə etmək üçün parametrlərə daxil olun.</string>
+  <string name="notification_deleted">Silindi</string>
+  <string name="settings_show_labels">Alt menyu etiketlərini göstər</string>
+  <string name="main_no_entries">Boş</string>
+  <string name="groups_empty_list_button">Supla Cloud-da qrup əlavə et</string>
+  <string name="scenes_empty_list_button">Supla Cloud-da səhnə əlavə et</string>
+  <string name="roller_shutter_closing_percentage">Bağla:</string>
+  <string name="roller_shutter_opening_percentage">Aç:</string>
+  <string name="roller_shutter_calibration">Kalibrləmə</string>
+  <string name="roller_shutter_calibration_needed">Kalibrləmə tələb olunur</string>
+  <string name="cfg_night_mode">Gecə rejimi</string>
+  <string name="menu_device_catalog">Cihaz kataloqu</string>
+  <string name="channel_caption_facade_blinds">Fasad jalüzləri</string>
+  <string name="channel_loading_error">Kanal yüklənmə xətası</string>
+  <string name="facade_blind_slat_tilt">Bucaqlama: </string>
+  <string name="facade_blinds_no_tilt">Konfiqurasiya çatışmır</string>
+  <string name="toolbar_delete_chart_history">Tarixi sil və yenidən yüklə</string>
+  <string name="history_wait_for_download_completed">Zəhmət olmasa gözləyin, yüklənir…</string>
+  <string name="channel_caption_terrace_awning">Teras tenti</string>
+  <string name="channel_caption_projector_screen">Proyektor ekranı</string>
+  <string name="channel_caption_curtain">Perde</string>
+  <string name="channel_caption_vertical_blinds">Şaquli jalüzlər</string>
+  <string name="channel_caption_roller_garage_door">Qaraj qapısı</string>
+  <string name="shading_system_extension">Uzantı:</string>
+  <string name="status_initializing">Başlanır…</string>
+  <string name="status_try_again">Yenidən cəhd et</string>
+  <string name="lock_screen_hello">Xoş gəlmisiniz!</string>
+  <string name="lock_screen_enter_pin">PIN daxil edin</string>
+  <string name="pin_setup_header">PIN kodunuzu təyin edin</string>
+  <string name="cfg_lock_screen">Kilid ekranı</string>
+  <string name="cfg_lock_screen_app">Tətbiq</string>
+  <string name="cfg_lock_screen_accounts">Hesablar</string>
+  <string name="cfg_lock_screen_none">Heç biri</string>
+  <string name="pin_setup_title">PIN-i konfiqurasiya et</string>
+  <string name="pin_setup_repeat">PIN-i təkrar edin</string>
+  <string name="pin_setup_entry_different">PIN-lər uyğun deyil!</string>
+  <string name="pin_setup_failed">Daxili xəta səbəbindən PIN təyini mümkün deyil.</string>
+  <string name="lock_screen_wrong_pin">Daxil edilən PIN səhvdir!</string>
+  <string name="lock_screen_remove_pin">PIN-i silmək</string>
+  <string name="lock_screen_forgotten_code">PIN kodumu xatırlamıram</string>
+  <string name="lock_screen_forgotten_code_title">Giriş kodu</string>
+  <string name="lock_screen_forgotten_code_message">Əgər kodu xatırlamırsınızsa, tətbiqi silin və yenidən quraşdırın. Sonra Supla Cloud hesabınızı yenidən konfiqurasiya edin.\n\nYeni hesab yaratmayın. Bütün məlumatlarınız və cihazlarınız Supla Cloud hesabınızda qalacaq.</string>
+  <string name="lock_screen_forgotten_code_button">OK</string>
+  <string name="lock_screen_confirm_authorize_range_change">Avtorizasiya diapazonunun dəyişdirilməsi</string>
+  <string name="pin_setup_use_biometric">Biometrik doğrulama: </string>
+  <string name="pin_setup_biometric_not_enrolled">Biometrik mövcud deyil. Biometrik istifadə etmək istəyirsinizsə, parametrlərə daxil olun və biometrikanızı qeydiyyatdan keçirin.</string>
+  <string name="biometric_prompt_subtitle">Barmaq izi ilə açın</string>
+  <string name="lock_screen_biometric_error">Biometrika deaktiv edildi: %1$s</string>
+  <string name="lock_screen_pin_locked">Çox sayda səhv. PIN daxil etmə %1$s müddətinə bloklandı.</string>
+  <string name="status_disconnecting">Bağlanır…</string>
+  <string name="status_awaiting_network">Şəbəkə gözlənilir…</string>
+  <string name="about_build_time">Günün versiyası: </string>
+  <string name="device_catalog_error">Cihaz kataloqu yüklənə bilmədi. Zəhmət olmasa sonra yenidən cəhd edin.</string>
+  <string name="settings_show_bottom_menu">Alt menyunu göstər</string>
+  <string name="details_em_forward_active_energy">İrəli aktiv enerji</string>
+  <string name="details_em_reverse_active_energy">Geri aktiv enerji</string>
+  <string name="details_em_forward_reactive_energy">İrəli reaktiv enerji</string>
+  <string name="details_em_reverse_reactive_energy">Geri reaktiv enerji</string>
+  <string name="details_em_frequency">Tezlik</string>
+  <string name="details_em_voltage">Gərginlik</string>
+  <string name="details_em_current">Cərəyan</string>
+  <string name="details_em_power_active">Aktiv güc</string>
+  <string name="details_em_power_reactive">Reaktiv güc</string>
+  <string name="details_em_power_factor">Güc faktoru</string>
+  <string name="details_em_phase_angle">Faza bucağı</string>
+  <string name="details_em_power_apparent">Görünən güc</string>
+  <string name="details_em_phase1">Faza 1</string>
+  <string name="details_em_phase2">Faza 2</string>
+  <string name="details_em_phase3">Faza 3</string>
+  <string name="details_em_balance_arithmetic">Aritmetik balans</string>
+  <string name="details_em_balance_vector">Vektor balansı</string>
+  <string name="details_em_chart_data_type">Məlumat</string>
+  <string name="details_em_phases">Fazalar</string>
+  <string name="details_em_balance_hourly">Saatlıq balans</string>
+  <string name="details_em_balance_chart_aggregated">Cədvəldə cəmlənmiş balans</string>
+  <string name="details_em_sum">Cəm</string>
+  <string name="details_em_active_energy">Aktiv enerji</string>
+  <string name="details_em_forwarded_energy">İrəli</string>
+  <string name="details_em_reversed_energy">Geri</string>
+  <string name="details_em_cost">Xərc</string>
+  <string name="details_em_settings_list_item">Kanal siyahısında göstərilən göstərici</string>
+  <string name="details_em_settings_title">Parametrlər - %1$s</string>
+  <string name="details_em_total_suffix">(ölçü sayğacı oxunuşu)</string>
+  <string name="details_em_current_month_suffix">(mövcud ay)</string>
+  <string name="details_em_last_month_balancing">Mövcud ay üçün balans növü</string>
+  <string name="channel_caption_pump_switch">Nasos açarı</string>
+  <string name="channel_caption_heat_or_cold_sourc_switch">İstilik və ya soyutma mənbəyi açarı</string>
+  <string name="details_list">Siyahı</string>
+  <string name="thermostat_detail_main_thermostat">Əsas termostat</string>
+  <string name="thermostat_detail_other_thermostats">Asılı termostatlar</string>
+  <string name="thermostat_battery_cover_open">Batareya qapağı açıqdır</string>
+  <string name="details_em_hour_marker_title" translatable="false">%1$d saat</string>
+  <string name="history_data_type" translatable="false">Məlumat növü</string>
+  <string name="details_em_forward_active_energy_short" translatable="false">İrəli aktiv</string>
+  <string name="details_em_reverse_active_energy_short" translatable="false">Geri aktiv</string>
+  <string name="details_em_forward_reactive_energy_short" translatable="false">İrəli reaktiv</string>
+  <string name="details_em_reverse_reactive_energy_short" translatable="false">Geri reaktiv</string>
+  <string name="details_em_energy_label" translatable="false">Enerji</string>
+  <string name="channel_btn_shut">Bağla</string>
+  <string name="channel_btn_reveal">Aç</string>
+  <string name="channel_btn_collapse">Sıx</string>
+  <string name="channel_btn_expand">Genişləndir</string>
+  <string name="settings_battery_level_warning" translatable="false">Aşağı batareya xəbərdarlığı</string>
+  <string name="channel_battery_level">Batareya səviyyəsi: %1$d%%</string>
+  <string name="channel_battery_level_with_info">Batareya səviyyəsi (%1$d - %2$s): %3$d%%</string>
+  <string name="counter_photo_counter_area" translatable="false">Sayğac sahəsi</string>
+  <string name="counter_photo_original_photo" translatable="false">Orijinal foto</string>
+  <string name="counter_photo_settings" translatable="false">Bulud konfiqurasiyası</string>
+  <string name="details_em_info_data_type" translatable="false">Burada məlumatların necə qruplaşdırılacağını (saat, gün) və ya reytinqləri göstərə bilərsiniz.</string>
+  <string name="details_em_info_range" translatable="false">Burada qrafikdə göstərilən məlumatlar üçün diapazonu seçə bilərsiniz (məsələn, cari ay və ya keçən il).</string>
+  <string name="details_em_info_data_set_single_phase" translatable="false">Buraya toxunaraq göstərilən məlumat növünü dəyişə bilərsiniz, məsələn, irəli və ya geri enerji (mövcuddursa).</string>
+  <string name="details_em_info_swipe" translatable="false">Daha çox dəyəri görmək üçün sürüşdürmə hərəkətindən istifadə edin</string>
+  <string name="details_em_info_data_set_multiple_phase" translatable="false">Buraya toxunaraq nəyi görmək istədiyinizi seçin, məsələn, saatlıq enerji balansı və ya hansı fazalar.</string>
+  <string name="details_em_voltage_phase_angle_12" translatable="false">Gərginlik faza bucağı 1-2</string>
+  <string name="details_em_voltage_phase_angle_13" translatable="false">Gərginlik faza bucağı 1-3</string>
+  <string name="details_em_voltage_phase_sequence" translatable="false">Gərginlik faza ardıcıllığı</string>
+  <string name="details_em_current_phase_sequence" translatable="false">Cərəyan faza ardıcıllığı</string>
+  <string name="em_electric_grid_parameters" translatable="false">Elektrik şəbəkəsi parametrləri</string>
+  <string name="channel_caption_container">Konteyner</string>
+  <string name="developer_info_database_section" translatable="false">Verilənlər bazasının detalları</string>
+  <string name="developer_info_activated">Tərtibatçı rejimi aktiv edildi</string>
+  <string name="counter_photo_photos" translatable="false">Foto tarixçəsi</string>
+  <string name="counter_photo_loading_error" translatable="false">Yükləmə xətası.</string>
+  <string name="counter_photo_error" translatable="false">Xəta</string>
+  <string name="valve_warning_flooding" translatable="false">Aşkar edilmiş daşqın səbəbindən vana bağlanıb. Vananı açmadan əvvəl səbəbin həll olunduğundan əmin olun. Vananı açmaq alarmı ləğv edir. Həqiqətən açmaq istəyirsiniz?</string>
+  <string name="channel_caption_flood_sensor">Daşqın sensoru</string>
+  <string name="flooding_alarm_message" translatable="false">Sensor daşqını bildirir!</string>
+  <string name="valve_warning_flooding_short" translatable="false">Aşkar edilmiş daşqın səbəbindən vana bağlanıb.</string>
+  <string name="channel_caption_septic_tank">Septik çən</string>
+  <string name="channel_caption_water_tank">Su çəni</string>
+  <string name="channel_caption_container_level_sensor">Konteyner səviyyə sensoru</string>
+  <string name="state_opened">açıq</string>
+  <string name="state_closed">bağlı</string>
+  <string name="valve_detail_sensors">Qoşulmuş sensorlar</string>
+  <string name="valve_action_error" translatable="false">Kommunikasiya xətası baş verdi. Zəhmət olmasa, sonra yenidən cəhd edin.</string>
+  <string name="valve_warning_motor_problem_opening" translatable="false">Motor problemi aşkar edildi. Vanaya heç nə mane olmadığından əmin olun. Vana qismən açıq ola bilər. Həqiqətən açmaq istəyirsiniz?</string>
+  <string name="valve_warning_motor_problem_closing" translatable="false">Motor problemi aşkar edildi. Vanaya heç nə mane olmadığından əmin olun. Vana qismən açıq ola bilər. Həqiqətən bağlamaq istəyirsiniz?</string>
+  <string name="valve_warning_motor_problem" translatable="false">Motor problemi aşkar edildi. Vanaya heç nə mane olmadığından əmin olun. Vana qismən açıq ola bilər.</string>
+  <string name="valve_error_sensor_offline">Daşqın sensoru mövcud deyil - aşkarlanmış daşqın riski var</string>
+  <string name="change_caption_header" translatable="false">Başlıq dəyişdirilməsi</string>
+  <string name="group_name" translatable="false">Qrup adı</string>
+  <string name="caption_change_failed" translatable="false">Başlıq dəyişdirilə bilmədi!</string>
+  <string name="container_fill_level" translatable="false">Doldurma səviyyəsi</string>
+  <string name="container_warning_level" translatable="false">Konteyner səviyyəsi xəbərdarlığı</string>
+  <string name="container_alarm_level" translatable="false">Konteyner səviyyəsi alarmı!</string>
+  <string name="container_invalid_sensor_state">Yanlış sensor vəziyyəti</string>
+  <string name="container_sound_alarm" translatable="false">Səsli alarm aktivdir</string>
+  <string name="channel_not_available" translatable="false">Bu kanal konfiqurasiya səbəbindən mövcud deyil. Tətbiqdə görünməməsi üçün kanalı gizlətməyi tövsiyə edirik.</string>
+  <string name="channel_status_awaiting" translatable="false">Bu cihaz uzaqdan oyadıla bilmir. Cihazdan cavab gözləyirik…</string>
+  <string name="channel_status_updating" translatable="false">Proqram təminatı yenilənir…</string>
+  <string name="thermostat_calibration_error">Kalibrləmə xətası</string>
+  <string name="state_dialog_index" translatable="false">(%1$d / %2$d)</string>
+  <string name="state_switch_cycle_count" translatable="false">Açar dövrləri</string>
+  <string name="android_auto_add" translatable="false">Android Auto elementi əlavə et</string>
+  <string name="channel_btn_stop">Dayandır</string>
+  <string name="android_auto_action">Əməliyyat: %1$s</string>
+  <string name="android_auto_empty" translatable="false">Android Auto konfiqurasiya olunmayıb. Supla Tətbiqi -> Parametrlər -> Android Auto bölməsinə gedərək konfiqurasiyanı hazırlayın.</string>
+  <string name="android_auto_executing" translatable="false">İcra olunur…</string>
+  <string name="android_auto_delete_title" translatable="false">Element silinir</string>
+  <string name="android_auto_delete_message" translatable="false">Davam etmək istəyirsiniz?</string>
+  <string name="android_auto_delete_confirm" translatable="false">Sil</string>
+  <string name="channel_not_found" translatable="false">Kanal tapılmadı</string>
+  <string name="scene_inactive" translatable="false">Səhnə aktiv deyil</string>
+  <string name="android_auto_error" translatable="false">İcra uğursuz oldu</string>
+  <string name="android_auto_play_messages" translatable="false">Mesajları oxu</string>
+  <string name="widget_not_supported" translatable="false">Seçilmiş kanal dəstəklənmir.</string>
+  <string name="widget_update_time_long" translatable="false">Yeniləmə vaxtı: %1$s</string>
+  <string name="widget_no_value" translatable="false">Məlumat mövcud deyil</string>
+  <string name="add_wizard_step_1_qr_info"><![CDATA[Əgər QR kodunuz varsa, skanerdən istifadə edin. QR kodu olmayan cihazlar üçün <b>Növbəti</b> düyməsini basın və davam edin.]]></string>
+  <string name="add_wizard_network_name">Şəbəkə adı</string>
+  <string name="add_wizard_step_2_search_network">Şəbəkə axtarışı</string>
+  <string name="add_wizard_step_3_message_1">Cihazınızı enerji mənbəyinə qoşun. Cihaz standart olaraq konfiqurasiya rejimində işləməlidir, vəziyyət LED-i aşağıdakı kimi yanıb-sönəcək.</string>
+  <string name="add_wizard_step_3_message_2">Əgər cihaz enerji verildikdən sonra konfiqurasiya rejimində deyilsə, CONFIG düyməsini ən az 5 saniyə basıb saxlayın.</string>
+  <string name="add_wizard_wrong_qr_code" translatable="false">Yanlış QR kod</string>
+  <string name="add_wizard_network_scan">Şəbəkə axtarılır</string>
+  <string name="select">Seç</string>
+  <string name="add_wizard_network_scan_limit_warning">Android sisteminin Wi-Fi skan məhdudiyyətləri səbəbindən əlavə skan mümkün olmadı. Siyahıda əvvəlki skan zamanı tapılan şəbəkələr var.</string>
+  <string name="add_wizard_network_scan_in_progress">Skan edilir…</string>
+  <string name="add_wizard_network_scan_empty">Heç bir Wi-Fi şəbəkəsi tapılmadı. Wi-Fi aktiv olduğundan və şəbəkə əhatəsində olduğunuzdan əmin olun.</string>
+  <string name="add_wizard_network_manual_connect">Şəbəkəyə əl ilə qoşuldum, davam et.</string>
+  <string name="add_wizard_add_more">Daha əlavə et</string>
+  <string name="add_wizard_repeat">Yenidən cəhd et</string>
+  <string name="add_wizard_password_clarification">Buludda yeni cihazların qeydiyyatı deaktivdir. Bunu əl ilə aktiv edin və ya sehrbazın yeni cihaz qeydiyyatı zamanı avtomatik aktiv etməsi üçün hesab şifrənizi təqdim edin.</string>
+  <string name="add_wizard_password_rules">Şifrə ən azı 8 simvol olmalı, ən azı bir böyük hərf, bir kiçik hərf və bir rəqəm içerməlidir.</string>
+  <string name="add_wizard_password_set_title">Cihaz şifrəsini təyin et</string>
+  <string name="add_wizard_password_new_label">Yeni şifrə</string>
+  <string name="add_wizard_password_repeat_label">Şifrəni təkrarla</string>
+  <string name="add_wizard_password_enter_title">Cihaz şifrəsi</string>
+  <string name="wizard_state_preparing">Hazırlıq…</string>
+  <string name="wizard_state_connecting">Qoşulur…</string>
+  <string name="wizard_state_configuring">Konfiqurasiya edilir…</string>
+  <string name="wizard_state_finishing">Bitirilir…</string>
+  <string name="add_wizard_device_temporarily_locked">Uğursuz giriş cəhdlərinin sayı həddi aşdı. Zəhmət olmasa, sonra yenidən cəhd edin…</string>
+  <string name="add_wizard_password_instruction">Zəhmət olmasa, lokal konfiqurasiya veb səhifəsinə daxil olmaq üçün istifadə edilən şifrəni istifadə edin.\n\nŞifrənizi unutmusunuz? Supla Cloud-da dəyişdirə bilərsiniz və ya cihazı fabriki ayarlara sıfırlaya bilərsiniz.</string>
+  <string name="add_wizard_manual_reconnect">Cihazla şəbəkə əlaqəsi əl ilə quruldu. Telefonunuzun yenidən internetə qoşulduğundan əmin olun və prosesi davam etdirin.</string>
+  <string name="channel_state_battery_powered">batareya</string>
+  <string name="channel_state_main_powered">şəbəkə</string>
+  <string name="cfg_temperature_precision">Temperatur dəqiqliyi</string>
+  <string name="temperature_measured">Ölçülən</string>
+  <string name="temperature_preset">Əvvəlcədən təyin edilmiş</string>
+  <string name="thermostat_detail_antifreeze_active">Antifriz qorunması aktivdir</string>
+  <string name="thermostat_detail_overheat_active">Həddindən artıq istilik qorunması aktivdir</string>
+  <string name="developer_option">İnkişafçı seçimləri</string>
+  <string name="developer_info_screen_orientation">Ekran fırlanması aktivdir</string>
+  <string name="developer_info_settings">Eksperimental parametrlər</string>
+
+  <plurals name="details_timer_info_on" translatable="false">
+    <item quantity="other">açıq</item>
+  </plurals>
+  <plurals name="details_timer_info_off" translatable="false">
+    <item quantity="other">bağlı</item>
+  </plurals>
+  <plurals name="day_pattern" translatable="false">
+    <item quantity="zero">%1$d gün</item>
+    <item quantity="one">%1$d gün</item>
+    <item quantity="other">%1$d gün</item>
+  </plurals>
+  <plurals name="rest_time_days_pattern" translatable="false">
+    <item quantity="zero">%1$d gün ⏱️</item>
+    <item quantity="one">%1$d gün ⏱️</item>
+    <item quantity="other">%1$d gün ⏱️</item>
+  </plurals>
+  <plurals name="hour_pattern" translatable="false">
+    <item quantity="zero">%1$d saat</item>
+    <item quantity="one">%1$d saat</item>
+    <item quantity="other">%1$d saat</item>
+  </plurals>
+  <plurals name="minute_pattern" translatable="false">
+    <item quantity="other">%1$d dəq</item>
+  </plurals>
+  <plurals name="second_pattern" translatable="false">
+    <item quantity="other">%1$d san</item>
+  </plurals>
+  <string name="state_partially_opened">Qismən açıq</string>
+  <string name="channel_btn_step_by_step">Aç/Bağla (addım-addım)</string>
+  <string name="gate_general_open_and_close_warning">Bütün qapılar üçün açılma sensoru ayarlanmayıb — “Aç” və “Bağla” düymələri düzgün işləməyə bilər.</string>
+  <string name="add_wizard_spaces_accept">Olduğu kimi saxla</string>
+  <string name="add_wizard_spaces_modify">Boşluqları sil</string>
+  <string name="add_wizard_spaces_title">Şəbəkə adında boşluq?</string>
+  <string name="add_wizard_spaces_message">Daxil edilən şəbəkə adı \"%1$s\" əvvəlində və ya sonunda boş simvollar (boşluq və ya tab) ehtiva edir. Əgər şəbəkə adınızda bu simvollar olmamalıdırsa, cihaz şəbəkəyə qoşula bilməyəcək. Aparıcı və ya son boş simvolları saxlamaq yoxsa silmək istəyirsiniz?</string>
+  <string name="state_dialog_last_known_state">Offline – son məlum vəziyyət:</string>
+  <string name="channel_caption_motion_sensor">Hərəkət sensoru</string>
+  <string name="channel_caption_binary_sensor">İkili sensor</string>
+  <string name="rgb_detail_select_color">Rəng seçin</string>
+  <string name="legacy_rgbw_settings_unauthorized_message">Konfiqurasiyanı görmək üçün icazə tələb olunur!</string>
+  <string name="legacy_rgbw_settings_authorize_button">İcazə verin</string>
+  <string name="rgb_detail_colors_limit">Limitə çatdı!</string>
+  <string name="toolbar_dimmer">Qaraldıcı</string>
+  <string name="rgb_detail_color">Rəng:</string>
+  <string name="rgb_detail_brightness">Parlaqlıq:</string>
+</resources>
