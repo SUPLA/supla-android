@@ -463,9 +463,9 @@ private class ChannelGroupEntityStateWrapper(
   override val isClosed: Boolean
     get() = getActivePercentage() >= 100
   override val brightness: Int
-    get() = if (getActivePercentage(2) >= 100) 1 else 0
-  override val colorBrightness: Int
     get() = if (getActivePercentage(1) >= 100) 1 else 0
+  override val colorBrightness: Int
+    get() = if (getActivePercentage(2) >= 100) 1 else 0
   override val transparent: Boolean
     get() = false
   override val thermostatSubfunction: ThermostatSubfunction?
@@ -526,9 +526,9 @@ private class ChannelGroupStateWrapper(
   override val isClosed: Boolean
     get() = getActivePercentage() >= 100
   override val brightness: Int
-    get() = if (getActivePercentage(2) >= 100) 1 else 0
-  override val colorBrightness: Int
     get() = if (getActivePercentage(1) >= 100) 1 else 0
+  override val colorBrightness: Int
+    get() = if (getActivePercentage(2) >= 100) 1 else 0
   override val transparent: Boolean
     get() = false
   override val thermostatSubfunction: ThermostatSubfunction?

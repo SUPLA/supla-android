@@ -109,6 +109,8 @@ class RgbDetailViewModel @Inject constructor(
       ItemType.CHANNEL -> observeChannel(remoteId)
       ItemType.GROUP -> observeGroup(remoteId)
     }
+
+    observeSavedColors(remoteId, type)
   }
 
   override fun onColorSelectionStarted() {
@@ -362,18 +364,17 @@ class RgbDetailViewModel @Inject constructor(
         Observable.just(0),
         updateSubject.debounce(1, TimeUnit.SECONDS)
       ),
-      observeChannelWithChildrenUseCase(remoteId).distinctUntilChanged(),
-      colorListRepository.findAllChannelColors(remoteId)
-    ) { _, channelWithChildren, savedColors -> Pair(channelWithChildren, savedColors) }
+      observeChannelWithChildrenUseCase(remoteId).distinctUntilChanged()
+    ) { _, channelWithChildren -> channelWithChildren }
       .attachSilent()
       .subscribeBy(
-        onNext = { (channelWithChildren, savedColors) -> handleChannel(channelWithChildren, savedColors) },
+        onNext = { channelWithChildren -> handleChannel(channelWithChildren) },
         onError = defaultErrorHandler("loadChannel($remoteId)")
       )
       .disposeBySelf()
   }
 
-  private fun handleChannel(channelWithChildren: ChannelWithChildren, savedColors: List<ColorEntity>) {
+  private fun handleChannel(channelWithChildren: ChannelWithChildren) {
     val channel = channelWithChildren.channel
     val channelState = getChannelStateUseCase(channel)
     val value = getValue(channel)
@@ -414,7 +415,6 @@ class RgbDetailViewModel @Inject constructor(
             textRes = R.string.channel_btn_off,
             pressed = (channelState as? ChannelState.RgbAndDimmer)?.rgb == ChannelState.Value.OFF
           ),
-          savedColors = savedColors.map { it.asSavedColor },
           loading = false
         )
       )
@@ -441,17 +441,16 @@ class RgbDetailViewModel @Inject constructor(
         updateSubject.debounce(1, TimeUnit.SECONDS)
       ),
       readGroupWithChannelsUseCase(remoteId).distinctUntilChanged(),
-      colorListRepository.findAllGroupColors(remoteId)
-    ) { _, group, savedColors -> Pair(group, savedColors) }
+    ) { _, group -> group }
       .attachSilent()
       .subscribeBy(
-        onNext = { (group, savedColors) -> handleGroup(group, savedColors) },
+        onNext = { group -> handleGroup(group) },
         onError = defaultErrorHandler("loadChannel($remoteId)")
       )
       .disposeBySelf()
   }
 
-  private fun handleGroup(groupWithChannels: GroupWithChannels, savedColors: List<ColorEntity>) {
+  private fun handleGroup(groupWithChannels: GroupWithChannels) {
     val group = groupWithChannels.group
     val groupStateValue: ChannelState.Value? = groupWithChannels.aggregatedState(GroupWithChannels.Policy.Rgb)
     val groupState = ChannelState.Default(groupStateValue ?: ChannelState.Value.OFF)
@@ -477,7 +476,7 @@ class RgbDetailViewModel @Inject constructor(
         viewState = state.viewState.copy(
           value = RgbValue.Multiple(rgbValues.toList()),
           deviceStateData = DeviceStateData(
-            icon = getIcon(groupState),
+            icon = getChannelIconUseCase(group),
             label = localizedString(R.string.details_timer_state_label),
             value = getDeviceStateValue(group.status, groupState),
           ),
@@ -491,7 +490,6 @@ class RgbDetailViewModel @Inject constructor(
             textRes = R.string.channel_btn_off,
             pressed = groupStateValue == ChannelState.Value.OFF
           ),
-          savedColors = savedColors.map { it.asSavedColor },
           loading = false
         )
       )
@@ -507,14 +505,6 @@ class RgbDetailViewModel @Inject constructor(
     else -> localizedString(R.string.details_timer_device_off)
   }
 
-  private fun getIcon(state: ChannelState): ImageId = when {
-    state.value == ChannelState.Value.ON -> ImageId(R.drawable.fnc_rgb_on)
-    state is ChannelState.RgbAndDimmer && state.rgb == ChannelState.Value.ON ->
-      ImageId(R.drawable.fnc_rgb_on)
-
-    else -> ImageId(R.drawable.fnc_rgb_off)
-  }
-
   private fun getButtonIcon(channel: ChannelDataBase, stateValue: ChannelState.Value): ImageId =
     when {
       channel.function == SuplaFunction.RGB_LIGHTING -> getChannelIconUseCase(channel, channelStateValue = stateValue)
@@ -528,6 +518,27 @@ class RgbDetailViewModel @Inject constructor(
       color = Color(color),
       brightness = brightness.toInt()
     )
+
+  private fun observeSavedColors(remoteId: Int, type: ItemType) {
+    val observable = when (type) {
+      ItemType.CHANNEL -> colorListRepository.findAllChannelColors(remoteId)
+      ItemType.GROUP -> colorListRepository.findAllGroupColors(remoteId)
+    }
+
+    observable
+      .attachSilent()
+      .subscribeBy(
+        onNext = { savedColors ->
+          updateState { state ->
+            state.copy(
+              viewState = state.viewState.copy(savedColors = savedColors.map { it.asSavedColor })
+            )
+          }
+        },
+        onError = defaultErrorHandler("observeSavedColors($remoteId, $type)")
+      )
+      .disposeBySelf()
+  }
 }
 
 sealed interface RgbDetailViewEvent : ViewEvent {
