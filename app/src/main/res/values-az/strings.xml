@@ -815,4 +815,5 @@
   <string name="toolbar_dimmer">Qaraldıcı</string>
   <string name="rgb_detail_color">Rəng:</string>
   <string name="rgb_detail_brightness">Parlaqlıq:</string>
+  <string name="channel_caption_invisible">Gizli</string>
 </resources>

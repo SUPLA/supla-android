@@ -700,4 +700,5 @@
   <string name="legacy_rgbw_settings_unauthorized_message">Norint peržiūrėti konfigūraciją, reikalingas leidimas!</string>
   <string name="legacy_rgbw_settings_authorize_button">Autorizuoti</string>
   <string name="rgb_detail_colors_limit">Pasiektas limitas!</string>
+  <string name="channel_caption_invisible">Paslėptas</string>
 </resources>

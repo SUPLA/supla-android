@@ -168,7 +168,7 @@ class ContainerGeneralDetailViewModel @Inject constructor(
       LocalizedString.WithResourceAndArguments(R.string.container_caption, caption, it)
     }
 
-    return RelatedChannelData(
+    return RelatedChannelData.Visible(
       channelId = channel.remoteId,
       profileId = channel.profileId,
       onlineState = channelDataEntity.channelValueEntity.onlineState,

@@ -216,7 +216,7 @@ private fun PreviewGroup() {
     previewScope.View(
       state = GateGeneralViewState(
         relatedChannelsData = listOf(
-          RelatedChannelData(
+          RelatedChannelData.Visible(
             channelId = 1,
             profileId = 1L,
             onlineState = ListOnlineState.ONLINE,
@@ -225,7 +225,8 @@ private fun PreviewGroup() {
             userCaption = "",
             batteryIcon = null,
             showChannelStateIcon = true
-          )
+          ),
+          RelatedChannelData.Invisible
         )
       )
     )

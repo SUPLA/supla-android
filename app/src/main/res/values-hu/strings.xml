@@ -720,4 +720,5 @@
   <string name="legacy_rgbw_settings_unauthorized_message">Engedély szükséges a konfiguráció megtekintéséhez!</string>
   <string name="legacy_rgbw_settings_authorize_button">Engedélyezés</string>
   <string name="rgb_detail_colors_limit">Elérte a korlátot!</string>
+  <string name="channel_caption_invisible">Rejtett</string>
 </resources>

@@ -155,7 +155,7 @@ private fun Preview() {
           ChannelIssueItem.LowBattery(listOf(LocalizedString.Constant("Low battery 1"), LocalizedString.Constant("Low battery 2")))
         ),
         sensors = listOf(
-          RelatedChannelData(
+          RelatedChannelData.Visible(
             channelId = 123,
             profileId = 1L,
             onlineState = ListOnlineState.ONLINE,
@@ -165,7 +165,7 @@ private fun Preview() {
             batteryIcon = IssueIcon.Battery50,
             showChannelStateIcon = true
           ),
-          RelatedChannelData(
+          RelatedChannelData.Visible(
             channelId = 123,
             profileId = 1L,
             onlineState = ListOnlineState.OFFLINE,
@@ -175,7 +175,7 @@ private fun Preview() {
             batteryIcon = IssueIcon.Battery25,
             showChannelStateIcon = false
           ),
-          RelatedChannelData(
+          RelatedChannelData.Visible(
             channelId = 123,
             profileId = 1L,
             onlineState = ListOnlineState.ONLINE,
@@ -185,7 +185,7 @@ private fun Preview() {
             batteryIcon = IssueIcon.Battery50,
             showChannelStateIcon = true
           ),
-          RelatedChannelData(
+          RelatedChannelData.Visible(
             channelId = 123,
             profileId = 1L,
             onlineState = ListOnlineState.OFFLINE,
@@ -195,7 +195,7 @@ private fun Preview() {
             batteryIcon = IssueIcon.Battery25,
             showChannelStateIcon = false
           ),
-          RelatedChannelData(
+          RelatedChannelData.Visible(
             channelId = 123,
             profileId = 1L,
             onlineState = ListOnlineState.ONLINE,
@@ -205,7 +205,8 @@ private fun Preview() {
             batteryIcon = IssueIcon.Battery50,
             showChannelStateIcon = true
           ),
-          RelatedChannelData(
+          RelatedChannelData.Invisible,
+          RelatedChannelData.Visible(
             channelId = 123,
             profileId = 1L,
             onlineState = ListOnlineState.OFFLINE,

@@ -48,6 +48,7 @@ fun ListItemDot(onlineState: ListOnlineState, withButton: Boolean, paddingValues
   val color = when (onlineState) {
     ListOnlineState.ONLINE, ListOnlineState.PARTIALLY_ONLINE -> onlineColor
     ListOnlineState.UPDATING -> updateColor
+    ListOnlineState.UNKNOWN -> MaterialTheme.colorScheme.onSurfaceVariant
     else -> offlineColor
   }
   val size = dimensionResource(id = R.dimen.channel_dot_size)
@@ -101,6 +102,8 @@ private fun Preview() {
       ListItemDot(onlineState = ListOnlineState.PARTIALLY_ONLINE, withButton = false, paddingValues = PaddingValues(0.dp))
       ListItemDot(onlineState = ListOnlineState.UPDATING, withButton = true, paddingValues = PaddingValues(0.dp))
       ListItemDot(onlineState = ListOnlineState.UPDATING, withButton = false, paddingValues = PaddingValues(0.dp))
+      ListItemDot(onlineState = ListOnlineState.UNKNOWN, withButton = true, paddingValues = PaddingValues(0.dp))
+      ListItemDot(onlineState = ListOnlineState.UNKNOWN, withButton = false, paddingValues = PaddingValues(0.dp))
     }
   }
 }

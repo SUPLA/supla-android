@@ -717,4 +717,5 @@
   <string name="legacy_rgbw_settings_unauthorized_message">Απαιτείται εξουσιοδότηση για να δείτε τη διαμόρφωση!</string>
   <string name="legacy_rgbw_settings_authorize_button">Εξουσιοδοτήστε</string>
   <string name="rgb_detail_colors_limit">Το όριο έφτασε!</string>
+  <string name="channel_caption_invisible">Κρυφός</string>
 </resources>

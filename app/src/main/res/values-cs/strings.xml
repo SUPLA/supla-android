@@ -703,4 +703,5 @@
   <string name="legacy_rgbw_settings_unauthorized_message">K zobrazení konfigurace je nutné oprávnění!</string>
   <string name="legacy_rgbw_settings_authorize_button">Autorizovat</string>
   <string name="rgb_detail_colors_limit">Dosažen limit!</string>
+  <string name="channel_caption_invisible">Skrytý</string>
 </resources>
