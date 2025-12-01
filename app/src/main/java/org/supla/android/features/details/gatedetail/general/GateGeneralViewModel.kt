@@ -36,6 +36,7 @@ import org.supla.android.usecases.channel.GetChannelStateUseCase
 import org.supla.android.usecases.channel.ObserveChannelWithChildrenUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.group.ChannelGroupRelationDataEntityConvertible
+import org.supla.android.usecases.group.ChannelInGroup
 import org.supla.android.usecases.group.GroupWithChannels
 import org.supla.android.usecases.group.ReadGroupWithChannelsUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -210,6 +211,12 @@ class GateGeneralViewModel @Inject constructor(
 private val ChannelWithChildren.hasSensor: Boolean
   get() = children.firstOrNull { it.relationType == ChannelRelationType.OPENING_SENSOR } != null ||
     children.firstOrNull { it.relationType == ChannelRelationType.PARTIAL_OPENING_SENSOR } != null
+
+private val ChannelInGroup.hasSensor: Boolean
+  get() = when (this) {
+    ChannelInGroup.Invisible -> false
+    is ChannelInGroup.Visible -> channelWithChildren.hasSensor
+  }
 
 private val SuplaFunction.supportsOpenAndClose: Boolean
   get() = when (this) {

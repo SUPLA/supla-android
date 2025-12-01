@@ -721,4 +721,5 @@
   <string name="legacy_rgbw_settings_unauthorized_message">Autorisatie nodig om de configuratie te zien!</string>
   <string name="legacy_rgbw_settings_authorize_button">Autoriseren</string>
   <string name="rgb_detail_colors_limit">Limiet bereikt!</string>
+  <string name="channel_caption_invisible">Verborgen</string>
 </resources>

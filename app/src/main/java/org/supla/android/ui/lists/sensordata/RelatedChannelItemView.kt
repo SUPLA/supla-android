@@ -47,17 +47,40 @@ import org.supla.android.ui.views.list.components.ListItemTitle
 import org.supla.core.shared.data.model.lists.IssueIcon
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.LocalizedStringId
+import org.supla.core.shared.infrastructure.localizedString
 
-data class RelatedChannelData(
-  val channelId: Int,
-  val profileId: Long,
-  val onlineState: ListOnlineState,
-  val icon: ImageId?,
-  val caption: LocalizedString,
-  val userCaption: String,
-  val batteryIcon: IssueIcon?,
+sealed interface RelatedChannelData {
+  val channelId: Int
+  val profileId: Long
+  val onlineState: ListOnlineState
+  val icon: ImageId?
+  val caption: LocalizedString
+  val userCaption: String
+  val batteryIcon: IssueIcon?
   val showChannelStateIcon: Boolean
-)
+
+  data object Invisible : RelatedChannelData {
+    override val channelId: Int = 0
+    override val profileId: Long = 0
+    override val onlineState: ListOnlineState = ListOnlineState.UNKNOWN
+    override val icon: ImageId = ImageId(R.drawable.ic_unknown_channel)
+    override val caption: LocalizedString = localizedString(R.string.channel_caption_invisible)
+    override val userCaption: String = ""
+    override val batteryIcon: IssueIcon? = null
+    override val showChannelStateIcon: Boolean = false
+  }
+
+  data class Visible(
+    override val channelId: Int,
+    override val profileId: Long,
+    override val onlineState: ListOnlineState,
+    override val icon: ImageId?,
+    override val caption: LocalizedString,
+    override val userCaption: String,
+    override val batteryIcon: IssueIcon?,
+    override val showChannelStateIcon: Boolean
+  ) : RelatedChannelData
+}
 
 @Composable
 fun RelatedChannelItemView(
@@ -79,7 +102,11 @@ fun RelatedChannelItemView(
     ListItemTitle(
       text = channel.caption(LocalContext.current),
       onItemClick = {},
-      onLongClick = { onCaptionLongPress(channel) },
+      onLongClick = {
+        if (channel is RelatedChannelData.Visible) {
+          onCaptionLongPress(channel)
+        }
+      },
       modifier = Modifier
         .padding(start = Distance.tiny)
         .weight(1f),
@@ -114,7 +141,7 @@ private fun Preview() {
   SuplaTheme {
     Column {
       RelatedChannelItemView(
-        channel = RelatedChannelData(
+        channel = RelatedChannelData.Visible(
           channelId = 123,
           profileId = 123L,
           onlineState = ListOnlineState.ONLINE,
@@ -126,7 +153,7 @@ private fun Preview() {
         )
       )
       RelatedChannelItemView(
-        channel = RelatedChannelData(
+        channel = RelatedChannelData.Visible(
           channelId = 123,
           profileId = 123L,
           onlineState = ListOnlineState.OFFLINE,
@@ -136,6 +163,9 @@ private fun Preview() {
           batteryIcon = null,
           showChannelStateIcon = false
         )
+      )
+      RelatedChannelItemView(
+        channel = RelatedChannelData.Invisible
       )
     }
   }
