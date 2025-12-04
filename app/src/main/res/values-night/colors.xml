@@ -62,7 +62,6 @@
     <color name="segmented_field_background">#101010</color>
 
     <color name="widget_fields_border">#4E5255</color>
-    <color name="widget_spinner_item_background">#262627</color>
 
     <color name="dialog_scrim">#BB171717</color>
     <color name="info_scrim">#DD000000</color>
