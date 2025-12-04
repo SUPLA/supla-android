@@ -4,7 +4,6 @@ plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.spotless)
   alias(libs.plugins.kotlin.android)
-  alias(libs.plugins.kapt)
   alias(libs.plugins.google.services)
   alias(libs.plugins.hilt)
   alias(libs.plugins.kotlin.compose)
@@ -183,8 +182,8 @@ dependencies {
 
   coreLibraryDesugaring(libs.android.tools.desugar)
 
-  kapt(libs.hilt.kapt)
-  kapt(libs.hilt.worker.kapt)
+  ksp(libs.hilt.kapt)
+  ksp(libs.hilt.worker.kapt)
   ksp(libs.androidx.room.compiler)
 
   testImplementation(libs.testing.junit)
@@ -201,10 +200,6 @@ dependencies {
   testImplementation(libs.testing.androidx.junit)
   testImplementation(libs.testing.androidx.arch.core)
   testImplementation(libs.testing.kotlin.relfect)
-}
-
-kapt {
-  correctErrorTypes = true
 }
 
 spotless {

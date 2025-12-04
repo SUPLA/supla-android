@@ -5,15 +5,15 @@ targetSdk = "35"
 minSdk = "24"
 buildTools = "35.0.0"
 
-androidGradlePlugin = "8.13.0"
+androidGradlePlugin = "8.13.1"
 
 # 2.2.0 is blocked becouse hilt worker does not support it
-kotlin = "2.1.10"
+kotlin = "2.2.21"
 hilt = "2.57.2"
 googleServices = "4.4.4"
-spotless = "8.0.0"
-ksp = "2.1.10-1.0.30"
-skie = "0.10.6"
+spotless = "8.1.0"
+ksp = "2.2.21-2.0.4"
+skie = "0.10.8"
 
 hiltWorker = "1.3.0"
 multidex = "2.0.1"
@@ -23,24 +23,24 @@ coroutines-rx3 = "1.10.2"
 googleMaterial = "1.13.0"
 ktlint = "0.48.1"
 fragmentViewBinding = "1.0.2"
-firebase = "34.4.0"
+firebase = "34.6.0"
 
 androidx-fragment = "1.8.9"
-androidx-lifecycle = "2.9.4"
+androidx-lifecycle = "2.10.0"
 androidx-lifecycle-extensions = "2.2.0"
-androidx-navigation = "2.9.5"
+androidx-navigation = "2.9.6"
 androidx-constraintLayout = "2.2.1"
 androidx-core = "1.17.0"
-androidx-core-splashscreen = "1.0.1"
+androidx-core-splashscreen = "1.2.0"
 androidx-preferences = "1.2.1"
 androidx-worker = "2.11.0"
 androidx-recyclerView = "1.4.0"
 androidx-security = "1.1.0"
-androidx-room = "2.8.3"
+androidx-room = "2.8.4"
 androidx-appCompat = "1.7.1"
 androidx-biometric = "1.1.0"
-androidx-compose-core = "1.9.4"
-androidx-activity-compose = "1.11.0"
+androidx-compose-core = "1.10.0"
+androidx-activity-compose = "1.12.1"
 androidx-material-icons-extended = "1.7.8"
 androidx-compose-constraintLayout = "1.1.1"
 androidx-compose-material3 = "1.4.0"
@@ -53,7 +53,7 @@ rxandroid = "3.0.2"
 rxkoltin = "3.0.1"
 
 retrofit = "3.0.0"
-retrofit-logging = "5.2.1"
+retrofit-logging = "5.3.2"
 
 android-tools-desugar = "2.1.5"
 jsoup = "1.21.2"
@@ -75,9 +75,8 @@ testing-androidx-rules = "1.7.0"
 testing-androidx-junit-extension = "1.3.0"
 testing-androidx-arch-core = "2.2.0"
 
-kotlinx-serialization = "1.8.1" # newer version is not compiling on iOS
-kotlinx-datetime = "0.6.2" # newer version is not compiling on iOS
-kotlin-bitops-endian = "0.2.0" # newer version is not compiling on iOS
+kotlinx-serialization = "1.9.0" # newer version is not compiling on iOS
+kotlin-bitops-endian = "0.3.0" # newer version is not compiling on iOS
 
 googleJavaFormat = "1.19.2"
 
@@ -144,7 +143,6 @@ firebase = { group = "com.google.firebase", name = "firebase-bom", version.ref =
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
 
 kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
-kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime" }
 
 android-tools-desugar = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "android-tools-desugar" }
 jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
@@ -178,7 +176,6 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
