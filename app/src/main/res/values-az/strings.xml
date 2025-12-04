@@ -771,31 +771,32 @@
   <string name="developer_info_screen_orientation">Ekran fırlanması aktivdir</string>
   <string name="developer_info_settings">Eksperimental parametrlər</string>
 
-  <plurals name="details_timer_info_on" translatable="false">
+  <plurals name="details_timer_info_on">
+    <item quantity="one">açıq</item>
     <item quantity="other">açıq</item>
   </plurals>
-  <plurals name="details_timer_info_off" translatable="false">
+  <plurals name="details_timer_info_off">
+    <item quantity="one">bağlı</item>
     <item quantity="other">bağlı</item>
   </plurals>
-  <plurals name="day_pattern" translatable="false">
-    <item quantity="zero">%1$d gün</item>
+  <plurals name="day_pattern">
     <item quantity="one">%1$d gün</item>
     <item quantity="other">%1$d gün</item>
   </plurals>
-  <plurals name="rest_time_days_pattern" translatable="false">
-    <item quantity="zero">%1$d gün ⏱️</item>
+  <plurals name="rest_time_days_pattern">
     <item quantity="one">%1$d gün ⏱️</item>
     <item quantity="other">%1$d gün ⏱️</item>
   </plurals>
-  <plurals name="hour_pattern" translatable="false">
-    <item quantity="zero">%1$d saat</item>
+  <plurals name="hour_pattern">
     <item quantity="one">%1$d saat</item>
     <item quantity="other">%1$d saat</item>
   </plurals>
-  <plurals name="minute_pattern" translatable="false">
+  <plurals name="minute_pattern">
+    <item quantity="one">%1$d dəq</item>
     <item quantity="other">%1$d dəq</item>
   </plurals>
-  <plurals name="second_pattern" translatable="false">
+  <plurals name="second_pattern">
+    <item quantity="one">%1$d san</item>
     <item quantity="other">%1$d san</item>
   </plurals>
   <string name="state_partially_opened">Qismən açıq</string>
