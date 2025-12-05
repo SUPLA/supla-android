@@ -29,20 +29,20 @@ class SegmentedButtonGroup @JvmOverloads constructor(
   defStyleAttr: Int = 0
 ) : LinearLayout(ctx, attrs, defStyleAttr) {
 
-  private var _idx = 0
-  private var _listener: ((Int) -> Unit)? = null
+  private var idx = 0
+  private var listener: ((Int) -> Unit)? = null
 
   var position: Int
-    get() = _idx
+    get() = idx
     set(value) {
-      if (_idx == value) {
+      if (idx == value) {
         return
       }
-      _idx = value
+      idx = value
 
       for (i in 0 until childCount) {
         val v = getChildAt(i)
-        v.isSelected = _idx == i
+        v.isSelected = idx == i
       }
     }
 
@@ -50,12 +50,12 @@ class SegmentedButtonGroup @JvmOverloads constructor(
     super.addView(child, index, params)
     child.isClickable = true
     val pos = if (index >= 0) index else childCount - 1
-    child.isSelected = pos == _idx
+    child.isSelected = pos == idx
     child.setOnClickListener { positionClick(pos) }
   }
 
   fun setOnPositionChangedListener(listener: ((Int) -> Unit)?) {
-    _listener = listener
+    this@SegmentedButtonGroup.listener = listener
   }
 
   private fun positionClick(position: Int) {
@@ -64,6 +64,6 @@ class SegmentedButtonGroup @JvmOverloads constructor(
     }
 
     this.position = position
-    _listener?.invoke(_idx)
+    listener?.invoke(idx)
   }
 }

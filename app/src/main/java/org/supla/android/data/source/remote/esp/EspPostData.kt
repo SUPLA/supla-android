@@ -26,31 +26,45 @@ class EspPostData(
 
   var ssid: String?
     get() = fieldMap[FIELD_SSID]
-    set(value) { fieldMap.putOrRemove(FIELD_SSID, value) }
+    set(value) {
+      fieldMap.putOrRemove(FIELD_SSID, value)
+    }
 
   var password: String?
     get() = fieldMap[FIELD_PASSWORD]
-    set(value) { fieldMap.putOrRemove(FIELD_PASSWORD, value) }
+    set(value) {
+      fieldMap.putOrRemove(FIELD_PASSWORD, value)
+    }
 
   var server: String?
     get() = fieldMap[FIELD_SERVER]
-    set(value) { fieldMap.putOrRemove(FIELD_SERVER, value) }
+    set(value) {
+      fieldMap.putOrRemove(FIELD_SERVER, value)
+    }
 
   var email: String?
     get() = fieldMap[FIELD_EMAIL]
-    set(value) { fieldMap.putOrRemove(FIELD_EMAIL, value) }
+    set(value) {
+      fieldMap.putOrRemove(FIELD_EMAIL, value)
+    }
 
   var softwareUpdate: Boolean?
     get() = fieldMap[FIELD_UPDATE]?.let { it == "1" }
-    set(value) { fieldMap.putOrRemove(FIELD_UPDATE, value) }
+    set(value) {
+      fieldMap.putOrRemove(FIELD_UPDATE, value)
+    }
 
   var protocol: EspDeviceProtocol?
     get() = fieldMap[FIELD_PROTO]?.toIntOrNull()?.let { EspDeviceProtocol.from(it) }
-    set(value) { fieldMap.putOrRemove(FIELD_PROTO, value?.id) }
+    set(value) {
+      fieldMap.putOrRemove(FIELD_PROTO, value?.id)
+    }
 
   var reboot: Boolean?
     get() = fieldMap[FIELD_REBOOT]?.let { it == "1" }
-    set(value) { fieldMap.putOrRemove(FIELD_REBOOT, value) }
+    set(value) {
+      fieldMap.putOrRemove(FIELD_REBOOT, value)
+    }
 
   val isCompatible: Boolean
     get() = ssid.isNotNull && password.isNotNull && server.isNotNull && email.isNotNull

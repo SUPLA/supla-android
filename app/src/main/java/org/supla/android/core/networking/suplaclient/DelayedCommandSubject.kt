@@ -44,7 +44,13 @@ abstract class DelayedCommandSubject<T : DelayableState>(
           Mode.SAMPLE -> it.sample(delayMs, TimeUnit.MILLISECONDS)
         }
       }
-      .flatMapCompletable { if (it.sent.not()) { execute(it) } else Completable.complete() }
+      .flatMapCompletable {
+        if (it.sent.not()) {
+          execute(it)
+        } else {
+          Completable.complete()
+        }
+      }
       .subscribeOn(schedulers.io)
       .subscribeBy(
         onError = { Timber.e(it, "Could not execute delayed request") }

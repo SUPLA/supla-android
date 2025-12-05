@@ -56,7 +56,7 @@ import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.buttons.OutlinedButton
 import kotlin.time.Duration.Companion.milliseconds
 
-private const val numberOfDots = 10
+private const val NUMBER_OF_DOTS = 10
 
 @Composable
 fun AddWizardScaffold(
@@ -135,13 +135,13 @@ private fun ProcessingText() {
   LaunchedEffect(Any()) {
     while (true) {
       delay(100.milliseconds)
-      if (position >= numberOfDots) {
+      if (position >= NUMBER_OF_DOTS) {
         position = 0
       } else {
         position += 1
       }
       text = ""
-      for (i in 0..numberOfDots) {
+      for (i in 0..NUMBER_OF_DOTS) {
         text += if (i == position) "|" else "."
       }
     }
