@@ -1,4 +1,5 @@
-package org.supla.android.db.room.measurements.migrations/*
+package org.supla.android.db.room.measurements.migrations
+/*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
  This program is free software; you can redistribute it and/or

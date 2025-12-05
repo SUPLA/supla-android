@@ -213,15 +213,23 @@ spotless {
   }
   kotlin {
     target(fileTree("dir" to "src", "include" to "**/*.kt"))
-    ktlint(libs.versions.ktlint.get()).editorConfigOverride(
+    ktlint().editorConfigOverride(
       mapOf(
         "ktlint_standard_no-wildcard-imports" to "disabled",
         "ktlint_standard_filename" to "disabled",
         "ktlint_standard_trailing-comma-on-declaration-site" to "disabled",
         "ktlint_standard_trailing-comma-on-call-site" to "disabled",
-        "ktlint_experimental" to "disabled",
         "max_line_length" to "140",
-        "indent_size" to "2"
+        "indent_size" to "2",
+        // After update from 0.48.1 to 1.8.0
+        "ktlint_code_style" to "intellij_idea",
+        "ktlint_function_signature_body_expression_wrapping" to "default",
+        "ktlint_standard_function-expression-body" to "disabled",
+        "ktlint_standard_class-signature" to "disabled",
+        "ktlint_standard_function-signature" to "disabled",
+        "ktlint_standard_enum-wrapping" to "disabled",
+        "ktlint_standard_value-parameter-comment" to "disabled",
+        "ktlint_function_naming_ignore_when_annotated_with" to "Composable"
       )
     )
   }

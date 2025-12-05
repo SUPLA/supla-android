@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import kotlinx.serialization.Serializable
 import java.util.Date
 
+@Suppress("ktlint:standard:property-naming")
 @Serializable
 class SuplaChannelExtendedValue {
   @JvmField

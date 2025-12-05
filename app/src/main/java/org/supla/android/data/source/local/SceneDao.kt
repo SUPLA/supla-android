@@ -72,6 +72,7 @@ class SceneDao(dap: DatabaseAccessProvider) : BaseDao(dap) {
     return ids
   }
 
+  @Suppress("ktlint:standard:comment-wrapping")
   fun sceneCursor(profileId: Long? = cachedProfileId): Cursor {
     return read {
       val selection: String?

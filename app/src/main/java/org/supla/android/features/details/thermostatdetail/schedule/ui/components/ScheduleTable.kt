@@ -73,7 +73,7 @@ import org.supla.android.features.details.thermostatdetail.schedule.extensions.c
 import org.supla.android.features.details.thermostatdetail.schedule.ui.PreviewProxy
 import org.supla.android.features.details.thermostatdetail.schedule.ui.ScheduleDetailViewProxy
 
-const val rowsCount = 25
+const val ROWS_COUNT = 25
 val columnsCount = DayOfWeek.entries.size
 val boxPadding = 2.dp
 val boxSpacing = boxPadding.times(2)
@@ -106,7 +106,7 @@ fun ScheduleTable(
   val (viewSize, updateSize) = remember { mutableStateOf<IntSize?>(null) }
   val textWidth = hours.first().textLayoutResult.size.width.plus(boxPadding.toPx()).plus(textPadding.toPx())
   val gridWidth = remember(viewSize) { viewSize?.width?.toFloat()?.minus(textWidth)?.div(columnsCount) ?: 0f }
-  val gridHeight = remember(viewSize) { viewSize?.height?.toFloat()?.div(rowsCount) ?: 0f }
+  val gridHeight = remember(viewSize) { viewSize?.height?.toFloat()?.div(ROWS_COUNT) ?: 0f }
   val boxSize = remember(viewSize) { createBoxSize(viewSize, gridWidth, gridHeight).also { onBoxSizeChanged?.invoke(it) } }
   val positions: Map<ScheduleDetailEntryBoxKey, Offset> = remember(viewSize) {
     createBoxesPositions(viewSize, hours, days, textWidth, gridHeight, gridWidth)

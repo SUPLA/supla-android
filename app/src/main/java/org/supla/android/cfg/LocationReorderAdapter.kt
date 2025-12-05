@@ -188,7 +188,9 @@ class LocationReorderAdapter(
     val firstVisiblePosition = listView.firstVisiblePosition
     if (dest == ListViewDragListener.INVALID_POSITION ||
       srcPosition == null
-    ) { return }
+    ) {
+      return
+    }
     if (dest != destPosition) {
       destPosition = dest
       notifyDataSetChanged()

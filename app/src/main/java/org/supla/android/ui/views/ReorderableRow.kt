@@ -100,7 +100,7 @@ fun <T> ReorderableRow(
     overLeadingContent = leadingRect?.let { dragItemStartPosition < it.right - distanceDefault } ?: false
     overTrailingContent = trailingRect?.let { dragItemEndPosition > it.left + distanceDefault } ?: false
 
-    for (index in 0 ..< itemRects.size) {
+    for (index in 0..<itemRects.size) {
       val currentItemRect = itemRects.getOrNull(index) ?: return
       val currentItemCenterPosition = currentItemRect.center.x
 
@@ -227,7 +227,13 @@ private fun PreviewText(text: String, isCurrentDragging: Boolean, itemOver: Bool
     modifier = Modifier
       .padding(horizontal = Distance.small)
       .background(
-        color = if (itemOver) Color.Red else if (isCurrentDragging) Color.LightGray else Color.White,
+        color = if (itemOver) {
+          Color.Red
+        } else if (isCurrentDragging) {
+          Color.LightGray
+        } else {
+          Color.White
+        },
         shape = RoundedCornerShape(8.dp)
       )
       .border(

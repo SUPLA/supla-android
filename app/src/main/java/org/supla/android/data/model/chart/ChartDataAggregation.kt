@@ -33,7 +33,7 @@ import org.supla.core.shared.infrastructure.localizedString
 import java.util.Date
 
 enum class ChartDataAggregation(
-  @StringRes val stringRes: Int,
+  @param:StringRes val stringRes: Int,
   val timeInSec: Long,
   val aggregator: (BaseLogEntity) -> Long,
   val groupTimeProvider: (Date) -> Long // In seconds

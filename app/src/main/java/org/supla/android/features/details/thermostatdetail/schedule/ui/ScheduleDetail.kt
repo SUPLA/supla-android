@@ -175,8 +175,8 @@ private fun ScheduleProgramsRow(content: @Composable RowScope.() -> Unit) =
     content = content
   )
 
-context(ColumnScope)
 @Composable
+context(ColumnScope)
 private fun ScheduleDetailTable(viewState: ScheduleDetailViewState, viewProxy: ScheduleDetailViewProxy, onBoxSizeChanged: (Size) -> Unit) =
   Box(
     modifier = Modifier
