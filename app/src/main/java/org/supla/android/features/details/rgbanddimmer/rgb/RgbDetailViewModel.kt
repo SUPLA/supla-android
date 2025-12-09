@@ -508,8 +508,8 @@ class RgbDetailViewModel @Inject constructor(
   private fun getButtonIcon(channel: ChannelDataBase, stateValue: ChannelState.Value): ImageId =
     when {
       channel.function == SuplaFunction.RGB_LIGHTING -> getChannelIconUseCase(channel, channelStateValue = stateValue)
-      stateValue == ChannelState.Value.ON -> ImageId(R.drawable.fnc_dimmer_on)
-      else -> ImageId(R.drawable.fnc_dimmer_off)
+      stateValue == ChannelState.Value.ON -> ImageId(R.drawable.fnc_rgb_on)
+      else -> ImageId(R.drawable.fnc_rgb_off)
     }
 
   private val ColorEntity.asSavedColor: SavedColor

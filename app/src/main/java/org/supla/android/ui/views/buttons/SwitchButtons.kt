@@ -59,9 +59,30 @@ fun SwitchButtons(
   rightButtonClick: () -> Unit = {},
   leftColors: SuplaButtonColors = SuplaButtonDefaults.errorColors(contentDisabled = MaterialTheme.colorScheme.onSurface),
   rightColors: SuplaButtonColors = SuplaButtonDefaults.primaryColors(contentDisabled = MaterialTheme.colorScheme.onSurface)
+) = SwitchButtons(
+  leftButton = leftButton,
+  rightButton = rightButton,
+  disabled = disabled,
+  leftButtonClick = leftButtonClick,
+  rightButtonClick = rightButtonClick,
+  leftColors = leftColors,
+  rightColors = rightColors,
+  modifier = Modifier.padding(horizontal = Distance.horizontal, vertical = Distance.vertical)
+)
+
+@Composable
+fun SwitchButtons(
+  leftButton: SwitchButtonState?,
+  rightButton: SwitchButtonState?,
+  disabled: Boolean = false,
+  leftButtonClick: () -> Unit = {},
+  rightButtonClick: () -> Unit = {},
+  leftColors: SuplaButtonColors = SuplaButtonDefaults.errorColors(contentDisabled = MaterialTheme.colorScheme.onSurface),
+  rightColors: SuplaButtonColors = SuplaButtonDefaults.primaryColors(contentDisabled = MaterialTheme.colorScheme.onSurface),
+  modifier: Modifier
 ) =
   SwitchButtonsLayout(
-    modifier = Modifier.padding(horizontal = Distance.horizontal, vertical = Distance.vertical)
+    modifier = modifier
   ) {
     leftButton?.let {
       SwitchButton(

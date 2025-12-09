@@ -21,6 +21,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -49,6 +50,7 @@ import org.supla.android.features.details.rgbanddimmer.common.LinearColorSelecto
 import org.supla.android.images.ImageId
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.tools.SuplaPreviewLandscape
+import org.supla.android.tools.SuplaSmallPreview
 import org.supla.android.ui.lists.channelissues.ChannelIssuesView
 import org.supla.android.ui.views.DeviceState
 import org.supla.android.ui.views.DeviceStateData
@@ -133,6 +135,50 @@ private fun DimmerDetailScope.Landscape(
 private fun DimmerDetailScope.Portrait(
   state: DimmerDetailViewState
 ) {
+  BoxWithConstraints {
+    if (maxHeight < 550.dp) {
+      LowPortrait(state)
+    } else {
+      HighPortrait(state)
+    }
+  }
+}
+
+@Composable
+private fun DimmerDetailScope.LowPortrait(state: DimmerDetailViewState) {
+  Column {
+    state.deviceStateData?.let { DeviceState(data = it) }
+    state.channelIssues?.let { issues -> ChannelIssuesView(issues) }
+
+    BrightnessBox(state.value)
+
+    LinearColorSelector(
+      value = state.value.brightness?.div(100f)?.coerceIn(0f, 1f),
+      selectedColor = state.value.brightness?.toGrayColor(),
+      enabled = !state.offline,
+      valueMarkers = state.value.markers.map { it.div(100f).coerceIn(0f, 1f) },
+      onValueChangeStarted = { onBrightnessSelectionStarted() },
+      onValueChanging = { onBrightnessSelecting(brightness = it.times(100).roundToInt()) },
+      onValueChanged = { onBrightnessSelected() },
+      modifier = Modifier
+        .padding(horizontal = Distance.horizontal, vertical = Distance.vertical)
+        .weight(1f)
+        .width(40.dp)
+        .align(Alignment.CenterHorizontally)
+    )
+
+    SwitchButtons(
+      leftButton = state.offButtonState,
+      rightButton = state.onButtonState,
+      disabled = state.offline || state.loading,
+      leftButtonClick = { turnOff() },
+      rightButtonClick = { turnOn() },
+    )
+  }
+}
+
+@Composable
+private fun DimmerDetailScope.HighPortrait(state: DimmerDetailViewState) {
   Column {
     state.deviceStateData?.let { DeviceState(data = it) }
     state.channelIssues?.let { issues -> ChannelIssuesView(issues) }
@@ -210,6 +256,7 @@ private val previewScope = object : DimmerDetailScope {
 
 @SuplaPreviewLandscape
 @SuplaPreview
+@SuplaSmallPreview
 @PreviewScreenSizes
 @Composable
 private fun Preview() {

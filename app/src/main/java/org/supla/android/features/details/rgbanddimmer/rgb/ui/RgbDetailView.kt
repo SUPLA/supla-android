@@ -24,6 +24,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -53,6 +54,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowSizeClass
@@ -66,8 +68,11 @@ import org.supla.android.features.details.rgbanddimmer.rgb.model.RgbDetailViewSt
 import org.supla.android.features.details.rgbanddimmer.rgb.model.RgbValue
 import org.supla.android.features.details.rgbanddimmer.rgb.model.SavedColor
 import org.supla.android.images.ImageId
+import org.supla.android.tools.BACKGROUND_COLOR
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.tools.SuplaPreviewLandscape
+import org.supla.android.tools.SuplaSmallPreview
+import org.supla.android.ui.extensions.ifTrue
 import org.supla.android.ui.lists.channelissues.ChannelIssuesView
 import org.supla.android.ui.views.DeviceState
 import org.supla.android.ui.views.DeviceStateData
@@ -169,6 +174,17 @@ private fun RgbDetailScope.Landscape(
 private fun RgbDetailScope.Portrait(
   state: RgbDetailViewState
 ) {
+  BoxWithConstraints {
+    if (maxHeight < 550.dp) {
+      LowPortrait(state, showCurrentValueBox = maxHeight > 400.dp)
+    } else {
+      HighPortrait(state, smallMargins = maxHeight < 650.dp)
+    }
+  }
+}
+
+@Composable
+private fun RgbDetailScope.LowPortrait(state: RgbDetailViewState, showCurrentValueBox: Boolean) {
   var color by remember { mutableStateOf(state.value.hsv) }
 
   LaunchedEffect(state.value) {
@@ -176,7 +192,53 @@ private fun RgbDetailScope.Portrait(
   }
 
   Column {
-    state.deviceStateData?.let { DeviceState(data = it) }
+    state.deviceStateData?.let { DeviceState(data = it, modifier = Modifier.padding(vertical = Distance.small)) }
+    state.channelIssues?.let { issues -> ChannelIssuesView(issues) }
+
+    showCurrentValueBox.ifTrue {
+      ColorAndBrightnessBox(color, state.value, !state.offline, Modifier.padding(horizontal = Distance.default))
+    }
+
+    ColorPickerComponent(
+      color = state.value.hsv,
+      enabled = !state.offline,
+      onColorSelectionStarted = { onColorSelectionStarted() },
+      markers = state.value.markers,
+      onColorSelecting = { hsv ->
+        color = hsv
+        onColorSelecting(hsv)
+      },
+      onColorSelected = { hsv -> onColorSelected(hsv) },
+      modifier = Modifier
+        .fillMaxWidth()
+        .weight(1f)
+        .padding(horizontal = Distance.default, vertical = Distance.small)
+    )
+
+    SavedColors(state.savedColors, !state.offline)
+
+    SwitchButtons(
+      leftButton = state.offButtonState,
+      rightButton = state.onButtonState,
+      disabled = state.offline || state.loading,
+      leftButtonClick = { turnOff() },
+      rightButtonClick = { turnOn() },
+      modifier = Modifier.padding(horizontal = Distance.horizontal, vertical = Distance.small)
+    )
+  }
+}
+
+@Composable
+private fun RgbDetailScope.HighPortrait(state: RgbDetailViewState, smallMargins: Boolean) {
+  var color by remember { mutableStateOf(state.value.hsv) }
+  val verticalMargin = smallMargins.ifTrue { Distance.small } ?: Distance.default
+
+  LaunchedEffect(state.value) {
+    color = state.value.hsv
+  }
+
+  Column {
+    state.deviceStateData?.let { DeviceState(data = it, modifier = Modifier.padding(vertical = verticalMargin)) }
     state.channelIssues?.let { issues -> ChannelIssuesView(issues) }
 
     Spacer(Modifier.weight(1f))
@@ -196,7 +258,7 @@ private fun RgbDetailScope.Portrait(
       modifier = Modifier
         .fillMaxWidth()
         .sizeIn(maxHeight = 450.dp)
-        .padding(Distance.default)
+        .padding(horizontal = Distance.default, vertical = verticalMargin)
     )
 
     Spacer(Modifier.weight(1f))
@@ -209,6 +271,7 @@ private fun RgbDetailScope.Portrait(
       disabled = state.offline || state.loading,
       leftButtonClick = { turnOff() },
       rightButtonClick = { turnOn() },
+      modifier = Modifier.padding(horizontal = Distance.horizontal, vertical = verticalMargin)
     )
   }
 }
@@ -351,6 +414,8 @@ private val previewScope = object : RgbDetailScope {
 
 @SuplaPreviewLandscape
 @SuplaPreview
+@Preview(showBackground = true, widthDp = 360, heightDp = 550, backgroundColor = BACKGROUND_COLOR)
+@SuplaSmallPreview
 @PreviewScreenSizes
 @Composable
 private fun Preview() {
