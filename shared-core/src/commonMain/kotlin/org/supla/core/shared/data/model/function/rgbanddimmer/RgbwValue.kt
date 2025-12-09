@@ -41,9 +41,9 @@ data class RgbwValue(
         on = bytes[0] >= 1,
         brightness = bytes[0].toInt().coerceAtLeast(0).coerceAtMost(100),
         colorBrightness = bytes[1].toInt().coerceAtLeast(0).coerceAtMost(100),
-        red = bytes[4].toInt(),
-        green = bytes[3].toInt(),
-        blue = bytes[2].toInt()
+        red = bytes[4].toInt() and 0xFF,
+        green = bytes[3].toInt() and 0xFF,
+        blue = bytes[2].toInt() and 0xFF
       )
     }
   }
