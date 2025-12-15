@@ -18,24 +18,34 @@ package org.supla.android.features.details.rgbanddimmer.dimmer
  */
 
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.DelayableState
+import org.supla.android.core.storage.UserStateHolder
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.model.general.ChannelState
+import org.supla.android.data.source.ColorListRepository
+import org.supla.android.data.source.local.entity.ColorEntityType
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.remote.rgb.color
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.LoadingTimeoutManager
+import org.supla.android.extensions.toGrayColor
+import org.supla.android.features.details.rgbanddimmer.common.SavedColor
+import org.supla.android.features.details.rgbanddimmer.common.asSavedColor
 import org.supla.android.features.details.rgbanddimmer.common.dimmerValues
 import org.supla.android.images.ImageId
 import org.supla.android.lib.actions.ActionId
@@ -58,6 +68,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 private const val REFRESH_DELAY_MS = 3000
+private const val BRIGHTNESSES_LIMIT = 10
 
 @HiltViewModel
 class DimmerDetailViewModel @Inject constructor(
@@ -68,6 +79,8 @@ class DimmerDetailViewModel @Inject constructor(
   private val getChannelStateUseCase: GetChannelStateUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val loadingTimeoutManager: LoadingTimeoutManager,
+  private val colorListRepository: ColorListRepository,
+  private val userStateHolder: UserStateHolder,
   private val dateProvider: DateProvider,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<DimmerDetailModelState, DimmerDetailViewEvent>(DimmerDetailModelState(), schedulers), DimmerDetailScope {
@@ -91,6 +104,8 @@ class DimmerDetailViewModel @Inject constructor(
       ItemType.CHANNEL -> observeChannel(remoteId)
       ItemType.GROUP -> observeGroup(remoteId)
     }
+
+    observeSavedColors(remoteId, type)
   }
 
   override fun onBrightnessSelectionStarted() {
@@ -161,6 +176,127 @@ class DimmerDetailViewModel @Inject constructor(
     }
   }
 
+  override fun toggleSelectorType() {
+    updateState {
+      val newValue = when (it.viewState.selectorType) {
+        DimmerSelectorType.LINEAR -> DimmerSelectorType.CIRCULAR
+        DimmerSelectorType.CIRCULAR -> DimmerSelectorType.LINEAR
+      }
+      if (it.profileId != null && it.remoteId != null) {
+        userStateHolder.setDimmerSelectorType(newValue, it.profileId, it.remoteId)
+      }
+      it.copy(
+        viewState = it.viewState.copy(
+          selectorType = newValue
+        )
+      )
+    }
+  }
+
+  override fun onSavedColorSelected(color: SavedColor) {
+    updateState {
+      if (it.viewState.offline) {
+        return@updateState it
+      }
+      it.copy(
+        lastInteractionTime = null,
+        viewState = it.viewState.copy(
+          value = DimmerValue.Single(color.brightness)
+        )
+      )
+    }
+
+    sendDimmerValues(color.brightness)
+  }
+
+  override fun onSaveCurrentColor() {
+    updateState { it.copy(lastInteractionTime = null) }
+
+    val state = currentState()
+    if (state.viewState.offline) {
+      return
+    }
+
+    val remoteId = state.remoteId ?: return
+    val profileId = state.profileId ?: return
+    val type = state.type ?: return
+    val brightness = state.viewState.value.brightness ?: return
+    val colorsCount = state.viewState.savedColors.size
+
+    if (colorsCount > BRIGHTNESSES_LIMIT) {
+      sendEvent(DimmerDetailViewEvent.ShowLimitReached)
+      return
+    }
+
+    viewModelScope.launch {
+      withContext(Dispatchers.IO) {
+        try {
+          colorListRepository.save(
+            remoteId = remoteId,
+            isGroup = type.isGroup(),
+            color = brightness.toGrayColor(),
+            brightness = brightness,
+            profileId = profileId,
+            type = ColorEntityType.DIMMER
+          )
+        } catch (ex: Exception) {
+          Timber.e(ex, "Brightness save failed")
+        }
+      }
+    }
+  }
+
+  override fun onRemoveColor(positionOnList: Int) {
+    updateState { it.copy(lastInteractionTime = null) }
+
+    val state = currentState()
+    if (state.viewState.offline) {
+      return
+    }
+    val color = state.viewState.savedColors.getOrNull(positionOnList) ?: return
+    val remoteId = state.remoteId ?: return
+    val type = state.type ?: return
+
+    viewModelScope.launch {
+      withContext(Dispatchers.IO) {
+        try {
+          colorListRepository.delete(
+            colorId = color.id,
+            remoteId = remoteId,
+            isGroup = type.isGroup(),
+            type = ColorEntityType.DIMMER
+          )
+        } catch (ex: Exception) {
+          Timber.e(ex, "Brightness delete failed")
+        }
+      }
+    }
+  }
+
+  override fun onMoveColors(from: Int, to: Int) {
+    updateState { it.copy(lastInteractionTime = null) }
+
+    val state = currentState()
+    val remoteId = state.remoteId ?: return
+    val type = state.type ?: return
+
+    viewModelScope.launch {
+      withContext(Dispatchers.IO) {
+        try {
+          colorListRepository.swapPositions(
+            remoteId = remoteId,
+            from = from,
+            to = to,
+            isGroup = type.isGroup(),
+            type = ColorEntityType.DIMMER
+          )
+        } catch (ex: Exception) {
+          Timber.e(ex, "Positions swap failed")
+        }
+      }
+    }
+  }
+
   private fun sendDimmerValues(brightness: Int? = null) {
     with(currentState()) {
       if (type != null && remoteId != null) {
@@ -216,6 +352,7 @@ class DimmerDetailViewModel @Inject constructor(
 
       state.copy(
         remoteId = channel.remoteId,
+        profileId = channel.profileId,
         type = ItemType.CHANNEL,
         loadingState = state.loadingState.changingLoading(false, dateProvider),
         rgbColor = rgbValue?.color,
@@ -238,7 +375,8 @@ class DimmerDetailViewModel @Inject constructor(
             textRes = R.string.channel_btn_off,
             pressed = value.brightness == 0
           ),
-          loading = false
+          loading = false,
+          selectorType = userStateHolder.getDimmerSelectorType(channel.profileId, channel.remoteId)
         )
       )
     }
@@ -276,6 +414,7 @@ class DimmerDetailViewModel @Inject constructor(
     updateState { state ->
       state.copy(
         remoteId = group.remoteId,
+        profileId = group.profileId,
         type = ItemType.GROUP,
         loadingState = state.loadingState.changingLoading(false, dateProvider),
         viewState = state.viewState.copy(
@@ -296,7 +435,8 @@ class DimmerDetailViewModel @Inject constructor(
             textRes = R.string.channel_btn_off,
             pressed = groupState.value == ChannelState.Value.OFF
           ),
-          loading = false
+          loading = false,
+          selectorType = userStateHolder.getDimmerSelectorType(group.profileId, group.remoteId)
         )
       )
     }
@@ -315,13 +455,37 @@ class DimmerDetailViewModel @Inject constructor(
       stateValue == ChannelState.Value.ON -> ImageId(R.drawable.fnc_dimmer_on)
       else -> ImageId(R.drawable.fnc_dimmer_off)
     }
+
+  private fun observeSavedColors(remoteId: Int, type: ItemType) {
+    val observable = when (type) {
+      ItemType.CHANNEL -> colorListRepository.findAllChannelColors(remoteId, ColorEntityType.DIMMER)
+      ItemType.GROUP -> colorListRepository.findAllGroupColors(remoteId, ColorEntityType.DIMMER)
+    }
+
+    observable
+      .attachSilent()
+      .subscribeBy(
+        onNext = { savedColors ->
+          updateState { state ->
+            state.copy(
+              viewState = state.viewState.copy(savedColors = savedColors.map { it.asSavedColor })
+            )
+          }
+        },
+        onError = defaultErrorHandler("observeSavedColors($remoteId, $type)")
+      )
+      .disposeBySelf()
+  }
 }
 
-sealed interface DimmerDetailViewEvent : ViewEvent
+sealed interface DimmerDetailViewEvent : ViewEvent {
+  data object ShowLimitReached : DimmerDetailViewEvent
+}
 
 data class DimmerDetailModelState(
   val remoteId: Int? = null,
   val type: ItemType? = null,
+  val profileId: Long? = null,
   val lastInteractionTime: Long? = null,
   val changing: Boolean = false,
   val loadingState: LoadingTimeoutManager.LoadingState = LoadingTimeoutManager.LoadingState(),

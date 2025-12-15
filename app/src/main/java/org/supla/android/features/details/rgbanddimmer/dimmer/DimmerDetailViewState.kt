@@ -17,7 +17,9 @@ package org.supla.android.features.details.rgbanddimmer.dimmer
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.R
 import org.supla.android.data.ValuesFormatter
+import org.supla.android.features.details.rgbanddimmer.common.SavedColor
 import org.supla.android.ui.views.DeviceStateData
 import org.supla.android.ui.views.buttons.SwitchButtonState
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
@@ -27,7 +29,9 @@ data class DimmerDetailViewState(
   val channelIssues: List<ChannelIssueItem>? = null,
   val offButtonState: SwitchButtonState? = null,
   val onButtonState: SwitchButtonState? = null,
+  val savedColors: List<SavedColor> = emptyList(),
   val value: DimmerValue = DimmerValue.Empty,
+  val selectorType: DimmerSelectorType = DimmerSelectorType.LINEAR,
   val offline: Boolean = false,
   val loading: Boolean = false
 )
@@ -68,5 +72,21 @@ sealed interface DimmerValue {
         } else {
           brightnesses
         }
+  }
+}
+
+enum class DimmerSelectorType(val value: Int, val swapIconRes: Int) {
+  LINEAR(0, R.drawable.ic_dimmer_circular_selector), CIRCULAR(1, R.drawable.ic_dimmer_linear_selector);
+
+  companion object {
+    fun from(value: Int): DimmerSelectorType {
+      for (type in entries) {
+        if (type.value == value) {
+          return type
+        }
+      }
+
+      return LINEAR
+    }
   }
 }

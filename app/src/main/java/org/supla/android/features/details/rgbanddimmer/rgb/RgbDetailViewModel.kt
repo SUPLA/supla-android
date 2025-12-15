@@ -35,7 +35,7 @@ import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.source.ColorListRepository
-import org.supla.android.data.source.local.entity.ColorEntity
+import org.supla.android.data.source.local.entity.ColorEntityType
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
@@ -47,10 +47,11 @@ import org.supla.android.extensions.filterHexDigits
 import org.supla.android.extensions.toColor
 import org.supla.android.extensions.toHexString
 import org.supla.android.extensions.toHsv
+import org.supla.android.features.details.rgbanddimmer.common.SavedColor
+import org.supla.android.features.details.rgbanddimmer.common.asSavedColor
 import org.supla.android.features.details.rgbanddimmer.common.rgbValues
 import org.supla.android.features.details.rgbanddimmer.rgb.model.RgbDetailViewState
 import org.supla.android.features.details.rgbanddimmer.rgb.model.RgbValue
-import org.supla.android.features.details.rgbanddimmer.rgb.model.SavedColor
 import org.supla.android.features.details.rgbanddimmer.rgb.ui.ColorDialogState
 import org.supla.android.features.details.rgbanddimmer.rgb.ui.RgbDetailScope
 import org.supla.android.images.ImageId
@@ -208,7 +209,14 @@ class RgbDetailViewModel @Inject constructor(
     viewModelScope.launch {
       withContext(Dispatchers.IO) {
         try {
-          colorListRepository.save(remoteId, type.isGroup(), hsv.fullBrightnessColor, hsv.valueAsPercentage, profileId)
+          colorListRepository.save(
+            remoteId = remoteId,
+            isGroup = type.isGroup(),
+            color = hsv.fullBrightnessColor,
+            brightness = hsv.valueAsPercentage,
+            profileId = profileId,
+            type = ColorEntityType.RGB
+          )
         } catch (ex: Exception) {
           Timber.e(ex, "Color save failed")
         }
@@ -230,7 +238,12 @@ class RgbDetailViewModel @Inject constructor(
     viewModelScope.launch {
       withContext(Dispatchers.IO) {
         try {
-          colorListRepository.delete(color.id, remoteId, type.isGroup())
+          colorListRepository.delete(
+            colorId = color.id,
+            remoteId = remoteId,
+            isGroup = type.isGroup(),
+            type = ColorEntityType.RGB
+          )
         } catch (ex: Exception) {
           Timber.e(ex, "Color delete failed")
         }
@@ -248,9 +261,15 @@ class RgbDetailViewModel @Inject constructor(
     viewModelScope.launch {
       withContext(Dispatchers.IO) {
         try {
-          colorListRepository.swapPositions(remoteId = remoteId, from = from, to = to, isGroup = type.isGroup())
+          colorListRepository.swapPositions(
+            remoteId = remoteId,
+            from = from,
+            to = to,
+            isGroup = type.isGroup(),
+            type = ColorEntityType.RGB
+          )
         } catch (ex: Exception) {
-          Timber.e(ex, "Color delete failed")
+          Timber.e(ex, "Positions swap failed")
         }
       }
     }
@@ -403,7 +422,7 @@ class RgbDetailViewModel @Inject constructor(
           deviceStateData = DeviceStateData(
             icon = getChannelIconUseCase(channel),
             label = localizedString(R.string.details_timer_state_label),
-            value = getDeviceStateValue(channel.status, channelState),
+            value = getChannelStateString(channel.status, channelState),
           ),
           onButtonState = SwitchButtonState(
             icon = getButtonIcon(channel, ChannelState.Value.ON),
@@ -475,10 +494,11 @@ class RgbDetailViewModel @Inject constructor(
         loadingState = state.loadingState.changingLoading(false, dateProvider),
         viewState = state.viewState.copy(
           value = RgbValue.Multiple(rgbValues.toList()),
+          offline = group.status.offline,
           deviceStateData = DeviceStateData(
             icon = getChannelIconUseCase(group),
             label = localizedString(R.string.details_timer_state_label),
-            value = getDeviceStateValue(group.status, groupState),
+            value = getChannelStateString(group.status, groupState),
           ),
           onButtonState = SwitchButtonState(
             icon = getButtonIcon(group, ChannelState.Value.ON),
@@ -496,7 +516,7 @@ class RgbDetailViewModel @Inject constructor(
     }
   }
 
-  private fun getDeviceStateValue(status: SuplaChannelAvailabilityStatus, state: ChannelState): LocalizedString = when {
+  private fun getChannelStateString(status: SuplaChannelAvailabilityStatus, state: ChannelState): LocalizedString = when {
     status.offline -> localizedString(R.string.offline)
     state.value == ChannelState.Value.ON -> localizedString(R.string.details_timer_device_on)
     state is ChannelState.RgbAndDimmer && state.rgb == ChannelState.Value.ON ->
@@ -512,17 +532,10 @@ class RgbDetailViewModel @Inject constructor(
       else -> ImageId(R.drawable.fnc_rgb_off)
     }
 
-  private val ColorEntity.asSavedColor: SavedColor
-    get() = SavedColor(
-      id = id!!,
-      color = Color(color),
-      brightness = brightness.toInt()
-    )
-
   private fun observeSavedColors(remoteId: Int, type: ItemType) {
     val observable = when (type) {
-      ItemType.CHANNEL -> colorListRepository.findAllChannelColors(remoteId)
-      ItemType.GROUP -> colorListRepository.findAllGroupColors(remoteId)
+      ItemType.CHANNEL -> colorListRepository.findAllChannelColors(remoteId, ColorEntityType.RGB)
+      ItemType.GROUP -> colorListRepository.findAllGroupColors(remoteId, ColorEntityType.RGB)
     }
 
     observable
