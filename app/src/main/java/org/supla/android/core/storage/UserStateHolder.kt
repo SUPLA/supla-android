@@ -18,19 +18,21 @@ package org.supla.android.core.storage
  */
 
 import android.content.Context
+import androidx.core.content.edit
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.supla.android.data.model.chart.ChartState
 import org.supla.android.data.model.chart.DefaultChartState
 import org.supla.android.data.model.chart.ElectricityChartState
 import org.supla.android.data.model.electricitymeter.ElectricityMeterSettings
+import org.supla.android.features.details.rgbanddimmer.dimmer.DimmerSelectorType
 import javax.inject.Inject
 import javax.inject.Singleton
 
 private const val USER_STATE_PREFERENCES = "user_state_preferences"
 private const val TEMPERATURE_CHART_STATE = "temperature_chart_state_%PROFILE_ID%_%CHANNEL_ID%"
 private const val ELECTRICITY_METER_SETTINGS = "electricity_meter_settings_%PROFILE_ID%_%CHANNEL_ID%"
+private const val DIMMER_SELECTOR_TYPE = "dimmer_selector_type_%PROFILE_ID%_%CHANNEL_ID%"
 
 @Singleton
 class UserStateHolder @Inject constructor(@ApplicationContext context: Context) {
@@ -46,9 +48,8 @@ class UserStateHolder @Inject constructor(@ApplicationContext context: Context) 
       ?.let { ElectricityChartState.from(it) } ?: ElectricityChartState.default()
 
   fun setChartState(state: ChartState, profileId: Long, remoteId: Int) {
-    with(preferences.edit()) {
+    preferences.edit {
       putString(getKey(TEMPERATURE_CHART_STATE, profileId, remoteId), state.toJson())
-      apply()
     }
   }
 
@@ -57,9 +58,17 @@ class UserStateHolder @Inject constructor(@ApplicationContext context: Context) 
       ?.let { ElectricityMeterSettings.from(it) } ?: ElectricityMeterSettings.default()
 
   fun setElectricityMeterSettings(settings: ElectricityMeterSettings, profileId: Long, remoteId: Int) {
-    with(preferences.edit()) {
+    preferences.edit {
       putString(getKey(ELECTRICITY_METER_SETTINGS, profileId, remoteId), Json.encodeToString(settings))
-      apply()
+    }
+  }
+
+  fun getDimmerSelectorType(profileId: Long, remoteId: Int): DimmerSelectorType =
+    preferences.getInt(getKey(DIMMER_SELECTOR_TYPE, profileId, remoteId), 0).let { DimmerSelectorType.from(it) }
+
+  fun setDimmerSelectorType(type: DimmerSelectorType, profileId: Long, remoteId: Int) {
+    preferences.edit {
+      putInt(getKey(DIMMER_SELECTOR_TYPE, profileId, remoteId), type.value)
     }
   }
 

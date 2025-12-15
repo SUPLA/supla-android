@@ -32,9 +32,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.drawscope.Fill
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
@@ -44,12 +41,6 @@ import org.supla.android.tools.ComponentPreview
 
 // Dimensions
 val OUTER_SURFACE_WIDTH = 5.dp
-private val SELECTOR_SHADOW_RADIUS = 20.dp
-private val SELECTOR_RADIUS = 12.dp
-private val MARKER_RADIUS = 4.dp
-
-// Colors
-private val POINTER_SHADOW_COLOR = Color(0x647E8082)
 
 @Composable
 fun LinearColorSelector(
@@ -136,44 +127,6 @@ fun LinearColorSelector(
       )
     }
   }
-}
-
-fun DrawScope.drawMarkerPoint(position: Offset) {
-  drawCircle(
-    color = Color.White,
-    radius = MARKER_RADIUS.toPx(),
-    style = Fill,
-    center = position
-  )
-  drawCircle(
-    color = Color.Black,
-    radius = MARKER_RADIUS.toPx(),
-    style = Stroke(width = 1.dp.toPx()),
-    center = position
-  )
-}
-
-fun DrawScope.drawSelectorPoint(position: Offset, color: Color) {
-  // Outer black ring
-  drawCircle(
-    color = POINTER_SHADOW_COLOR,
-    radius = SELECTOR_SHADOW_RADIUS.toPx(),
-    style = Fill,
-    center = position
-  )
-  // Inner white ring
-  drawCircle(
-    color = color,
-    radius = SELECTOR_RADIUS.toPx(),
-    style = Fill,
-    center = position
-  )
-  drawCircle(
-    color = Color.White,
-    radius = SELECTOR_RADIUS.toPx(),
-    style = Stroke(width = 2.dp.toPx()),
-    center = position
-  )
 }
 
 @ComponentPreview

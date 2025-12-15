@@ -19,9 +19,7 @@ package org.supla.android.features.details.rgbanddimmer.rgb.ui
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -30,14 +28,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
@@ -52,7 +45,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
@@ -63,10 +55,11 @@ import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.extensions.HsvColor
-import org.supla.android.extensions.applyBrightness
+import org.supla.android.features.details.rgbanddimmer.common.SavedColor
+import org.supla.android.features.details.rgbanddimmer.common.SavedColorListScope
+import org.supla.android.features.details.rgbanddimmer.common.SavedColors
 import org.supla.android.features.details.rgbanddimmer.rgb.model.RgbDetailViewState
 import org.supla.android.features.details.rgbanddimmer.rgb.model.RgbValue
-import org.supla.android.features.details.rgbanddimmer.rgb.model.SavedColor
 import org.supla.android.images.ImageId
 import org.supla.android.tools.BACKGROUND_COLOR
 import org.supla.android.tools.SuplaPreview
@@ -77,19 +70,14 @@ import org.supla.android.ui.lists.channelissues.ChannelIssuesView
 import org.supla.android.ui.views.DeviceState
 import org.supla.android.ui.views.DeviceStateData
 import org.supla.android.ui.views.LoadingScrim
-import org.supla.android.ui.views.ReorderableRow
 import org.supla.android.ui.views.buttons.SwitchButtonState
 import org.supla.android.ui.views.buttons.SwitchButtons
 import org.supla.core.shared.infrastructure.localizedString
 
-interface RgbDetailScope : RgbColorDialogScope {
+interface RgbDetailScope : RgbColorDialogScope, SavedColorListScope {
   fun onColorSelectionStarted()
   fun onColorSelecting(color: HsvColor)
   fun onColorSelected(color: HsvColor)
-  fun onSavedColorSelected(color: SavedColor)
-  fun onSaveCurrentColor()
-  fun onRemoveColor(positionOnList: Int)
-  fun onMoveColors(from: Int, to: Int)
   fun turnOn()
   fun turnOff()
 }
@@ -277,26 +265,6 @@ private fun RgbDetailScope.HighPortrait(state: RgbDetailViewState, smallMargins:
 }
 
 @Composable
-private fun RgbDetailScope.SavedColors(savedColors: List<SavedColor>, online: Boolean) {
-  ReorderableRow(
-    items = savedColors,
-    onRemove = { onRemoveColor(it) },
-    onMove = { from, to -> onMoveColors(from, to) },
-    leadingContent = { dragging, itemOver ->
-      if (online) {
-        val color = if (itemOver) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
-        SavedColorAction(color, dragging)
-      }
-    },
-    modifier = Modifier
-      .horizontalScroll(rememberScrollState())
-      .padding(horizontal = Distance.default)
-  ) {
-    SavedColorBox(it, online = online)
-  }
-}
-
-@Composable
 private fun RgbDetailScope.ColorAndBrightnessBox(color: HsvColor?, value: RgbValue, online: Boolean, modifier: Modifier = Modifier) =
   Row(
     modifier = modifier
@@ -348,51 +316,6 @@ private fun BrightnessBox(brightness: String) =
       text = brightness,
       style = MaterialTheme.typography.bodyMedium,
       color = MaterialTheme.colorScheme.onSurface
-    )
-  }
-
-@Composable
-private fun RgbDetailScope.SavedColorBox(color: SavedColor, online: Boolean) =
-  Box(
-    modifier = Modifier
-      .padding(horizontal = Distance.tiny)
-      .width(42.dp)
-      .height(36.dp)
-      .background(
-        color = color.color.applyBrightness(color.brightness),
-        shape = RoundedCornerShape(dimensionResource(R.dimen.radius_default))
-      )
-      .border(
-        width = 1.dp,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        shape = RoundedCornerShape(dimensionResource(R.dimen.radius_default))
-      )
-      .clickable(enabled = online) { onSavedColorSelected(color) }
-  )
-
-@Composable
-private fun RgbDetailScope.SavedColorAction(color: Color, dragging: Boolean) =
-  Box(
-    modifier = Modifier
-      .padding(end = Distance.tiny)
-      .width(42.dp)
-      .height(36.dp)
-      .border(
-        width = 1.dp,
-        color = color,
-        shape = RoundedCornerShape(dimensionResource(R.dimen.radius_default))
-      )
-      .clickable(enabled = !dragging) {
-        onSaveCurrentColor()
-      }
-  ) {
-    Icon(
-      painter = painterResource(if (dragging) R.drawable.ic_delete else R.drawable.ic_plus),
-      contentDescription = "Usuń",
-      tint = color,
-      modifier = Modifier
-        .align(Alignment.Center)
-        .size(if (dragging) 16.dp else 12.dp)
     )
   }
 

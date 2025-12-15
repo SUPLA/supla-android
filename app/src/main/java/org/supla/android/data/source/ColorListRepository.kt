@@ -22,9 +22,9 @@ import androidx.compose.ui.graphics.toArgb
 import io.reactivex.rxjava3.core.Completable
 import org.supla.android.data.source.local.dao.ColorListDao
 import org.supla.android.data.source.local.entity.ColorEntity
+import org.supla.android.data.source.local.entity.ColorEntityType
 import org.supla.android.usecases.channel.RemoveHiddenChannelsUseCase
 import org.supla.android.usecases.profile.DeleteProfileUseCase
-import org.supla.core.shared.extensions.ifTrue
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -33,11 +33,11 @@ class ColorListRepository @Inject constructor(
   private val colorListDao: ColorListDao
 ) : RemoveHiddenChannelsUseCase.ChannelsDeletable, DeleteProfileUseCase.ProfileRemover {
 
-  fun findAllChannelColors(remoteId: Int) = colorListDao.findAllColors(remoteId, isGroup = 0)
+  fun findAllChannelColors(remoteId: Int, type: ColorEntityType) = colorListDao.findAllColors(remoteId, isGroup = 0, type)
 
-  fun findAllGroupColors(remoteId: Int) = colorListDao.findAllColors(remoteId, isGroup = 1)
+  fun findAllGroupColors(remoteId: Int, type: ColorEntityType) = colorListDao.findAllColors(remoteId, isGroup = 1, type)
 
-  suspend fun save(remoteId: Int, isGroup: Boolean, color: Color, brightness: Int, profileId: Long) {
+  suspend fun save(remoteId: Int, isGroup: Boolean, color: Color, brightness: Int, profileId: Long, type: ColorEntityType) {
     val entity = ColorEntity(
       id = null,
       remoteId = remoteId,
@@ -45,22 +45,21 @@ class ColorListRepository @Inject constructor(
       idx = 0,
       color = color.toArgb(),
       brightness = brightness.toShort(),
-      profileId = profileId
+      profileId = profileId,
+      type = type
     )
 
     colorListDao.save(entity)
-    colorListDao.updatePositions(remoteId, isGroup)
+    colorListDao.updatePositions(remoteId, isGroup, type)
   }
 
-  suspend fun delete(colorId: Long, remoteId: Int, isGroup: Boolean) {
-    colorListDao.delete(
-      id = colorId,
-      isGroup = isGroup.ifTrue { 1 } ?: 0
-    )
-    colorListDao.updatePositions(remoteId, isGroup)
+  suspend fun delete(colorId: Long, remoteId: Int, isGroup: Boolean, type: ColorEntityType) {
+    colorListDao.delete(colorId)
+    colorListDao.updatePositions(remoteId, isGroup, type)
   }
 
-  suspend fun swapPositions(remoteId: Int, from: Int, to: Int, isGroup: Boolean) = colorListDao.swapPositions(remoteId, from, to, isGroup)
+  suspend fun swapPositions(remoteId: Int, from: Int, to: Int, isGroup: Boolean, type: ColorEntityType) =
+    colorListDao.swapPositions(remoteId, from, to, isGroup, type)
 
   override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = colorListDao.deleteKtx(remoteId, profileId)
   override fun deleteByProfile(profileId: Long): Completable = colorListDao.deleteByProfile(profileId)

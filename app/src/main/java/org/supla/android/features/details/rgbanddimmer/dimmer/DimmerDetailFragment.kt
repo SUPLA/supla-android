@@ -19,10 +19,12 @@ package org.supla.android.features.details.rgbanddimmer.dimmer
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
+import org.supla.android.R
 import org.supla.android.core.ui.BaseComposeFragment
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.details.detailbase.base.ItemBundle
@@ -47,7 +49,12 @@ class DimmerDetailFragment : BaseComposeFragment<DimmerDetailModelState, DimmerD
     }
   }
 
-  override fun handleEvents(event: DimmerDetailViewEvent) {}
+  override fun handleEvents(event: DimmerDetailViewEvent) {
+    when (event) {
+      DimmerDetailViewEvent.ShowLimitReached ->
+        Toast.makeText(requireContext(), getText(R.string.rgb_detail_colors_limit), Toast.LENGTH_SHORT).show()
+    }
+  }
 
   companion object {
     fun bundle(itemBundle: ItemBundle) = bundleOf(

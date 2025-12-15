@@ -31,7 +31,9 @@ import org.supla.android.data.source.local.entity.ColorEntity.Companion.COLUMN_I
 import org.supla.android.data.source.local.entity.ColorEntity.Companion.COLUMN_IDX
 import org.supla.android.data.source.local.entity.ColorEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.ColorEntity.Companion.COLUMN_REMOTE_ID
+import org.supla.android.data.source.local.entity.ColorEntity.Companion.COLUMN_TYPE
 import org.supla.android.data.source.local.entity.ColorEntity.Companion.TABLE_NAME
+import org.supla.android.data.source.local.entity.ColorEntityType
 import org.supla.android.data.source.local.entity.ProfileEntity
 
 @Dao
@@ -42,24 +44,18 @@ abstract class ColorListDao {
     FROM $TABLE_NAME 
     WHERE $COLUMN_REMOTE_ID = :remoteId 
       AND $COLUMN_GROUP = :isGroup
+      AND $COLUMN_TYPE = :type
       AND $COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
     ORDER BY $COLUMN_IDX ASC, $COLUMN_ID DESC
     """
   )
-  abstract fun findAllColors(remoteId: Int, isGroup: Int): Observable<List<ColorEntity>>
+  abstract fun findAllColors(remoteId: Int, isGroup: Int, type: ColorEntityType): Observable<List<ColorEntity>>
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   abstract suspend fun save(color: ColorEntity)
 
-  @Query(
-    """
-      DELETE FROM $TABLE_NAME 
-      WHERE $COLUMN_ID = :id 
-        AND $COLUMN_GROUP = :isGroup 
-        AND $COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
-    """
-  )
-  abstract suspend fun delete(id: Long, isGroup: Int)
+  @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_ID = :id")
+  abstract suspend fun delete(id: Long)
 
   @Query(
     """
@@ -77,16 +73,16 @@ abstract class ColorListDao {
   abstract fun deleteByProfile(profileId: Long): Completable
 
   @Transaction
-  open suspend fun updatePositions(remoteId: Int, isGroup: Boolean) {
-    val colors = findAllColors(remoteId = remoteId, isGroup = if (isGroup) 1 else 0).blockingFirst()
+  open suspend fun updatePositions(remoteId: Int, isGroup: Boolean, type: ColorEntityType) {
+    val colors = findAllColors(remoteId = remoteId, isGroup = if (isGroup) 1 else 0, type = type).blockingFirst()
     for (i in colors.indices) {
       updatePosition(colors[i].id!!, i)
     }
   }
 
   @Transaction
-  open suspend fun swapPositions(remoteId: Int, from: Int, to: Int, isGroup: Boolean) {
-    val colors = findAllColors(remoteId = remoteId, isGroup = if (isGroup) 1 else 0).blockingFirst().toMutableList()
+  open suspend fun swapPositions(remoteId: Int, from: Int, to: Int, isGroup: Boolean, type: ColorEntityType) {
+    val colors = findAllColors(remoteId = remoteId, isGroup = if (isGroup) 1 else 0, type = type).blockingFirst().toMutableList()
     val move = colors.removeAt(from)
     colors.add(to, move)
 

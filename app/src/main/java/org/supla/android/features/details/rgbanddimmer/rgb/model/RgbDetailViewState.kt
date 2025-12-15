@@ -20,6 +20,7 @@ package org.supla.android.features.details.rgbanddimmer.rgb.model
 import androidx.compose.ui.graphics.Color
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.extensions.HsvColor
+import org.supla.android.features.details.rgbanddimmer.common.SavedColor
 import org.supla.android.features.details.rgbanddimmer.rgb.ui.ColorDialogState
 import org.supla.android.ui.views.DeviceStateData
 import org.supla.android.ui.views.buttons.SwitchButtonState
@@ -35,12 +36,6 @@ data class RgbDetailViewState(
   val offline: Boolean = false,
   val loading: Boolean = false,
   val colorDialogState: ColorDialogState? = null
-)
-
-data class SavedColor(
-  val id: Long,
-  val color: Color,
-  val brightness: Int
 )
 
 sealed interface RgbValue {
