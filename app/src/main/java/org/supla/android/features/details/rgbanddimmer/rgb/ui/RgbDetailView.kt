@@ -163,7 +163,7 @@ private fun RgbDetailScope.Portrait(
   state: RgbDetailViewState
 ) {
   BoxWithConstraints {
-    if (maxHeight < 550.dp) {
+    if (maxHeight < 600.dp) {
       LowPortrait(state, showCurrentValueBox = maxHeight > 400.dp)
     } else {
       HighPortrait(state, smallMargins = maxHeight < 650.dp)
@@ -229,9 +229,9 @@ private fun RgbDetailScope.HighPortrait(state: RgbDetailViewState, smallMargins:
     state.deviceStateData?.let { DeviceState(data = it, modifier = Modifier.padding(vertical = verticalMargin)) }
     state.channelIssues?.let { issues -> ChannelIssuesView(issues) }
 
-    Spacer(Modifier.weight(1f))
-
     ColorAndBrightnessBox(color, state.value, !state.offline, Modifier.padding(Distance.default))
+
+    Spacer(Modifier.weight(1f))
 
     ColorPickerComponent(
       color = state.value.hsv,
