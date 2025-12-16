@@ -59,6 +59,7 @@ import org.supla.android.images.ImageId
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.tools.SuplaPreviewLandscape
 import org.supla.android.tools.SuplaSmallPreview
+import org.supla.android.ui.extensions.ifTrue
 import org.supla.android.ui.lists.channelissues.ChannelIssuesView
 import org.supla.android.ui.views.DeviceState
 import org.supla.android.ui.views.DeviceStateData
@@ -145,7 +146,7 @@ private fun DimmerDetailScope.Portrait(
     if (maxHeight < 600.dp) {
       LowPortrait(state)
     } else {
-      HighPortrait(state)
+      HighPortrait(state, maxHeight < 650.dp)
     }
   }
 }
@@ -180,18 +181,20 @@ private fun DimmerDetailScope.LowPortrait(state: DimmerDetailViewState) {
 }
 
 @Composable
-private fun DimmerDetailScope.HighPortrait(state: DimmerDetailViewState) {
+private fun DimmerDetailScope.HighPortrait(state: DimmerDetailViewState, smallMargins: Boolean) {
+  val verticalMargin = smallMargins.ifTrue { Distance.small } ?: Distance.default
+
   Column {
-    state.deviceStateData?.let { DeviceState(data = it) }
+    state.deviceStateData?.let { DeviceState(data = it, modifier = Modifier.padding(vertical = verticalMargin)) }
     state.channelIssues?.let { issues -> ChannelIssuesView(issues) }
 
-    BrightnessBox(state.value)
+    BrightnessBox(state.value, modifier = Modifier.padding(Distance.default))
 
     BrightnessSelector(
       state = state,
       modifier = Modifier
         .fillMaxWidth()
-        .padding(horizontal = Distance.horizontal, vertical = Distance.vertical)
+        .padding(horizontal = Distance.horizontal, vertical = verticalMargin)
         .weight(1f)
         .align(Alignment.CenterHorizontally)
     )
@@ -204,6 +207,7 @@ private fun DimmerDetailScope.HighPortrait(state: DimmerDetailViewState) {
       disabled = state.offline || state.loading,
       leftButtonClick = { turnOff() },
       rightButtonClick = { turnOn() },
+      modifier = Modifier.padding(horizontal = Distance.horizontal, vertical = verticalMargin)
     )
   }
 }
@@ -228,6 +232,7 @@ private fun DimmerDetailScope.BrightnessSelector(state: DimmerDetailViewState, m
             .width(40.dp)
             .align(Alignment.Center)
         )
+
       DimmerSelectorType.CIRCULAR ->
         CircularColorSelector(
           value = state.value.brightness?.div(100f)?.coerceIn(0f, 1f),
@@ -245,7 +250,7 @@ private fun DimmerDetailScope.BrightnessSelector(state: DimmerDetailViewState, m
 
     SuplaButton(
       onClick = { toggleSelectorType() },
-      modifier = Modifier.align(Alignment.BottomEnd)
+      modifier = Modifier.align(Alignment.TopEnd)
     ) {
       Image(
         painter = painterResource(id = state.selectorType.swapIconRes),

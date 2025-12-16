@@ -28,6 +28,8 @@ import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.ActionParameters
+import org.supla.android.lib.actions.IGNORE_COLOR
+import org.supla.android.lib.actions.RgbwActionParameters
 import org.supla.android.lib.actions.SubjectType
 
 open class BaseActionUseCase<T : ChannelDataBase>(
@@ -40,7 +42,7 @@ open class BaseActionUseCase<T : ChannelDataBase>(
   protected open fun performAction(channelBase: T, buttonType: ButtonType, forGroup: Boolean) {
     val client = suplaClientProvider.provide() ?: return
     if (isRGBW(channelBase.function.value)) {
-      client.executeAction(ActionParameters(getTurnOnOffActionId(buttonType), getSubjectType(forGroup), channelBase.remoteId))
+      client.executeAction(getRgbwParameters(buttonType, forGroup, channelBase.remoteId))
     } else if (channelBase.isShadingSystem() || channelBase.isProjectorScreen() || channelBase.isGarageDoorRoller()) {
       if (SuplaChannelFlag.RS_SBS_AND_STOP_ACTIONS inside channelBase.flags) {
         client.executeAction(ActionParameters(getRevealShutStopActionId(buttonType), getSubjectType(forGroup), channelBase.remoteId))
@@ -68,9 +70,22 @@ open class BaseActionUseCase<T : ChannelDataBase>(
     ButtonType.RIGHT -> 1
   }
 
-  private fun getTurnOnOffActionId(buttonType: ButtonType): ActionId = when (buttonType) {
-    ButtonType.LEFT -> ActionId.TURN_OFF
-    ButtonType.RIGHT -> ActionId.TURN_ON
+  private fun getRgbwParameters(buttonType: ButtonType, forGroup: Boolean, remoteId: Int): RgbwActionParameters {
+    val brightness: Short = when (buttonType) {
+      ButtonType.LEFT -> 0
+      ButtonType.RIGHT -> 100
+    }
+
+    return RgbwActionParameters(
+      action = ActionId.SET_RGBW_PARAMETERS,
+      subjectType = getSubjectType(forGroup),
+      subjectId = remoteId,
+      brightness = brightness,
+      color = IGNORE_COLOR,
+      colorBrightness = brightness,
+      colorRandom = false,
+      onOff = true
+    )
   }
 
   private fun getRevealShutActionId(buttonType: ButtonType): ActionId = when (buttonType) {

@@ -71,25 +71,51 @@ fun CircularColorSelector(
   var gesturePrevValue by remember { mutableStateOf<Float?>(null) }
   var isActiveGesture by remember { mutableStateOf(false) }
 
+  var initialValue by remember { mutableStateOf<Float?>(null) }
+  var valueDiff by remember { mutableStateOf<Float?>(null) }
+
   fun updateValueFromOffset(offset: Offset, center: IntOffset) {
-    val dx = offset.x - center.x
-    val dy = offset.y - center.y
-    val angleDeg = atan2(dy, dx) * (180f / PI.toFloat())
-    var newValue = angleToValue(angleDeg)
+    val newValue = getValueFromPosition(offset, center)
+
+    if (initialValue == null) {
+      initialValue = newValue
+    }
 
     val prev = gesturePrevValue
     if (prev != null) {
-      val nearHigh = prev > 0.85f
-      val nearLow = prev < 0.15f
-      val jumpedHighToLow = nearHigh && newValue < 0.15f
-      val jumpedLowToHigh = nearLow && newValue > 0.85f
+      val currentDiff = prev - newValue
+      valueDiff =
+        if (currentDiff > 0f && currentDiff < 0.8f) {
+          valueDiff?.let { it + currentDiff }
+        } else if (currentDiff < 0f && currentDiff > -0.8f) {
+          valueDiff?.let { it + currentDiff }
+        } else if (currentDiff > 0f) {
+          valueDiff?.let { it - (1 - prev + newValue) }
+        } else if (currentDiff < 0f) {
+          valueDiff?.let { it + 1 - newValue + prev }
+        } else {
+          valueDiff
+        }
 
-      if (jumpedHighToLow) newValue = 1f
-      if (jumpedLowToHigh) newValue = 0f
+      val currentValue = initialValue?.minus(valueDiff ?: 0f)
+      if (currentValue != null) {
+        if (currentValue > 1) {
+          onValueChanging(1f)
+        } else if (currentValue < 0) {
+          onValueChanging(0f)
+        } else {
+          onValueChanging(currentValue)
+        }
+
+        if (currentValue < -1) {
+          valueDiff = valueDiff?.let { it - 1f }
+        } else if (currentValue > 2) {
+          valueDiff = valueDiff?.let { it + 1f }
+        }
+      }
     }
 
     gesturePrevValue = newValue
-    onValueChanging(newValue)
   }
 
   Canvas(
@@ -114,17 +140,21 @@ fun CircularColorSelector(
             )
 
             if (isActiveGesture) {
-              gesturePrevValue = value?.coerceIn(0f, 1f)
+              initialValue = null
+              gesturePrevValue = null
+              valueDiff = 0f
               onValueChangeStarted()
               updateValueFromOffset(startPos, center)
             }
           },
           onDragEnd = {
             if (enabled && isActiveGesture) onValueChanged()
+            initialValue = null
             isActiveGesture = false
             gesturePrevValue = null
           },
           onDragCancel = {
+            initialValue = null
             isActiveGesture = false
             gesturePrevValue = null
           },
@@ -149,7 +179,7 @@ fun CircularColorSelector(
           if (!isInRing(pos, center, ringRadius, trackWidthPx, slopPx)) return@detectTapGestures
 
           gesturePrevValue = null
-          updateValueFromOffset(pos, center)
+          onValueChanging(getValueFromPosition(pos, center))
           onValueChanged()
         }
       }
@@ -196,6 +226,13 @@ fun CircularColorSelector(
       drawSelectorPoint(position = p, color = selectedColor)
     }
   }
+}
+
+private fun getValueFromPosition(offset: Offset, center: IntOffset): Float {
+  val dx = offset.x - center.x
+  val dy = offset.y - center.y
+  val angleDeg = atan2(dy, dx) * (180f / PI.toFloat())
+  return angleToValue(angleDeg)
 }
 
 private fun angleToValue(angleDeg: Float): Float {

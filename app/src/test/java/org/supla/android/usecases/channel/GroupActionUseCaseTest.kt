@@ -58,7 +58,7 @@ class GroupActionUseCaseTest {
     val channelId = 123
 
     testActionExecution(channelId, SuplaFunction.RGB_LIGHTING, ButtonType.LEFT) {
-      Assertions.assertThat(it.action).isEqualTo(ActionId.TURN_OFF)
+      Assertions.assertThat(it.action).isEqualTo(ActionId.SET_RGBW_PARAMETERS)
       Assertions.assertThat(it.subjectType).isEqualTo(SubjectType.GROUP)
       Assertions.assertThat(it.subjectId).isEqualTo(channelId)
     }
@@ -69,7 +69,7 @@ class GroupActionUseCaseTest {
     val channelId = 234
 
     testActionExecution(channelId, SuplaFunction.DIMMER, ButtonType.RIGHT) {
-      Assertions.assertThat(it.action).isEqualTo(ActionId.TURN_ON)
+      Assertions.assertThat(it.action).isEqualTo(ActionId.SET_RGBW_PARAMETERS)
       Assertions.assertThat(it.subjectType).isEqualTo(SubjectType.GROUP)
       Assertions.assertThat(it.subjectId).isEqualTo(channelId)
     }
@@ -80,7 +80,7 @@ class GroupActionUseCaseTest {
     val channelId = 123
 
     testActionExecution(channelId, SuplaFunction.DIMMER_AND_RGB_LIGHTING, ButtonType.LEFT) {
-      Assertions.assertThat(it.action).isEqualTo(ActionId.TURN_OFF)
+      Assertions.assertThat(it.action).isEqualTo(ActionId.SET_RGBW_PARAMETERS)
       Assertions.assertThat(it.subjectType).isEqualTo(SubjectType.GROUP)
       Assertions.assertThat(it.subjectId).isEqualTo(channelId)
     }
