@@ -50,7 +50,7 @@ interface SavedColorListScope {
 }
 
 @Composable
-fun SavedColorListScope.SavedColors(savedColors: List<SavedColor>, online: Boolean) {
+fun SavedColorListScope.SavedColors(savedColors: List<SavedColor>, online: Boolean, modifier: Modifier = Modifier) {
   ReorderableRow(
     items = savedColors,
     onRemove = { onRemoveColor(it) },
@@ -61,9 +61,7 @@ fun SavedColorListScope.SavedColors(savedColors: List<SavedColor>, online: Boole
         SavedColorAction(color, dragging)
       }
     },
-    modifier = Modifier
-      .horizontalScroll(rememberScrollState())
-      .padding(horizontal = Distance.default)
+    modifier = modifier.horizontalScroll(rememberScrollState())
   ) {
     SavedColorBox(it, online = online)
   }

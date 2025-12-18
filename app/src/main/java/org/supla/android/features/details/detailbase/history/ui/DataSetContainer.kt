@@ -43,7 +43,7 @@ import org.supla.android.data.model.chart.ChartDataAggregation
 import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.HistoryDataSet
 import org.supla.android.images.ImageId
-import org.supla.android.tools.ComponentPreview
+import org.supla.android.tools.SuplaComponentPreview
 import org.supla.android.ui.views.Image
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.infrastructure.LocalizedString
@@ -432,7 +432,7 @@ private val testSets5 =
     typeName = LocalizedString.Constant("type name")
   )
 
-@ComponentPreview
+@SuplaComponentPreview
 @Composable
 private fun Preview() {
   SuplaTheme {
@@ -446,7 +446,7 @@ private fun Preview() {
   }
 }
 
-@ComponentPreview
+@SuplaComponentPreview
 @Composable
 private fun PreviewLandscape() {
   SuplaTheme {

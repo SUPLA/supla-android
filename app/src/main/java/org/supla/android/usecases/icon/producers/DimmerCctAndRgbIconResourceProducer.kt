@@ -23,13 +23,25 @@ import org.supla.android.usecases.icon.IconData
 import org.supla.android.usecases.icon.IconResourceProducer
 import org.supla.core.shared.data.model.general.SuplaFunction
 
-object RgbLightingIconResourceProducer : IconResourceProducer {
+object DimmerCctAndRgbIconResourceProducer : IconResourceProducer {
   override fun accepts(function: SuplaFunction): Boolean =
-    function == SuplaFunction.RGB_LIGHTING
+    function == SuplaFunction.DIMMER_CCT_AND_RGB
 
-  override fun produce(data: IconData): Int =
-    when (data.state.value) {
-      ChannelState.Value.ON -> R.drawable.fnc_rgb_on
-      else -> R.drawable.fnc_rgb_off
+  override fun produce(data: IconData): Int? {
+    return when (data.state) {
+      is ChannelState.RgbAndDimmer -> {
+        if (data.state.dimmer == ChannelState.Value.ON && data.state.rgb == ChannelState.Value.ON) {
+          R.drawable.fnc_dimmer_cct_rgb_on_on
+        } else if (data.state.dimmer == ChannelState.Value.OFF && data.state.rgb == ChannelState.Value.ON) {
+          R.drawable.fnc_dimmer_cct_rgb_off_on
+        } else if (data.state.dimmer == ChannelState.Value.ON && data.state.rgb == ChannelState.Value.OFF) {
+          R.drawable.fnc_dimmer_cct_rgb_on_off
+        } else {
+          R.drawable.fnc_dimmer_cct_rgb_off_off
+        }
+      }
+
+      else -> null
     }
+  }
 }

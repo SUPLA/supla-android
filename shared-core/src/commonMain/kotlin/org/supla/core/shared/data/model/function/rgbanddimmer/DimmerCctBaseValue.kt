@@ -1,4 +1,4 @@
-package org.supla.android.usecases.icon.producers
+package org.supla.core.shared.data.model.function.rgbanddimmer
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,19 +17,6 @@ package org.supla.android.usecases.icon.producers
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.R
-import org.supla.android.data.model.general.ChannelState
-import org.supla.android.usecases.icon.IconData
-import org.supla.android.usecases.icon.IconResourceProducer
-import org.supla.core.shared.data.model.general.SuplaFunction
-
-object RgbLightingIconResourceProducer : IconResourceProducer {
-  override fun accepts(function: SuplaFunction): Boolean =
-    function == SuplaFunction.RGB_LIGHTING
-
-  override fun produce(data: IconData): Int =
-    when (data.state.value) {
-      ChannelState.Value.ON -> R.drawable.fnc_rgb_on
-      else -> R.drawable.fnc_rgb_off
-    }
+interface DimmerCctBaseValue : DimmerBaseValue {
+  val cct: Int
 }

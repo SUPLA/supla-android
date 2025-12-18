@@ -118,8 +118,10 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
       SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
       SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
       SuplaFunction.DIMMER,
+      SuplaFunction.DIMMER_CCT,
       SuplaFunction.RGB_LIGHTING,
-      SuplaFunction.DIMMER_AND_RGB_LIGHTING -> true
+      SuplaFunction.DIMMER_AND_RGB_LIGHTING,
+      SuplaFunction.DIMMER_CCT_AND_RGB -> true
 
       SuplaFunction.UNKNOWN,
       SuplaFunction.NONE,

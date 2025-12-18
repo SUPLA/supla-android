@@ -19,33 +19,37 @@ package org.supla.core.shared.data.model.function.rgbanddimmer
 
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 
-private const val RGB_VALUE_LENGTH = 5
+private const val RGB_VALUE_LENGTH = 8
 
-data class RgbValue(
+data class RgbwwValue(
   override val status: SuplaChannelAvailabilityStatus,
   override val on: Boolean,
+  override val brightness: Int,
   override val colorBrightness: Int,
   override val red: Int,
   override val green: Int,
-  override val blue: Int
-) : RgbBaseValue {
+  override val blue: Int,
+  override val cct: Int
+) : RgbBaseValue, DimmerCctBaseValue {
 
   val rgb: Int
     get() = (red and 0x00000FF) or ((green shl 8) and 0x0000FF00) or ((blue shl 16) and 0x00FF0000)
 
   companion object {
-    fun from(status: SuplaChannelAvailabilityStatus, bytes: ByteArray): RgbValue {
+    fun from(status: SuplaChannelAvailabilityStatus, bytes: ByteArray): RgbwwValue {
       if (bytes.size < RGB_VALUE_LENGTH) {
-        return RgbValue(status, false, 0, 0, 0, 0)
+        return RgbwwValue(status, false, 0, 0, 0, 0, 0, 0)
       }
 
-      return RgbValue(
+      return RgbwwValue(
         status = status,
         on = bytes[0] >= 1,
-        colorBrightness = bytes[1].toInt().coerceAtLeast(0).coerceAtMost(100),
+        brightness = bytes[0].toInt().coerceIn(0, 100),
+        colorBrightness = bytes[1].toInt().coerceIn(0, 100),
         red = bytes[4].toInt() and 0xFF,
         green = bytes[3].toInt() and 0xFF,
-        blue = bytes[2].toInt() and 0xFF
+        blue = bytes[2].toInt() and 0xFF,
+        cct = bytes[7].toInt().coerceIn(0, 100)
       )
     }
   }

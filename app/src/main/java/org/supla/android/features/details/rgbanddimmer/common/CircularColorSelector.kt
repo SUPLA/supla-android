@@ -43,7 +43,7 @@ import androidx.compose.ui.unit.center
 import androidx.compose.ui.unit.dp
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.tools.ComponentPreview
+import org.supla.android.tools.SuplaComponentPreview
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -84,18 +84,7 @@ fun CircularColorSelector(
     val prev = gesturePrevValue
     if (prev != null) {
       val currentDiff = prev - newValue
-      valueDiff =
-        if (currentDiff > 0f && currentDiff < 0.8f) {
-          valueDiff?.let { it + currentDiff }
-        } else if (currentDiff < 0f && currentDiff > -0.8f) {
-          valueDiff?.let { it + currentDiff }
-        } else if (currentDiff > 0f) {
-          valueDiff?.let { it - (1 - prev + newValue) }
-        } else if (currentDiff < 0f) {
-          valueDiff?.let { it + 1 - newValue + prev }
-        } else {
-          valueDiff
-        }
+      valueDiff = valueDiff?.let { it + calculateDiffIncrement(currentDiff, newValue, prev) }
 
       val currentValue = initialValue?.minus(valueDiff ?: 0f)
       if (currentValue != null) {
@@ -107,11 +96,7 @@ fun CircularColorSelector(
           onValueChanging(currentValue)
         }
 
-        if (currentValue < -1) {
-          valueDiff = valueDiff?.let { it - 1f }
-        } else if (currentValue > 2) {
-          valueDiff = valueDiff?.let { it + 1f }
-        }
+        valueDiff = valueDiff.coerceValue(currentValue)
       }
     }
 
@@ -228,6 +213,28 @@ fun CircularColorSelector(
   }
 }
 
+private fun calculateDiffIncrement(currentDiff: Float, currentValue: Float, previousValue: Float): Float =
+  if ((currentDiff > 0f && currentDiff < 0.8f) || (currentDiff < 0f && currentDiff > -0.8f)) {
+    currentDiff
+  } else if (currentDiff > 0f) {
+    previousValue - 1 - currentValue
+  } else if (currentDiff < 0f) {
+    previousValue + 1 - currentValue
+  } else {
+    0f
+  }
+
+private fun Float?.coerceValue(currentValue: Float): Float? =
+  this?.let {
+    if (currentValue < -1) {
+      it - 1f
+    } else if (currentValue > 2) {
+      it + 1f
+    } else {
+      it
+    }
+  }
+
 private fun getValueFromPosition(offset: Offset, center: IntOffset): Float {
   val dx = offset.x - center.x
   val dy = offset.y - center.y
@@ -265,7 +272,7 @@ private fun isInRing(touch: Offset, center: IntOffset, ringRadius: Float, trackW
   return d in inner..outer
 }
 
-@ComponentPreview
+@SuplaComponentPreview
 @Composable
 private fun Preview() {
   SuplaTheme {

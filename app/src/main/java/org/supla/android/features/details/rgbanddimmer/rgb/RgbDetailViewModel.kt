@@ -18,6 +18,7 @@ package org.supla.android.features.details.rgbanddimmer.rgb
  */
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
@@ -47,15 +48,16 @@ import org.supla.android.extensions.filterHexDigits
 import org.supla.android.extensions.toColor
 import org.supla.android.extensions.toHexString
 import org.supla.android.extensions.toHsv
+import org.supla.android.features.details.rgbanddimmer.common.DelayedRgbwwActionSubject
 import org.supla.android.features.details.rgbanddimmer.common.SavedColor
 import org.supla.android.features.details.rgbanddimmer.common.asSavedColor
+import org.supla.android.features.details.rgbanddimmer.common.delayableState
 import org.supla.android.features.details.rgbanddimmer.common.rgbValues
 import org.supla.android.features.details.rgbanddimmer.rgb.model.RgbDetailViewState
 import org.supla.android.features.details.rgbanddimmer.rgb.model.RgbValue
 import org.supla.android.features.details.rgbanddimmer.rgb.ui.ColorDialogState
 import org.supla.android.features.details.rgbanddimmer.rgb.ui.RgbDetailScope
 import org.supla.android.images.ImageId
-import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.views.DeviceStateData
 import org.supla.android.ui.views.buttons.SwitchButtonState
@@ -81,7 +83,7 @@ private const val COLORS_LIMIT = 10
 class RgbDetailViewModel @Inject constructor(
   private val observeChannelWithChildrenUseCase: ObserveChannelWithChildrenUseCase,
   private val readGroupWithChannelsUseCase: ReadGroupWithChannelsUseCase,
-  private val delayedRgbActionSubject: DelayedRgbActionSubject,
+  private val delayedRgbwwActionSubject: DelayedRgbwwActionSubject,
   private val executeRgbwActionUseCase: ExecuteRgbwActionUseCase,
   private val getChannelStateUseCase: GetChannelStateUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
@@ -145,27 +147,30 @@ class RgbDetailViewModel @Inject constructor(
         )
       )
     }
-    delayedRgbActionSubject.emit(state)
+
+    state.delayableState?.let { delayedRgbwwActionSubject.emit(it) }
   }
 
   override fun onColorSelected(color: HsvColor) {
-    updateState {
-      if (it.viewState.offline) {
-        return@updateState it
+    updateState { state ->
+      if (state.viewState.offline) {
+        return@updateState state
       }
-      val state = it.copy(
-        loadingState = it.loadingState.changingLoading(true, dateProvider),
+      val state = state.copy(
+        loadingState = state.loadingState.changingLoading(true, dateProvider),
         lastInteractionTime = dateProvider.currentTimestamp(),
         changing = false,
-        viewState = it.viewState.copy(
+        viewState = state.viewState.copy(
           value = RgbValue.Single(color)
         )
       )
 
-      delayedRgbActionSubject.sendImmediately(state)
-        .attachSilent()
-        .subscribeBy(onError = defaultErrorHandler("onColorSelected()"))
-        .disposeBySelf()
+      state.delayableState?.let {
+        delayedRgbwwActionSubject.sendImmediately(it)
+          .attachSilent()
+          .subscribeBy(onError = defaultErrorHandler("onColorSelected()"))
+          .disposeBySelf()
+      }
 
       return@updateState state
     }
@@ -328,10 +333,12 @@ class RgbDetailViewModel @Inject constructor(
       )
     }
 
-    delayedRgbActionSubject.sendImmediately(currentState())
-      .attachSilent()
-      .subscribeBy(onError = defaultErrorHandler("onColorDialogConfirm()"))
-      .disposeBySelf()
+    currentState().delayableState?.let {
+      delayedRgbwwActionSubject.sendImmediately(it)
+        .attachSilent()
+        .subscribeBy(onError = defaultErrorHandler("onColorDialogConfirm()"))
+        .disposeBySelf()
+    }
   }
 
   override fun onColorDialogInputChange(value: String) {
@@ -362,12 +369,11 @@ class RgbDetailViewModel @Inject constructor(
     with(currentState()) {
       if (type != null && remoteId != null) {
         executeRgbwActionUseCase(
-          actionId = ActionId.SET_RGBW_PARAMETERS,
           type = type.subjectType,
           remoteId = remoteId,
-          color = color ?: viewState.value.hsv?.fullBrightnessColor,
-          colorBrightness = colorBrightness,
-          brightness = dimmerBrightness,
+          color = color?.toArgb()?.toLong() ?: viewState.value.hsv?.fullBrightnessColor?.toArgb()?.toLong(),
+          colorBrightness = colorBrightness?.toShort() ?: viewState.value.hsv?.valueAsPercentage?.toShort(),
+          brightness = dimmerBrightness?.toShort(),
           onOff = onOff
         )
           .attachSilent()

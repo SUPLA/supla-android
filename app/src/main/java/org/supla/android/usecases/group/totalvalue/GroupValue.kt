@@ -122,6 +122,24 @@ data class DimmerGroupValue(
   }
 }
 
+data class DimmerCctGroupValue(
+  val brightness: Int,
+  val cct: Int
+) : GroupValue() {
+  override val values: List<Value<*>>
+    get() = listOf(IntegerValue(brightness), IntegerValue(cct))
+
+  companion object {
+    operator fun invoke(stringValue: String): DimmerCctGroupValue {
+      val values = stringValue.split(SEPARATOR)
+      if (values.size != 2) {
+        throw IllegalArgumentException("Given string value is not correct `$stringValue`")
+      }
+      return DimmerCctGroupValue(values[0].toInt(), values[1].toInt())
+    }
+  }
+}
+
 data class RgbGroupValue(
   val color: Int,
   val brightness: Int
@@ -153,6 +171,31 @@ data class DimmerAndRgbGroupValue(
       IntegerValue(color),
       IntegerValue(brightnessColor),
       IntegerValue(brightness)
+    )
+
+  companion object {
+    operator fun invoke(stringValue: String): DimmerAndRgbGroupValue {
+      val values = stringValue.split(SEPARATOR)
+      if (values.size != 3) {
+        throw IllegalArgumentException("Given string value is not correct `$stringValue`")
+      }
+      return DimmerAndRgbGroupValue(values[0].toInt(), values[1].toInt(), values[2].toInt())
+    }
+  }
+}
+
+data class DimmerCctAndRgbGroupValue(
+  val color: Int,
+  val brightnessColor: Int,
+  val brightness: Int,
+  val cct: Int
+) : GroupValue() {
+  override val values: List<Value<*>>
+    get() = listOf(
+      IntegerValue(color),
+      IntegerValue(brightnessColor),
+      IntegerValue(brightness),
+      IntegerValue(cct)
     )
 
   companion object {

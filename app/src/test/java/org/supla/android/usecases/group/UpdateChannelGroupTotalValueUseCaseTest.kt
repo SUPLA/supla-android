@@ -17,6 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import androidx.compose.ui.graphics.Color
 import io.mockk.every
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Completable
@@ -39,6 +40,7 @@ import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupRelationDataEntity
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
+import org.supla.android.data.source.remote.rgb.color
 import org.supla.core.shared.data.model.general.SuplaFunction
 
 @Suppress("SameParameterValue")
@@ -452,20 +454,26 @@ class UpdateChannelGroupTotalValueUseCaseTest {
 
   private fun mockDimmer(groupId: Int, brightness: Int = 0) =
     mockRelationData(groupId, SuplaFunction.DIMMER, SuplaChannelAvailabilityStatus.ONLINE) {
-      every { it.asBrightness() } returns brightness
+      every { it.asDimmerValue() } returns mockk {
+        every { this@mockk.brightness } returns brightness
+      }
     }
 
   private fun mockRgb(groupId: Int, color: Int = 0, brightness: Int = 0) =
     mockRelationData(groupId, SuplaFunction.RGB_LIGHTING, SuplaChannelAvailabilityStatus.ONLINE) {
-      every { it.asColor() } returns color
-      every { it.asBrightnessColor() } returns brightness
+      every { it.asRgbValue() } returns mockk {
+        every { this@mockk.colorBrightness } returns brightness
+        every { this@mockk.rgb } returns color
+      }
     }
 
   private fun mockDimmerAndRgb(groupId: Int, color: Int = 0, brightnessColor: Int = 0, brightness: Int = 0) =
     mockRelationData(groupId, SuplaFunction.DIMMER_AND_RGB_LIGHTING, SuplaChannelAvailabilityStatus.ONLINE) {
-      every { it.asColor() } returns color
-      every { it.asBrightnessColor() } returns brightnessColor
-      every { it.asBrightness() } returns brightness
+      every { it.asRgbwValue() } returns mockk {
+        every { this@mockk.colorBrightness } returns brightnessColor
+        every { this@mockk.brightness } returns brightness
+        every { this@mockk.rgb } returns color
+      }
     }
 
   private fun mockTerraceAwning(

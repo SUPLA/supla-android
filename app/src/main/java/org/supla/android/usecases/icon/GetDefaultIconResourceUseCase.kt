@@ -29,6 +29,8 @@ import org.supla.android.usecases.icon.producers.CurtainIconResourceProducer
 import org.supla.android.usecases.icon.producers.DigiglassHorizontalIconResourceProducer
 import org.supla.android.usecases.icon.producers.DigiglassVerticalIconResourceProducer
 import org.supla.android.usecases.icon.producers.DimmerAndRgbIconResourceProducer
+import org.supla.android.usecases.icon.producers.DimmerCctAndRgbIconResourceProducer
+import org.supla.android.usecases.icon.producers.DimmerCctIconResourceProducer
 import org.supla.android.usecases.icon.producers.DimmerIconResourceProducer
 import org.supla.android.usecases.icon.producers.DoorIconResourceProducer
 import org.supla.android.usecases.icon.producers.ElectricityMeterIconResourceProducer
@@ -92,9 +94,11 @@ class GetDefaultIconResourceUseCase @Inject constructor() {
     static(SuplaFunction.RAIN_SENSOR, R.drawable.fnc_rain),
     static(SuplaFunction.WEIGHT_SENSOR, R.drawable.fnc_weight),
     LiquidSensorIconResourceProducer(),
-    DimmerIconResourceProducer(),
-    RgbLightingIconResourceProducer(),
-    DimmerAndRgbIconResourceProducer(),
+    DimmerIconResourceProducer,
+    DimmerCctIconResourceProducer,
+    RgbLightingIconResourceProducer,
+    DimmerAndRgbIconResourceProducer,
+    DimmerCctAndRgbIconResourceProducer,
     static(SuplaFunction.DEPTH_SENSOR, R.drawable.fnc_depth),
     static(SuplaFunction.DISTANCE_SENSOR, R.drawable.fnc_distance),
     WindowIconResourceProducer(),

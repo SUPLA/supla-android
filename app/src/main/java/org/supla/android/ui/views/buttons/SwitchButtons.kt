@@ -150,8 +150,25 @@ private fun SwitchButtonsLayout(
 }
 
 @Composable
+fun SwitchIconButton(
+  state: SwitchButtonState,
+  modifier: Modifier = Modifier,
+  disabled: Boolean = false,
+  colors: SuplaButtonColors,
+  onClick: () -> Unit
+) = SwitchButton(
+  text = null,
+  icon = state.icon,
+  modifier = modifier,
+  disabled = disabled,
+  pressed = state.pressed,
+  colors = colors,
+  onClick = onClick
+)
+
+@Composable
 fun SwitchButton(
-  text: String,
+  text: String?,
   icon: ImageId?,
   modifier: Modifier = Modifier,
   disabled: Boolean = false,
@@ -167,7 +184,7 @@ fun SwitchButton(
     active = pressed,
     colors = colors,
     shape = shape
-  ) {
+  ) { color ->
     Row(
       modifier = Modifier
         .align(Alignment.Center)
@@ -183,14 +200,16 @@ fun SwitchButton(
           modifier = Modifier.size(dimensionResource(id = R.dimen.icon_default_size)),
         )
       }
-      Text(
-        text = text,
-        style = MaterialTheme.typography.labelLarge,
-        color = it,
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis,
-        modifier = Modifier
-      )
+      text?.let {
+        Text(
+          text = it,
+          style = MaterialTheme.typography.labelLarge,
+          color = color,
+          maxLines = 1,
+          overflow = TextOverflow.Ellipsis,
+          modifier = Modifier
+        )
+      }
     }
   }
 }

@@ -123,10 +123,11 @@ class GetChannelStateUseCase @Inject constructor(
       SuplaFunction.MOTION_SENSOR,
       SuplaFunction.BINARY_SENSOR -> getOnOff(value.isClosed)
 
-      SuplaFunction.DIMMER -> getOnOff(value.brightness > 0)
+      SuplaFunction.DIMMER, SuplaFunction.DIMMER_CCT -> getOnOff(value.brightness > 0)
       SuplaFunction.RGB_LIGHTING -> getOnOff(value.colorBrightness > 0)
 
-      SuplaFunction.DIMMER_AND_RGB_LIGHTING -> {
+      SuplaFunction.DIMMER_AND_RGB_LIGHTING,
+      SuplaFunction.DIMMER_CCT_AND_RGB -> {
         val first = if (value.brightness > 0) ChannelState.Value.ON else ChannelState.Value.OFF
         val second = if (value.colorBrightness > 0) ChannelState.Value.ON else ChannelState.Value.OFF
 
@@ -245,6 +246,7 @@ class GetChannelStateUseCase @Inject constructor(
         SuplaFunction.ALARM_ARMAMENT_SENSOR,
         SuplaFunction.LIGHTSWITCH,
         SuplaFunction.DIMMER,
+        SuplaFunction.DIMMER_CCT,
         SuplaFunction.RGB_LIGHTING,
         SuplaFunction.PUMP_SWITCH,
         SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH,
@@ -253,7 +255,8 @@ class GetChannelStateUseCase @Inject constructor(
         SuplaFunction.MOTION_SENSOR,
         SuplaFunction.BINARY_SENSOR -> ChannelState.Default(ChannelState.Value.OFF)
 
-        SuplaFunction.DIMMER_AND_RGB_LIGHTING ->
+        SuplaFunction.DIMMER_AND_RGB_LIGHTING,
+        SuplaFunction.DIMMER_CCT_AND_RGB ->
           ChannelState.RgbAndDimmer(ChannelState.Value.OFF, ChannelState.Value.OFF)
 
         SuplaFunction.DIGIGLASS_HORIZONTAL,
@@ -345,6 +348,7 @@ class GetChannelStateUseCase @Inject constructor(
         SuplaFunction.ALARM_ARMAMENT_SENSOR,
         SuplaFunction.LIGHTSWITCH,
         SuplaFunction.DIMMER,
+        SuplaFunction.DIMMER_CCT,
         SuplaFunction.RGB_LIGHTING,
         SuplaFunction.PUMP_SWITCH,
         SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH,
@@ -358,7 +362,8 @@ class GetChannelStateUseCase @Inject constructor(
             ChannelState.Default(ChannelState.Value.ON)
           }
 
-        SuplaFunction.DIMMER_AND_RGB_LIGHTING ->
+        SuplaFunction.DIMMER_AND_RGB_LIGHTING,
+        SuplaFunction.DIMMER_CCT_AND_RGB ->
           if (actionId == ActionId.TURN_OFF) {
             ChannelState.RgbAndDimmer(ChannelState.Value.OFF, ChannelState.Value.OFF)
           } else {
@@ -430,9 +435,9 @@ private class ChannelValueEntityStateWrapper(private val channelValueEntity: Cha
   override val isClosed: Boolean
     get() = channelValueEntity.isClosed()
   override val brightness: Int
-    get() = channelValueEntity.asBrightness()
+    get() = channelValueEntity.asDimmerValue().brightness
   override val colorBrightness: Int
-    get() = channelValueEntity.asBrightnessColor()
+    get() = channelValueEntity.asRgbValue().colorBrightness
   override val transparent: Boolean
     get() = channelValueEntity.asDigiglassValue().isAnySectionTransparent
   override val thermostatSubfunction: ThermostatSubfunction
