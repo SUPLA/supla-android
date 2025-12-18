@@ -17,11 +17,10 @@ package org.supla.android.usecases.client
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import io.reactivex.rxjava3.core.Completable
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
-import org.supla.android.extensions.toHsv
+import org.supla.android.extensions.HsvColor
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.IGNORE_BRIGHTNESS
 import org.supla.android.lib.actions.IGNORE_COLOR
@@ -37,26 +36,42 @@ class ExecuteRgbwActionUseCase @Inject constructor(
   private val suplaClientProvider: SuplaClientProvider,
   private val vibrationHelper: VibrationHelper
 ) {
+
   operator fun invoke(
-    actionId: ActionId,
     type: SubjectType,
     remoteId: Int,
-    color: Color? = null,
-    colorBrightness: Int? = null,
+    color: HsvColor? = null,
     brightness: Int? = null,
+    onOff: Boolean = false,
+    vibrate: Boolean = true
+  ): Completable =
+    invoke(
+      type = type,
+      remoteId = remoteId,
+      color = color?.color?.toArgb()?.toLong(),
+      colorBrightness = color?.valueAsPercentage?.toShort(),
+      brightness = brightness?.toShort(),
+      onOff = onOff,
+      vibrate = vibrate
+    )
+
+  operator fun invoke(
+    type: SubjectType,
+    remoteId: Int,
+    color: Long? = null,
+    colorBrightness: Short? = null,
+    brightness: Short? = null,
     onOff: Boolean = false,
     vibrate: Boolean = true
   ): Completable = Completable.fromRunnable {
     suplaClientProvider.provide()?.run {
       val parameters = RgbwActionParameters(
-        action = actionId,
+        action = ActionId.SET_RGBW_PARAMETERS,
         subjectType = type,
         subjectId = remoteId,
-        brightness = brightness?.toShort() ?: IGNORE_BRIGHTNESS,
-        colorBrightness = colorBrightness?.toShort()
-          ?: color?.toHsv()?.valueAsPercentage?.toShort()
-          ?: IGNORE_BRIGHTNESS,
-        color = color?.toArgb()?.toLong() ?: IGNORE_COLOR,
+        brightness = brightness ?: IGNORE_BRIGHTNESS,
+        colorBrightness = colorBrightness ?: IGNORE_BRIGHTNESS,
+        color = color ?: IGNORE_COLOR,
         colorRandom = false,
         onOff
       )

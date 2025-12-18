@@ -273,7 +273,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get off state for dimmer`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaFunction.DIMMER, brightness = 0)
+    val channelData = mockChannelDataEntity(SuplaFunction.DIMMER, brightnessValue = 0)
 
     // when
     val state = useCase(channelData)
@@ -285,7 +285,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get on state for dimmer`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaFunction.DIMMER, brightness = 5)
+    val channelData = mockChannelDataEntity(SuplaFunction.DIMMER, brightnessValue = 5)
 
     // when
     val state = useCase(channelData)
@@ -297,7 +297,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get off state for rgb`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaFunction.RGB_LIGHTING, colorBrightness = 0)
+    val channelData = mockChannelDataEntity(SuplaFunction.RGB_LIGHTING, colorBrightnessValue = 0)
 
     // when
     val state = useCase(channelData)
@@ -309,7 +309,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get on state for rgb`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaFunction.RGB_LIGHTING, colorBrightness = 5)
+    val channelData = mockChannelDataEntity(SuplaFunction.RGB_LIGHTING, colorBrightnessValue = 5)
 
     // when
     val state = useCase(channelData)
@@ -321,7 +321,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get off off state for dimmer and rgb`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaFunction.DIMMER_AND_RGB_LIGHTING, colorBrightness = 0, brightness = 0)
+    val channelData = mockChannelDataEntity(SuplaFunction.DIMMER_AND_RGB_LIGHTING, colorBrightnessValue = 0, brightnessValue = 0)
 
     // when
     val state = useCase(channelData)
@@ -333,7 +333,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get off on state for dimmer and rgb`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaFunction.DIMMER_AND_RGB_LIGHTING, colorBrightness = 3, brightness = 0)
+    val channelData = mockChannelDataEntity(SuplaFunction.DIMMER_AND_RGB_LIGHTING, colorBrightnessValue = 3, brightnessValue = 0)
 
     // when
     val state = useCase(channelData)
@@ -345,7 +345,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get on off state for dimmer and rgb`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaFunction.DIMMER_AND_RGB_LIGHTING, colorBrightness = 0, brightness = 3)
+    val channelData = mockChannelDataEntity(SuplaFunction.DIMMER_AND_RGB_LIGHTING, colorBrightnessValue = 0, brightnessValue = 3)
 
     // when
     val state = useCase(channelData)
@@ -357,7 +357,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get on on state for dimmer and rgb`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaFunction.DIMMER_AND_RGB_LIGHTING, colorBrightness = 4, brightness = 3)
+    val channelData = mockChannelDataEntity(SuplaFunction.DIMMER_AND_RGB_LIGHTING, colorBrightnessValue = 4, brightnessValue = 3)
 
     // when
     val state = useCase(channelData)
@@ -596,8 +596,8 @@ class GetChannelStateUseCaseTest {
     subValueHi: Int = 0,
     rollerShutterPosition: Int = 0,
     isClosed: Boolean = false,
-    brightness: Int = 0,
-    colorBrightness: Int = 0,
+    brightnessValue: Int = 0,
+    colorBrightnessValue: Int = 0,
     transparent: Boolean = false,
     thermostatSubfunction: ThermostatSubfunction? = null,
   ): ChannelDataEntity =
@@ -607,14 +607,22 @@ class GetChannelStateUseCaseTest {
         every { it.status } returns status
         every { it.getSubValueHi() } returns subValueHi
         every { it.isClosed() } returns isClosed
-        every { it.asBrightness() } returns brightness
-        every { it.asBrightnessColor() } returns colorBrightness
         every { it.asDigiglassValue() } returns mockk { every { isAnySectionTransparent } returns transparent }
         if (thermostatSubfunction != null) {
           every { it.asThermostatValue() } returns mockk { every { subfunction } returns thermostatSubfunction }
         }
         every { it.asRollerShutterValue() } returns mockk { every { position } returns rollerShutterPosition }
         every { it.asFacadeBlindValue() } returns mockk { every { position } returns rollerShutterPosition }
+        every { it.asDimmerValue() } returns mockk {
+          every { brightness } returns brightnessValue
+        }
+        every { it.asRgbwValue() } returns mockk {
+          every { brightness } returns brightnessValue
+          every { colorBrightness } returns colorBrightnessValue
+        }
+        every { it.asRgbValue() } returns mockk {
+          every { colorBrightness } returns colorBrightnessValue
+        }
       }
     }
 }

@@ -50,7 +50,7 @@ import androidx.compose.ui.unit.round
 import androidx.compose.ui.zIndex
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.extensions.toPx
-import org.supla.android.tools.ComponentPreview
+import org.supla.android.tools.SuplaComponentPreview
 import timber.log.Timber
 import kotlin.math.roundToInt
 
@@ -196,7 +196,7 @@ fun <T> ReorderableRow(
   }
 }
 
-@ComponentPreview
+@SuplaComponentPreview
 @Composable
 private fun Preview() {
   val items = remember { mutableListOf("A", "B", "C", "D") }

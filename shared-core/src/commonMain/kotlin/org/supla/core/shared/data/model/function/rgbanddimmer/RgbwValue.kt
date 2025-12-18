@@ -30,6 +30,10 @@ data class RgbwValue(
   override val green: Int,
   override val blue: Int
 ) : RgbBaseValue, DimmerBaseValue {
+
+  val rgb: Int
+    get() = (red and 0x00000FF) or ((green shl 8) and 0x0000FF00) or ((blue shl 16) and 0x00FF0000)
+
   companion object {
     fun from(status: SuplaChannelAvailabilityStatus, bytes: ByteArray): RgbwValue {
       if (bytes.size < RGB_VALUE_LENGTH) {

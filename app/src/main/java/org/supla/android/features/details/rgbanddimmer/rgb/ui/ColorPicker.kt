@@ -56,12 +56,12 @@ import org.supla.android.features.details.rgbanddimmer.common.LinearColorSelecto
 import org.supla.android.features.details.rgbanddimmer.common.OUTER_SURFACE_WIDTH
 import org.supla.android.features.details.rgbanddimmer.common.drawMarkerPoint
 import org.supla.android.features.details.rgbanddimmer.common.drawSelectorPoint
-import org.supla.android.tools.SuplaPreview
-import org.supla.android.tools.SuplaPreviewLandscape
+import org.supla.android.tools.SuplaSizeClassPreview
 import org.supla.core.shared.extensions.ifTrue
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.cos
+import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sin
 import kotlin.math.sqrt
@@ -111,7 +111,10 @@ fun ColorPickerComponent(
       valueMarkers = hsv.isNull.ifTrue { markers.map { it.value } } ?: emptyList(),
       onValueChangeStarted = onColorSelectionStarted,
       onValueChanging = {
-        val color = hsv?.copy(value = it) ?: HsvColor(1f, 1f, it)
+        // Setting brightness to 0 is not allowed. If the user wants turn off the dimmer
+        // should click on turn off button
+        val brightness = max(0.01f, it)
+        val color = hsv?.copy(value = brightness) ?: HsvColor(1f, 1f, brightness)
         hsv = color
         onColorSelecting(color)
       },
@@ -290,8 +293,7 @@ private fun PointerInputScope.calculateHueAndSaturation(offset: Offset): Pair<Fl
 private fun Float.toDegrees(): Float = this * 180f / PI.toFloat()
 private fun Float.toRadians(): Float = this * PI.toFloat() / 180f
 
-@SuplaPreview
-@SuplaPreviewLandscape
+@SuplaSizeClassPreview
 @Composable
 fun PreviewColorPickerComponent() {
   var color by remember { mutableStateOf(HsvColor()) } // Start with red

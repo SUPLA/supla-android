@@ -60,8 +60,8 @@ class CreateProfileChannelsListUseCase @Inject constructor(
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val channelRepository: RoomChannelRepository,
   private val getCaptionUseCase: GetCaptionUseCase,
-  @Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter,
-  @Named(GSON_FOR_REPO) private val gson: Gson,
+  @param:Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter,
+  @param:Named(GSON_FOR_REPO) private val gson: Gson,
 ) {
 
   operator fun invoke(): Observable<List<ListItem>> =
@@ -123,7 +123,9 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       SuplaFunction.STAIRCASE_TIMER,
       SuplaFunction.RGB_LIGHTING,
       SuplaFunction.DIMMER_AND_RGB_LIGHTING,
+      SuplaFunction.DIMMER_CCT_AND_RGB,
       SuplaFunction.DIMMER,
+      SuplaFunction.DIMMER_CCT,
       SuplaFunction.VALVE_OPEN_CLOSE,
       SuplaFunction.VALVE_PERCENTAGE -> toIconWithButtonsItem(channelData, childrenMap)
 

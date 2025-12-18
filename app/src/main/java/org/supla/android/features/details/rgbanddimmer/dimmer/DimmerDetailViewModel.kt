@@ -17,7 +17,6 @@ package org.supla.android.features.details.rgbanddimmer.dimmer
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
@@ -43,9 +42,13 @@ import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStat
 import org.supla.android.data.source.remote.rgb.color
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.LoadingTimeoutManager
+import org.supla.android.extensions.HsvColor
 import org.supla.android.extensions.toGrayColor
+import org.supla.android.extensions.toHsv
+import org.supla.android.features.details.rgbanddimmer.common.DelayedRgbwwActionSubject
 import org.supla.android.features.details.rgbanddimmer.common.SavedColor
 import org.supla.android.features.details.rgbanddimmer.common.asSavedColor
+import org.supla.android.features.details.rgbanddimmer.common.delayableState
 import org.supla.android.features.details.rgbanddimmer.common.dimmerValues
 import org.supla.android.images.ImageId
 import org.supla.android.lib.actions.ActionId
@@ -66,6 +69,7 @@ import org.supla.core.shared.infrastructure.localizedString
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.math.max
 
 private const val REFRESH_DELAY_MS = 3000
 private const val BRIGHTNESSES_LIMIT = 10
@@ -74,7 +78,7 @@ private const val BRIGHTNESSES_LIMIT = 10
 class DimmerDetailViewModel @Inject constructor(
   private val observeChannelWithChildrenUseCase: ObserveChannelWithChildrenUseCase,
   private val readGroupWithChannelsUseCase: ReadGroupWithChannelsUseCase,
-  private val delayedDimmerActionSubject: DelayedDimmerActionSubject,
+  private val delayedRgbwwActionSubject: DelayedRgbwwActionSubject,
   private val executeRgbwActionUseCase: ExecuteRgbwActionUseCase,
   private val getChannelStateUseCase: GetChannelStateUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
@@ -122,12 +126,14 @@ class DimmerDetailViewModel @Inject constructor(
       it.copy(
         lastInteractionTime = dateProvider.currentTimestamp(),
         viewState = it.viewState.copy(
-          value = DimmerValue.Single(brightness)
+          // Setting brightness to 0 is not allowed. If the user wants turn off the dimmer
+          // should click on turn off button
+          value = DimmerValue.Single(max(1, brightness))
         )
       )
     }
 
-    delayedDimmerActionSubject.emit(currentState())
+    currentState().delayableState?.let { delayedRgbwwActionSubject.emit(it) }
   }
 
   override fun onBrightnessSelected() {
@@ -138,10 +144,12 @@ class DimmerDetailViewModel @Inject constructor(
       )
     }
 
-    delayedDimmerActionSubject.sendImmediately(currentState())
-      .attachSilent()
-      .subscribeBy(onError = defaultErrorHandler("onBrightnessSelected()"))
-      .disposeBySelf()
+    currentState().delayableState?.let {
+      delayedRgbwwActionSubject.sendImmediately(it)
+        .attachSilent()
+        .subscribeBy(onError = defaultErrorHandler("onBrightnessSelected()"))
+        .disposeBySelf()
+    }
   }
 
   override fun turnOn() {
@@ -206,7 +214,7 @@ class DimmerDetailViewModel @Inject constructor(
       )
     }
 
-    sendDimmerValues(color.brightness)
+    sendDimmerValues(color.brightness, onOff = false)
   }
 
   override fun onSaveCurrentColor() {
@@ -297,17 +305,15 @@ class DimmerDetailViewModel @Inject constructor(
     }
   }
 
-  private fun sendDimmerValues(brightness: Int? = null) {
+  private fun sendDimmerValues(brightness: Int? = null, onOff: Boolean = true) {
     with(currentState()) {
       if (type != null && remoteId != null) {
         executeRgbwActionUseCase(
-          actionId = ActionId.SET_RGBW_PARAMETERS,
           type = type.subjectType,
           remoteId = remoteId,
           color = rgbColor,
-          colorBrightness = rgbBrightness,
           brightness = brightness ?: viewState.value.brightness,
-          onOff = true
+          onOff = onOff
         )
           .attachSilent()
           .subscribeBy(onError = defaultErrorHandler("sendDimmerValues()"))
@@ -355,7 +361,7 @@ class DimmerDetailViewModel @Inject constructor(
         profileId = channel.profileId,
         type = ItemType.CHANNEL,
         loadingState = state.loadingState.changingLoading(false, dateProvider),
-        rgbColor = rgbValue?.color,
+        rgbColor = rgbValue?.color?.toHsv(),
         rgbBrightness = rgbValue?.colorBrightness,
         viewState = state.viewState.copy(
           offline = channel.status.offline,
@@ -489,7 +495,7 @@ data class DimmerDetailModelState(
   val lastInteractionTime: Long? = null,
   val changing: Boolean = false,
   val loadingState: LoadingTimeoutManager.LoadingState = LoadingTimeoutManager.LoadingState(),
-  val rgbColor: Color? = null,
+  val rgbColor: HsvColor? = null,
   val rgbBrightness: Int? = null,
   val viewState: DimmerDetailViewState = DimmerDetailViewState(),
 

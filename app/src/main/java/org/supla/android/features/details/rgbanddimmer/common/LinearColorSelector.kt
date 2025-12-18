@@ -37,7 +37,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.tools.ComponentPreview
+import org.supla.android.tools.SuplaComponentPreview
 
 // Dimensions
 val OUTER_SURFACE_WIDTH = 5.dp
@@ -129,7 +129,7 @@ fun LinearColorSelector(
   }
 }
 
-@ComponentPreview
+@SuplaComponentPreview
 @Composable
 private fun Preview() {
   SuplaTheme {
