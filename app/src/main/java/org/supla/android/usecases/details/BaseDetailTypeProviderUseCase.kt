@@ -24,7 +24,7 @@ import org.supla.core.shared.data.model.general.SuplaFunction
 abstract class BaseDetailTypeProviderUseCase {
 
   fun provide(function: SuplaFunction, manufacturerId: Int? = null, productId: Int? = null): DetailType? = when (function) {
-    SuplaFunction.DIMMER, SuplaFunction.DIMMER_CCT ->
+    SuplaFunction.DIMMER ->
       StandardDetailType(
         pages = if (shouldShowRgbSettings(manufacturerId, productId)) {
           listOf(DetailPage.DIMMER, DetailPage.LEGACY_RGBW)
@@ -32,8 +32,9 @@ abstract class BaseDetailTypeProviderUseCase {
           listOf(DetailPage.DIMMER)
         }
       )
+    SuplaFunction.DIMMER_CCT -> StandardDetailType(listOf(DetailPage.DIMMER_CCT))
 
-    SuplaFunction.DIMMER_AND_RGB_LIGHTING, SuplaFunction.DIMMER_CCT_AND_RGB ->
+    SuplaFunction.DIMMER_AND_RGB_LIGHTING ->
       StandardDetailType(
         pages = if (shouldShowRgbSettings(manufacturerId, productId)) {
           listOf(DetailPage.RGB, DetailPage.DIMMER, DetailPage.LEGACY_RGBW)
@@ -41,6 +42,7 @@ abstract class BaseDetailTypeProviderUseCase {
           listOf(DetailPage.RGB, DetailPage.DIMMER)
         }
       )
+    SuplaFunction.DIMMER_CCT_AND_RGB -> StandardDetailType(listOf(DetailPage.RGB, DetailPage.DIMMER))
 
     SuplaFunction.RGB_LIGHTING ->
       StandardDetailType(

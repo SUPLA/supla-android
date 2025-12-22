@@ -21,9 +21,7 @@ import io.reactivex.rxjava3.core.Completable
 import org.supla.android.core.networking.suplaclient.DelayableState
 import org.supla.android.core.networking.suplaclient.DelayedCommandSubject
 import org.supla.android.extensions.HsvColor
-import org.supla.android.features.details.rgbanddimmer.dimmer.DimmerDetailModelState
 import org.supla.android.features.details.rgbanddimmer.rgb.RgbDetailModelState
-import org.supla.android.lib.actions.IGNORE_COLOR
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.client.ExecuteRgbwActionUseCase
@@ -54,7 +52,7 @@ data class State(
   val remoteId: Int,
   val color: HsvColor?,
   val brightness: Int?,
-  val cct: Int,
+  val cct: Int?,
   override val sent: Boolean = false
 ) : DelayableState {
   override fun sentState(): DelayableState = copy(sent = true)
@@ -73,26 +71,7 @@ val RgbDetailModelState.delayableState: State?
         remoteId = remoteId,
         color = color,
         brightness = dimmerBrightness,
-        cct = 0
-      )
-    } else {
-      null
-    }
-  }
-
-val DimmerDetailModelState.delayableState: State?
-  get() {
-    val type = type
-    val remoteId = remoteId
-    val brightness = viewState.value.brightness
-
-    return if (type != null && remoteId != null && brightness != null) {
-      State(
-        type = type.subjectType,
-        remoteId = remoteId,
-        color = rgbColor,
-        brightness = brightness,
-        cct = 0
+        cct = dimmerCct
       )
     } else {
       null

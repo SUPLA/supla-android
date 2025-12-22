@@ -52,10 +52,10 @@ import androidx.compose.ui.unit.dp
 import org.supla.android.extensions.HsvColor
 import org.supla.android.extensions.exactly
 import org.supla.android.extensions.isNull
-import org.supla.android.features.details.rgbanddimmer.common.LinearColorSelector
-import org.supla.android.features.details.rgbanddimmer.common.OUTER_SURFACE_WIDTH
-import org.supla.android.features.details.rgbanddimmer.common.drawMarkerPoint
-import org.supla.android.features.details.rgbanddimmer.common.drawSelectorPoint
+import org.supla.android.features.details.rgbanddimmer.common.ui.LinearColorSelector
+import org.supla.android.features.details.rgbanddimmer.common.ui.OUTER_SURFACE_WIDTH
+import org.supla.android.features.details.rgbanddimmer.common.ui.drawMarkerPoint
+import org.supla.android.features.details.rgbanddimmer.common.ui.drawSelectorPoint
 import org.supla.android.tools.SuplaSizeClassPreview
 import org.supla.core.shared.extensions.ifTrue
 import kotlin.math.PI

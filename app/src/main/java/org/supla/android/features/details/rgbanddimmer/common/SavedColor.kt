@@ -22,13 +22,16 @@ import org.supla.android.data.source.local.entity.ColorEntity
 
 data class SavedColor(
   val id: Long,
-  val color: Color,
+  val color: Int,
   val brightness: Int
-)
+) {
+  val asColor: Color
+    get() = Color(color)
+}
 
 val ColorEntity.asSavedColor: SavedColor
   get() = SavedColor(
     id = id!!,
-    color = Color(color),
+    color = color,
     brightness = brightness.toInt()
   )

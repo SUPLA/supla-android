@@ -1,4 +1,4 @@
-package org.supla.android.features.details.rgbanddimmer.dimmer
+package org.supla.android.features.details.rgbanddimmer.common.dimmer
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -38,22 +38,31 @@ data class DimmerDetailViewState(
 
 sealed interface DimmerValue {
   val brightness: Int?
-  val markers: List<Int>
+  val cct: Int?
+  val brightnessMarkers: List<Int>
   val brightnessString: String
+  val cctMarkers: List<Int>
 
   data object Empty : DimmerValue {
     override val brightness: Int? = null
-    override val markers: List<Int> = emptyList()
+    override val cct: Int? = null
+    override val brightnessMarkers: List<Int> = emptyList()
     override val brightnessString: String = "?"
+    override val cctMarkers: List<Int> = emptyList()
   }
 
-  data class Single(override val brightness: Int) : DimmerValue {
-    override val markers: List<Int> = emptyList()
+  data class Single(
+    override val brightness: Int,
+    override val cct: Int = 0
+  ) : DimmerValue {
+    override val brightnessMarkers: List<Int> = emptyList()
     override val brightnessString: String = ValuesFormatter.getPercentageString(brightness)
+    override val cctMarkers: List<Int> = emptyList()
   }
 
-  data class Multiple(val brightnesses: List<Int>) : DimmerValue {
+  data class Multiple(val brightnesses: List<Int>, val ccts: List<Int> = emptyList()) : DimmerValue {
     override val brightness: Int? = if (brightnesses.size == 1) brightnesses.first() else null
+    override val cct: Int? = if (ccts.size == 1) ccts.first() else null
     override val brightnessString: String
       get() = if (brightnesses.size == 1) {
         ValuesFormatter.getPercentageString(brightnesses.first())
@@ -65,12 +74,20 @@ sealed interface DimmerValue {
         "$min - $max"
       }
 
-    override val markers: List<Int>
+    override val brightnessMarkers: List<Int>
       get() =
         if (brightnesses.size == 1) {
           emptyList()
         } else {
           brightnesses
+        }
+
+    override val cctMarkers: List<Int>
+      get() =
+        if (ccts.size == 1) {
+          emptyList()
+        } else {
+          ccts
         }
   }
 }

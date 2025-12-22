@@ -1,4 +1,4 @@
-package org.supla.android.features.details.rgbanddimmer.common
+package org.supla.android.features.details.rgbanddimmer.common.ui.dimmer
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -43,6 +43,10 @@ import androidx.compose.ui.unit.center
 import androidx.compose.ui.unit.dp
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.features.details.rgbanddimmer.common.ui.OUTER_SURFACE_WIDTH
+import org.supla.android.features.details.rgbanddimmer.common.ui.SELECTOR_RADIUS
+import org.supla.android.features.details.rgbanddimmer.common.ui.drawMarkerPoint
+import org.supla.android.features.details.rgbanddimmer.common.ui.drawSelectorPoint
 import org.supla.android.tools.SuplaComponentPreview
 import kotlin.math.PI
 import kotlin.math.atan2
@@ -62,6 +66,30 @@ fun CircularColorSelector(
   enabled: Boolean = true,
   startColor: Color = Color.White,
   endColor: Color = Color.Black,
+  onValueChangeStarted: () -> Unit = {},
+  onValueChanging: (Float) -> Unit = {},
+  onValueChanged: () -> Unit = {}
+) =
+  CircularColorSelector(
+    value = value,
+    selectedColor = selectedColor,
+    colors = listOf(Pair(0f, endColor), Pair(1f, startColor)),
+    modifier = modifier,
+    valueMarkers = valueMarkers,
+    enabled = enabled,
+    onValueChangeStarted = onValueChangeStarted,
+    onValueChanging = onValueChanging,
+    onValueChanged = onValueChanged
+  )
+
+@Composable
+fun CircularColorSelector(
+  value: Float?,
+  selectedColor: Color?,
+  colors: List<Pair<Float, Color>>,
+  modifier: Modifier = Modifier,
+  valueMarkers: List<Float> = emptyList(),
+  enabled: Boolean = true,
   onValueChangeStarted: () -> Unit = {},
   onValueChanging: (Float) -> Unit = {},
   onValueChanged: () -> Unit = {}
@@ -188,7 +216,7 @@ fun CircularColorSelector(
 
     rotate(270f) {
       val sweep = Brush.sweepGradient(
-        colors = listOf(endColor, startColor),
+        colorStops = colors.toTypedArray(),
         center = center
       )
       drawCircle(
