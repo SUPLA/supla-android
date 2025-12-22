@@ -435,9 +435,9 @@ private class ChannelValueEntityStateWrapper(private val channelValueEntity: Cha
   override val isClosed: Boolean
     get() = channelValueEntity.isClosed()
   override val brightness: Int
-    get() = channelValueEntity.asDimmerValue().brightness
+    get() = channelValueEntity.asRgbwwValue().brightness
   override val colorBrightness: Int
-    get() = channelValueEntity.asRgbValue().colorBrightness
+    get() = channelValueEntity.asRgbwwValue().colorBrightness
   override val transparent: Boolean
     get() = channelValueEntity.asDigiglassValue().isAnySectionTransparent
   override val thermostatSubfunction: ThermostatSubfunction
