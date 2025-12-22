@@ -22,6 +22,8 @@ import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.extensions.HsvColor
 import org.supla.android.extensions.toHsv
 import org.supla.android.usecases.group.totalvalue.DimmerAndRgbGroupValue
+import org.supla.android.usecases.group.totalvalue.DimmerCctAndRgbGroupValue
+import org.supla.android.usecases.group.totalvalue.DimmerCctGroupValue
 import org.supla.android.usecases.group.totalvalue.DimmerGroupValue
 import org.supla.android.usecases.group.totalvalue.RgbGroupValue
 
@@ -31,6 +33,20 @@ val ChannelGroupEntity.dimmerValues: List<Int>
       when (it) {
         is DimmerGroupValue -> it.brightness
         is DimmerAndRgbGroupValue -> it.brightness
+        is DimmerCctGroupValue -> it.brightness
+        is DimmerCctAndRgbGroupValue -> it.brightness
+        else -> null
+      }
+    }
+    .toSet() // To eliminate duplicates
+    .toList()
+
+val ChannelGroupEntity.cctValues: List<Int>
+  get() = groupTotalValues
+    .mapNotNull {
+      when (it) {
+        is DimmerCctGroupValue -> it.cct
+        is DimmerCctAndRgbGroupValue -> it.cct
         else -> null
       }
     }

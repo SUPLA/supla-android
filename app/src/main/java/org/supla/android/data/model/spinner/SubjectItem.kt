@@ -195,8 +195,8 @@ interface SubjectItemConversionScope {
       isLocation = false,
       value = when (function) {
         SuplaFunction.DIMMER -> "0"
-        SuplaFunction.RGB_LIGHTING -> "${channelValueEntity.asRgbValue().rgb}"
-        SuplaFunction.DIMMER_AND_RGB_LIGHTING -> "${channelValueEntity.asRgbwValue().rgb}"
+        SuplaFunction.RGB_LIGHTING -> "${channelValueEntity.asRgbwwValue().rgb}"
+        SuplaFunction.DIMMER_AND_RGB_LIGHTING -> "${channelValueEntity.asRgbwwValue().rgb}"
 
         SuplaFunction.THERMOMETER,
         SuplaFunction.GENERAL_PURPOSE_METER,

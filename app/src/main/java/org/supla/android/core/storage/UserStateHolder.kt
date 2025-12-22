@@ -25,7 +25,7 @@ import org.supla.android.data.model.chart.ChartState
 import org.supla.android.data.model.chart.DefaultChartState
 import org.supla.android.data.model.chart.ElectricityChartState
 import org.supla.android.data.model.electricitymeter.ElectricityMeterSettings
-import org.supla.android.features.details.rgbanddimmer.dimmer.DimmerSelectorType
+import org.supla.android.features.details.rgbanddimmer.common.dimmer.DimmerSelectorType
 import javax.inject.Inject
 import javax.inject.Singleton
 

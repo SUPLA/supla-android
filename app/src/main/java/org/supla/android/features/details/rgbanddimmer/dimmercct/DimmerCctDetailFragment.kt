@@ -1,4 +1,4 @@
-package org.supla.core.shared.data.model.function.rgbanddimmer
+package org.supla.android.features.details.rgbanddimmer.dimmercct
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,10 +17,21 @@ package org.supla.core.shared.data.model.function.rgbanddimmer
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
+import androidx.compose.runtime.Composable
+import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
+import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.features.details.rgbanddimmer.common.dimmer.BaseDimmerDetailFragment
+import org.supla.android.features.details.rgbanddimmer.common.dimmer.DimmerDetailModelState
 
-interface DimmerBaseValue {
-  val status: SuplaChannelAvailabilityStatus
-  val on: Boolean
-  val brightness: Int
+@AndroidEntryPoint
+class DimmerCctDetailFragment : BaseDimmerDetailFragment() {
+  override val viewModel: DimmerCctDetailViewModel by viewModels()
+
+  @Composable
+  override fun ComposableContent(modelState: DimmerDetailModelState) {
+    SuplaTheme {
+      viewModel.View(modelState.viewState)
+    }
+  }
 }

@@ -1,4 +1,4 @@
-package org.supla.android.features.details.rgbanddimmer.common
+package org.supla.android.features.details.rgbanddimmer.common.ui
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.extensions.applyBrightness
+import org.supla.android.features.details.rgbanddimmer.common.SavedColor
 import org.supla.android.ui.views.ReorderableRow
 
 interface SavedColorListScope {
@@ -50,7 +51,12 @@ interface SavedColorListScope {
 }
 
 @Composable
-fun SavedColorListScope.SavedColors(savedColors: List<SavedColor>, online: Boolean, modifier: Modifier = Modifier) {
+fun SavedColorListScope.SavedColors(
+  savedColors: List<SavedColor>,
+  online: Boolean,
+  modifier: Modifier = Modifier,
+  itemContent: @Composable SavedColorListScope.(SavedColor, Boolean) -> Unit = { color, online -> SavedColorBox(color, online) }
+) {
   ReorderableRow(
     items = savedColors,
     onRemove = { onRemoveColor(it) },
@@ -63,19 +69,19 @@ fun SavedColorListScope.SavedColors(savedColors: List<SavedColor>, online: Boole
     },
     modifier = modifier.horizontalScroll(rememberScrollState())
   ) {
-    SavedColorBox(it, online = online)
+    itemContent(it, online)
   }
 }
 
 @Composable
-private fun SavedColorListScope.SavedColorBox(color: SavedColor, online: Boolean) =
+fun SavedColorListScope.SavedColorBox(color: SavedColor, online: Boolean) =
   Box(
     modifier = Modifier
       .padding(horizontal = Distance.tiny)
       .width(42.dp)
       .height(36.dp)
       .background(
-        color = color.color.applyBrightness(color.brightness),
+        color = color.asColor.applyBrightness(color.brightness),
         shape = RoundedCornerShape(dimensionResource(R.dimen.radius_default))
       )
       .border(

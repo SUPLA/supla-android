@@ -1,4 +1,4 @@
-package org.supla.core.shared.data.model.function.rgbanddimmer
+package org.supla.android.features.details.rgbanddimmer.common.dimmer
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,26 +17,13 @@ package org.supla.core.shared.data.model.function.rgbanddimmer
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
+import org.supla.android.features.details.rgbanddimmer.common.ui.SavedColorListScope
 
-private const val RGB_VALUE_LENGTH = 1
-
-data class DimmerValue(
-  override val status: SuplaChannelAvailabilityStatus,
-  override val on: Boolean,
-  override val brightness: Int,
-) : DimmerBaseValue {
-  companion object {
-    fun from(status: SuplaChannelAvailabilityStatus, bytes: ByteArray): DimmerValue {
-      if (bytes.size < RGB_VALUE_LENGTH) {
-        return DimmerValue(status, false, 0)
-      }
-
-      return DimmerValue(
-        status = status,
-        on = bytes[0] >= 1,
-        brightness = bytes[0].toInt().coerceAtLeast(0).coerceAtMost(100)
-      )
-    }
-  }
+interface DimmerDetailScope : SavedColorListScope {
+  fun onBrightnessSelectionStarted()
+  fun onBrightnessSelecting(brightness: Int)
+  fun onBrightnessSelected()
+  fun turnOn()
+  fun turnOff()
+  fun toggleSelectorType()
 }

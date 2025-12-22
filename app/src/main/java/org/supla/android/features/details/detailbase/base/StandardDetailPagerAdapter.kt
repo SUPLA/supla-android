@@ -33,7 +33,9 @@ import org.supla.android.features.details.impulsecounter.counterphoto.CounterPho
 import org.supla.android.features.details.impulsecounter.general.ImpulseCounterGeneralFragment
 import org.supla.android.features.details.impulsecounter.history.ImpulseCounterHistoryDetailFragment
 import org.supla.android.features.details.legacydetail.LegacyDetailFragment
+import org.supla.android.features.details.rgbanddimmer.common.dimmer.BaseDimmerDetailFragment
 import org.supla.android.features.details.rgbanddimmer.dimmer.DimmerDetailFragment
+import org.supla.android.features.details.rgbanddimmer.dimmercct.DimmerCctDetailFragment
 import org.supla.android.features.details.rgbanddimmer.rgb.RgbDetailFragment
 import org.supla.android.features.details.switchdetail.general.SwitchGeneralFragment
 import org.supla.android.features.details.switchdetail.timer.TimersDetailFragment
@@ -120,7 +122,8 @@ class StandardDetailPagerAdapter(
 
     DetailPage.GATE_GENERAL -> GateGeneralFragment().apply { arguments = GateGeneralFragment.bundle(itemBundle) }
     DetailPage.RGB -> RgbDetailFragment().apply { arguments = RgbDetailFragment.bundle(itemBundle) }
-    DetailPage.DIMMER -> DimmerDetailFragment().apply { arguments = DimmerDetailFragment.bundle(itemBundle) }
+    DetailPage.DIMMER -> DimmerDetailFragment().apply { arguments = BaseDimmerDetailFragment.bundle(itemBundle) }
+    DetailPage.DIMMER_CCT -> DimmerCctDetailFragment().apply { arguments = BaseDimmerDetailFragment.bundle(itemBundle) }
     DetailPage.LEGACY_RGBW -> LegacyDetailFragment().apply {
       arguments = LegacyDetailFragment.bundle(itemBundle.remoteId, LegacyDetailType.RGBW, itemBundle.itemType)
     }
@@ -182,6 +185,7 @@ enum class DetailPage(val item: DetailBottomItem) {
   // RGB and Dimmer
   RGB(DetailBottomItem.RGB),
   DIMMER(DetailBottomItem.DIMMER),
+  DIMMER_CCT(DetailBottomItem.DIMMER),
   LEGACY_RGBW(DetailBottomItem.SETTINGS)
 }
 

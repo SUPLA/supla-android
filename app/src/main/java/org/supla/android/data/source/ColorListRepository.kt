@@ -37,13 +37,16 @@ class ColorListRepository @Inject constructor(
 
   fun findAllGroupColors(remoteId: Int, type: ColorEntityType) = colorListDao.findAllColors(remoteId, isGroup = 1, type)
 
-  suspend fun save(remoteId: Int, isGroup: Boolean, color: Color, brightness: Int, profileId: Long, type: ColorEntityType) {
+  suspend fun save(remoteId: Int, isGroup: Boolean, color: Color, brightness: Int, profileId: Long, type: ColorEntityType) =
+    save(remoteId, isGroup, color.toArgb(), brightness, profileId, type)
+
+  suspend fun save(remoteId: Int, isGroup: Boolean, color: Int, brightness: Int, profileId: Long, type: ColorEntityType) {
     val entity = ColorEntity(
       id = null,
       remoteId = remoteId,
       isGroup = isGroup,
       idx = 0,
-      color = color.toArgb(),
+      color = color,
       brightness = brightness.toShort(),
       profileId = profileId,
       type = type
