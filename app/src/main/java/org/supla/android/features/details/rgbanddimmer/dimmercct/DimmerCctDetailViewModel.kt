@@ -1,4 +1,4 @@
-package org.supla.android.features.details.rgbanddimmer.dimmer
+package org.supla.android.features.details.rgbanddimmer.dimmercct
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -19,6 +19,7 @@ package org.supla.android.features.details.rgbanddimmer.dimmer
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.kotlin.subscribeBy
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -29,10 +30,10 @@ import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.source.ColorListRepository
 import org.supla.android.data.source.local.entity.ColorEntityType
 import org.supla.android.events.LoadingTimeoutManager
-import org.supla.android.extensions.toGrayColor
 import org.supla.android.features.details.rgbanddimmer.common.DelayedRgbwwActionSubject
 import org.supla.android.features.details.rgbanddimmer.common.dimmer.BaseDimmerDetailViewModel
 import org.supla.android.features.details.rgbanddimmer.common.dimmer.DimmerDetailViewEvent
+import org.supla.android.features.details.rgbanddimmer.common.dimmer.DimmerValue
 import org.supla.android.images.ImageId
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.GetChannelStateUseCase
@@ -46,17 +47,17 @@ import javax.inject.Inject
 private const val BRIGHTNESSES_LIMIT = 10
 
 @HiltViewModel
-class DimmerDetailViewModel @Inject constructor(
+class DimmerCctDetailViewModel @Inject constructor(
+  private val delayedRgbwwActionSubject: DelayedRgbwwActionSubject,
   private val colorListRepository: ColorListRepository,
+  private val dateProvider: DateProvider,
   observeChannelWithChildrenUseCase: ObserveChannelWithChildrenUseCase,
   readGroupWithChannelsUseCase: ReadGroupWithChannelsUseCase,
-  delayedRgbwwActionSubject: DelayedRgbwwActionSubject,
   executeRgbwActionUseCase: ExecuteRgbwActionUseCase,
   getChannelStateUseCase: GetChannelStateUseCase,
   getChannelIconUseCase: GetChannelIconUseCase,
   loadingTimeoutManager: LoadingTimeoutManager,
   userStateHolder: UserStateHolder,
-  dateProvider: DateProvider,
   schedulers: SuplaSchedulers
 ) : BaseDimmerDetailViewModel(
   observeChannelWithChildrenUseCase,
@@ -70,7 +71,9 @@ class DimmerDetailViewModel @Inject constructor(
   userStateHolder,
   dateProvider,
   schedulers
-) {
+),
+  DimmerCctDetailScope {
+
   override fun onSaveCurrentColor() {
     updateState { it.copy(lastInteractionTime = null) }
 
@@ -83,6 +86,7 @@ class DimmerDetailViewModel @Inject constructor(
     val profileId = state.profileId ?: return
     val type = state.type ?: return
     val brightness = state.viewState.value.brightness ?: return
+    val cct = state.viewState.value.cct ?: 100
     val colorsCount = state.viewState.savedColors.size
 
     if (colorsCount > BRIGHTNESSES_LIMIT) {
@@ -96,7 +100,7 @@ class DimmerDetailViewModel @Inject constructor(
           colorListRepository.save(
             remoteId = remoteId,
             isGroup = type.isGroup(),
-            color = brightness.toGrayColor(),
+            color = cct,
             brightness = brightness,
             profileId = profileId,
             type = ColorEntityType.DIMMER
@@ -110,7 +114,48 @@ class DimmerDetailViewModel @Inject constructor(
 
   override fun getButtonIcon(stateValue: ChannelState.Value): ImageId =
     when (stateValue) {
-      ChannelState.Value.ON -> ImageId(R.drawable.fnc_dimmer_on)
-      else -> ImageId(R.drawable.fnc_dimmer_off)
+      ChannelState.Value.ON -> ImageId(R.drawable.fnc_dimmer_cct_on)
+      else -> ImageId(R.drawable.fnc_dimmer_cct_off)
     }
+
+  override fun onCctSelectionStarted() {
+    updateState {
+      it.copy(
+        lastInteractionTime = dateProvider.currentTimestamp(),
+        changing = true
+      )
+    }
+  }
+
+  override fun onCctSelecting(cct: Int) {
+    updateState {
+      it.copy(
+        lastInteractionTime = dateProvider.currentTimestamp(),
+        viewState = it.viewState.copy(
+          value = DimmerValue.Single(
+            brightness = it.viewState.value.brightness ?: 100,
+            cct = cct
+          )
+        )
+      )
+    }
+
+    currentState().delayableState?.let { delayedRgbwwActionSubject.emit(it) }
+  }
+
+  override fun onCctSelected() {
+    updateState {
+      it.copy(
+        loadingState = it.loadingState.changingLoading(true, dateProvider),
+        changing = false
+      )
+    }
+
+    currentState().delayableState?.let {
+      delayedRgbwwActionSubject.sendImmediately(it)
+        .attachSilent()
+        .subscribeBy(onError = defaultErrorHandler("onBrightnessSelected()"))
+        .disposeBySelf()
+    }
+  }
 }

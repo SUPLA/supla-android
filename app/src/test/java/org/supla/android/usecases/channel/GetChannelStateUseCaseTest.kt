@@ -613,14 +613,8 @@ class GetChannelStateUseCaseTest {
         }
         every { it.asRollerShutterValue() } returns mockk { every { position } returns rollerShutterPosition }
         every { it.asFacadeBlindValue() } returns mockk { every { position } returns rollerShutterPosition }
-        every { it.asDimmerValue() } returns mockk {
+        every { it.asRgbwwValue() } returns mockk {
           every { brightness } returns brightnessValue
-        }
-        every { it.asRgbwValue() } returns mockk {
-          every { brightness } returns brightnessValue
-          every { colorBrightness } returns colorBrightnessValue
-        }
-        every { it.asRgbValue() } returns mockk {
           every { colorBrightness } returns colorBrightnessValue
         }
       }
