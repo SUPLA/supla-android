@@ -1,4 +1,4 @@
-package org.supla.android.features.details.rgbanddimmer.common
+package org.supla.android.features.details.rgbanddimmer.common.ui
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -54,6 +54,30 @@ fun LinearColorSelector(
   onValueChangeStarted: () -> Unit = {},
   onValueChanging: (Float) -> Unit = {},
   onValueChanged: () -> Unit = {}
+) =
+  LinearColorSelector(
+    value = value,
+    selectedColor = selectedColor,
+    colors = listOf(Pair(0f, startColor), Pair(1f, endColor)),
+    modifier = modifier,
+    valueMarkers = valueMarkers,
+    enabled = enabled,
+    onValueChangeStarted = onValueChangeStarted,
+    onValueChanging = onValueChanging,
+    onValueChanged = onValueChanged
+  )
+
+@Composable
+fun LinearColorSelector(
+  value: Float?,
+  selectedColor: Color?,
+  colors: List<Pair<Float, Color>>,
+  modifier: Modifier = Modifier,
+  valueMarkers: List<Float> = emptyList(),
+  enabled: Boolean = true,
+  onValueChangeStarted: () -> Unit = {},
+  onValueChanging: (Float) -> Unit = {},
+  onValueChanged: () -> Unit = {}
 ) {
   val surfaceColor = MaterialTheme.colorScheme.surface
 
@@ -95,7 +119,7 @@ fun LinearColorSelector(
 
     // Background gradient for Value: Top = Full Hue/Sat/Value, Bottom = Black
     val valueGradientBrush = Brush.verticalGradient(
-      colors = listOf(startColor, endColor),
+      colorStops = colors.toTypedArray(),
       startY = 0f,
       endY = sliderHeight
     )

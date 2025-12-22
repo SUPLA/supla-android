@@ -18,7 +18,7 @@ package org.supla.android.data.source.remote.rgb
  */
 
 import androidx.compose.ui.graphics.Color
-import org.supla.core.shared.data.model.function.rgbanddimmer.RgbBaseValue
+import org.supla.core.shared.data.model.function.rgbanddimmer.RgbwwValue
 
-val RgbBaseValue.color: Color
+val RgbwwValue.color: Color
   get() = Color(red, green, blue)

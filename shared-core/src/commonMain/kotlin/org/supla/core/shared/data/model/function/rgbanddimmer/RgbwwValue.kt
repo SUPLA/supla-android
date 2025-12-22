@@ -22,15 +22,15 @@ import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStat
 private const val RGB_VALUE_LENGTH = 8
 
 data class RgbwwValue(
-  override val status: SuplaChannelAvailabilityStatus,
-  override val on: Boolean,
-  override val brightness: Int,
-  override val colorBrightness: Int,
-  override val red: Int,
-  override val green: Int,
-  override val blue: Int,
-  override val cct: Int
-) : RgbBaseValue, DimmerCctBaseValue {
+  val status: SuplaChannelAvailabilityStatus,
+  val on: Boolean,
+  val brightness: Int,
+  val colorBrightness: Int,
+  val red: Int,
+  val green: Int,
+  val blue: Int,
+  val cct: Int
+) {
 
   val rgb: Int
     get() = (red and 0x00000FF) or ((green shl 8) and 0x0000FF00) or ((blue shl 16) and 0x00FF0000)

@@ -116,16 +116,16 @@ private fun ChannelGroupEntity.getGroupValue(value: ChannelValueEntity): GroupVa
       ProjectorScreenGroupValue(value.asRollerShutterValue().alwaysValidPosition)
 
     SuplaFunction.DIMMER ->
-      DimmerGroupValue(value.asDimmerValue().brightness)
+      DimmerGroupValue(value.asRgbwwValue().brightness)
 
     SuplaFunction.DIMMER_CCT ->
-      value.asDimmerCctValue().let { DimmerCctGroupValue(it.brightness, it.cct) }
+      value.asRgbwwValue().let { DimmerCctGroupValue(it.brightness, it.cct) }
 
     SuplaFunction.RGB_LIGHTING ->
-      value.asRgbValue().let { RgbGroupValue(it.rgb, it.colorBrightness) }
+      value.asRgbwwValue().let { RgbGroupValue(it.rgb, it.colorBrightness) }
 
     SuplaFunction.DIMMER_AND_RGB_LIGHTING ->
-      value.asRgbwValue().let { DimmerAndRgbGroupValue(it.rgb, it.colorBrightness, it.brightness) }
+      value.asRgbwwValue().let { DimmerAndRgbGroupValue(it.rgb, it.colorBrightness, it.brightness) }
 
     SuplaFunction.DIMMER_CCT_AND_RGB ->
       value.asRgbwwValue().let { DimmerCctAndRgbGroupValue(it.rgb, it.colorBrightness, it.brightness, it.cct) }

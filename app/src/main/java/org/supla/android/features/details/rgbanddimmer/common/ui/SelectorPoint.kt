@@ -1,4 +1,4 @@
-package org.supla.android.features.details.rgbanddimmer.common
+package org.supla.android.features.details.rgbanddimmer.common.ui
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 

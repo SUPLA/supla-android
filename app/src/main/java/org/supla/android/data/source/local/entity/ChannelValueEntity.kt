@@ -32,10 +32,6 @@ import org.supla.core.shared.data.model.function.container.ContainerValue
 import org.supla.core.shared.data.model.function.digiglass.DigiglassValue
 import org.supla.core.shared.data.model.function.facadeblind.FacadeBlindValue
 import org.supla.core.shared.data.model.function.relay.RelayValue
-import org.supla.core.shared.data.model.function.rgbanddimmer.DimmerCctValue
-import org.supla.core.shared.data.model.function.rgbanddimmer.DimmerValue
-import org.supla.core.shared.data.model.function.rgbanddimmer.RgbValue
-import org.supla.core.shared.data.model.function.rgbanddimmer.RgbwValue
 import org.supla.core.shared.data.model.function.rgbanddimmer.RgbwwValue
 import org.supla.core.shared.data.model.function.rollershutter.RollerShutterValue
 import org.supla.core.shared.data.model.function.thermostat.HomePlusThermostatValue
@@ -81,15 +77,7 @@ data class ChannelValueEntity(
 
   fun asContainerValue() = ContainerValue.from(status, getValueAsByteArray())
 
-  fun asRgbValue() = RgbValue.from(status, getValueAsByteArray())
-
-  fun asRgbwValue() = RgbwValue.from(status, getValueAsByteArray())
-
   fun asRgbwwValue() = RgbwwValue.from(status, getValueAsByteArray())
-
-  fun asDimmerValue() = DimmerValue.from(status, getValueAsByteArray())
-
-  fun asDimmerCctValue() = DimmerCctValue.from(status, getValueAsByteArray())
 
   fun getSubValueHi(): Int =
     getSubValueAsByteArray().let {
