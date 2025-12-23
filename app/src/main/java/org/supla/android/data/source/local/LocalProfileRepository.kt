@@ -83,6 +83,7 @@ class LocalProfileRepository(provider: DatabaseAccessProvider) : ProfileReposito
     )
   }
 
+  @Suppress("ktlint:standard:comment-wrapping")
   override val allProfiles: List<AuthProfileItem>
     get() {
       return read {

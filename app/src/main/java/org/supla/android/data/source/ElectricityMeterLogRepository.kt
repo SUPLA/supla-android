@@ -98,6 +98,9 @@ class ElectricityMeterLogRepository @Inject constructor(
       profileId = profileId
     )
 
+  override fun findCountWithoutGroupingString(remoteId: Int, profileId: Long): Single<Int> =
+    electricityMeterLogDao.emptyGroupingStringCount(remoteId, profileId)
+
   override fun count(): Observable<Int> = electricityMeterLogDao.count()
 
   override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = electricityMeterLogDao.deleteKtx(remoteId, profileId)

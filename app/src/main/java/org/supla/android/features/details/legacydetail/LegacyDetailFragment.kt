@@ -22,8 +22,10 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.os.bundleOf
+import androidx.core.view.isEmpty
 import androidx.fragment.app.viewModels
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,9 +38,11 @@ import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.databinding.FragmentLegacyDetailBinding
 import org.supla.android.db.ChannelBase
 import org.supla.android.listview.DetailLayout
+import org.supla.android.navigator.MainNavigator
 import org.supla.android.ui.animations.DEFAULT_ANIMATION_DURATION
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
+import javax.inject.Inject
 
 private const val ARG_REMOTE_ID = "ARG_REMOTE_ID"
 private const val ARG_DETAIL_TYPE = "ARG_DETAIL_TYPE"
@@ -57,17 +61,33 @@ class LegacyDetailFragment : BaseFragment<LegacyDetailViewState, LegacyDetailVie
   private val itemType: ItemType by lazy { requireArguments().getSerializable(ARG_ITEM_TYPE) as ItemType }
   private val remoteId: Int by lazy { requireArguments().getInt(ARG_REMOTE_ID) }
 
+  @Inject
+  lateinit var navigator: MainNavigator
+
   private lateinit var detailView: DetailLayout
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     viewModel.loadData(remoteId, itemType)
+
+    val onBackPressedCallback = object : OnBackPressedCallback(true) {
+      override fun handleOnBackPressed() {
+        if (this@LegacyDetailFragment::detailView.isInitialized) {
+          if (!detailView.onBackPressed()) {
+            navigator.back()
+          }
+        } else {
+          navigator.back()
+        }
+      }
+    }
+    requireActivity().onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
-    if (binding.legacyDetailContent.childCount == 0 && this::detailView.isInitialized) {
+    if (binding.legacyDetailContent.isEmpty() && this::detailView.isInitialized) {
       binding.legacyDetailContent.addView(
         detailView,
         ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)

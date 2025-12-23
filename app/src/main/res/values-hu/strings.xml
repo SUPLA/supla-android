@@ -16,7 +16,6 @@
   <string name="status_temporarily_unavailable">A szolgáltatás ideiglenesen nem érhető el</string>
   <string name="status_bad_credentials">Helytelen hitelesítési adatok</string>
   <string name="status_climit_exceded">Az ügyfélalkalmazás mennyiség korlátja túllépett</string>
-  <string name="status_version_error">Nem kompatibilis szerver verzió</string>
   <string name="status_reg_disabled">A regisztráció jelenleg ki van kapcsolva. Bakapcsoláshoz ugorjon az \ "Okostelefonok \" fülre a(z) \"Supla Cloud\" oldalon</string>
   <string name="status_access_id_not_assigned">Ehhez az eszközhöz nincs hozzárendelve hozzáférési azonosító. Lépjen az \"Supla Cloud\" webhelyre, és  az "Okostelefonok \" fülben rendelje hozzá a megfelelő azonosítót.</string>
   <string name="status_device_disabled">Az eszköz ki van kapcsolva</string>
@@ -97,8 +96,6 @@
   <string name="wizard_no_internetwifi">Mielőtt elkezdené, csatlakozzon az internethez egy WiFi-hálózaton keresztül, amelyet a végrehajtó eszközök is használnak a szerverhez történő csatlakozáshoz.</string>
   <string name="wizard_wifi_error">A Wi-Fi hálózat ki van kapcsolva, vagy az azonosítója vagy a neve nem olvasható!</string>
   <string name="wizard_location_error">Ahhoz, hogy a hozzáadási varázsló megfelelően működjön, engedélyezni kell a helyinformációt ezen az eszközön. Lépjen a rendszerbeállításokba, majd válassza a „Helyinformáció” lehetőséget, és győződjön meg róla, hogy engedélyezve van.</string>
-  <string name="wizard_addnetwork_error">Nem lehet hozzáadni a Wi-Fi hálózati konfigurációt!</string>
-  <string name="wizard_wifi_timeout">A várakozási idő túllépte a jelenlegi Wi-Fi hálózati adatokat! Az Android rendszerrel rendelkező készülékén a beállítások-nál válassza ki a Wi-Fi menüpontot, a megjelenő ablakon válassza ki a További beállítások feliratot, majd jelölje be a "Wi-Fi automatikus bekapcsolása" opciót.</string>
   <string name="wizard_scan_timeout">A Wi-Fi halózat keresése a várakozási időt túllépte!</string>
   <string name="wizard_connect_timeout">A végrehajtó eszközzel való kapcsolat létrehozásának várakozási ideje túllépve!</string>
   <string name="wizard_configure_timeout">Az eszközkonfiguráció befejezésének várakozási ideje túllépve!</string>
@@ -113,7 +110,6 @@
   <string name="wizard_iodev_name">Megnevezés</string>
   <string name="wizard_iodev_laststate">Előző állapot</string>
 
-  <string name="wizard_result_param_error">Érvénytelen bemeneti paraméterek!</string>
   <string name="wizard_result_compat_error">A csatlakoztatott eszköz nem kompatibilis ezzel a varázslóval!</string>
   <string name="wizard_result_conn_error">Nem lehet csatlakozni az eszközhöz!</string>
   <string name="wizard_result_failed">Az újrakonfigurálás nem sikerült</string>
@@ -133,7 +129,6 @@
   <string name="hp_eco">ECO</string>
   <string name="hp_turbo">TURBÓ</string>
   <string name="hp_auto">AUTO</string>
-  <string name="hp_room_temperature">A terem hőmérséklete</string>
   <string name="hp_cfg_turbo_time">A TURBÓ üzemmód időtartama</string>
   <string name="hp_cfg_water_max">A víz maximális hőmérséklete</string>
   <string name="hp_cfg_eco_reduction">Hőmérséklet csökkentése ECO módban</string>
@@ -151,7 +146,6 @@
   <string name="ranking_of_hours">Órák rangsorolása</string>
   <string name="ranking_of_weekdays">A hét napjai rangsorolása</string>
   <string name="ranking_of_months">Hónapok rangsorolása</string>
-  <string name="consumption_acording_to_phases">Fogyasztási fázisok szerint</string>
   <string name="temperature">Hőmérséklet</string>
   <string name="humidity">Nedvességtartalom</string>
   <string name="history_range_last_day">Az elmúlt 24 óra</string>
@@ -162,18 +156,11 @@
   <string name="all_available_history">Az összes elérhető eseménytörténet</string>
   <string name="retrieving_data_from_the_server">Adatok letöltése a szerverről ...</string>
   <string name="no_chart_data_available">A diagramhoz nincs adat.</string>
-  <string name="comparsion_minmin">Percről percre összehasonlítás</string>
-  <string name="comparsion_hourhour">Óránkénti összehasonlítás</string>
-  <string name="comparsion_dayday">Napi összehasonlítás</string>
-  <string name="comparsion_monthmonth">Havi összehasonlítás</string>
-  <string name="comparsion_yearyear">Éves összehasonlítás</string>
   <string name="hp_error_1">Nincs víz</string>
   <string name="hp_error_2">Kiégett forraló</string>
   <string name="hp_error_3">A vízhőmérséklet-érzékelő hibája</string>
   <string name="hp_error_4">Helyiség hőmérséklet-érzékelő hibája</string>
   <string name="hp_error_5">Nincs hálózat megszakítás</string>
-  <string name="production_acording_to_phases">Fázis szerinti gyártás</string>
-  <string name="current_production">Termelés a folyó hónapban</string>
   <string name="enter_superuser_credentials">Írja be a fő felhasználó hitelesítő adatait</string>
 
   <string name="channel_func_none">Nincs implementált funkció</string>
@@ -216,11 +203,6 @@
   <string name="channel_func_valve_percentage">Valve</string>
 
   <string name="channel_caption_heatmeter">Hőmérő</string>
-  <string name="aritmetic_balance_days">Számtani egyensúly - Napok</string>
-  <string name="aritmetic_balance_hours">Számtani egyensúly - Órák</string>
-  <string name="aritmetic_balance_minutes">Számtani egyensúly - Percek</string>
-  <string name="aritmetic_balance_months">Számtani egyensúly - Hónapok</string>
-  <string name="aritmetic_balance_years">Számtani egyensúly - Évek</string>
   <string name="associeted_with_scene_error">Egy jelenettel társított csatorna funkciója nem módosítható.</string>
   <string name="battery_health">Az akkumulátor élettartama</string>
   <string name="battery_level">Az akkumulátor töltöttségi szintje</string>
@@ -268,11 +250,6 @@
   <string name="channel_uv_error">Az uv fűtőtest élettartama %1$.01f%%. Cserélje ki a fűtőtestet.</string>
   <string name="valve_warning_manually_closed">A szelepet kézzel vagy rádióval zárták be. Mielőtt kinyitná, győződjön meg arról, hogy az áradás miatt nem volt bezárva. A figyelmeztetés kikapcsolásához kézzel nyissa ki a szelepet. Biztosan meg szeretné nyitni a szelepet az alkalmazásból?!</string>
   <string name="valve_warning">A szelepet kézzel vagy rádióval zárták be. Mielőtt kinyitná, győződjön meg arról, hogy az áradás miatt nem volt bezárva. A figyelmeztetés kikapcsolásához kézzel nyissa ki a szelepet.</string>
-  <string name="vector_balance_days">Vektoregyensúly - Napok</string>
-  <string name="vector_balance_hours">Vektoregyensúly - Órák</string>
-  <string name="vector_balance_minutes">Vektoregyensúly - Percek</string>
-  <string name="vector_balance_months">Vektoregyensúly - Hónapok</string>
-  <string name="vector_balance_years">Vektoregyensúly - Évek</string>
   <string name="vl_cfg_auto">AUTO</string>
   <string name="vl_cfg_boost">Erősítés</string>
   <string name="vl_cfg_mode">Tompítási mód</string>
@@ -290,18 +267,11 @@
   <string name="vl_dimmer_cfg_info_txt6">Erősítés</string>
   <string name="vl_dimmer_cfg_info_txt7">Ez a funkció elősegíti a LED-világítás bekapcsolását memorizált alacsony fényerő mellett, indítást biztosítva a fényerő növeléséhez (erősítéséhez). A sötétszürke csúszkát a kerék körül mozgatva növelheti vagy csökkentheti az erősítés szintjét, amelyet zöld vonallal jelölnek. A világítás bekapcsolásakor a fényerő szintje az előre beállított értékre növekszik (fokozódik), majd visszatér a memória szintjére, mielőtt a világítást kikapcsolná.</string>
   <string name="vl_dimmer_cfg_info_txt8">A fényerő-szabályozóval kapcsolatban további információk találhatók a ... címen</string>
-  <string name="vl_dimmer_info_txt1">Fényerő-szabályozás</string>
-  <string name="vl_dimmer_info_txt2">A fényerő megváltoztatásához csúsztassa az ujját a csúszka vagy a fényerő kerék mutatóján.</string>
-  <string name="vl_dimmer_info_txt3">A be/ki gombbal ki- vagy bekapcsolhatja a világítást.</string>
-  <string name="vl_dimmer_info_txt4">A fényerő-szabályozó emlékeztet a fényerőre, mielőtt kikapcsolná a világítást</string>
-  <string name="vl_dimmer_info_txt5">A fényerő-szabályozó paramétereinek beállításához nyomja meg a beállítások gombot.</string>
   <string name="wake_up_frequency">Ébresztési gyakoriság</string>
   <string name="wakeup_info">*) A megadott beállításokat a csomópont következő ébredésekor alkalmazzák.</string>
   <string name="wheel">Kerék</string>
   <string name="wifi_rssi">Wi-Fi RSSI</string>
   <string name="wifi_signal_strength">Wi-Fi jelerősség</string>
-  <string name="wifi_throttling">Az Android rendszer által a Wi-Fi hálózat keresésének korlátai miatt várjon a fent bemutatott idő alatt.</string>
-  <string name="wizard_step1_txt2">Az eszközök hozzáadásakor ellenőrizze, hogy a mobil adat ki van-e kapcsolva. Ellenkező esetben az hozzáadás sikertelen lehet.</string>
   <string name="add_wizard_step_2_message">Írja be annak otthoni vagy vállalati Wi-Fi hálózatának nevét és jelszavát, amelyen keresztül a végrehajtó eszköz képes kapcsolatot létesíteni a szerverrel.</string>
   <string name="yes">Igen</string>
   <string name="z_wave">Z-wave híd</string>
@@ -368,7 +338,6 @@
   <string name="profile">A fiókja</string>
   <string name="profile_plural">A fiókjai</string>
   <string name="menubar_appsettings">Beállítások</string>
-  <string name="em_chart_phase_n">Fázis %d</string>
   <string name="em_chart_all_phases">Fázis 1+2+3</string>
   <string name="widget_configure_title">Widget konfiguráció</string>
   <string name="widget_configure_profile_label">Fiók</string>
@@ -376,8 +345,6 @@
   <string name="widget_configure_action_label">Akció</string>
   <string name="widget_configure_name_label">Név</string>
   <string name="widget_configure_error">A csatorna konfiguráció sikertelen...</string>
-  <string name="widget_configure_no_selection">Nincs kiválasztott csatorna</string>
-  <string name="widget_configure_no_channel">Nincs elérhető csatorna</string>
   <string name="double_button_widget_description">Kétgombos widget</string>
   <string name="single_button_widget_description">Egygombos widget</string>
   <string name="widget_app_not_initialized">Kérjük jelentkezzen be!</string>
@@ -396,7 +363,6 @@
   <string name="input">Bemenet</string>
   <string name="monostable">Monostabil</string>
   <string name="bistable">Bistabil</string>
-  <string name="wizard_iodev_connect_failed">A Wi-Fi-kapcsolat létrehozására tett kísérlet a műveleti eszközzel meghiúsult.</string>
   <string name="diw_cfg_info_oprange">Állítsa be a sötétítő teljesítménytartományát a minimális és maximális fényerővel. A minimális és maximális értékeket a kerék mindkét oldalán elhelyezett csúszkák mozgatásával állíthatja be.</string>
   <string name="diw_cfg_info_in_options">Belépési lehetőségek</string>
   <string name="diw_cfg_info_mono_option">Ez az opció megváltoztatja a bemenet viselkedését, amelyhez a monostabil gomb csatlakozik. Ha az opciót kikapcsolták, a sötétítő leállítja a világítási folyamatot, amikor a maximális fényerő szintet érjük el, és sötétítés esetén, amikor a minimális szintet érjük el. Ennek a beállításnak a bekapcsolása a maximális fényerő elérésekor a minimálisra, sötétedés esetén pedig a maximálisra vált, miután elérte a minimum értéket. A világítás/sötétedés addig tart, amíg megnyomja a gombot.</string>
@@ -456,15 +422,12 @@
 
   <string name="turn_on">Bekapcsolás</string>
   <string name="turn_off">Kikapcsolás</string>
-  <string name="str_default">Alapértelmezett</string>
   <string name="widget_configure_type_label">Widget hozzáadása:</string>
   <string name="widget_configure_type_channel_label">Csatornához</string>
   <string name="widget_configure_type_group_label">Csoporthoz</string>
   <string name="widget_configure_type_scene_label">Jelenethez</string>
   <string name="widget_configure_group_label">Csoport a widgethez</string>
   <string name="widget_configure_scene_label">Jelenet a widgethez</string>
-  <string name="widget_configure_no_group">Nincsenek elérhető csoportok</string>
-  <string name="widget_configure_no_scene">Nincsenek elérhető jelenetek</string>
   <string name="widget_command_error">Hiba lépett fel! (kód: %1$d)</string>
   <string name="widget_command_connection_failure">Csatlakozási hiba! (kód: %1$d)</string>
   <string name="widget_command_subject_offline">offline állapotban%1$s van!</string>
@@ -664,7 +627,6 @@
   <string name="details_em_balance_hourly">Óránkénti mérleg</string>
   <string name="details_em_balance_chart_aggregated">Diagram alapján összesített mérleg</string>
   <string name="details_em_sum">Összeg</string>
-  <string name="details_em_select_range">Válasszon ki egy időszakot</string>
   <string name="details_em_active_energy">Aktív energia</string>
   <string name="details_em_forwarded_energy">Fogyasztott</string>
   <string name="details_em_reversed_energy">Visszatérő</string>
@@ -721,10 +683,6 @@
   <string name="developer_info_activated">Fejlesztői mód aktiválva</string>
   <string name="developer_info_screen_orientation">Képernyőforgatás engedélyezve</string>
   <string name="developer_info_settings">Kísérleti beállítások</string>
-  <string name="profiles_list_sorting">Rendezés</string>
-  <string name="profiles_list_sorting_default">Alapértelmezett</string>
-  <string name="profiles_list_sorting_name">Név</string>
-  <string name="profiles_list_sorting_added">Utoljára hozzáadott</string>
   <string name="channel_caption_water_tank">Víztartály</string>
   <string name="channel_caption_container_level_sensor">Konténer szintérzékelő</string>
   <string name="state_opened">nyitva</string>
@@ -755,4 +713,12 @@
     <item quantity="other">%1$d nap ⏱️</item>
   </plurals>
   <string name="thermostat_calibration_error">Kalibrációs hiba</string>
+  <string name="toolbar_dimmer">Dimmer</string>
+  <string name="rgb_detail_color">Szín:</string>
+  <string name="rgb_detail_brightness">Fényerő:</string>
+  <string name="rgb_detail_select_color">Szín kiválasztása</string>
+  <string name="legacy_rgbw_settings_unauthorized_message">Engedély szükséges a konfiguráció megtekintéséhez!</string>
+  <string name="legacy_rgbw_settings_authorize_button">Engedélyezés</string>
+  <string name="rgb_detail_colors_limit">Elérte a korlátot!</string>
+  <string name="channel_caption_invisible">Rejtett</string>
 </resources>

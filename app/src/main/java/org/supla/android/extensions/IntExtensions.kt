@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import android.content.res.Resources
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import java.util.Locale
 
@@ -53,3 +54,9 @@ val Int.ipV4String: String
       (this shr 16 and 0xff),
       (this shr 24 and 0xff)
     )
+
+fun Int.toGrayColor(): Color {
+  val value = this.coerceIn(0, 100)
+  val gray = (value * 255 / 100)
+  return Color(gray, gray, gray)
+}

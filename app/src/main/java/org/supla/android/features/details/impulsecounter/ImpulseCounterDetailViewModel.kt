@@ -25,9 +25,9 @@ import org.supla.android.core.shared.shareable
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.events.UpdateEventsManager
-import org.supla.android.features.details.detailbase.standarddetail.StandardDetailViewEvent
-import org.supla.android.features.details.detailbase.standarddetail.StandardDetailViewModel
-import org.supla.android.features.details.detailbase.standarddetail.StandardDetailViewState
+import org.supla.android.features.details.detailbase.base.BaseDetailViewEvent
+import org.supla.android.features.details.detailbase.base.BaseDetailViewModel
+import org.supla.android.features.details.detailbase.base.BaseDetailViewState
 import org.supla.android.features.details.impulsecounter.counterphoto.DownloadPhotoWorker
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
@@ -48,7 +48,7 @@ class ImpulseCounterDetailViewModel @Inject constructor(
   updateEventsManager: UpdateEventsManager,
   preferences: Preferences,
   schedulers: SuplaSchedulers
-) : StandardDetailViewModel<ImpulseCounterDetailViewState, ImpulseCounterDetailViewEvent>(
+) : BaseDetailViewModel<ImpulseCounterDetailViewState, ImpulseCounterDetailViewEvent>(
   readChannelByRemoteIdUseCase,
   readChannelGroupByRemoteIdUseCase,
   updateEventsManager,
@@ -84,7 +84,7 @@ class ImpulseCounterDetailViewModel @Inject constructor(
   }
 }
 
-sealed interface ImpulseCounterDetailViewEvent : StandardDetailViewEvent {
+sealed interface ImpulseCounterDetailViewEvent : BaseDetailViewEvent {
   data object Close : ImpulseCounterDetailViewEvent
 }
 
@@ -92,4 +92,4 @@ data class ImpulseCounterDetailViewState(
   override val caption: LocalizedString? = null,
   val photoDownloaded: Boolean = false,
   val hasPhoto: Boolean = false
-) : StandardDetailViewState(caption)
+) : BaseDetailViewState(caption)

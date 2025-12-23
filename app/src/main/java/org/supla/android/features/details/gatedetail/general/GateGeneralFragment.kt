@@ -17,6 +17,8 @@ package org.supla.android.features.details.gatedetail.general
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.os.Bundle
+import android.view.View
 import androidx.compose.runtime.Composable
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
@@ -27,7 +29,7 @@ import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.captionchangedialog.CaptionChangeViewModel
 import org.supla.android.features.captionchangedialog.View
-import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
+import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.features.statedialog.StateDialogViewModel
 import org.supla.android.features.statedialog.View
 import org.supla.android.features.statedialog.handleStateDialogViewEvent
@@ -46,6 +48,11 @@ class GateGeneralFragment : BaseComposeFragment<GateGeneralModelState, GateGener
 
   private val item: ItemBundle by lazy { requireSerializable(ARG_ITEM_BUNDLE, ItemBundle::class.java) }
 
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    viewModel.observeData(item.remoteId, item.itemType)
+  }
+
   @Composable
   override fun ComposableContent(modelState: GateGeneralModelState) {
     SuplaTheme {
@@ -57,11 +64,6 @@ class GateGeneralFragment : BaseComposeFragment<GateGeneralModelState, GateGener
       stateDialogViewModel.View()
       captionChangeViewModel.View()
     }
-  }
-
-  override fun onStart() {
-    super.onStart()
-    viewModel.observeData(item.remoteId, item.itemType)
   }
 
   override fun handleEvents(event: GateGeneralViewEvent) {}

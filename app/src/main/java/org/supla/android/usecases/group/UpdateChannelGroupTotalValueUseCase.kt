@@ -23,6 +23,8 @@ import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.usecases.group.totalvalue.DimmerAndRgbGroupValue
+import org.supla.android.usecases.group.totalvalue.DimmerCctAndRgbGroupValue
+import org.supla.android.usecases.group.totalvalue.DimmerCctGroupValue
 import org.supla.android.usecases.group.totalvalue.DimmerGroupValue
 import org.supla.android.usecases.group.totalvalue.GroupTotalValue
 import org.supla.android.usecases.group.totalvalue.GroupValue
@@ -114,13 +116,19 @@ private fun ChannelGroupEntity.getGroupValue(value: ChannelValueEntity): GroupVa
       ProjectorScreenGroupValue(value.asRollerShutterValue().alwaysValidPosition)
 
     SuplaFunction.DIMMER ->
-      DimmerGroupValue(value.asBrightness())
+      DimmerGroupValue(value.asDimmerValue().brightness)
+
+    SuplaFunction.DIMMER_CCT ->
+      value.asDimmerCctValue().let { DimmerCctGroupValue(it.brightness, it.cct) }
 
     SuplaFunction.RGB_LIGHTING ->
-      RgbGroupValue(value.asColor(), value.asBrightnessColor())
+      value.asRgbValue().let { RgbGroupValue(it.rgb, it.colorBrightness) }
 
     SuplaFunction.DIMMER_AND_RGB_LIGHTING ->
-      DimmerAndRgbGroupValue(value.asColor(), value.asBrightnessColor(), value.asBrightness())
+      value.asRgbwValue().let { DimmerAndRgbGroupValue(it.rgb, it.colorBrightness, it.brightness) }
+
+    SuplaFunction.DIMMER_CCT_AND_RGB ->
+      value.asRgbwwValue().let { DimmerCctAndRgbGroupValue(it.rgb, it.colorBrightness, it.brightness, it.cct) }
 
     SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS ->
       value.asHeatpolThermostatValue().let {

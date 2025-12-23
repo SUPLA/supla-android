@@ -16,7 +16,6 @@
   <string name="status_temporarily_unavailable">Tjenesten er midlertidig utilgjengelig</string>
   <string name="status_bad_credentials">Feil bekreftelser</string>
   <string name="status_climit_exceded">Grensen på antall kundeapplikasjoner er overskredet</string>
-  <string name="status_version_error">Inkompatibel serverversjon</string>
   <string name="status_reg_disabled">Registering er for tiden ikke på. For å skru den på gå til fanen \"Smarttelefoner\" på nettsiden \"Supla Cloud\".</string>
   <string name="status_access_id_not_assigned">Denne enheten har ikke tilknyttet tilgang identifikator. Gå til nettsiden \"Supla Cloud\" tilpass riktig identifikator i fanen \"Smarttelefoner\".</string>
   <string name="status_device_disabled">Enheten er skrudd av</string>
@@ -97,8 +96,6 @@
   <string name="wizard_no_internetwifi">Før du begynner må du koble til Internett via trådløs nettverk. Det trådløse nettverket blir også brukt av enheter for tilkobling til serveren.</string>
   <string name="wizard_wifi_error">Trådløs nettverket er skrudd av eller så er det ikke mulig å avlese dens identifikator eller navn!</string>
   <string name="wizard_location_error">For at veiviseren for å legge til nye enheter skal fungere ordentlig, må Posisjon være aktivert på denne enheten. Gå til systeminnstillinger, deretter velg «Posisjon» og kontroller at den er slått på.</string>
-  <string name="wizard_addnetwork_error">Det er ikke mulig å legge til konfigurasjonen til det trådløse nettverket!</string>
-  <string name="wizard_wifi_timeout">Ventetiden for opplysninger om trådløs nettverk er overskredet! Gå til Android WiFi-innstillingene, velg Avanserte, og velg «Slå på WiFi automatisk»</string>
   <string name="wizard_scan_timeout">Ventetiden for avslutning av trådløs nettverk søket er overskredet!</string>
   <string name="wizard_connect_timeout">Ventetiden for etablering av kobling med aktuator er overskredet!</string>
   <string name="wizard_configure_timeout">Ventetiden for avslutning av konfigurasjon av enheten er overskredet!</string>
@@ -113,7 +110,6 @@
   <string name="wizard_iodev_name">Navn</string>
   <string name="wizard_iodev_laststate">Forrige status</string>
 
-  <string name="wizard_result_param_error">Forrige status</string>
   <string name="wizard_result_compat_error">Enheten som er koblet til er ikke kompatibel med denne assistenten!</string>
   <string name="wizard_result_conn_error">Ikke mulig å koble til enheten!</string>
   <string name="wizard_result_failed">Konfigurasjon mislykket!</string>
@@ -133,7 +129,6 @@
   <string name="hp_eco">ECO</string>
   <string name="hp_turbo">TURBO</string>
   <string name="hp_auto">AUTO</string>
-  <string name="hp_room_temperature">Romtemperatur</string>
   <string name="hp_cfg_turbo_time">TURBO modus varighet</string>
   <string name="hp_cfg_water_max">Maksimal vanntemperatur</string>
   <string name="hp_cfg_eco_reduction">Temperaturreduksjon i ECO modus</string>
@@ -151,7 +146,6 @@
   <string name="ranking_of_hours">Time rangering</string>
   <string name="ranking_of_weekdays">Ukedager rangering</string>
   <string name="ranking_of_months">Måneder rangering</string>
-  <string name="consumption_acording_to_phases">Forbruk i forhold til faser</string>
   <string name="temperature">Temperatur</string>
   <string name="humidity">Fuktighet</string>
   <string name="history_range_last_day">Siste 24 timer</string>
@@ -162,18 +156,11 @@
   <string name="all_available_history">Tilgjengelig historie</string>
   <string name="retrieving_data_from_the_server">Nedlasting av data fra serveren...</string>
   <string name="no_chart_data_available">Manglende data for diagrammet.</string>
-  <string name="comparsion_minmin">Sammenligning minutt etter minutt</string>
-  <string name="comparsion_hourhour">Sammenligning time etter time</string>
-  <string name="comparsion_dayday">Sammenligning dag etter dag</string>
-  <string name="comparsion_monthmonth">Sammenligning måned etter måned</string>
-  <string name="comparsion_yearyear">Sammenligning år etter år</string>
   <string name="hp_error_1">Ingen vann</string>
   <string name="hp_error_2">Brent varmeapparat</string>
   <string name="hp_error_3">Vanntemperatursensor feil</string>
   <string name="hp_error_4">Romtemperatursensor feil</string>
   <string name="hp_error_5">Ingen nettverk avbrudd</string>
-  <string name="production_acording_to_phases">Produksjon i forhold til faser</string>
-  <string name="current_production">Produksjon i gjeldende måned</string>
   <string name="enter_superuser_credentials">Skriv inn superbrukerens legitimasjon</string>
 
   <string name="channel_func_none">Manglende funksjoner</string>
@@ -217,11 +204,6 @@
 
   <string name="channel_caption_heatmeter">Varmemåler</string>
   <string name="add_wizard_step_2_message">Skriv inn navnet og passordet til hjemme- eller firma WiFi-nettverket, der den utøvende enheten vil kunne opprette en tilkobling til serveren.</string>
-  <string name="aritmetic_balance_days">Aritmetisk balanse - Dager</string>
-  <string name="aritmetic_balance_hours">Aritmetisk balanse - Timer</string>
-  <string name="aritmetic_balance_minutes">Aritmetisk balanse - Minutter</string>
-  <string name="aritmetic_balance_months">Aritmetisk balanse - Måneder</string>
-  <string name="aritmetic_balance_years">Aritmetisk balanse - År</string>
   <string name="associeted_with_scene_error">Du kan ikke endre funksjonen til en kanal som er tilknyttet en scene.</string>
   <string name="battery_health">Batteritid</string>
   <string name="battery_level">Batterinivå</string>
@@ -269,11 +251,6 @@
   <string name="channel_uv_error">UV-lampens levetid er %1$.01f%%. Skifte ut lampen.</string>
   <string name="valve_warning_manually_closed">Ventilen har blitt stengt manuelt eller med radio. Før du åpner den, må du sørge for at den ikke har vært stengt på grunn av vannskader. For å deaktivere advarselen, åpne ventilen manuelt. Er du sikker på at du vil åpne ventilen via appen?!</string>
   <string name="valve_warning">Ventilen har blitt stengt manuelt eller med radio. Før du åpner den, må du sørge for at den ikke har vært stengt på grunn av vannskader. For å deaktivere advarselen, åpne ventilen manuelt.</string>
-  <string name="vector_balance_days">Vektorbalanse - Dager</string>
-  <string name="vector_balance_hours">Vektorbalanse - Timer</string>
-  <string name="vector_balance_minutes">Vektorbalanse - Minutter</string>
-  <string name="vector_balance_months">Vektorbalanse - Måneder</string>
-  <string name="vector_balance_years">Vektorbalanse - År</string>
   <string name="vl_cfg_auto">AUTO</string>
   <string name="vl_cfg_boost">Forsterkning</string>
   <string name="vl_cfg_mode">Dimmemodus</string>
@@ -291,18 +268,11 @@
   <string name="vl_dimmer_cfg_info_txt6">Forsterkning</string>
   <string name="vl_dimmer_cfg_info_txt7">Denne funksjonen hjelper til med å slå på LED-belysningen med det lagrede lave lysnivået, noe som gir en innledende økning (forsterkning) av lysstyrken. Ved å bevege den mørkegrå skyveren rundt hjulet, kan du øke eller redusere forsterkningsnivået, som selv er merket med den grønne linjen. Når du slår på belysningen, vil lysstyrkenivået økes (forsterkes) til den angitte verdien, og deretter vil den gå tilbake til det nivået som er blitt lagret før belysningen ble slått av.</string>
   <string name="vl_dimmer_cfg_info_txt8">Mer informasjon om dimmeren finner du på</string>
-  <string name="vl_dimmer_info_txt1">Dimmerkontroll</string>
-  <string name="vl_dimmer_info_txt2">For å endre lysstyrken, skyv fingeren over indikatoren på skyveren eller lysstyrkehjulet.</string>
-  <string name="vl_dimmer_info_txt3">Med av/på-knappen kan du slå belysningen av eller på.</string>
-  <string name="vl_dimmer_info_txt4">Dimmeren vil lagre lysstyrken før belysningen slås av.</string>
-  <string name="vl_dimmer_info_txt5">Trykk på innstillinger for å justere dimmerparametrene.</string>
   <string name="wake_up_frequency">Vekkefrekvensen</string>
   <string name="wakeup_info">*) De angitte innstillingene blir brukt neste gang noden vekkes.</string>
   <string name="wheel">Hjul</string>
   <string name="wifi_rssi">Wi-Fi RSSI</string>
   <string name="wifi_signal_strength">Wi-Fi signalstyrke</string>
-  <string name="wifi_throttling">På grunn av begrensningene for skanning av WiFi-nettverk pålagt av Android-systemet, må du vente den tiden som er presentert ovenfor.</string>
-  <string name="wizard_step1_txt2">Forsikre deg om at mobildata er slått av når du legger til enheter. Ellers kan tillegging mislykkes.</string>
   <string name="yes">Ja</string>
   <string name="z_wave">Z-wave bro</string>
   <string name="zwave_add_device">Legg til enhet</string>
@@ -368,7 +338,6 @@
   <string name="profile">Kontoen din</string>
   <string name="profile_plural">Dine kontoer</string>
   <string name="menubar_appsettings">Innstillinger</string>
-  <string name="em_chart_phase_n">Fase %d</string>
   <string name="em_chart_all_phases">Fase 1 + 2 + 3</string>
   <string name="widget_configure_title">Widget-konfigurasjon</string>
   <string name="widget_configure_profile_label">Konto</string>
@@ -376,8 +345,6 @@
   <string name="widget_configure_action_label">Handling</string>
   <string name="widget_configure_name_label">Navn</string>
   <string name="widget_configure_error">Kanalkonfigurasjon mislyktes ...</string>
-  <string name="widget_configure_no_selection">Ingen kanal er valgt</string>
-  <string name="widget_configure_no_channel">Ingen tilgjengelige kanaler</string>
   <string name="double_button_widget_description">To-knapps widget</string>
   <string name="single_button_widget_description">En-knapps widget</string>
   <string name="widget_app_not_initialized">Vennligst logg inn!</string>
@@ -396,7 +363,6 @@
   <string name="input">Inngang</string>
   <string name="monostable">Monostabil</string>
   <string name="bistable">Bistabil</string>
-  <string name="wizard_iodev_connect_failed">Forsøket på å etablere en WiFi-tilkobling med den utøvende enheten mislyktes.</string>
   <string name="diw_cfg_info_oprange">Juster dimmerens arbeidsområde ved å stille inn minimum og maksimum lysstyrkenivå. Minimums- og maksimumsverdien kan stilles inn ved å flytte glidebryterne på begge sider av hjulet.</string>
   <string name="diw_cfg_info_in_options">Inngangsalternativer</string>
   <string name="diw_cfg_info_mono_option">Dette alternativet endrer oppførselen til inngangen som den monostabile knappen er koblet til. Hvis alternativet er deaktivert, stopper dimmeren lysingsprosessen når det maksimale lysstyrkenivået er nådd, og ved dimming når det når minimumsnivået. Aktivering av dette alternativet vil bytte til minimumsnivået så snart maksimal lysstyrke er nådd, og ved dimming til maksimumsverdien, så snart minimum er nådd. Lysningen / dimmingen fortsetter så lenge knappen holdes nede.</string>
@@ -456,15 +422,12 @@
 
   <string name="turn_on">Slå på</string>
   <string name="turn_off">Slå av</string>
-  <string name="str_default">Som standard</string>
   <string name="widget_configure_type_label">Widget for:</string>
   <string name="widget_configure_type_channel_label">Kanal</string>
   <string name="widget_configure_type_group_label">Grupper</string>
   <string name="widget_configure_type_scene_label">Scener</string>
   <string name="widget_configure_group_label">Gruppe for widget</string>
   <string name="widget_configure_scene_label">Scene for widget</string>
-  <string name="widget_configure_no_group">Ingen grupper tilgjengelig</string>
-  <string name="widget_configure_no_scene">Ingen scener tilgjengelig</string>
   <string name="widget_command_error">Det har oppstått en feil! (kode: %1$d)</string>
   <string name="widget_command_connection_failure">Tilkoblingsfeil! (kode: %1$d)</string>
   <string name="widget_command_subject_offline">%1$s er offline!</string>
@@ -664,7 +627,6 @@
   <string name="details_em_balance_hourly">Saldo per time</string>
   <string name="details_em_balance_chart_aggregated">Diagram aggregert saldo</string>
   <string name="details_em_sum">Sum</string>
-  <string name="details_em_select_range">Velg en periode</string>
   <string name="details_em_active_energy">Aktiv energi</string>
   <string name="details_em_forwarded_energy">Lastet ned</string>
   <string name="details_em_reversed_energy">Returnert</string>
@@ -721,10 +683,6 @@
   <string name="developer_info_activated">Utviklermodus aktivert</string>
   <string name="developer_info_screen_orientation">Skjermrotasjon aktivert</string>
   <string name="developer_info_settings">Eksperimentelle innstillinger</string>
-  <string name="profiles_list_sorting">Sortering</string>
-  <string name="profiles_list_sorting_default">Standard</string>
-  <string name="profiles_list_sorting_name">Navn</string>
-  <string name="profiles_list_sorting_added">Sist lagt til</string>
   <string name="channel_caption_water_tank">Vanntank</string>
   <string name="channel_caption_container_level_sensor">Beholder nivåsensor</string>
   <string name="state_opened">åpen</string>
@@ -755,4 +713,12 @@
     <item quantity="other">%1$d dager ⏱️</item>
   </plurals>
   <string name="thermostat_calibration_error">Kalibreringsfeil</string>
+  <string name="toolbar_dimmer">Dimmer</string>
+  <string name="rgb_detail_color">Farge:</string>
+  <string name="rgb_detail_brightness">Lysstyrke:</string>
+  <string name="rgb_detail_select_color">Velg farge</string>
+  <string name="legacy_rgbw_settings_unauthorized_message">Autorisasjon nødvendig for å se konfigurasjonen!</string>
+  <string name="legacy_rgbw_settings_authorize_button">Autoriser</string>
+  <string name="rgb_detail_colors_limit">Grensen er nådd!</string>
+  <string name="channel_caption_invisible">Skjult</string>
 </resources>

@@ -33,7 +33,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
@@ -44,7 +43,7 @@ import org.supla.android.features.details.containerdetail.general.ui.ControlLeve
 import org.supla.android.features.details.containerdetail.general.ui.ErrorLevel
 import org.supla.android.features.details.containerdetail.general.ui.WarningLevel
 import org.supla.android.images.ImageId
-import org.supla.android.tools.BACKGROUND_COLOR
+import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.lists.ListOnlineState
 import org.supla.android.ui.lists.channelissues.ChannelIssuesView
 import org.supla.android.ui.lists.sensordata.RelatedChannelData
@@ -142,7 +141,7 @@ private val emptyScope = object : ContainerGeneralDetailViewScope {
   override fun onMuteClick() {}
 }
 
-@Preview(showBackground = true, showSystemUi = true, backgroundColor = BACKGROUND_COLOR)
+@SuplaPreview
 @Composable
 private fun Preview() {
   SuplaTheme {
@@ -154,7 +153,7 @@ private fun Preview() {
           ErrorLevel(0.9f, "90%", ControlLevel.Type.UPPER)
         ),
         sensors = listOf(
-          RelatedChannelData(
+          RelatedChannelData.Visible(
             channelId = 123,
             profileId = 123L,
             onlineState = ListOnlineState.ONLINE,
@@ -164,7 +163,7 @@ private fun Preview() {
             batteryIcon = IssueIcon.Battery50,
             showChannelStateIcon = true
           ),
-          RelatedChannelData(
+          RelatedChannelData.Visible(
             channelId = 123,
             profileId = 123L,
             onlineState = ListOnlineState.OFFLINE,
@@ -173,7 +172,8 @@ private fun Preview() {
             userCaption = "",
             batteryIcon = null,
             showChannelStateIcon = false
-          )
+          ),
+          RelatedChannelData.Invisible
         )
       ),
       showStateDialog = {},
@@ -182,7 +182,7 @@ private fun Preview() {
   }
 }
 
-@Preview(showBackground = true, showSystemUi = true, backgroundColor = BACKGROUND_COLOR)
+@SuplaPreview
 @Composable
 private fun Preview_NoLevel() {
   SuplaTheme {
@@ -194,7 +194,7 @@ private fun Preview_NoLevel() {
           WarningLevel(0.85f, "90%", ControlLevel.Type.UPPER)
         ),
         sensors = listOf(
-          RelatedChannelData(
+          RelatedChannelData.Visible(
             channelId = 123,
             profileId = 123L,
             onlineState = ListOnlineState.ONLINE,
@@ -204,7 +204,8 @@ private fun Preview_NoLevel() {
             batteryIcon = IssueIcon.Battery50,
             showChannelStateIcon = true
           ),
-          RelatedChannelData(
+          RelatedChannelData.Invisible,
+          RelatedChannelData.Visible(
             channelId = 123,
             profileId = 123L,
             onlineState = ListOnlineState.OFFLINE,

@@ -48,10 +48,30 @@ import org.supla.core.shared.data.model.general.SuplaFunction
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-data class ChannelState(
-  val value: Value,
-  val complex: List<Value>? = null
-) {
+sealed interface ChannelState {
+  val value: Value
+  val isActive: Boolean
+    get() {
+      return when (value) {
+        Value.CLOSED, Value.ON, Value.TRANSPARENT -> true
+        else -> false
+      }
+    }
+
+  data class Default(
+    override val value: Value
+  ) : ChannelState
+
+  data class RgbAndDimmer(
+    val dimmer: Value,
+    val rgb: Value
+  ) : ChannelState {
+    override val value: Value
+      get() = when {
+        dimmer == Value.ON || rgb == Value.ON -> Value.ON
+        else -> Value.OFF
+      }
+  }
 
   enum class Value {
     // active states
@@ -75,22 +95,14 @@ data class ChannelState(
     EMPTY,
 
     // others
-    NOT_USED,
-    COMPLEX
-  }
-
-  fun isActive(): Boolean {
-    return when (value) {
-      Value.CLOSED, Value.ON, Value.TRANSPARENT -> true
-      else -> false
-    }
+    NOT_USED
   }
 
   companion object {
     fun active(function: Int): ChannelState =
       when (function) {
         SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL,
-        SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL -> ChannelState(Value.TRANSPARENT)
+        SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL -> Default(Value.TRANSPARENT)
 
         SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK,
         SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
@@ -106,7 +118,7 @@ data class ChannelState(
         SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW,
         SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW,
         SUPLA_CHANNELFNC_VALVE_OPENCLOSE,
-        SUPLA_CHANNELFNC_VALVE_PERCENTAGE -> ChannelState(Value.CLOSED)
+        SUPLA_CHANNELFNC_VALVE_PERCENTAGE -> Default(Value.CLOSED)
 
         SUPLA_CHANNELFNC_POWERSWITCH,
         SUPLA_CHANNELFNC_STAIRCASETIMER,
@@ -117,21 +129,21 @@ data class ChannelState(
         SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR,
         SUPLA_CHANNELFNC_LIGHTSWITCH,
         SUPLA_CHANNELFNC_DIMMER,
-        SUPLA_CHANNELFNC_RGBLIGHTING -> ChannelState(Value.ON)
+        SUPLA_CHANNELFNC_RGBLIGHTING -> Default(Value.ON)
 
-        SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING -> ChannelState(Value.COMPLEX, listOf(Value.ON, Value.ON))
+        SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING -> RgbAndDimmer(Value.ON, Value.ON)
 
         SuplaFunction.CONTAINER.value,
         SuplaFunction.WATER_TANK.value,
-        SuplaFunction.SEPTIC_TANK.value -> ChannelState(Value.FULL)
+        SuplaFunction.SEPTIC_TANK.value -> Default(Value.FULL)
 
-        else -> ChannelState(Value.NOT_USED)
+        else -> Default(Value.NOT_USED)
       }
 
     fun inactive(function: Int): ChannelState =
       when (function) {
         SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL,
-        SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL -> ChannelState(Value.OPAQUE)
+        SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL -> Default(Value.OPAQUE)
 
         SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK,
         SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
@@ -147,7 +159,7 @@ data class ChannelState(
         SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW,
         SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW,
         SUPLA_CHANNELFNC_VALVE_OPENCLOSE,
-        SUPLA_CHANNELFNC_VALVE_PERCENTAGE -> ChannelState(Value.OPEN)
+        SUPLA_CHANNELFNC_VALVE_PERCENTAGE -> Default(Value.OPEN)
 
         SUPLA_CHANNELFNC_POWERSWITCH,
         SUPLA_CHANNELFNC_STAIRCASETIMER,
@@ -158,15 +170,15 @@ data class ChannelState(
         SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR,
         SUPLA_CHANNELFNC_LIGHTSWITCH,
         SUPLA_CHANNELFNC_DIMMER,
-        SUPLA_CHANNELFNC_RGBLIGHTING -> ChannelState(Value.OFF)
+        SUPLA_CHANNELFNC_RGBLIGHTING -> Default(Value.OFF)
 
-        SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING -> ChannelState(Value.COMPLEX, listOf(Value.OFF, Value.OFF))
+        SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING -> RgbAndDimmer(Value.OFF, Value.OFF)
 
         SuplaFunction.CONTAINER.value,
         SuplaFunction.WATER_TANK.value,
-        SuplaFunction.SEPTIC_TANK.value -> ChannelState(Value.EMPTY)
+        SuplaFunction.SEPTIC_TANK.value -> Default(Value.EMPTY)
 
-        else -> ChannelState(Value.NOT_USED)
+        else -> Default(Value.NOT_USED)
       }
   }
 }

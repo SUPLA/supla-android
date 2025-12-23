@@ -75,7 +75,7 @@ class ChannelActionUseCaseTest {
     val channelId = 123
 
     testActionExecution(channelId, SuplaFunction.RGB_LIGHTING, ButtonType.LEFT) {
-      assertThat(it.action).isEqualTo(ActionId.TURN_OFF)
+      assertThat(it.action).isEqualTo(ActionId.SET_RGBW_PARAMETERS)
       assertThat(it.subjectType).isEqualTo(SubjectType.CHANNEL)
       assertThat(it.subjectId).isEqualTo(channelId)
     }
@@ -86,7 +86,7 @@ class ChannelActionUseCaseTest {
     val channelId = 234
 
     testActionExecution(channelId, SuplaFunction.DIMMER, ButtonType.RIGHT) {
-      assertThat(it.action).isEqualTo(ActionId.TURN_ON)
+      assertThat(it.action).isEqualTo(ActionId.SET_RGBW_PARAMETERS)
       assertThat(it.subjectType).isEqualTo(SubjectType.CHANNEL)
       assertThat(it.subjectId).isEqualTo(channelId)
     }
@@ -97,7 +97,7 @@ class ChannelActionUseCaseTest {
     val channelId = 123
 
     testActionExecution(channelId, SuplaFunction.DIMMER_AND_RGB_LIGHTING, ButtonType.LEFT) {
-      assertThat(it.action).isEqualTo(ActionId.TURN_OFF)
+      assertThat(it.action).isEqualTo(ActionId.SET_RGBW_PARAMETERS)
       assertThat(it.subjectType).isEqualTo(SubjectType.CHANNEL)
       assertThat(it.subjectId).isEqualTo(channelId)
     }

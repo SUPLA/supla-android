@@ -41,7 +41,6 @@
   <string name="status_temporarily_unavailable">Service temporarily unavailable</string>
   <string name="status_bad_credentials">Bad credentials</string>
   <string name="status_climit_exceded">Client limit exceeded</string>
-  <string name="status_version_error">Incompatible server version</string>
   <string name="status_reg_disabled">New client registration disabled. Please log in to \"Supla Cloud\" and enable “New client registration” in “Smartphone” section of the website.</string>
   <string name="status_access_id_not_assigned">Client activation required. Please log in to \"Supla Cloud\" and assign an “Access ID” for this device in “Smartphone” section of the website.</string>
   <string name="status_device_disabled">Device disabled. Please log in to \"Supla Cloud\" and enable this device in “Smartphone” section of the website.</string>
@@ -146,8 +145,6 @@
   <string name="wizard_no_internetwifi">Before you start, set up your Internet connection with the Wi-Fi also used by the I/O device when connecting with server.</string>
   <string name="wizard_wifi_error">Wi-Fi Network is disabled or it is impossible to read its identifier or name!</string>
   <string name="wizard_location_error">For the Add Device Wizard to work properly, the Location service must be enabled on this device. Go to your system settings, then select „Location” and make sure it\'s turned on.</string>
-  <string name="wizard_addnetwork_error">Wi-Fi Network configuration can not be added!</string>
-  <string name="wizard_wifi_timeout">Current Wi-Fi Network Data timeout. Go to your Android Wi-Fi settings, select Advanced, then check "Turn on Wi-Fi automatically"</string>
   <string name="wizard_scan_timeout">Wi-Fi Network Scan timeout!</string>
   <string name="wizard_connect_timeout">I/O Device connection setting timeout!</string>
   <string name="wizard_configure_timeout">Device Configuration Completion timeout!</string>
@@ -163,7 +160,6 @@
   <string name="wizard_iodev_mac" translatable="false">MAC</string>
   <string name="wizard_iodev_laststate">Previous state</string>
 
-  <string name="wizard_result_param_error">Incorrect input parameters!</string>
   <string name="wizard_result_compat_error">The connected device is not compatible with this Wizard!</string>
   <string name="wizard_result_conn_error">Connection with the device cannot be set!</string>
   <string name="wizard_result_failed">Configuration Failed!</string>
@@ -174,7 +170,6 @@
   <string name="hp_eco">ECO</string>
   <string name="hp_turbo">TURBO</string>
   <string name="hp_auto">AUTO</string>
-  <string name="hp_room_temperature">Room temperature</string>
   <string name="hp_cfg_turbo_time">Duration of the TURBO mode</string>
   <string name="hp_cfg_water_max">Maximum water temperature</string>
   <string name="hp_cfg_eco_reduction">Temperature reduction in ECO mode</string>
@@ -193,26 +188,17 @@
   <string name="ranking_of_hours">Ranking of hours</string>
   <string name="ranking_of_weekdays">Ranking of weekdays</string>
   <string name="ranking_of_months">Ranking of months</string>
-  <string name="consumption_acording_to_phases">Consumption according to phases</string>
   <string name="temperature">Temperature</string>
   <string name="humidity">Humidity</string>
   <string name="all_available_history">All available history</string>
   <string name="retrieving_data_from_the_server">Retrieving data from the server...</string>
   <string name="no_chart_data_available">No chart data available in selected time period.</string>
-  <string name="em_chart_phase_n">Phase %d</string>
   <string name="em_chart_all_phases">Phase 1+2+3</string>
-  <string name="comparsion_minmin">Minute to minute comparison</string>
-  <string name="comparsion_hourhour">Hour to hour comparison</string>
-  <string name="comparsion_dayday">Day to day comparison</string>
-  <string name="comparsion_monthmonth">Month to month comparison</string>
-  <string name="comparsion_yearyear">Year to year comparison</string>
   <string name="hp_error_1">No water</string>
   <string name="hp_error_2">Burnt heater</string>
   <string name="hp_error_3">Water temperature sensor error</string>
   <string name="hp_error_4">Room temperature sensor error</string>
   <string name="hp_error_5">No network interruptions</string>
-  <string name="current_production">Production in the current month</string>
-  <string name="production_acording_to_phases">Production according to phases</string>
   <string name="enter_superuser_credentials">Enter superuser credentials</string>
 
   <string name="channel_func_none">No function</string>
@@ -261,7 +247,6 @@
   <string name="yes">Yes</string>
   <string name="no">No</string>
   <string name="ok" translatable="false">OK</string>
-  <string name="dots" translatable="false">....</string>
   <string name="exit">Exit</string>
 
   <string name="channel_caption_heatmeter">Heat Meter</string>
@@ -321,16 +306,6 @@
   <string name="bridge">Bridge</string>
   <string name="em_phase_to_phase_balance">Vector phase-to-phase balancing</string>
 
-  <string name="aritmetic_balance_minutes">Arithmetic balance - Minutes</string>
-  <string name="aritmetic_balance_hours">Arithmetic balance - Hours</string>
-  <string name="aritmetic_balance_days">Arithmetic balance - Days</string>
-  <string name="aritmetic_balance_months">Arithmetic balance - Months</string>
-  <string name="aritmetic_balance_years">Arithmetic balance - Years</string>
-  <string name="vector_balance_minutes">Vector balance - Minutes</string>
-  <string name="vector_balance_hours">Vector balance - Hours</string>
-  <string name="vector_balance_days">Vector balance - Days</string>
-  <string name="vector_balance_months">Vector balance - Months</string>
-  <string name="vector_balance_years">Vector balance - Years</string>
   <string name="wheel">Wheel</string>
   <string name="slider">Slider</string>
 
@@ -345,11 +320,6 @@
   <string name="vl_cfg_boost">Boost</string>
 
   <string name="information">Information</string>
-  <string name="vl_dimmer_info_txt1">Dimmer control</string>
-  <string name="vl_dimmer_info_txt2">Control the dimmer by moving the control button on the brightness slider / wheel.</string>
-  <string name="vl_dimmer_info_txt3">Switch on and off by tapping the on/off button.</string>
-  <string name="vl_dimmer_info_txt4">The dimmer will remember the previous brightness setting.</string>
-  <string name="vl_dimmer_info_txt5">Tap the config icon to adjust dimming settings.</string>
   <string name="vl_dimmer_cfg_info_txt1">Dimming Mode / Operating Range</string>
   <string name="vl_dimmer_cfg_info_txt2">Fine tune the performance of your LED lights by selecting a different dimming mode or change the operating range by moving the dark grey sliders around the wheel to adjust the minimum and maximum brightness levels.</string>
   <string name="vl_dimmer_cfg_info_txt3">Mode 1: V-Pro Trailing-Edge Dimming</string>
@@ -384,13 +354,11 @@
   <string name="channel_uv_error">The lifespan of the uv radiator is %1$.01f%%. Replace the radiator.</string>
   <string name="add_wizard_step_2_message">Enter Wi-Fi Network name and password to use with new I/O Device</string>
   <string name="enabling_registration_timeout">Timeout for enabling registration has expired!</string>
-  <string name="wifi_throttling">Oops…! It looks like the Android OS Wi-Fi scanning limit has been reached. Setup can be continued after this window closes.</string>
   <string name="enter_suplaorg_credentails">Please enter your Supla Cloud login details.</string>
   <string name="save_without_saving">Do you want to quit without saving?</string>
   <string name="do_you_want_to_save">Do you want to save the settings?</string>
   <string name="restoring_default_settings">Restoring default settings</string>
   <string name="mode_change_in_progress">Mode change in progress</string>
-  <string name="wizard_step1_txt2">It is recommended to temporary disable mobile data connection on your device as it may interfere with the configuration process.</string>
   <string name="wake_up_frequency">Wake up frequency</string>
   <string name="zwave_change_wake_up_settings">You can also change the wake-up settings by pressing the icon below.</string>
   <string name="wakeup_info">*) The entered settings will be applied the next time the node wakes up.</string>
@@ -411,10 +379,6 @@
   <string name="widget_configure_action_label">Action</string>
   <string name="widget_configure_name_label">Display name</string>
   <string name="widget_configure_error">Could not configure channel…</string>
-  <string name="widget_configure_no_selection">No channel selected</string>
-  <string name="widget_configure_no_channel">No channels available</string>
-  <string name="widget_configure_no_group">No groups available</string>
-  <string name="widget_configure_no_scene">No scenes available</string>
   <string name="double_button_widget_description">Double-button widget.</string>
   <string name="single_button_widget_description">Single-button widget.</string>
   <string name="extended_value_widget_description" translatable="false">Electricity meter preview widget.</string>
@@ -445,7 +409,6 @@
   <string name="input">Input</string>
   <string name="monostable">Monostable</string>
   <string name="bistable">Bistable</string>
-  <string name="wizard_iodev_connect_failed">The attempt to establish a Wi-Fi connection with the i/o device has failed.</string>
   <string name="diw_cfg_info_oprange">Change the operating range by moving the dark grey sliders around the wheel to adjust the minimum and maximum brightness levels.</string>
   <string name="diw_cfg_info_in_options">Input options</string>
   <string name="diw_cfg_info_mono_option">This option changes the behavior of the input to which the monostable button is connected. In case the option is disabled, the dimmer stops brightening the light when the full brightness level is reached and in case of dimming, at the lowest brightness level. Enabling this option will switch to the minimum level as soon as the maximum brightness is reached, and in the case of dimming to the maximum value, as soon as the minimum is reached. Brightening / dimming will continue as long as the button is pressed.</string>
@@ -460,7 +423,6 @@
   <string name="incorrect_password">Incorrect password</string>
   <string name="channel_name">Channel name</string>
   <string name="location_name">Location name</string>
-  <string name="str_default">Default</string>
   <string name="overcurrent_warning">The power was turned off after the set threshold of the allowable current was exceeded.</string>
   <string name="overcurrent_question">The power was turned off after exceeding the set threshold of the allowable current. Are you sure you want to power on?</string>
   <string name="roller_shutter_start_calibration_message">Are you sure you want to start calibration?</string>
@@ -652,6 +614,7 @@
   <string name="facade_blinds_no_tilt">Missing configuration</string>
   <string name="toolbar_delete_chart_history">Delete history and download again</string>
   <string name="toolbar_ocr" translatable="false">OCR</string>
+  <string name="toolbar_rgb" translatable="false">RGB</string>
   <string name="history_wait_for_download_completed">Please wait, downloading…</string>
   <string name="channel_caption_terrace_awning">Terrace awning</string>
   <string name="channel_caption_projector_screen">Projector screen</string>
@@ -711,7 +674,6 @@
   <string name="details_em_balance_hourly">Hourly balance</string>
   <string name="details_em_balance_chart_aggregated">Chart aggregated balance</string>
   <string name="details_em_sum">Sum</string>
-  <string name="details_em_select_range">Select range</string>
   <string name="details_em_active_energy">Active energy</string>
   <string name="details_em_forwarded_energy">Forward</string>
   <string name="details_em_reversed_energy">Reverse</string>
@@ -757,7 +719,6 @@
   <string name="channel_caption_container">Container</string>
   <string name="developer_info_database_section" translatable="false">Database details</string>
   <string name="developer_info_activated">Developer mode activated</string>
-  <string name="developer_info_title" translatable="false">App information</string>
   <string name="counter_photo_photos" translatable="false">Photo history</string>
   <string name="counter_photo_loading_error" translatable="false">Loading failed.</string>
   <string name="counter_photo_error" translatable="false">Error</string>
@@ -872,10 +833,6 @@
   <plurals name="second_pattern" translatable="false">
     <item quantity="other">%1$d sec</item>
   </plurals>
-  <string name="profiles_list_sorting">Sorting</string>
-  <string name="profiles_list_sorting_default">Default</string>
-  <string name="profiles_list_sorting_name">Name</string>
-  <string name="profiles_list_sorting_added">Last added</string>
   <string name="state_partially_opened">Partially opened</string>
   <string name="channel_btn_step_by_step">Open/Close (step by step)</string>
   <string name="gate_general_open_and_close_warning">Not all gates have an opening sensor configured - the \"Open\" and \"Close\" buttons may not function correctly.</string>
@@ -886,4 +843,12 @@
   <string name="state_dialog_last_known_state">Offline - last known state:</string>
   <string name="channel_caption_motion_sensor">Motion sensor</string>
   <string name="channel_caption_binary_sensor">Binary sensor</string>
+  <string name="toolbar_dimmer">Dimmer</string>
+  <string name="rgb_detail_color">Color:</string>
+  <string name="rgb_detail_brightness">Brightness:</string>
+  <string name="rgb_detail_select_color">Select color</string>
+  <string name="legacy_rgbw_settings_unauthorized_message">Authorization needed to see the configuration!</string>
+  <string name="legacy_rgbw_settings_authorize_button">Authorize</string>
+  <string name="rgb_detail_colors_limit">Limit reached!</string>
+  <string name="channel_caption_invisible">Hidden</string>
 </resources>

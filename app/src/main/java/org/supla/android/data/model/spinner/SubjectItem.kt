@@ -195,8 +195,8 @@ interface SubjectItemConversionScope {
       isLocation = false,
       value = when (function) {
         SuplaFunction.DIMMER -> "0"
-        SuplaFunction.RGB_LIGHTING,
-        SuplaFunction.DIMMER_AND_RGB_LIGHTING -> "${channelValueEntity.asColor()}"
+        SuplaFunction.RGB_LIGHTING -> "${channelValueEntity.asRgbValue().rgb}"
+        SuplaFunction.DIMMER_AND_RGB_LIGHTING -> "${channelValueEntity.asRgbwValue().rgb}"
 
         SuplaFunction.THERMOMETER,
         SuplaFunction.GENERAL_PURPOSE_METER,
@@ -307,8 +307,10 @@ interface SubjectItemConversionScope {
       SuplaFunction.LIGHTSWITCH,
       SuplaFunction.STAIRCASE_TIMER,
       SuplaFunction.DIMMER,
+      SuplaFunction.DIMMER_CCT,
       SuplaFunction.RGB_LIGHTING,
       SuplaFunction.DIMMER_AND_RGB_LIGHTING,
+      SuplaFunction.DIMMER_CCT_AND_RGB,
       SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS,
       SuplaFunction.HVAC_THERMOSTAT,
       SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,

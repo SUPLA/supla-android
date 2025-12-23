@@ -64,6 +64,7 @@ class DownloadGeneralPurposeMeasurementLogUseCaseTest {
 
     every { generalPurposeMeasurementLogRepository.findCount(remoteId, profileId) } returns Maybe.just(50)
     every { generalPurposeMeasurementLogRepository.insert(any()) } returns Completable.complete()
+    every { generalPurposeMeasurementLogRepository.findCountWithoutGroupingString(remoteId, profileId) } returns Single.just(0)
     mockEntityMapping(remoteId, profileId)
 
     // when
@@ -83,6 +84,7 @@ class DownloadGeneralPurposeMeasurementLogUseCaseTest {
       generalPurposeMeasurementLogRepository.getMeasurements(cloudService, remoteId, measurementDate.toTimestamp())
       generalPurposeMeasurementLogRepository.map(any(), eq("2023110103003"), eq(remoteId), eq(profileId))
       generalPurposeMeasurementLogRepository.insert(capture(captor))
+      generalPurposeMeasurementLogRepository.findCountWithoutGroupingString(remoteId, profileId)
     }
 
     val result = captor.captured
@@ -190,6 +192,7 @@ class DownloadGeneralPurposeMeasurementLogUseCaseTest {
     every { generalPurposeMeasurementLogRepository.findMinTimestamp(remoteId, profileId) } returns
       Single.just(date(2023, 10, 1).time)
     every { generalPurposeMeasurementLogRepository.findCount(remoteId, profileId) } returns Maybe.just(100)
+    every { generalPurposeMeasurementLogRepository.findCountWithoutGroupingString(remoteId, profileId) } returns Single.just(0)
 
     // when
     val testObserver = useCase.loadMeasurements(remoteId, profileId).test()
@@ -202,6 +205,7 @@ class DownloadGeneralPurposeMeasurementLogUseCaseTest {
       generalPurposeMeasurementLogRepository.findMinTimestamp(remoteId, profileId)
       generalPurposeMeasurementLogRepository.findCount(remoteId, profileId)
       generalPurposeMeasurementLogRepository.getInitialMeasurements(cloudService, remoteId)
+      generalPurposeMeasurementLogRepository.findCountWithoutGroupingString(remoteId, profileId)
     }
 
     confirmVerified(suplaCloudServiceProvider, generalPurposeMeasurementLogRepository)
@@ -230,6 +234,7 @@ class DownloadGeneralPurposeMeasurementLogUseCaseTest {
     every { generalPurposeMeasurementLogRepository.delete(remoteId, profileId) } returns Completable.complete()
     every { generalPurposeMeasurementLogRepository.findCount(remoteId, profileId) } returns Maybe.just(50)
     every { generalPurposeMeasurementLogRepository.insert(any()) } returns Completable.complete()
+    every { generalPurposeMeasurementLogRepository.findCountWithoutGroupingString(remoteId, profileId) } returns Single.just(0)
     mockEntityMapping(remoteId, profileId)
 
     // when
@@ -250,6 +255,7 @@ class DownloadGeneralPurposeMeasurementLogUseCaseTest {
       generalPurposeMeasurementLogRepository.getMeasurements(cloudService, remoteId, lastDbDate.toTimestamp())
       generalPurposeMeasurementLogRepository.getMeasurements(cloudService, remoteId, measurementDate.toTimestamp())
       generalPurposeMeasurementLogRepository.insert(capture(captor))
+      generalPurposeMeasurementLogRepository.findCountWithoutGroupingString(remoteId, profileId)
     }
 
     val result = captor.captured

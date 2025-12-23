@@ -35,7 +35,6 @@
   <string name="status_temporarily_unavailable">Usługa tymczasowo niedostępna</string>
   <string name="status_bad_credentials">Błędne poświadczenia</string>
   <string name="status_climit_exceded">Przekroczony limit aplikacji klienckich</string>
-  <string name="status_version_error">Niekompatybilna wersja serwera</string>
   <string name="status_reg_disabled">Rejestracja jest obecnie wyłączona. Zaloguj się do \"Supla Cloud\" i przełącz rejestrację klientów na AKTYWNĄ w zakładce \"Smartfony\".</string>
   <string name="status_access_id_not_assigned">To urządzenie nie ma przypisanego identyfikatora dostępu. Przejdź na stronę \"Supla Cloud\" i w zakładce \"Smartfony\" przypisz odpowiedni identyfikator.</string>
   <string name="status_device_disabled">Urządzenie jest wyłączone. Zaloguj się do \"Supla Cloud\" i włącz ten smrtfon w zakładce \"Smartfony\".</string>
@@ -140,8 +139,6 @@
   <string name="wizard_no_internetwifi">Zanim rozpoczniesz, połącz się z Internetem za pośrednictwem sieci Wi-Fi, która będzie również wykorzystywana przez urządzenia wykonawcze do łączenia się z serwerem.</string>
   <string name="wizard_wifi_error">Sieć Wi-Fi jest wyłączona lub nie można odczytać jej identyfikatora lub nazwy!</string>
   <string name="wizard_location_error">Aby kreator dodawania działał poprawnie, usługa Lokalizacji musi być włączona na tym urządzeniu. Przejdź do ustawień systemu, następnie wybierz opcję „Lokalizacja” i upewnij się, że jest włączona.</string>
-  <string name="wizard_addnetwork_error">Nie można dodać konfiguracji sieci Wi-Fi!</string>
-  <string name="wizard_wifi_timeout">Przekroczono czas oczekiwania na dane o bieżącej sieci Wi-Fi! Przejdź do ustawień Wi-Fi systemu Android, wybierz Zaawansowane, a następnie zaznacz opcję "Włącz Wi-Fi automatycznie"</string>
   <string name="wizard_scan_timeout">Przekroczono czas oczekiwania na zakończenie przeszukiwania sieci Wi-Fi!</string>
   <string name="wizard_connect_timeout">Przekroczono czas oczekiwania na nawiązanie połączenia z urządzeniem wykonawczym!</string>
   <string name="wizard_configure_timeout">Przekroczono czas oczekiwania na zakończenie konfiguracji urządzenia!</string>
@@ -156,7 +153,6 @@
   <string name="wizard_iodev_name">Nazwa</string>
   <string name="wizard_iodev_laststate">Poprzedni status</string>
 
-  <string name="wizard_result_param_error">Błędne parametry wejściowe!</string>
   <string name="wizard_result_compat_error">Urządzenie z którym nawiązano połączenie nie jest kompatybilne z tym kreatorem!</string>
   <string name="wizard_result_conn_error">Nie można nawiązać połączenia z urządzeniem!</string>
   <string name="wizard_result_failed">Konfiguracja zakończona niepowodzeniem!</string>
@@ -176,7 +172,6 @@
   <string name="hp_eco">ECO</string>
   <string name="hp_turbo">TURBO</string>
   <string name="hp_auto">AUTO</string>
-  <string name="hp_room_temperature">Temperatura w pomieszczeniu</string>
   <string name="hp_cfg_turbo_time">Czas trwania trybu TURBO</string>
   <string name="hp_cfg_water_max">Maksymalna temperatura wody</string>
   <string name="hp_cfg_eco_reduction">Redukcja temperatury w trybie ECO</string>
@@ -194,26 +189,17 @@
   <string name="ranking_of_hours">Ranking godzin</string>
   <string name="ranking_of_weekdays">Ranking dni tygodnia</string>
   <string name="ranking_of_months">Ranking miesięcy</string>
-  <string name="consumption_acording_to_phases">Zużycie wg. faz</string>
   <string name="temperature">Temperatura</string>
   <string name="humidity">Wilgotność</string>
   <string name="all_available_history">Cała dostępna historia</string>
   <string name="retrieving_data_from_the_server">Pobieranie danych z serwera...</string>
   <string name="no_chart_data_available">Brak danych w wybranym okresie czasu.</string>
-  <string name="em_chart_phase_n">Faza %d</string>
   <string name="em_chart_all_phases">Fazy 1+2+3</string>
-  <string name="comparsion_minmin">Porównanie minuta do minuty</string>
-  <string name="comparsion_hourhour">Porównanie godzina do godziny</string>
-  <string name="comparsion_dayday">Porównanie dzień do dnia</string>
-  <string name="comparsion_monthmonth">Porównanie miesiąc do miesiąca</string>
-  <string name="comparsion_yearyear">Porównanie rok do roku</string>
   <string name="hp_error_1">Brak wody</string>
   <string name="hp_error_2">Spalona grzałka</string>
   <string name="hp_error_3">Błąd czujnika temperatury wody</string>
   <string name="hp_error_4">Błąd czujnika temperatury pokojowej</string>
   <string name="hp_error_5">Brak przerwań sieciowych</string>
-  <string name="production_acording_to_phases">Produkcja wg. faz</string>
-  <string name="current_production">Produkcja w bieżącym miesiącu</string>
   <string name="enter_superuser_credentials">Wprowadź poświadczenia głównego użytkownika</string>
 
   <string name="channel_func_none">Brak funkcji</string>
@@ -316,16 +302,6 @@
   <string name="event_openedclosedthevalve">Otwieranie/zamykanie zaworu</string>
   <string name="bridge">Most</string>
   <string name="em_phase_to_phase_balance">Bilans międzyfazowy wektorowy</string>
-  <string name="aritmetic_balance_minutes">Bilans arytmetyczny - Minuty</string>
-  <string name="aritmetic_balance_hours">Bilans arytmetyczny - Godziny</string>
-  <string name="aritmetic_balance_days">Bilans arytmetyczny - Dni</string>
-  <string name="aritmetic_balance_months">Bilans arytmetyczny - Miesiące</string>
-  <string name="aritmetic_balance_years">Bilans arytmetyczny - Lata</string>
-  <string name="vector_balance_minutes">Bilans wektorowy - Minuty</string>
-  <string name="vector_balance_hours">Bilans wektorowy - Godziny</string>
-  <string name="vector_balance_days">Bilans wektorowy - Dni</string>
-  <string name="vector_balance_months">Bilans wektorowy - Miesiące</string>
-  <string name="vector_balance_years">Bilans wektorowy - Lata</string>
   <string name="wheel">Koło</string>
   <string name="slider">Suwak</string>
   <string name="vl_cfg_mode">Tryb ściemniania</string>
@@ -338,11 +314,6 @@
   <string name="cfg_op_range">Zakres pracy</string>
   <string name="vl_cfg_boost">Wzmocnienie</string>
   <string name="information">Informacje</string>
-  <string name="vl_dimmer_info_txt1">Sterowanie ściemniaczem</string>
-  <string name="vl_dimmer_info_txt2">Aby zmienić poziom jasności przesuń palcem wskaźnik znajdujący się na suwaku lub kole jasności.</string>
-  <string name="vl_dimmer_info_txt3">Przyciskiem włącz/wyłącz możesz całkowicie wyłączyć lub włączyć oświetlenie.</string>
-  <string name="vl_dimmer_info_txt4">Ściemniacz zapamięta poziom jasności sprzed wyłączenia oświetlenia.</string>
-  <string name="vl_dimmer_info_txt5">Aby dostosować parametry ściemniacza, naciśnij przycisk ustawień.</string>
   <string name="vl_dimmer_cfg_info_txt1">Tryb ściemniania / Zakres pracy</string>
   <string name="vl_dimmer_cfg_info_txt2">Dostosuj wydajność ściemniania oświetlenia LED poprzez wybór odpowiedniego trybu. Dostosuj również zakres pracy ściemniacza poprzez ustawienie minimalnego oraz maksymalnego poziomu jasności. Wartość minimalną oraz maksymalną można ustawić przesuwając suwaki umieszczone po obu stronach koła.</string>
   <string name="vl_dimmer_cfg_info_txt3">Tryb 1: Ściemnianie zboczem opadającym (V-Pro)</string>
@@ -372,13 +343,11 @@
   <string name="channel_uv_error">Żywotność promiennika uv wynosi %1$.01f%%. Wymień promiennik.</string>
   <string name="add_wizard_step_2_message">Wprowadź nazwę oraz hasło Twojej domowej lub firmowej sieci Wi-Fi za pośrednictwem której urządzenie wykonawcze będzie mogło nawiązać połączenie z serwerem.</string>
   <string name="enabling_registration_timeout">Upłynął czas oczekiwania na włączenie rejestracji!</string>
-  <string name="wifi_throttling">Z uwagi na limity skanowania sieci Wi-Fi narzucone przez system Android, należy odczekać czas prezentowany powyżej.</string>
   <string name="enter_suplaorg_credentails">Wprowadź Twoje dane logowania do Supla Cloud.</string>
   <string name="save_without_saving">Czy na pewno chcesz wyjść bez zapisu?</string>
   <string name="do_you_want_to_save">Czy chcesz zapisać ustawienia?</string>
   <string name="restoring_default_settings">Trwa przywracanie ustawień domyślnych</string>
   <string name="mode_change_in_progress">Trwa zmiana trybu</string>
-  <string name="wizard_step1_txt2">Zaleca się aby dane mobilne podczas dodawania urządzeń były wyłączone. W przeciwnym razie dodawanie może zakończyć się niepowodzeniem.</string>
   <string name="wake_up_frequency">Częstotliwość wybudzania</string>
   <string name="zwave_change_wake_up_settings">Możesz również zmienić ustawienia wybudzania naciskając poniższą ikonę.</string>
   <string name="wakeup_info">*) Wprowadzone ustawienia zostaną zastosowane przy najbliższym wybudzeniu węzła.</string>
@@ -401,7 +370,6 @@
   <string name="input">Wejście</string>
   <string name="monostable">Monostabilne</string>
   <string name="bistable">Bistabilne</string>
-  <string name="wizard_iodev_connect_failed">Próba nawiązania połączenia Wi-Fi z urządzeniem wykonawczym zakończyła się niepowodzeniem.</string>
   <string name="diw_cfg_info_oprange">Dostosuj zakres pracy ściemniacza poprzez ustawienie minimalnego oraz maksymalnego poziomu jasności. Wartość minimalną oraz maksymalną można ustawić przesuwając suwaki umieszczone po obu stronach koła.</string>
   <string name="diw_cfg_info_in_options">Opcje wejścia</string>
   <string name="diw_cfg_info_mono_option">Opcja zmienia zachowanie wejścia do którego podłączony jest przycisk monostabilny. W przypadku gdy opcja jest wyłączona, ściemniacz zatrzymuje proces rozjaśniania w momencie osiągnięcia maksymalnego poziomu jasności, a w przypadku ściemniania gdy osiągnie poziom minimalny. Włączenie tej opcji spowoduje przejście do poziomu minimalnego zaraz po osiągnięciu maksimum jasności, a w przypadku ściemniania do wartości maksymalnej, zaraz po osiągnięciu minumum. Rozjaśnianie/ściemnianie będzie trwało tak długo jak długo będzie naciśnięty przycisk.</string>
@@ -414,7 +382,6 @@
   <string name="incorrect_password">Nieprawidłowe hasło</string>
   <string name="channel_name">Nazwa kanału</string>
   <string name="location_name">Nazwa lokalizacji</string>
-  <string name="str_default">Domyślnie</string>
   <string name="overcurrent_warning">Zasilanie zostało wyłączone po przekroczeniu ustawionego progu dopuszczalnego natężenia prądu.</string>
   <string name="overcurrent_question">Zasilanie zostało wyłączone po przekroczeniu ustawionego progu dopuszczalnego natężenia prądu. Czy na pewno chcesz włączyć zasilanie?</string>
   <string name="roller_shutter_start_calibration_message">Czy na pewno chcesz rozpocząć kalibrację ?</string>
@@ -434,10 +401,6 @@
   <string name="widget_configure_action_label">Akcja</string>
   <string name="widget_configure_name_label">Nazwa</string>
   <string name="widget_configure_error">Konfiguracja kanału nie powiodła się…</string>
-  <string name="widget_configure_no_selection">Nie wybrano kanału</string>
-  <string name="widget_configure_no_channel">Brak dostępnych kanałów</string>
-  <string name="widget_configure_no_group">Brak dostępnych grup</string>
-  <string name="widget_configure_no_scene">Brak dostępnch scen</string>
   <string name="double_button_widget_description">Widżet dwuprzyciskowy</string>
   <string name="single_button_widget_description">Widżet jednoprzyciskowy</string>
   <string name="extended_value_widget_description">Podgląd wartości licznika energii.</string>
@@ -687,7 +650,6 @@
   <string name="details_em_balance_hourly">Bilans godzinowy</string>
   <string name="details_em_balance_chart_aggregated">Bilans agregowany wykresem</string>
   <string name="details_em_sum">Suma</string>
-  <string name="details_em_select_range">Wybierz okres</string>
   <string name="details_em_active_energy">Energia czynna</string>
   <string name="details_em_forwarded_energy">Pobrana</string>
   <string name="details_em_reversed_energy">Zwrócona</string>
@@ -733,7 +695,6 @@
   <string name="channel_caption_container">Zbiornik</string>
   <string name="developer_info_database_section">Baza danych</string>
   <string name="developer_info_activated">Tryb programisty aktywowany</string>
-  <string name="developer_info_title">Dane aplikacji</string>
   <string name="counter_photo_photos">Historia zdjęć</string>
   <string name="counter_photo_loading_error">Nie udało się załadować zawartości.</string>
   <string name="counter_photo_error">Błąd</string>
@@ -846,10 +807,6 @@
   <plurals name="second_pattern" tools:ignore="MissingQuantity">
     <item quantity="other">%1$d sek.</item>
   </plurals>
-  <string name="profiles_list_sorting">Sortowanie</string>
-  <string name="profiles_list_sorting_default">Domyślne</string>
-  <string name="profiles_list_sorting_name">Nazwa</string>
-  <string name="profiles_list_sorting_added">Ostatnio dodane</string>
   <string name="state_partially_opened">częściowo otwarty</string>
   <string name="channel_btn_step_by_step">Otwórz/Zamknij (krok po kroku)</string>
   <string name="gate_general_open_and_close_warning">Nie wszystkie bramy mają skonfigurowany czujnik otwarcia — przyciski „Otwórz” i „Zamknij” mogą nie działać prawidłowo.</string>
@@ -860,4 +817,12 @@
   <string name="state_dialog_last_known_state">Offline – ostatni znany stan:</string>
   <string name="channel_caption_motion_sensor">Czujnik ruchu</string>
   <string name="channel_caption_binary_sensor">Czujnik binarny</string>
+  <string name="toolbar_dimmer">Ściemniacz</string>
+  <string name="rgb_detail_color">Kolor:</string>
+  <string name="rgb_detail_brightness">Jasność:</string>
+  <string name="rgb_detail_select_color">Wybierz kolor</string>
+  <string name="legacy_rgbw_settings_unauthorized_message">Wymagana autoryzacja, aby zobaczyć konfigurację!</string>
+  <string name="legacy_rgbw_settings_authorize_button">Autoryzuj</string>
+  <string name="rgb_detail_colors_limit">Osiągnięto limit!</string>
+  <string name="channel_caption_invisible">Ukryty</string>
 </resources>

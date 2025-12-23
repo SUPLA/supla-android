@@ -29,7 +29,7 @@ import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.captionchangedialog.CaptionChangeViewModel
 import org.supla.android.features.captionchangedialog.View
-import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
+import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.features.statedialog.StateDialogViewModel
 import org.supla.android.features.statedialog.View
 import org.supla.android.features.statedialog.handleStateDialogViewEvent

@@ -90,6 +90,9 @@ class CurrentLogRepository @Inject constructor(
       profileId = profileId
     )
 
+  override fun findCountWithoutGroupingString(remoteId: Int, profileId: Long): Single<Int> =
+    currentLogDao.emptyGroupingStringCount(remoteId, profileId)
+
   override fun count(): Observable<Int> = currentLogDao.count()
 
   override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = currentLogDao.deleteKtx(remoteId, profileId)

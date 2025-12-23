@@ -46,16 +46,27 @@ fun DeviceState(data: DeviceStateData) {
   DeviceState(
     stateLabel = data.label(LocalContext.current),
     icon = data.icon,
-    stateValue = data.value(LocalContext.current)
+    stateValue = data.value(LocalContext.current),
+    modifier = Modifier.padding(vertical = Distance.vertical)
   )
 }
 
 @Composable
-fun DeviceState(stateLabel: String, icon: ImageId?, stateValue: String) =
+fun DeviceState(data: DeviceStateData, modifier: Modifier) {
+  DeviceState(
+    stateLabel = data.label(LocalContext.current),
+    icon = data.icon,
+    stateValue = data.value(LocalContext.current),
+    modifier = modifier
+  )
+}
+
+@Composable
+fun DeviceState(stateLabel: String, icon: ImageId?, stateValue: String, modifier: Modifier = Modifier) =
   Row(
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.spacedBy(Distance.tiny),
-    modifier = Modifier.padding(top = Distance.default, bottom = Distance.default)
+    modifier = modifier
   ) {
     Spacer(modifier = Modifier.weight(1f))
     Text(

@@ -154,7 +154,7 @@ class ValveGeneralDetailViewModel @Inject constructor(
   }
 
   private fun ChannelChildEntity.toSensor() =
-    RelatedChannelData(
+    RelatedChannelData.Visible(
       channelId = channel.remoteId,
       profileId = channel.profileId,
       onlineState = channelDataEntity.channelValueEntity.onlineState,

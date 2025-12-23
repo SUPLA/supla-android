@@ -86,6 +86,10 @@ class HomePlusThermostatLogRepository @Inject constructor(
       groupingString = groupingString,
       profileId = profileId
     )
+
+  override fun findCountWithoutGroupingString(remoteId: Int, profileId: Long): Single<Int> =
+    homePlusThermostatLogDao.emptyGroupingStringCount(remoteId, profileId)
+
   override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = homePlusThermostatLogDao.deleteKtx(remoteId, profileId)
   override fun deleteByProfile(profileId: Long): Completable = homePlusThermostatLogDao.deleteByProfile(profileId)
 }

@@ -15,7 +15,6 @@
   <string name="status_temporarily_unavailable">Serviciu indisponibil temporar</string>
   <string name="status_bad_credentials">Date de conectare incorecte</string>
   <string name="status_climit_exceded">Limita de aplicații de client a fost depășită</string>
-  <string name="status_version_error">Versiunea serverului este incompatibilă</string>
   <string name="status_reg_disabled">În prezent, înregistrarea este dezactivată. Pentru a o activa, accesați fila \"Smartphones\" de pe pagina \"Supla Cloud\".</string>
   <string name="status_access_id_not_assigned">Acest Dispozitiv nu a realocat un identificator de acces. Accesați pagina \"Supla Cloud\" și atribuiți indetificatorul corespunzător în fila \"Smartphones\".</string>
   <string name="status_device_disabled">Dispozitivul este oprit</string>
@@ -96,8 +95,6 @@
   <string name="wizard_no_internetwifi">Înainte de a începe, conectați-vă la Internet printr-o rețea Wi-Fi, careva fi folosită și de dispozitivele de acționare pentru a se conecta la server.</string>
   <string name="wizard_wifi_error">Rețeaua Wi-Fi este dezactivată sau identificatorul sau numele acesteia nu poate fi citit!</string>
   <string name="wizard_location_error">Pentru funcționarea corectă al asistentului de adăugare, serviciul de localizare trebuie să fie activat pe acest dispozitiv. Accesați setările sistemului, apoi selectați opțiunea „Locație” și vă asigurați că este pornită.</string>
-  <string name="wizard_addnetwork_error">Nu se poate adăuga configurația rețelei Wi-Fi!</string>
-  <string name="wizard_wifi_timeout">Timpul de așteptare pentru datele rețelei actuale Wi-Fi a fost depășit! Accesați setările Wi-Fi al sistemului Android, selectați Avansate, după care bifați opțiunea „Porniți Wi-Fi automat”</string>
   <string name="wizard_scan_timeout">Timpul de așteptare pentru finalizarea căutării rețelei Wi-Fi a fost depășit!</string>
   <string name="wizard_connect_timeout">Timpul de așteptare pentru stabilirea conexiunii cu dispozitivul de acționare a fost depășit!</string>
   <string name="wizard_configure_timeout">Timpul de așteptare pentru completarea configurației dispozitivului a fost depășit!</string>
@@ -112,7 +109,6 @@
   <string name="wizard_iodev_name">Numele</string>
   <string name="wizard_iodev_laststate">Starea precedentă</string>
 
-  <string name="wizard_result_param_error">Parametri de intrare incorecți!</string>
   <string name="wizard_result_compat_error">Dispozitivul la care s-a efectuat conectarea nu este compatibil cu acest creator!</string>
   <string name="wizard_result_conn_error">Conexiunea la dispozitiv nu este posibilă!</string>
   <string name="wizard_result_failed">Configurația a eșuat!</string>
@@ -132,7 +128,6 @@
   <string name="hp_eco">ECO</string>
   <string name="hp_turbo">TURBO</string>
   <string name="hp_auto">AUTO</string>
-  <string name="hp_room_temperature">Temperatura camerei</string>
   <string name="hp_cfg_turbo_time">Durata modului TURBO</string>
   <string name="hp_cfg_water_max">Temperatura maximă a apei</string>
   <string name="hp_cfg_eco_reduction">Reducerea temperaturii în modul ECO</string>
@@ -150,7 +145,6 @@
   <string name="ranking_of_hours">Clasarea orelor</string>
   <string name="ranking_of_weekdays">Clasarea zilelor săptămânii</string>
   <string name="ranking_of_months">Clasare alunilor</string>
-  <string name="consumption_acording_to_phases">Consumul conform fazelor</string>
   <string name="temperature">Temperatură</string>
   <string name="humidity">Umiditate</string>
   <string name="history_range_last_day">Ultimele 24 de ore</string>
@@ -161,18 +155,11 @@
   <string name="all_available_history">Tot istoricul disponibil</string>
   <string name="retrieving_data_from_the_server">Descărcare adatelor de pe server...</string>
   <string name="no_chart_data_available">Nu există date pentru grafic.</string>
-  <string name="comparsion_minmin">Comparație minut cu minut</string>
-  <string name="comparsion_hourhour">Comparație oră cu oră</string>
-  <string name="comparsion_dayday">Comparație zi cu zi</string>
-  <string name="comparsion_monthmonth">Comparație lună cu lună</string>
-  <string name="comparsion_yearyear">Comparație an cu an</string>
   <string name="hp_error_1">Nu există apă</string>
   <string name="hp_error_2">Încălzitor ars</string>
   <string name="hp_error_3">Eroare a senzorului de temperatură a apei</string>
   <string name="hp_error_4">Eroare a senzorului de temperatură a camerei</string>
   <string name="hp_error_5">Nu există întreruperi în rețea</string>
-  <string name="production_acording_to_phases">Producția conform fazelor</string>
-  <string name="current_production">Producția în luna curentă</string>
   <string name="enter_superuser_credentials">Introduceți datele de acreditare ale utilizatorului principal</string>
 
   <string name="channel_func_none">Nu există funcții</string>
@@ -215,11 +202,6 @@
   <string name="channel_func_valve_percentage">Valve</string>
 
   <string name="channel_caption_heatmeter">Contorul de căldură</string>
-  <string name="aritmetic_balance_days">Bilanţ aritmetic - Zile</string>
-  <string name="aritmetic_balance_hours">Bilanţ aritmetic - Ore</string>
-  <string name="aritmetic_balance_minutes">Bilanţ aritmetic - Minute</string>
-  <string name="aritmetic_balance_months">Bilanţ aritmetic - Luni</string>
-  <string name="aritmetic_balance_years">Bilanţ aritmetic - Ani</string>
   <string name="associeted_with_scene_error">Nu se poate schimba funcţia unui canal care este asociat cu o scenă</string>
   <string name="battery_health">Durata de viaţă a bateriei</string>
   <string name="battery_level">Nivelul bateriei</string>
@@ -267,11 +249,6 @@
   <string name="channel_uv_error">Durata de viaţă a lămpii UV este de %1$.01f%%.  Înlocuiţi lampa.</string>
   <string name="valve_warning_manually_closed">Robinetul a fost închis manual sau prin radio. Înainte de a-l deschide, asiguraţi-vă că nu a fost închis din cauza inundaţiei Pentru a dezactiva avertizarea, deschideți manual robinetul. Sigur doriți să deschideți robinetul din aplicație?!</string>
   <string name="valve_warning">Robinetul a fost închis manual sau prin radio. Înainte de a-l deschide, asiguraţi-vă că nu a fost închis din cauza inundaţiei. Pentru a dezactiva avertizarea, deschideți manual robinetul.</string>
-  <string name="vector_balance_days">Bilanţ vectorial - Zile</string>
-  <string name="vector_balance_hours">Bilanţ vectorial - Ore</string>
-  <string name="vector_balance_minutes">Bilanţ vectorial - Minute</string>
-  <string name="vector_balance_months">Bilanţ vectorial - Luni</string>
-  <string name="vector_balance_years">Bilanţ vectorial - Ani</string>
   <string name="vl_cfg_auto">AUTO</string>
   <string name="vl_cfg_boost">Amplificare</string>
   <string name="vl_cfg_mode">Mod de estompare</string>
@@ -289,18 +266,11 @@
   <string name="vl_dimmer_cfg_info_txt6">Amplificare</string>
   <string name="vl_dimmer_cfg_info_txt7">Această funcţie ajută la pornirea iluminării cu LED la nivelul scăzut de luminozitate memorat, asigurând oferind un impuls de pornire (amplificare) nivelului de luminozitate. Prin deplasarea potențiometrului gri închis în jurul cercului, puteți crește sau reduce nivelul de amplificare, marcat cu linia verde. La pornirea iluminatului, nivelul de luminozitate va fi mărit (amplificat) la valoarea setată iar apoi va reveni la nivelul memorat înainte de oprirea iluminatului.</string>
   <string name="vl_dimmer_cfg_info_txt8">Mai multe informaţii despre estompator de lumină  puteţi găsi la</string>
-  <string name="vl_dimmer_info_txt1">Controlul estompării</string>
-  <string name="vl_dimmer_info_txt2">Pentru a modifica nivelul de luminozitate, mutaţi cu degetul indicatorul de pe riglă sau de pe cercul de luminozitate.</string>
-  <string name="vl_dimmer_info_txt3">Cu butonul de pornire / oprire, puteţi opri sau porni iluminatul complet.</string>
-  <string name="vl_dimmer_info_txt4">Estompatorul ţine minte nivelul de luminozitate de înainte de a opri iluminatul.</string>
-  <string name="vl_dimmer_info_txt5">Pentru a regla parametrii estompatorului, apăsaţi butonul de setări.</string>
   <string name="wake_up_frequency">Frecvenţa  de trezire</string>
   <string name="wakeup_info">*) Setările introduse vor fi aplicate data viitoare la trezirea nodului.</string>
   <string name="wheel">Cerc</string>
   <string name="wifi_rssi">Wi-Fi RSSI</string>
   <string name="wifi_signal_strength">Puterea semnalului Wi-Fi</string>
-  <string name="wifi_throttling">Datorită limitelor de scanare a reţelei Wi-Fi impuse de sistemul Android, veţi aştepta timpul afişat mai sus.</string>
-  <string name="wizard_step1_txt2">Asiguraţi-vă că datele mobile sunt dezactivate atunci când adăugaţi dispozitive. În caz contrar, adăugarea poate eşua.</string>
   <string name="add_wizard_step_2_message">Introduceţi numele şi parola reţelei Wi-Fi de acasă sau a companiei prin care dispozitivul executiv va putea stabili o conexiune cu serverul.</string>
   <string name="yes">Da</string>
   <string name="z_wave">Podul   Z-Wave</string>
@@ -367,7 +337,6 @@
   <string name="profile">Contul tău</string>
   <string name="profile_plural">Conturile Tale</string>
   <string name="menubar_appsettings">Setări</string>
-  <string name="em_chart_phase_n">Faza %d</string>
   <string name="em_chart_all_phases">Faza 1 + 2 + 3</string>
   <string name="widget_configure_title">Configurare widget</string>
   <string name="widget_configure_profile_label">Cont</string>
@@ -375,8 +344,6 @@
   <string name="widget_configure_action_label">Acțiune</string>
   <string name="widget_configure_name_label">Denumire</string>
   <string name="widget_configure_error">Configurarea canalului a eșuat...</string>
-  <string name="widget_configure_no_selection">Nu a fost selectat canalul</string>
-  <string name="widget_configure_no_channel">Nu există canale disponibile</string>
   <string name="double_button_widget_description">Widget cu două butoane</string>
   <string name="single_button_widget_description">Widget cu un singur buton</string>
   <string name="widget_app_not_initialized">Vă rugăm să te conectezi!</string>
@@ -395,7 +362,6 @@
   <string name="input">Intrare</string>
   <string name="monostable">Monostabil</string>
   <string name="bistable">Bistabil</string>
-  <string name="wizard_iodev_connect_failed">Încercarea de a stabili o conexiune Wi-Fi cu dispozitivul executiv a eșuat.</string>
   <string name="diw_cfg_info_oprange">Reglează intervalul de lucru al dimmer-ului setând nivelul minim și  maxim de luminozitate. Valoarea minimă și maximă poate fi setată prin mișcarea glisoarelor de pe ambele părți ale roții.</string>
   <string name="diw_cfg_info_in_options">Opțiuni de intrare</string>
   <string name="diw_cfg_info_mono_option">Această opțiune modifică comportamentul  intrării la care este conectat butonul monostabil. Dacă opțiunea este dezactivată, dimmer-ul oprește procesul de luminozitate atunci când atinge nivelul maxim de luminozitate, iar în cazul dimmării, când atinge nivelul minim. Activarea acestei opțiuni va trece la nivelul minim de îndată ce luminozitatea maximă este atinsă, iar în cazul diminuării la valoarea maximă, imediat ce este atins minimul. Iluminarea / estomparea va continua atâta timp cât butonul este apăsat.</string>
@@ -457,7 +423,6 @@
 
   <string name="turn_on">Pornește</string>
   <string name="turn_off">Închide</string>
-  <string name="str_default">Implicit</string>
 
   <string name="widget_configure_type_label">Widget pentru:</string>
   <string name="widget_configure_type_channel_label">Canal</string>
@@ -465,8 +430,6 @@
   <string name="widget_configure_type_scene_label">Scene</string>
   <string name="widget_configure_group_label">Grup pentru widget</string>
   <string name="widget_configure_scene_label">Scenă pentru widget</string>
-  <string name="widget_configure_no_group">Nu există grupuri disponibile</string>
-  <string name="widget_configure_no_scene">Nu există scene disponibile</string>
   <string name="widget_command_error">A apărut o eroare! (cod: %1$d)</string>
   <string name="widget_command_connection_failure">Eroare de conectare! (cod: %1$d)</string>
   <string name="widget_command_subject_offline">%1$s este offline!</string>
@@ -666,7 +629,6 @@
   <string name="details_em_balance_hourly">Echilibru orar</string>
   <string name="details_em_balance_chart_aggregated">Balanță agregată diagramă</string>
   <string name="details_em_sum">Suma</string>
-  <string name="details_em_select_range">Selectați perioada</string>
   <string name="details_em_active_energy">Energie activă</string>
   <string name="details_em_forwarded_energy">Descărcat</string>
   <string name="details_em_reversed_energy">Returnat</string>
@@ -723,10 +685,6 @@
   <string name="developer_info_activated">Modul dezvoltator a fost activat</string>
   <string name="developer_info_screen_orientation">Rotirea ecranului activată</string>
   <string name="developer_info_settings">Setări experimentale</string>
-  <string name="profiles_list_sorting">Sortare</string>
-  <string name="profiles_list_sorting_default">Implicit</string>
-  <string name="profiles_list_sorting_name">Nume</string>
-  <string name="profiles_list_sorting_added">Adăugat cel mai recent</string>
   <string name="channel_caption_water_tank">Rezervor de apă</string>
   <string name="channel_caption_container_level_sensor">Senzor de nivel al recipientului</string>
   <string name="state_opened">deschis</string>
@@ -758,4 +716,12 @@
     <item quantity="other">%1$d de zile ⏱️</item>
   </plurals>
   <string name="thermostat_calibration_error">Eroare de calibrare</string>
+  <string name="toolbar_dimmer">Dimmer</string>
+  <string name="rgb_detail_color">Culoare:</string>
+  <string name="rgb_detail_brightness">Luminozitate:</string>
+  <string name="rgb_detail_select_color">Selectați culoarea</string>
+  <string name="legacy_rgbw_settings_unauthorized_message">Este necesară autorizarea pentru a vedea configurația!</string>
+  <string name="legacy_rgbw_settings_authorize_button">Autorizați</string>
+  <string name="rgb_detail_colors_limit">Limită atinsă!</string>
+  <string name="channel_caption_invisible">Ascuns</string>
 </resources>

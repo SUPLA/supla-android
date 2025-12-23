@@ -325,7 +325,7 @@ class MainActivity :
 
     setAccountItemVisible(profileManager.getAllProfiles().blockingFirst().size > 1 && lastDestinationId == R.id.main_fragment)
     setDeleteVisible(lastDestinationId == R.id.notifications_log_fragment)
-    setDeleteHistoryVisible(lastDestinationId == R.id.thermometer_detail_fragment || lastDestinationId == R.id.gpm_detail_fragment)
+    setDeleteHistoryVisible(lastDestinationId == R.id.single_history_detail_fragment)
   }
 
   override fun onResume() {

@@ -461,6 +461,9 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
   public boolean setRGBW(
       int ID, boolean Group, int Color, int ColorBrightness, int Brightness, boolean TurnOnOff) {
+    Timber.d(
+        "setRGBW(id: %d, group: %b, color: %d, colorBrightness: %d, brightness: %d, onOff: %b)",
+        ID, Group, Color, ColorBrightness, Brightness, TurnOnOff);
     long _supla_client_ptr = lockClientPtr();
     try {
       return _supla_client_ptr != 0
@@ -564,6 +567,9 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
   public boolean deviceCalCfgRequest(
       int ID, boolean Group, int Command, int DataType, byte[] Data) {
+    Timber.d(
+        "deviceCalCfgRequest(id: %d, group: %b, command: %d, dataType: %d)",
+        ID, Group, Command, DataType);
     long _supla_client_ptr = lockClientPtr();
     try {
       return _supla_client_ptr != 0
@@ -1189,6 +1195,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
   private void channelExtendedValueUpdate(
       SuplaChannelExtendedValueUpdate channelExtendedValueUpdate) {
+    Timber.d("Channel extended value id: %d", channelExtendedValueUpdate.Id);
     UpdateExtendedValueResult result =
         updateChannelExtendedValueUseCase
             .invoke(channelExtendedValueUpdate.Id, channelExtendedValueUpdate.Value)
@@ -1226,10 +1233,15 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   }
 
   private void onDeviceCalCfgResult(int ChannelId, int Command, int Result, byte[] Data) {
+    Timber.d(
+        "onDeviceCalCfgResult(channelId: %d, command: %d, result: %d)", ChannelId, Command, Result);
     sendMessage(new SuplaClientMessage.CallConfigResult(ChannelId, Command, Result, Data));
   }
 
   private void onDeviceCalCfgProgressReport(int ChannelId, int Command, short Progress) {
+    Timber.d(
+        "onDeviceCalCfgProgressReport(channelId: %d, command: %d, progress: %d)",
+        ChannelId, Command, Progress);
     sendMessage(new SuplaClientMessage.CallConfigProgressReport(ChannelId, Command, Progress));
   }
 

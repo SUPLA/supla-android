@@ -16,7 +16,6 @@
   <string name="status_temporarily_unavailable">Υπηρεσία προσωρινά μη διαθέσιμη</string>
   <string name="status_bad_credentials">Λανθασμένα διαπιστευτήρια</string>
   <string name="status_climit_exceded">Υπέρβαση ορίου των εφαρμογών πελάτη</string>
-  <string name="status_version_error">Μη συμβατή έκδοση διακομιστή</string>
   <string name="status_reg_disabled">Η εγγραφή είναι αυτή τη στιγμή απενεργοποιημένη. Για να την ενεργοποιήσετε, μεταβείτε στην καρτέλα \"Smartphones\" στη σελίδα \"Supla Cloud\".</string>
   <string name="status_access_id_not_assigned">Αυτή η συσκευή δεν έχει παραχωρημένο αναγνωριστικό πρόσβασης. Μεταβείτε στη σελίδα \"Supla Cloud\" στην καρτέλα \"Smartphones\" και παραχωρήστε το κατάλληλο αναγνωριστικό.</string>
   <string name="status_device_disabled">Η συσκευή είναι απενεργοποιημένη</string>
@@ -94,8 +93,6 @@
   <string name="wizard_no_internetwifi">Πριν ξεκινήσετε, συνδεθείτε στο Διαδἰκτυο μέσω ενός δικτύου Wi-Fi, το οποίο θα χρησιμοποιηθεί για τη σύνδεση με το διακομιστή και από τις εκτελεστικές συσκευές.</string>
   <string name="wizard_wifi_error">Το δίκτυο Wi-Fi είναι απενεργοποιημένο ή δεν μπορούν να διαβαστούν το αναγνωριστικό ή το όνομα του!</string>
   <string name="wizard_location_error">Για να λειτουργήσει σωστά ο οδηγός προσθήκης, η υπηρεσία της Τοποθεσίας πρέπει να είναι ενεργοποιημένη σε αυτήν τη συσκευή. Ανοίξτε τις ρυθμίσεις του συστήματός και, στη συνέχεια, επιλέξτε την «Τοποθεσία» και βεβαιωθείτε ότι είναι ενεργοποιημένη.</string>
-  <string name="wizard_addnetwork_error">Δεν είναι δυνατή η προσθήκη διαμόρφωσης του δικτύου Wi-Fi!</string>
-  <string name="wizard_wifi_timeout">Υπέρβαση χρόνου αναμονής για τα δεδομένα του ισχύοντος Wi-Fi! Ανοίξτε τις ρυθμίσεις Wi-Fi του Android, μεταβείτε στην επιλογή Για προχωρημένους και επιλέξτε την «Αυτόματη ενεργοποίηση Wi-Fi»</string>
   <string name="wizard_scan_timeout">Υπέρβαση χρόνου αναμονής για την ολοκλήρωση της αναζήτησης Wi-Fi!</string>
   <string name="wizard_connect_timeout">Υπέρβαση χρόνου αναμονής για τη σύνδεση με την εκτελεστική συσκευή!</string>
   <string name="wizard_configure_timeout">Υπέρβαση χρόνου αναμονής για την ολοκλήρωση διαμόρφωσης της συσκευής!</string>
@@ -110,7 +107,6 @@
   <string name="wizard_iodev_name">Ονομασία</string>
   <string name="wizard_iodev_laststate">Προηγούμενη κατάσταση</string>
 
-  <string name="wizard_result_param_error">Μη έγκυρες παράμετροι εισόδου!</string>
   <string name="wizard_result_compat_error">Η συσκευή με την οποία συνδεθήκατε δεν είναι συμβατή με αυτόν τον οδηγό!</string>
   <string name="wizard_result_conn_error">Δεν είναι δυνατή η σύνδεση με τη συσκευή!</string>
   <string name="wizard_result_failed">Η διαμόρφωση απέτυχε!</string>
@@ -130,7 +126,6 @@
   <string name="hp_eco">ECO</string>
   <string name="hp_turbo">TURBO</string>
   <string name="hp_auto">AUTO</string>
-  <string name="hp_room_temperature">Θερμοκρασία δωματίου</string>
   <string name="hp_cfg_turbo_time">Διάρκεια λειτουργίας TURBO</string>
   <string name="hp_cfg_water_max">Μέγιστη θερμοκρασία νερού</string>
   <string name="hp_cfg_eco_reduction">Μείωση θερμοκρασίας με λειτουργία ECO</string>
@@ -148,7 +143,6 @@
   <string name="ranking_of_hours">Κατάταξη των ωρών</string>
   <string name="ranking_of_weekdays">Κατάταξη των ημερών της εβδομάδας</string>
   <string name="ranking_of_months">Κατάταξη των μηνών</string>
-  <string name="consumption_acording_to_phases">Κατανάλωση ανάλογα με τις φάσεις</string>
   <string name="temperature">Θερμοκρασία</string>
   <string name="humidity">Υγρασία</string>
   <string name="history_range_last_day">Οι τελευταίες 24 ώρες</string>
@@ -159,18 +153,11 @@
   <string name="all_available_history">Όλο το διαθέσιμο ιστορικό</string>
   <string name="retrieving_data_from_the_server">Λήψη δεδομένων από διακομιστή...</string>
   <string name="no_chart_data_available">Δεν υπάρχουν δεδομένα για το γράφημα.</string>
-  <string name="comparsion_minmin">Σύγκριση λεπτό προς λεπτό</string>
-  <string name="comparsion_hourhour">Σύγκριση ώρα προς ώρα</string>
-  <string name="comparsion_dayday">Σύγκριση μέρα προς μέρα</string>
-  <string name="comparsion_monthmonth">Σύγκριση ώρα προς ώρα</string>
-  <string name="comparsion_yearyear">Σύγκριση έτος προς έτος</string>
   <string name="hp_error_1">Έλλειψη νερού</string>
   <string name="hp_error_2">Καμμένος θερμαντήρας</string>
   <string name="hp_error_3">Σφάλμα αισθητήρα θερμοκρασίας νερού</string>
   <string name="hp_error_4">Σφάλμα αισθητήρα θερμοκρασίας δωματίου</string>
   <string name="hp_error_5">Δεν υπάρχουν διακοπές στο δίκτυο</string>
-  <string name="production_acording_to_phases">Παραγωγή ανάλογα με τις φάσεις</string>
-  <string name="current_production">Παραγωγή τον τρέχοντα μήνα</string>
   <string name="enter_superuser_credentials">Καταχωρίστε τα διαπιστευτήρια superuser</string>
 
   <string name="channel_func_none">Δεν υπάρχει λειτουργία</string>
@@ -214,11 +201,6 @@
 
   <string name="channel_caption_heatmeter">Μετρητής θερμότητας</string>
   <string name="add_wizard_step_2_message">Εισαγάγετε το όνομα και τον κωδικό πρόσβασης του δικτύου WiFi οικίας ή εταιρείας μέσω του οποίου η εκτελεστική συσκευή θα μπορεί να δημιουργήσει σύνδεση με τον διακομιστή.</string>
-  <string name="aritmetic_balance_days">Αριθμητικός ισολογισμός - Ημέρες</string>
-  <string name="aritmetic_balance_hours">Αριθμητικός ισολογισμός - Ώρες</string>
-  <string name="aritmetic_balance_minutes">Αριθμητικός ισολογισμός - Λεπτά</string>
-  <string name="aritmetic_balance_months">Αριθμητικός ισολογισμός - Μήνες</string>
-  <string name="aritmetic_balance_years">Αριθμητικός ισολογισμός - Χρόνια</string>
   <string name="associeted_with_scene_error">Δεν μπορείτε να αλλάξετε τη λειτουργία ενός καναλιού που σχετίζεται με μια σκηνή.</string>
   <string name="battery_health">Διάρκεια ζωής μπαταρίας</string>
   <string name="battery_level">Επίπεδο μπαταρίας</string>
@@ -266,11 +248,6 @@
   <string name="channel_uv_error">Η διάρκεια ζωής της λυχνίας UV είναι %1$.01f%%. Αντικαταστήστε τη λυχνία.</string>
   <string name="valve_warning_manually_closed">Η βαλβίδα έχει κλείσει χειροκίνητα ή μέσω ραδιοφώνου. Πριν την ανοίξετε, βεβαιωθείτε ότι δεν έχει κλείσει λόγω πλημμύρας. Για να απενεργοποιήσετε την προειδοποίηση, ανοίξτε τη βαλβίδα χειροκίνητα. Είστε βέβαιοι ότι θέλετε να ανοίξετε τη βαλβίδα μέσω της εφαρμογής;</string>
   <string name="valve_warning">Η βαλβίδα έχει κλείσει χειροκίνητα ή μέσω ραδιοφώνου. Πριν την ανοίξετε, βεβαιωθείτε ότι δεν έχει κλείσει λόγω πλημμύρας. Για να απενεργοποιήσετε την προειδοποίηση, ανοίξτε τη βαλβίδα χειροκίνητα.</string>
-  <string name="vector_balance_days">Διανυσματικός ισολογισμός - Ημέρες</string>
-  <string name="vector_balance_hours">Διανυσματικός ισολογισμός - Ώρες</string>
-  <string name="vector_balance_minutes">Διανυσματικός ισολογισμός - Λεπτά</string>
-  <string name="vector_balance_months">Διανυσματικός ισολογισμός - Μήνες</string>
-  <string name="vector_balance_years">Διανυσματικός ισολογισμός - Χρόνια</string>
   <string name="vl_cfg_auto">ΑΥΤΟ</string>
   <string name="vl_cfg_boost">Ενίσχυση</string>
   <string name="vl_cfg_mode">Λειτουργία εξασθένισης</string>
@@ -288,18 +265,11 @@
   <string name="vl_dimmer_cfg_info_txt6">Ενίσχυση</string>
   <string name="vl_dimmer_cfg_info_txt7">Αυτή η λειτουργία βοηθά στην ενεργοποίηση του φωτισμού LED σε αποθηκευμένο χαμηλό επίπεδο φωτεινότητας, παρέχοντας στην εκκίνηση την αύξηση (ενδυνάμωση) του επιπέδου φωτεινότητας. Μετακινώντας τη σκούρο γκρι κλίμακα γύρω από τον κύκλο, μπορείτε να αυξήσετε ή να μειώσετε το επίπεδο ενδυνάμωσης, το οποίο επισημαίνεται με την πράσινη γραμμή. Κατά την ενεργοποίηση του φωτισμού, το επίπεδο φωτεινότητας θα αυξηθεί (ενδυναμωθεί) στην προκαθορισμένη τιμή και, στη συνέχεια, θα επιστρέψει στο επίπεδο που έχει αποθηκευτεί πριν απενεργοποιήσετε τον φωτισμό.</string>
   <string name="vl_dimmer_cfg_info_txt8">Περισσότερες πληροφορίες σχετικά με τον ρεοστάτη μπορείτε να βρείτε στη διεύθυνση</string>
-  <string name="vl_dimmer_info_txt1">Έλεγχος ρεοστάτη</string>
-  <string name="vl_dimmer_info_txt2">Για να αλλάξετε το επίπεδο φωτεινότητας, σύρετε το δάχτυλό σας στην ένδειξη στην κλίμακα ή στον τροχό φωτεινότητας.</string>
-  <string name="vl_dimmer_info_txt3">Με το κουμπί λειτουργίας, μπορείτε να απενεργοποιήσετε ή να ενεργοποιήσετε εντελώς τον φωτισμό.</string>
-  <string name="vl_dimmer_info_txt4">Ο ρεοστάτης θα θυμάται το επίπεδο φωτεινότητας πριν απενεργοποιήσει τον φωτισμό.</string>
-  <string name="vl_dimmer_info_txt5">Για να ρυθμίσετε τις παραμέτρους του ρεοστάτη, πατήστε το κουμπί ρυθμίσεων.</string>
   <string name="wake_up_frequency">Συχνότητα αφύπνισης</string>
   <string name="wakeup_info">*) Οι καταχωρημένες ρυθμίσεις θα εφαρμοστούν την επόμενη φορά που θα ξυπνήσει ο κόμβος.</string>
   <string name="wheel">Κύκλος</string>
   <string name="wifi_rssi">Wi-Fi RSSI</string>
   <string name="wifi_signal_strength">Ισχύς σήματος Wi-Fi</string>
-  <string name="wifi_throttling">Λόγω των ορίων της σάρωσης δικτύου Wi-Fi που επιβάλλει το σύστημα Android, θα πρέπει να περιμένετε τον χρόνο που παρουσιάζεται παραπάνω.</string>
-  <string name="wizard_step1_txt2">Βεβαιωθείτε ότι τα δεδομένα κινητής τηλεφωνίας είναι απενεργοποιημένα κατά την προσθήκη συσκευών. Διαφορετικά, η προσθήκη ενδέχεται να αποτύχει.</string>
   <string name="yes">Ναί</string>
   <string name="z_wave">Γέφυρα κύματος Ζ</string>
   <string name="zwave_add_device">Πρόσθεση συσκευής</string>
@@ -365,7 +335,6 @@
   <string name="profile">Ο λογαριασμός σας</string>
   <string name="profile_plural">Οι λογαριασμοί σας</string>
   <string name="menubar_appsettings">Ρυθμίσεις</string>
-  <string name="em_chart_phase_n">Στάδιο %d</string>
   <string name="em_chart_all_phases">Στάδιο 1+2+3</string>
   <string name="widget_configure_title">Διαμόρφωση γραφικού στοιχείου</string>
   <string name="widget_configure_profile_label">Λογαριασμός</string>
@@ -373,8 +342,6 @@
   <string name="widget_configure_action_label">Ενέργεια</string>
   <string name="widget_configure_name_label">Όνομα</string>
   <string name="widget_configure_error">Η ρύθμιση του καναλιού απέτυχε...</string>
-  <string name="widget_configure_no_selection">Το κανάλι δεν είναι επιλεγμένο</string>
-  <string name="widget_configure_no_channel">Δεν υπάρχουν διαθέσιμα κανάλια</string>
   <string name="double_button_widget_description">Γραφικό στοιχείο δύο κουμπιών</string>
   <string name="single_button_widget_description">Γραφικό στοιχείο με ένα κουμπί</string>
   <string name="widget_app_not_initialized">Παρακαλώ συνδεθείτε!</string>
@@ -393,7 +360,6 @@
   <string name="input">Είσοδος</string>
   <string name="monostable">Μονόσταχτο</string>
   <string name="bistable">Διστακτικό</string>
-  <string name="wizard_iodev_connect_failed">Μια προσπάθεια δημιουργίας σύνδεσης Wi-Fi στον ενεργοποιητή απέτυχε.</string>
   <string name="diw_cfg_info_oprange">Ρυθμίστε το εύρος ροοστάτη ρυθμίζοντας τα ελάχιστα και μέγιστα επίπεδα φωτεινότητας. Οι ελάχιστες και μέγιστες τιμές μπορούν να ρυθμιστούν μετακινώντας τα ρυθμιστικά που βρίσκονται και στις δύο πλευρές του τροχού.</string>
   <string name="diw_cfg_info_in_options">Επιλογές εισαγωγής</string>
   <string name="diw_cfg_info_mono_option">Αυτή η επιλογή αλλάζει τη συμπεριφορά της εισόδου στην οποία είναι συνδεδεμένο το κουμπί monostable. Όταν αυτή η επιλογή είναι απενεργοποιημένη, ο ροοστάτης σταματά τη διαδικασία φωτεινότητας όταν επιτευχθεί το μέγιστο επίπεδο φωτεινότητας και, σε περίπτωση μείωσης της έντασης, όταν φτάσει στο ελάχιστο επίπεδο. Η ενεργοποίηση αυτής της επιλογής θα μετακινηθεί στο ελάχιστο επίπεδο μόλις επιτευχθεί η μέγιστη φωτεινότητα και, σε περίπτωση μείωσης της έντασης στη μέγιστη τιμή, μόλις επιτευχθεί το ελάχιστο. Η λεύκανση/εξασθένιση θα συνεχιστεί όσο πατάτε το κουμπί.</string>
@@ -452,15 +418,12 @@
   <string name="cfg_profile_active_indicator">ενεργό</string>
   <string name="turn_on">Ενεργοποίηση</string>
   <string name="turn_off">Απενεργοποίηση</string>
-  <string name="str_default">Προεπιλογή</string>
   <string name="widget_configure_type_label">Γραφικό στοιχείο για:</string>
   <string name="widget_configure_type_channel_label">Κανάλι</string>
   <string name="widget_configure_type_group_label">Ομάδες</string>
   <string name="widget_configure_type_scene_label">Σκηνές</string>
   <string name="widget_configure_group_label">Ομάδα για γραφικό στοιχείο</string>
   <string name="widget_configure_scene_label">Σκηνή για γραφικό στοιχείο</string>
-  <string name="widget_configure_no_group">Δεν υπάρχουν διαθέσιμες ομάδες</string>
-  <string name="widget_configure_no_scene">Δεν υπάρχουν διαθέσιμες σκηνές</string>
   <string name="widget_command_error">Εμφανίστηκε σφάλμα! (κωδικός: %1$d)</string>
   <string name="widget_command_connection_failure">Σφάλμα σύνδεσης! (κωδικός: %1$d)</string>
   <string name="widget_command_subject_offline">%1$s είναι εκτός σύνδεσης!</string>
@@ -660,7 +623,6 @@
   <string name="details_em_balance_hourly">Ωριαίο ισοζύγιο</string>
   <string name="details_em_balance_chart_aggregated">Ισολογισμός συγκεντρωμένος με διάγραμμα</string>
   <string name="details_em_sum">Σύνολο</string>
-  <string name="details_em_select_range">Επιλέξτε περίοδο</string>
   <string name="details_em_active_energy">Ενεργή ενέργεια</string>
   <string name="details_em_forwarded_energy">Έχει γίνει λήψη</string>
   <string name="details_em_reversed_energy">Επιστράφηκε</string>
@@ -718,10 +680,6 @@
   <string name="developer_info_activated">Λειτουργία προγραμματιστή ενεργοποιήθηκε</string>
   <string name="developer_info_screen_orientation">Ενεργοποιήθηκε η περιστροφή οθόνης</string>
   <string name="developer_info_settings">Πειραματικές ρυθμίσεις</string>
-  <string name="profiles_list_sorting">Ταξινόμηση</string>
-  <string name="profiles_list_sorting_default">Προεπιλογή</string>
-  <string name="profiles_list_sorting_name">Όνομα</string>
-  <string name="profiles_list_sorting_added">Τελευταία προσθήκη</string>
   <string name="channel_caption_water_tank">Δεξαμενή νερού</string>
   <string name="channel_caption_container_level_sensor">Αισθητήρας στάθμης δοχείου</string>
   <string name="state_opened">ανοιχτό</string>
@@ -752,4 +710,12 @@
     <item quantity="other">%1$d ημέρες ⏱️</item>
   </plurals>
   <string name="thermostat_calibration_error">Σφάλμα βαθμονόμησης</string>
+  <string name="toolbar_dimmer">Δίμερ</string>
+  <string name="rgb_detail_color">Χρώμα:</string>
+  <string name="rgb_detail_brightness">Φωτεινότητα:</string>
+  <string name="rgb_detail_select_color">Επιλέξτε χρώμα</string>
+  <string name="legacy_rgbw_settings_unauthorized_message">Απαιτείται εξουσιοδότηση για να δείτε τη διαμόρφωση!</string>
+  <string name="legacy_rgbw_settings_authorize_button">Εξουσιοδοτήστε</string>
+  <string name="rgb_detail_colors_limit">Το όριο έφτασε!</string>
+  <string name="channel_caption_invisible">Κρυφός</string>
 </resources>

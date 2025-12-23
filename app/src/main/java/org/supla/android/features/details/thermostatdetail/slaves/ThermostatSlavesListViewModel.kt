@@ -34,8 +34,8 @@ import org.supla.android.data.source.remote.thermostat.getIndicatorIcon
 import org.supla.android.data.source.remote.thermostat.getSetpointText
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.di.FORMATTER_THERMOMETER
-import org.supla.android.features.details.detailbase.standarddetail.DetailPage
-import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
+import org.supla.android.features.details.detailbase.base.DetailPage
+import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase

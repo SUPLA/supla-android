@@ -4,7 +4,6 @@ plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.spotless)
   alias(libs.plugins.kotlin.android)
-  alias(libs.plugins.kapt)
   alias(libs.plugins.google.services)
   alias(libs.plugins.hilt)
   alias(libs.plugins.kotlin.compose)
@@ -26,8 +25,8 @@ android {
     minSdk = libs.versions.minSdk.get().toInt()
     targetSdk = libs.versions.targetSdk.get().toInt()
     multiDexEnabled = true
-    versionCode = 308
-    versionName = "25.11"
+    versionCode = 312
+    versionName = "25.12.01"
 
     ndk {
       moduleName = "suplaclient"
@@ -183,8 +182,8 @@ dependencies {
 
   coreLibraryDesugaring(libs.android.tools.desugar)
 
-  kapt(libs.hilt.kapt)
-  kapt(libs.hilt.worker.kapt)
+  ksp(libs.hilt.kapt)
+  ksp(libs.hilt.worker.kapt)
   ksp(libs.androidx.room.compiler)
 
   testImplementation(libs.testing.junit)
@@ -203,10 +202,6 @@ dependencies {
   testImplementation(libs.testing.kotlin.relfect)
 }
 
-kapt {
-  correctErrorTypes = true
-}
-
 spotless {
   java {
     target(fileTree("dir" to "src", "include" to "**/*.java"))
@@ -218,15 +213,23 @@ spotless {
   }
   kotlin {
     target(fileTree("dir" to "src", "include" to "**/*.kt"))
-    ktlint(libs.versions.ktlint.get()).editorConfigOverride(
+    ktlint().editorConfigOverride(
       mapOf(
         "ktlint_standard_no-wildcard-imports" to "disabled",
         "ktlint_standard_filename" to "disabled",
         "ktlint_standard_trailing-comma-on-declaration-site" to "disabled",
         "ktlint_standard_trailing-comma-on-call-site" to "disabled",
-        "ktlint_experimental" to "disabled",
         "max_line_length" to "140",
-        "indent_size" to "2"
+        "indent_size" to "2",
+        // After update from 0.48.1 to 1.8.0
+        "ktlint_code_style" to "intellij_idea",
+        "ktlint_function_signature_body_expression_wrapping" to "default",
+        "ktlint_standard_function-expression-body" to "disabled",
+        "ktlint_standard_class-signature" to "disabled",
+        "ktlint_standard_function-signature" to "disabled",
+        "ktlint_standard_enum-wrapping" to "disabled",
+        "ktlint_standard_value-parameter-comment" to "disabled",
+        "ktlint_function_naming_ignore_when_annotated_with" to "Composable"
       )
     )
   }

@@ -18,17 +18,76 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
+import org.supla.android.data.source.local.entity.ColorEntity
+import org.supla.android.data.source.local.entity.ColorEntity.Companion.ALL_COLUMNS
+import org.supla.android.data.source.local.entity.ColorEntity.Companion.COLUMN_GROUP
+import org.supla.android.data.source.local.entity.ColorEntity.Companion.COLUMN_ID
+import org.supla.android.data.source.local.entity.ColorEntity.Companion.COLUMN_IDX
 import org.supla.android.data.source.local.entity.ColorEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.ColorEntity.Companion.COLUMN_REMOTE_ID
+import org.supla.android.data.source.local.entity.ColorEntity.Companion.COLUMN_TYPE
 import org.supla.android.data.source.local.entity.ColorEntity.Companion.TABLE_NAME
+import org.supla.android.data.source.local.entity.ColorEntityType
+import org.supla.android.data.source.local.entity.ProfileEntity
 
 @Dao
-interface ColorListDao {
+abstract class ColorListDao {
+  @Query(
+    """
+    SELECT $ALL_COLUMNS 
+    FROM $TABLE_NAME 
+    WHERE $COLUMN_REMOTE_ID = :remoteId 
+      AND $COLUMN_GROUP = :isGroup
+      AND $COLUMN_TYPE = :type
+      AND $COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
+    ORDER BY $COLUMN_IDX ASC, $COLUMN_ID DESC
+    """
+  )
+  abstract fun findAllColors(remoteId: Int, isGroup: Int, type: ColorEntityType): Observable<List<ColorEntity>>
+
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  abstract suspend fun save(color: ColorEntity)
+
+  @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_ID = :id")
+  abstract suspend fun delete(id: Long)
+
+  @Query(
+    """
+      UPDATE $TABLE_NAME
+      SET $COLUMN_IDX = :position
+      WHERE $COLUMN_ID = :id
+    """
+  )
+  abstract suspend fun updatePosition(id: Long, position: Int)
+
   @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_REMOTE_ID = :remoteId AND $COLUMN_PROFILE_ID = :profileId")
-  suspend fun deleteKtx(remoteId: Int, profileId: Long)
+  abstract suspend fun deleteKtx(remoteId: Int, profileId: Long)
 
   @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_PROFILE_ID = :profileId")
-  fun deleteByProfile(profileId: Long): Completable
+  abstract fun deleteByProfile(profileId: Long): Completable
+
+  @Transaction
+  open suspend fun updatePositions(remoteId: Int, isGroup: Boolean, type: ColorEntityType) {
+    val colors = findAllColors(remoteId = remoteId, isGroup = if (isGroup) 1 else 0, type = type).blockingFirst()
+    for (i in colors.indices) {
+      updatePosition(colors[i].id!!, i)
+    }
+  }
+
+  @Transaction
+  open suspend fun swapPositions(remoteId: Int, from: Int, to: Int, isGroup: Boolean, type: ColorEntityType) {
+    val colors = findAllColors(remoteId = remoteId, isGroup = if (isGroup) 1 else 0, type = type).blockingFirst().toMutableList()
+    val move = colors.removeAt(from)
+    colors.add(to, move)
+
+    for (i in colors.indices) {
+      updatePosition(colors[i].id!!, i)
+    }
+  }
 }

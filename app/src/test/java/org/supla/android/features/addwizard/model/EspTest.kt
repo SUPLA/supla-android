@@ -164,6 +164,7 @@ class EspTest {
     assertThat(Esp.isKnownNetworkName("ZAMEL-dom")).isFalse
     assertThat(Esp.isKnownNetworkName("ZAMEL-DOM1")).isFalse
     assertThat(Esp.isKnownNetworkName("ZAMEL-AFF1")).isTrue
+    assertThat(Esp.isKnownNetworkName("SUPLA-1624R")).isFalse
   }
 
   private fun performTest(shortSsid: String, longSsid: String, vararg invalidSsids: String) {

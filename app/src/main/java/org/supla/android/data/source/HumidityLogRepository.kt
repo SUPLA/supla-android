@@ -56,6 +56,9 @@ class HumidityLogRepository @Inject constructor(
       profileId = profileId
     )
 
+  override fun findCountWithoutGroupingString(remoteId: Int, profileId: Long): Single<Int> =
+    humidityLogDao.emptyGroupingStringCount(remoteId, profileId)
+
   override fun getInitialMeasurements(cloudService: SuplaCloudService, remoteId: Int): Response<List<HumidityMeasurement>> =
     cloudService.getInitialHumidityMeasurements(remoteId).execute()
 

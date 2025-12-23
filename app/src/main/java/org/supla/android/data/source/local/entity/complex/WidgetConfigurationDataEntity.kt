@@ -53,7 +53,7 @@ data class WidgetConfigurationDataEntity(
           actionId = widgetConfiguration.action
         )
       } else {
-        ChannelState(ChannelState.Value.NOT_USED)
+        ChannelState.Default(ChannelState.Value.NOT_USED)
       }
     }
 

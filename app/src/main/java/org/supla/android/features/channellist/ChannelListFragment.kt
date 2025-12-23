@@ -111,7 +111,7 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
         binding.channelsList.adapter = adapter
       }
 
-      is ChannelListViewEvent.OpenStandardDetail -> navigator.navigateTo(
+      is ChannelListViewEvent.BaseDetail -> navigator.navigateTo(
         destinationId = event.fragmentId,
         bundle = event.fragmentArguments
       )

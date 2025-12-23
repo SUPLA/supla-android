@@ -23,7 +23,7 @@ import org.supla.android.usecases.icon.IconData
 import org.supla.android.usecases.icon.IconResourceProducer
 import org.supla.core.shared.data.model.general.SuplaFunction
 
-class RgbLightingIconResourceProducer : IconResourceProducer {
+object RgbLightingIconResourceProducer : IconResourceProducer {
   override fun accepts(function: SuplaFunction): Boolean =
     function == SuplaFunction.RGB_LIGHTING
 

@@ -42,7 +42,6 @@
     <dimen name="channel_distanceimgtext_width">150dp</dimen>
     <dimen name="channel_distanceimg_width">150dp</dimen>
     <dimen name="channel_distanceimg_height">15dp</dimen>
-    <dimen name="rgb_detail_tab_btn_text">10sp</dimen>
     <dimen name="wizard_btnnextl_width">15dp</dimen>
     <dimen name="wizard_btnnextr_width">40dp</dimen>
     <dimen name="menuitem_height">50dp</dimen>

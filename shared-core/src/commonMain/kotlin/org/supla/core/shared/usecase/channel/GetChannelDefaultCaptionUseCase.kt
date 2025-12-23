@@ -104,9 +104,11 @@ class GetChannelDefaultCaptionUseCase {
       SuplaFunction.RAIN_SENSOR -> localizedString(CHANNEL_CAPTION_RAIN_SENSOR)
       SuplaFunction.WEIGHT_SENSOR -> localizedString(CHANNEL_CAPTION_WEIGHT_SENSOR)
       SuplaFunction.NO_LIQUID_SENSOR -> localizedString(CHANNEL_CAPTION_NO_LIQUID_SENSOR)
-      SuplaFunction.DIMMER -> localizedString(CHANNEL_CAPTION_DIMMER)
+      SuplaFunction.DIMMER, SuplaFunction.DIMMER_CCT -> localizedString(CHANNEL_CAPTION_DIMMER)
       SuplaFunction.RGB_LIGHTING -> localizedString(CHANNEL_CAPTION_RGB_LIGHTING)
-      SuplaFunction.DIMMER_AND_RGB_LIGHTING -> localizedString(CHANNEL_CAPTION_DIMMER_AND_RGB_LIGHTING)
+      SuplaFunction.DIMMER_AND_RGB_LIGHTING, SuplaFunction.DIMMER_CCT_AND_RGB ->
+        localizedString(CHANNEL_CAPTION_DIMMER_AND_RGB_LIGHTING)
+
       SuplaFunction.DEPTH_SENSOR -> localizedString(CHANNEL_CAPTION_DEPTH_SENSOR)
       SuplaFunction.DISTANCE_SENSOR -> localizedString(CHANNEL_CAPTION_DISTANCE_SENSOR)
       SuplaFunction.OPENING_SENSOR_WINDOW -> localizedString(CHANNEL_CAPTION_OPENING_SENSOR_WINDOW)

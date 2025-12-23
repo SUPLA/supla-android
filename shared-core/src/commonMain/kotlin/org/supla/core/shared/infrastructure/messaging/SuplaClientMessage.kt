@@ -17,15 +17,16 @@ package org.supla.core.shared.infrastructure.messaging
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import org.supla.android.data.source.remote.SuplaEventType
 import org.supla.android.lib.SuplaChannelBasicCfg
 import org.supla.android.lib.SuplaChannelState
 import org.supla.android.lib.ZWaveNode
 import org.supla.android.lib.ZWaveWakeUpSettings
 import org.supla.core.shared.data.model.suplaclient.SuplaResultCode
+import kotlin.time.Clock
 import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 sealed interface SuplaClientMessage {
   data class ChannelDataChanged(val channelId: Int, val extendedValueChanged: Boolean, val timerValueChanged: Boolean) : SuplaClientMessage
@@ -41,6 +42,7 @@ sealed interface SuplaClientMessage {
     val senderName: String?
   ) : SuplaClientMessage
 
+  @OptIn(ExperimentalTime::class)
   data class RegistrationEnabled(
     val clientRegistrationExpirationTimestamp: Long,
     val deviceRegistrationExpirationTimestamp: Long

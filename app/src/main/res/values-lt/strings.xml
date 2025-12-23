@@ -15,7 +15,6 @@
   <string name="status_temporarily_unavailable">Paslauga laikinai nepasiekiama</string>
   <string name="status_bad_credentials">Klaidingas autentifikavimas</string>
   <string name="status_climit_exceded">Viršutinė klientų programų riba viršyta</string>
-  <string name="status_version_error">Nesuderinama serverio versija</string>
   <string name="status_reg_disabled">Šiuo metu registracija išjungta. Norėdami ją įjungti eikite prie žymės Išmanieji telefonai puslapyje \"Supla Cloud\"</string>
   <string name="status_access_id_not_assigned">Šis įrenginys neturi priskirto prieigos identifikatoriaus. Eikite į puslapį \"Supla Cloud\" ir žymėje Išmanieji telefonai priskirkite tinkamą identifikatorių.</string>
   <string name="status_device_disabled">Įrenginys išjungtas</string>
@@ -78,8 +77,6 @@
   <string name="wizard_no_internetwifi">Prieš pradedami prisijunkite prie interneto Wi-Fi tinklo pagalba, kurį taip pat naudos vykdomasis įrenginys prisijungimui prie serverio.</string>
   <string name="wizard_wifi_error">Wi-Fi tinklas yra išjungtas arba negalima atpažinti jo identifikatoriaus arba pavadinimo!</string>
   <string name="wizard_location_error">Kad pridėjimo vedlys veiktų tinkamai, šiame įrenginyje turi būti įjungta Vietos paslauga. Eikite į sistemos nustatymus, tada pasirinkite „Vieta“ ir įsitikinkite, kad įjungta.</string>
-  <string name="wizard_addnetwork_error">Negalima pridėti Wi-Fi tinklo konfigūravimo!</string>
-  <string name="wizard_wifi_timeout">Viršytas aktualaus Wi-Fi tinklo duomenų laukimo laikas! Eikite į Android sistemos Wi-Fi nustatymus, pasirinkite Išplėstiniai parametrai, o tada pažymėkite "Įjungti Wi-Fi automatiškai".</string>
   <string name="wizard_scan_timeout">Viršytas Wi-Fi tinklo paieškos pabaigimo laukimo laikas!</string>
   <string name="wizard_connect_timeout">Viršytas ryšio užmezgimo su vykdomuoju įrenginiu laukimo laikas!</string>
   <string name="wizard_configure_timeout">Viršytas įrenginio konfigūracijos užbaigimo laukimo laikas!</string>
@@ -90,7 +87,6 @@
   <string name="wizard_iodev_data">Įrenginio duomenys</string>
   <string name="wizard_iodev_name">Pavadinimas</string>
   <string name="wizard_iodev_laststate">Ankstesnis statusas</string>
-  <string name="wizard_result_param_error">Klaidingi įvesties parametrai!</string>
   <string name="wizard_result_compat_error">Įrenginys, su kuriuo užmegztas ryšys nėra suderinamas su šiuo vedliu!</string>
   <string name="wizard_result_conn_error">Negalima užmegzti ryšio su įrenginiu!</string>
   <string name="wizard_result_failed">Nepavyko sėkmingai baigti konfigūravimo!</string>
@@ -107,7 +103,6 @@
   <string name="hp_eco">ECO</string>
   <string name="hp_turbo">TURBO</string>
   <string name="hp_auto">AUTO</string>
-  <string name="hp_room_temperature">Temperatūra patalpoje</string>
   <string name="hp_cfg_turbo_time">TURBO režimo trukmė</string>
   <string name="hp_cfg_water_max">Maksimali vandens temperatūra</string>
   <string name="hp_cfg_eco_reduction">Temperatūros mažinimas ECO režime</string>
@@ -125,7 +120,6 @@
   <string name="ranking_of_hours">Valandų reitingas</string>
   <string name="ranking_of_weekdays">Savaitės dienų reitingas</string>
   <string name="ranking_of_months">Mėnesių reitingas</string>
-  <string name="consumption_acording_to_phases">Suvartojimas pagal fazes</string>
   <string name="temperature">Temperatūra</string>
   <string name="humidity">Drėgmė</string>
   <string name="history_range_last_day">Pastarosios 24 valandos</string>
@@ -136,11 +130,6 @@
   <string name="all_available_history">Visa prieinama istorija</string>
   <string name="retrieving_data_from_the_server">Duomenų atsisiuntimas iš serverio...</string>
   <string name="no_chart_data_available">Nėra duomenų diagramai.</string>
-  <string name="comparsion_minmin">Palyginimas minutė prie minutės</string>
-  <string name="comparsion_hourhour">Palyginimas valanda prie valandos</string>
-  <string name="comparsion_dayday">Palyginimas diena prie dienos</string>
-  <string name="comparsion_monthmonth">Palyginimas mėnuo prie mėnesio</string>
-  <string name="comparsion_yearyear">Palyginimas metai prie metų</string>
   <string name="channel_caption_pressuresensor">Slėgio jutiklis</string>
   <string name="channel_caption_rainsensor">Kritulių matavimas</string>
   <string name="channel_caption_weightsensor">Svoris</string>
@@ -150,8 +139,6 @@
   <string name="hp_error_3">Vandens temperatūros jutiklio klaida</string>
   <string name="hp_error_4">Kambario temperatūros jutiklio klaida</string>
   <string name="hp_error_5">Tinklo pertraukų nėra</string>
-  <string name="current_production">Gamyba einamąjį mėnesį</string>
-  <string name="production_acording_to_phases">Gamyba pagal fazes</string>
   <string name="enter_superuser_credentials">Įveskite pagrindinio vartotojo kredencialus</string>
 
   <string name="channel_func_none">Funkcijų nėra</string>
@@ -195,11 +182,6 @@
 
   <string name="channel_caption_heatmeter">Šilumos skaitiklis</string>
   <string name="add_wizard_step_2_message">Įveskite savo namų ar įmonės Wi-Fi tinklo, kurio pagalba vykdomasis įrenginys galės prisijungti prie serverio, pavadinimą ir slaptažodį.</string>
-  <string name="aritmetic_balance_days">Asimetrinis balansas – Dienos</string>
-  <string name="aritmetic_balance_hours">Asimetrinis balansas – Valandos</string>
-  <string name="aritmetic_balance_minutes">Asimetrinis balansas – Minutės</string>
-  <string name="aritmetic_balance_months">Asimetrinis balansas Mėnesiai</string>
-  <string name="aritmetic_balance_years">Asimetrinis balansas – Metai</string>
   <string name="associeted_with_scene_error">Negalima pakeisti kanalo, kuris susietas su scena, funkcijų.</string>
   <string name="battery_health">Baterijos eksploatavimo laikas</string>
   <string name="battery_level">Baterijos lygis</string>
@@ -247,11 +229,6 @@
   <string name="channel_uv_error">UV spinduolio eksploatavimo laikas siekia %1$.01f%%. Pakeiskite spinduolį.</string>
   <string name="valve_warning_manually_closed">Vožtuvas uždarytas rankiniu būdu arba radijo ryšiu. Prieš jo atidarymą reikia įsitikinti, kad nebuvo uždarytas dėl užliejimo. Norėdami išjungti įspėjimą, vožtuvą atidarykite rankiniu būdu. Ar tikrai norite vožtuvą atidaryti programėlės pagalba?</string>
   <string name="valve_warning">Vožtuvas uždarytas rankiniu būdu arba radijo ryšiu. Prieš jo atidarymą reikia įsitikinti, kad nebuvo uždarytas dėl užliejimo. Norėdami išjungti įspėjimą, vožtuvą atidarykite rankiniu būdu.</string>
-  <string name="vector_balance_days">Vektorinis balansas – Dienos</string>
-  <string name="vector_balance_hours">Vektorinis balansas – Valandos</string>
-  <string name="vector_balance_minutes">Vektorinis balansas – Minutės</string>
-  <string name="vector_balance_months">Vektorinis balansas – Mėnesiai</string>
-  <string name="vector_balance_years">Vektorinis balansas – Metai</string>
   <string name="vl_cfg_auto">AUTO</string>
   <string name="vl_cfg_boost">Stiprinimas</string>
   <string name="vl_cfg_mode">Šviesos reguliavimo režimas</string>
@@ -269,18 +246,11 @@
   <string name="vl_dimmer_cfg_info_txt6">Stiprinimas</string>
   <string name="vl_dimmer_cfg_info_txt7">Ši funkcija padeda įjungti LED apšvietimą esant išsaugotam žemam šviesos intensyvumo lygiui ir užtikrina pradžioje šviesos intensyvumo padidinimą (stiprinimą). Judindami tamsiai pilką slankiklį aplink ratą galite padidinti ar sumažinti stiprinimo lygį, kuris pažymėtas žalia linija. Apšvietimo įjungimo metu šviesos intensyvumo lygus bus padidintas (sustiprintas) iki nustatytos vertės, o tada grįš prie išsaugoto prieš išjungimą apšvietimo lygio.</string>
   <string name="vl_dimmer_cfg_info_txt8">Daugiau informacijos apie šviesos srauto reguliatorių rasite čia:</string>
-  <string name="vl_dimmer_info_txt1">Šviesos srauto reguliavimo valdymas</string>
-  <string name="vl_dimmer_info_txt2">Norėdami pakeisti ryškumo lygį, pirštu slinkite ant slankiklio arba šviesos intensyvumo rato.</string>
-  <string name="vl_dimmer_info_txt3">Įjungti/išjungti mygtuko pagalba galite visiškai išjungti arba įjungti apšvietimą.</string>
-  <string name="vl_dimmer_info_txt4">Šviesos srauto reguliatorius išsaugos šviesos intensyvumo lygį iki apšvietimo išjungimo.</string>
-  <string name="vl_dimmer_info_txt5">Norėdami sureguliuoti šviesos srauto reguliatoriaus parametrus, spustelėkite nustatymų mygtuką.</string>
   <string name="wake_up_frequency">Pabudimo dažnumas</string>
   <string name="wakeup_info">*) Įvesti nustatymai bus taikomi, kai artimiausiu metu bus pabudintas mazgas.</string>
   <string name="wheel">Ratas</string>
   <string name="wifi_rssi">Wi-Fi RSSI</string>
   <string name="wifi_signal_strength">Wi-Fi signalo stiprumas</string>
-  <string name="wifi_throttling">Dėl Android sistemos nustatytų Wi-Fi tinklo nuskaitymo apribojimų reikia palaukti aukščiau nurodytą laiką.</string>
-  <string name="wizard_step1_txt2">Pridėdami įrenginius įsitikinkite, kad mobilieji duomenys yra išjungti. Kitu atveju pridėjimas gali nepavykti.</string>
   <string name="yes">Taip</string>
   <string name="z_wave">Z-wave tiltas</string>
   <string name="zwave_add_device">Pridėti įrenginį</string>
@@ -346,7 +316,6 @@
   <string name="profile">Jūsų paskyra</string>
   <string name="profile_plural">Jūsų paskyros</string>
   <string name="menubar_appsettings">Nustatymai</string>
-  <string name="em_chart_phase_n">%d fazė</string>
   <string name="em_chart_all_phases">1+2+3 fazė</string>
   <string name="widget_configure_title">Valdiklio konfigūravimas</string>
   <string name="widget_configure_profile_label">Paskyra</string>
@@ -354,8 +323,6 @@
   <string name="widget_configure_action_label">Veiksmas</string>
   <string name="widget_configure_name_label">Pavadinimas</string>
   <string name="widget_configure_error">Kanalo konfigūravimas nepavyko...</string>
-  <string name="widget_configure_no_selection">Nepasirinktas kanalas</string>
-  <string name="widget_configure_no_channel">Nėra pasiekiamų kanalų</string>
   <string name="double_button_widget_description">Dviejų mygtukų valdiklis</string>
   <string name="single_button_widget_description">Vieno mygtuko valdiklis</string>
   <string name="widget_app_not_initialized">Prašome prisijungti!</string>
@@ -374,7 +341,6 @@
   <string name="input">Įėjimas</string>
   <string name="monostable">Monostabilus</string>
   <string name="bistable">Bistabilus</string>
-  <string name="wizard_iodev_connect_failed">Bandymas užmegzti Wi-Fi ryšį su vykdomuoju įrenginiu baigėsi nesėkmingai.</string>
   <string name="diw_cfg_info_oprange">Pritaikykite šviesos srauto veikimo diapazoną nustatydami minimalų ir maksimalų ryškumo lygį. Minimalią ir maksimalią vertes galima nustatyti judinant slankiklius, kurie yra abiejose rato pusėse.</string>
   <string name="diw_cfg_info_in_options">Įvesties parinktys</string>
   <string name="diw_cfg_info_mono_option">Ši parinktis keičia įvesties, prie kurios prijungtas monostabilus mygtukas, veikimą. Tuo atveju, kai parinktis išjungta, šviesos srautas sustabdo šviesinimo procesą, kai pasiekią maksimalų ryškumo lygį, o pritemdymo atveju – kai pasiekia minimalų lygį. Jei ši parinktis bus įjungta, pasiekus maksimalų ryškumą iš karto bus pereita į minimalų lygį, o pritemdymo atveju – pasiekus minimumą iš karto bus pereita į maksimalią vertę. Apšvietimo didinimas/pritemdymas tęsis tol, kol bus paspaustas mygtukas.</string>
@@ -434,15 +400,12 @@
 
   <string name="turn_on">Įjungti</string>
   <string name="turn_off">Išjungti</string>
-  <string name="str_default">Pagal nutylėjimą</string>
   <string name="widget_configure_type_label">Valdiklis:</string>
   <string name="widget_configure_type_channel_label">Kanalo</string>
   <string name="widget_configure_type_group_label">Grupės</string>
   <string name="widget_configure_type_scene_label">Scenos</string>
   <string name="widget_configure_group_label">Valdiklio grupė</string>
   <string name="widget_configure_scene_label">Valdiklio scena</string>
-  <string name="widget_configure_no_group">Nėra prieinamų grupių</string>
-  <string name="widget_configure_no_scene">Nėra prieinamų scenų</string>
   <string name="widget_command_error">Įvyko klaida! (kodas: %1$d)</string>
   <string name="widget_command_connection_failure">Ryšio klaida! (kodas: %1$d)</string>
   <string name="widget_command_subject_offline">%1$s yra offline!</string>
@@ -642,7 +605,6 @@
   <string name="details_em_balance_hourly">Valandinis balansas</string>
   <string name="details_em_balance_chart_aggregated">Balansas apibendrintas diagramoje</string>
   <string name="details_em_sum">Suma</string>
-  <string name="details_em_select_range">Pasirinkite periodą</string>
   <string name="details_em_active_energy">Aktyvioji energija</string>
   <string name="details_em_forwarded_energy">Paimta</string>
   <string name="details_em_reversed_energy">Grąžinta</string>
@@ -699,10 +661,6 @@
   <string name="developer_info_activated">Kūrėjo režimas aktyvuotas</string>
   <string name="developer_info_screen_orientation">Ekrano pasukimas įjungtas</string>
   <string name="developer_info_settings">Eksperimentiniai nustatymai</string>
-  <string name="profiles_list_sorting">Rūšiavimas</string>
-  <string name="profiles_list_sorting_default">Numatytasis</string>
-  <string name="profiles_list_sorting_name">Pavadinimas</string>
-  <string name="profiles_list_sorting_added">Paskiausiai pridėtas</string>
   <string name="channel_caption_water_tank">Vandens talpykla</string>
   <string name="channel_caption_container_level_sensor">Konteinerio lygio jutiklis</string>
   <string name="state_opened">atidaryta</string>
@@ -735,4 +693,12 @@
     <item quantity="other">%1$d dienų ⏱️</item>
   </plurals>
   <string name="thermostat_calibration_error">Kalibravimo klaida</string>
+  <string name="toolbar_dimmer">Dimmer</string>
+  <string name="rgb_detail_color">Spalva:</string>
+  <string name="rgb_detail_brightness">Ryškumas:</string>
+  <string name="rgb_detail_select_color">Pasirinkti spalvą</string>
+  <string name="legacy_rgbw_settings_unauthorized_message">Norint peržiūrėti konfigūraciją, reikalingas leidimas!</string>
+  <string name="legacy_rgbw_settings_authorize_button">Autorizuoti</string>
+  <string name="rgb_detail_colors_limit">Pasiektas limitas!</string>
+  <string name="channel_caption_invisible">Paslėptas</string>
 </resources>

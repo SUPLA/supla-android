@@ -15,7 +15,6 @@
   <string name="status_temporarily_unavailable">Serviço temporariamente indisponível</string>
   <string name="status_bad_credentials">Dados de identificação errados</string>
   <string name="status_climit_exceded">Excedeu o limite de aplicações de clientes</string>
-  <string name="status_version_error">Versão do servidor incompátivel</string>
   <string name="status_reg_disabled">Atualmente o registro está desativado. Para activá-lo, vá para a guia \"Smartphones\" na página \"Supla Cloud\".</string>
   <string name="status_access_id_not_assigned">Este dispositivo não possui um ID de acesso atribuído. Vá para a página \"Supla Cloud\" e atribua o ID apropriado na guia \"Smartphones\".</string>
   <string name="status_device_disabled">O dispositivo está desligado</string>
@@ -77,7 +76,6 @@
   <string name="add_wizard_step_1_continue"><![CDATA[Para continuar carregue em <b>Continuar</b>.]]></string>
   <string name="add_device">Adicionar um dispositivo</string>
   <string name="advanced_settings">Configurações avançadas</string>
-  <string name="wizard_result_param_error">Os parâmetros de entrada errados!</string>
   <string name="wizard_iodev_data">Dados do dispositivo</string>
   <string name="email">ENDEREÇO E-MAIL</string>
   <string name="wizard_done">O dispositivo foi configurado com sucesso :)</string>
@@ -86,10 +84,8 @@
   <string name="add_wizard_step_3_message_3"><![CDATA[Carregue no botão <b>START</b> para iniciar uma configuração.]]></string>
   <string name="wizard_iodev_name">Nome</string>
   <string name="next">Continuar</string>
-  <string name="wizard_addnetwork_error">Impossível adicionar uma configuração da rede Wi-Fi!</string>
   <string name="wizard_result_conn_error">Impossível conectar um dispositivo!</string>
   <string name="wizard_iodevice_notfound">Nenhum dispositivo foi encontardo! Certifique-se que um dispositivo que quer configurar trabalha no modo de configuração e tente novamente. NOTA – Algumas versões de Android exigem que o GPS esteja ativo para as aplicações poderem pesquisar a rede Wi-Fi. Certifique-se também se o GPS está ligado.</string>
-  <string name="wizard_wifi_timeout">O tempo-limite de dados sobre a rede corrente Wi-Fi foi excedido! Vá para as configurações de Wi-Fi do Android, selecione funções avançadas e marque "Ativar Wi-Fi automaticamente"</string>
   <string name="wizard_connect_timeout">O tempo-limite de conexão a um atuador foi excedido!</string>
   <string name="wizard_reconnect_timeout">O tempo-limite de volta para a rede básica Wi-Fi foi excedido!</string>
   <string name="wizard_configure_timeout">O tempo-limite de configuração de um dispositivo foi excedido!</string>
@@ -116,7 +112,6 @@
   <string name="hp_eco">ECO</string>
   <string name="hp_turbo">TURBO</string>
   <string name="hp_auto">AUTO</string>
-  <string name="hp_room_temperature">Temperatura ambiente</string>
   <string name="hp_cfg_turbo_time">Duração do modo TURBO</string>
   <string name="hp_cfg_water_max">Temperatura máxima da água</string>
   <string name="hp_cfg_eco_reduction">Redução de temperatura no modo ECO</string>
@@ -134,7 +129,6 @@
   <string name="ranking_of_hours">Ranking de horas</string>
   <string name="ranking_of_weekdays">Ranking de dias da semana</string>
   <string name="ranking_of_months">Ranking de meses</string>
-  <string name="consumption_acording_to_phases">Consumo de acordo com fase</string>
   <string name="temperature">Temperatura</string>
   <string name="humidity">Humidade</string>
   <string name="history_range_last_day">Últimas 24 horas</string>
@@ -145,11 +139,6 @@
   <string name="all_available_history">Todo o histórico disponível</string>
   <string name="retrieving_data_from_the_server">Baixando dados do servidor ...</string>
   <string name="no_chart_data_available">Nenhum dado para o gráfico.</string>
-  <string name="comparsion_minmin">Comparação minuto a minuto</string>
-  <string name="comparsion_hourhour">Comparação hora a hora</string>
-  <string name="comparsion_dayday">Comparação dia a dia</string>
-  <string name="comparsion_monthmonth">Comparação mês a mês</string>
-  <string name="comparsion_yearyear">Comparação ano a ano</string>
   <string name="hp_error_1">Falta de água</string>
   <string name="hp_error_2">Aquecedor estourado</string>
   <string name="hp_error_3">Erro do sensor da temperatura de água</string>
@@ -159,8 +148,6 @@
   <string name="channel_caption_rainsensor">Medições da precipitação</string>
   <string name="channel_caption_weightsensor">Peso</string>
   <string name="channel_caption_windsensor">Velocidade do vento</string>
-  <string name="production_acording_to_phases">Produção de acordo com fase</string>
-  <string name="current_production">Produção no mês atual</string>
   <string name="enter_superuser_credentials">Digite as credenciais do superusuário</string>
 
   <string name="channel_func_none">Falta de funções</string>
@@ -204,11 +191,6 @@
 
   <string name="channel_caption_heatmeter">Medidor de calor</string>
   <string name="add_wizard_step_2_message">Insira o nome e a senha da rede Wi-Fi da sua casa ou empresa, através da qual o dispositivo executivo poderá estabelecer uma conexão com o servidor.</string>
-  <string name="aritmetic_balance_days">Balanço aritmético - Dias</string>
-  <string name="aritmetic_balance_hours">Balanço aritmético - Horas</string>
-  <string name="aritmetic_balance_minutes">Balanço aritmético - Minutos</string>
-  <string name="aritmetic_balance_months">Balanço aritmético - Meses</string>
-  <string name="aritmetic_balance_years">Balanço aritmético - Anos</string>
   <string name="associeted_with_scene_error">Não é possível alterar a função de um canal associado a uma cena.</string>
   <string name="battery_health">Vida útil da bateria</string>
   <string name="battery_level">Nível de bateria</string>
@@ -256,11 +238,6 @@
   <string name="channel_uv_error">A vida útil do emissor de UV é de %1$.01f%%. Substitua o emissor.</string>
   <string name="valve_warning_manually_closed">A válvula foi fechada manualmente ou por rádio. Antes de abri-la, certifique-se de que não foi fechada devido a alagamento. Para desativar o aviso, abra a válvula manualmente. Tem certeza de que deseja abrir a válvula do aplicativo?!</string>
   <string name="valve_warning">A válvula foi fechada manualmente ou por rádio. Antes de abri-la, certifique-se de que não foi fechada devido a alagamento. Para desativar o aviso, abra a válvula manualmente.</string>
-  <string name="vector_balance_days">Balanço vetorial - Dias</string>
-  <string name="vector_balance_hours">Balanço vetorial - Horas</string>
-  <string name="vector_balance_minutes">Balanço vetorial - Minutos</string>
-  <string name="vector_balance_months">Balanço vetorial - Meses</string>
-  <string name="vector_balance_years">Balanço vetorial - Anos</string>
   <string name="vl_cfg_auto">AUTO</string>
   <string name="vl_cfg_boost">Reforço</string>
   <string name="vl_cfg_mode">Modo de escurecimento</string>
@@ -278,18 +255,11 @@
   <string name="vl_dimmer_cfg_info_txt6">Reforço</string>
   <string name="vl_dimmer_cfg_info_txt7">Esta função ajuda a acender a iluminação do LED em um nível baixo de luminosidade memorizado, proporcionando um aumento inicial (reforço) do nível de luminosidade. Ao mover o controle deslizante cinza escuro ao redor do regulador rotativo, pode aumentar ou diminuir o nível de reforço, que é marcado com a linha verde. Ao ligar a iluminação, o nível de luminosidade será aumentado (reforçado) para o valor definido, e então ele retornará ao nível memorizado antes de desligar a iluminação.</string>
   <string name="vl_dimmer_cfg_info_txt8">Mais informações sobre o dimmer podem ser encontradas em</string>
-  <string name="vl_dimmer_info_txt1">Controle de escurecimento</string>
-  <string name="vl_dimmer_info_txt2">Para alterar o nível de brilho, deslize o dedo no indicador no controle deslizante ou no regulador rotativo de luminosidade.</string>
-  <string name="vl_dimmer_info_txt3">Com o botão liga/desliga, pode-se desligar ou ligar a iluminação completamente.</string>
-  <string name="vl_dimmer_info_txt4">O dimmer se lembrará do nível de brilho antes de desligar a iluminação.</string>
-  <string name="vl_dimmer_info_txt5">Para ajustar os parâmetros do dimmer, pressione o botão de configurações.</string>
   <string name="wake_up_frequency">Frequência de ativação</string>
   <string name="wakeup_info">*) As configurações inseridas serão aplicadas na próxima vez que o nó for ativado.</string>
   <string name="wheel">Rotativo</string>
   <string name="wifi_rssi">Wi-Fi RSSI</string>
   <string name="wifi_signal_strength">Força do sinal Wi-Fi</string>
-  <string name="wifi_throttling">Devido aos limites de varredura de rede Wi-Fi impostos pelo sistema Android, deve aguardar o tempo apresentado acima.</string>
-  <string name="wizard_step1_txt2">Certifique-se de que os dados móveis estão desligados ao adicionar dispositivos. Caso contrário, a adição pode falhar.</string>
   <string name="yes">Sim</string>
   <string name="z_wave">Ponte z-wave</string>
   <string name="zwave_add_device">Adicionar dispositivo</string>
@@ -362,8 +332,6 @@
   <string name="widget_configure_action_label">Acção</string>
   <string name="widget_configure_name_label">Nome</string>
   <string name="widget_configure_error">A configuração do canal falhou...</string>
-  <string name="widget_configure_no_selection">Canal não selecionado</string>
-  <string name="widget_configure_no_channel">Não há canais disponíveis</string>
   <string name="double_button_widget_description">Widget de dois botões</string>
   <string name="single_button_widget_description">Widget de um botão</string>
   <string name="widget_app_not_initialized">Por favor, faça o login!</string>
@@ -382,7 +350,6 @@
   <string name="input">Entrada</string>
   <string name="monostable">Monostáveis</string>
   <string name="bistable">Monostáveis</string>
-  <string name="wizard_iodev_connect_failed">Uma tentativa de estabelecer uma ligação Wi-Fi ao actuador falhou.</string>
   <string name="diw_cfg_info_oprange">Ajuste o intervalo de dimmer definindo os níveis mínimos e máximos de luminosidade. Os valores mínimos e máximos podem ser definidos movendo os deslizadores localizados em ambos os lados da roda.</string>
   <string name="diw_cfg_info_in_options">Opções de entrada</string>
   <string name="dgf_too_long_operation_warning">As secções do vidro são expostas por mais de 20 horas, o que pode afetar negativamente a sua vida útil. Recomenda-se cobrir todas as secções durante um mínimo de 4 horas para as regenerar.</string>
@@ -418,7 +385,6 @@
   <string name="rs_display_mode_closing">Encerramentos</string>
   <string name="status_accessid_inactive">Acesso ID inativo</string>
   <string name="wizard_done_explentations">Se o seu dispositivo não aparecer na aplicação, repita este procedimento de adicionar novamente e leia o \"Estado anterior\" acima indicado. Contém informações para determinar por que razão o dispositivo não se ligou ao servidor. A mensagem \"SSID não encontrado\" significa que o nome de rede Wi-Fi de 2,4 GHz que inseriu não foi encontrado ou a rede está fora de alcance.</string>
-  <string name="em_chart_phase_n">Fase %d</string>
   <string name="hour_string_format">HH:mm:ss</string>
   <string name="roller_shutter_calibration">Calibrar</string>
   <string name="details_em_forward_active_energy">Energia ativa direta</string>
@@ -443,7 +409,6 @@
 
   <string name="turn_on">Ativar</string>
   <string name="turn_off">Desativar</string>
-  <string name="str_default">Por Defeito</string>
 
   <string name="widget_configure_type_label">Widget para:</string>
   <string name="widget_configure_type_channel_label">Canal</string>
@@ -451,8 +416,6 @@
   <string name="widget_configure_type_scene_label">Cena</string>
   <string name="widget_configure_group_label">Grupo para o widget</string>
   <string name="widget_configure_scene_label">Cena para o widget</string>
-  <string name="widget_configure_no_group">Sem grupos disponíveis</string>
-  <string name="widget_configure_no_scene">Sem cenas disponíveis</string>
   <string name="widget_command_error">Ocorreu um erro! (código: %1$d)</string>
   <string name="widget_command_connection_failure">Erro de conexão! (código: %1$d)</string>
   <string name="widget_command_subject_offline">%1$s está offline!</string>
@@ -654,7 +617,6 @@
   <string name="details_em_balance_hourly">Balanço horário</string>
   <string name="details_em_balance_chart_aggregated">Balanço agregado em gráfico</string>
   <string name="details_em_sum">Soma</string>
-  <string name="details_em_select_range">Escolher período</string>
   <string name="details_em_active_energy">Energia ativa</string>
   <string name="details_em_forwarded_energy">Consumida</string>
   <string name="details_em_reversed_energy">Devolvida</string>
@@ -711,10 +673,6 @@
   <string name="developer_info_activated">Modo de desenvolvedor ativado</string>
   <string name="developer_info_screen_orientation">Rotação da tela ativada</string>
   <string name="developer_info_settings">Configurações experimentais</string>
-  <string name="profiles_list_sorting">Ordenação</string>
-  <string name="profiles_list_sorting_default">Padrão</string>
-  <string name="profiles_list_sorting_name">Nome</string>
-  <string name="profiles_list_sorting_added">Último adicionado</string>
   <string name="channel_caption_water_tank">Tanque de água</string>
   <string name="channel_caption_container_level_sensor">Sensor de nível de contêiner</string>
   <string name="state_opened">aberto</string>
@@ -745,4 +703,12 @@
     <item quantity="many">%1$d dias ⏱️</item>
   </plurals>
   <string name="thermostat_calibration_error">Erro de calibração</string>
+  <string name="toolbar_dimmer">Dimmer</string>
+  <string name="rgb_detail_color">Cor:</string>
+  <string name="rgb_detail_brightness">Luminosidade:</string>
+  <string name="rgb_detail_select_color">Selecionar cor</string>
+  <string name="legacy_rgbw_settings_unauthorized_message">Autorização necessária para ver a configuração!</string>
+  <string name="legacy_rgbw_settings_authorize_button">Autorizar</string>
+  <string name="rgb_detail_colors_limit">Limite atingido!</string>
+  <string name="channel_caption_invisible">Oculto</string>
 </resources>

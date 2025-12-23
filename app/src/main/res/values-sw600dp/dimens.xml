@@ -14,7 +14,6 @@
     <dimen name="channel_img_height">90dp</dimen>
     <dimen name="channel_imgtext_width">250dp</dimen>
     <dimen name="channel_imgtext_leftmargin">15dp</dimen>
-    <dimen name="rgb_detail_tab_btn_text">14sp</dimen>
     <dimen name="wizard_btnnextl_width">25dp</dimen>
     <dimen name="wizard_btnnextr_width">70dp</dimen>
     <dimen name="menuitem_height">80dp</dimen>

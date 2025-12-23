@@ -16,7 +16,6 @@
   <string name="status_temporarily_unavailable">Servizio temporaneamente non disponibile</string>
   <string name="status_bad_credentials">Credenziali non valide</string>
   <string name="status_climit_exceded">Limite delle applicazioni dei clienti superato</string>
-  <string name="status_version_error">Versione del server non compatibile</string>
   <string name="status_reg_disabled">La registrazione è attualmente disabilitata. Per abilitarlo, vai alla scheda \"Smartphone\" a pagina \"Supla Cloud\".</string>
   <string name="status_access_id_not_assigned">A questo dispositivo non è stato assegnato un ID di accesso. Vai a pagina \"Supla Cloud\" e assegna l\'identificatore appropriato nella scheda \"Smartphone \".</string>
   <string name="status_device_disabled">Il dispositivo è  disabilitato</string>
@@ -78,7 +77,6 @@
   <string name="add_wizard_step_1_continue"><![CDATA[Per continuare clicca <b>Avanti</b>.]]></string>
   <string name="add_device">Aggiungi un dispositivo</string>
   <string name="advanced_settings">Impostazioni avanzate</string>
-  <string name="wizard_result_param_error">Parametri di input non validi!</string>
   <string name="wizard_iodev_data">Dati del dispositivo</string>
   <string name="email">INDIRIZZO E-MAIL</string>
   <string name="wizard_done">Configurazione del dispositivo terminata con successo :)</string>
@@ -87,10 +85,8 @@
   <string name="add_wizard_step_3_message_3"><![CDATA[Premii il tasto <b>START</b> per iniziare la configurazione.]]></string>
   <string name="wizard_iodev_name">Nome</string>
   <string name="next">Avanti</string>
-  <string name="wizard_addnetwork_error">Impossibile aggiungere la configurazione della rete Wi-Fi!</string>
   <string name="wizard_result_conn_error">Impossibile stabilire una connessione con il dispositivo!</string>
   <string name="wizard_iodevice_notfound">Nessun dispositivo trovato! Assicurati che il dispositivo che vuoi configurare, lavora in modalità di configurazione e poi riprova. IMPORTANTE – Alcune versioni di Android richiedono che il GPS sia acceso al fine di permettere alle applicazioni di effettuare la ricerca nella rete Wi-Fi. Per questo motivo assicuraTi anche che il GPS sia accesso.</string>
-  <string name="wizard_wifi_timeout">Il tempo di attesa per i dati sulla rete corrente Wi-Fi è stato superato! Vai nelle impostazioni Wi-Fi di Android, seleziona Avanzate e poi spunta l\'opzione "Attiva Wi-Fi automaticamente".</string>
   <string name="wizard_connect_timeout">Il tempo di attesa per lo stabilimento della connessione con il dispositivo di input/output è stato superato!</string>
   <string name="wizard_reconnect_timeout">Il tempo di attesa per il ritorno alla rete basilare Wi-Fi è stato superato!</string>
   <string name="wizard_configure_timeout">Il tempo di attesa per la terminazione della configurazione del dispositivo è stato superato!</string>
@@ -117,7 +113,6 @@
   <string name="hp_eco">ECO</string>
   <string name="hp_turbo">TURBO</string>
   <string name="hp_auto">AUTO</string>
-  <string name="hp_room_temperature">Temperatura ambiente</string>
   <string name="hp_cfg_turbo_time">Durata della modalità TURBO</string>
   <string name="hp_cfg_water_max">Temperatura massima dell\'acqua</string>
   <string name="hp_cfg_eco_reduction">Riduzione della temperatura in modalità ECO</string>
@@ -135,7 +130,6 @@
   <string name="ranking_of_hours">Classifica delle ore</string>
   <string name="ranking_of_weekdays">Classifica dei giorni della settimana</string>
   <string name="ranking_of_months">Classifica dei mesi</string>
-  <string name="consumption_acording_to_phases">Consumo in base alle fasi</string>
   <string name="temperature">Temperatura</string>
   <string name="humidity">Umidità</string>
   <string name="history_range_last_day">Ultime 24 ore</string>
@@ -146,11 +140,6 @@
   <string name="all_available_history">Tutta la cronologia disponibile</string>
   <string name="retrieving_data_from_the_server">Scaricamento dati da server...</string>
   <string name="no_chart_data_available">Nessun dato per il grafico.</string>
-  <string name="comparsion_minmin">Confronto minuto a minuto</string>
-  <string name="comparsion_hourhour">Confronto ora ad ora</string>
-  <string name="comparsion_dayday">Confronto giorno a giorno</string>
-  <string name="comparsion_monthmonth">Confronto mese a mese</string>
-  <string name="comparsion_yearyear">Confronto anno ad anno</string>
   <string name="hp_error_1">Mancanza d’acqua</string>
   <string name="hp_error_2">Resistenza bruciata</string>
   <string name="hp_error_3">Errore del sensore di temperatura dell’acqua</string>
@@ -160,8 +149,6 @@
   <string name="channel_caption_rainsensor">Misura della quantità di pioggia caduta</string>
   <string name="channel_caption_weightsensor">Peso</string>
   <string name="channel_caption_windsensor">Velocità del vento</string>
-  <string name="current_production">Produzione del mese corrente</string>
-  <string name="production_acording_to_phases">Produzione in base alle fasi</string>
   <string name="enter_superuser_credentials">Immettere le credenziali del superutente</string>
 
   <string name="channel_func_none">Nessuna funzione</string>
@@ -205,11 +192,6 @@
 
   <string name="channel_caption_heatmeter">Contatore di calore</string>
   <string name="add_wizard_step_2_message">Inserisci il nome e la password della Tua rete Wi-Fi domestica o aziendale tramite la quale l’attuatore potrà collegarsi al server.</string>
-  <string name="aritmetic_balance_days">Equilibrio aritmetico – Giorni</string>
-  <string name="aritmetic_balance_hours">Equilibrio aritmetico - Ore</string>
-  <string name="aritmetic_balance_minutes">Equilibrio aritmetico – Minuti</string>
-  <string name="aritmetic_balance_months">Equilibrio aritmetico – Mesi</string>
-  <string name="aritmetic_balance_years">Equilibrio aritmetico - Anni</string>
   <string name="associeted_with_scene_error">Non è possibile cambiare la funzione del canale che risulta collegato alla scena.</string>
   <string name="battery_health">Vita utile della batteria</string>
   <string name="battery_level">Livello batteria</string>
@@ -257,11 +239,6 @@
   <string name="channel_uv_error">Vita utile di radiatore uv risulta %1$.01f%%. Sostituisci radiatore.</string>
   <string name="valve_warning_manually_closed">La valvola è stata chiusa manualmente o via radio. Prima di aprirla, assicurati che non sia stata chiusa a causa di allagamento. Per disabilitare l’avviso apri la valvola manualmente. Sei sicuro di voler aprire la valvola tramite l’applicazione?!</string>
   <string name="valve_warning">La valvola è stata chiusa manualmente o via radio. Prima di aprirla, assicurati che non sia stata chiusa a causa di allagamento. Per disabilitare l’avviso apri la valvola manualmente.</string>
-  <string name="vector_balance_days">Equilibrio vettoriale - Giorni</string>
-  <string name="vector_balance_hours">Equilibrio vettoriale - Ore</string>
-  <string name="vector_balance_minutes">Equilibrio vettoriale - Minuti</string>
-  <string name="vector_balance_months">Equilibrio vettoriale – Mesi</string>
-  <string name="vector_balance_years">Equilibrio vettoriale - Anni</string>
   <string name="vl_cfg_auto">AUTO</string>
   <string name="vl_cfg_boost">Rafforzamento</string>
   <string name="vl_cfg_mode">Modalità di oscuramento</string>
@@ -279,18 +256,11 @@
   <string name="vl_dimmer_cfg_info_txt6">Rafforzamento</string>
   <string name="vl_dimmer_cfg_info_txt7">Questa funzione aiuta ad accendere l’illuminazione a LED con un basso livello di luminosità memorizzato, garantendo l’aumento (il rafforzamento) iniziale del livello di luminosità. Facendo scorrere la barra di scorrimento di colore grigio scuro intorno al cerchio, puoi aumentare o ridurre il livello di rafforzamento, che è contrassegnato da una linea verde. All’accensione dell’illuminazione il livello di luminosità verrà aumentato (rafforzato) fino al valore impostato, e poi ritorna al livello memorizzato prima dello spegnimento dell’illuminazione.</string>
   <string name="vl_dimmer_cfg_info_txt8">Per ulteriori informazioni sul varialuce consulta</string>
-  <string name="vl_dimmer_info_txt1">Comando di varialuce</string>
-  <string name="vl_dimmer_info_txt2">Per cambiare il livello di luminosità fai scorrere un dito su indicatore che si trova sulla barra di scorrimento o sul cerchio di luminosità.</string>
-  <string name="vl_dimmer_info_txt3">Con il pulsante accendi/spegni puoi completamente spegnere o accendere l’illuminazione.</string>
-  <string name="vl_dimmer_info_txt4">Varialuce memorizza il livello di luminosità prima di spegnere l’illuminazione.</string>
-  <string name="vl_dimmer_info_txt5">Per adattare parametri di varialuce, premi il pulsante delle impostazioni.</string>
   <string name="wake_up_frequency">Frequenza di risveglio</string>
   <string name="wakeup_info">*) Impostazioni inserite verranno applicate alla successiva attivazione del nodo.</string>
   <string name="wheel">Cerchio</string>
   <string name="wifi_rssi">Wi-fi RSSI</string>
   <string name="wifi_signal_strength">Potenza del segnale Wi-Fi</string>
-  <string name="wifi_throttling">A causa dei limiti di scansione della rete Wi-Fi imposti dal sistema Android, bisogna aspettare il tempo di cui sopra.</string>
-  <string name="wizard_step1_txt2">Assicurati che dati mobili siano disabilitati quando si aggiungono i dispositivi. Altrimenti l’operazione potrebbe non riuscire.</string>
   <string name="yes">Sì</string>
   <string name="z_wave">Ponte z-wave</string>
   <string name="zwave_add_device">Aggiungi un dispositivo</string>
@@ -343,7 +313,6 @@
   <string name="input">Ingresso</string>
   <string name="monostable">Monostabile</string>
   <string name="bistable">Bistabile</string>
-  <string name="wizard_iodev_connect_failed">Il tentativo del dispositivo I/O di connettersi alla rete Wi-Fi è fallito.</string>
   <string name="diw_cfg_info_oprange">Impostare il range di regolazione agendo sui cursori per cambiare il livello di luminosità massima e minima.</string>
   <string name="diw_cfg_info_in_options">Opzioni Ingresso</string>
   <string name="diw_cfg_info_mono_option">Questa opzione modifica il comportamento del dimmer con ingresso impostato come Monostabile. Con opzione disabilitata, il dimmer smette di regolare la luce una volta raggiunto il livello di luminosità massima o minima. Abilitando questa opzione, la regolazione sarà continua passando dal livello minimo al massimo e viceversa. La regolazione della luminosità continuerà finché il pulsante sarà premuto.</string>
@@ -406,7 +375,6 @@
   <string name="edit_account">Modifica account</string>
   <string name="delete_account">Rimuovi</string>
   <string name="profile_plural">Il tuo account</string>
-  <string name="em_chart_phase_n">Fase %d</string>
   <string name="em_chart_all_phases">Fase 1+2+3</string>
   <string name="widget_configure_title">Configurazione del widget</string>
   <string name="widget_configure_profile_label">Account</string>
@@ -414,8 +382,6 @@
   <string name="widget_configure_action_label">Azione</string>
   <string name="widget_configure_name_label">Nome</string>
   <string name="widget_configure_error">Non è possibile configurare il canale</string>
-  <string name="widget_configure_no_selection">Nessun canale selezionato</string>
-  <string name="widget_configure_no_channel">Nessun canale disponibile</string>
   <string name="double_button_widget_description">Widget doppio</string>
   <string name="single_button_widget_description">Widget singolo</string>
   <string name="widget_app_not_initialized">Effettuare il login!</string>
@@ -451,15 +417,12 @@
 
   <string name="turn_on">Abilita</string>
   <string name="turn_off">Disabilita</string>
-  <string name="str_default">Impostazione predefinita</string>
   <string name="widget_configure_type_label">Widget per:</string>
   <string name="widget_configure_type_channel_label">Canale</string>
   <string name="widget_configure_type_group_label">Gruppi</string>
   <string name="widget_configure_type_scene_label">Scene</string>
   <string name="widget_configure_group_label">Gruppo per widget</string>
   <string name="widget_configure_scene_label">Scena per widget</string>
-  <string name="widget_configure_no_group">Nessun gruppo disponibile</string>
-  <string name="widget_configure_no_scene">Nessuna scena disponibile</string>
   <string name="widget_command_error">Si è verificato un errore! (codice: %1$d)</string>
   <string name="widget_command_connection_failure">Errore di connessione! (codice: %1$d)</string>
   <string name="widget_command_subject_offline">%1$s è offline!</string>
@@ -656,7 +619,6 @@
   <string name="details_em_balance_hourly">Bilancio orario</string>
   <string name="details_em_balance_chart_aggregated">Bilancio aggregato in forma di grafico</string>
   <string name="details_em_sum">Somma</string>
-  <string name="details_em_select_range">Seleziona il periodo</string>
   <string name="details_em_active_energy">Energia attiva</string>
   <string name="details_em_forwarded_energy">Assorbita</string>
   <string name="details_em_reversed_energy">Restituita</string>
@@ -749,10 +711,6 @@
   <string name="developer_info_activated">Modalità sviluppatore attivata</string>
   <string name="developer_info_screen_orientation">Rotazione schermo abilitata</string>
   <string name="developer_info_settings">Impostazioni sperimentali</string>
-  <string name="profiles_list_sorting">Ordinamento</string>
-  <string name="profiles_list_sorting_default">Predefinito</string>
-  <string name="profiles_list_sorting_name">Nome</string>
-  <string name="profiles_list_sorting_added">Ultimo aggiunto</string>
   <string name="channel_caption_water_tank">Serbatoio dell\'acqua</string>
   <string name="channel_caption_container_level_sensor">Sensore di livello contenitore</string>
   <string name="state_opened">aperto</string>
@@ -780,4 +738,12 @@
     <item quantity="other">%1$d giorni ⏱️</item>
   </plurals>
   <string name="thermostat_calibration_error">Errore di calibrazione</string>
+  <string name="toolbar_dimmer">Dimmer</string>
+  <string name="rgb_detail_color">Colore:</string>
+  <string name="rgb_detail_brightness">Luminosità:</string>
+  <string name="rgb_detail_select_color">Selezionare il colore</string>
+  <string name="legacy_rgbw_settings_unauthorized_message">Autorizzazione necessaria per visualizzare la configurazione!</string>
+  <string name="legacy_rgbw_settings_authorize_button">Autorizzare</string>
+  <string name="rgb_detail_colors_limit">Limite raggiunto!</string>
+  <string name="channel_caption_invisible">Nascosto</string>
 </resources>

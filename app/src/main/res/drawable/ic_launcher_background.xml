@@ -2,25 +2,45 @@
     xmlns:aapt="http://schemas.android.com/aapt"
     android:width="108dp"
     android:height="108dp"
-    android:viewportWidth="192"
-    android:viewportHeight="192">
-  <group android:scaleX="1.01"
-      android:scaleY="1.01"
-      android:translateX="-0.96"
-      android:translateY="-0.96">
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+  <group>
+    <clip-path
+        android:pathData="M0,0h512v512h-512z"/>
     <path
-        android:pathData="M0,0h192v192h-192z">
+        android:pathData="M0,0h512v512h-512z">
       <aapt:attr name="android:fillColor">
-        <gradient 
-            android:startX="96"
+        <gradient
+            android:startX="256"
             android:startY="0"
-            android:endX="96"
-            android:endY="192"
+            android:endX="256"
+            android:endY="512"
             android:type="linear">
           <item android:offset="0" android:color="#FF21D042"/>
           <item android:offset="1" android:color="#FF10A929"/>
         </gradient>
       </aapt:attr>
     </path>
+    <path
+        android:pathData="M-51,449.95a136.33,82.95 0,1 0,272.66 0a136.33,82.95 0,1 0,-272.66 0z"
+        android:fillColor="#ffffff"/>
+    <path
+        android:pathData="M291.07,456a156.21,82.95 0,1 0,312.42 0a156.21,82.95 0,1 0,-312.42 0z"
+        android:fillColor="#ffffff"/>
+    <path
+        android:pathData="M136.88,444.82a72.79,62.53 0,1 0,145.57 0a72.79,62.53 0,1 0,-145.57 0z"
+        android:fillColor="#ffffff"/>
+    <path
+        android:pathData="M252.5,444.82a72.79,62.53 0,1 0,145.57 0a72.79,62.53 0,1 0,-145.57 0z"
+        android:fillColor="#ffffff"/>
+    <path
+        android:pathData="M221.65,405a34.71,5 0,1 0,69.42 0a34.71,5 0,1 0,-69.42 0z"
+        android:fillColor="#CCCCCC"/>
+    <path
+        android:pathData="M246.89,433.91a37.24,35.52 0,1 0,74.48 0a37.24,35.52 0,1 0,-74.48 0z"
+        android:fillColor="#ffffff"/>
+    <path
+        android:pathData="M96,551.95a156.21,82.95 0,1 0,312.42 0a156.21,82.95 0,1 0,-312.42 0z"
+        android:fillColor="#ffffff"/>
   </group>
 </vector>

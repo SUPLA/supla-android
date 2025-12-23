@@ -16,7 +16,6 @@
   <string name="status_temporarily_unavailable">Služba dočasně nedostupná</string>
   <string name="status_bad_credentials">Chybné pověření</string>
   <string name="status_climit_exceded">Limit klientské aplikace překročen</string>
-  <string name="status_version_error">Nekompatibilní verze serveru</string>
   <string name="status_reg_disabled">Registrace je momentálně zakázána. Chcete-li ji povolit, přejděte na kartu Smartphone na stránce \"Supla Cloud\".</string>
   <string name="status_access_id_not_assigned">Toto zařízení nemá přiřazené ID přístupu. Přejděte na Smartphone na \"Supla Cloud\" a vyberte příslušné ID na kartě</string>
   <string name="status_device_disabled">Zařízení je vypnuté</string>
@@ -79,8 +78,6 @@
   <string name="wizard_no_internetwifi">Než začnete, připojte se k síti Internet pomocí Wi-Fi, které budou také využívány výkonávajícími zařízeními pro připojení k serveru</string>
   <string name="wizard_wifi_error">Síť Wi-Fi je vypnuta nebo její ID nebo jméno nelze přečíst!</string>
   <string name="wizard_location_error">Aby průvodce přidáním fungoval správně, musí být v tomto zařízení povolena služba určování polohy. Přejděte do nastavení systému, vyberte možnost "Umístění" a zkontrolujte, zda je povolena.</string>
-  <string name="wizard_addnetwork_error">Nelze přidat konfiguraci sítě Wi-Fi!</string>
-  <string name="wizard_wifi_timeout">Doba čekání na data v aktuální síti Wi-Fi byla překročena! Přejděte do nastavení Wi-Fi v systému Android, vyberte možnost Upřesnit a zaškrtněte možnost „Zapnout WiFi automaticky".</string>
   <string name="wizard_scan_timeout">Byla překročena doba čekání na dokončení vyhledávání sítě Wi-Fi!</string>
   <string name="wizard_connect_timeout">Doba čekání na spojení s vykonávajícím zařízením byla překročena!</string>
   <string name="wizard_configure_timeout">Doba čekání na dokončení konfigurace zařízení byla překročena!</string>
@@ -91,7 +88,6 @@
   <string name="wizard_iodev_data">Data zařízení</string>
   <string name="wizard_iodev_name">Název</string>
   <string name="wizard_iodev_laststate">Předchozí stav</string>
-  <string name="wizard_result_param_error">Chybné vstupní parametry!</string>
   <string name="wizard_result_compat_error">Zařízení, které jste připojili, není kompatibilní s tímto průvodcem!</string>
   <string name="wizard_result_conn_error">Nelze se připojit k zařízení!</string>
   <string name="wizard_result_failed">Konfigurace se nezdařila!</string>
@@ -108,7 +104,6 @@
   <string name="hp_eco">ECO</string>
   <string name="hp_turbo">TURBO</string>
   <string name="hp_auto">AUTO</string>
-  <string name="hp_room_temperature">Teplota v místnosti</string>
   <string name="hp_cfg_turbo_time">Trvání režimu TURBO</string>
   <string name="hp_cfg_water_max">Maximální teplota vody</string>
   <string name="hp_cfg_eco_reduction">Snížení teploty v režimu ECO</string>
@@ -126,7 +121,6 @@
   <string name="ranking_of_hours">Pořadí hodin</string>
   <string name="ranking_of_weekdays">Pořadí dnů v týdnu</string>
   <string name="ranking_of_months">Pořadí měsíců</string>
-  <string name="consumption_acording_to_phases">Spotřeba podle fáze</string>
   <string name="temperature">Teplota</string>
   <string name="humidity">Vlhkost</string>
   <string name="history_range_last_day">Posledních 24 hodin</string>
@@ -137,11 +131,6 @@
   <string name="all_available_history">Kompletní dostupná historie</string>
   <string name="retrieving_data_from_the_server">Stahování dat ze serveru ...</string>
   <string name="no_chart_data_available">Žádné údaje o graf.</string>
-  <string name="comparsion_minmin">Srovnání minuty do minuty</string>
-  <string name="comparsion_hourhour">Mezihodinové srovnání</string>
-  <string name="comparsion_dayday">Mezidenní srovnání</string>
-  <string name="comparsion_monthmonth">Meziměsíční srovnání</string>
-  <string name="comparsion_yearyear">Meziroční srovnání</string>
   <string name="hp_error_1">Chybí voda</string>
   <string name="hp_error_2">Spálené topení</string>
   <string name="hp_error_3">Chyba snímače teploty vody</string>
@@ -151,8 +140,6 @@
   <string name="channel_caption_rainsensor">Měření úhrnu srážek</string>
   <string name="channel_caption_weightsensor">Hmotnost</string>
   <string name="channel_caption_windsensor">Rychlost větru</string>
-  <string name="current_production">Produkce v tomto měsíci</string>
-  <string name="production_acording_to_phases">Produkce podle fáze</string>
   <string name="enter_superuser_credentials">Zadejte pověření superuživatele</string>
 
   <string name="channel_func_none">Bez funkce</string>
@@ -203,11 +190,6 @@
   <string name="channel_caption_heatmeter">Měřič tepla</string>
   <string name="event_openedclosedthevalve">Otevírání/zavírání ventilu</string>
   <string name="add_wizard_step_2_message">Zadejte název a heslo Vaší domácí nebo firemní Wi-Fi sítě, prostřednictvím kterého bude možné dané zařízení připojit k serveru.</string>
-  <string name="aritmetic_balance_days">Aritmetická zová rovnováha - Dny</string>
-  <string name="aritmetic_balance_hours">Aritmetická rovnováha - Hodiny</string>
-  <string name="aritmetic_balance_minutes">Fázová rovnováha - Minuty</string>
-  <string name="aritmetic_balance_months">Aritmetická rovnováha - Měsíce</string>
-  <string name="aritmetic_balance_years">Aritmetická rovnováha - Roky</string>
   <string name="associeted_with_scene_error">Není možné změnit funkci kanálu, který je připojený ke scéně.</string>
   <string name="battery_health">Životnost baterie</string>
   <string name="battery_level">Stav baterie</string>
@@ -250,11 +232,6 @@
   <string name="uptime">Provozní doba</string>
   <string name="channel_uv_warning">Životnost UV zářivky je %1$.01f%%. Naplánujte si její výměnu.</string>
   <string name="channel_uv_error">Životnost UV zářivky je %1$.01f%%. Vyměňte zářivku.</string>
-  <string name="vector_balance_days">Vektorová rovnováha - Dny</string>
-  <string name="vector_balance_hours">Vektorová rovnováha - Hodiny</string>
-  <string name="vector_balance_minutes">Vektorová rovnováha - Minuty</string>
-  <string name="vector_balance_months">Vektorová rovnováha - Měsíce</string>
-  <string name="vector_balance_years">Vektorová rovnováha - Roky</string>
   <string name="vl_cfg_auto">AUTO</string>
   <string name="vl_cfg_boost">Posílení</string>
   <string name="vl_cfg_mode">Režim stmívání</string>
@@ -272,18 +249,11 @@
   <string name="vl_dimmer_cfg_info_txt6">Posílení</string>
   <string name="vl_dimmer_cfg_info_txt7">Tato funkce pomáhá zapnout LED osvětlení při zapamatované nízké úrovni jasu, to umožňuje zvýšit (zesílit) úroveň jasu hned po spuštění. Přesunutím tmavě šedého posuvníku kolem kolečka můžete zesílit nebo snížit úroveň intenzity, která je označena zelenou čárkou. Během zapínání osvětlení zůstane úroveň jasu zvýšená (zesílená) na přednastavenou hodnotu a poté se vrátí na úroveň zapamatovanou před vypnutím osvětlení.</string>
   <string name="vl_dimmer_cfg_info_txt8">Více informací na téma stmívačů najdete na</string>
-  <string name="vl_dimmer_info_txt1">Ovládání stmívačem</string>
-  <string name="vl_dimmer_info_txt2">Pro změnu úrovně jasu přesuňte prstem ukazatel nacházející se na posuvníku nebo kolečkem pro nastavení jasu.</string>
-  <string name="vl_dimmer_info_txt3">Tlačítkem zapnout/vypnout můžete buď celkově vypnout nebo zapnout osvětlení.</string>
-  <string name="vl_dimmer_info_txt4">Stmívač si pamatuje úrovně jasu ještě před samotným vypnutím osvětlení.</string>
-  <string name="vl_dimmer_info_txt5">Stisknutím tlačítka nastavení můžete upravit jednotlivé parametry stmívače.</string>
   <string name="wake_up_frequency">Četnost probuzení uzlu</string>
   <string name="wakeup_info">*) Zadané nastavení bude použito při nejbližším probuzení uzlu.</string>
   <string name="wheel">Kolečko</string>
   <string name="wifi_rssi">Wi-Fi RSSl</string>
   <string name="wifi_signal_strength">Síla signálu Wi-Fi</string>
-  <string name="wifi_throttling">Vzhledem k časovým limitům skenování Wi-Fi sítě, které stanovuje systém android je nutné počkat tak dlouho jak je výše znázorněno.</string>
-  <string name="wizard_step1_txt2">Ujistěte se, že mobilní data jsou během přidávání zařízení vypnuta. V opačném případě se nemusí podařit proces přidání zařízení.</string>
   <string name="z_wave">Z-wave můstek</string>
   <string name="zwave_add_device">Přidat zařízení</string>
   <string name="zwave_before_search_message">Než budete dále pokračovat, ujistěte se, že všechny Vaše zařízení z-wave jsou online. Stisknutím \"Další“ dojde k prohledání Vaší sítě z-wave, které může trvat několik sekund až několik minut.</string>
@@ -348,7 +318,6 @@
   <string name="profile">Váš účet</string>
   <string name="profile_plural">Vaše účty</string>
   <string name="menubar_appsettings">Nastavení</string>
-  <string name="em_chart_phase_n">Fáze %d</string>
   <string name="em_chart_all_phases">Fáze 1+2+3</string>
   <string name="widget_configure_title">Nastavení widgetu</string>
   <string name="widget_configure_profile_label">Účet</string>
@@ -356,8 +325,6 @@
   <string name="widget_configure_action_label">Akce</string>
   <string name="widget_configure_name_label">Název</string>
   <string name="widget_configure_error">Nastavení kanálu se nezdařilo...</string>
-  <string name="widget_configure_no_selection">Není vybrán žádný kanál</string>
-  <string name="widget_configure_no_channel">Nejsou k dispozici žádné kanály</string>
   <string name="double_button_widget_description">Widget se dvěma tlačítky</string>
   <string name="single_button_widget_description">Widget s jedním tlačítkem</string>
   <string name="widget_app_not_initialized">Přihlaste se!</string>
@@ -376,7 +343,6 @@
   <string name="input">Vstup</string>
   <string name="monostable">Monostabilní</string>
   <string name="bistable">Bistabilní</string>
-  <string name="wizard_iodev_connect_failed">Pokus o navázání připojení Wi-Fi se zařízením provádějícím činnosti se nezdařil.</string>
   <string name="diw_cfg_info_oprange">Vybráním minimální nebo maximální úrovně jasu, můžete upravit provozní rozsah stmívače. Minimální a maximální hodnotu můžete nastavit přesouváním posuvníku umístěného na obou stranách kolečka.</string>
   <string name="diw_cfg_info_in_options">Možnosti vstupu</string>
   <string name="diw_cfg_info_mono_option">Tato volba mění chování vstupu, ke kterému je připojeno monostabilní tlačítko. Pokud je tato možnost vypnutá, stmívač přestane zesvětlovat, když dosáhne maximální úrovně jasu, a stmívat, když dosáhne minimální úrovně. Pokud je tato možnost zapnutá, přepne se stmívač na minimální úroveň, jakmile je dosaženo maximální úrovně jasu, a v případě stmívání na maximální hodnotu a to hned po dosažení minima. Rozjasňování/stmívání bude pokračovat, dokud bude tlačítko stisknuté.</string>
@@ -434,15 +400,12 @@
   <string name="cfg_profile_active_indicator">aktivní</string>
   <string name="turn_on">Zapnout</string>
   <string name="turn_off">Vypnout</string>
-  <string name="str_default">Výchozí</string>
   <string name="widget_configure_type_label">Widget pro:</string>
   <string name="widget_configure_type_channel_label">Kanál</string>
   <string name="widget_configure_type_group_label">Skupiny</string>
   <string name="widget_configure_type_scene_label">Scény</string>
   <string name="widget_configure_group_label">Skupina pro widget</string>
   <string name="widget_configure_scene_label">Scéna pro widget</string>
-  <string name="widget_configure_no_group">Nejsou k dispozici žádné skupiny</string>
-  <string name="widget_configure_no_scene">Nejsou k dispozici žádné scény</string>
   <string name="widget_command_error">Vyskytla se chyba!  (kód: %1$d )</string>
   <string name="widget_command_connection_failure">Chyba připojení!  (kód: %1$d )</string>
   <string name="widget_command_subject_offline">%1$s je offline!</string>
@@ -644,7 +607,6 @@
   <string name="details_em_balance_hourly">Hodinová bilance</string>
   <string name="details_em_balance_chart_aggregated">Výkres souhrnu bilancí</string>
   <string name="details_em_sum">Součet</string>
-  <string name="details_em_select_range">Vyberte období</string>
   <string name="details_em_active_energy">Aktivní energie</string>
   <string name="details_em_forwarded_energy">Staženo</string>
   <string name="details_em_reversed_energy">Vrácena</string>
@@ -702,10 +664,6 @@
   <string name="developer_info_activated">Režim pro vývojáře aktivován</string>
   <string name="developer_info_screen_orientation">Otočení obrazovky povoleno</string>
   <string name="developer_info_settings">Experimentální nastavení</string>
-  <string name="profiles_list_sorting">Seřazení</string>
-  <string name="profiles_list_sorting_default">Výchozí</string>
-  <string name="profiles_list_sorting_name">Název</string>
-  <string name="profiles_list_sorting_added">Naposledy přidáno</string>
   <string name="channel_caption_water_tank">Nádrž na vodu</string>
   <string name="channel_caption_container_level_sensor">Snímač hladiny kontejneru</string>
   <string name="state_opened">otevřeno</string>
@@ -738,4 +696,12 @@
     <item quantity="other">%1$d dne ⏱️</item>
   </plurals>
   <string name="thermostat_calibration_error">Chyba kalibrace</string>
+  <string name="toolbar_dimmer">Stmívač</string>
+  <string name="rgb_detail_color">Barva:</string>
+  <string name="rgb_detail_brightness">Jas:</string>
+  <string name="rgb_detail_select_color">Vyberte barvu</string>
+  <string name="legacy_rgbw_settings_unauthorized_message">K zobrazení konfigurace je nutné oprávnění!</string>
+  <string name="legacy_rgbw_settings_authorize_button">Autorizovat</string>
+  <string name="rgb_detail_colors_limit">Dosažen limit!</string>
+  <string name="channel_caption_invisible">Skrytý</string>
 </resources>

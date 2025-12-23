@@ -94,7 +94,7 @@ class ThermostatGeneralViewModel @Inject constructor(
   private val suplaClientProvider: SuplaClientProvider,
   private val schedulers: SuplaSchedulers,
   private val dateProvider: DateProvider,
-  @Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter
+  @param:Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter
 ) : BaseViewModel<ThermostatGeneralViewState, ThermostatGeneralViewEvent>(ThermostatGeneralViewState(), schedulers),
   ThermostatGeneralViewProxy {
 

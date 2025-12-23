@@ -19,14 +19,17 @@ package org.supla.android.ui.views.spinner
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -161,7 +164,9 @@ fun <T : SpinnerItem> TextSpinner(
         text = stringResource(id = it).uppercase(),
         style = MaterialTheme.typography.bodySmall,
         color = labelTextColor,
-        modifier = Modifier.align(labelAlignment).padding(labelPadding),
+        modifier = Modifier
+          .align(labelAlignment)
+          .padding(labelPadding),
         maxLines = 1
       )
     }
@@ -190,7 +195,21 @@ fun <T : SpinnerItem> TextSpinner(
             .menuAnchor(MenuAnchorType.PrimaryNotEditable)
         )
       }
-      DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+
+      // Height limitation is needed for Android 9.
+      // There is some bug which causes that top list elements are not visible.
+      val limitHeightModifier: Modifier =
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+          Modifier.heightIn(max = 300.dp)
+        } else {
+          Modifier
+        }
+
+      DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = { expanded = false },
+        modifier = limitHeightModifier
+      ) {
         options.items.forEach { option ->
           DropdownMenuItem(
             text = {

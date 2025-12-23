@@ -35,6 +35,7 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
+import kotlin.math.roundToInt
 
 @Singleton
 class ValuesFormatter @Inject constructor(
@@ -58,8 +59,8 @@ class ValuesFormatter @Inject constructor(
      */
     private const val TEMPERATURE_NA_VALUE = ThermometerValueProvider.UNKNOWN_VALUE
 
-    fun getPercentageString(value: Float): String =
-      "${value.times(100).toInt()}%"
+    fun getPercentageString(value: Float): String = "${value.times(100).roundToInt().coerceIn(0, 100)}%"
+    fun getPercentageString(value: Int): String = "${value.coerceIn(0, 100)}%"
 
     fun getHourWithMinutes(minutes: Int): LocalizedString {
       val hours = minutes.div(60)

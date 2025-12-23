@@ -17,8 +17,8 @@ package org.supla.android.usecases.details
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.data.model.general.ChannelDataBase
-import org.supla.android.features.details.detailbase.standarddetail.DetailPage
+import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
+import org.supla.android.features.details.detailbase.base.DetailPage
 import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -26,10 +26,9 @@ import javax.inject.Singleton
 @Singleton
 class ProvideGroupDetailTypeUseCase @Inject constructor() : BaseDetailTypeProviderUseCase() {
 
-  operator fun invoke(channelDataBase: ChannelDataBase): DetailType? =
-    when (channelDataBase.function) {
-      SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS ->
-        ThermostatDetailType(listOf(DetailPage.THERMOSTAT_HEATPOL_GENERAL))
-      else -> provide(channelDataBase.function)
+  operator fun invoke(group: ChannelGroupDataEntity): DetailType? =
+    when (group.function) {
+      SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS -> ThermostatDetailType(listOf(DetailPage.THERMOSTAT_HEATPOL_GENERAL))
+      else -> provide(group.function)
     }
 }

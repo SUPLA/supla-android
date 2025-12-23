@@ -142,7 +142,7 @@ class SwitchGeneralViewModelTest :
     val onIcon: ImageId = mockk()
     val offIcon: ImageId = mockk()
     val channelState: ChannelState = mockk {
-      every { isActive() } returns true
+      every { isActive } returns true
       every { value } returns ChannelState.Value.ON
     }
 
@@ -211,7 +211,7 @@ class SwitchGeneralViewModelTest :
     val stateIcon: ImageId = mockk()
 
     every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channelData)
-    every { getChannelStateUseCase.invoke(channelData) } returns mockk { every { isActive() } returns true }
+    every { getChannelStateUseCase.invoke(channelData) } returns mockk { every { isActive } returns true }
     every { getChannelIconUseCase.invoke(channelData) } returns stateIcon
     every { dateProvider.currentDate() } returns Date()
     every { electricityMeterGeneralStateHandler.updateState(any(), any(), any()) } answers { firstArg() }
@@ -279,7 +279,7 @@ class SwitchGeneralViewModelTest :
     val offIcon: ImageId = mockk()
 
     every { readGroupWithChannelsUseCase(remoteId) } returns Observable.just(GroupWithChannels(group, emptyList()))
-    every { getChannelStateUseCase.invoke(group) } returns mockk { every { isActive() } returns true }
+    every { getChannelStateUseCase.invoke(group) } returns mockk { every { isActive } returns true }
     every { getChannelIconUseCase.invoke(group, channelStateValue = ChannelState.Value.ON) } returns onIcon
     every { getChannelIconUseCase.invoke(group, channelStateValue = ChannelState.Value.OFF) } returns offIcon
     every { preferences.scale } returns 1f
@@ -338,7 +338,7 @@ class SwitchGeneralViewModelTest :
     val estimatedEndDate = Date(1000)
     every { dateProvider.currentDate() } returns Date(100)
     val channelState: ChannelState = mockk {
-      every { isActive() } returns true
+      every { isActive } returns true
       every { value } returns ChannelState.Value.ON
     }
 
@@ -412,7 +412,7 @@ class SwitchGeneralViewModelTest :
     every { dateProvider.currentDate() } returns Date(1003)
 
     val channelState: ChannelState = mockk {
-      every { isActive() } returns true
+      every { isActive } returns true
       every { value } returns ChannelState.Value.ON
     }
 

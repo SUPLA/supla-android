@@ -29,6 +29,8 @@ import org.supla.android.usecases.icon.producers.CurtainIconResourceProducer
 import org.supla.android.usecases.icon.producers.DigiglassHorizontalIconResourceProducer
 import org.supla.android.usecases.icon.producers.DigiglassVerticalIconResourceProducer
 import org.supla.android.usecases.icon.producers.DimmerAndRgbIconResourceProducer
+import org.supla.android.usecases.icon.producers.DimmerCctAndRgbIconResourceProducer
+import org.supla.android.usecases.icon.producers.DimmerCctIconResourceProducer
 import org.supla.android.usecases.icon.producers.DimmerIconResourceProducer
 import org.supla.android.usecases.icon.producers.DoorIconResourceProducer
 import org.supla.android.usecases.icon.producers.ElectricityMeterIconResourceProducer
@@ -92,9 +94,11 @@ class GetDefaultIconResourceUseCase @Inject constructor() {
     static(SuplaFunction.RAIN_SENSOR, R.drawable.fnc_rain),
     static(SuplaFunction.WEIGHT_SENSOR, R.drawable.fnc_weight),
     LiquidSensorIconResourceProducer(),
-    DimmerIconResourceProducer(),
-    RgbLightingIconResourceProducer(),
-    DimmerAndRgbIconResourceProducer(),
+    DimmerIconResourceProducer,
+    DimmerCctIconResourceProducer,
+    RgbLightingIconResourceProducer,
+    DimmerAndRgbIconResourceProducer,
+    DimmerCctAndRgbIconResourceProducer,
     static(SuplaFunction.DEPTH_SENSOR, R.drawable.fnc_depth),
     static(SuplaFunction.DISTANCE_SENSOR, R.drawable.fnc_distance),
     WindowIconResourceProducer(),
@@ -151,12 +155,12 @@ interface IconResourceProducer {
 data class IconData(
   val function: SuplaFunction,
   val altIcon: Int,
-  val state: ChannelState = ChannelState(ChannelState.Value.NOT_USED),
+  val state: ChannelState = ChannelState.Default(ChannelState.Value.NOT_USED),
   val type: IconType = IconType.SINGLE
 ) {
   @DrawableRes
   fun stateIcon(@DrawableRes activeIcon: Int, @DrawableRes inactiveIcon: Int): Int =
-    if (state.isActive()) activeIcon else inactiveIcon
+    if (state.isActive) activeIcon else inactiveIcon
 }
 
 private fun static(function: SuplaFunction, @DrawableRes day: Int) =

@@ -17,50 +17,73 @@ package org.supla.android.usecases.details
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.features.details.detailbase.standarddetail.DetailPage
+import org.supla.android.features.details.detailbase.base.DetailPage
+import org.supla.android.lib.SuplaConst
 import org.supla.core.shared.data.model.general.SuplaFunction
 
 abstract class BaseDetailTypeProviderUseCase {
 
-  fun provide(function: SuplaFunction): DetailType? = when (function) {
-    SuplaFunction.DIMMER,
-    SuplaFunction.DIMMER_AND_RGB_LIGHTING,
+  fun provide(function: SuplaFunction, manufacturerId: Int? = null, productId: Int? = null): DetailType? = when (function) {
+    SuplaFunction.DIMMER, SuplaFunction.DIMMER_CCT ->
+      StandardDetailType(
+        pages = if (shouldShowRgbSettings(manufacturerId, productId)) {
+          listOf(DetailPage.DIMMER, DetailPage.LEGACY_RGBW)
+        } else {
+          listOf(DetailPage.DIMMER)
+        }
+      )
+
+    SuplaFunction.DIMMER_AND_RGB_LIGHTING, SuplaFunction.DIMMER_CCT_AND_RGB ->
+      StandardDetailType(
+        pages = if (shouldShowRgbSettings(manufacturerId, productId)) {
+          listOf(DetailPage.RGB, DetailPage.DIMMER, DetailPage.LEGACY_RGBW)
+        } else {
+          listOf(DetailPage.RGB, DetailPage.DIMMER)
+        }
+      )
+
     SuplaFunction.RGB_LIGHTING ->
-      LegacyDetailType.RGBW
+      StandardDetailType(
+        pages = if (shouldShowRgbSettings(manufacturerId, productId)) {
+          listOf(DetailPage.RGB, DetailPage.LEGACY_RGBW)
+        } else {
+          listOf(DetailPage.RGB)
+        }
+      )
 
     SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER ->
-      WindowDetailType(listOf(DetailPage.ROLLER_SHUTTER))
+      StandardDetailType(listOf(DetailPage.ROLLER_SHUTTER))
 
     SuplaFunction.CONTROLLING_THE_ROOF_WINDOW ->
-      WindowDetailType(listOf(DetailPage.ROOF_WINDOW))
+      StandardDetailType(listOf(DetailPage.ROOF_WINDOW))
 
     SuplaFunction.CONTROLLING_THE_FACADE_BLIND ->
-      WindowDetailType(listOf(DetailPage.FACADE_BLINDS))
+      StandardDetailType(listOf(DetailPage.FACADE_BLINDS))
 
     SuplaFunction.TERRACE_AWNING ->
-      WindowDetailType(listOf(DetailPage.TERRACE_AWNING))
+      StandardDetailType(listOf(DetailPage.TERRACE_AWNING))
 
     SuplaFunction.PROJECTOR_SCREEN ->
-      WindowDetailType(listOf(DetailPage.PROJECTOR_SCREEN))
+      StandardDetailType(listOf(DetailPage.PROJECTOR_SCREEN))
 
     SuplaFunction.CURTAIN ->
-      WindowDetailType(listOf(DetailPage.CURTAIN))
+      StandardDetailType(listOf(DetailPage.CURTAIN))
 
     SuplaFunction.VERTICAL_BLIND ->
-      WindowDetailType(listOf(DetailPage.VERTICAL_BLIND))
+      StandardDetailType(listOf(DetailPage.VERTICAL_BLIND))
 
     SuplaFunction.ROLLER_GARAGE_DOOR ->
-      WindowDetailType(listOf(DetailPage.GARAGE_DOOR_ROLLER))
+      StandardDetailType(listOf(DetailPage.GARAGE_DOOR_ROLLER))
 
     SuplaFunction.LIGHTSWITCH,
     SuplaFunction.POWER_SWITCH,
     SuplaFunction.STAIRCASE_TIMER,
     SuplaFunction.PUMP_SWITCH,
     SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH ->
-      SwitchDetailType(listOf(DetailPage.SWITCH))
+      StandardDetailType(listOf(DetailPage.SWITCH))
 
     SuplaFunction.ELECTRICITY_METER ->
-      EmDetailType(listOf(DetailPage.EM_GENERAL, DetailPage.EM_HISTORY, DetailPage.EM_SETTINGS))
+      StandardDetailType(listOf(DetailPage.EM_GENERAL, DetailPage.EM_HISTORY, DetailPage.EM_SETTINGS))
 
     SuplaFunction.IC_ELECTRICITY_METER,
     SuplaFunction.IC_GAS_METER,
@@ -101,12 +124,12 @@ abstract class BaseDetailTypeProviderUseCase {
     SuplaFunction.CONTAINER,
     SuplaFunction.SEPTIC_TANK,
     SuplaFunction.WATER_TANK ->
-      ContainerDetailType(listOf(DetailPage.CONTAINER_GENERAL))
+      StandardDetailType(listOf(DetailPage.CONTAINER_GENERAL))
 
     SuplaFunction.CONTROLLING_THE_GATE,
     SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
     SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
-    SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK -> GateDetailType(listOf(DetailPage.GATE_GENERAL))
+    SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK -> StandardDetailType(listOf(DetailPage.GATE_GENERAL))
 
     SuplaFunction.UNKNOWN,
     SuplaFunction.NONE,
@@ -140,4 +163,9 @@ abstract class BaseDetailTypeProviderUseCase {
     SuplaFunction.MOTION_SENSOR,
     SuplaFunction.BINARY_SENSOR -> null
   }
+
+  private fun shouldShowRgbSettings(manufacturerId: Int?, productId: Int?): Boolean =
+    manufacturerId == SuplaConst.SUPLA_MFR_DOYLETRATT && productId == 1 ||
+      manufacturerId == SuplaConst.SUPLA_MFR_ZAMEL && productId == SuplaConst.ZAM_PRODID_DIW_01 ||
+      manufacturerId == SuplaConst.SUPLA_MFR_COMELIT && productId == SuplaConst.COM_PRODID_WDIM100
 }

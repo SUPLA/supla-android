@@ -94,6 +94,17 @@ abstract class BaseDownloadLogUseCase<T : Measurement, U : BaseLogEntity>(
         Timber.d("No entries to get - cleaning measurements")
         return true
       } else {
+        val entriesWithoutGroupingString = try {
+          baseMeasurementRepository.findCountWithoutGroupingString(remoteId, profileId).blockingGet()
+        } catch (ex: Exception) {
+          Timber.e(ex, "Could not load count of entries without grouping string")
+          return true
+        }
+        if (entriesWithoutGroupingString > 0) {
+          Timber.w("Found $entriesWithoutGroupingString entries without grouping string - cleaning")
+          return true
+        }
+
         val minTimestamp = try {
           baseMeasurementRepository.findMinTimestamp(remoteId, profileId).blockingGet()
         } catch (_: EmptyResultSetException) {

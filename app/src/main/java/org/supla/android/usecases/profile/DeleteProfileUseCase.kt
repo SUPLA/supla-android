@@ -31,6 +31,7 @@ import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.ChannelRelationRepository
 import org.supla.android.data.source.ChannelStateRepository
 import org.supla.android.data.source.ChannelValueRepository
+import org.supla.android.data.source.ColorListRepository
 import org.supla.android.data.source.CurrentLogRepository
 import org.supla.android.data.source.ElectricityMeterLogRepository
 import org.supla.android.data.source.GeneralPurposeMeasurementLogRepository
@@ -41,7 +42,6 @@ import org.supla.android.data.source.ImpulseCounterLogRepository
 import org.supla.android.data.source.LocationRepository
 import org.supla.android.data.source.PowerActiveLogRepository
 import org.supla.android.data.source.RoomChannelRepository
-import org.supla.android.data.source.RoomColorListRepository
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.RoomSceneRepository
 import org.supla.android.data.source.RoomUserIconRepository
@@ -80,7 +80,7 @@ class DeleteProfileUseCase @Inject constructor(
   channelValueRepository: ChannelValueRepository,
   channelGroupRepository: ChannelGroupRepository,
   channelGroupRelationRepository: ChannelGroupRelationRepository,
-  colorListRepository: RoomColorListRepository,
+  colorListRepository: ColorListRepository,
   locationRepository: LocationRepository,
   sceneRepository: RoomSceneRepository,
   userIconRepository: RoomUserIconRepository,

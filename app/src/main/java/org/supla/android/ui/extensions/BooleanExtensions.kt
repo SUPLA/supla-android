@@ -25,3 +25,10 @@ fun <T> Boolean.ifTrue(valueProvider: @Composable () -> T): T? = if (this) {
 } else {
   null
 }
+
+@Composable
+fun <T> Boolean.ifFalse(valueProvider: @Composable () -> T): T? = if (!this) {
+  valueProvider()
+} else {
+  null
+}
