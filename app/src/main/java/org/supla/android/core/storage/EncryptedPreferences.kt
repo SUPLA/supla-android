@@ -40,16 +40,18 @@ private const val WIZARD_WIFI_PASSWORD = "WIZARD_WIFI_PASSWORD"
 
 @Singleton
 class EncryptedPreferences @Inject constructor(
-  @ApplicationContext private val context: Context
+  @param:ApplicationContext private val context: Context
 ) {
 
-  private val preferences: SharedPreferences = EncryptedSharedPreferences.create(
-    context,
-    "secured_preferences",
-    MasterKey.Builder(context).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build(),
-    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-  )
+  private val preferences: SharedPreferences by lazy {
+    EncryptedSharedPreferences.create(
+      context,
+      "secured_preferences",
+      MasterKey.Builder(context).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build(),
+      EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+      EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+    )
+  }
 
   var fcmToken: String?
     get() = preferences.getString(FCM_TOKEN_KEY, null)

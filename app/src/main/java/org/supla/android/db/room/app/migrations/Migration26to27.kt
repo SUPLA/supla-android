@@ -23,6 +23,20 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import org.supla.android.data.source.local.entity.LegacyScene
 import org.supla.android.data.source.local.entity.ProfileEntity
+import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_ACCESS_ID
+import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_ACCESS_ID_PASSWORD
+import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_ACTIVE
+import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_ADVANCED_MODE
+import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_AUTH_KEY
+import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_EMAIL
+import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_EMAIL_AUTH
+import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_GUID
+import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_ID
+import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_NAME
+import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_PREFERRED_PROTOCOL_VERSION
+import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_SERVER_AUTO_DETECT
+import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_SERVER_FOR_ACCESS_ID
+import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_SERVER_FOR_EMAIL
 import org.supla.android.data.source.local.entity.SceneEntity
 import org.supla.android.data.source.local.view.SceneView
 import org.supla.android.db.AuthProfileItem
@@ -66,7 +80,7 @@ class Migration26to27 @Inject constructor() : Migration(26, 27), SqlExecutor {
   }
 
   private fun getAllProfiles(database: SupportSQLiteDatabase): Cursor =
-    database.query("SELECT ${ProfileEntity.ALL_COLUMNS.joinToString(", ")} FROM ${ProfileEntity.TABLE_NAME}")
+    database.query("SELECT $PROFILE_ALL_COLUMNS_VERSION_26 FROM ${ProfileEntity.TABLE_NAME}")
 
   private fun makeEmptyAuthItem(): AuthProfileItem {
     return AuthProfileItem(
@@ -124,3 +138,8 @@ class Migration26to27 @Inject constructor() : Migration(26, 27), SqlExecutor {
   private fun sceneCursor(db: SupportSQLiteDatabase): Cursor =
     db.query("SELECT ${SceneView.ALL_COLUMNS.joinToString(", ")} FROM ${SceneView.NAME}")
 }
+
+private const val PROFILE_ALL_COLUMNS_VERSION_26 =
+  "$COLUMN_ID,$COLUMN_NAME,$COLUMN_EMAIL,$COLUMN_SERVER_FOR_ACCESS_ID,$COLUMN_SERVER_FOR_EMAIL," +
+    "$COLUMN_SERVER_AUTO_DETECT,$COLUMN_EMAIL_AUTH,$COLUMN_ACCESS_ID,$COLUMN_ACCESS_ID_PASSWORD," +
+    "$COLUMN_PREFERRED_PROTOCOL_VERSION,$COLUMN_ACTIVE,$COLUMN_ADVANCED_MODE,$COLUMN_GUID,$COLUMN_AUTH_KEY"
