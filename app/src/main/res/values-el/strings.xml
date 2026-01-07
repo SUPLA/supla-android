@@ -718,4 +718,5 @@
   <string name="legacy_rgbw_settings_authorize_button">Εξουσιοδοτήστε</string>
   <string name="rgb_detail_colors_limit">Το όριο έφτασε!</string>
   <string name="channel_caption_invisible">Κρυφός</string>
+  <string name="dimmer_detail_temperature">Χρωματικότητα:</string>
 </resources>

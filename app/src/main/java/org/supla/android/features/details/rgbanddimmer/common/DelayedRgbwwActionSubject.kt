@@ -42,6 +42,7 @@ class DelayedRgbwwActionSubject @Inject constructor(
       remoteId = state.remoteId,
       color = state.color,
       brightness = state.brightness,
+      cct = state.cct,
       onOff = false,
       vibrate = false
     )

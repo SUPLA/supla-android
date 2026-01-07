@@ -746,4 +746,5 @@
   <string name="legacy_rgbw_settings_authorize_button">Autorizzare</string>
   <string name="rgb_detail_colors_limit">Limite raggiunto!</string>
   <string name="channel_caption_invisible">Nascosto</string>
+  <string name="dimmer_detail_temperature">Colore:</string>
 </resources>

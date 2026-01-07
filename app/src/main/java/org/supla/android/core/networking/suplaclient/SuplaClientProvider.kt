@@ -40,15 +40,6 @@ interface SuplaClientApi : SuplaClientSharedApi {
 
   fun open(ID: Int, Group: Boolean, Open: Int): Boolean
 
-  fun setRGBW(
-    ID: Int,
-    Group: Boolean,
-    Color: Int,
-    ColorBrightness: Int,
-    Brightness: Int,
-    TurnOnOff: Boolean
-  ): Boolean
-
   fun executeAction(parameters: ActionParameters): Boolean
 
   fun registerPushNotificationClientToken(appId: Int, token: String, profileName: String): Boolean
