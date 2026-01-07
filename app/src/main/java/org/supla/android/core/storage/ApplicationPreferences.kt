@@ -18,6 +18,7 @@ package org.supla.android.core.storage
  */
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -39,7 +40,9 @@ private const val KEY_ROTATION_ENABLED = "pref_rotation_enabled"
 @Singleton
 class ApplicationPreferences @Inject constructor(@ApplicationContext context: Context) : ApplicationPreferences {
 
-  private val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+  private val preferences: SharedPreferences by lazy {
+    PreferenceManager.getDefaultSharedPreferences(context)
+  }
 
   var nightMode: NightModeSetting
     get() = NightModeSetting.from(preferences.getInt(KEY_NIGHT_MODE, NightModeSetting.UNSET.value))
