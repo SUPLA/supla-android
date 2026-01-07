@@ -69,20 +69,24 @@ class LoadLatestOcrPhotoUseCase @Inject constructor(
 ) {
 
   operator fun invoke(remoteId: Int): Observable<OcrPhoto> =
-    with(suplaCloudServiceProvider.provide()) {
-      getLatestImpulseCounterPhotoOld(remoteId)
-        .onErrorResumeNext { getLatestImpulseCounterPhoto(remoteId) }
-        .map { photoDto ->
-          val localDateTime = LocalDateTime.parse(photoDto.createdAt, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
-          val date = Date.from(localDateTime.atZone(ZoneId.of("UTC")).toInstant())
-            ?.let { ValuesFormatter.getFullDateString(it) } ?: NO_VALUE_TEXT
+    try {
+      with(suplaCloudServiceProvider.provide()) {
+        getLatestImpulseCounterPhotoOld(remoteId)
+          .onErrorResumeNext { getLatestImpulseCounterPhoto(remoteId) }
+          .map { photoDto ->
+            val localDateTime = LocalDateTime.parse(photoDto.createdAt, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+            val date = Date.from(localDateTime.atZone(ZoneId.of("UTC")).toInstant())
+              ?.let { ValuesFormatter.getFullDateString(it) } ?: NO_VALUE_TEXT
 
-          OcrPhoto(
-            date = date,
-            original = photoDto.image?.let { Base64.decode(it, Base64.DEFAULT) },
-            cropped = photoDto.imageCropped?.let { Base64.decode(it, Base64.DEFAULT) },
-            value = photoDto.toValue()
-          )
-        }
+            OcrPhoto(
+              date = date,
+              original = photoDto.image?.let { Base64.decode(it, Base64.DEFAULT) },
+              cropped = photoDto.imageCropped?.let { Base64.decode(it, Base64.DEFAULT) },
+              value = photoDto.toValue()
+            )
+          }
+      }
+    } catch (ex: IllegalStateException) {
+      Observable.error(ex)
     }
 }
