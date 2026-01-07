@@ -45,10 +45,16 @@ import org.supla.android.features.details.rgbanddimmer.common.SavedColor
 import org.supla.android.features.details.rgbanddimmer.common.dimmer.DimmerDetailScope
 import org.supla.android.features.details.rgbanddimmer.common.dimmer.DimmerDetailViewState
 import org.supla.android.features.details.rgbanddimmer.common.dimmer.DimmerSelectorType
+import org.supla.android.features.details.rgbanddimmer.common.dimmer.DimmerValue
 import org.supla.android.features.details.rgbanddimmer.common.ui.LinearColorSelector
 import org.supla.android.features.details.rgbanddimmer.common.ui.SavedColorListScope
-import org.supla.android.features.details.rgbanddimmer.common.ui.dimmer.CircularColorSelector
+import org.supla.android.features.details.rgbanddimmer.common.ui.ValuesCard
+import org.supla.android.features.details.rgbanddimmer.common.ui.dimmer.BrightnessValueView
+import org.supla.android.features.details.rgbanddimmer.common.ui.dimmer.DoubleCircularColorSelector
 import org.supla.android.features.details.rgbanddimmer.common.ui.dimmer.Scaffold
+import org.supla.android.features.details.rgbanddimmer.common.ui.dimmer.ValueLabel
+import org.supla.android.features.details.rgbanddimmer.common.ui.dimmer.ValueRow
+import org.supla.android.features.details.rgbanddimmer.rgb.ui.ColorBox
 import org.supla.android.images.ImageId
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.tools.SuplaPreviewLandscape
@@ -90,7 +96,8 @@ fun DimmerCctDetailScope.View(
   Scaffold(
     state = state,
     brightnessControl = { state, modifier -> Selectors(state, modifier) },
-    savedColorItemContent = { color, online -> SavedColorBox(color, online) }
+    savedColorItemContent = { color, online -> SavedColorBox(color, online) },
+    brightnessBox = { value, modifier -> BrightnessBox(value, modifier) }
   )
 }
 
@@ -119,7 +126,7 @@ private fun DimmerCctDetailScope.LinearSelectors(state: DimmerDetailViewState, m
     state.value.cct?.div(100f)?.coerceIn(0f, 1f).let { cct ->
       LinearColorSelector(
         value = cct,
-        selectedColor = cct?.let { colorAt(it, CCT_START_COLOR, Color.White, CCT_END_COLOR) },
+        selectedColor = cct?.toCctColor(),
         colors = CCT_SELECTOR_COLORS,
         enabled = !state.offline,
         valueMarkers = state.value.cctMarkers.map { it.div(100f).coerceIn(0f, 1f) },
@@ -134,34 +141,26 @@ private fun DimmerCctDetailScope.LinearSelectors(state: DimmerDetailViewState, m
   }
 
 @Composable
-private fun DimmerCctDetailScope.CircularSelectors(state: DimmerDetailViewState, modifier: Modifier = Modifier) =
-  Box(modifier = modifier.fillMaxSize()) {
-    CircularColorSelector(
-      value = state.value.brightness?.div(100f)?.coerceIn(0f, 1f),
-      selectedColor = state.value.brightness?.toGrayColor(),
-      enabled = !state.offline,
-      valueMarkers = state.value.brightnessMarkers.map { it.div(100f).coerceIn(0f, 1f) },
-      onValueChangeStarted = { onBrightnessSelectionStarted() },
-      onValueChanging = { onBrightnessSelecting(brightness = it.times(100).roundToInt()) },
-      onValueChanged = { onBrightnessSelected() },
-      modifier = Modifier.fillMaxSize()
-    )
-    state.value.cct?.div(100f)?.coerceIn(0f, 1f).let { cct ->
-      CircularColorSelector(
-        value = cct,
-        selectedColor = cct?.let { colorAt(it, CCT_END_COLOR, Color.White, CCT_START_COLOR) },
-        colors = CCT_CIRCULAR_SELECTOR_COLORS,
-        enabled = !state.offline,
-        valueMarkers = state.value.cctMarkers.map { it.div(100f).coerceIn(0f, 1f) },
-        onValueChangeStarted = { onCctSelectionStarted() },
-        onValueChanging = { onCctSelecting(cct = it.times(100).roundToInt()) },
-        onValueChanged = { onCctSelected() },
-        modifier = Modifier
-          .fillMaxSize()
-          .padding(35.dp)
-      )
-    }
-  }
+private fun DimmerCctDetailScope.CircularSelectors(state: DimmerDetailViewState, modifier: Modifier = Modifier) {
+  val cct = state.value.cct?.div(100f)?.coerceIn(0f, 1f)
+  DoubleCircularColorSelector(
+    outerValue = state.value.brightness?.div(100f)?.coerceIn(0f, 1f),
+    outerSelectedColor = state.value.brightness?.toGrayColor(),
+    outerColors = listOf(Pair(0f, Color.Black), Pair(1f, Color.White)),
+    outerValueMarkers = state.value.brightnessMarkers.map { it.div(100f).coerceIn(0f, 1f) },
+    innerValue = cct,
+    innerSelectedColor = cct?.toCctColor(),
+    innerColors = CCT_CIRCULAR_SELECTOR_COLORS,
+    innerValueMarkers = state.value.cctMarkers.map { it.div(100f).coerceIn(0f, 1f) },
+    modifier = modifier.fillMaxSize(),
+    onOuterValueChangeStarted = { onBrightnessSelectionStarted() },
+    onOuterValueChanging = { onBrightnessSelecting(brightness = it.times(100).roundToInt()) },
+    onOuterValueChanged = { onBrightnessSelected() },
+    onInnerValueChangeStarted = { onCctSelectionStarted() },
+    onInnerValueChanging = { onCctSelecting(cct = it.times(100).roundToInt()) },
+    onInnerValueChanged = { onCctSelected() },
+  )
+}
 
 @Composable
 private fun SavedColorListScope.SavedColorBox(color: SavedColor, online: Boolean) =
@@ -193,14 +192,32 @@ private fun SavedColorListScope.SavedColorBox(color: SavedColor, online: Boolean
         .width(21.dp)
         .fillMaxHeight()
         .background(
-          color = colorAt(color.color.div(100f).coerceIn(0f, 1f), CCT_START_COLOR, CCT_END_COLOR),
+          color = color.color.div(100f).coerceIn(0f, 1f).toCctColor(),
           shape = RoundedCornerShape(topEnd = radius, bottomEnd = radius)
         )
         .align(Alignment.TopEnd)
     )
   }
 
+@Composable
+private fun BrightnessBox(value: DimmerValue, modifier: Modifier = Modifier) =
+  ValuesCard(
+    modifier = modifier,
+    horizontalArrangement = Arrangement.spacedBy(Distance.default)
+  ) {
+    ValueRow {
+      BrightnessValueView(value.brightnessString)
+    }
+    ValueRow {
+      ValueLabel(R.string.dimmer_detail_temperature)
+      ColorBox(value.cct?.div(100f)?.coerceIn(0f, 1f)?.toCctColor())
+    }
+  }
+
 private fun lerp(a: Float, b: Float, t: Float) = a + (b - a) * t
+
+private fun Float.toCctColor(): Color =
+  colorAt(this, CCT_END_COLOR, Color.White, CCT_START_COLOR)
 
 private fun colorAt(t: Float, start: Color, middle: Color, end: Color): Color =
   if (t <= 0.5f) {

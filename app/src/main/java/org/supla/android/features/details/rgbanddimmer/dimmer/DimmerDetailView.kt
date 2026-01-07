@@ -17,6 +17,7 @@ package org.supla.android.features.details.rgbanddimmer.dimmer
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
@@ -24,14 +25,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
+import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.extensions.toGrayColor
 import org.supla.android.features.details.rgbanddimmer.common.SavedColor
 import org.supla.android.features.details.rgbanddimmer.common.dimmer.DimmerDetailScope
 import org.supla.android.features.details.rgbanddimmer.common.dimmer.DimmerDetailViewState
 import org.supla.android.features.details.rgbanddimmer.common.dimmer.DimmerSelectorType
+import org.supla.android.features.details.rgbanddimmer.common.dimmer.DimmerValue
 import org.supla.android.features.details.rgbanddimmer.common.ui.LinearColorSelector
 import org.supla.android.features.details.rgbanddimmer.common.ui.SavedColorBox
+import org.supla.android.features.details.rgbanddimmer.common.ui.ValuesCard
+import org.supla.android.features.details.rgbanddimmer.common.ui.dimmer.BrightnessValueView
 import org.supla.android.features.details.rgbanddimmer.common.ui.dimmer.CircularColorSelector
 import org.supla.android.features.details.rgbanddimmer.common.ui.dimmer.Scaffold
 import org.supla.android.images.ImageId
@@ -51,7 +56,8 @@ fun DimmerDetailScope.View(
   Scaffold(
     state = state,
     brightnessControl = { state, modifier -> BrightnessSelector(state, modifier) },
-    savedColorItemContent = { color, online -> SavedColorBox(color, online) }
+    savedColorItemContent = { color, online -> SavedColorBox(color, online) },
+    brightnessBox = { value, modifier -> BrightnessBox(value, modifier) }
   )
 }
 
@@ -84,6 +90,15 @@ private fun DimmerDetailScope.BrightnessSelector(state: DimmerDetailViewState, m
         modifier = Modifier
           .fillMaxSize()
       )
+  }
+
+@Composable
+private fun BrightnessBox(value: DimmerValue, modifier: Modifier = Modifier) =
+  ValuesCard(
+    modifier = modifier,
+    horizontalArrangement = Arrangement.spacedBy(Distance.tiny)
+  ) {
+    BrightnessValueView(value.brightnessString)
   }
 
 private val previewScope = object : DimmerDetailScope {

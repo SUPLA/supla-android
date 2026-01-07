@@ -23,6 +23,7 @@ import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.extensions.HsvColor
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.IGNORE_BRIGHTNESS
+import org.supla.android.lib.actions.IGNORE_CCT
 import org.supla.android.lib.actions.IGNORE_COLOR
 import org.supla.android.lib.actions.RgbwActionParameters
 import org.supla.android.lib.actions.SubjectType
@@ -42,6 +43,7 @@ class ExecuteRgbwActionUseCase @Inject constructor(
     remoteId: Int,
     color: HsvColor? = null,
     brightness: Int? = null,
+    cct: Int? = null,
     onOff: Boolean = false,
     vibrate: Boolean = true
   ): Completable =
@@ -51,6 +53,7 @@ class ExecuteRgbwActionUseCase @Inject constructor(
       color = color?.color?.toArgb()?.toLong(),
       colorBrightness = color?.valueAsPercentage?.toShort(),
       brightness = brightness?.toShort(),
+      cct = cct?.toShort(),
       onOff = onOff,
       vibrate = vibrate
     )
@@ -61,6 +64,7 @@ class ExecuteRgbwActionUseCase @Inject constructor(
     color: Long? = null,
     colorBrightness: Short? = null,
     brightness: Short? = null,
+    cct: Short? = null,
     onOff: Boolean = false,
     vibrate: Boolean = true
   ): Completable = Completable.fromRunnable {
@@ -73,7 +77,8 @@ class ExecuteRgbwActionUseCase @Inject constructor(
         colorBrightness = colorBrightness ?: IGNORE_BRIGHTNESS,
         color = color ?: IGNORE_COLOR,
         colorRandom = false,
-        onOff
+        dimmerCct = cct ?: IGNORE_CCT,
+        onOff = onOff
       )
       Timber.d("Executing RGBW action with parameters: $parameters")
 

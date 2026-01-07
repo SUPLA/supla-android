@@ -721,4 +721,5 @@
   <string name="legacy_rgbw_settings_authorize_button">Engedélyezés</string>
   <string name="rgb_detail_colors_limit">Elérte a korlátot!</string>
   <string name="channel_caption_invisible">Rejtett</string>
+  <string name="dimmer_detail_temperature">Színhőmérséklet:</string>
 </resources>
