@@ -60,21 +60,22 @@ import org.supla.android.ui.views.buttons.supla.SuplaButtonDefaults
 fun DimmerDetailScope.Scaffold(
   state: DimmerDetailViewState,
   brightnessControl: @Composable DimmerDetailScope.(DimmerDetailViewState, Modifier) -> Unit,
-  savedColorItemContent: @Composable SavedColorListScope.(SavedColor, Boolean) -> Unit
+  savedColorItemContent: @Composable SavedColorListScope.(SavedColor, Boolean) -> Unit,
+  brightnessBox: @Composable DimmerDetailScope.(DimmerValue, Modifier) -> Unit
 ) {
   SizeClassBox(Modifier.fillMaxSize()) {
     when (it) {
-      SizeClass.LANDSCAPE_SMALL -> LandscapeNarrow(state, brightnessControl, savedColorItemContent)
+      SizeClass.LANDSCAPE_SMALL -> LandscapeNarrow(state, brightnessBox, brightnessControl, savedColorItemContent)
 
       SizeClass.SQUARE_SMALL,
       SizeClass.SQUARE_MEDIUM,
       SizeClass.SQUARE_BIG,
       SizeClass.PORTRAIT_SMALL,
       SizeClass.PORTRAIT_MEDIUM,
-      SizeClass.PORTRAIT_BIG -> Portrait(state, brightnessControl, savedColorItemContent)
+      SizeClass.PORTRAIT_BIG -> Portrait(state, brightnessBox, brightnessControl, savedColorItemContent)
 
       SizeClass.LANDSCAPE_MEDIUM,
-      SizeClass.LANDSCAPE_BIG -> Landscape(state, brightnessControl, savedColorItemContent)
+      SizeClass.LANDSCAPE_BIG -> Landscape(state, brightnessBox, brightnessControl, savedColorItemContent)
     }
 
     if (state.loading) {
@@ -86,11 +87,12 @@ fun DimmerDetailScope.Scaffold(
 @Composable
 private fun DimmerDetailScope.LandscapeNarrow(
   state: DimmerDetailViewState,
+  brightnessBox: @Composable DimmerDetailScope.(DimmerValue, Modifier) -> Unit,
   brightnessControl: @Composable DimmerDetailScope.(DimmerDetailViewState, Modifier) -> Unit,
   savedColorItemContent: @Composable SavedColorListScope.(SavedColor, Boolean) -> Unit
 ) {
   Column {
-    BrightnessBox(state.value, Modifier.padding(horizontal = Distance.horizontal, vertical = Distance.small))
+    brightnessBox(state.value, Modifier.padding(horizontal = Distance.horizontal, vertical = Distance.small))
     Box(
       modifier = Modifier
         .fillMaxWidth()
@@ -137,6 +139,7 @@ private fun DimmerDetailScope.LandscapeNarrow(
 @Composable
 private fun DimmerDetailScope.Landscape(
   state: DimmerDetailViewState,
+  brightnessBox: @Composable DimmerDetailScope.(DimmerValue, Modifier) -> Unit,
   brightnessControl: @Composable DimmerDetailScope.(DimmerDetailViewState, Modifier) -> Unit,
   savedColorItemContent: @Composable SavedColorListScope.(SavedColor, Boolean) -> Unit
 ) {
@@ -147,7 +150,7 @@ private fun DimmerDetailScope.Landscape(
       state.deviceStateData?.let { DeviceState(data = it) }
       state.channelIssues?.let { issues -> ChannelIssuesView(issues) }
 
-      BrightnessBox(state.value)
+      brightnessBox(state.value, Modifier)
 
       Spacer(Modifier.weight(1f))
 
@@ -184,6 +187,7 @@ private fun DimmerDetailScope.Landscape(
 @Composable
 private fun DimmerDetailScope.Portrait(
   state: DimmerDetailViewState,
+  brightnessBox: @Composable DimmerDetailScope.(DimmerValue, Modifier) -> Unit,
   brightnessControl: @Composable DimmerDetailScope.(DimmerDetailViewState, Modifier) -> Unit,
   savedColorItemContent: @Composable SavedColorListScope.(SavedColor, Boolean) -> Unit
 ) {
@@ -195,7 +199,7 @@ private fun DimmerDetailScope.Portrait(
       state.channelIssues?.let { issues -> ChannelIssuesView(issues) }
     }
 
-    BrightnessBox(state.value, Modifier.padding(horizontal = Distance.horizontal))
+    brightnessBox(state.value, Modifier.padding(horizontal = Distance.horizontal))
 
     BrightnessSelectorBox(
       state = state,
@@ -253,13 +257,4 @@ private fun DimmerDetailScope.BrightnessSelectorTypeButton(state: DimmerDetailVi
         .size(dimensionResource(id = R.dimen.icon_default_size))
         .align(Alignment.Center),
     )
-  }
-
-@Composable
-private fun BrightnessBox(value: DimmerValue, modifier: Modifier = Modifier) =
-  ValuesCard(
-    modifier = modifier,
-    horizontalArrangement = Arrangement.spacedBy(Distance.tiny)
-  ) {
-    BrightnessValueView(value.brightnessString)
   }

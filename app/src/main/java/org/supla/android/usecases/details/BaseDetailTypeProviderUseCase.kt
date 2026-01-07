@@ -42,7 +42,7 @@ abstract class BaseDetailTypeProviderUseCase {
           listOf(DetailPage.RGB, DetailPage.DIMMER)
         }
       )
-    SuplaFunction.DIMMER_CCT_AND_RGB -> StandardDetailType(listOf(DetailPage.RGB, DetailPage.DIMMER))
+    SuplaFunction.DIMMER_CCT_AND_RGB -> StandardDetailType(listOf(DetailPage.RGB, DetailPage.DIMMER_CCT))
 
     SuplaFunction.RGB_LIGHTING ->
       StandardDetailType(

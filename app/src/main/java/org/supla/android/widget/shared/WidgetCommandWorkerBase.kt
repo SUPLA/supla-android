@@ -52,6 +52,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_RESULT_RESPONSE_TIMEOUT
 import org.supla.android.lib.SuplaConst.SUPLA_RESULT_VERSION_ERROR
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.ActionParameters
+import org.supla.android.lib.actions.IGNORE_CCT
 import org.supla.android.lib.actions.RgbwActionParameters
 import org.supla.android.lib.singlecall.ContainerLevel
 import org.supla.android.lib.singlecall.DoubleValue
@@ -177,6 +178,7 @@ abstract class WidgetCommandWorkerBase(
         brightness,
         brightness,
         configuration.value!!.toLong(),
+        dimmerCct = IGNORE_CCT,
         colorRandom = false,
         onOff = true
       )

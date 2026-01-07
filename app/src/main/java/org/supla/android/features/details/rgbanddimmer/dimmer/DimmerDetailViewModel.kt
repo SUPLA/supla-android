@@ -31,8 +31,10 @@ import org.supla.android.data.source.local.entity.ColorEntityType
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.extensions.toGrayColor
 import org.supla.android.features.details.rgbanddimmer.common.DelayedRgbwwActionSubject
+import org.supla.android.features.details.rgbanddimmer.common.SavedColor
 import org.supla.android.features.details.rgbanddimmer.common.dimmer.BaseDimmerDetailViewModel
 import org.supla.android.features.details.rgbanddimmer.common.dimmer.DimmerDetailViewEvent
+import org.supla.android.features.details.rgbanddimmer.common.dimmer.DimmerValue
 import org.supla.android.images.ImageId
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.GetChannelStateUseCase
@@ -106,6 +108,22 @@ class DimmerDetailViewModel @Inject constructor(
         }
       }
     }
+  }
+
+  override fun onSavedColorSelected(color: SavedColor) {
+    updateState {
+      if (it.viewState.offline) {
+        return@updateState it
+      }
+      it.copy(
+        lastInteractionTime = null,
+        viewState = it.viewState.copy(
+          value = DimmerValue.Single(color.brightness)
+        )
+      )
+    }
+
+    sendDimmerValues(color.brightness, onOff = false)
   }
 
   override fun getButtonIcon(stateValue: ChannelState.Value): ImageId =

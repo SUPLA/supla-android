@@ -219,7 +219,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
       int Color,
       int ColorBrightness,
       int Brightness,
-      int TurnOnOff);
+      int TurnOnOff,
+      int dimmerCct);
 
   private native boolean scGetRegistrationEnabled(long _supla_client);
 
@@ -460,7 +461,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   }
 
   public boolean setRGBW(
-      int ID, boolean Group, int Color, int ColorBrightness, int Brightness, boolean TurnOnOff) {
+      int ID, boolean Group, int Color, int ColorBrightness, int Brightness, int dimmerCct, boolean TurnOnOff) {
     Timber.d(
         "setRGBW(id: %d, group: %b, color: %d, colorBrightness: %d, brightness: %d, onOff: %b)",
         ID, Group, Color, ColorBrightness, Brightness, TurnOnOff);
@@ -474,15 +475,11 @@ public class SuplaClient extends Thread implements SuplaClientApi {
               Color,
               ColorBrightness,
               Brightness,
-              TurnOnOff ? 1 : 0);
+              TurnOnOff ? 1 : 0,
+              dimmerCct);
     } finally {
       unlockClientPtr();
     }
-  }
-
-  public boolean setRGBW(
-      int ChannelID, int Color, int ColorBrightness, int Brightness, boolean TurnOnOff) {
-    return setRGBW(ChannelID, false, Color, ColorBrightness, Brightness, TurnOnOff);
   }
 
   public void getRegistrationEnabled() {
