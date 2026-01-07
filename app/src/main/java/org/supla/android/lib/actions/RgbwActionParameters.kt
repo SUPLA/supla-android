@@ -22,6 +22,8 @@ import org.supla.android.tools.UsedFromNativeCode
 
 const val IGNORE_BRIGHTNESS: Short = -1
 const val IGNORE_COLOR: Long = 0
+const val IGNORE_CCT: Short = -1
+
 
 @UsedFromNativeCode
 data class RgbwActionParameters(
@@ -31,6 +33,7 @@ data class RgbwActionParameters(
   var brightness: Short,
   var colorBrightness: Short,
   var color: Long,
+  var dimmerCct: Short,
   var colorRandom: Boolean,
   var onOff: Boolean
 ) :

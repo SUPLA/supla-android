@@ -701,4 +701,5 @@
   <string name="legacy_rgbw_settings_authorize_button">Autorizuoti</string>
   <string name="rgb_detail_colors_limit">Pasiektas limitas!</string>
   <string name="channel_caption_invisible">Paslėptas</string>
+  <string name="dimmer_detail_temperature">Spalvotė:</string>
 </resources>

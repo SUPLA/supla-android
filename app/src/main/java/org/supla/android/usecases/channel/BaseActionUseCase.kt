@@ -28,6 +28,7 @@ import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.ActionParameters
+import org.supla.android.lib.actions.IGNORE_CCT
 import org.supla.android.lib.actions.IGNORE_COLOR
 import org.supla.android.lib.actions.RgbwActionParameters
 import org.supla.android.lib.actions.SubjectType
@@ -84,6 +85,7 @@ open class BaseActionUseCase<T : ChannelDataBase>(
       color = IGNORE_COLOR,
       colorBrightness = brightness,
       colorRandom = false,
+      dimmerCct = IGNORE_CCT,
       onOff = true
     )
   }

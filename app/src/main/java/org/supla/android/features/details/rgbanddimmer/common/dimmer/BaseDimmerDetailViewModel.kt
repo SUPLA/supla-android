@@ -193,22 +193,6 @@ abstract class BaseDimmerDetailViewModel(
     }
   }
 
-  override fun onSavedColorSelected(color: SavedColor) {
-    updateState {
-      if (it.viewState.offline) {
-        return@updateState it
-      }
-      it.copy(
-        lastInteractionTime = null,
-        viewState = it.viewState.copy(
-          value = DimmerValue.Single(color.brightness)
-        )
-      )
-    }
-
-    sendDimmerValues(color.brightness, onOff = false)
-  }
-
   override fun onRemoveColor(positionOnList: Int) {
     updateState { it.copy(lastInteractionTime = null) }
 
@@ -260,7 +244,7 @@ abstract class BaseDimmerDetailViewModel(
     }
   }
 
-  private fun sendDimmerValues(brightness: Int? = null, onOff: Boolean = true) {
+  protected fun sendDimmerValues(brightness: Int? = null, onOff: Boolean = true) {
     with(currentState()) {
       if (type != null && remoteId != null) {
         executeRgbwActionUseCase(
@@ -268,6 +252,7 @@ abstract class BaseDimmerDetailViewModel(
           remoteId = remoteId,
           color = rgbColor,
           brightness = brightness ?: viewState.value.brightness,
+          cct = viewState.value.cct,
           onOff = onOff
         )
           .attachSilent()
