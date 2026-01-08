@@ -18,8 +18,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import static org.supla.android.widget.shared.WidgetReloadWorker.WORK_ID;
-
 import android.app.UiModeManager;
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -35,16 +33,11 @@ import androidx.hilt.work.HiltWorkerFactory;
 import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.multidex.MultiDexApplication;
 import androidx.work.Configuration.Builder;
-import androidx.work.Constraints;
-import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.ExistingWorkPolicy;
-import androidx.work.NetworkType;
-import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 import com.github.mikephil.charting.utils.Utils;
 import dagger.hilt.android.HiltAndroidApp;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import org.supla.android.core.SuplaAppApi;
 import org.supla.android.core.infrastructure.storage.DebugFileLoggingTree;
@@ -61,14 +54,12 @@ import org.supla.android.data.ValuesFormatter;
 import org.supla.android.data.model.general.NightModeSetting;
 import org.supla.android.db.DbHelper;
 import org.supla.android.db.room.app.AppDatabase;
-import org.supla.android.features.icons.LoadUserIconsIntoCacheWorker;
 import org.supla.android.lib.AndroidSuplaClientMessageHandler;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaOAuthToken;
 import org.supla.android.profile.ProfileManager;
 import org.supla.android.restapi.SuplaRestApiClientTask;
 import org.supla.android.widget.extended.ExtendedValueWidgetWorker;
-import org.supla.android.widget.shared.WidgetReloadWorker;
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage;
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessageHandler;
 import timber.log.Timber;
@@ -128,7 +119,6 @@ public class SuplaApp extends MultiDexApplication
     // Needed to trigger database migration through Room.
     migrateDatabase();
 
-    enqueueWidgetRefresh();
     enqueueInitialization();
     enqueueExtendedValueWidgetUpdates();
   }
@@ -278,23 +268,6 @@ public class SuplaApp extends MultiDexApplication
     ConnectivityManager manager =
         (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
     manager.registerNetworkCallback(request, suplaClientNetworkCallback);
-  }
-
-  private void enqueueWidgetRefresh() {
-    Constraints constraints =
-        new Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build();
-    PeriodicWorkRequest request =
-        new PeriodicWorkRequest.Builder(
-                WidgetReloadWorker.class,
-                PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS,
-                TimeUnit.MINUTES)
-            .setConstraints(constraints)
-            .addTag(WORK_ID)
-            .build();
-    WorkManager.getInstance(this)
-        .enqueueUniquePeriodicWork(
-            WORK_ID, ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE, request);
-    LoadUserIconsIntoCacheWorker.Companion.start(this);
   }
 
   private void migrateDatabase() {

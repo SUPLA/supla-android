@@ -23,13 +23,15 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
-import org.supla.core.shared.usecase.channel.valueformatter.formatters.HumidityValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.GpmValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.ThermometerAndHumidityValueFormatter
 import org.supla.core.shared.usecase.channel.valueformatter.formatters.ThermometerValueFormatter
 import javax.inject.Named
 import javax.inject.Singleton
 
 const val FORMATTER_THERMOMETER = "FORMATTER_THERMOMETER"
-const val FORMATTER_HUMIDITY = "FORMATTER_HUMIDITY"
+const val FORMATTER_THERMOMETER_AND_HUMIDITY = "FORMATTER_HUMIDITY"
+const val FORMATTER_GPM = "FORMATTER_GPM"
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -44,6 +46,13 @@ class FormattingModule {
 
   @Singleton
   @Provides
-  @Named(FORMATTER_HUMIDITY)
-  fun provideHumidityValueFormatter(): ValueFormatter = HumidityValueFormatter
+  @Named(FORMATTER_THERMOMETER_AND_HUMIDITY)
+  fun provideThermometerAndHumidityValueFormatter(
+    applicationPreferences: ApplicationPreferences
+  ): ValueFormatter = ThermometerAndHumidityValueFormatter(applicationPreferences)
+
+  @Singleton
+  @Provides
+  @Named(FORMATTER_GPM)
+  fun provideGpmValueFormatter(): ValueFormatter = GpmValueFormatter()
 }

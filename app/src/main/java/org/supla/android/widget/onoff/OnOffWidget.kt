@@ -29,26 +29,17 @@ import org.supla.android.R
 import org.supla.android.core.infrastructure.WorkManagerProxy
 import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.source.local.entity.ChannelEntity
+import org.supla.android.extensions.mapRedrawToUpdateEvent
 import org.supla.android.images.ImageCache
-import org.supla.android.lib.SuplaConst
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.widget.WidgetConfiguration
+import org.supla.android.widget.shared.WidgetAction
 import org.supla.android.widget.shared.WidgetProviderBase
+import org.supla.android.widget.shared.isValueWidget
 import org.supla.android.widget.shared.isWidgetValid
 import timber.log.Timber
 import javax.inject.Inject
 
-private const val ACTION_TURN_ON = "ACTION_TURN_ON"
-private const val ACTION_TURN_OFF = "ACTION_TURN_OFF"
-private const val ACTION_UPDATE = "ACTION_UPDATE"
-
-/**
- * Implementation of widgets for on-off operations. It is supporting turning on/off channels with functions of:
- * light switch [SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH],
- * dimmer [SuplaConst.SUPLA_CHANNELFNC_DIMMER],
- * RGB lightning [SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING],
- * dimmer with RGB lightning [SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING]
- */
 @AndroidEntryPoint
 class OnOffWidget : WidgetProviderBase() {
 
@@ -64,6 +55,7 @@ class OnOffWidget : WidgetProviderBase() {
     widgetId: Int,
     configuration: WidgetConfiguration?
   ) {
+    Timber.d("[OnOffWidget] Redrawing widget!")
     // Construct the RemoteViews object
     val views = buildWidget(context, widgetId)
     if (configuration != null && isWidgetValid(configuration)) {
@@ -82,21 +74,25 @@ class OnOffWidget : WidgetProviderBase() {
   }
 
   override fun onReceive(context: Context, intent: Intent?) {
-    super.onReceive(context, intent)
-    Timber.i("[DoubleWidget] Got intent with action: %s", intent?.action ?: "")
-
-    val turnOnOff = when (intent?.action) {
-      ACTION_TURN_ON -> true
-      ACTION_TURN_OFF -> false
-      else -> null
-    }
-
-    if (turnOnOff == null && intent?.action != ACTION_UPDATE) {
+    Timber.i("[OnOffWidget] Got intent with action: ${intent?.action}")
+    if (intent.mapRedrawToUpdateEvent(context) { super.onReceive(context, it) }) {
+      Timber.i("[OnOffWidget] Widget only redrawn!")
       return
     }
 
-    val widgetIds = intent?.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS) ?: IntArray(0)
-    OnOffWidgetCommandWorker.enqueue(widgetIds, turnOnOff, workManagerProxy)
+    super.onReceive(context, intent)
+    if (intent == null) {
+      Timber.i("[OnOffWidget] onReceive called with no intent!")
+      return
+    }
+
+    val widgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS)
+    if (widgetIds == null || widgetIds.isEmpty()) {
+      Timber.i("[OnOffWidget] No widgets to update!")
+      return
+    }
+
+    WidgetAction.from(intent.action)?.let { OnOffWidgetCommandWorker.enqueue(widgetIds, it, workManagerProxy) }
   }
 
   private fun setChannelIcons(
@@ -116,7 +112,7 @@ class OnOffWidget : WidgetProviderBase() {
       R.id.on_off_widget_turn_on_button
     }
 
-    val activeIcon = getChannelIconUseCase.forState(channel, ChannelState.active(channel.function.value))
+    val activeIcon = getChannelIconUseCase.forState(channel, ChannelState.active(channel.function))
     ImageCache.loadBitmapForWidgetView(activeIcon, views, iconViewId, false)
 
     val viewIdNightMode = if (channel.isValueWidget) {
@@ -134,7 +130,7 @@ class OnOffWidget : WidgetProviderBase() {
       views.setViewVisibility(R.id.on_off_widget_buttons, View.GONE)
       views.setViewVisibility(R.id.on_off_widget_value, View.VISIBLE)
     } else {
-      val inactiveIcon = getChannelIconUseCase.forState(channel, ChannelState.inactive(channel.function.value))
+      val inactiveIcon = getChannelIconUseCase.forState(channel, ChannelState.inactive(channel.function))
       ImageCache.loadBitmapForWidgetView(inactiveIcon, views, R.id.on_off_widget_turn_off_button, false)
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         ImageCache.loadBitmapForWidgetView(inactiveIcon, views, R.id.on_off_widget_turn_off_button_night_mode, true)
@@ -143,21 +139,17 @@ class OnOffWidget : WidgetProviderBase() {
       views.setViewVisibility(R.id.on_off_widget_value, View.GONE)
     }
   }
-
-  companion object {
-    private val TAG = OnOffWidget::class.simpleName
-  }
 }
 
 internal fun buildWidget(context: Context, widgetId: Int): RemoteViews {
   val views = RemoteViews(context.packageName, R.layout.on_off_widget)
-  val turnOnPendingIntent = pendingIntent(context, ACTION_TURN_ON, widgetId)
+  val turnOnPendingIntent = pendingIntent(context, WidgetAction.RIGHT_BUTTON_PRESSED.string, widgetId)
   views.setOnClickPendingIntent(R.id.on_off_widget_turn_on_button, turnOnPendingIntent)
   views.setOnClickPendingIntent(R.id.on_off_widget_turn_on_button_night_mode, turnOnPendingIntent)
-  val turnOffPendingIntent = pendingIntent(context, ACTION_TURN_OFF, widgetId)
+  val turnOffPendingIntent = pendingIntent(context, WidgetAction.LEFT_BUTTON_PRESSED.string, widgetId)
   views.setOnClickPendingIntent(R.id.on_off_widget_turn_off_button, turnOffPendingIntent)
   views.setOnClickPendingIntent(R.id.on_off_widget_turn_off_button_night_mode, turnOffPendingIntent)
-  val updatePendingIntent = pendingIntent(context, ACTION_UPDATE, widgetId)
+  val updatePendingIntent = pendingIntent(context, WidgetAction.MANUAL_UPDATE.string, widgetId)
   views.setOnClickPendingIntent(R.id.on_off_widget_value_text, updatePendingIntent)
   views.setOnClickPendingIntent(R.id.on_off_widget_value_icon, updatePendingIntent)
   views.setOnClickPendingIntent(R.id.on_off_widget_value_icon_night_mode, updatePendingIntent)
@@ -184,7 +176,6 @@ fun intent(context: Context, intentAction: String, widgetId: Int): Intent =
   intent(context, intentAction, intArrayOf(widgetId))
 
 fun intent(context: Context, intentAction: String, widgetIds: IntArray): Intent {
-  Timber.d("Creating intent with action: $intentAction")
   return Intent(context, OnOffWidget::class.java).apply {
     action = intentAction
     flags = Intent.FLAG_RECEIVER_FOREGROUND

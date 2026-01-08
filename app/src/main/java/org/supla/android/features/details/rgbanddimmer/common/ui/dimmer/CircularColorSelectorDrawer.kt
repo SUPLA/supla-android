@@ -55,7 +55,6 @@ class CircularColorSelectorDrawer(
   private var initialValue: Float? = null
   private var valueDiff: Float? = null
 
-
   fun handleDragStart(scope: PointerInputScope, enabled: Boolean, startPosition: Offset) {
     with(scope) {
       if (!enabled) return
@@ -108,7 +107,7 @@ class CircularColorSelectorDrawer(
 
   fun handleTap(scope: PointerInputScope, enabled: Boolean, position: Offset) {
     if (!enabled) return
-    with (scope) {
+    with(scope) {
       val center = size.center
       val outerMargin = outerMarginDp.toPx()
       val trackWidthPx = TRACK_WIDTH.toPx()

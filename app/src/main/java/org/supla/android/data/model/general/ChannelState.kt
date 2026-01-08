@@ -1,35 +1,5 @@
 package org.supla.android.data.model.general
 
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIMMER
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HOTELCARDSENSOR
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_NOLIQUIDSENSOR
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_DOOR
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE
-import org.supla.core.shared.data.model.general.SuplaFunction
-
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -40,13 +10,15 @@ import org.supla.core.shared.data.model.general.SuplaFunction
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the``````
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 sealed interface ChannelState {
   val value: Value
@@ -99,86 +71,162 @@ sealed interface ChannelState {
   }
 
   companion object {
-    fun active(function: Int): ChannelState =
+    fun active(function: SuplaFunction): ChannelState =
       when (function) {
-        SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL,
-        SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL -> Default(Value.TRANSPARENT)
+        SuplaFunction.DIGIGLASS_VERTICAL,
+        SuplaFunction.DIGIGLASS_HORIZONTAL -> Default(Value.TRANSPARENT)
 
-        SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK,
-        SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
-        SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR,
-        SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK,
-        SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
-        SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW,
-        SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY,
-        SUPLA_CHANNELFNC_OPENSENSOR_GATE,
-        SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR,
-        SUPLA_CHANNELFNC_OPENSENSOR_DOOR,
-        SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER,
-        SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW,
-        SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW,
-        SUPLA_CHANNELFNC_VALVE_OPENCLOSE,
-        SUPLA_CHANNELFNC_VALVE_PERCENTAGE -> Default(Value.CLOSED)
+        SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
+        SuplaFunction.CONTROLLING_THE_GATE,
+        SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
+        SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
+        SuplaFunction.CONTROLLING_THE_ROOF_WINDOW,
+        SuplaFunction.CONTROLLING_THE_FACADE_BLIND,
+        SuplaFunction.TERRACE_AWNING,
+        SuplaFunction.PROJECTOR_SCREEN,
+        SuplaFunction.CURTAIN,
+        SuplaFunction.VERTICAL_BLIND,
+        SuplaFunction.ROLLER_GARAGE_DOOR,
+        SuplaFunction.OPEN_SENSOR_GATEWAY,
+        SuplaFunction.OPEN_SENSOR_GATE,
+        SuplaFunction.OPEN_SENSOR_GARAGE_DOOR,
+        SuplaFunction.OPEN_SENSOR_DOOR,
+        SuplaFunction.OPEN_SENSOR_ROLLER_SHUTTER,
+        SuplaFunction.OPENING_SENSOR_WINDOW,
+        SuplaFunction.OPEN_SENSOR_ROOF_WINDOW,
+        SuplaFunction.VALVE_OPEN_CLOSE,
+        SuplaFunction.VALVE_PERCENTAGE -> Default(Value.CLOSED)
 
-        SUPLA_CHANNELFNC_POWERSWITCH,
-        SUPLA_CHANNELFNC_STAIRCASETIMER,
-        SUPLA_CHANNELFNC_NOLIQUIDSENSOR,
-        SUPLA_CHANNELFNC_MAILSENSOR,
-        SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
-        SUPLA_CHANNELFNC_HOTELCARDSENSOR,
-        SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR,
-        SUPLA_CHANNELFNC_LIGHTSWITCH,
-        SUPLA_CHANNELFNC_DIMMER,
-        SUPLA_CHANNELFNC_RGBLIGHTING -> Default(Value.ON)
+        SuplaFunction.POWER_SWITCH,
+        SuplaFunction.STAIRCASE_TIMER,
+        SuplaFunction.NO_LIQUID_SENSOR,
+        SuplaFunction.MAIL_SENSOR,
+        SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS,
+        SuplaFunction.HOTEL_CARD_SENSOR,
+        SuplaFunction.ALARM_ARMAMENT_SENSOR,
+        SuplaFunction.LIGHTSWITCH,
+        SuplaFunction.DIMMER,
+        SuplaFunction.DIMMER_CCT,
+        SuplaFunction.RGB_LIGHTING -> Default(Value.ON)
 
-        SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING -> RgbAndDimmer(Value.ON, Value.ON)
+        SuplaFunction.DIMMER_AND_RGB_LIGHTING,
+        SuplaFunction.DIMMER_CCT_AND_RGB -> RgbAndDimmer(Value.ON, Value.ON)
 
-        SuplaFunction.CONTAINER.value,
-        SuplaFunction.WATER_TANK.value,
-        SuplaFunction.SEPTIC_TANK.value -> Default(Value.FULL)
+        SuplaFunction.CONTAINER,
+        SuplaFunction.WATER_TANK,
+        SuplaFunction.SEPTIC_TANK -> Default(Value.FULL)
 
-        else -> Default(Value.NOT_USED)
+        SuplaFunction.UNKNOWN,
+        SuplaFunction.NONE,
+        SuplaFunction.THERMOMETER,
+        SuplaFunction.HUMIDITY,
+        SuplaFunction.HUMIDITY_AND_TEMPERATURE,
+        SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER,
+        SuplaFunction.RING,
+        SuplaFunction.ALARM,
+        SuplaFunction.NOTIFICATION,
+        SuplaFunction.DEPTH_SENSOR,
+        SuplaFunction.DISTANCE_SENSOR,
+        SuplaFunction.WIND_SENSOR,
+        SuplaFunction.PRESSURE_SENSOR,
+        SuplaFunction.RAIN_SENSOR,
+        SuplaFunction.WEIGHT_SENSOR,
+        SuplaFunction.WEATHER_STATION,
+        SuplaFunction.ELECTRICITY_METER,
+        SuplaFunction.IC_ELECTRICITY_METER,
+        SuplaFunction.IC_GAS_METER,
+        SuplaFunction.IC_WATER_METER,
+        SuplaFunction.IC_HEAT_METER,
+        SuplaFunction.HVAC_THERMOSTAT,
+        SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
+        SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
+        SuplaFunction.GENERAL_PURPOSE_MEASUREMENT,
+        SuplaFunction.GENERAL_PURPOSE_METER,
+        SuplaFunction.PUMP_SWITCH,
+        SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH,
+        SuplaFunction.CONTAINER_LEVEL_SENSOR,
+        SuplaFunction.FLOOD_SENSOR,
+        SuplaFunction.MOTION_SENSOR,
+        SuplaFunction.BINARY_SENSOR -> Default(Value.NOT_USED)
       }
 
-    fun inactive(function: Int): ChannelState =
+    fun inactive(function: SuplaFunction): ChannelState =
       when (function) {
-        SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL,
-        SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL -> Default(Value.OPAQUE)
+        SuplaFunction.DIGIGLASS_VERTICAL,
+        SuplaFunction.DIGIGLASS_HORIZONTAL -> Default(Value.OPAQUE)
 
-        SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK,
-        SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
-        SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR,
-        SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK,
-        SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
-        SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW,
-        SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY,
-        SUPLA_CHANNELFNC_OPENSENSOR_GATE,
-        SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR,
-        SUPLA_CHANNELFNC_OPENSENSOR_DOOR,
-        SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER,
-        SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW,
-        SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW,
-        SUPLA_CHANNELFNC_VALVE_OPENCLOSE,
-        SUPLA_CHANNELFNC_VALVE_PERCENTAGE -> Default(Value.OPEN)
+        SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
+        SuplaFunction.CONTROLLING_THE_GATE,
+        SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
+        SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
+        SuplaFunction.CONTROLLING_THE_ROOF_WINDOW,
+        SuplaFunction.CONTROLLING_THE_FACADE_BLIND,
+        SuplaFunction.TERRACE_AWNING,
+        SuplaFunction.PROJECTOR_SCREEN,
+        SuplaFunction.CURTAIN,
+        SuplaFunction.VERTICAL_BLIND,
+        SuplaFunction.ROLLER_GARAGE_DOOR,
+        SuplaFunction.OPEN_SENSOR_GATEWAY,
+        SuplaFunction.OPEN_SENSOR_GATE,
+        SuplaFunction.OPEN_SENSOR_GARAGE_DOOR,
+        SuplaFunction.OPEN_SENSOR_DOOR,
+        SuplaFunction.OPEN_SENSOR_ROLLER_SHUTTER,
+        SuplaFunction.OPENING_SENSOR_WINDOW,
+        SuplaFunction.OPEN_SENSOR_ROOF_WINDOW,
+        SuplaFunction.VALVE_OPEN_CLOSE,
+        SuplaFunction.VALVE_PERCENTAGE -> Default(Value.OPEN)
 
-        SUPLA_CHANNELFNC_POWERSWITCH,
-        SUPLA_CHANNELFNC_STAIRCASETIMER,
-        SUPLA_CHANNELFNC_NOLIQUIDSENSOR,
-        SUPLA_CHANNELFNC_MAILSENSOR,
-        SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
-        SUPLA_CHANNELFNC_HOTELCARDSENSOR,
-        SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR,
-        SUPLA_CHANNELFNC_LIGHTSWITCH,
-        SUPLA_CHANNELFNC_DIMMER,
-        SUPLA_CHANNELFNC_RGBLIGHTING -> Default(Value.OFF)
+        SuplaFunction.POWER_SWITCH,
+        SuplaFunction.STAIRCASE_TIMER,
+        SuplaFunction.NO_LIQUID_SENSOR,
+        SuplaFunction.MAIL_SENSOR,
+        SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS,
+        SuplaFunction.HOTEL_CARD_SENSOR,
+        SuplaFunction.ALARM_ARMAMENT_SENSOR,
+        SuplaFunction.LIGHTSWITCH,
+        SuplaFunction.DIMMER,
+        SuplaFunction.DIMMER_CCT,
+        SuplaFunction.RGB_LIGHTING -> Default(Value.OFF)
 
-        SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING -> RgbAndDimmer(Value.OFF, Value.OFF)
+        SuplaFunction.DIMMER_AND_RGB_LIGHTING,
+        SuplaFunction.DIMMER_CCT_AND_RGB -> RgbAndDimmer(Value.OFF, Value.OFF)
 
-        SuplaFunction.CONTAINER.value,
-        SuplaFunction.WATER_TANK.value,
-        SuplaFunction.SEPTIC_TANK.value -> Default(Value.EMPTY)
+        SuplaFunction.CONTAINER,
+        SuplaFunction.WATER_TANK,
+        SuplaFunction.SEPTIC_TANK -> Default(Value.EMPTY)
 
-        else -> Default(Value.NOT_USED)
+        SuplaFunction.UNKNOWN,
+        SuplaFunction.NONE,
+        SuplaFunction.THERMOMETER,
+        SuplaFunction.HUMIDITY,
+        SuplaFunction.HUMIDITY_AND_TEMPERATURE,
+        SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER,
+        SuplaFunction.RING,
+        SuplaFunction.ALARM,
+        SuplaFunction.NOTIFICATION,
+        SuplaFunction.DEPTH_SENSOR,
+        SuplaFunction.DISTANCE_SENSOR,
+        SuplaFunction.WIND_SENSOR,
+        SuplaFunction.PRESSURE_SENSOR,
+        SuplaFunction.RAIN_SENSOR,
+        SuplaFunction.WEIGHT_SENSOR,
+        SuplaFunction.WEATHER_STATION,
+        SuplaFunction.ELECTRICITY_METER,
+        SuplaFunction.IC_ELECTRICITY_METER,
+        SuplaFunction.IC_GAS_METER,
+        SuplaFunction.IC_WATER_METER,
+        SuplaFunction.IC_HEAT_METER,
+        SuplaFunction.HVAC_THERMOSTAT,
+        SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
+        SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
+        SuplaFunction.GENERAL_PURPOSE_MEASUREMENT,
+        SuplaFunction.GENERAL_PURPOSE_METER,
+        SuplaFunction.PUMP_SWITCH,
+        SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH,
+        SuplaFunction.CONTAINER_LEVEL_SENSOR,
+        SuplaFunction.FLOOD_SENSOR,
+        SuplaFunction.MOTION_SENSOR,
+        SuplaFunction.BINARY_SENSOR -> Default(Value.NOT_USED)
       }
   }
 }
