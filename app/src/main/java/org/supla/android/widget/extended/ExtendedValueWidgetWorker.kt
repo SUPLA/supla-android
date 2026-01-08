@@ -99,7 +99,7 @@ class ExtendedValueWidgetWorker @AssistedInject constructor(
     private val PERIODIC_WORK_ID = "PERIODIC_${ExtendedValueWidgetWorker::class.java.simpleName}"
     private val UNIQUE_WORK_ID = "UNIQUE_${ExtendedValueWidgetWorker::class.java.simpleName}"
 
-    private val GLANCE_ID = "GLANCE_ID"
+    private const val GLANCE_ID = "GLANCE_ID"
 
     fun enqueuePeriodic(workManager: WorkManager) {
       workManager.enqueueUniquePeriodicWork(

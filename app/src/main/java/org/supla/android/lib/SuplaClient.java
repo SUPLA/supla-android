@@ -461,7 +461,13 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   }
 
   public boolean setRGBW(
-      int ID, boolean Group, int Color, int ColorBrightness, int Brightness, int dimmerCct, boolean TurnOnOff) {
+      int ID,
+      boolean Group,
+      int Color,
+      int ColorBrightness,
+      int Brightness,
+      int dimmerCct,
+      boolean TurnOnOff) {
     Timber.d(
         "setRGBW(id: %d, group: %b, color: %d, colorBrightness: %d, brightness: %d, onOff: %b)",
         ID, Group, Color, ColorBrightness, Brightness, TurnOnOff);

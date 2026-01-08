@@ -71,10 +71,14 @@ class WidgetManager @Inject constructor(
 
   fun updateAllWidgets() {
     appWidgetManager.getAppWidgetIds(ComponentName(context, OnOffWidget::class.java))?.let {
-      updateOnOffWidgets(context, it)
+      if (it.isNotEmpty()) {
+        updateOnOffWidgets(context, it)
+      }
     }
     appWidgetManager.getSingleWidgetIds(context)?.let {
-      updateSingleWidgets(context, it)
+      if (it.isNotEmpty()) {
+        updateSingleWidgets(context, it)
+      }
     }
   }
 

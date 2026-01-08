@@ -22,7 +22,6 @@ import android.os.PowerManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.core.Single
-import org.supla.android.core.infrastructure.WorkManagerProxy
 import org.supla.android.data.model.spinner.ProfileItem
 import org.supla.android.data.model.spinner.SubjectItem
 import org.supla.android.data.model.spinner.SubjectItemConversionScope
@@ -43,7 +42,6 @@ import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.android.usecases.profile.ReadAllProfilesUseCase
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.WidgetPreferences
-import org.supla.android.widget.single.SingleWidgetCommandWorker
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.usecase.GetCaptionUseCase
@@ -52,13 +50,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SingleWidgetConfigurationViewModel @Inject constructor(
-  @ApplicationContext private val context: Context,
+  @param:ApplicationContext private val context: Context,
   private val readAllProfilesUseCase: ReadAllProfilesUseCase,
   override val getChannelIconUseCase: GetChannelIconUseCase,
   override val getSceneIconUseCase: GetSceneIconUseCase,
   override val getCaptionUseCase: GetCaptionUseCase,
   private val widgetPreferences: WidgetPreferences,
-  private val workManagerProxy: WorkManagerProxy,
   getChannelValueStringUseCase: GetChannelValueStringUseCase,
   channelGroupRepository: ChannelGroupRepository,
   channelRepository: RoomChannelRepository,
@@ -66,12 +63,12 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
   powerManager: PowerManager,
   schedulers: SuplaSchedulers
 ) : BaseWidgetViewModel(
-  getChannelIconUseCase,
-  getSceneIconUseCase,
-  getCaptionUseCase,
   getChannelValueStringUseCase,
   channelGroupRepository,
+  getChannelIconUseCase,
+  getSceneIconUseCase,
   channelRepository,
+  getCaptionUseCase,
   sceneRepository,
   powerManager,
   context,
@@ -261,10 +258,6 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
     )
 
     widgetPreferences.setWidgetConfiguration(widgetId, configuration)
-    if (isValueWidget(subject.function)) {
-      SingleWidgetCommandWorker.enqueue(intArrayOf(widgetId), workManagerProxy)
-    }
-
     sendEvent(WidgetConfigurationViewEvent.Finished(widgetId))
   }
 }
