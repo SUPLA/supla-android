@@ -49,7 +49,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DoubleWidgetConfigurationViewModel @Inject constructor(
-  @ApplicationContext private val context: Context,
+  @param:ApplicationContext private val context: Context,
   private val readAllProfilesUseCase: ReadAllProfilesUseCase,
   override val getChannelIconUseCase: GetChannelIconUseCase,
   override val getSceneIconUseCase: GetSceneIconUseCase,
@@ -62,12 +62,12 @@ class DoubleWidgetConfigurationViewModel @Inject constructor(
   powerManager: PowerManager,
   schedulers: SuplaSchedulers
 ) : BaseWidgetViewModel(
-  getChannelIconUseCase,
-  getSceneIconUseCase,
-  getCaptionUseCase,
   getChannelValueStringUseCase,
   channelGroupRepository,
+  getChannelIconUseCase,
+  getSceneIconUseCase,
   channelRepository,
+  getCaptionUseCase,
   sceneRepository,
   powerManager,
   context,

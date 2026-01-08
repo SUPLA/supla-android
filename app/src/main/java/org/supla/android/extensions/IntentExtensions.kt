@@ -1,7 +1,4 @@
-package org.supla.android.lib.actions
-
-import org.supla.android.tools.UsedFromNativeCode
-
+package org.supla.android.extensions
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -20,20 +17,23 @@ import org.supla.android.tools.UsedFromNativeCode
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-const val IGNORE_BRIGHTNESS: Short = -1
-const val IGNORE_COLOR: Long = 0
-const val IGNORE_CCT: Short = -1
+import android.appwidget.AppWidgetManager
+import android.content.Context
+import android.content.Intent
+import org.supla.android.widget.onoff.intent
+import org.supla.android.widget.shared.WidgetAction
 
-@UsedFromNativeCode
-data class RgbwActionParameters(
-  override val action: ActionId,
-  override val subjectType: SubjectType,
-  override val subjectId: Int,
-  var brightness: Short,
-  var colorBrightness: Short,
-  var color: Long,
-  var dimmerCct: Short,
-  var colorRandom: Boolean,
-  var onOff: Boolean
-) :
-  ActionParameters(action, subjectType, subjectId)
+fun Intent?.mapRedrawToUpdateEvent(context: Context, callback: (Intent) -> Unit): Boolean {
+  if (this == null) {
+    return false
+  }
+
+  if (action == WidgetAction.REDRAW.string) {
+    getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS)?.let { widgetIds ->
+      callback(intent(context, AppWidgetManager.ACTION_APPWIDGET_UPDATE, widgetIds))
+      return true
+    }
+  }
+
+  return false
+}

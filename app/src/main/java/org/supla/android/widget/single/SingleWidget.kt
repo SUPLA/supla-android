@@ -30,26 +30,21 @@ import org.supla.android.core.infrastructure.WorkManagerProxy
 import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.Scene
+import org.supla.android.extensions.mapRedrawToUpdateEvent
 import org.supla.android.images.ImageCache
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.widget.WidgetConfiguration
+import org.supla.android.widget.shared.WidgetAction
 import org.supla.android.widget.shared.WidgetProviderBase
+import org.supla.android.widget.shared.isValueWidget
 import org.supla.android.widget.shared.isWidgetValid
+import org.supla.core.shared.data.model.general.SuplaFunction
 import timber.log.Timber
 import javax.inject.Inject
 
-private const val ACTION_PRESSED = "ACTION_PRESSED"
-
-/**
- * Implementation of widgets for on-off operations. It is supporting turning on/off channels with functions of:
- * light switch [SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH],
- * dimmer [SuplaConst.SUPLA_CHANNELFNC_DIMMER],
- * RGB lightning [SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING],
- * dimmer with RGB lightning [SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING]
- */
 @AndroidEntryPoint
 class SingleWidget : WidgetProviderBase() {
 
@@ -65,8 +60,9 @@ class SingleWidget : WidgetProviderBase() {
     widgetId: Int,
     configuration: WidgetConfiguration?
   ) {
+    Timber.d("[SingleWidget] Redrawing widget!")
     // Construct the RemoteViews object
-    val views = buildWidget(context, widgetId)
+    val views = buildWidget(context, widgetId, configuration?.subjectFunction)
     if (configuration != null && isWidgetValid(configuration)) {
       views.setTextViewText(R.id.single_widget_channel_name, configuration.caption)
 
@@ -102,13 +98,25 @@ class SingleWidget : WidgetProviderBase() {
   }
 
   override fun onReceive(context: Context, intent: Intent?) {
-    super.onReceive(context, intent)
-    Timber.i("[SingleWidget] Got intent with action: %s", intent?.action ?: "")
-
-    if (intent?.action == ACTION_PRESSED) {
-      val widgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS) ?: IntArray(0)
-      SingleWidgetCommandWorker.enqueue(widgetIds, workManagerProxy)
+    Timber.i("[SingleWidget] Got intent with action: ${intent?.action}")
+    if (intent.mapRedrawToUpdateEvent(context) { super.onReceive(context, it) }) {
+      Timber.i("[SingleWidget] Widget only redrawn!")
+      return
     }
+
+    super.onReceive(context, intent)
+    if (intent == null) {
+      Timber.i("[SingleWidget] onReceive called with no intent!")
+      return
+    }
+
+    val widgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS)
+    if (widgetIds == null || widgetIds.isEmpty()) {
+      Timber.i("[SingleWidget] No widgets to update!")
+      return
+    }
+
+    WidgetAction.from(intent.action)?.let { SingleWidgetCommandWorker.enqueue(widgetIds, it, workManagerProxy) }
   }
 
   private fun setChannelIcons(
@@ -129,9 +137,9 @@ class SingleWidget : WidgetProviderBase() {
       views.setViewVisibility(R.id.single_widget_text, View.VISIBLE)
     } else {
       val state = if (turnOnOrClose(configuration)) {
-        ChannelState.active(channel.function.value)
+        ChannelState.active(channel.function)
       } else {
-        ChannelState.inactive(channel.function.value)
+        ChannelState.inactive(channel.function)
       }
 
       val icon = getChannelIconUseCase.forState(channel, state)
@@ -143,15 +151,11 @@ class SingleWidget : WidgetProviderBase() {
       views.setViewVisibility(R.id.single_widget_text, View.GONE)
     }
   }
-
-  companion object {
-    private val TAG = SingleWidget::class.simpleName
-  }
 }
 
-internal fun buildWidget(context: Context, widgetId: Int): RemoteViews {
+internal fun buildWidget(context: Context, widgetId: Int, function: SuplaFunction?): RemoteViews {
   val views = RemoteViews(context.packageName, R.layout.single_widget)
-  val turnOnPendingIntent = pendingIntent(context, ACTION_PRESSED, widgetId)
+  val turnOnPendingIntent = pendingIntent(context, WidgetAction.getSingleButtonAction(function).string, widgetId)
   views.setOnClickPendingIntent(R.id.single_widget_button, turnOnPendingIntent)
   views.setOnClickPendingIntent(R.id.single_widget_button_night_mode, turnOnPendingIntent)
   views.setOnClickPendingIntent(R.id.single_widget_text, turnOnPendingIntent)

@@ -36,7 +36,7 @@ import javax.inject.Singleton
 @Singleton
 class GpmValueStringProvider @Inject constructor(
   private val gpmValueProvider: GpmValueProvider,
-  @Named(GSON_FOR_REPO) private val gson: Gson
+  @param:Named(GSON_FOR_REPO) private val gson: Gson
 ) : ChannelValueStringProvider {
 
   private val formatter = GpmValueFormatter()

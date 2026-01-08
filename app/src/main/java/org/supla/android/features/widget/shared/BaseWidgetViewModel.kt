@@ -37,20 +37,20 @@ import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
-import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.android.widget.shared.isValueWidget
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import java.util.Objects
 
 abstract class BaseWidgetViewModel(
-  override val getChannelIconUseCase: GetChannelIconUseCase,
-  override val getSceneIconUseCase: GetSceneIconUseCase,
-  override val getCaptionUseCase: GetCaptionUseCase,
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
   private val channelGroupRepository: ChannelGroupRepository,
+  override val getChannelIconUseCase: GetChannelIconUseCase,
+  override val getSceneIconUseCase: GetSceneIconUseCase,
   private val channelRepository: RoomChannelRepository,
+  override val getCaptionUseCase: GetCaptionUseCase,
   private val sceneRepository: RoomSceneRepository,
   private val powerManager: PowerManager,
-  @ApplicationContext private val context: Context,
+  @param:ApplicationContext private val context: Context,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<WidgetConfigurationViewModelState, WidgetConfigurationViewEvent>(
   WidgetConfigurationViewModelState(),
@@ -108,20 +108,7 @@ abstract class BaseWidgetViewModel(
     }
 
   protected open fun filter(channelBase: ChannelBase) =
-    channelBase.function.actions.isNotEmpty() || isValueWidget(channelBase.function)
-
-  protected fun isValueWidget(function: SuplaFunction?): Boolean =
-    when (function) {
-      SuplaFunction.THERMOMETER,
-      SuplaFunction.HUMIDITY_AND_TEMPERATURE,
-      SuplaFunction.GENERAL_PURPOSE_METER,
-      SuplaFunction.GENERAL_PURPOSE_MEASUREMENT,
-      SuplaFunction.CONTAINER,
-      SuplaFunction.SEPTIC_TANK,
-      SuplaFunction.WATER_TANK -> true
-
-      else -> false
-    }
+    channelBase.function.actions.isNotEmpty() || channelBase.function.isValueWidget
 }
 
 sealed class WidgetConfigurationViewEvent : ViewEvent {

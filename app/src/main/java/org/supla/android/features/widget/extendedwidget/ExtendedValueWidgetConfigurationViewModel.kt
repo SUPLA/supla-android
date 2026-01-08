@@ -54,7 +54,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ExtendedValueWidgetConfigurationViewModel @Inject constructor(
-  @ApplicationContext private val context: Context,
+  @param:ApplicationContext private val context: Context,
   private val readAllProfilesUseCase: ReadAllProfilesUseCase,
   private val widgetConfigurationDao: WidgetConfigurationDao,
   override val getChannelIconUseCase: GetChannelIconUseCase,
@@ -67,12 +67,12 @@ class ExtendedValueWidgetConfigurationViewModel @Inject constructor(
   powerManager: PowerManager,
   schedulers: SuplaSchedulers
 ) : BaseWidgetViewModel(
-  getChannelIconUseCase,
-  getSceneIconUseCase,
-  getCaptionUseCase,
   getChannelValueStringUseCase,
   channelGroupRepository,
+  getChannelIconUseCase,
+  getSceneIconUseCase,
   channelRepository,
+  getCaptionUseCase,
   sceneRepository,
   powerManager,
   context,
