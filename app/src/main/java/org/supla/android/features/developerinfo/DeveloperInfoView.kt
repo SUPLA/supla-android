@@ -44,6 +44,8 @@ import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.source.local.entity.ChannelStateEntity
 import org.supla.android.ui.views.buttons.Button
+import org.supla.android.ui.views.forms.TextField
+import org.supla.android.ui.views.forms.TextFieldLabel
 import org.supla.android.ui.views.settings.SettingsList
 import org.supla.android.ui.views.settings.SettingsListItem
 import org.supla.android.usecases.developerinfo.TableDetail
@@ -52,6 +54,7 @@ data class DeveloperInfoViewState(
   val developerOptions: Boolean = false,
   val rotationEnabled: Boolean = false,
   val debugLoggingEnabled: Boolean = false,
+  val debugLoggingFilter: String = "",
   val debugLogSize: String? = null,
   val suplaTableDetails: List<TableDetail> = emptyList(),
   val measurementTableDetails: List<TableDetail> = emptyList()
@@ -61,6 +64,7 @@ interface DeveloperInfoScope {
   fun setDeveloperOptionEnabled(enabled: Boolean)
   fun setRotationEnabled(enabled: Boolean)
   fun setDebugLoggingEnabled(enabled: Boolean)
+  fun onFilterChanged(filter: String)
   fun downloadLogFile()
   fun deleteLogFile()
   fun refreshLogFileSize()
@@ -104,7 +108,14 @@ fun DeveloperInfoScope.View(
         description = viewState.debugLogSize
       ) { setDebugLoggingEnabled(it) }
     }
+
     if (viewState.debugLoggingEnabled) {
+      TextField(
+        value = viewState.debugLoggingFilter,
+        label = { TextFieldLabel("Filtering string") },
+        onValueChange = { onFilterChanged(it) },
+        modifier = Modifier.fillMaxWidth().padding(horizontal = Distance.default)
+      )
       Row(
         horizontalArrangement = Arrangement.spacedBy(Distance.default),
         modifier = Modifier.fillMaxWidth().padding(horizontal = Distance.default)
@@ -192,6 +203,7 @@ val previewScope = object : DeveloperInfoScope {
   override fun setDeveloperOptionEnabled(enabled: Boolean) {}
   override fun setRotationEnabled(enabled: Boolean) {}
   override fun setDebugLoggingEnabled(enabled: Boolean) {}
+  override fun onFilterChanged(filter: String) {}
   override fun downloadLogFile() {}
   override fun deleteLogFile() {}
   override fun refreshLogFileSize() {}

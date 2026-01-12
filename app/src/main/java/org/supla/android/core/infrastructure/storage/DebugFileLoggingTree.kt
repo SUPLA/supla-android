@@ -21,6 +21,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
+import org.supla.android.core.storage.EncryptedPreferences
 import timber.log.Timber
 import java.io.File
 import java.io.FileWriter
@@ -38,7 +39,8 @@ import javax.inject.Singleton
  */
 @Singleton
 class DebugFileLoggingTree @Inject constructor(
-  @ApplicationContext private val context: Context
+  @param:ApplicationContext private val context: Context,
+  private val preferences: EncryptedPreferences
 ) : Timber.DebugTree() {
 
   private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US)
@@ -48,6 +50,10 @@ class DebugFileLoggingTree @Inject constructor(
   // This is the core function called every time Timber.log() is used.
   @SuppressLint("LogNotTimber")
   override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
+    if (skipLogging(tag, message, t)) {
+      return
+    }
+
     try {
       val timestamp = dateFormat.format(Date())
       val priorityStr = getPriorityString(priority)
@@ -83,6 +89,22 @@ class DebugFileLoggingTree @Inject constructor(
       Log.ERROR -> "E"
       Log.ASSERT -> "A"
       else -> "?"
+    }
+  }
+
+  private fun skipLogging(tag: String?, message: String, t: Throwable?): Boolean {
+    if (t != null) {
+      return false
+    }
+    val filter = preferences.devLogFilteringString
+    if (filter == null || filter.isEmpty()) {
+      return false
+    }
+
+    return if (tag != null) {
+      !message.contains(filter, true) || !tag.contains(filter, true)
+    } else {
+      !message.contains(filter, true)
     }
   }
 

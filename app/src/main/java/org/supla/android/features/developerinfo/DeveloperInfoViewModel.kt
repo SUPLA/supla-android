@@ -123,6 +123,11 @@ class DeveloperInfoViewModel @Inject constructor(
     }
   }
 
+  override fun onFilterChanged(filter: String) {
+    encryptedPreferences.devLogFilteringString = filter
+    updateState { it.copy(state = it.state.copy(debugLoggingFilter = filter)) }
+  }
+
   override fun downloadLogFile() {
     sendEvent(DeveloperInfoViewEvent.ExportLogFile)
   }
@@ -207,7 +212,8 @@ class DeveloperInfoViewModel @Inject constructor(
         it.copy(
           state = it.state.copy(
             debugLoggingEnabled = true,
-            debugLogSize = fileUtils.getFileSize(debugFileLoggingTree.logFile)
+            debugLogSize = fileUtils.getFileSize(debugFileLoggingTree.logFile),
+            debugLoggingFilter = encryptedPreferences.devLogFilteringString ?: ""
           )
         )
       }

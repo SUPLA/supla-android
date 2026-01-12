@@ -35,6 +35,7 @@ private const val FCM_PROFILE_TOKEN_KEY = "FCM_TOKEN_KEY_"
 private const val LOCK_SCREEN_SETTING_KEY = "LOCK_SCREEN_SETTING_KEY"
 private const val DEV_MODE_KEY = "DEV_MODE_KEY"
 private const val DEV_LOG_KEY = "DEV_LOG_KEY"
+private const val DEV_FILTER_KEY = "DEV_FILTER_KEY"
 private const val WIZARD_WIFI_NAME = "WIZARD_WIFI_NAME"
 private const val WIZARD_WIFI_PASSWORD = "WIZARD_WIFI_PASSWORD"
 
@@ -98,6 +99,13 @@ class EncryptedPreferences @Inject constructor(
     get() = preferences.getBoolean(DEV_LOG_KEY, false)
     set(value) = preferences.edit {
       putBoolean(DEV_LOG_KEY, value)
+      apply()
+    }
+
+  var devLogFilteringString: String?
+    get() = preferences.getString(DEV_FILTER_KEY, "")
+    set(value) = preferences.edit {
+      putString(DEV_FILTER_KEY, value)
       apply()
     }
 
