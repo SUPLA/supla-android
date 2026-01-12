@@ -32,7 +32,6 @@ import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.extensions.onlineState
 import org.supla.android.data.source.remote.SuplaChannelConfig
-import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.remote.container.SuplaChannelContainerConfig
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.ChannelUpdatesObserver
@@ -176,7 +175,7 @@ class ContainerGeneralDetailViewModel @Inject constructor(
       caption = captionWithPercentage ?: caption,
       userCaption = channel.caption,
       batteryIcon = getChannelBatteryIconUseCase(channelDataEntity.shareable),
-      showChannelStateIcon = SuplaChannelFlag.CHANNEL_STATE inside channel.flags && channelDataEntity.stateEntity != null
+      showChannelStateIcon = channelDataEntity.showInfo
     )
   }
 
