@@ -133,7 +133,7 @@ class ThermostatSlavesListViewModel @Inject constructor(
       value = mainThermometer?.let { getChannelValueStringUseCase(it.withChildren) } ?: NO_VALUE_TEXT,
       indicatorIcon = thermostatValue.getIndicatorIcon(),
       channelIssueItem = getChannelIssuesForSlavesUseCase(shareable),
-      showChannelStateIcon = SuplaChannelFlag.CHANNEL_STATE inside channel.flags,
+      showChannelStateIcon = channel.showInfo,
       subValue = withSetpointValue.ifTrue { thermostatValue.getSetpointText(thermometerValueFormatter) },
       pumpSwitchIcon = pumpSwitchChild?.let { getChannelIconUseCase(it.channelDataEntity) },
       sourceSwitchIcon = heatOrColdSourceSwitchChild?.let { getChannelIconUseCase(it.channelDataEntity) }
@@ -156,7 +156,7 @@ class ThermostatSlavesListViewModel @Inject constructor(
       value = mainThermometer?.let { getChannelValueStringUseCase(it.withChildren) } ?: NO_VALUE_TEXT,
       indicatorIcon = thermostatValue.getIndicatorIcon(),
       channelIssueItem = getChannelIssuesForSlavesUseCase(channelDataEntity.shareable),
-      showChannelStateIcon = SuplaChannelFlag.CHANNEL_STATE inside channel.flags,
+      showChannelStateIcon = channelDataEntity.showInfo,
       subValue = withSetpointValue.ifTrue { thermostatValue.getSetpointText(thermometerValueFormatter) },
       pumpSwitchIcon = pumpSwitchChild?.let { getChannelIconUseCase(it.channelDataEntity) },
       sourceSwitchIcon = heatOrColdSourceSwitchChild?.let { getChannelIconUseCase(it.channelDataEntity) }
