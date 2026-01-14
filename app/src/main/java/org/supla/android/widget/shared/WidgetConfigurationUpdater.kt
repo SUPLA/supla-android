@@ -55,6 +55,7 @@ class WidgetConfigurationUpdater @Inject constructor(
     return try {
       loadValue(configuration, withUnit)?.let { UpdateResult.Success(it) } ?: UpdateResult.Empty
     } catch (ex: ResultException) {
+      Timber.w(ex, "Widget value load failed")
       ex.toUpdateResult
     } catch (ex: Exception) {
       Timber.e(ex, "Could not update widget configuration")

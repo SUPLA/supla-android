@@ -17,6 +17,7 @@ package org.supla.android.widget.shared
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.work.ListenableWorker
 import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_ACCESSID_DISABLED
 import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_ACCESSID_INACTIVE
 import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_ACCESSID_NOT_ASSIGNED
@@ -49,11 +50,22 @@ fun UpdateResult.whenSuccess(block: (WidgetConfiguration) -> Unit) {
   }
 }
 
-fun UpdateResult.whenFailure(block: () -> Unit) {
+fun UpdateResult.whenFailure(block: (cleanConfiguration: Boolean) -> Unit) {
   if (this !is UpdateResult.Success) {
-    block()
+    val cleanConfiguration = when (this) {
+      is UpdateResult.ConnectionError -> code != SUPLA_RESULT_HOST_NOT_FOUND
+      else -> true
+    }
+    block(cleanConfiguration)
   }
 }
+
+val UpdateResult.toWorkerResult: ListenableWorker.Result
+  get() = when (this) {
+    is UpdateResult.Success -> ListenableWorker.Result.success()
+    is UpdateResult.ConnectionError -> ListenableWorker.Result.retry()
+    else -> ListenableWorker.Result.failure()
+  }
 
 val ResultException.toUpdateResult: UpdateResult
   get() = when (result) {

@@ -28,6 +28,7 @@ import android.os.Looper
 import android.widget.Toast
 import androidx.work.Data
 import androidx.work.ForegroundInfo
+import androidx.work.ListenableWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import org.supla.android.R
@@ -92,6 +93,7 @@ abstract class WidgetCommandWorkerBase(
 
   private fun performUpdate(widgetIds: IntArray, isManualUpdate: Boolean): Result {
     if (!isNetworkAvailable()) {
+      Timber.d("Widget update skipped because of unavailable network (widgetIds: $widgetIds)")
       if (isManualUpdate) {
         showToastLong(R.string.widget_command_no_connection)
       }
@@ -100,7 +102,7 @@ abstract class WidgetCommandWorkerBase(
 
     createForegroundInfo()
 
-    var success = true
+    var result = Result.success()
     for (widgetId in widgetIds) {
       val configuration = widgetPreferences.getWidgetConfiguration(widgetId)
       if (configuration == null) {
@@ -114,23 +116,29 @@ abstract class WidgetCommandWorkerBase(
       Timber.i("Performing widget configuration update for id: $widgetId")
       val updateResult = widgetConfigurationUpdater.update(configuration, valueWithUnit())
 
-      updateResult.whenFailure {
+      updateResult.whenFailure { cleanConfiguration ->
+        Timber.w("Widget refresh failed with error: $updateResult")
         isManualUpdate.ifTrue { handleUpdateResult(updateResult, configuration) }
-        updateWidgetConfiguration(widgetId, configuration.copy(value = NO_VALUE_TEXT))
-        success = false
+        cleanConfiguration.ifTrue {
+          Timber.w("Cleaning widget configuration")
+          updateWidgetConfiguration(widgetId, configuration.copy(value = NO_VALUE_TEXT))
+        }
       }
       updateResult.whenSuccess {
+        Timber.w("Widget refreshed successfully")
         updateWidgetConfiguration(widgetId, it)
       }
 
+      result = result.accumulate(updateResult.toWorkerResult)
       sendWidgetRedrawAction(widgetId)
     }
 
-    if (success && isManualUpdate) {
+    if (result is Result.Success && isManualUpdate) {
       vibrationHelper.vibrate()
     }
 
-    return success.ifTrue { Result.success() } ?: Result.failure()
+    Timber.i("Widget update finished with result: $result")
+    return result
   }
 
   private fun performAction(widgetIds: IntArray, widgetAction: WidgetAction): Result {
@@ -314,30 +322,13 @@ abstract class WidgetCommandWorkerBase(
     }
   }
 
-  @Suppress("DEPRECATION")
   private fun isNetworkAvailable(): Boolean {
-    val connectivityManager =
-      applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    connectivityManager.allNetworks.forEach {
-      val actNw = connectivityManager.getNetworkCapabilities(it)
-        ?: return@forEach
+    val connectivityManager = applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val network = connectivityManager.activeNetwork ?: return false
+    val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
 
-      val result = when {
-        actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-        actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-        // for other device which are able to connect with Ethernet
-        actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-        // for check internet over Bluetooths
-        actNw.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH) -> true
-        else -> false
-      }
-
-      if (result) {
-        return true
-      }
-    }
-
-    return false
+    return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+      capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
   }
 
   private fun getBrightness(actionId: ActionId?): Short =
@@ -372,3 +363,10 @@ abstract class WidgetCommandWorkerBase(
         .build()
   }
 }
+
+private fun ListenableWorker.Result.accumulate(other: ListenableWorker.Result): ListenableWorker.Result =
+  if (this is ListenableWorker.Result.Failure || this is ListenableWorker.Result.Retry) {
+    this
+  } else {
+    other
+  }

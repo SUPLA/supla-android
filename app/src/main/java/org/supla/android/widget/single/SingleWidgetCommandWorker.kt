@@ -19,7 +19,9 @@ package org.supla.android.widget.single
 
 import android.content.Context
 import androidx.hilt.work.HiltWorker
+import androidx.work.Constraints
 import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
@@ -65,17 +67,22 @@ class SingleWidgetCommandWorker @AssistedInject constructor(
   override fun valueWithUnit(): Boolean = false
 
   companion object {
+    val constraint = Constraints.Builder()
+      .setRequiredNetworkType(NetworkType.CONNECTED)
+      .build()
+
     fun enqueue(widgetIds: IntArray, widgetAction: WidgetAction, workManagerProxy: WorkManagerProxy) {
       val workName = getWorkId(WORK_ID_PREFIX, widgetIds)
       Timber.d("Enqueueing single widget command worker $workName")
       val inputData = buildInputData(widgetIds, widgetAction)
 
-      val removeWidgetsWork = OneTimeWorkRequestBuilder<SingleWidgetCommandWorker>()
+      val widgetsWork = OneTimeWorkRequestBuilder<SingleWidgetCommandWorker>()
         .setInputData(inputData)
+        .setConstraints(constraint)
         .build()
 
       // Work for widget ID is unique, so no other worker for the same ID will be started
-      workManagerProxy.enqueueUniqueWork(workName, ExistingWorkPolicy.KEEP, removeWidgetsWork)
+      workManagerProxy.enqueueUniqueWork(workName, ExistingWorkPolicy.KEEP, widgetsWork)
     }
   }
 }
