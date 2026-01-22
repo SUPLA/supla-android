@@ -20,7 +20,6 @@ package org.supla.android.features.details.gatedetail.general
 import android.os.Bundle
 import android.view.View
 import androidx.compose.runtime.Composable
-import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.core.ui.BaseComposeFragment
@@ -29,13 +28,10 @@ import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.captionchangedialog.CaptionChangeViewModel
 import org.supla.android.features.captionchangedialog.View
-import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.features.statedialog.StateDialogViewModel
 import org.supla.android.features.statedialog.View
 import org.supla.android.features.statedialog.handleStateDialogViewEvent
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
-
-private const val ARG_ITEM_BUNDLE = "ARG_ITEM_BUNDLE"
 
 @AndroidEntryPoint
 class GateGeneralFragment : BaseComposeFragment<GateGeneralModelState, GateGeneralViewEvent>() {
@@ -45,8 +41,6 @@ class GateGeneralFragment : BaseComposeFragment<GateGeneralModelState, GateGener
 
   private val stateDialogViewModel: StateDialogViewModel by viewModels()
   private val captionChangeViewModel: CaptionChangeViewModel by viewModels()
-
-  private val item: ItemBundle by lazy { requireSerializable(ARG_ITEM_BUNDLE, ItemBundle::class.java) }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -74,11 +68,5 @@ class GateGeneralFragment : BaseComposeFragment<GateGeneralModelState, GateGener
 
   override fun handleHelperEvents(event: ViewEvent) {
     handleStateDialogViewEvent(event)
-  }
-
-  companion object {
-    fun bundle(itemBundle: ItemBundle) = bundleOf(
-      ARG_ITEM_BUNDLE to itemBundle
-    )
   }
 }

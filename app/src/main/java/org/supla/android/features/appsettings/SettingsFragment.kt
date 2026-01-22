@@ -69,6 +69,9 @@ class SettingsFragment : BaseFragment<SettingsViewState, SettingsViewEvent>(R.la
       SettingsViewEvent.NavigateToAndroidAuto ->
         navigator.navigateTo(R.id.android_auto_items_fragment)
 
+      SettingsViewEvent.NavigateToNfc ->
+        navigator.navigateTo(R.id.nfc_tag_list_fragment)
+
       is SettingsViewEvent.NavigateToPinSetup ->
         navigator.navigateTo(R.id.pin_setup_fragment, PinSetupFragment.bundle(event.lockScreenScope))
 

@@ -22,6 +22,7 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import org.supla.android.R
+import org.supla.android.core.ui.bundle
 import org.supla.android.features.details.containerdetail.general.ContainerGeneralDetailFragment
 import org.supla.android.features.details.electricitymeterdetail.general.ElectricityMeterGeneralFragment
 import org.supla.android.features.details.electricitymeterdetail.history.ElectricityMeterHistoryFragment
@@ -33,7 +34,6 @@ import org.supla.android.features.details.impulsecounter.counterphoto.CounterPho
 import org.supla.android.features.details.impulsecounter.general.ImpulseCounterGeneralFragment
 import org.supla.android.features.details.impulsecounter.history.ImpulseCounterHistoryDetailFragment
 import org.supla.android.features.details.legacydetail.LegacyDetailFragment
-import org.supla.android.features.details.rgbanddimmer.common.dimmer.BaseDimmerDetailFragment
 import org.supla.android.features.details.rgbanddimmer.dimmer.DimmerDetailFragment
 import org.supla.android.features.details.rgbanddimmer.dimmercct.DimmerCctDetailFragment
 import org.supla.android.features.details.rgbanddimmer.rgb.RgbDetailFragment
@@ -66,66 +66,43 @@ class StandardDetailPagerAdapter(
   override fun getItemCount(): Int = pages.size
 
   override fun createFragment(position: Int): Fragment = when (pages[position]) {
-    DetailPage.SWITCH -> SwitchGeneralFragment().apply { arguments = SwitchGeneralFragment.bundle(itemBundle) }
-    DetailPage.SWITCH_TIMER -> TimersDetailFragment().apply { arguments = TimersDetailFragment.bundle(itemBundle.remoteId) }
-
-    DetailPage.THERMOSTAT -> ThermostatGeneralFragment().apply { arguments = ThermostatGeneralFragment.bundle(itemBundle) }
-    DetailPage.THERMOSTAT_LIST -> ThermostatSlavesListFragment().apply { arguments = ThermostatSlavesListFragment.bundle(itemBundle) }
-    DetailPage.SCHEDULE -> ScheduleDetailFragment().apply { arguments = ScheduleDetailFragment.bundle(itemBundle) }
-    DetailPage.THERMOSTAT_TIMER -> TimerDetailFragment().apply { arguments = TimerDetailFragment.bundle(itemBundle) }
-    DetailPage.THERMOSTAT_HISTORY -> ThermostatHistoryDetailFragment().apply {
-      arguments = ThermostatHistoryDetailFragment.bundle(itemBundle.remoteId)
-    }
-    DetailPage.THERMOSTAT_HEATPOL_GENERAL -> LegacyDetailFragment().apply {
-      arguments = LegacyDetailFragment.bundle(itemBundle.remoteId, LegacyDetailType.THERMOSTAT_HP, itemBundle.itemType)
-    }
-    DetailPage.THERMOSTAT_HEATPOL_HISTORY -> HeatpolHistoryDetailFragment().apply {
-      arguments = HeatpolHistoryDetailFragment.bundle(itemBundle.remoteId)
-    }
-
-    DetailPage.THERMOMETER_HISTORY -> ThermometerHistoryDetailFragment().apply {
-      arguments = ThermometerHistoryDetailFragment.bundle(itemBundle.remoteId)
-    }
-
-    DetailPage.HUMIDITY_HISTORY -> HumidityHistoryDetailFragment().apply {
-      arguments = HumidityHistoryDetailFragment.bundle(itemBundle.remoteId)
-    }
-
-    DetailPage.GPM_HISTORY -> GpmHistoryDetailFragment().apply { arguments = GpmHistoryDetailFragment.bundle(itemBundle.remoteId) }
-
-    DetailPage.ROLLER_SHUTTER -> RollerShutterFragment().apply { arguments = RollerShutterFragment.bundle(itemBundle) }
-    DetailPage.ROOF_WINDOW -> RoofWindowFragment().apply { arguments = RoofWindowFragment.bundle(itemBundle) }
-    DetailPage.FACADE_BLINDS -> FacadeBlindsFragment().apply { arguments = FacadeBlindsFragment.bundle(itemBundle) }
-    DetailPage.TERRACE_AWNING -> TerraceAwningFragment().apply { arguments = TerraceAwningFragment.bundle(itemBundle) }
-    DetailPage.PROJECTOR_SCREEN -> ProjectorScreenFragment().apply { arguments = ProjectorScreenFragment.bundle(itemBundle) }
-    DetailPage.CURTAIN -> CurtainFragment().apply { arguments = CurtainFragment.bundle(itemBundle) }
-    DetailPage.VERTICAL_BLIND -> VerticalBlindsFragment().apply { arguments = VerticalBlindsFragment.bundle(itemBundle) }
-    DetailPage.GARAGE_DOOR_ROLLER -> GarageDoorFragment().apply { arguments = GarageDoorFragment.bundle(itemBundle) }
-
-    DetailPage.EM_GENERAL -> ElectricityMeterGeneralFragment().apply { arguments = ElectricityMeterGeneralFragment.bundle(itemBundle) }
-    DetailPage.EM_HISTORY -> ElectricityMeterHistoryFragment().apply {
-      arguments = ElectricityMeterHistoryFragment.bundle(itemBundle.remoteId)
-    }
-    DetailPage.EM_SETTINGS -> ElectricityMeterSettingsFragment().apply { arguments = ElectricityMeterSettingsFragment.bundle(itemBundle) }
-
-    DetailPage.CONTAINER_GENERAL -> ContainerGeneralDetailFragment().apply {
-      arguments = ContainerGeneralDetailFragment.bundle(itemBundle)
-    }
-
-    DetailPage.IC_GENERAL -> ImpulseCounterGeneralFragment().apply { arguments = ImpulseCounterGeneralFragment.bundle(itemBundle) }
-    DetailPage.IC_HISTORY -> ImpulseCounterHistoryDetailFragment().apply {
-      arguments = ImpulseCounterHistoryDetailFragment.bundle(itemBundle.remoteId)
-    }
-    DetailPage.IC_OCR -> CounterPhotoFragment().apply { arguments = CounterPhotoFragment.bundle(itemBundle) }
-
-    DetailPage.VALVE_GENERAL -> ValveGeneralDetailFragment().apply { arguments = ValveGeneralDetailFragment.bundle(itemBundle) }
-
-    DetailPage.GATE_GENERAL -> GateGeneralFragment().apply { arguments = GateGeneralFragment.bundle(itemBundle) }
-    DetailPage.RGB -> RgbDetailFragment().apply { arguments = RgbDetailFragment.bundle(itemBundle) }
-    DetailPage.DIMMER -> DimmerDetailFragment().apply { arguments = BaseDimmerDetailFragment.bundle(itemBundle) }
-    DetailPage.DIMMER_CCT -> DimmerCctDetailFragment().apply { arguments = BaseDimmerDetailFragment.bundle(itemBundle) }
+    DetailPage.SWITCH -> SwitchGeneralFragment().apply { arguments = bundle(itemBundle) }
+    DetailPage.SWITCH_TIMER -> TimersDetailFragment().apply { arguments = bundle(itemBundle) }
+    DetailPage.THERMOSTAT -> ThermostatGeneralFragment().apply { arguments = bundle(itemBundle) }
+    DetailPage.THERMOSTAT_LIST -> ThermostatSlavesListFragment().apply { arguments = bundle(itemBundle) }
+    DetailPage.SCHEDULE -> ScheduleDetailFragment().apply { arguments = bundle(itemBundle) }
+    DetailPage.THERMOSTAT_TIMER -> TimerDetailFragment().apply { arguments = bundle(itemBundle) }
+    DetailPage.THERMOSTAT_HISTORY -> ThermostatHistoryDetailFragment().apply { arguments = bundle(itemBundle) }
+    DetailPage.THERMOSTAT_HEATPOL_HISTORY -> HeatpolHistoryDetailFragment().apply { arguments = bundle(itemBundle) }
+    DetailPage.THERMOMETER_HISTORY -> ThermometerHistoryDetailFragment().apply { arguments = bundle(itemBundle) }
+    DetailPage.HUMIDITY_HISTORY -> HumidityHistoryDetailFragment().apply { arguments = bundle(itemBundle) }
+    DetailPage.GPM_HISTORY -> GpmHistoryDetailFragment().apply { arguments = bundle(itemBundle) }
+    DetailPage.ROLLER_SHUTTER -> RollerShutterFragment().apply { arguments = bundle(itemBundle) }
+    DetailPage.ROOF_WINDOW -> RoofWindowFragment().apply { arguments = bundle(itemBundle) }
+    DetailPage.FACADE_BLINDS -> FacadeBlindsFragment().apply { arguments = bundle(itemBundle) }
+    DetailPage.TERRACE_AWNING -> TerraceAwningFragment().apply { arguments = bundle(itemBundle) }
+    DetailPage.PROJECTOR_SCREEN -> ProjectorScreenFragment().apply { arguments = bundle(itemBundle) }
+    DetailPage.CURTAIN -> CurtainFragment().apply { arguments = bundle(itemBundle) }
+    DetailPage.VERTICAL_BLIND -> VerticalBlindsFragment().apply { arguments = bundle(itemBundle) }
+    DetailPage.GARAGE_DOOR_ROLLER -> GarageDoorFragment().apply { arguments = bundle(itemBundle) }
+    DetailPage.EM_GENERAL -> ElectricityMeterGeneralFragment().apply { arguments = bundle(itemBundle) }
+    DetailPage.EM_HISTORY -> ElectricityMeterHistoryFragment().apply { arguments = bundle(itemBundle) }
+    DetailPage.EM_SETTINGS -> ElectricityMeterSettingsFragment().apply { arguments = bundle(itemBundle) }
+    DetailPage.CONTAINER_GENERAL -> ContainerGeneralDetailFragment().apply { arguments = bundle(itemBundle) }
+    DetailPage.IC_GENERAL -> ImpulseCounterGeneralFragment().apply { arguments = bundle(itemBundle) }
+    DetailPage.IC_HISTORY -> ImpulseCounterHistoryDetailFragment().apply { arguments = bundle(itemBundle) }
+    DetailPage.IC_OCR -> CounterPhotoFragment().apply { arguments = bundle(itemBundle) }
+    DetailPage.VALVE_GENERAL -> ValveGeneralDetailFragment().apply { arguments = bundle(itemBundle) }
+    DetailPage.GATE_GENERAL -> GateGeneralFragment().apply { arguments = bundle(itemBundle) }
+    DetailPage.RGB -> RgbDetailFragment().apply { arguments = bundle(itemBundle) }
+    DetailPage.DIMMER -> DimmerDetailFragment().apply { arguments = bundle(itemBundle) }
+    DetailPage.DIMMER_CCT -> DimmerCctDetailFragment().apply { arguments = bundle(itemBundle) }
     DetailPage.LEGACY_RGBW -> LegacyDetailFragment().apply {
       arguments = LegacyDetailFragment.bundle(itemBundle.remoteId, LegacyDetailType.RGBW, itemBundle.itemType)
+    }
+
+    DetailPage.THERMOSTAT_HEATPOL_GENERAL -> LegacyDetailFragment().apply {
+      arguments = LegacyDetailFragment.bundle(itemBundle.remoteId, LegacyDetailType.THERMOSTAT_HP, itemBundle.itemType)
     }
   }
 }

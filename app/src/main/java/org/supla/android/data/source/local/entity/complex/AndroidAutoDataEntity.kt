@@ -41,7 +41,14 @@ data class AndroidAutoDataEntity(
   @Embedded(prefix = "profile_") val profileEntity: ProfileEntity,
   @Embedded(prefix = "item_") val androidAutoItemEntity: AndroidAutoItemEntity
 ) {
-  val state: ChannelState
+  fun icon(getChannelIconUseCase: GetChannelIconUseCase, getSceneIconUseCase: GetSceneIconUseCase): ImageId =
+    when (androidAutoItemEntity.subjectType) {
+      SubjectType.GROUP -> getChannelIconUseCase.forState(groupEntity!!, state)
+      SubjectType.SCENE -> getSceneIconUseCase(sceneEntity!!)
+      SubjectType.CHANNEL -> getChannelIconUseCase.forState(channelEntity!!, state)
+    }
+
+  private val state: ChannelState
     get() {
       val function = channelEntity?.function ?: groupEntity?.function
       val thermostatSubfunction = function?.hasThermostatSubfunction?.ifTrue { channelValueEntity?.asThermostatValue()?.subfunction }
@@ -55,12 +62,5 @@ data class AndroidAutoDataEntity(
       } else {
         ChannelState.Default(ChannelState.Value.NOT_USED)
       }
-    }
-
-  fun icon(getChannelIconUseCase: GetChannelIconUseCase, getSceneIconUseCase: GetSceneIconUseCase): ImageId =
-    when (androidAutoItemEntity.subjectType) {
-      SubjectType.GROUP -> getChannelIconUseCase.forState(groupEntity!!, state)
-      SubjectType.SCENE -> getSceneIconUseCase(sceneEntity!!)
-      SubjectType.CHANNEL -> getChannelIconUseCase.forState(channelEntity!!, state)
     }
 }

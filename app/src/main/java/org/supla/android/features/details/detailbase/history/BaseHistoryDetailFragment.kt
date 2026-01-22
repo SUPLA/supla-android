@@ -32,16 +32,12 @@ import org.supla.android.databinding.FragmentComposeBinding
 import org.supla.android.features.details.detailbase.history.ui.View
 import org.supla.android.ui.ToolbarItemsClickHandler
 
-private const val ARG_REMOTE_ID = "ARG_REMOTE_ID"
-
 abstract class BaseHistoryDetailFragment :
   BaseFragment<HistoryDetailViewState, HistoryDetailViewEvent>(R.layout.fragment_compose),
   ToolbarItemsClickHandler {
 
   abstract override val viewModel: BaseHistoryDetailViewModel
   private val binding by viewBinding(FragmentComposeBinding::bind)
-
-  protected val remoteId: Int by lazy { requireArguments().getInt(ARG_REMOTE_ID) }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -60,7 +56,7 @@ abstract class BaseHistoryDetailFragment :
 
   override fun onResume() {
     super.onResume()
-    viewModel.loadData(remoteId)
+    viewModel.loadData(item.remoteId)
     setToolbarItemVisible(R.id.toolbar_delete_chart_history, true)
   }
 
@@ -81,7 +77,7 @@ abstract class BaseHistoryDetailFragment :
 
   override fun onMenuItemClick(menuItem: MenuItem): Boolean {
     if (menuItem.itemId == R.id.toolbar_delete_chart_history) {
-      viewModel.deleteAndDownloadData(remoteId)
+      viewModel.deleteAndDownloadData(item.remoteId)
       return true
     }
 

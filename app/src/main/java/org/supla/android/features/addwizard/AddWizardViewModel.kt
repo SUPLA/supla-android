@@ -104,7 +104,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddWizardViewModel @Inject constructor(
-  @ApplicationContext private val context: Context,
+  @param:ApplicationContext private val context: Context,
   private val checkRegistrationEnabledUseCase: CheckRegistrationEnabledUseCase,
   private val currentWifiNetworkInfoProvider: CurrentWifiNetworkInfoProvider,
   private val checkLocationEnabledUseCase: CheckLocationEnabledUseCase,

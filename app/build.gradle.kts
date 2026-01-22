@@ -159,6 +159,10 @@ dependencies {
   implementation(libs.androidx.glance.widget.preview)
   implementation(libs.androidx.glance.material)
   implementation(libs.androidx.glance.preview)
+  implementation(libs.androidx.navigation3.runtime)
+  implementation(libs.androidx.navigation3.ui)
+  implementation(libs.androidx.navigation3.viewmodel)
+  implementation(libs.hilt.navigation.compose)
 
   implementation(libs.rxjava)
   implementation(libs.rxandroid)

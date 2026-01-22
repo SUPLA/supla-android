@@ -17,10 +17,7 @@ package org.supla.android.features.addwizard.view
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -51,11 +48,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.extensions.ucFirst
 import org.supla.android.features.addwizard.AddWizardScope
 import org.supla.android.features.addwizard.model.AddWizardScreen
 import org.supla.android.features.addwizard.view.components.AddWizardContentText
 import org.supla.android.features.addwizard.view.components.AddWizardScaffold
+import org.supla.android.features.addwizard.view.components.AddWizardTextFieldContainer
 import org.supla.android.ui.dialogs.Dialog
 import org.supla.android.ui.dialogs.DialogButtonsColumn
 import org.supla.android.ui.dialogs.DialogHeader
@@ -67,7 +64,6 @@ import org.supla.android.ui.views.buttons.TextButton
 import org.supla.android.ui.views.forms.Checkbox
 import org.supla.android.ui.views.forms.PasswordTextField
 import org.supla.android.ui.views.forms.TextField
-import org.supla.android.ui.views.forms.TextFieldLabel
 
 data class AddWizardNetworkSelectionState(
   val networkName: String = "",
@@ -108,7 +104,7 @@ fun AddWizardNetworkSelectionScope.AddWizardNetworkSelectionView(
 
     val (passwordFocusRequester) = FocusRequester.createRefs()
 
-    TextFieldScaffold(R.string.add_wizard_network_name) {
+    AddWizardTextFieldContainer(R.string.add_wizard_network_name) {
       TextField(
         value = state.networkName,
         modifier = Modifier.fillMaxWidth(),
@@ -119,7 +115,7 @@ fun AddWizardNetworkSelectionScope.AddWizardNetworkSelectionView(
       )
     }
 
-    TextFieldScaffold(R.string.password) {
+    AddWizardTextFieldContainer(R.string.password) {
       PasswordTextField(
         password = state.networkPassword,
         passwordVisible = state.networkPasswordVisible,
@@ -153,19 +149,6 @@ fun AddWizardNetworkSelectionScope.AddWizardNetworkSelectionView(
     )
   }
 }
-
-@Composable
-private fun TextFieldScaffold(
-  @StringRes labelId: Int,
-  content: @Composable () -> Unit
-) =
-  Column(verticalArrangement = Arrangement.spacedBy(Distance.tiny)) {
-    TextFieldLabel(
-      text = stringResource(labelId).lowercase().ucFirst(),
-      color = MaterialTheme.colorScheme.onPrimaryContainer
-    )
-    content()
-  }
 
 @Composable
 private fun NetworkSearchButton(onClick: () -> Unit) =

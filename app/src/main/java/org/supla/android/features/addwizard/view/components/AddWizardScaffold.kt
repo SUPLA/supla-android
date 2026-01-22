@@ -66,11 +66,34 @@ fun AddWizardScaffold(
   processing: Boolean = false,
   onNext: () -> Unit = {},
   content: @Composable ColumnScope.() -> Unit
-) {
-  Column(
-    modifier = Modifier.padding(Distance.small),
-    verticalArrangement = Arrangement.spacedBy(Distance.tiny),
-    horizontalAlignment = Alignment.CenterHorizontally
+) =
+  AddWizardScaffold(
+    buttonTextId = buttonTextId,
+    backButton = backButton,
+    processing = processing,
+    onNext = onNext
+  ) {
+    Image(
+      drawableId = iconRes,
+      modifier = Modifier.size(140.dp)
+    )
+
+    content()
+  }
+
+@Composable
+fun AddWizardScaffold(
+  @StringRes buttonTextId: Int,
+  backButton: (@Composable BoxScope.() -> Unit)? = null,
+  processing: Boolean = false,
+  onNext: () -> Unit = {},
+  content: @Composable ColumnScope.() -> Unit
+) =
+  AddWizardEmptyScaffold(
+    buttonTextId = buttonTextId,
+    backButton = backButton,
+    processing = processing,
+    onNext = onNext
   ) {
     Column(
       modifier = Modifier
@@ -80,13 +103,24 @@ fun AddWizardScaffold(
       verticalArrangement = Arrangement.spacedBy(Distance.small),
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
-      Image(
-        drawableId = iconRes,
-        modifier = Modifier.size(140.dp)
-      )
-
       content()
     }
+  }
+
+@Composable
+fun AddWizardEmptyScaffold(
+  @StringRes buttonTextId: Int,
+  backButton: (@Composable BoxScope.() -> Unit)? = null,
+  processing: Boolean = false,
+  onNext: () -> Unit = {},
+  content: @Composable ColumnScope.() -> Unit
+) {
+  Column(
+    modifier = Modifier.padding(Distance.small),
+    verticalArrangement = Arrangement.spacedBy(Distance.tiny),
+    horizontalAlignment = Alignment.CenterHorizontally
+  ) {
+    content()
 
     NavigationButtons(
       buttonTextId = buttonTextId,
@@ -104,13 +138,19 @@ private fun NavigationButtons(
   processing: Boolean,
   onNext: () -> Unit
 ) =
-  Box(modifier = Modifier.fillMaxWidth().padding(Distance.tiny)) {
+  Box(
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(Distance.tiny)
+  ) {
     backButton?.let { it() }
     OutlinedButton(
       colors = ButtonDefaults.addWizardButtonColors(),
       contentPadding = PaddingValues(start = Distance.default, top = Distance.small, end = Distance.small, bottom = Distance.small),
       onClick = onNext,
-      modifier = Modifier.align(Alignment.CenterEnd).defaultMinSize(minWidth = 130.dp, minHeight = 56.dp),
+      modifier = Modifier
+        .align(Alignment.CenterEnd)
+        .defaultMinSize(minWidth = 130.dp, minHeight = 56.dp),
       enabled = !processing
     ) {
       if (processing) {

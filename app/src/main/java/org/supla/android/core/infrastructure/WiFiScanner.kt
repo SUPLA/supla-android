@@ -42,9 +42,6 @@ class WiFiScanner @Inject constructor(
   private val wifiManager: WifiManager
 ) {
 
-  val cashedSsids: List<String>
-    get() = ssids
-
   private val ssids = Collections.synchronizedList(mutableListOf<String>())
   private val semaphore = Semaphore(1, 1)
   private val mutex = Mutex()

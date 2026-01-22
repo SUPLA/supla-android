@@ -17,24 +17,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
-import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.features.details.windowdetail.base.BaseWindowFragment
-
-private const val ARG_ITEM_BUNDLE = "ARG_ITEM_BUNDLE"
 
 @AndroidEntryPoint
 class GarageDoorFragment : BaseWindowFragment<GarageDoorViewModelState>() {
-
   override val viewModel: GarageDoorViewModel by viewModels()
-
-  override val item: ItemBundle by lazy { requireSerializable(ARG_ITEM_BUNDLE, ItemBundle::class.java) }
-
-  companion object {
-    fun bundle(itemBundle: ItemBundle) = bundleOf(
-      ARG_ITEM_BUNDLE to itemBundle
-    )
-  }
 }

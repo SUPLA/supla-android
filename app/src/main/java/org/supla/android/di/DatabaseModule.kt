@@ -46,6 +46,7 @@ import org.supla.android.db.room.app.migrations.MIGRATION_38_39
 import org.supla.android.db.room.app.migrations.MIGRATION_39_40
 import org.supla.android.db.room.app.migrations.MIGRATION_40_41
 import org.supla.android.db.room.app.migrations.MIGRATION_41_42
+import org.supla.android.db.room.app.migrations.MIGRATION_42_43
 import org.supla.android.db.room.app.migrations.Migration25to26
 import org.supla.android.db.room.app.migrations.Migration26to27
 import org.supla.android.db.room.app.migrations.Migration27to28
@@ -100,7 +101,8 @@ class DatabaseModule {
         MIGRATION_38_39,
         MIGRATION_39_40,
         MIGRATION_40_41,
-        MIGRATION_41_42
+        MIGRATION_41_42,
+        MIGRATION_42_43
       )
       .build()
 
@@ -183,6 +185,11 @@ class DatabaseModule {
   @Singleton
   fun widgetConfigurationDao(appDatabase: AppDatabase) =
     appDatabase.widgetConfigurationDao()
+
+  @Provides
+  @Singleton
+  fun provideNfcTagDao(appDatabase: AppDatabase) =
+    appDatabase.nfcTagDao()
 
   @Provides
   @Singleton

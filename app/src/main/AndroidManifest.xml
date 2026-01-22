@@ -12,8 +12,13 @@
   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
   <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
   <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+  <uses-permission android:name="android.permission.NFC" />
 
   <uses-feature android:name="android.hardware.wifi" />
+  <uses-feature
+    android:name="android.hardware.nfc"
+    android:required="false" />
+
   <supports-screens
     android:anyDensity="true"
     android:largeScreens="true"
@@ -56,7 +61,7 @@
       android:value="1" />
     <meta-data
       android:name="com.google.mlkit.vision.DEPENDENCIES"
-      android:value="barcode_ui"/>
+      android:value="barcode_ui" />
 
     <receiver
       android:name=".widget.onoff.OnOffWidget"
@@ -136,12 +141,30 @@
       </intent-filter>
     </activity>
     <activity
-    android:name=".features.widget.extendedwidget.ExtendedValueWidgetConfigurationActivity"
-    android:exported="true">
-    <intent-filter>
-      <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-    </intent-filter>
-  </activity>
+      android:name=".features.widget.extendedwidget.ExtendedValueWidgetConfigurationActivity"
+      android:exported="true">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+      </intent-filter>
+    </activity>
+
+    <activity
+      android:name=".features.nfc.call.CallTagActionActivity"
+      android:launchMode="singleTop"
+      android:exported="true">
+
+      <intent-filter android:autoVerify="true">
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+
+        <data android:scheme="https" />
+        <data android:scheme="http" />
+        <data android:host="supla.org" />
+        <data android:host="www.supla.org" />
+        <data android:pathPattern=".*"/>
+      </intent-filter>
+    </activity>
 
     <service
       android:name=".core.notifications.NotificationMessagingService"
@@ -155,7 +178,8 @@
       android:name="androidx.work.impl.foreground.SystemForegroundService"
       android:foregroundServiceType="shortService" />
 
-    <service android:name=".automotive.SuplaCarAppService"
+    <service
+      android:name=".automotive.SuplaCarAppService"
       android:exported="true">
       <intent-filter>
         <action android:name="androidx.car.app.CarAppService" />

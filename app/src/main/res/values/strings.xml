@@ -852,4 +852,25 @@
   <string name="rgb_detail_colors_limit">Limit reached!</string>
   <string name="channel_caption_invisible">Hidden</string>
   <string name="dimmer_detail_temperature">Color:</string>
+  <string name="menu_nfc">NFC</string>
+  <string name="add_nfc_tag_title">NFC</string>
+  <string name="settings_nfc_label">NFC</string>
+  <string name="nfc_list_add">Add NFC tag</string>
+  <string name="add_nfc_name_label">Tag name</string>
+  <string name="add_nfc_scanning_hint">Hold the NFC tag near the phone…</string>
+  <string name="add_nfc_general_error">An error occurred and tag could not be used.</string>
+  <string name="add_nfc_not_usable">This RFID tag cannot be used for Supla purposes.</string>
+  <string name="add_nfc_success"><![CDATA[New tag with id<br><b>%1$s</b><br>was added to your Supla app!]]></string>
+  <string name="add_nfc_timeout">No RFID tag found!</string>
+  <string name="add_nfc_configure_tag">Configure tag action</string>
+  <string name="add_nfc_duplicate"><![CDATA[Tag with id<br><b>%1$s</b><br>is already available in your app. You named it <b>%2$s</b>.]]></string>
+  <string name="edit_nfc_tag_name">Tag name</string>
+  <string name="call_nfc_action_resolving_tag">Searching configuration</string>
+  <string name="call_nfc_action_calling">Performing action</string>
+  <string name="call_nfc_action_success">Success!</string>
+  <string name="call_nfc_action_failure_illegal_intent">Unable to parse data provided by the NFC tag.</string>
+  <string name="call_nfc_action_failure_unknown_url">The NFC tag has incorrect content!</string>
+  <string name="call_nfc_action_failure_not_found">The NFC tag is not added in the SUPLA application!</string>
+  <string name="call_nfc_action_not_configured">The NFC tag is not configured!</string>
+  <string name="call_nfc_action_call_failed">The NFC tag action call finished with failure!</string>
 </resources>

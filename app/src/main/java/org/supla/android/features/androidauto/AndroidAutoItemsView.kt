@@ -52,6 +52,7 @@ import org.supla.android.ui.views.EmptyListInfoView
 import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.buttons.FloatingAddButton
 import org.supla.android.ui.views.list.components.ListItemIcon
+import org.supla.android.ui.views.list.components.ListItemProfile
 import org.supla.android.ui.views.list.components.ListItemTitle
 import org.supla.android.ui.views.settings.SettingsListItem
 import sh.calvin.reorderable.ReorderableCollectionItemScope
@@ -186,22 +187,6 @@ private fun AndroidAutoItemsViewScope.ItemView(
       modifier = with(scope) {
         Modifier.draggableHandle(onDragStopped = { onMoveFinished() })
       }
-    )
-  }
-}
-
-@Composable
-private fun ListItemProfile(profileName: String) {
-  Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-    Text(
-      text = stringResource(R.string.notifications_log_profile),
-      style = MaterialTheme.typography.bodySmall,
-      color = MaterialTheme.colorScheme.onSurfaceVariant
-    )
-    Text(
-      text = profileName,
-      style = MaterialTheme.typography.bodySmall,
-      color = MaterialTheme.colorScheme.onSurface
     )
   }
 }
