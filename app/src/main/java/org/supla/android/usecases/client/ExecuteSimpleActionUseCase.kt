@@ -34,12 +34,17 @@ class ExecuteSimpleActionUseCase @Inject constructor(
 ) {
 
   operator fun invoke(actionId: ActionId, type: SubjectType, remoteId: Int): Completable =
-    Completable.fromRunnable {
-      suplaClientProvider.provide()?.run {
-        Timber.i("Executing action ($actionId) of $type with id: $remoteId")
-        if (executeAction(ActionParameters(actionId, type, remoteId))) {
-          vibrationHelper.vibrate()
-        }
+    Completable.fromRunnable { launch(actionId, type, remoteId) }
+
+  fun launch(actionId: ActionId, type: SubjectType, remoteId: Int): Boolean {
+    suplaClientProvider.provide()?.run {
+      Timber.i("Executing action ($actionId) of $type with id: $remoteId")
+      if (executeAction(ActionParameters(actionId, type, remoteId))) {
+        vibrationHelper.vibrate()
+        return true
       }
     }
+
+    return false
+  }
 }

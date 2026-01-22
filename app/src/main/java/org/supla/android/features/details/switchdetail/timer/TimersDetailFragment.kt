@@ -22,7 +22,6 @@ import android.os.CountDownTimer
 import android.text.format.DateFormat
 import android.view.View
 import android.widget.Toast
-import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,10 +34,8 @@ import org.supla.android.extensions.visibleIf
 import org.supla.android.images.ImageCache
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 import timber.log.Timber
-import java.util.*
+import java.util.Date
 import javax.inject.Inject
-
-private const val ARG_REMOTE_ID = "ARG_REMOTE_ID"
 
 @AndroidEntryPoint
 class TimersDetailFragment : BaseFragment<TimersDetailViewState, TimersDetailViewEvent>(R.layout.fragment_timers_detail) {
@@ -49,7 +46,6 @@ class TimersDetailFragment : BaseFragment<TimersDetailViewState, TimersDetailVie
   override val viewModel: TimersDetailViewModel by viewModels()
   private val binding by viewBinding(FragmentTimersDetailBinding::bind)
 
-  private val remoteId: Int by lazy { requireArguments().getInt(ARG_REMOTE_ID) }
   private var timer: CountDownTimer? = null
   private var leftTimeInSecs: Int = 0
 
@@ -59,6 +55,7 @@ class TimersDetailFragment : BaseFragment<TimersDetailViewState, TimersDetailVie
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
+    val remoteId = item.remoteId
     binding.detailsTimerConfiguration.onStartClickListener = { timeInSeconds, action ->
       stateHolder.setLastTimerValue(remoteId, timeInSeconds)
       viewModel.startTimer(remoteId, action == TimerTargetAction.TURN_ON, timeInSeconds)
@@ -77,7 +74,7 @@ class TimersDetailFragment : BaseFragment<TimersDetailViewState, TimersDetailVie
 
   override fun onResume() {
     super.onResume()
-    viewModel.loadData(remoteId)
+    viewModel.loadData(item.remoteId)
   }
 
   override fun onPause() {
@@ -187,7 +184,7 @@ class TimersDetailFragment : BaseFragment<TimersDetailViewState, TimersDetailVie
         override fun onFinish() {
           timer?.cancel()
           timer = null
-          viewModel.loadData(remoteId)
+          viewModel.loadData(item.remoteId)
         }
       }.start()
     }
@@ -195,18 +192,12 @@ class TimersDetailFragment : BaseFragment<TimersDetailViewState, TimersDetailVie
 
   override fun onSuplaMessage(message: SuplaClientMessage) {
     (message as? SuplaClientMessage.ChannelDataChanged)?.let {
-      if (it.channelId == remoteId && (it.timerValueChanged || !it.extendedValueChanged)) {
+      if (it.channelId == item.remoteId && (it.timerValueChanged || !it.extendedValueChanged)) {
         Timber.i("Detail got data changed event")
         timer?.cancel()
         timerActive = false
-        viewModel.loadData(remoteId)
+        viewModel.loadData(item.remoteId)
       }
     }
-  }
-
-  companion object {
-    fun bundle(remoteId: Int) = bundleOf(
-      ARG_REMOTE_ID to remoteId
-    )
   }
 }

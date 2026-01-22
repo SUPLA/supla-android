@@ -79,8 +79,9 @@ class SettingsViewModel @Inject constructor(
         SettingItem.NightMode(nightModeSetting = applicationPreferences.nightMode, this::updateNightMode),
         SettingItem.LockScreen(lockScreenScope = encryptedPreferences.lockScreenSettings.scope, this::updateLockScreen),
         SettingItem.BatteryWarningLevel(level = applicationPreferences.batteryWarningLevel, this::updateBatteryWarningLevel),
-        SettingItem.LocalizationOrdering { sendEvent(SettingsViewEvent.NavigateToLocalizationsOrdering) },
-        SettingItem.AndroidAuto { sendEvent(SettingsViewEvent.NavigateToAndroidAuto) },
+        SettingItem.NavigationItem(R.string.location_ordering) { sendEvent(SettingsViewEvent.NavigateToLocalizationsOrdering) },
+        SettingItem.NavigationItem(R.string.settings_android_auto_label) { sendEvent(SettingsViewEvent.NavigateToAndroidAuto) },
+        SettingItem.NavigationItem(R.string.settings_nfc_label) { sendEvent(SettingsViewEvent.NavigateToNfc) },
 
         SettingItem.HeaderItem(headerResource = R.string.settings_permissions),
         SettingItem.NotificationsItem(allowed = areNotificationsEnabled(), this::goToSettings),
@@ -100,7 +101,8 @@ class SettingsViewModel @Inject constructor(
         SettingItem.NightMode(nightModeSetting = applicationPreferences.nightMode, this::updateNightMode),
         SettingItem.LockScreen(lockScreenScope = encryptedPreferences.lockScreenSettings.scope, this::updateLockScreen),
         SettingItem.BatteryWarningLevel(level = applicationPreferences.batteryWarningLevel, this::updateBatteryWarningLevel),
-        SettingItem.LocalizationOrdering { sendEvent(SettingsViewEvent.NavigateToLocalizationsOrdering) },
+        SettingItem.NavigationItem(R.string.location_ordering) { sendEvent(SettingsViewEvent.NavigateToLocalizationsOrdering) },
+        SettingItem.NavigationItem(R.string.settings_nfc_label) { sendEvent(SettingsViewEvent.NavigateToNfc) },
 
         SettingItem.HeaderItem(headerResource = R.string.settings_permissions),
         SettingItem.NotificationsItem(allowed = areNotificationsEnabled(), this::goToSettings),
@@ -188,6 +190,7 @@ class SettingsViewModel @Inject constructor(
 sealed class SettingsViewEvent : ViewEvent {
   data object NavigateToLocalizationsOrdering : SettingsViewEvent()
   data object NavigateToAndroidAuto : SettingsViewEvent()
+  data object NavigateToNfc : SettingsViewEvent()
   data object NavigateToSettings : SettingsViewEvent()
   data class NavigateToPinVerification(val verificationAction: UnlockAction) : SettingsViewEvent()
   data class NavigateToPinSetup(val lockScreenScope: LockScreenScope) : SettingsViewEvent()
