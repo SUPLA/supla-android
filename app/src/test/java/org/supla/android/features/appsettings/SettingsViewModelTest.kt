@@ -94,8 +94,9 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
       tuple(SettingItem.NightMode::class.java),
       tuple(SettingItem.LockScreen::class.java),
       tuple(SettingItem.BatteryWarningLevel::class.java),
-      tuple(SettingItem.LocalizationOrdering::class.java),
-      tuple(SettingItem.AndroidAuto::class.java),
+      tuple(SettingItem.NavigationItem::class.java),
+      tuple(SettingItem.NavigationItem::class.java),
+      tuple(SettingItem.NavigationItem::class.java),
       tuple(SettingItem.HeaderItem::class.java),
       tuple(SettingItem.NotificationsItem::class.java),
       tuple(SettingItem.LocalizationItem::class.java)
@@ -112,9 +113,9 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     assertThat((settingsList[8] as SettingItem.RollerShutterOpenClose).showOpeningPercentage).isEqualTo(true)
     assertThat((settingsList[9] as SettingItem.NightMode).nightModeSetting).isEqualTo(NightModeSetting.NEVER)
     assertThat((settingsList[10] as SettingItem.LockScreen).lockScreenScope).isEqualTo(LockScreenScope.NONE)
-    assertThat((settingsList[14] as SettingItem.HeaderItem).headerResource).isEqualTo(R.string.settings_permissions)
-    assertThat((settingsList[15] as SettingItem.NotificationsItem).allowed).isEqualTo(true)
-    assertThat((settingsList[16] as SettingItem.LocalizationItem).allowed).isEqualTo(true)
+    assertThat((settingsList[15] as SettingItem.HeaderItem).headerResource).isEqualTo(R.string.settings_permissions)
+    assertThat((settingsList[16] as SettingItem.NotificationsItem).allowed).isEqualTo(true)
+    assertThat((settingsList[17] as SettingItem.LocalizationItem).allowed).isEqualTo(true)
   }
 
   @Test
@@ -393,7 +394,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val channelSettingItem = states[0].settingsItems[12] as SettingItem.LocalizationOrdering
+    val channelSettingItem = states[0].settingsItems[12] as SettingItem.NavigationItem
     channelSettingItem.callback()
 
     // then
@@ -410,7 +411,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val channelSettingItem = states[0].settingsItems[15] as SettingItem.NotificationsItem
+    val channelSettingItem = states[0].settingsItems[16] as SettingItem.NotificationsItem
     channelSettingItem.callback()
 
     // then
@@ -427,7 +428,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val channelSettingItem = states[0].settingsItems[16] as SettingItem.LocalizationItem
+    val channelSettingItem = states[0].settingsItems[17] as SettingItem.LocalizationItem
     channelSettingItem.callback()
 
     // then

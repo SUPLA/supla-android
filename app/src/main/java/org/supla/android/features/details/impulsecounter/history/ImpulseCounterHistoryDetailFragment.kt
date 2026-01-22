@@ -17,19 +17,11 @@ package org.supla.android.features.details.impulsecounter.history
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.features.details.detailbase.history.BaseHistoryDetailFragment
 
-private const val ARG_REMOTE_ID = "ARG_REMOTE_ID"
-
 @AndroidEntryPoint
 class ImpulseCounterHistoryDetailFragment : BaseHistoryDetailFragment() {
-
   override val viewModel: ImpulseCounterHistoryDetailViewModel by viewModels()
-
-  companion object {
-    fun bundle(remoteId: Int) = bundleOf(ARG_REMOTE_ID to remoteId)
-  }
 }

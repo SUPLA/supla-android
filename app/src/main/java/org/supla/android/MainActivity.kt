@@ -20,6 +20,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
+import android.app.PendingIntent
+import android.content.Intent
+import android.nfc.NfcAdapter
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -67,6 +70,7 @@ import org.supla.android.extensions.subscribeBy
 import org.supla.android.extensions.visibleIf
 import org.supla.android.features.lockscreen.LockScreenFragment
 import org.supla.android.features.lockscreen.UnlockAction
+import org.supla.android.features.nfc.NfcHost
 import org.supla.android.images.ImageCache
 import org.supla.android.images.ImageId
 import org.supla.android.lib.SuplaConst
@@ -93,7 +97,10 @@ class MainActivity :
   LoadableContent,
   ToolbarItemsController,
   ToolbarVisibilityController,
-  BackHandleOwner {
+  BackHandleOwner,
+  NfcHost {
+
+  private val nfcAdapter by lazy { NfcAdapter.getDefaultAdapter(this) }
 
   private var downloadUserIcons: DownloadUserIcons? = null
   private var notificationView: RelativeLayout? = null
@@ -184,6 +191,32 @@ class MainActivity :
     }
 
     menuLayout.setOnClickListener(this::handleMenuClicks)
+  }
+
+  override fun onNewIntent(intent: Intent) {
+    super.onNewIntent(intent)
+    Timber.d("Got an intent (action: ${intent.action})")
+    nfcIntentHandler?.invoke(intent)
+  }
+
+  private var nfcIntentHandler: ((Intent) -> Unit)? = null
+
+  override fun enableNfcDispatch(intentHandler: (Intent) -> Unit) {
+    Timber.d("Enable nfc dispatch")
+    nfcIntentHandler = intentHandler
+
+    val adapter = nfcAdapter ?: return
+    val intent = Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+    val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+    val pendingIntent = PendingIntent.getActivity(this, 0, intent, flags)
+
+    adapter.enableForegroundDispatch(this, pendingIntent, null, null)
+  }
+
+  override fun disableNfcDispatch() {
+    Timber.d("Disable nfc dispatch")
+    nfcIntentHandler = null
+    nfcAdapter?.disableForegroundDispatch(this)
   }
 
   override fun onStart() {

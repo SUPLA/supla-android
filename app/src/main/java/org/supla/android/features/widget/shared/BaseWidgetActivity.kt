@@ -22,16 +22,11 @@ import android.appwidget.AppWidgetManager
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.core.net.toUri
-import androidx.lifecycle.lifecycleScope
+import org.supla.android.core.ui.BaseComposeActivity
 
-abstract class BaseWidgetActivity : ComponentActivity() {
-  protected abstract val viewModel: BaseWidgetViewModel
+abstract class BaseWidgetActivity : BaseComposeActivity<WidgetConfigurationViewModelState, WidgetConfigurationViewEvent>() {
+  abstract override val viewModel: BaseWidgetViewModel
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -40,27 +35,6 @@ abstract class BaseWidgetActivity : ComponentActivity() {
     setResult(RESULT_CANCELED)
 
     viewModel.setWidgetId(getWidgetId())
-
-    setContent {
-      val state by viewModel.getViewState().collectAsState()
-      ComposableContent(state)
-    }
-    viewModel.onViewCreated()
-
-    lifecycleScope.launchWhenStarted { viewModel.getViewEvents().collect { event -> handleEvent(event) } }
-  }
-
-  @Composable
-  abstract fun ComposableContent(modelState: WidgetConfigurationViewModelState)
-
-  override fun onStart() {
-    super.onStart()
-    viewModel.onStart()
-  }
-
-  override fun onStop() {
-    super.onStop()
-    viewModel.onStop()
   }
 
   protected abstract fun updateIntent(widgetId: Int): Intent
@@ -72,13 +46,13 @@ abstract class BaseWidgetActivity : ComponentActivity() {
     )
 
   @SuppressLint("BatteryLife")
-  protected open fun handleEvent(event: WidgetConfigurationViewEvent) {
+  override fun handleEvent(event: WidgetConfigurationViewEvent) {
     when (event) {
       WidgetConfigurationViewEvent.Close -> finish()
       WidgetConfigurationViewEvent.OpenSettings ->
         Intent().also {
-          it.setAction(ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
-          it.setData("package:$packageName".toUri())
+          it.action = ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+          it.data = "package:$packageName".toUri()
           startActivity(it)
         }
 

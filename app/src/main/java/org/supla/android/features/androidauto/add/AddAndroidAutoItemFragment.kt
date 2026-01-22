@@ -40,7 +40,7 @@ class AddAndroidAutoItemFragment : BaseComposeFragment<AddAndroidAutoItemViewMod
   @Inject
   lateinit var navigator: MainNavigator
 
-  private val item: Long? by lazy { arguments?.getLong(ARG_ITEM_ID)?.let { if (it == 0L) null else it } }
+  private val itemId: Long? by lazy { arguments?.getLong(ARG_ITEM_ID)?.let { if (it == 0L) null else it } }
 
   @Composable
   override fun ComposableContent(modelState: AddAndroidAutoItemViewModelState) {
@@ -64,7 +64,7 @@ class AddAndroidAutoItemFragment : BaseComposeFragment<AddAndroidAutoItemViewMod
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
-    viewModel.onViewCreated(item)
+    viewModel.onViewCreated(itemId)
   }
 
   override fun handleEvents(event: AddAndroidAutoItemViewEvent) {
