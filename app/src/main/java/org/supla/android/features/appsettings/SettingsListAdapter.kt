@@ -230,21 +230,14 @@ sealed class SettingItem(val viewResource: Int) {
     }
   }
 
-  data class LocalizationOrdering(
-    val callback: () -> Unit = {}
-  ) : SettingItem(R.layout.li_settings_arrow_button) {
-    override fun bind(holder: SettingItemViewHolder<*>) {
-      holder.binding.root.setOnClickListener { callback() }
-    }
-  }
-
-  data class AndroidAuto(
+  data class NavigationItem(
+    @field:StringRes val title: Int,
     val callback: () -> Unit = {}
   ) : SettingItem(R.layout.li_settings_arrow_button) {
     override fun bind(holder: SettingItemViewHolder<*>) {
       holder.binding.root.setOnClickListener { callback() }
       (holder.binding as? LiSettingsArrowButtonBinding)?.apply {
-        settingsButtonLabel.setText(R.string.settings_android_auto_label)
+        settingsButtonLabel.setText(title)
       }
     }
   }

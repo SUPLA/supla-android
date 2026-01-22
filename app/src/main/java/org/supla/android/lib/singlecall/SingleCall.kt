@@ -107,7 +107,7 @@ class SingleCall private constructor(
   @Singleton
   class Provider @Inject constructor(
     private val profileRepository: RoomProfileRepository,
-    @ApplicationContext private val context: Context
+    @param:ApplicationContext private val context: Context
   ) {
     fun provide(profileId: Long) = SingleCall(context, profileId, profileRepository)
   }

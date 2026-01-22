@@ -22,11 +22,13 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.FlowPreview
 import org.supla.android.MainActivity
 import org.supla.android.extensions.visibleIf
+import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.lib.AndroidSuplaClientMessageHandler
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.AppBar
@@ -41,6 +43,8 @@ import timber.log.Timber
 import java.io.Serializable
 import javax.inject.Inject
 
+const val ARG_ITEM_BUNDLE = "ARG_ITEM_BUNDLE"
+
 abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayoutId: Int) : Fragment(contentLayoutId) {
 
   private val suplaMessageListener: SuplaClientMessageHandler.Listener = object : SuplaClientMessageHandler.Listener {
@@ -53,6 +57,8 @@ abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayo
 
   protected abstract val viewModel: BaseViewModel<S, E>
   protected open val helperViewModels: List<BaseViewModel<*, *>> = emptyList()
+
+  protected val item: ItemBundle by lazy { requireSerializable(ARG_ITEM_BUNDLE, ItemBundle::class.java) }
 
   protected val viewState: S
     get() = viewModel.getViewState().value
@@ -143,13 +149,8 @@ abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayo
       requireArguments().getSerializable(key) as T
     }
   }
-
-  protected fun <T : Serializable> requireSerializableOptional(key: String, clazz: Class<T>): T? {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-      arguments?.getSerializable(key, clazz)
-    } else {
-      @Suppress("DEPRECATION", "UNCHECKED_CAST")
-      arguments?.getSerializable(key) as T?
-    }
-  }
 }
+
+fun bundle(itemBundle: ItemBundle) = bundleOf(
+  ARG_ITEM_BUNDLE to itemBundle
+)

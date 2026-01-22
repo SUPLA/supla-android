@@ -26,7 +26,6 @@ import androidx.compose.ui.res.stringResource
 import org.supla.android.R
 import org.supla.android.core.ui.BaseComposeFragment
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.features.details.windowdetail.base.ui.WindowView
 import org.supla.android.ui.dialogs.AlertDialog
 import org.supla.android.ui.dialogs.AuthorizationDialog
@@ -34,7 +33,6 @@ import org.supla.android.ui.dialogs.AuthorizationDialog
 abstract class BaseWindowFragment<S : BaseWindowViewModelState> : BaseComposeFragment<S, BaseWindowViewEvent>() {
 
   abstract override val viewModel: BaseWindowViewModel<S>
-  protected abstract val item: ItemBundle
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)

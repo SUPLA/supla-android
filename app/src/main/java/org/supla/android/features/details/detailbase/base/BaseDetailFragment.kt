@@ -28,13 +28,13 @@ import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.supla.android.core.storage.RuntimeStateHolder
+import org.supla.android.core.ui.ARG_ITEM_BUNDLE
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.extensions.visibleIf
 import org.supla.android.navigator.MainNavigator
 import org.supla.android.ui.layouts.BottomBarHeightHandler
 import javax.inject.Inject
 
-private const val ARG_SUBJECT_BUNDLE = "ARG_SUBJECT_BUNDLE"
 private const val ARG_PAGES = "ARG_PAGES"
 
 abstract class BaseDetailFragment<S : BaseDetailViewState, E : BaseDetailViewEvent>(@LayoutRes contentLayoutId: Int) :
@@ -48,9 +48,6 @@ abstract class BaseDetailFragment<S : BaseDetailViewState, E : BaseDetailViewEve
 
   @Inject
   lateinit var navigator: MainNavigator
-
-  @Suppress("DEPRECATION") // Not deprecated method can't be accessed from API 21
-  protected val item: ItemBundle by lazy { requireArguments().getSerializable(ARG_SUBJECT_BUNDLE) as ItemBundle }
 
   @Suppress("UNCHECKED_CAST", "DEPRECATION") // Not deprecated method can be accessed from API 33
   protected val pages by lazy { (requireArguments().getSerializable(ARG_PAGES) as Array<DetailPage>).asList() }
@@ -126,7 +123,7 @@ abstract class BaseDetailFragment<S : BaseDetailViewState, E : BaseDetailViewEve
 
   companion object Companion {
     fun bundle(subjectBundle: ItemBundle, pages: Array<DetailPage>) = bundleOf(
-      ARG_SUBJECT_BUNDLE to subjectBundle,
+      ARG_ITEM_BUNDLE to subjectBundle,
       ARG_PAGES to pages
     )
   }

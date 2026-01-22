@@ -19,20 +19,14 @@ package org.supla.android.features.details.windowdetail.facadeblinds
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
-import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.features.details.windowdetail.base.BaseWindowFragment
-
-private const val ARG_ITEM_BUNDLE = "ARG_ITEM_BUNDLE"
 
 @AndroidEntryPoint
 class FacadeBlindsFragment : BaseWindowFragment<FacadeBlindsViewModelState>() {
 
   override val viewModel: FacadeBlindsViewModel by viewModels()
-
-  override val item: ItemBundle by lazy { requireSerializable(ARG_ITEM_BUNDLE, ItemBundle::class.java) }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -42,11 +36,5 @@ class FacadeBlindsFragment : BaseWindowFragment<FacadeBlindsViewModelState>() {
   override fun onResume() {
     super.onResume()
     viewModel.loadConfig(item.remoteId, item.itemType)
-  }
-
-  companion object {
-    fun bundle(itemBundle: ItemBundle) = bundleOf(
-      ARG_ITEM_BUNDLE to itemBundle
-    )
   }
 }
