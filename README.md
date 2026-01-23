@@ -44,7 +44,7 @@ For a high-level overview of the SUPLA architecture and how individual repositor
 
 Development instructions, build steps and test execution are described in:
 
-* `Development.md`
+* [`Development.md`](Development.md)
 
 ---
 
@@ -52,8 +52,8 @@ Development instructions, build steps and test execution are described in:
 
 Please read:
 
-* `CONTRIBUTING.md`
-* `SECURITY.md`
+* [`CONTRIBUTING.md`](CONTRIBUTING.md)
+* [`SECURITY.md`](SECURITY.md)
 
 ---
 
