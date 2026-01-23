@@ -20,7 +20,6 @@ package org.supla.android.features.statedialog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
@@ -31,6 +30,7 @@ import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.events.OnlineEventsManager
+import org.supla.android.extensions.subscribeBy
 import org.supla.android.lib.SuplaChannelState
 import org.supla.android.lib.toEntity
 import org.supla.android.tools.SuplaSchedulers

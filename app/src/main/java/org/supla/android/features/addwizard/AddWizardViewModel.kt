@@ -23,7 +23,6 @@ import android.net.NetworkCapabilities
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelAndJoin
@@ -42,6 +41,7 @@ import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.remote.esp.EspConfigurationSession
 import org.supla.android.extensions.isNotNull
+import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.addwizard.configuration.AndroidEspConfigurationStateHolder
 import org.supla.android.features.addwizard.model.AddWizardScreen
 import org.supla.android.features.addwizard.model.Esp

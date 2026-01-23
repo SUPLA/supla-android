@@ -19,7 +19,6 @@ package org.supla.android.features.details.containerdetail.general
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Maybe
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
@@ -36,6 +35,7 @@ import org.supla.android.data.source.remote.container.SuplaChannelContainerConfi
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.ChannelUpdatesObserver
 import org.supla.android.events.UpdateEventsManager
+import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.details.containerdetail.general.ui.ContainerType
 import org.supla.android.features.details.containerdetail.general.ui.ControlLevel
 import org.supla.android.features.details.containerdetail.general.ui.ErrorLevel

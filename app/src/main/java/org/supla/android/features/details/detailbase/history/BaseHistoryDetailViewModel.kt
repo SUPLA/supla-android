@@ -22,7 +22,6 @@ import androidx.compose.ui.text.intl.Locale
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.storage.UserStateHolder
@@ -65,6 +64,7 @@ import org.supla.android.extensions.quarterStart
 import org.supla.android.extensions.setDay
 import org.supla.android.extensions.setHour
 import org.supla.android.extensions.shift
+import org.supla.android.extensions.subscribeBy
 import org.supla.android.extensions.weekEnd
 import org.supla.android.extensions.weekStart
 import org.supla.android.extensions.yearEnd

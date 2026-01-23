@@ -19,8 +19,8 @@ package org.supla.android.events
 
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.core.infrastructure.DateProvider
+import org.supla.android.extensions.subscribeBy
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 

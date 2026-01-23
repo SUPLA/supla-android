@@ -23,10 +23,10 @@ import androidx.work.NetworkType
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import io.reactivex.rxjava3.kotlin.blockingSubscribeBy
 import org.supla.android.data.source.local.entity.measurements.BaseLogEntity
 import org.supla.android.data.source.remote.rest.channel.Measurement
 import org.supla.android.events.DownloadEventsManager
+import org.supla.android.extensions.blockingSubscribeBy
 import org.supla.android.features.measurementsdownload.BaseDownloadLogUseCase
 import org.supla.core.shared.extensions.guardLet
 import timber.log.Timber

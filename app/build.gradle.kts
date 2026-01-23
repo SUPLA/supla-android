@@ -162,7 +162,6 @@ dependencies {
 
   implementation(libs.rxjava)
   implementation(libs.rxandroid)
-  implementation(libs.rxkotlin)
   implementation(libs.retrofit)
   implementation(libs.retrofit.gson)
   implementation(libs.retrofit.rxJavaAdapter)

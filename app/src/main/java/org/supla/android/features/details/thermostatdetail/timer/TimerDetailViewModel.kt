@@ -19,7 +19,6 @@ package org.supla.android.features.details.thermostatdetail.timer
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
@@ -52,6 +51,7 @@ import org.supla.android.extensions.minutesInHour
 import org.supla.android.extensions.secondsInMinute
 import org.supla.android.extensions.setHour
 import org.supla.android.extensions.shift
+import org.supla.android.extensions.subscribeBy
 import org.supla.android.extensions.yearNo
 import org.supla.android.features.details.thermostatdetail.timer.ui.TimerDetailViewProxy
 import org.supla.android.features.details.thermostatdetail.ui.TimerHeaderState
