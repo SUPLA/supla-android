@@ -19,8 +19,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import android.annotation.SuppressLint
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
+import org.supla.android.extensions.subscribeBy
 import org.supla.android.tools.SuplaSchedulers
 import timber.log.Timber
 import java.util.concurrent.TimeUnit

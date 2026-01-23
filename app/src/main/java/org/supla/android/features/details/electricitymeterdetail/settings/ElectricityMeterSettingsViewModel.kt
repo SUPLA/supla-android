@@ -18,7 +18,6 @@ package org.supla.android.features.details.electricitymeterdetail.settings
  */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.R
 import org.supla.android.core.shared.shareable
 import org.supla.android.core.storage.UserStateHolder
@@ -31,6 +30,7 @@ import org.supla.android.data.model.general.SingleSelectionList
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.Electricity
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
+import org.supla.android.extensions.subscribeBy
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.core.shared.extensions.guardLet

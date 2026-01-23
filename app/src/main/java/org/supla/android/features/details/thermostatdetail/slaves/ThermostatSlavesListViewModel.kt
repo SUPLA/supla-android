@@ -18,7 +18,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.shared.shareable
@@ -34,6 +33,7 @@ import org.supla.android.data.source.remote.thermostat.getIndicatorIcon
 import org.supla.android.data.source.remote.thermostat.getSetpointText
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.di.FORMATTER_THERMOMETER
+import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.details.detailbase.base.DetailPage
 import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.tools.SuplaSchedulers
@@ -133,7 +133,7 @@ class ThermostatSlavesListViewModel @Inject constructor(
       value = mainThermometer?.let { getChannelValueStringUseCase(it.withChildren) } ?: NO_VALUE_TEXT,
       indicatorIcon = thermostatValue.getIndicatorIcon(),
       channelIssueItem = getChannelIssuesForSlavesUseCase(shareable),
-      showChannelStateIcon = SuplaChannelFlag.CHANNEL_STATE inside channel.flags,
+      showChannelStateIcon = channel.showInfo,
       subValue = withSetpointValue.ifTrue { thermostatValue.getSetpointText(thermometerValueFormatter) },
       pumpSwitchIcon = pumpSwitchChild?.let { getChannelIconUseCase(it.channelDataEntity) },
       sourceSwitchIcon = heatOrColdSourceSwitchChild?.let { getChannelIconUseCase(it.channelDataEntity) }
@@ -156,7 +156,7 @@ class ThermostatSlavesListViewModel @Inject constructor(
       value = mainThermometer?.let { getChannelValueStringUseCase(it.withChildren) } ?: NO_VALUE_TEXT,
       indicatorIcon = thermostatValue.getIndicatorIcon(),
       channelIssueItem = getChannelIssuesForSlavesUseCase(channelDataEntity.shareable),
-      showChannelStateIcon = SuplaChannelFlag.CHANNEL_STATE inside channel.flags,
+      showChannelStateIcon = channelDataEntity.showInfo,
       subValue = withSetpointValue.ifTrue { thermostatValue.getSetpointText(thermometerValueFormatter) },
       pumpSwitchIcon = pumpSwitchChild?.let { getChannelIconUseCase(it.channelDataEntity) },
       sourceSwitchIcon = heatOrColdSourceSwitchChild?.let { getChannelIconUseCase(it.channelDataEntity) }

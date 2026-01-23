@@ -25,8 +25,8 @@ android {
     minSdk = libs.versions.minSdk.get().toInt()
     targetSdk = libs.versions.targetSdk.get().toInt()
     multiDexEnabled = true
-    versionCode = 312
-    versionName = "25.12.01"
+    versionCode = 31
+    versionName = "26.01"
 
     ndk {
       moduleName = "suplaclient"
@@ -162,7 +162,6 @@ dependencies {
 
   implementation(libs.rxjava)
   implementation(libs.rxandroid)
-  implementation(libs.rxkotlin)
   implementation(libs.retrofit)
   implementation(libs.retrofit.gson)
   implementation(libs.retrofit.rxJavaAdapter)

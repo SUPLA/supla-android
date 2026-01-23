@@ -19,7 +19,6 @@ package org.supla.android.features.details.containerdetail.general
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Maybe
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
@@ -32,11 +31,11 @@ import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.extensions.onlineState
 import org.supla.android.data.source.remote.SuplaChannelConfig
-import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.remote.container.SuplaChannelContainerConfig
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.ChannelUpdatesObserver
 import org.supla.android.events.UpdateEventsManager
+import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.details.containerdetail.general.ui.ContainerType
 import org.supla.android.features.details.containerdetail.general.ui.ControlLevel
 import org.supla.android.features.details.containerdetail.general.ui.ErrorLevel
@@ -176,7 +175,7 @@ class ContainerGeneralDetailViewModel @Inject constructor(
       caption = captionWithPercentage ?: caption,
       userCaption = channel.caption,
       batteryIcon = getChannelBatteryIconUseCase(channelDataEntity.shareable),
-      showChannelStateIcon = SuplaChannelFlag.CHANNEL_STATE inside channel.flags && channelDataEntity.stateEntity != null
+      showChannelStateIcon = channelDataEntity.showInfo
     )
   }
 

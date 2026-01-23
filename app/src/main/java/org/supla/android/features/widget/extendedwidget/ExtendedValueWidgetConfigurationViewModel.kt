@@ -23,7 +23,6 @@ import androidx.glance.GlanceId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.R
 import org.supla.android.data.model.general.ChannelBase
 import org.supla.android.data.model.spinner.ProfileItem
@@ -34,6 +33,7 @@ import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.RoomSceneRepository
 import org.supla.android.data.source.local.dao.WidgetConfigurationDao
 import org.supla.android.data.source.local.entity.WidgetConfigurationEntity
+import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.widget.shared.BaseWidgetViewModel
 import org.supla.android.features.widget.shared.WidgetConfigurationScope
 import org.supla.android.features.widget.shared.WidgetConfigurationViewEvent

@@ -21,7 +21,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
@@ -49,6 +48,7 @@ import org.supla.android.data.source.remote.channel.suplaFlags
 import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.events.DownloadEventsManager.DataType
+import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.details.detailbase.history.BaseHistoryDetailViewModel
 import org.supla.android.features.details.detailbase.history.HistoryDetailViewState
 import org.supla.android.features.details.detailbase.history.ui.ChartDataSelectionDialogState

@@ -19,7 +19,6 @@ package org.supla.android.features.details.switchdetail.timer
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
@@ -27,6 +26,7 @@ import org.supla.android.core.ui.ViewState
 import org.supla.android.db.Channel
 import org.supla.android.extensions.asDate
 import org.supla.android.extensions.getTimerStateValue
+import org.supla.android.extensions.subscribeBy
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers

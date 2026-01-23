@@ -19,7 +19,6 @@ package org.supla.android.features.details.humiditydetail.history
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.storage.UserStateHolder
 import org.supla.android.data.model.Optional
@@ -32,6 +31,7 @@ import org.supla.android.data.model.chart.datatype.LineChartData
 import org.supla.android.data.model.chart.style.HumidityChartStyle
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.events.DownloadEventsManager
+import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.details.detailbase.history.BaseHistoryDetailViewModel
 import org.supla.android.profile.ProfileManager
 import org.supla.android.tools.SuplaSchedulers

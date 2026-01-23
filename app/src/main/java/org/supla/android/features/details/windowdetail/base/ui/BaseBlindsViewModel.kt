@@ -17,7 +17,6 @@ package org.supla.android.features.details.windowdetail.base.ui
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
@@ -27,6 +26,7 @@ import org.supla.android.data.source.remote.rollershutter.SuplaChannelFacadeBlin
 import org.supla.android.data.source.remote.rollershutter.SuplaTiltControlType
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.ChannelConfigEventsManager
+import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.details.windowdetail.base.BaseWindowViewModel
 import org.supla.android.features.details.windowdetail.base.BaseWindowViewModelState
 import org.supla.android.features.details.windowdetail.base.data.ShadingBlindMarker

@@ -22,7 +22,6 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -45,6 +44,7 @@ import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.extensions.HsvColor
 import org.supla.android.extensions.filterHexDigits
+import org.supla.android.extensions.subscribeBy
 import org.supla.android.extensions.toColor
 import org.supla.android.extensions.toHexString
 import org.supla.android.extensions.toHsv

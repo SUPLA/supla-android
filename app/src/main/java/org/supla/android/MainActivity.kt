@@ -50,7 +50,6 @@ import com.google.android.material.appbar.AppBarLayout
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.core.branding.Configuration
 import org.supla.android.core.networking.suplaclient.SuplaClientState
 import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
@@ -64,6 +63,7 @@ import org.supla.android.extensions.hide
 import org.supla.android.extensions.setStatusBarColor
 import org.supla.android.extensions.setupOrientationLock
 import org.supla.android.extensions.show
+import org.supla.android.extensions.subscribeBy
 import org.supla.android.extensions.visibleIf
 import org.supla.android.features.lockscreen.LockScreenFragment
 import org.supla.android.features.lockscreen.UnlockAction
