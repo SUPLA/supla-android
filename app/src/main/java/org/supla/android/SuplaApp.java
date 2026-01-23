@@ -273,12 +273,12 @@ public class SuplaApp extends MultiDexApplication
   private void migrateDatabase() {
     try {
       appDatabase.getOpenHelper().getReadableDatabase();
-    } catch (IllegalStateException exception) {
+    } catch (Exception exception) {
       if (BuildConfig.DEBUG) {
         throw exception;
       }
 
-      Timber.e(exception, "Could not migrated database, trying to delete it");
+      Timber.e(exception, "Could not migrate database, trying to delete it");
       boolean result = deleteDatabase(DbHelper.DATABASE_NAME);
       Timber.e("Database deletion finished with %s", (result ? "success" : "failure"));
     }
