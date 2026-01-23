@@ -18,13 +18,13 @@ package org.supla.android.features.profileslist
  */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.LockScreenScope
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
+import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.lockscreen.UnlockAction
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.lock.GetLockScreenSettingUseCase

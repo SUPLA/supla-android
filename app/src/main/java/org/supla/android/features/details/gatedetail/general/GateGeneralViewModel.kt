@@ -18,7 +18,6 @@ package org.supla.android.features.details.gatedetail.general
  */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.ui.BaseViewModel
@@ -28,6 +27,7 @@ import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.runtime.ItemType
+import org.supla.android.extensions.subscribeBy
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.views.DeviceStateData

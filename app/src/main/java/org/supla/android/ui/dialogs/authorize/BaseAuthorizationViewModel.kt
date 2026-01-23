@@ -17,13 +17,13 @@ package org.supla.android.ui.dialogs.authorize
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.R
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.extensions.subscribeBy
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.AuthorizationDialogScope
 import org.supla.android.ui.dialogs.AuthorizationDialogState

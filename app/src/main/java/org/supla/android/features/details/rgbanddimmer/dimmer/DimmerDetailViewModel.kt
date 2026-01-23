@@ -20,7 +20,6 @@ package org.supla.android.features.details.rgbanddimmer.dimmer
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -43,6 +42,7 @@ import org.supla.android.data.source.remote.rgb.color
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.extensions.HsvColor
+import org.supla.android.extensions.subscribeBy
 import org.supla.android.extensions.toGrayColor
 import org.supla.android.extensions.toHsv
 import org.supla.android.features.details.rgbanddimmer.common.DelayedRgbwwActionSubject

@@ -33,7 +33,6 @@ import androidx.core.graphics.drawable.IconCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -46,6 +45,7 @@ import org.supla.android.data.source.AndroidAutoItemRepository
 import org.supla.android.data.source.local.entity.AndroidAutoItemEntity
 import org.supla.android.data.source.local.entity.complex.AndroidAutoDataEntity
 import org.supla.android.events.UpdateEventsManager
+import org.supla.android.extensions.subscribeBy
 import org.supla.android.extensions.ucFirst
 import org.supla.android.images.ImageCache
 import org.supla.android.lib.actions.ActionParameters

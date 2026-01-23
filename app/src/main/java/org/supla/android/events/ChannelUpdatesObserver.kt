@@ -18,8 +18,8 @@ package org.supla.android.events
  */
 
 import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.extensions.subscribeBy
 import org.supla.android.tools.SuplaSchedulers
 
 interface ChannelUpdatesObserver {

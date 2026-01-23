@@ -19,7 +19,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
@@ -45,6 +44,7 @@ import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.extensions.ifNumber
+import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.details.thermostatdetail.general.data.SensorIssue
 import org.supla.android.features.details.thermostatdetail.general.data.ThermostatProgramInfo
 import org.supla.android.features.details.thermostatdetail.general.data.build

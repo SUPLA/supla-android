@@ -18,7 +18,6 @@ package org.supla.android.features.details.valveDetail.general
  */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.shared.shareable
@@ -30,9 +29,9 @@ import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.extensions.onlineState
-import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.events.ChannelUpdatesObserver
 import org.supla.android.events.UpdateEventsManager
+import org.supla.android.extensions.subscribeBy
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers

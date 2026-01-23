@@ -22,7 +22,6 @@ import android.os.PowerManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.core.infrastructure.WorkManagerProxy
 import org.supla.android.data.model.spinner.ProfileItem
 import org.supla.android.data.model.spinner.SubjectItem
@@ -30,6 +29,7 @@ import org.supla.android.data.model.spinner.SubjectItemConversionScope
 import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.RoomSceneRepository
+import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.widget.shared.BaseWidgetViewModel
 import org.supla.android.features.widget.shared.WidgetConfigurationScope
 import org.supla.android.features.widget.shared.WidgetConfigurationViewEvent

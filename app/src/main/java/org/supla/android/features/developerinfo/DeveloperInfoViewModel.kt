@@ -23,7 +23,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.work.ExistingWorkPolicy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -37,6 +36,7 @@ import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.db.room.measurements.MeasurementsDatabase
+import org.supla.android.extensions.subscribeBy
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.db.MakeAnonymizedDatabaseCopyUseCase
 import org.supla.android.usecases.developerinfo.LoadDatabaseDetailsUseCase

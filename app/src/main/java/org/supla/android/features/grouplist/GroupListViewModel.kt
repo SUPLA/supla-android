@@ -21,7 +21,6 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.annotation.IdRes
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
@@ -32,6 +31,7 @@ import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.events.UpdateEventsManager
+import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.details.detailbase.StandardDetailFragment
 import org.supla.android.features.details.detailbase.base.DetailPage
 import org.supla.android.features.details.detailbase.base.ItemBundle
