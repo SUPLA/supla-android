@@ -36,6 +36,7 @@ Key goals:
 * stable and predictable user experience,
 * clear and maintainable architecture,
 * performance and battery efficiency.
+* UI/UX consistency and feature parity with the SUPLA iOS app
 
 The Android app is a **client** of SUPLA server.
 Changes should not assume a specific server deployment (official vs self-hosted).
