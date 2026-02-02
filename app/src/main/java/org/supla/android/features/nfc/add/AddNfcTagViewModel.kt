@@ -24,6 +24,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.supla.android.Preferences
 import org.supla.android.core.infrastructure.NfcScanner
 import org.supla.android.core.infrastructure.nfc.TagProcessingResult
 import org.supla.android.core.infrastructure.nfc.prepareForSupla
@@ -38,11 +39,17 @@ import javax.inject.Inject
 @HiltViewModel
 class AddNfcTagViewModel @Inject constructor(
   private val nfcTagRepository: NfcTagRepository,
+  private val preferences: Preferences,
   private val nfcScanner: NfcScanner,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<AddNfcTagViewModelState, AddNfcTagViewEvent>(AddNfcTagViewModelState(), schedulers), AddNfcTagScope {
 
   private var currentJob: Job? = null
+
+  override fun onViewCreated() {
+    startTagScanJob()
+    updateState { it.copy(viewState = it.viewState.copy(lockTag = preferences.lockNfcTag)) }
+  }
 
   override fun onTagNameChange(name: String) {
     updateState {
@@ -52,56 +59,119 @@ class AddNfcTagViewModel @Inject constructor(
 
   override fun onStepFinished(step: AddNfcStep) {
     when (step) {
-      AddNfcStep.Preconditions -> {
-        updateState {
-          if (it.viewState.tagName.trim().isEmpty()) {
-            it.copy(viewState = it.viewState.copy(error = true))
-          } else {
-            it.copy(viewState = it.viewState.copy(step = AddNfcStep.TagConfiguration, loading = true))
-          }
+      AddNfcStep.TagReading -> {} // Nothing to do
+      is AddNfcStep.TagConfiguration ->
+        when (step.result) {
+          AddNfcSummary.Failure,
+          AddNfcSummary.NotEnoughSpace,
+          AddNfcSummary.NotUsable,
+          AddNfcSummary.Timeout,
+          is AddNfcSummary.Duplicate -> sendEvent(AddNfcTagViewEvent.Close)
+
+          is AddNfcSummary.Success -> saveAndClose(step.result.tagUuid)
         }
-      }
-
-      AddNfcStep.TagConfiguration -> {}
-      is AddNfcStep.Summary -> sendEvent(AddNfcTagViewEvent.Close)
     }
-
-    handleStep(currentState().viewState.step)
   }
 
   override fun onConfigureTagAction(tagId: Long) {
     sendEvent(AddNfcTagViewEvent.ConfigureTagAction(tagId))
   }
 
+  override fun onWriteLockChanged(active: Boolean) {
+    preferences.lockNfcTag = active
+    updateState { it.copy(viewState = it.viewState.copy(lockTag = active)) }
+  }
+
+  override fun onPrepareAnother() {
+    currentJob?.cancel()
+    updateState {
+      it.copy(
+        viewState = it.viewState.copy(
+          tagName = "",
+          error = false,
+          step = AddNfcStep.TagReading
+        )
+      )
+    }
+    startTagScanJob()
+  }
+
+  override fun onSaveAndPrepareAnother(uuid: String) {
+    viewModelScope.launch {
+      getTagName()?.let {
+        saveWithDuplicateCheck(uuid, it)
+        onPrepareAnother()
+      }
+    }
+  }
+
+  override fun onSaveAndConfigure(uuid: String) {
+    viewModelScope.launch {
+      getTagName()?.let {
+        val id = saveWithDuplicateCheck(uuid, it)
+        sendEvent(AddNfcTagViewEvent.ConfigureTagAction(id))
+      }
+    }
+  }
+
+  override fun onConfigure(id: Long) {
+    sendEvent(AddNfcTagViewEvent.ConfigureTagAction(id))
+  }
+
   fun handleIntent(intent: Intent) {
     nfcScanner.handleIntent(intent)
   }
 
-  private fun handleStep(step: AddNfcStep) {
-    when (step) {
-      AddNfcStep.Preconditions -> {}
-      AddNfcStep.TagConfiguration -> handleTagConfiguration()
-      is AddNfcStep.Summary -> {}
+  fun handleBack() {
+    currentJob?.cancel()
+    sendEvent(AddNfcTagViewEvent.Close)
+  }
+
+  private fun saveAndClose(uuid: String) {
+    viewModelScope.launch {
+      getTagName()?.let {
+        saveWithDuplicateCheck(uuid, it)
+        sendEvent(AddNfcTagViewEvent.Close)
+      }
     }
   }
 
-  private fun handleTagConfiguration() {
+  private fun getTagName(): String? {
+    val tagName = currentState().viewState.tagName
+    if (tagName.trim().isEmpty()) {
+      updateState { it.copy(viewState = it.viewState.copy(error = true)) }
+      return null
+    } else {
+      updateState { it.copy(viewState = it.viewState.copy(error = false)) }
+      return tagName
+    }
+  }
+
+  private suspend fun saveWithDuplicateCheck(uuid: String, tagName: String): Long {
+    val existing = nfcTagRepository.findByUuid(uuid)
+    if (existing != null) {
+      val updated = existing.copy(name = tagName)
+      nfcTagRepository.save(updated)
+      return updated.id
+    } else {
+      val new = NfcTagEntity(uuid = uuid, name = tagName)
+      return nfcTagRepository.save(new)
+    }
+  }
+
+  private fun startTagScanJob() {
     val job = viewModelScope.launch {
       sendEvent(AddNfcTagViewEvent.EnableNfc)
 
       val summary: AddNfcSummary = withContext(Dispatchers.IO) {
         when (val result = nfcScanner.scan()) {
-          is NfcScanner.Result.Success -> {
-            val name = currentState().viewState.tagName.trim()
-            result.tag.prepareForSupla().toSummary(name)
-          }
-
+          is NfcScanner.Result.Success -> result.tag.prepareForSupla(currentState().viewState.lockTag).toSummary()
           NfcScanner.Result.Failure -> AddNfcSummary.Failure
           NfcScanner.Result.Timeout -> AddNfcSummary.Timeout
         }
       }
 
-      updateState { it.copy(viewState = it.viewState.copy(step = AddNfcStep.Summary(summary))) }
+      updateState { it.copy(viewState = it.viewState.copy(step = AddNfcStep.TagConfiguration(summary))) }
     }
     job.invokeOnCompletion {
       sendEvent(AddNfcTagViewEvent.DisableNfc)
@@ -111,10 +181,11 @@ class AddNfcTagViewModel @Inject constructor(
     currentJob = job
   }
 
-  suspend fun TagProcessingResult.toSummary(name: String): AddNfcSummary =
+  suspend fun TagProcessingResult.toSummary(): AddNfcSummary =
     when (this) {
       TagProcessingResult.Failure -> AddNfcSummary.Failure
       TagProcessingResult.NotUsable -> AddNfcSummary.NotUsable
+      TagProcessingResult.NotEnoughSpace -> AddNfcSummary.NotEnoughSpace
       is TagProcessingResult.Success -> {
         val tags = nfcTagRepository.findAll()
         val existing = tags.find { it.uuid == uuid }
@@ -122,8 +193,7 @@ class AddNfcTagViewModel @Inject constructor(
         if (existing != null) {
           AddNfcSummary.Duplicate(existing.id, existing.uuid, existing.name)
         } else {
-          val id = nfcTagRepository.save(NfcTagEntity(uuid = uuid, name = name))
-          AddNfcSummary.Success(id, uuid)
+          AddNfcSummary.Success(uuid)
         }
       }
     }

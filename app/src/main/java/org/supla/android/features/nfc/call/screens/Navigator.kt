@@ -19,11 +19,38 @@ package org.supla.android.features.nfc.call.screens
 
 import android.app.Activity
 import android.content.Context
+import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
+import kotlinx.coroutines.flow.MutableStateFlow
+import org.supla.android.features.nfc.call.EditMissingAction
+import org.supla.android.features.nfc.call.SaveNewNfcTag
 import javax.inject.Inject
 
 @ActivityScoped
 class Navigator @Inject constructor(@param:ActivityContext private val activityContext: Context) {
+  private val backStack = MutableStateFlow<NavBackStack<NavKey>?>(null)
+
   fun finish() = (activityContext as? Activity)?.finish()
+
+  fun navigateToEditMissingAction(id: Long) {
+    this.backStack.value?.removeLastOrNull()
+    this.backStack.value?.add(EditMissingAction(id))
+  }
+
+  fun navigateToSaveNewNfcTag(uuid: String) {
+    this.backStack.value?.removeLastOrNull()
+    this.backStack.value?.add(SaveNewNfcTag(uuid))
+  }
+
+  fun bind(backStack: NavBackStack<NavKey>) {
+    this.backStack.value = backStack
+  }
+
+  fun unbind(backStack: NavBackStack<NavKey>) {
+    if (this.backStack.value == backStack) {
+      this.backStack.value = null
+    }
+  }
 }

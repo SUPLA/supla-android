@@ -26,6 +26,17 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.db.AuthProfileItem
+import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_ACCESSID_DISABLED
+import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_ACCESSID_INACTIVE
+import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_ACCESSID_NOT_ASSIGNED
+import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_BAD_CREDENTIALS
+import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_CHANNEL_IS_OFFLINE
+import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_CLIENT_DISABLED
+import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_CLIENT_NOT_EXISTS
+import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_SUBJECT_NOT_FOUND
+import org.supla.android.lib.SuplaConst.SUPLA_RESULT_CANT_CONNECT_TO_HOST
+import org.supla.android.lib.SuplaConst.SUPLA_RESULT_HOST_NOT_FOUND
+import org.supla.android.lib.SuplaConst.SUPLA_RESULT_RESPONSE_TIMEOUT
 import org.supla.android.lib.actions.ActionParameters
 import org.supla.android.profile.AuthInfo
 import org.supla.android.profile.NoSuchProfileException
@@ -81,10 +92,17 @@ class SingleCall private constructor(
   }
 
   @WorkerThread
-  @Throws(NoSuchProfileException::class, ResultException::class)
-  fun executeAction(parameters: ActionParameters) {
-    executeAction(context, getProfile().authInfo, parameters, CONNECTION_NO_TIMEOUT)
-  }
+  fun executeAction(parameters: ActionParameters): Result =
+    try {
+      executeAction(context, getProfile().authInfo, parameters, CONNECTION_NO_TIMEOUT)
+      Result.Success
+    } catch (ex: ResultException) {
+      ex.toResult
+    } catch (_: NoSuchProfileException) {
+      Result.NoSuchProfile
+    } catch (_: Exception) {
+      Result.UnknownError
+    }
 
   @WorkerThread
   @Throws(NoSuchProfileException::class, ResultException::class)
@@ -112,6 +130,19 @@ class SingleCall private constructor(
     fun provide(profileId: Long) = SingleCall(context, profileId, profileRepository)
   }
 
+  sealed interface Result {
+    data object Success : Result
+    data object Offline : Result
+    data object NotFound : Result
+    data object NoSuchProfile : Result
+    data object UnknownError : Result
+    data object Inactive : Result
+
+    data class CommandError(val code: Int) : Result
+    data class ConnectionError(val code: Int) : Result
+    data class AccessError(val code: Int) : Result
+  }
+
   companion object {
     init {
       System.loadLibrary("suplaclient")
@@ -120,3 +151,22 @@ class SingleCall private constructor(
     const val CONNECTION_NO_TIMEOUT: Int = 0
   }
 }
+
+val ResultException.toResult: SingleCall.Result
+  get() = when (result) {
+    SUPLA_RESULT_HOST_NOT_FOUND,
+    SUPLA_RESULT_CANT_CONNECT_TO_HOST,
+    SUPLA_RESULT_RESPONSE_TIMEOUT -> SingleCall.Result.ConnectionError(result)
+
+    SUPLA_RESULTCODE_CLIENT_NOT_EXISTS,
+    SUPLA_RESULTCODE_BAD_CREDENTIALS,
+    SUPLA_RESULTCODE_CLIENT_DISABLED,
+    SUPLA_RESULTCODE_ACCESSID_NOT_ASSIGNED,
+    SUPLA_RESULTCODE_ACCESSID_DISABLED -> SingleCall.Result.AccessError(result)
+
+    SUPLA_RESULTCODE_ACCESSID_INACTIVE -> SingleCall.Result.Inactive
+
+    SUPLA_RESULTCODE_CHANNEL_IS_OFFLINE -> SingleCall.Result.Offline
+    SUPLA_RESULTCODE_SUBJECT_NOT_FOUND -> SingleCall.Result.NotFound
+    else -> SingleCall.Result.CommandError(result)
+  }

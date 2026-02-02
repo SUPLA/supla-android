@@ -1,4 +1,4 @@
-package org.supla.android.features.nfc.call
+package org.supla.android.features.nfc.shared.edit
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,17 +17,19 @@ package org.supla.android.features.nfc.call
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.navigation3.runtime.NavKey
-import kotlinx.serialization.Serializable
+import org.supla.android.data.model.general.SingleSelectionList
+import org.supla.android.data.model.spinner.ProfileItem
+import org.supla.android.data.model.spinner.SubjectItem
+import org.supla.android.lib.actions.ActionId
+import org.supla.android.lib.actions.SubjectType
 
-@Serializable
-data class CallActionFromUrl(val url: String?) : NavKey
+data class EditNfcTagViewState(
+  val tagName: String = "",
+  val profiles: SingleSelectionList<ProfileItem>? = null,
+  val subjectType: SubjectType = SubjectType.CHANNEL,
 
-@Serializable
-data class CallActionFromData(val id: String) : NavKey
+  val isError: Boolean = false,
 
-@Serializable
-data class EditMissingAction(val id: Long) : NavKey
-
-@Serializable
-data class SaveNewNfcTag(val uuid: String) : NavKey
+  val subjects: SingleSelectionList<SubjectItem>? = null,
+  val actions: SingleSelectionList<ActionId>? = null,
+)

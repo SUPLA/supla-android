@@ -81,7 +81,11 @@ fun ActionConfigurationScope.Subjects(subjects: SingleSelectionList<SubjectItem>
   )
 
 @Composable
-fun ActionConfigurationScope.Caption(@StringRes label: Int, caption: String) =
+fun ActionConfigurationScope.Caption(
+  @StringRes label: Int,
+  caption: String,
+  isError: Boolean = false
+) =
   Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
     Text(
       text = stringResource(label).uppercase(),
@@ -93,7 +97,8 @@ fun ActionConfigurationScope.Caption(@StringRes label: Int, caption: String) =
       value = caption,
       onValueChange = { onCaptionChange(it) },
       modifier = Modifier.fillMaxWidth(),
-      singleLine = true
+      singleLine = true,
+      isError = isError
     )
   }
 
