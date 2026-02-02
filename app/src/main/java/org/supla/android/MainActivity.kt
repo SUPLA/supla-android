@@ -202,7 +202,7 @@ class MainActivity :
   private var nfcIntentHandler: ((Intent) -> Unit)? = null
 
   override fun enableNfcDispatch(intentHandler: (Intent) -> Unit) {
-    Timber.d("Enable nfc dispatch")
+    Timber.d("Enable NFC dispatch")
     nfcIntentHandler = intentHandler
 
     val adapter = nfcAdapter ?: return
@@ -214,7 +214,7 @@ class MainActivity :
   }
 
   override fun disableNfcDispatch() {
-    Timber.d("Disable nfc dispatch")
+    Timber.d("Disable NFC dispatch")
     nfcIntentHandler = null
     nfcAdapter?.disableForegroundDispatch(this)
   }

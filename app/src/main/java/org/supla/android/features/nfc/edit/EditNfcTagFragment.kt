@@ -25,6 +25,8 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.core.ui.BaseComposeFragment
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.features.nfc.shared.edit.EditNfcTagViewEvent
+import org.supla.android.features.nfc.shared.edit.EditNfcTagViewModelState
 import org.supla.android.navigator.MainNavigator
 import javax.inject.Inject
 
@@ -42,7 +44,7 @@ class EditNfcTagFragment : BaseComposeFragment<EditNfcTagViewModelState, EditNfc
   @Composable
   override fun ComposableContent(modelState: EditNfcTagViewModelState) {
     SuplaTheme {
-      viewModel.View(modelState.viewState)
+      viewModel.View(modelState.screenState)
     }
   }
 

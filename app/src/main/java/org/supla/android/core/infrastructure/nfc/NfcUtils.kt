@@ -26,25 +26,28 @@ import android.nfc.Tag
 import android.nfc.tech.Ndef
 import android.nfc.tech.NdefFormatable
 import android.os.Build.VERSION.SDK_INT
+import androidx.navigation3.runtime.NavKey
+import org.supla.android.features.nfc.call.CallActionFromData
+import org.supla.android.features.nfc.call.CallActionFromUrl
 import timber.log.Timber
 import java.util.UUID
 
-private const val HOST = "www.supla.org"
-private const val PATH = "/nfc"
-private const val ID_ARGUMENT = "id"
-private const val URL = "https://${HOST}$PATH?${ID_ARGUMENT}="
+private const val HOST = "supla.org"
+private const val PATH = "tag"
+private const val URL = "https://$HOST/$PATH/"
+private const val MIME = "application/vnd.org.supla.tag"
 
 sealed interface TagProcessingResult {
   data object NotUsable : TagProcessingResult
   data class Success(val uuid: String) : TagProcessingResult
+  data object NotEnoughSpace : TagProcessingResult
   data object Failure : TagProcessingResult
 }
 
 val Uri.tagUuid: String?
   get() =
-    if (host == HOST && path == PATH) {
-      getQueryParameter(ID_ARGUMENT)
-        ?.let { if (it.startsWith("=")) it.substring(1) else it }
+    if (host == HOST && pathSegments.size == 2 && pathSegments[0] == PATH) {
+      pathSegments[1]
     } else {
       Timber.w("Could not find tag UUID in URI $this (host: $host, path: $path)")
       null
@@ -67,10 +70,62 @@ val Intent.nfcTag: Tag?
       getParcelableExtra(NfcAdapter.EXTRA_TAG)
   }
 
-fun Tag.prepareForSupla(): TagProcessingResult =
-  Ndef.get(this)?.prepareForSupla()
-    ?: NdefFormatable.get(this)?.formatForSupla()
-    ?: TagProcessingResult.NotUsable
+val Intent.ndefMessages: List<NdefMessage>?
+  get() = when {
+    SDK_INT >= 33 -> getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES, NdefMessage::class.java)?.toList()
+    else ->
+      @Suppress("DEPRECATION")
+      getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)?.map { it as NdefMessage }
+  }
+
+val NdefMessage.uuidFromMimeRecord: String?
+  get() =
+    records
+      .firstOrNull { record ->
+        record.tnf == NdefRecord.TNF_MIME_MEDIA &&
+          record.type.contentEquals(MIME.toByteArray(Charsets.UTF_8))
+      }?.payload?.toString(Charsets.UTF_8)
+
+val NdefMessage.uriFromUriRecord: Uri?
+  get() =
+    records
+      .firstOrNull { it.tnf == NdefRecord.TNF_WELL_KNOWN && it.type.contentEquals(NdefRecord.RTD_URI) }
+      ?.toUri()
+
+val List<NdefMessage>.navKey: NavKey?
+  get() {
+    for (message in this) {
+      message.uriFromUriRecord?.let {
+        Timber.d("Found URI in message: $it")
+        return CallActionFromUrl(it.toString())
+      }
+      message.uuidFromMimeRecord?.let {
+        Timber.d("Found UUID in message: $it")
+        return CallActionFromData(it)
+      }
+    }
+
+    Timber.d("Nothing found in messages (size: $size)")
+    return null
+  }
+
+fun Tag.prepareForSupla(lockTag: Boolean): TagProcessingResult {
+  val ndef = Ndef.get(this)
+  if (ndef != null) {
+    return ndef.prepareForSupla(lockTag)
+  }
+
+  val formatable = NdefFormatable.get(this)
+  if (formatable != null) {
+    val result = formatable.formatForSupla()
+    if (lockTag) {
+      makeReadOnlyAfterFormat()
+    }
+    return result
+  }
+
+  return TagProcessingResult.NotUsable
+}
 
 private fun NdefFormatable.formatForSupla(): TagProcessingResult {
   try {
@@ -90,26 +145,24 @@ private fun NdefFormatable.formatForSupla(): TagProcessingResult {
   }
 }
 
-private fun Ndef.prepareForSupla(): TagProcessingResult {
+private fun Ndef.prepareForSupla(lockTag: Boolean): TagProcessingResult {
   try {
     connect()
 
-    val message = ndefMessage ?: return writeSuplaRecord()
-    for (record in message.records) {
-      Timber.d("Processing NFC tag record: ${String(record.payload)}")
+    val message = ndefMessage ?: return writeSuplaRecord(lockTag)
+    val uuidFromMimeRecord = message.uuidFromMimeRecord
+    val uuidFromUriRecord = message.uriFromUriRecord?.tagUuid
 
-      if (record.tnf == NdefRecord.TNF_WELL_KNOWN && record.type.contentEquals(NdefRecord.RTD_URI)) {
-        val url = runCatching { record.toUri() }.getOrNull() ?: continue
-        val id = url.getQueryParameter("id")
-        if (url.host == "supla.org" && url.path == "/nfc" && id != null) {
-          Timber.i("Found supla message in NFC tag (id: $id)")
-          return TagProcessingResult.Success(id)
-        }
+    if (uuidFromMimeRecord != null && uuidFromMimeRecord == uuidFromUriRecord) {
+      Timber.i("NFC tag for supla found (id: $uuidFromMimeRecord)")
+      if (lockTag && isWritable) {
+        makeReadOnly()
       }
+      return TagProcessingResult.Success(uuidFromMimeRecord)
     }
 
     Timber.d("No supla NFC record found, trying to create one")
-    return writeSuplaRecord()
+    return writeSuplaRecord(lockTag)
   } catch (ex: Exception) {
     Timber.e(ex, "NFC tag processing failed!")
     return TagProcessingResult.Failure
@@ -118,7 +171,19 @@ private fun Ndef.prepareForSupla(): TagProcessingResult {
   }
 }
 
-private fun Ndef.writeSuplaRecord(): TagProcessingResult {
+private fun Tag.makeReadOnlyAfterFormat() {
+  val ndef = Ndef.get(this) ?: return
+  try {
+    ndef.connect()
+    ndef.makeReadOnly()
+  } catch (e: Exception) {
+    Timber.e(e, "Read only tag making failed")
+  } finally {
+    runCatching { ndef.close() }
+  }
+}
+
+private fun Ndef.writeSuplaRecord(lockTag: Boolean): TagProcessingResult {
   if (isWritable) {
     val id = UUID.randomUUID().toString()
     val message = createNdefMessage(id)
@@ -127,10 +192,13 @@ private fun Ndef.writeSuplaRecord(): TagProcessingResult {
     return if (recordsSize < maxSize) {
       Timber.d("Writing supla message to NFC tag")
       writeNdefMessage(message)
+      if (lockTag) {
+        makeReadOnly()
+      }
       TagProcessingResult.Success(id)
     } else {
       Timber.e("Supla message is too big to write to NFC tag ($recordsSize vs $maxSize")
-      TagProcessingResult.Failure
+      TagProcessingResult.NotEnoughSpace
     }
   } else {
     Timber.d("NFC tag is not writable")
@@ -139,6 +207,7 @@ private fun Ndef.writeSuplaRecord(): TagProcessingResult {
 }
 
 private fun createNdefMessage(id: String): NdefMessage {
-  val wwwUri = NdefRecord.createUri("$URL=$id")
-  return NdefMessage(arrayOf(wwwUri))
+  val mimeRecord = NdefRecord.createMime(MIME, id.toByteArray(Charsets.UTF_8))
+  val wwwUri = NdefRecord.createUri("${URL}$id")
+  return NdefMessage(arrayOf(mimeRecord, wwwUri))
 }

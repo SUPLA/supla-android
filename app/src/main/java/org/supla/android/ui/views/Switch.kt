@@ -41,7 +41,8 @@ fun Switch(checked: Boolean, modifier: Modifier = Modifier, enabled: Boolean = t
       uncheckedThumbColor = MaterialTheme.colorScheme.surface,
       uncheckedTrackColor = colorResource(id = R.color.gray_light),
       uncheckedBorderColor = colorResource(id = R.color.gray_light),
-      checkedThumbColor = MaterialTheme.colorScheme.surface
+      checkedThumbColor = MaterialTheme.colorScheme.surface,
+      checkedBorderColor = MaterialTheme.colorScheme.background
     ),
     modifier = modifier,
     enabled = enabled

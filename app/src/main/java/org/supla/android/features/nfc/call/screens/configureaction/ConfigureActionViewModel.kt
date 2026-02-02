@@ -1,4 +1,4 @@
-package org.supla.android.features.nfc.edit
+package org.supla.android.features.nfc.call.screens.configureaction
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,16 +17,13 @@ package org.supla.android.features.nfc.edit
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.NfcTagRepository
 import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.RoomSceneRepository
 import org.supla.android.features.nfc.shared.edit.BaseEditNfcTagViewModel
 import org.supla.android.features.nfc.shared.edit.EditNfcTagViewEvent
-import org.supla.android.features.nfc.shared.edit.Mode
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -36,7 +33,7 @@ import org.supla.core.shared.usecase.GetCaptionUseCase
 import javax.inject.Inject
 
 @HiltViewModel
-class EditNfcTagViewModel @Inject constructor(
+class ConfigureActionViewModel @Inject constructor(
   getChannelValueStringUseCase: GetChannelValueStringUseCase,
   readAllProfilesUseCase: ReadAllProfilesUseCase,
   channelGroupRepository: ChannelGroupRepository,
@@ -59,17 +56,8 @@ class EditNfcTagViewModel @Inject constructor(
   getSceneIconUseCase,
   getCaptionUseCase
 ),
-  EditNfcTagViewScope {
-
-  override fun onDelete() {
-    when (val mode = currentState().mode) {
-      is Mode.Edit ->
-        viewModelScope.launch {
-          nfcTagRepository.delete(mode.id)
-          sendEvent(EditNfcTagViewEvent.Close)
-        }
-
-      else -> sendEvent(EditNfcTagViewEvent.Close)
-    }
+  ConfigureActionScreenScope {
+  override fun onClose() {
+    sendEvent(EditNfcTagViewEvent.Close)
   }
 }

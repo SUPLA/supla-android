@@ -59,10 +59,10 @@ import org.supla.android.ui.views.EmptyListInfoView
 import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.SegmentedComponent
 import org.supla.android.ui.views.buttons.Button
-import org.supla.android.ui.views.buttons.IconButton
 import org.supla.android.ui.views.forms.TextField
 import org.supla.android.ui.views.spinner.LabelledSpinner
 import org.supla.android.ui.views.spinner.Spinner
+import org.supla.android.ui.views.texts.Header
 import org.supla.core.shared.infrastructure.LocalizedString
 
 data class WidgetConfigurationViewState(
@@ -164,19 +164,11 @@ fun WidgetConfigurationScope.View(
 
 @Composable
 private fun WidgetConfigurationScope.Header() =
-  Row(verticalAlignment = Alignment.Bottom) {
-    Text(
-      stringResource(R.string.widget_configure_title),
-      style = MaterialTheme.typography.titleLarge,
-      modifier = Modifier.weight(1f)
-    )
-    IconButton(
-      icon = R.drawable.ic_close,
-      onClick = { onClose() },
-      iconSize = dimensionResource(R.dimen.icon_default_size),
-      tint = MaterialTheme.colorScheme.onBackground
-    )
-  }
+  Header(
+    textRes = R.string.widget_configure_title,
+    iconRes = R.drawable.ic_close,
+    onClose = { onClose() }
+  )
 
 @Composable
 private fun WidgetConfigurationScope.Warning() =
