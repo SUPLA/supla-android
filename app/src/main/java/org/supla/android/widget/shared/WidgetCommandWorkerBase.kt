@@ -37,7 +37,6 @@ import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.ActionParameters
 import org.supla.android.lib.actions.IGNORE_CCT
 import org.supla.android.lib.actions.RgbwActionParameters
-import org.supla.android.lib.singlecall.ResultException
 import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.widget.WidgetConfiguration
@@ -102,7 +101,7 @@ abstract class WidgetCommandWorkerBase(
 
     createForegroundInfo()
 
-    var result = Result.success()
+    var result: WorkResult = WorkResult.Success
     for (widgetId in widgetIds) {
       val configuration = widgetPreferences.getWidgetConfiguration(widgetId)
       if (configuration == null) {
@@ -116,9 +115,9 @@ abstract class WidgetCommandWorkerBase(
       Timber.i("Performing widget configuration update for id: $widgetId")
       val updateResult = widgetConfigurationUpdater.update(configuration, valueWithUnit())
 
-      updateResult.whenFailure { cleanConfiguration ->
+      updateResult.whenFailure { cleanConfiguration, errorResult ->
         Timber.w("Widget refresh failed with error: $updateResult")
-        isManualUpdate.ifTrue { handleUpdateResult(updateResult, configuration) }
+        isManualUpdate.ifTrue { handleUpdateResult(errorResult.result, configuration) }
         cleanConfiguration.ifTrue {
           Timber.w("Cleaning widget configuration")
           updateWidgetConfiguration(widgetId, configuration.copy(value = NO_VALUE_TEXT))
@@ -129,16 +128,16 @@ abstract class WidgetCommandWorkerBase(
         updateWidgetConfiguration(widgetId, it)
       }
 
-      result = result.accumulate(updateResult.toWorkerResult)
+      result = result.accumulate(updateResult.toWorkResult)
       sendWidgetRedrawAction(widgetId)
     }
 
-    if (result is Result.Success && isManualUpdate) {
+    if (result is WorkResult.Success && isManualUpdate) {
       vibrationHelper.vibrate()
     }
 
     Timber.i("Widget update finished with result: $result")
-    return result
+    return result.asWorkerResult
   }
 
   private fun performAction(widgetIds: IntArray, widgetAction: WidgetAction): Result {
@@ -240,12 +239,11 @@ abstract class WidgetCommandWorkerBase(
   }
 
   private fun callAction(configuration: WidgetConfiguration, parameters: ActionParameters) {
-    try {
-      singleCallProvider.provide(configuration.profileId).executeAction(parameters)
+    val result = singleCallProvider.provide(configuration.profileId).executeAction(parameters)
+    if (result is SingleCall.Result.Success) {
       showDoneToast(configuration)
-    } catch (ex: ResultException) {
-      Timber.e(ex, "Could not perform action")
-      handleUpdateResult(ex.toUpdateResult, configuration)
+    } else {
+      handleUpdateResult(result, configuration)
     }
   }
 
@@ -256,36 +254,37 @@ abstract class WidgetCommandWorkerBase(
     }
   }
 
-  private fun handleUpdateResult(updateResult: UpdateResult, configuration: WidgetConfiguration) =
-    when (updateResult) {
-      is UpdateResult.AccessError ->
+  private fun handleUpdateResult(result: SingleCall.Result, configuration: WidgetConfiguration) =
+    when (result) {
+      is SingleCall.Result.AccessError ->
         showToast(
-          applicationContext.resources.getString(R.string.widget_command_no_access, updateResult.code),
+          applicationContext.resources.getString(R.string.widget_command_no_access, result.code),
           Toast.LENGTH_LONG
         )
 
-      is UpdateResult.CommandError ->
+      is SingleCall.Result.CommandError ->
         showToast(
-          applicationContext.resources.getString(R.string.widget_command_error, updateResult.code),
+          applicationContext.resources.getString(R.string.widget_command_error, result.code),
           Toast.LENGTH_SHORT
         )
 
-      is UpdateResult.ConnectionError ->
+      is SingleCall.Result.ConnectionError ->
         showToast(
-          applicationContext.resources.getString(R.string.widget_command_connection_failure, updateResult.code),
+          applicationContext.resources.getString(R.string.widget_command_connection_failure, result.code),
           Toast.LENGTH_LONG
         )
 
-      UpdateResult.NotFound -> showNotFoundToast(configuration)
-      UpdateResult.Offline -> showOfflineToast(configuration)
-      UpdateResult.UnknownError ->
+      SingleCall.Result.NotFound -> showNotFoundToast(configuration)
+      SingleCall.Result.Offline -> showOfflineToast(configuration)
+      SingleCall.Result.Inactive,
+      SingleCall.Result.UnknownError ->
         showToast(
           applicationContext.resources.getString(R.string.widget_command_error, INTERNAL_ERROR),
           Toast.LENGTH_SHORT
         )
 
-      UpdateResult.Empty,
-      is UpdateResult.Success -> {
+      SingleCall.Result.NoSuchProfile,
+      SingleCall.Result.Success -> {
       } // nothing to do
     }
 
@@ -364,9 +363,33 @@ abstract class WidgetCommandWorkerBase(
   }
 }
 
-private fun ListenableWorker.Result.accumulate(other: ListenableWorker.Result): ListenableWorker.Result =
-  if (this is ListenableWorker.Result.Failure || this is ListenableWorker.Result.Retry) {
-    this
-  } else {
-    other
+private sealed interface WorkResult {
+  data object Success : WorkResult
+  data object Retry : WorkResult
+  data object Failure : WorkResult
+
+  val asWorkerResult: ListenableWorker.Result
+    get() = when (this) {
+      Success -> ListenableWorker.Result.success()
+      Retry -> ListenableWorker.Result.retry()
+      Failure -> ListenableWorker.Result.failure()
+    }
+
+  fun accumulate(other: WorkResult): WorkResult =
+    if (this is Failure || this is Retry) {
+      this
+    } else {
+      other
+    }
+}
+
+private val UpdateResult.toWorkResult: WorkResult
+  get() = when (this) {
+    is UpdateResult.Success -> WorkResult.Success
+    is UpdateResult.Error -> when (result) {
+      is SingleCall.Result.ConnectionError -> WorkResult.Retry
+      else -> WorkResult.Failure
+    }
+
+    UpdateResult.Empty -> WorkResult.Failure
   }

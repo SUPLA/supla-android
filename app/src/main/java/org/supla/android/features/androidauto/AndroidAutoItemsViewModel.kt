@@ -41,7 +41,7 @@ class AndroidAutoItemsViewModel @Inject constructor(
   AndroidAutoItemsViewScope {
 
   override fun onViewCreated() {
-    updateState { it.copy(viewState = it.viewState.copy(playMessages = preferences.playAndroidAuto())) }
+    updateState { it.copy(viewState = it.viewState.copy(playMessages = preferences.playAndroidAuto)) }
     androidAutoItemRepository.findAll()
       .attach()
       .subscribeBy(
@@ -57,7 +57,7 @@ class AndroidAutoItemsViewModel @Inject constructor(
 
   override fun onPlayMessagesChange(value: Boolean) {
     updateState { it.copy(viewState = it.viewState.copy(playMessages = value)) }
-    preferences.setPlayAndroidAuto(value)
+    preferences.playAndroidAuto = value
   }
 
   override fun onAddClick() {

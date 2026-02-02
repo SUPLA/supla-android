@@ -29,6 +29,7 @@ import org.supla.android.lib.singlecall.DoubleValue
 import org.supla.android.lib.singlecall.ResultException
 import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.lib.singlecall.TemperatureAndHumidity
+import org.supla.android.lib.singlecall.toResult
 import org.supla.android.usecases.channel.valueprovider.GpmValueProvider
 import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
 import org.supla.android.widget.WidgetConfiguration
@@ -56,10 +57,10 @@ class WidgetConfigurationUpdater @Inject constructor(
       loadValue(configuration, withUnit)?.let { UpdateResult.Success(it) } ?: UpdateResult.Empty
     } catch (ex: ResultException) {
       Timber.w(ex, "Widget value load failed")
-      ex.toUpdateResult
+      UpdateResult.Error(ex.toResult)
     } catch (ex: Exception) {
       Timber.e(ex, "Could not update widget configuration")
-      UpdateResult.UnknownError
+      UpdateResult.Error(SingleCall.Result.UnknownError)
     }
   }
 

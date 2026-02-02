@@ -37,6 +37,9 @@ enum class SubjectType(val value: Int, val nameRes: Int, val widgetNameRes: Int)
   GROUP(SubjectTypeValue.GROUP, R.string.widget_group, R.string.widget_configure_type_group_label),
   SCENE(SubjectTypeValue.SCENE, R.string.widget_scene, R.string.widget_configure_type_scene_label);
 
+  val isScene: Boolean
+    get() = this == SCENE
+
   companion object {
     fun from(value: Int): SubjectType {
       entries.forEach {

@@ -44,6 +44,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import kotlinx.coroutines.delay
@@ -52,7 +53,8 @@ import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.addwizard.view.components.addWizardButtonColors
 import org.supla.android.features.nfc.add.NfcScanningAnimation
-import org.supla.android.features.nfc.call.CallAction
+import org.supla.android.features.nfc.call.CallActionFromData
+import org.supla.android.features.nfc.call.CallActionFromUrl
 import org.supla.android.features.nfc.call.screens.Navigator
 import org.supla.android.features.nfc.call.screens.ScreenScaffold
 import org.supla.android.tools.SuplaPreview
@@ -64,6 +66,8 @@ private const val NUMBER_OF_DOTS = 3
 
 interface CallActionScreenScope {
   fun close()
+  fun addNewTag(uuid: String)
+  fun configureTag(id: Long)
 }
 
 data class CallActionScreenState(
@@ -86,29 +90,41 @@ sealed class TagProcessingStep {
   data object Success : TagProcessingStep()
   data class Failure(val type: FailureType) : TagProcessingStep()
 
-  enum class FailureType {
-    ILLEGAL_INTENT,
-    UNKNOWN_URL,
-    TAG_NOT_FOUND,
-    TAG_NOT_CONFIGURED,
-    ACTION_FAILED
+  sealed interface FailureType {
+    data object IllegalIntent : FailureType
+    data object UnknownUrl : FailureType
+    data class TagNotFound(val uuid: String) : FailureType
+    data class TagNotConfigured(val id: Long) : FailureType
+    data object ActionFailed : FailureType
+    data object ChannelNotFound : FailureType
+    data object ChannelOffline : FailureType
   }
 }
 
 @Composable
 fun CallActionScreen(
-  key: CallAction,
+  key: CallActionFromUrl,
   navigator: Navigator,
   viewModel: CallActionViewModel = hiltViewModel()
 ) {
-  LaunchedEffect(key.url) { viewModel.onLaunch(key.url) }
+  LaunchedEffect(key.url) { viewModel.onLaunchWithUrl(key.url) }
   ScreenScaffold(
     viewModel = viewModel,
-    eventHandler = {
-      when (it) {
-        CallActionViewEvent.Close -> navigator.finish()
-      }
-    },
+    eventHandler = { handleEvent(it, navigator) },
+    content = { viewModel.View(it) }
+  )
+}
+
+@Composable
+fun CallActionScreen(
+  key: CallActionFromData,
+  navigator: Navigator,
+  viewModel: CallActionViewModel = hiltViewModel()
+) {
+  LaunchedEffect(key.id) { viewModel.onLaunchWithId(key.id) }
+  ScreenScaffold(
+    viewModel = viewModel,
+    eventHandler = { handleEvent(it, navigator) },
     content = { viewModel.View(it) }
   )
 }
@@ -191,30 +207,35 @@ private fun CallActionScreenScope.Steps(steps: List<TagProcessingStep>, currentS
 @Composable
 private fun CallActionScreenScope.FailureStep(type: TagProcessingStep.FailureType) {
   val message = when (type) {
-    TagProcessingStep.FailureType.ILLEGAL_INTENT -> R.string.call_nfc_action_failure_illegal_intent
-    TagProcessingStep.FailureType.UNKNOWN_URL -> R.string.call_nfc_action_failure_unknown_url
-    TagProcessingStep.FailureType.TAG_NOT_FOUND -> R.string.call_nfc_action_failure_not_found
-    TagProcessingStep.FailureType.TAG_NOT_CONFIGURED -> R.string.call_nfc_action_not_configured
-    TagProcessingStep.FailureType.ACTION_FAILED -> R.string.call_nfc_action_call_failed
+    TagProcessingStep.FailureType.IllegalIntent -> R.string.call_nfc_action_failure_illegal_intent
+    TagProcessingStep.FailureType.UnknownUrl -> R.string.call_nfc_action_failure_unknown_url
+    is TagProcessingStep.FailureType.TagNotFound -> R.string.call_nfc_action_failure_not_found
+    is TagProcessingStep.FailureType.TagNotConfigured -> R.string.call_nfc_action_not_configured
+    TagProcessingStep.FailureType.ActionFailed -> R.string.call_nfc_action_call_failed
+    TagProcessingStep.FailureType.ChannelNotFound -> R.string.call_nfc_action_channel_not_found
+    TagProcessingStep.FailureType.ChannelOffline -> R.string.call_nfc_action_channel_offline
   }
 
   Text(
     text = stringResource(message),
     style = MaterialTheme.typography.bodyMedium,
-    color = MaterialTheme.colorScheme.onPrimaryContainer
+    color = MaterialTheme.colorScheme.onPrimaryContainer,
+    textAlign = TextAlign.Center
   )
 
   Spacer(modifier = Modifier.height(Distance.default))
 
   when (type) {
-    TagProcessingStep.FailureType.TAG_NOT_FOUND ->
-      Button(R.string.nfc_list_add) { }
+    is TagProcessingStep.FailureType.TagNotFound ->
+      Button(R.string.nfc_list_add) { addNewTag(type.uuid) }
 
-    TagProcessingStep.FailureType.TAG_NOT_CONFIGURED ->
-      Button(R.string.add_nfc_configure_tag) { }
+    is TagProcessingStep.FailureType.TagNotConfigured ->
+      Button(R.string.add_nfc_configure_tag) { configureTag(type.id) }
 
-    else -> Button(R.string.exit) { close() }
+    else -> {}
   }
+
+  Button(R.string.exit) { close() }
 }
 
 @Composable
@@ -296,8 +317,18 @@ private fun Button(
     )
   }
 
+private fun handleEvent(event: CallActionViewEvent, navigator: Navigator) {
+  when (event) {
+    CallActionViewEvent.Close -> navigator.finish()
+    is CallActionViewEvent.EditMissingAction -> navigator.navigateToEditMissingAction(event.id)
+    is CallActionViewEvent.SaveNewNfcTag -> navigator.navigateToSaveNewNfcTag(event.uuid)
+  }
+}
+
 private val previewScope = object : CallActionScreenScope {
   override fun close() {}
+  override fun addNewTag(uuid: String) {}
+  override fun configureTag(id: Long) {}
 }
 
 @SuplaPreview
@@ -313,7 +344,7 @@ private fun Preview_Searching() {
 private fun Preview_SearchFailed() {
   val steps = listOf(
     TagProcessingStep.ResolvingTag,
-    TagProcessingStep.Failure(TagProcessingStep.FailureType.TAG_NOT_FOUND)
+    TagProcessingStep.Failure(TagProcessingStep.FailureType.TagNotFound(""))
   )
   SuplaTheme {
     previewScope.View(CallActionScreenState(steps = steps))

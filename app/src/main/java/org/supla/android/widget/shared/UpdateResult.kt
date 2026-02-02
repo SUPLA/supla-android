@@ -17,31 +17,14 @@ package org.supla.android.widget.shared
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.work.ListenableWorker
-import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_ACCESSID_DISABLED
-import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_ACCESSID_INACTIVE
-import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_ACCESSID_NOT_ASSIGNED
-import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_BAD_CREDENTIALS
-import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_CHANNEL_IS_OFFLINE
-import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_CLIENT_DISABLED
-import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_CLIENT_NOT_EXISTS
-import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_SUBJECT_NOT_FOUND
-import org.supla.android.lib.SuplaConst.SUPLA_RESULT_CANT_CONNECT_TO_HOST
 import org.supla.android.lib.SuplaConst.SUPLA_RESULT_HOST_NOT_FOUND
-import org.supla.android.lib.SuplaConst.SUPLA_RESULT_RESPONSE_TIMEOUT
-import org.supla.android.lib.singlecall.ResultException
+import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.widget.WidgetConfiguration
 
 sealed interface UpdateResult {
   data class Success(val configuration: WidgetConfiguration) : UpdateResult
-  data class CommandError(val code: Int) : UpdateResult
-  data class ConnectionError(val code: Int) : UpdateResult
-  data class AccessError(val code: Int) : UpdateResult
-
+  data class Error(val result: SingleCall.Result) : UpdateResult
   data object Empty : UpdateResult
-  data object Offline : UpdateResult
-  data object NotFound : UpdateResult
-  data object UnknownError : UpdateResult
 }
 
 fun UpdateResult.whenSuccess(block: (WidgetConfiguration) -> Unit) {
@@ -50,37 +33,12 @@ fun UpdateResult.whenSuccess(block: (WidgetConfiguration) -> Unit) {
   }
 }
 
-fun UpdateResult.whenFailure(block: (cleanConfiguration: Boolean) -> Unit) {
-  if (this !is UpdateResult.Success) {
-    val cleanConfiguration = when (this) {
-      is UpdateResult.ConnectionError -> code != SUPLA_RESULT_HOST_NOT_FOUND
+fun UpdateResult.whenFailure(block: (cleanConfiguration: Boolean, errorResult: UpdateResult.Error) -> Unit) {
+  if (this is UpdateResult.Error) {
+    val cleanConfiguration = when (result) {
+      is SingleCall.Result.ConnectionError -> result.code != SUPLA_RESULT_HOST_NOT_FOUND
       else -> true
     }
-    block(cleanConfiguration)
+    block(cleanConfiguration, this)
   }
 }
-
-val UpdateResult.toWorkerResult: ListenableWorker.Result
-  get() = when (this) {
-    is UpdateResult.Success -> ListenableWorker.Result.success()
-    is UpdateResult.ConnectionError -> ListenableWorker.Result.retry()
-    else -> ListenableWorker.Result.failure()
-  }
-
-val ResultException.toUpdateResult: UpdateResult
-  get() = when (result) {
-    SUPLA_RESULT_HOST_NOT_FOUND,
-    SUPLA_RESULT_CANT_CONNECT_TO_HOST,
-    SUPLA_RESULT_RESPONSE_TIMEOUT -> UpdateResult.ConnectionError(result)
-
-    SUPLA_RESULTCODE_CLIENT_NOT_EXISTS,
-    SUPLA_RESULTCODE_BAD_CREDENTIALS,
-    SUPLA_RESULTCODE_CLIENT_DISABLED,
-    SUPLA_RESULTCODE_ACCESSID_NOT_ASSIGNED,
-    SUPLA_RESULTCODE_ACCESSID_DISABLED,
-    SUPLA_RESULTCODE_ACCESSID_INACTIVE -> UpdateResult.AccessError(result)
-
-    SUPLA_RESULTCODE_CHANNEL_IS_OFFLINE -> UpdateResult.Offline
-    SUPLA_RESULTCODE_SUBJECT_NOT_FOUND -> UpdateResult.NotFound
-    else -> UpdateResult.CommandError(result)
-  }

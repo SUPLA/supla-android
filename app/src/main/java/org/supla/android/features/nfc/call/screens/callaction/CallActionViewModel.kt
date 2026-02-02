@@ -49,60 +49,84 @@ class CallActionViewModel @Inject constructor(
     sendEvent(CallActionViewEvent.Close)
   }
 
-  fun onLaunch(url: String?) {
+  override fun addNewTag(uuid: String) {
+    sendEvent(CallActionViewEvent.SaveNewNfcTag(uuid))
+  }
+
+  override fun configureTag(id: Long) {
+    sendEvent(CallActionViewEvent.EditMissingAction(id))
+  }
+
+  fun onLaunchWithUrl(url: String?) {
     if (url == null) {
       Timber.d("Url not found!")
-      setErrorState(TagProcessingStep.FailureType.ILLEGAL_INTENT)
+      setErrorState(TagProcessingStep.FailureType.IllegalIntent)
       return
     }
     val tagId = resolveUrlToId(url)
     if (tagId == null) {
       Timber.d("Tag id not found!")
-      setErrorState(TagProcessingStep.FailureType.UNKNOWN_URL)
+      setErrorState(TagProcessingStep.FailureType.UnknownUrl)
       return
     }
 
     viewModelScope.launch {
-      var currentTime = dateProvider.currentTimestamp()
-      val tag = schedulers.io { nfcTagRepository.findByUuid(tagId) }
+      performAction(tagId)
+    }
+  }
 
-      if (tag == null) {
-        setErrorState(TagProcessingStep.FailureType.TAG_NOT_FOUND)
-        return@launch
-      }
+  fun onLaunchWithId(tagId: String?) {
+    if (tagId == null) {
+      Timber.d("Tag id not found!")
+      setErrorState(TagProcessingStep.FailureType.IllegalIntent)
+      return
+    }
 
-      val configuration = tag.configuration
-      if (configuration == null) {
-        setErrorState(TagProcessingStep.FailureType.TAG_NOT_CONFIGURED)
-        return@launch
-      }
+    viewModelScope.launch {
+      performAction(tagId)
+    }
+  }
 
-      delayIfNeeded(currentTime)
-      currentTime = dateProvider.currentTimestamp()
-      setState(TagProcessingStep.ExecutingAction)
+  private suspend fun performAction(tagId: String) {
+    var currentTime = dateProvider.currentTimestamp()
+    val tag = schedulers.io { nfcTagRepository.findByUuid(tagId) }
 
-      val singleCall = singleCallProvider.provide(configuration.profileId)
+    if (tag == null) {
+      setErrorState(TagProcessingStep.FailureType.TagNotFound(tagId))
+      return
+    }
 
-      val success =
-        schedulers.io {
-          try {
-            singleCall.executeAction(configuration.actionParameters)
-            true
-          } catch (ex: Exception) {
-            Timber.d(ex, "Could not execute action")
-            false
-          }
-        }
+    val configuration = tag.configuration
+    if (configuration == null) {
+      setErrorState(TagProcessingStep.FailureType.TagNotConfigured(tag.id))
+      return
+    }
 
-      delayIfNeeded(currentTime)
+    delayIfNeeded(currentTime)
+    currentTime = dateProvider.currentTimestamp()
+    setState(TagProcessingStep.ExecutingAction)
 
-      if (success) {
+    val singleCall = singleCallProvider.provide(configuration.profileId)
+
+    val result = schedulers.io { singleCall.executeAction(configuration.actionParameters) }
+
+    delayIfNeeded(currentTime)
+
+    when (result) {
+      SingleCall.Result.Success -> {
         setState(TagProcessingStep.Success)
         delay(SUCCESS_DELAY_MS)
         sendEvent(CallActionViewEvent.Close)
-      } else {
-        setErrorState(TagProcessingStep.FailureType.ACTION_FAILED)
       }
+
+      SingleCall.Result.NotFound -> setErrorState(TagProcessingStep.FailureType.ChannelNotFound)
+      SingleCall.Result.Offline -> setErrorState(TagProcessingStep.FailureType.ChannelOffline)
+      is SingleCall.Result.AccessError,
+      is SingleCall.Result.CommandError,
+      is SingleCall.Result.ConnectionError,
+      SingleCall.Result.NoSuchProfile,
+      SingleCall.Result.Inactive,
+      SingleCall.Result.UnknownError -> setErrorState(TagProcessingStep.FailureType.ActionFailed)
     }
   }
 
@@ -137,6 +161,8 @@ private val NfcTagEntity.Configuration.actionParameters: ActionParameters
 
 sealed class CallActionViewEvent : ViewEvent {
   data object Close : CallActionViewEvent()
+  data class EditMissingAction(val id: Long) : CallActionViewEvent()
+  data class SaveNewNfcTag(val uuid: String) : CallActionViewEvent()
 }
 
 data class CallActionViewModelState(

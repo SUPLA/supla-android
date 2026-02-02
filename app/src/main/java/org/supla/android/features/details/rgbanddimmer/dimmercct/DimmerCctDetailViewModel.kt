@@ -19,7 +19,6 @@ package org.supla.android.features.details.rgbanddimmer.dimmercct
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -30,6 +29,7 @@ import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.source.ColorListRepository
 import org.supla.android.data.source.local.entity.ColorEntityType
 import org.supla.android.events.LoadingTimeoutManager
+import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.details.rgbanddimmer.common.DelayedRgbwwActionSubject
 import org.supla.android.features.details.rgbanddimmer.common.SavedColor
 import org.supla.android.features.details.rgbanddimmer.common.dimmer.BaseDimmerDetailViewModel

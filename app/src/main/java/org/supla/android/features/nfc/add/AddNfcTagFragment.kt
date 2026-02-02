@@ -23,6 +23,7 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.core.ui.BaseComposeFragment
+import org.supla.android.core.ui.UpHandler
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.nfc.NfcHost
 import org.supla.android.features.nfc.edit.EditNfcTagFragment
@@ -33,7 +34,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AddNfcTagFragment : BaseComposeFragment<AddNfcTagViewModelState, AddNfcTagViewEvent>(), NavigationSubcontroller {
+class AddNfcTagFragment : BaseComposeFragment<AddNfcTagViewModelState, AddNfcTagViewEvent>(), NavigationSubcontroller, UpHandler {
   override val viewModel: AddNfcTagViewModel by viewModels()
 
   @Inject
@@ -81,5 +82,10 @@ class AddNfcTagFragment : BaseComposeFragment<AddNfcTagViewModelState, AddNfcTag
 
   private fun disableNfcDispatch() {
     (activity as? NfcHost)?.disableNfcDispatch()
+  }
+
+  override fun onUpPressed(): Boolean {
+    viewModel.handleBack()
+    return true
   }
 }

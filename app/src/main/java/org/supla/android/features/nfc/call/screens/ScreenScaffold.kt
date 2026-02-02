@@ -19,6 +19,7 @@ package org.supla.android.features.nfc.call.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -39,7 +40,7 @@ import org.supla.android.core.ui.ViewEvent
 fun <SS : Any, S : ModelViewState<SS>, E : ViewEvent> ScreenScaffold(
   viewModel: BaseViewModel<S, E>,
   eventHandler: (E) -> Unit = {},
-  content: @Composable (SS) -> Unit
+  content: @Composable BoxScope.(SS) -> Unit
 ) {
   val lifecycleOwner = LocalLifecycleOwner.current
 

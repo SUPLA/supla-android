@@ -20,6 +20,7 @@ package org.supla.android.ui.lists
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import androidx.annotation.CallSuper
 import io.reactivex.rxjava3.core.Observable
+import org.supla.android.PREF_CHANNEL_HEIGHT
 import org.supla.android.Preferences
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.ui.BaseViewModel
@@ -45,7 +46,7 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
   protected var lastItemOpenTime: Long = 0
 
   private val preferencesChangeListener = OnSharedPreferenceChangeListener { _, key ->
-    if (key.equals(Preferences.pref_channel_height)) {
+    if (key.equals(PREF_CHANNEL_HEIGHT)) {
       sendReassignEvent()
     }
   }

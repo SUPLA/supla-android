@@ -157,12 +157,18 @@
         <action android:name="android.intent.action.VIEW" />
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="https" android:host="supla.org" android:pathPrefix="/tag/"/>
+      </intent-filter>
 
-        <data android:scheme="https" />
-        <data android:scheme="http" />
-        <data android:host="supla.org" />
-        <data android:host="www.supla.org" />
-        <data android:pathPattern=".*"/>
+      <intent-filter>
+        <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <data android:mimeType="application/vnd.org.supla.tag" />
+      </intent-filter>
+
+      <intent-filter>
+        <action android:name="android.nfc.action.TAG_DISCOVERED" />
+        <category android:name="android.intent.category.DEFAULT" />
       </intent-filter>
     </activity>
 

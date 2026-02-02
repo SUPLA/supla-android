@@ -19,46 +19,29 @@ package org.supla.android.features.nfc.edit
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.model.general.SingleSelectionList
 import org.supla.android.data.model.spinner.ProfileItem
 import org.supla.android.data.model.spinner.SubjectItem
+import org.supla.android.features.nfc.shared.edit.EditNfcTagViewState
+import org.supla.android.features.nfc.shared.edit.NfcActions
 import org.supla.android.images.ImageId
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaPreview
-import org.supla.android.ui.views.EmptyListInfoView
 import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.buttons.OutlinedButton
 import org.supla.android.ui.views.configuration.ActionConfigurationScope
-import org.supla.android.ui.views.configuration.Actions
-import org.supla.android.ui.views.configuration.Caption
-import org.supla.android.ui.views.configuration.Profiles
-import org.supla.android.ui.views.configuration.SubjectTypes
-import org.supla.android.ui.views.configuration.Subjects
 import org.supla.core.shared.infrastructure.LocalizedString
-
-data class EditNfcTagViewState(
-  val tagName: String = "",
-  val profiles: SingleSelectionList<ProfileItem>? = null,
-  val subjectType: SubjectType = SubjectType.CHANNEL,
-
-  val subjects: SingleSelectionList<SubjectItem>? = null,
-  val actions: SingleSelectionList<ActionId>? = null,
-)
 
 interface EditNfcTagViewScope : ActionConfigurationScope {
   fun onSave()
@@ -68,25 +51,7 @@ interface EditNfcTagViewScope : ActionConfigurationScope {
 @Composable
 fun EditNfcTagViewScope.View(viewState: EditNfcTagViewState) {
   Box(modifier = Modifier.fillMaxSize()) {
-    Column(
-      modifier = Modifier
-        .padding(Distance.default)
-        .padding(bottom = 80.dp)
-        .verticalScroll(state = rememberScrollState()),
-      verticalArrangement = Arrangement.spacedBy(Distance.small),
-      horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-      Caption(R.string.edit_nfc_tag_name, viewState.tagName)
-
-      viewState.profiles?.let { profiles ->
-        Profiles(profiles)
-        SubjectTypes(viewState.subjectType)
-      }
-      viewState.subjects?.let { subjects ->
-        Subjects(subjects)
-        viewState.actions?.let { Actions(it) }
-      } ?: EmptyListInfoView(modifier = Modifier.padding(Distance.default))
-    }
+    NfcActions(viewState)
 
     Row(
       modifier = Modifier
