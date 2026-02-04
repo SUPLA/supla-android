@@ -3,6 +3,7 @@
   xmlns:app="http://schemas.android.com/apk/res-auto">
 
   <data>
+
     <import type="android.view.View" />
 
     <variable
@@ -10,126 +11,146 @@
       type="org.supla.android.features.createaccount.CreateAccountViewModel" />
   </data>
 
-  <LinearLayout
-    android:id="@+id/cfg"
+  <RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.SwitchCompat
-      android:id="@+id/cfg_cb_advanced"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="end"
-      android:layout_marginTop="@dimen/distance_default"
-      android:layout_marginEnd="@dimen/activity_horizontal_margin"
-      android:fontFamily="@font/open_sans_regular"
-      android:text="@string/advanced_settings"
-      android:textSize="@dimen/default_text_size"
-      app:theme="@style/Switch" />
-
-    <FrameLayout
+    <LinearLayout
+      android:id="@+id/cfg"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_weight="1">
+      android:background="@color/background"
+      android:orientation="vertical">
 
-      <ScrollView
-        android:id="@+id/scroll_view"
+      <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/cfg_cb_advanced"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="@dimen/distance_default"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:fontFamily="@font/open_sans_regular"
+        android:text="@string/advanced_settings"
+        android:textSize="@dimen/default_text_size"
+        app:theme="@style/Switch" />
+
+      <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
-        <LinearLayout
+        <ScrollView
+          android:id="@+id/scroll_view"
           android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:orientation="vertical">
+          android:layout_height="match_parent">
 
-          <RelativeLayout
-            android:id="@+id/cfg_content"
+          <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="top"
-            android:focusable="true"
-            android:focusableInTouchMode="true">
+            android:orientation="vertical">
 
-            <include
-              android:id="@+id/cfg_basic"
-              layout="@layout/inc_create_account_basic"
-              android:visibility="@{viewModel.viewState.advancedMode ? View.GONE : View.VISIBLE}" />
+            <RelativeLayout
+              android:id="@+id/cfg_content"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_gravity="top"
+              android:focusable="true"
+              android:focusableInTouchMode="true">
 
-            <include
-              android:id="@+id/cfg_advanced"
-              layout="@layout/inc_create_account_advanced"
-              android:visibility="@{viewModel.viewState.advancedMode ? View.VISIBLE : View.GONE}" />
-          </RelativeLayout>
+              <include
+                android:id="@+id/cfg_basic"
+                layout="@layout/inc_create_account_basic"
+                android:visibility="@{viewModel.viewState.advancedMode ? View.GONE : View.VISIBLE}" />
 
-          <View
-            android:layout_width="match_parent"
-            android:layout_height="25dp" />
-        </LinearLayout>
-      </ScrollView>
+              <include
+                android:id="@+id/cfg_advanced"
+                layout="@layout/inc_create_account_advanced"
+                android:visibility="@{viewModel.viewState.advancedMode ? View.VISIBLE : View.GONE}" />
+            </RelativeLayout>
 
-      <View
-        android:layout_width="match_parent"
-        android:layout_height="25dp"
-        android:layout_gravity="bottom"
-        android:background="@drawable/gradient_shape" />
-    </FrameLayout>
+            <View
+              android:layout_width="match_parent"
+              android:layout_height="25dp" />
+          </LinearLayout>
+        </ScrollView>
 
-    <RelativeLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginLeft="@dimen/activity_horizontal_margin"
-      android:layout_marginTop="@dimen/activity_vertical_margin"
-      android:layout_marginRight="@dimen/activity_horizontal_margin">
+        <View
+          android:layout_width="match_parent"
+          android:layout_height="25dp"
+          android:layout_gravity="bottom"
+          android:background="@drawable/gradient_shape" />
+      </FrameLayout>
 
-      <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/cfg_save"
-        style="@style/AppTheme.Button.Contained"
-        android:layout_width="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/form_field_spacing"
-        android:fontFamily="@font/open_sans_regular"
-        android:text="@string/confirm_button_text" />
-
-      <TextView
-        android:id="@+id/dont_have_account_text"
+      <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/cfg_save"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="0dp"
-        android:textAppearance="@style/AppTheme.TextAppearance.Body2"
-        android:gravity="center_horizontal"
-        android:singleLine="false"
-        android:text="@string/dont_have_account_yet" />
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin">
 
-      <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/cfg_create_account"
-        style="@style/AppTheme.Button.Text"
+        <androidx.appcompat.widget.AppCompatButton
+          android:id="@+id/cfg_save"
+          style="@style/AppTheme.Button.Contained"
+          android:layout_width="match_parent"
+          android:layout_alignParentTop="true"
+          android:layout_centerHorizontal="true"
+          android:layout_marginBottom="@dimen/form_field_spacing"
+          android:fontFamily="@font/open_sans_regular"
+          android:text="@string/confirm_button_text" />
+
+        <TextView
+          android:id="@+id/dont_have_account_text"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/cfg_save"
+          android:layout_centerHorizontal="true"
+          android:layout_marginTop="0dp"
+          android:gravity="center_horizontal"
+          android:singleLine="false"
+          android:text="@string/dont_have_account_yet"
+          android:textAppearance="@style/AppTheme.TextAppearance.Body2" />
+
+        <androidx.appcompat.widget.AppCompatButton
+          android:id="@+id/cfg_create_account"
+          style="@style/AppTheme.Button.Text"
+          android:layout_width="wrap_content"
+          android:layout_height="20sp"
+          android:layout_below="@+id/dont_have_account_text"
+          android:layout_centerHorizontal="true"
+          android:layout_marginTop="4dp"
+          android:layout_marginBottom="@dimen/form_field_spacing"
+          android:fontFamily="@font/open_sans_bold"
+          android:onClick="@{() -> viewModel.createAccount()}"
+          android:text="@string/create_account" />
+
+
+        <androidx.appcompat.widget.AppCompatButton
+          android:id="@+id/cfg_delete"
+          style="@style/AppTheme.Button.Outlined"
+          android:layout_width="match_parent"
+          android:layout_below="@id/cfg_create_account"
+          android:layout_centerHorizontal="true"
+          android:layout_marginTop="@dimen/shrink_field_spacing"
+          android:layout_marginBottom="@dimen/form_field_spacing"
+          android:fontFamily="@font/open_sans_regular"
+          android:text="@string/delete_account" />
+
+      </RelativeLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+      android:id="@+id/create_account_loading"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/dialog_scrim"
+      android:visibility="gone">
+
+      <ProgressBar
         android:layout_width="wrap_content"
-        android:layout_height="20sp"
-        android:layout_below="@+id/dont_have_account_text"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="@dimen/form_field_spacing"
-        android:fontFamily="@font/open_sans_bold"
-        android:onClick="@{() -> viewModel.createAccount()}"
-        android:text="@string/create_account" />
-
-
-      <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/cfg_delete"
-        style="@style/AppTheme.Button.Outlined"
-        android:layout_width="match_parent"
-        android:layout_below="@id/cfg_create_account"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/shrink_field_spacing"
-        android:layout_marginBottom="@dimen/form_field_spacing"
-        android:fontFamily="@font/open_sans_regular"
-        android:text="@string/delete_account" />
-
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:indeterminate="true" />
     </RelativeLayout>
-  </LinearLayout>
+
+  </RelativeLayout>
 </layout>
