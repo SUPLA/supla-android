@@ -852,38 +852,40 @@
   <string name="rgb_detail_colors_limit">Limit reached!</string>
   <string name="channel_caption_invisible">Hidden</string>
   <string name="dimmer_detail_temperature">Color:</string>
-  <string name="menu_nfc">NFC</string>
-  <string name="add_nfc_tag_title">NFC</string>
-  <string name="settings_nfc_label">NFC</string>
-  <string name="nfc_list_add">Add NFC tag</string>
-  <string name="add_nfc_name_label">Tag name</string>
-  <string name="add_nfc_scanning_hint">Hold the NFC tag near your mobile device to write SUPLA data</string>
-  <string name="add_nfc_scanning_hint_with_erase">Hold the NFC tag near your mobile device to write SUPLA data (and optionally switch it to read-only mode)</string>
-  <string name="add_nfc_general_error">An error occurred and tag could not be used.</string>
-  <string name="add_nfc_not_usable">This NFC tag cannot be used for Supla purposes.</string>
-  <string name="add_nfc_success"><![CDATA[New tag with id<br><b>%1$s</b><br>was prepared to your SUPLA app. Provide tag name to save it.]]></string>
-  <string name="add_nfc_timeout">No NFC tag found!</string>
-  <string name="add_nfc_save_and_configure_tag">Save and configure tag action</string>
-  <string name="add_nfc_duplicate"><![CDATA[Tag with id<br><b>%1$s</b><br>is already available in your app. You named it <b>%2$s</b>.]]></string>
-  <string name="edit_nfc_tag_name">Tag name</string>
-  <string name="call_nfc_action_resolving_tag">Searching configuration</string>
-  <string name="call_nfc_action_calling">Performing action</string>
-  <string name="call_nfc_action_success">Success!</string>
-  <string name="call_nfc_action_failure_illegal_intent">Unable to parse data provided by the NFC tag.\n\nIf you used a new empty tag, go to SUPLA App Settings -> NFC and configure the tag.</string>
-  <string name="call_nfc_action_failure_unknown_url">The NFC tag has incorrect content!</string>
-  <string name="call_nfc_action_failure_not_found">The NFC tag is not added in the SUPLA application!</string>
-  <string name="call_nfc_action_not_configured">The NFC tag is not configured!</string>
-  <string name="call_nfc_action_call_failed">The NFC tag action call finished with failure!</string>
-  <string name="add_nfc_override_warning">The current content of the NFC tag will be erased.</string>
-  <string name="add_nfc_save_and_prepare_another">Save and prepare another tag</string>
-  <string name="add_nfc_empty_name">Tag name cannot be empty!</string>
-  <string name="add_nfc_configure_tag">Configure tag action</string>
-  <string name="add_nfc_prepare_another">Prepare another tag</string>
-  <string name="nfc_list_lock_tag">Block tag from being written</string>
-  <string name="add_nfc_lock_warning">Read-only mode is permanent. Once enabled, the NFC tag cannot be made writable again.</string>
-  <string name="add_nfc_read_only_label">Switch NFC tag to read-only mode (recommended)</string>
-  <string name="add_nfc_not_enough_space">The NFC tag has not enough space to save SUPLA data.</string>
-  <string name="call_nfc_action_channel_not_found">Channel assigned to the NFC tag does not exists anymore!</string>
-  <string name="call_nfc_action_channel_offline">Channel assigned to the NFC tag is offline!</string>
-  <string name="edit_nfc_tag_title">NFC Tag Configuration</string>
+  <string name="menu_nfc" translatable="false">NFC</string>
+  <string name="add_nfc_tag_title" translatable="false">NFC</string>
+  <string name="settings_nfc_label" translatable="false">NFC</string>
+  <string name="nfc_list_add" translatable="false">Add NFC tag</string>
+  <string name="add_nfc_name_label" translatable="false">Tag name</string>
+  <string name="add_nfc_scanning_hint" translatable="false">Hold the NFC tag near your mobile device to write SUPLA data</string>
+  <string name="add_nfc_scanning_hint_with_erase" translatable="false">Hold the NFC tag near your mobile device to write SUPLA data (and optionally switch it to read-only mode)</string>
+  <string name="add_nfc_general_error" translatable="false">An error occurred and tag could not be used.</string>
+  <string name="add_nfc_not_usable" translatable="false">This NFC tag cannot be used for Supla purposes.</string>
+  <string name="add_nfc_success" translatable="false"><![CDATA[New tag with id<br><b>%1$s</b><br>was prepared to your SUPLA app. Provide tag name to save it.]]></string>
+  <string name="add_nfc_timeout" translatable="false">No NFC tag found!</string>
+  <string name="add_nfc_save_and_configure_tag" translatable="false">Save and configure tag action</string>
+  <string name="add_nfc_duplicate" translatable="false"><![CDATA[Tag with id<br><b>%1$s</b><br>is already available in your app. You named it <b>%2$s</b>.]]></string>
+  <string name="add_nfc_lock_warning" translatable="false">Read-only mode is permanent. Once enabled, the NFC tag cannot be made writable again.</string>
+  <string name="add_nfc_read_only_label" translatable="false">Switch NFC tag to read-only mode (recommended)</string>
+  <string name="add_nfc_not_enough_space" translatable="false">The NFC tag has not enough space to save SUPLA data.</string>
+  <string name="edit_nfc_tag_title" translatable="false">Edit NFC tag</string>
+  <string name="edit_nfc_tag_name" translatable="false">Tag name</string>
+  <string name="call_nfc_action_resolving_tag" translatable="false">Searching configuration</string>
+  <string name="call_nfc_action_calling" translatable="false">Performing action</string>
+  <string name="call_nfc_action_success" translatable="false">Success!</string>
+  <string name="call_nfc_action_failure_illegal_intent" translatable="false">Unable to parse data provided by the NFC tag.\n\nIf you used a new empty tag, go to SUPLA App Settings -> NFC and configure the tag.</string>
+  <string name="call_nfc_action_failure_unknown_url" translatable="false">The NFC tag has incorrect content!</string>
+  <string name="call_nfc_action_failure_not_found" translatable="false">The NFC tag is not added in the SUPLA application!</string>
+  <string name="call_nfc_action_not_configured" translatable="false">The NFC tag is not configured!</string>
+  <string name="call_nfc_action_call_failed" translatable="false">The NFC tag action call finished with failure!</string>
+  <string name="add_nfc_override_warning" translatable="false">The current content of the NFC tag will be erased.</string>
+  <string name="add_nfc_save_and_prepare_another" translatable="false">Save and prepare another tag</string>
+  <string name="add_nfc_empty_name" translatable="false">Tag name cannot be empty!</string>
+  <string name="add_nfc_configure_tag" translatable="false">Configure tag action</string>
+  <string name="add_nfc_prepare_another" translatable="false">Prepare another tag</string>
+  <string name="nfc_list_title" translatable="false">Your NFC tags</string>
+  <string name="nfc_list_lock_tag" translatable="false">Block tag from being written</string>
+  <string name="call_nfc_action_channel_not_found" translatable="false">Channel assigned to the NFC tag does not exists anymore!</string>
+  <string name="call_nfc_action_channel_offline" translatable="false">Channel assigned to the NFC tag is offline!</string>
+  <string name="edit_nfc_tag_header" translatable="false">NFC Tag Configuration</string>
 </resources>

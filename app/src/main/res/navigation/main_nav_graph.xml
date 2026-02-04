@@ -101,12 +101,12 @@
   <fragment
     android:id="@+id/nfc_tag_list_fragment"
     android:name="org.supla.android.features.nfc.list.NfcTagListFragment"
-    android:label="@string/add_nfc_tag_title" />
+    android:label="@string/nfc_list_title" />
 
   <fragment
     android:id="@+id/edit_nfc_tag_fragment"
     android:name="org.supla.android.features.nfc.edit.EditNfcTagFragment"
-    android:label="@string/add_nfc_tag_title" />
+    android:label="@string/edit_nfc_tag_title" />
 
   <!-- Legacy fragment -->
   <fragment

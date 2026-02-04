@@ -97,7 +97,7 @@ private fun BoxScope.View(viewState: EditNfcTagViewState, viewScope: ConfigureAc
 @Composable
 private fun ConfigureActionScreenScope.Header() =
   Header(
-    textRes = R.string.edit_nfc_tag_title,
+    textRes = R.string.edit_nfc_tag_header,
     iconRes = R.drawable.ic_close,
     onClose = { onClose() },
     modifier = Modifier.padding(
