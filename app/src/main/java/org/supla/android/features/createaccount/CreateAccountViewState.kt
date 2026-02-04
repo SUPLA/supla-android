@@ -21,7 +21,10 @@ data class CreateAccountViewState(
 
   //
   val profileNameVisible: Boolean = false,
-  val deleteButtonVisible: Boolean = false
+  val deleteButtonVisible: Boolean = false,
+
+  //
+  val loading: Boolean = false
 ) : ViewState() {
 
   fun toProfileItem() = AuthProfileItem(
