@@ -663,6 +663,11 @@ public class ChannelDetailThermostatHP extends DetailLayout
         1000);
   }
 
+  @Override
+  public boolean onBackPressed() {
+    return false;
+  }
+
   private void loadChannelList() {
     if (!isGroup()) {
       return;
