@@ -129,6 +129,8 @@ class CreateAccountFragment : BaseFragment<CreateAccountViewState, CreateAccount
       cfgCreateAccount.visibleIf(state.profileNameVisible.not())
       dontHaveAccountText.visibleIf(state.profileNameVisible.not())
       cloudInfoVisible = state.profileNameVisible.not()
+
+      createAccountLoading.visibleIf(state.loading)
     }
   }
 
