@@ -59,6 +59,9 @@ fun ActionConfigurationScope.NfcActions(viewState: EditNfcTagViewState) {
     viewState.subjects?.let { subjects ->
       Subjects(subjects)
       viewState.actions?.let { Actions(it) }
-    } ?: EmptyListInfoView(modifier = Modifier.padding(Distance.default))
+    }
+    if (viewState.subjects == null) {
+      EmptyListInfoView(modifier = Modifier.padding(Distance.default))
+    }
   }
 }

@@ -36,7 +36,7 @@ import org.supla.android.R
 import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.data.model.general.SingleSelectionList
+import org.supla.android.data.model.general.SingleOptionalSelectionList
 import org.supla.android.data.model.spinner.ProfileItem
 import org.supla.android.data.model.spinner.SubjectItem
 import org.supla.android.images.ImageId
@@ -55,18 +55,20 @@ import org.supla.android.ui.views.configuration.Subjects
 import org.supla.core.shared.infrastructure.LocalizedString
 
 data class AddAndroidAutoItemViewState(
-  val profiles: SingleSelectionList<ProfileItem>? = null,
+  val profiles: SingleOptionalSelectionList<ProfileItem>? = null,
   val subjectType: SubjectType = SubjectType.CHANNEL,
 
-  val subjects: SingleSelectionList<SubjectItem>? = null,
+  val subjects: SingleOptionalSelectionList<SubjectItem>? = null,
   val caption: String? = null,
-  val actions: SingleSelectionList<ActionId>? = null,
+  val actions: SingleOptionalSelectionList<ActionId>? = null,
 
-  val saveEnabled: Boolean = true,
   val showDelete: Boolean = false
 ) {
   val profilesEnabled: Boolean = !showDelete
   val subjectsEnabled: Boolean = !showDelete
+
+  val saveEnabled: Boolean
+    get() = caption?.isNotEmpty() == true && subjects?.selected != null && actions?.selected != null
 }
 
 interface AddAndroidAutoItemScope : ActionConfigurationScope {
@@ -97,7 +99,10 @@ fun AddAndroidAutoItemScope.View(viewState: AddAndroidAutoItemViewState) {
         Subjects(subjects, viewState.subjectsEnabled)
         viewState.caption?.let { Caption(R.string.widget_configure_name_label, it) }
         viewState.actions?.let { Actions(it) }
-      } ?: EmptyListInfoView(modifier = Modifier.padding(Distance.default))
+      }
+      if (viewState.subjects == null) {
+        EmptyListInfoView(modifier = Modifier.padding(Distance.default))
+      }
     }
 
     if (viewState.showDelete) {
@@ -146,7 +151,7 @@ private val emptyScope = object : AddAndroidAutoItemScope {
 @Preview(showBackground = true, backgroundColor = BACKGROUND_COLOR)
 @Composable
 private fun Preview() {
-  val firstProfile = ProfileItem(1, LocalizedString.Constant("Default"))
+  val firstProfile = ProfileItem(1, LocalizedString.Constant("Default"), true)
   val firstSubject = SubjectItem.create(
     id = 1,
     caption = LocalizedString.Constant("Thermostat"),
@@ -155,15 +160,15 @@ private fun Preview() {
   SuplaTheme {
     emptyScope.View(
       AddAndroidAutoItemViewState(
-        profiles = SingleSelectionList(
+        profiles = SingleOptionalSelectionList(
           selected = firstProfile,
           label = R.string.widget_configure_profile_label,
           items = listOf(
             firstProfile,
-            ProfileItem(2, LocalizedString.Constant("Test"))
+            ProfileItem(2, LocalizedString.Constant("Test"), true)
           )
         ),
-        subjects = SingleSelectionList(
+        subjects = SingleOptionalSelectionList(
           selected = firstSubject,
           label = R.string.widget_channel,
           items = listOf(
@@ -171,7 +176,7 @@ private fun Preview() {
           )
         ),
         caption = "Thermostat",
-        actions = SingleSelectionList(
+        actions = SingleOptionalSelectionList(
           selected = ActionId.OPEN,
           label = R.string.widget_configure_action_label,
           items = listOf(ActionId.OPEN)
@@ -184,16 +189,48 @@ private fun Preview() {
 @Preview(showBackground = true, backgroundColor = BACKGROUND_COLOR)
 @Composable
 private fun Preview_NoSubjects() {
-  val firstProfile = ProfileItem(1, LocalizedString.Constant("Default"))
+  val firstProfile = ProfileItem(1, LocalizedString.Constant("Default"), true)
   SuplaTheme {
     emptyScope.View(
       AddAndroidAutoItemViewState(
-        profiles = SingleSelectionList(
+        profiles = SingleOptionalSelectionList(
           selected = firstProfile,
           label = R.string.widget_configure_profile_label,
           items = listOf(
             firstProfile,
-            ProfileItem(2, LocalizedString.Constant("Test"))
+            ProfileItem(2, LocalizedString.Constant("Test"), true)
+          )
+        )
+      )
+    )
+  }
+}
+
+@Preview(showBackground = true, backgroundColor = BACKGROUND_COLOR)
+@Composable
+private fun Preview_SubjectsWithoutSelection() {
+  val firstProfile = ProfileItem(1, LocalizedString.Constant("Default"), true)
+  val firstSubject = SubjectItem.create(
+    id = 1,
+    caption = LocalizedString.Constant("Thermostat"),
+    icon = ImageId(R.drawable.fnc_thermostat_dhw)
+  )
+  SuplaTheme {
+    emptyScope.View(
+      AddAndroidAutoItemViewState(
+        profiles = SingleOptionalSelectionList(
+          selected = firstProfile,
+          label = R.string.widget_configure_profile_label,
+          items = listOf(
+            firstProfile,
+            ProfileItem(2, LocalizedString.Constant("Test"), true)
+          )
+        ),
+        subjects = SingleOptionalSelectionList(
+          selected = null,
+          label = R.string.widget_channel,
+          items = listOf(
+            firstSubject
           )
         )
       )

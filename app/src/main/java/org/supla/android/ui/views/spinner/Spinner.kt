@@ -29,7 +29,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -55,6 +54,7 @@ import org.supla.android.R
 import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.model.chart.ChartRange
+import org.supla.android.data.model.general.SingleOptionalSelectionList
 import org.supla.android.data.model.general.SingleSelectionList
 import org.supla.core.shared.extensions.ifTrue
 import org.supla.core.shared.infrastructure.LocalizedString
@@ -103,7 +103,7 @@ interface SpinnerItem {
 
 @Composable
 fun <T : SpinnerItem> Spinner(
-  options: SingleSelectionList<T>,
+  options: SingleOptionalSelectionList<T>,
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
   fillMaxWidth: Boolean = false,
@@ -111,7 +111,7 @@ fun <T : SpinnerItem> Spinner(
   onOptionSelected: (selected: T) -> Unit
 ) {
   var expanded by remember { mutableStateOf(false) }
-  val selectedOptionText = options.selected.label(LocalContext.current)
+  val selectedOptionText = options.selected?.label(LocalContext.current)
 
   Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
     options.label?.let {
@@ -123,7 +123,7 @@ fun <T : SpinnerItem> Spinner(
       )
     }
     ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { ifTrue(enabled) { expanded = it } }) {
-      SpinnerTextField(selectedOptionText, expanded, enabled, fillMaxWidth)
+      SpinnerTextField(selectedOptionText ?: "---", expanded, enabled, fillMaxWidth, options.isError)
       ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
         options.items.forEach { option ->
           DropdownMenuItem(

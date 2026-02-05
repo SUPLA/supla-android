@@ -38,10 +38,9 @@ class NfcTagListViewModel @Inject constructor(
   schedulers: SuplaSchedulers
 ) : BaseViewModel<NfcTagListViewModelState, NfcTagListViewEvent>(NfcTagListViewModelState(), schedulers), NfcTagListScope {
 
-  override fun onViewCreated() {
+  override fun onStart() {
     viewModelScope.launch {
       val tags = nfcTagRepository.findAllWithDependencies()
-
       updateState { state ->
         state.copy(viewState = state.viewState.copy(items = tags.map { it.toItem }))
       }

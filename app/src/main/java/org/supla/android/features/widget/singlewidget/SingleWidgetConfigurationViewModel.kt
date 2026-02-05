@@ -77,7 +77,9 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
   WidgetConfigurationScope,
   SubjectItemConversionScope {
 
-  override fun onViewCreated() {
+  override fun setWidgetId(widgetId: Int?) {
+    super.setWidgetId(widgetId)
+
     val configuration = currentState().widgetId?.let { widgetPreferences.getWidgetConfiguration(it) }
 
     if (configuration != null) {
@@ -100,13 +102,14 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
         onNext = { (profiles, subjects) ->
           val activeProfile = profiles.first { it.active == true }
           updateState { state ->
+            val subjectsList = subjects.asSingleSelectionList(SubjectType.CHANNEL)
             state.copy(
               viewState = state.viewState.copy(
                 profiles = profiles.asSingleSelectionList(activeProfile.id),
                 subjectTypes = SubjectType.entries,
-                subjects = subjects.asSingleSelectionList(SubjectType.CHANNEL),
+                subjects = subjectsList,
                 caption = null,
-                subjectDetails = subjects.firstOrNull { it.isLocation.not() }?.details(),
+                subjectDetails = subjectsList?.selected?.details(),
               )
             )
           }
@@ -143,7 +146,6 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
                 subjectDetails = configuration.actionId?.let { actionId ->
                   subjects.firstOrNull { it.id == configuration.itemId }?.details(ActionDetail(actionId))
                 },
-                saveEnabled = true
               )
             )
           }
@@ -173,13 +175,15 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
             val lastSubjectId = state.lastSubjectId(profileItem.id, subjectType)
             val lastCaption = state.lastCaption(profileItem.id, subjectType, lastSubjectId)
             val lastDetail = state.lastDetail(profileItem.id, subjectType, lastSubjectId)
+            val subjectsList = subjects.asSingleSelectionList(subjectType, lastSubjectId)
+
             state.copy(
               viewState = state.viewState.copy(
                 profiles = state.viewState.profiles?.copy(selected = profileItem),
                 subjectType = subjectType,
-                subjects = subjects.asSingleSelectionList(subjectType, lastSubjectId),
+                subjects = subjectsList,
                 caption = lastCaption,
-                subjectDetails = subjects.firstOrNull { it.isLocation.not() }?.details(lastDetail)
+                subjectDetails = subjectsList?.selected?.details(lastDetail)
               ),
             )
           }
@@ -198,12 +202,13 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
             val lastSubjectId = state.lastSubjectId(profile.id, subjectType)
             val lastCaption = state.lastCaption(profile.id, subjectType, lastSubjectId)
             val lastDetail = state.lastDetail(profile.id, subjectType, lastSubjectId)
+            val subjectsList = subjects.asSingleSelectionList(subjectType, lastSubjectId)
             state.copy(
               viewState = state.viewState.copy(
                 subjectType = subjectType,
-                subjects = subjects.asSingleSelectionList(subjectType, lastSubjectId),
+                subjects = subjectsList,
                 caption = lastCaption,
-                subjectDetails = subjects.firstOrNull { it.isLocation.not() }?.details(lastDetail)
+                subjectDetails = subjectsList?.selected?.details(lastDetail)
               ),
             )
           }
@@ -222,7 +227,8 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
           subjects = state.viewState.subjects?.copy(selected = subjectItem),
           caption = lastCaption,
           subjectDetails = subjectItem.details(lastDetail)
-        )
+        ),
+        selections = state.updateSelections(subjectItem.id)
       )
     }
   }

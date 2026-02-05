@@ -18,6 +18,7 @@ package org.supla.android.features.nfc.add
  */
 
 import android.content.Intent
+import android.os.Bundle
 import androidx.compose.runtime.Composable
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,6 +41,12 @@ class AddNfcTagFragment : BaseComposeFragment<AddNfcTagViewModelState, AddNfcTag
   @Inject
   lateinit var navigator: MainNavigator
 
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+
+    viewModel.attachFragment(this)
+  }
+
   @Composable
   override fun ComposableContent(modelState: AddNfcTagViewModelState) {
     SuplaTheme {
@@ -59,9 +66,6 @@ class AddNfcTagFragment : BaseComposeFragment<AddNfcTagViewModelState, AddNfcTag
         navigator.back()
         navigator.navigateTo(R.id.edit_nfc_tag_fragment, EditNfcTagFragment.bundle(event.tagId))
       }
-
-      AddNfcTagViewEvent.DisableNfc -> disableNfcDispatch()
-      AddNfcTagViewEvent.EnableNfc -> enableNfcDispatch()
     }
   }
 
@@ -76,11 +80,11 @@ class AddNfcTagFragment : BaseComposeFragment<AddNfcTagViewModelState, AddNfcTag
 
   override fun screenTakeoverAllowed(): Boolean = false
 
-  private fun enableNfcDispatch() {
+  fun enableNfcDispatch() {
     (activity as? NfcHost)?.enableNfcDispatch { intent -> handle(intent) }
   }
 
-  private fun disableNfcDispatch() {
+  fun disableNfcDispatch() {
     (activity as? NfcHost)?.disableNfcDispatch()
   }
 

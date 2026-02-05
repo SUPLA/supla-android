@@ -20,13 +20,11 @@ package org.supla.android.features.nfc.add
 import android.content.Intent
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.supla.android.Preferences
-import org.supla.android.core.infrastructure.NfcScanner
 import org.supla.android.core.infrastructure.nfc.TagProcessingResult
+import org.supla.android.core.infrastructure.nfc.nfcTag
 import org.supla.android.core.infrastructure.nfc.prepareForSupla
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
@@ -34,20 +32,25 @@ import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.NfcTagRepository
 import org.supla.android.data.source.local.entity.NfcTagEntity
 import org.supla.android.tools.SuplaSchedulers
+import timber.log.Timber
+import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 @HiltViewModel
 class AddNfcTagViewModel @Inject constructor(
   private val nfcTagRepository: NfcTagRepository,
   private val preferences: Preferences,
-  private val nfcScanner: NfcScanner,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<AddNfcTagViewModelState, AddNfcTagViewEvent>(AddNfcTagViewModelState(), schedulers), AddNfcTagScope {
 
   private var currentJob: Job? = null
+  private lateinit var fragment: WeakReference<AddNfcTagFragment>
+
+  fun attachFragment(fragment: AddNfcTagFragment) {
+    this.fragment = WeakReference(fragment)
+  }
 
   override fun onViewCreated() {
-    startTagScanJob()
     updateState { it.copy(viewState = it.viewState.copy(lockTag = preferences.lockNfcTag)) }
   }
 
@@ -62,13 +65,11 @@ class AddNfcTagViewModel @Inject constructor(
       AddNfcStep.TagReading -> {} // Nothing to do
       is AddNfcStep.TagConfiguration ->
         when (step.result) {
+          is AddNfcSummary.Success -> saveAndConfigure(step.result.tagUuid)
+          is AddNfcSummary.Duplicate -> sendEvent(AddNfcTagViewEvent.ConfigureTagAction(step.result.tagId))
           AddNfcSummary.Failure,
           AddNfcSummary.NotEnoughSpace,
-          AddNfcSummary.NotUsable,
-          AddNfcSummary.Timeout,
-          is AddNfcSummary.Duplicate -> sendEvent(AddNfcTagViewEvent.Close)
-
-          is AddNfcSummary.Success -> saveAndClose(step.result.tagUuid)
+          AddNfcSummary.NotUsable -> sendEvent(AddNfcTagViewEvent.Close)
         }
     }
   }
@@ -83,17 +84,8 @@ class AddNfcTagViewModel @Inject constructor(
   }
 
   override fun onPrepareAnother() {
-    currentJob?.cancel()
-    updateState {
-      it.copy(
-        viewState = it.viewState.copy(
-          tagName = "",
-          error = false,
-          step = AddNfcStep.TagReading
-        )
-      )
-    }
-    startTagScanJob()
+    updateState { it.copy(viewState = it.viewState.copy(tagName = "", error = false)) }
+    changeStep(AddNfcStep.TagReading)
   }
 
   override fun onSaveAndPrepareAnother(uuid: String) {
@@ -105,21 +97,49 @@ class AddNfcTagViewModel @Inject constructor(
     }
   }
 
-  override fun onSaveAndConfigure(uuid: String) {
-    viewModelScope.launch {
-      getTagName()?.let {
-        val id = saveWithDuplicateCheck(uuid, it)
-        sendEvent(AddNfcTagViewEvent.ConfigureTagAction(id))
-      }
+  override fun onStart() {
+    if (currentState().viewState.step == AddNfcStep.TagReading) {
+      fragment.get()?.enableNfcDispatch()
     }
   }
 
-  override fun onConfigure(id: Long) {
-    sendEvent(AddNfcTagViewEvent.ConfigureTagAction(id))
+  override fun onStop() {
+    if (currentState().viewState.step == AddNfcStep.TagReading) {
+      fragment.get()?.disableNfcDispatch()
+    }
   }
 
   fun handleIntent(intent: Intent) {
-    nfcScanner.handleIntent(intent)
+    val state = currentState()
+    if (state.viewState.step != AddNfcStep.TagReading) {
+      Timber.i("Got intent but is not in reading state")
+      return
+    }
+
+    val tag = intent.nfcTag
+    if (tag == null) {
+      Timber.i("Got intent but without a tag")
+      return
+    }
+
+    if (currentJob != null) {
+      Timber.i("Got intent but already processing")
+      return
+    }
+
+    val job = viewModelScope.launch {
+      val result = tag.prepareForSupla(state.viewState.lockTag).toSummary()
+      changeStep(AddNfcStep.TagConfiguration(result))
+    }
+    job.invokeOnCompletion {
+      if (it != null) {
+        // If job failed we need to disable NFC manually.
+        fragment.get()?.disableNfcDispatch()
+      }
+      currentJob = null
+    }
+
+    currentJob = job
   }
 
   fun handleBack() {
@@ -127,11 +147,11 @@ class AddNfcTagViewModel @Inject constructor(
     sendEvent(AddNfcTagViewEvent.Close)
   }
 
-  private fun saveAndClose(uuid: String) {
+  private fun saveAndConfigure(uuid: String) {
     viewModelScope.launch {
       getTagName()?.let {
-        saveWithDuplicateCheck(uuid, it)
-        sendEvent(AddNfcTagViewEvent.Close)
+        val id = saveWithDuplicateCheck(uuid, it)
+        sendEvent(AddNfcTagViewEvent.ConfigureTagAction(id))
       }
     }
   }
@@ -159,28 +179,6 @@ class AddNfcTagViewModel @Inject constructor(
     }
   }
 
-  private fun startTagScanJob() {
-    val job = viewModelScope.launch {
-      sendEvent(AddNfcTagViewEvent.EnableNfc)
-
-      val summary: AddNfcSummary = withContext(Dispatchers.IO) {
-        when (val result = nfcScanner.scan()) {
-          is NfcScanner.Result.Success -> result.tag.prepareForSupla(currentState().viewState.lockTag).toSummary()
-          NfcScanner.Result.Failure -> AddNfcSummary.Failure
-          NfcScanner.Result.Timeout -> AddNfcSummary.Timeout
-        }
-      }
-
-      updateState { it.copy(viewState = it.viewState.copy(step = AddNfcStep.TagConfiguration(summary))) }
-    }
-    job.invokeOnCompletion {
-      sendEvent(AddNfcTagViewEvent.DisableNfc)
-      currentJob = null
-    }
-
-    currentJob = job
-  }
-
   suspend fun TagProcessingResult.toSummary(): AddNfcSummary =
     when (this) {
       TagProcessingResult.Failure -> AddNfcSummary.Failure
@@ -197,13 +195,29 @@ class AddNfcTagViewModel @Inject constructor(
         }
       }
     }
+
+  private fun changeStep(newStep: AddNfcStep) {
+    val state = currentState()
+    val oldStep = state.viewState.step
+
+    if (oldStep == newStep) {
+      Timber.w("Trying to change step to the same one: $newStep")
+      return
+    }
+
+    if (newStep == AddNfcStep.TagReading) {
+      fragment.get()?.enableNfcDispatch()
+    } else if (oldStep == AddNfcStep.TagReading) {
+      fragment.get()?.disableNfcDispatch()
+    }
+
+    updateState { it.copy(viewState = state.viewState.copy(step = newStep)) }
+  }
 }
 
 sealed interface AddNfcTagViewEvent : ViewEvent {
   data object Close : AddNfcTagViewEvent
   data class ConfigureTagAction(val tagId: Long) : AddNfcTagViewEvent
-  data object EnableNfc : AddNfcTagViewEvent
-  data object DisableNfc : AddNfcTagViewEvent
 }
 
 data class AddNfcTagViewModelState(

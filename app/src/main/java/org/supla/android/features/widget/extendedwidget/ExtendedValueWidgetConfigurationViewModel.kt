@@ -145,7 +145,6 @@ class ExtendedValueWidgetConfigurationViewModel @Inject constructor(
                 subjects = subjects.asSingleSelectionList(configuration.subjectType, configuration.subjectId),
                 subjectType = configuration.subjectType,
                 caption = configuration.caption,
-                saveEnabled = true
               )
             )
           }
@@ -218,7 +217,8 @@ class ExtendedValueWidgetConfigurationViewModel @Inject constructor(
         viewState = state.viewState.copy(
           subjects = state.viewState.subjects?.copy(selected = subjectItem),
           caption = lastCaption
-        )
+        ),
+        selections = state.updateSelections(subjectItem.id)
       )
     }
   }

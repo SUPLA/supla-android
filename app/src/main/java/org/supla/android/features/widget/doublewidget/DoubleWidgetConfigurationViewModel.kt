@@ -76,7 +76,8 @@ class DoubleWidgetConfigurationViewModel @Inject constructor(
   WidgetConfigurationScope,
   SubjectItemConversionScope {
 
-  override fun onViewCreated() {
+  override fun setWidgetId(widgetId: Int?) {
+    super.setWidgetId(widgetId)
     val configuration = currentState().widgetId?.let { widgetPreferences.getWidgetConfiguration(it) }
 
     if (configuration != null) {
@@ -138,7 +139,6 @@ class DoubleWidgetConfigurationViewModel @Inject constructor(
                 subjectTypes = SubjectType.entries.minus(SubjectType.SCENE),
                 subjectType = configuration.subjectType,
                 caption = configuration.caption,
-                saveEnabled = true
               )
             )
           }
@@ -211,7 +211,8 @@ class DoubleWidgetConfigurationViewModel @Inject constructor(
         viewState = state.viewState.copy(
           subjects = state.viewState.subjects?.copy(selected = subjectItem),
           caption = lastCaption
-        )
+        ),
+        selections = state.updateSelections(subjectItem.id)
       )
     }
   }

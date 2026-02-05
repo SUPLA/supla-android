@@ -80,12 +80,13 @@ class AddAndroidAutoItemViewModel @Inject constructor(
         onNext = { (profiles, subjects) ->
           val activeProfile = profiles.first { it.active == true }
           updateState { state ->
+            val subjectsList = subjects.asSingleSelectionList(SubjectType.CHANNEL)
             state.copy(
               viewState = state.viewState.copy(
                 profiles = profiles.asSingleSelectionList(activeProfile.id),
-                subjects = subjects.asSingleSelectionList(SubjectType.CHANNEL),
+                subjects = subjectsList,
                 caption = null,
-                actions = subjects.firstOrNull { it.isLocation.not() }?.actionsList()
+                actions = subjectsList?.selected?.actionsList()
               )
             )
           }
@@ -130,13 +131,15 @@ class AddAndroidAutoItemViewModel @Inject constructor(
             val lastSubjectId = state.lastSubjectId(profileItem.id, subjectType)
             val lastCaption = state.lastCaption(profileItem.id, subjectType, lastSubjectId)
             val lastActionId = state.lastActionId(profileItem.id, subjectType, lastSubjectId)
+            val subjectsList = subjects.asSingleSelectionList(subjectType, lastSubjectId)
+
             state.copy(
               viewState = state.viewState.copy(
                 profiles = state.viewState.profiles?.copy(selected = profileItem),
                 subjectType = subjectType,
-                subjects = subjects.asSingleSelectionList(subjectType, lastSubjectId),
+                subjects = subjectsList,
                 caption = lastCaption,
-                actions = subjects.firstOrNull { it.isLocation.not() }?.actionsList(lastActionId)
+                actions = subjectsList?.selected?.actionsList(lastActionId)
               ),
             )
           }
@@ -155,12 +158,13 @@ class AddAndroidAutoItemViewModel @Inject constructor(
             val lastSubjectId = state.lastSubjectId(profile.id, subjectType)
             val lastCaption = state.lastCaption(profile.id, subjectType, lastSubjectId)
             val lastActionId = state.lastActionId(profile.id, subjectType, lastSubjectId)
+            val subjectsList = subjects.asSingleSelectionList(subjectType, lastSubjectId)
             state.copy(
               viewState = state.viewState.copy(
                 subjectType = subjectType,
-                subjects = subjects.asSingleSelectionList(subjectType, lastSubjectId),
+                subjects = subjectsList,
                 caption = lastCaption,
-                actions = subjects.firstOrNull { it.isLocation.not() }?.actionsList(lastActionId)
+                actions = subjectsList?.selected?.actionsList(lastActionId)
               ),
             )
           }
@@ -179,7 +183,8 @@ class AddAndroidAutoItemViewModel @Inject constructor(
           subjects = state.viewState.subjects?.copy(selected = subjectItem),
           caption = lastCaption,
           actions = subjectItem.actionsList(lastActionId)
-        )
+        ),
+        selections = state.updateSelections(subjectItem.id)
       )
     }
   }
@@ -187,10 +192,7 @@ class AddAndroidAutoItemViewModel @Inject constructor(
   override fun onCaptionChange(caption: String) {
     updateState { state ->
       state.copy(
-        viewState = state.viewState.copy(
-          caption = caption,
-          saveEnabled = caption.isNotEmpty()
-        ),
+        viewState = state.viewState.copy(caption = caption),
         selections = state.updateSelections(caption)
       )
     }
@@ -290,6 +292,16 @@ data class AddAndroidAutoItemViewModelState(
   val showDeletePopup: Boolean = false
 ) : ViewState() {
 
+  fun updateSelections(subjectId: Int): Set<Selection> =
+    mutableSetOf<Selection>().apply {
+      addAll(selections)
+      val profileId = viewState.profiles?.selected?.id
+
+      if (profileId != null) {
+        addOrReplace(Selection(profileId, viewState.subjectType, subjectId, null, null))
+      }
+    }
+
   fun updateSelections(actionId: ActionId): Set<Selection> =
     mutableSetOf<Selection>().apply {
       addAll(selections)
@@ -339,8 +351,8 @@ data class Selection(
   val profileId: Long,
   val subjectType: SubjectType,
   val subjectId: Int,
-  val caption: String,
-  val action: ActionId
+  val caption: String?,
+  val action: ActionId?
 ) {
   override fun hashCode(): Int {
     return Objects.hash(profileId, subjectType, subjectId)

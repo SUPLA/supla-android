@@ -18,6 +18,7 @@ package org.supla.android.data.model.spinner
  */
 
 import org.supla.android.R
+import org.supla.android.data.model.general.SingleOptionalSelectionList
 import org.supla.android.data.model.general.SingleSelectionList
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.ProfileEntity
@@ -59,22 +60,22 @@ data class SubjectItem(
   override val label: LocalizedString
     get() = caption
 
-  fun actionsList(selectedAction: ActionId? = null): SingleSelectionList<ActionId>? =
+  fun actionsList(selectedAction: ActionId? = null): SingleOptionalSelectionList<ActionId>? =
     if (actions.isEmpty()) {
       null
     } else {
-      SingleSelectionList(
-        selected = actions.firstOrNull { it == selectedAction } ?: actions.first(),
+      SingleOptionalSelectionList(
+        selected = actions.firstOrNull { it == selectedAction },
         label = R.string.widget_configure_action_label,
         items = actions
       )
     }
 
-  fun details(selected: SubjectDetail? = null): SingleSelectionList<SubjectDetail>? =
+  fun details(selected: SubjectDetail? = null): SingleOptionalSelectionList<SubjectDetail>? =
     actions.isNotEmpty().ifTrue {
       with(actions.map { ActionDetail(it) }) {
-        SingleSelectionList(
-          selected = this.firstOrNull { it == selected } ?: ActionDetail(actions.first()),
+        SingleOptionalSelectionList(
+          selected = this.firstOrNull { it == selected },
           label = R.string.widget_configure_action_label,
           items = this
         )
@@ -145,29 +146,29 @@ interface SubjectItemConversionScope {
     }
   }
 
-  fun List<SubjectItem>.asSingleSelectionList(type: SubjectType, selectedId: Int? = null): SingleSelectionList<SubjectItem>? =
+  fun List<SubjectItem>.asSingleSelectionList(type: SubjectType, selectedId: Int? = null): SingleOptionalSelectionList<SubjectItem>? =
     if (isEmpty()) {
       null
     } else {
-      SingleSelectionList(
-        selected = firstOrNull { it.id == selectedId } ?: first { !it.isLocation },
+      SingleOptionalSelectionList(
+        selected = firstOrNull { it.id == selectedId },
         label = type.nameRes,
         items = this
       )
     }
 
-  fun List<ProfileEntity>.asSingleSelectionList(selectedId: Long? = null): SingleSelectionList<ProfileItem>? =
-    map { ProfileItem(it.id!!, LocalizedString.Constant(it.name)) }
+  fun List<ProfileEntity>.asSingleSelectionList(selectedId: Long? = null): SingleOptionalSelectionList<ProfileItem>? =
+    map { ProfileItem(it.id!!, LocalizedString.Constant(it.name), it.active ?: false) }
       .asSingleSelectionList(R.string.widget_configure_profile_label)
       ?.let { list ->
-        list.copy(selected = list.items.firstOrNull { it.id == selectedId } ?: list.items.first())
+        list.copy(selected = list.items.firstOrNull { it.id == selectedId } ?: list.items.first { it.active })
       }
 
-  fun <T : SpinnerItem> List<T>.asSingleSelectionList(label: Int): SingleSelectionList<T>? =
+  fun <T : SpinnerItem> List<T>.asSingleSelectionList(label: Int): SingleOptionalSelectionList<T>? =
     if (isEmpty()) {
       null
     } else {
-      SingleSelectionList(selected = first(), label = label, items = this)
+      SingleOptionalSelectionList(selected = first(), label = label, items = this)
     }
 
   val LocationEntity.subjectItem: SubjectItem

@@ -58,7 +58,7 @@ abstract class BaseWidgetViewModel(
 ),
   SubjectItemConversionScope {
 
-  fun setWidgetId(widgetId: Int?) {
+  open fun setWidgetId(widgetId: Int?) {
     updateState { it.copy(widgetId = widgetId) }
   }
 
@@ -73,10 +73,7 @@ abstract class BaseWidgetViewModel(
   fun onCaptionChange(caption: String) {
     updateState { state ->
       state.copy(
-        viewState = state.viewState.copy(
-          caption = caption,
-          saveEnabled = caption.isNotEmpty()
-        ),
+        viewState = state.viewState.copy(caption = caption),
         selections = state.updateSelections(caption)
       )
     }
@@ -123,6 +120,16 @@ data class WidgetConfigurationViewModelState(
   val viewState: WidgetConfigurationViewState = WidgetConfigurationViewState(),
   val selections: Set<Selection> = emptySet(),
 ) : ViewState() {
+
+  fun updateSelections(subjectId: Int): Set<Selection> =
+    mutableSetOf<Selection>().apply {
+      addAll(selections)
+      val profileId = viewState.profiles?.selected?.id
+
+      if (profileId != null) {
+        addOrReplace(Selection(profileId, viewState.subjectType, subjectId, null, null))
+      }
+    }
 
   fun updateSelections(detail: SubjectDetail): Set<Selection> =
     mutableSetOf<Selection>().apply {
@@ -172,9 +179,9 @@ data class WidgetConfigurationViewModelState(
 data class Selection(
   val profileId: Long,
   val subjectType: SubjectType,
-  val subjectId: Int,
-  val caption: String,
-  val subjectDetail: SubjectDetail
+  val subjectId: Int?,
+  val caption: String?,
+  val subjectDetail: SubjectDetail?
 ) {
   override fun hashCode(): Int {
     return Objects.hash(profileId, subjectType, subjectId)
