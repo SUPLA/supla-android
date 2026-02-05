@@ -32,7 +32,7 @@ data class RgbwActionParameters(
   var brightness: Short,
   var colorBrightness: Short,
   var color: Long,
-  var dimmerCct: Short,
+  var whiteTemperature: Short,
   var colorRandom: Boolean,
   var onOff: Boolean
 ) :
