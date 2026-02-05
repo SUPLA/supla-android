@@ -19,9 +19,12 @@ package org.supla.android.features.nfc.shared.edit
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,6 +49,8 @@ fun ActionConfigurationScope.NfcActions(viewState: EditNfcTagViewState) {
     verticalArrangement = Arrangement.spacedBy(Distance.small),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
+    TagUuid(viewState.tagUuid)
+
     Caption(
       label = R.string.edit_nfc_tag_name,
       caption = viewState.tagName,
@@ -65,3 +70,24 @@ fun ActionConfigurationScope.NfcActions(viewState: EditNfcTagViewState) {
     }
   }
 }
+
+@Composable
+private fun TagUuid(uuid: String) =
+  Column(
+    verticalArrangement = Arrangement.spacedBy(4.dp),
+    horizontalAlignment = Alignment.Start,
+    modifier = Modifier.fillMaxWidth()
+  ) {
+    Text(
+      text = "UUID",
+      style = MaterialTheme.typography.bodySmall,
+      modifier = Modifier.padding(horizontal = 12.dp),
+      color = MaterialTheme.colorScheme.onSurfaceVariant
+    )
+    Text(
+      text = uuid,
+      style = MaterialTheme.typography.bodyMedium,
+      modifier = Modifier.padding(horizontal = 12.dp),
+      color = MaterialTheme.colorScheme.onSurface
+    )
+  }

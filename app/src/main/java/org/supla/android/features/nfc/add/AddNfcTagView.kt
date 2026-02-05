@@ -50,9 +50,9 @@ import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.features.addwizard.view.components.AddWizardActionButton
 import org.supla.android.features.addwizard.view.components.AddWizardContentText
 import org.supla.android.features.addwizard.view.components.AddWizardEmptyScaffold
-import org.supla.android.features.addwizard.view.components.AddWizardRepeatButton
 import org.supla.android.features.addwizard.view.components.AddWizardScaffold
 import org.supla.android.features.addwizard.view.components.AddWizardTextFieldContainer
 import org.supla.android.ui.views.Image
@@ -225,7 +225,7 @@ private fun ColumnScope.Error(@StringRes textRes: Int, onPrepareAnother: () -> U
 
   Spacer(modifier = Modifier.weight(1f))
 
-  AddWizardRepeatButton(textRes = R.string.add_wizard_repeat) { onPrepareAnother() }
+  AddWizardActionButton(textRes = R.string.add_wizard_repeat) { onPrepareAnother() }
 
   Spacer(modifier = Modifier.weight(1f))
 }
@@ -257,7 +257,7 @@ private fun ColumnScope.NewTag(tagName: String, error: Boolean, summary: AddNfcS
 
   Spacer(modifier = Modifier.weight(1f))
 
-  AddWizardRepeatButton(textRes = R.string.add_nfc_save_and_prepare_another) { scope.onSaveAndPrepareAnother(summary.tagUuid) }
+  AddWizardActionButton(textRes = R.string.add_nfc_save_and_prepare_another) { scope.onSaveAndPrepareAnother(summary.tagUuid) }
 
   Spacer(modifier = Modifier.weight(1f))
 }
@@ -270,7 +270,7 @@ private fun ColumnScope.DuplicatedTag(summary: AddNfcSummary.Duplicate, scope: A
 
   Spacer(modifier = Modifier.weight(1f))
 
-  AddWizardRepeatButton { scope.onPrepareAnother() }
+  AddWizardActionButton { scope.onPrepareAnother() }
 
   Spacer(modifier = Modifier.weight(1f))
 }

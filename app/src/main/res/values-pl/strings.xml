@@ -826,4 +826,5 @@
   <string name="rgb_detail_colors_limit">Osiągnięto limit!</string>
   <string name="channel_caption_invisible">Ukryty</string>
   <string name="dimmer_detail_temperature">Barwa:</string>
+  <string name="app_sentence">nareszcie w domu!</string>
 </resources>
