@@ -886,4 +886,5 @@
   <string name="call_nfc_action_channel_offline" translatable="false">Channel assigned to the NFC tag is offline!</string>
   <string name="edit_nfc_tag_header" translatable="false">NFC Tag Configuration</string>
   <string name="add_nfc_configure" translatable="false">Configure</string>
+  <string name="app_sentence">finally in home!</string>
 </resources>

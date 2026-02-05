@@ -25,6 +25,7 @@ import org.supla.android.lib.actions.SubjectType
 
 data class EditNfcTagViewState(
   val tagName: String = "",
+  val tagUuid: String = "",
   val profiles: SingleOptionalSelectionList<ProfileItem>? = null,
   val subjectType: SubjectType = SubjectType.CHANNEL,
 

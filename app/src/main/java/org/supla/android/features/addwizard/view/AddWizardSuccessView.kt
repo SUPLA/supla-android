@@ -34,8 +34,8 @@ import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.addwizard.AddWizardScope
 import org.supla.android.features.addwizard.model.AddWizardScreen
+import org.supla.android.features.addwizard.view.components.AddWizardActionButton
 import org.supla.android.features.addwizard.view.components.AddWizardContentText
-import org.supla.android.features.addwizard.view.components.AddWizardRepeatButton
 import org.supla.android.features.addwizard.view.components.AddWizardScaffold
 import org.supla.android.features.addwizard.view.components.DeviceParameter
 import org.supla.android.features.addwizard.view.components.DeviceParametersTable
@@ -72,7 +72,7 @@ fun AddWizardSuccessScope.AddWizardSuccessView(deviceParameters: List<DevicePara
     AddWizardContentText(R.string.wizard_done_explentations)
 
     Spacer(modifier = Modifier.weight(1f))
-    AddWizardRepeatButton { onAgain() }
+    AddWizardActionButton { onAgain() }
     Spacer(modifier = Modifier.weight(1f))
   }
 }

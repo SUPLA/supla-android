@@ -24,40 +24,22 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.delay
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.extensions.addWizardButton
 import org.supla.android.ui.views.Image
-import org.supla.android.ui.views.buttons.OutlinedButton
-import kotlin.time.Duration.Companion.milliseconds
-
-private const val NUMBER_OF_DOTS = 10
 
 @Composable
 fun AddWizardScaffold(
@@ -145,54 +127,13 @@ private fun NavigationButtons(
       .padding(Distance.tiny)
   ) {
     backButton?.let { it() }
-    OutlinedButton(
-      colors = ButtonDefaults.addWizardButtonColors(),
-      contentPadding = PaddingValues(start = Distance.default, top = Distance.small, end = Distance.small, bottom = Distance.small),
+    AddWizardNavigationButton(
+      textRes = buttonTextId,
+      modifier = Modifier.align(Alignment.CenterEnd),
       onClick = onNext,
-      modifier = Modifier
-        .align(Alignment.CenterEnd)
-        .addWizardButton(),
-      enabled = !processing
-    ) {
-      if (processing) {
-        ProcessingText()
-      } else {
-        Text(
-          text = stringResource(buttonTextId),
-          style = MaterialTheme.typography.labelLarge,
-        )
-        Spacer(modifier = Modifier.width(Distance.tiny))
-        Image(
-          drawableId = R.drawable.ic_arrow_right,
-        )
-      }
-    }
+      processing = processing
+    )
   }
-
-@Composable
-private fun ProcessingText() {
-  var position by remember { mutableIntStateOf(0) }
-  var text by remember { mutableStateOf("..........") }
-  LaunchedEffect(Any()) {
-    while (true) {
-      delay(100.milliseconds)
-      if (position >= NUMBER_OF_DOTS) {
-        position = 0
-      } else {
-        position += 1
-      }
-      text = ""
-      for (i in 0..NUMBER_OF_DOTS) {
-        text += if (i == position) "|" else "."
-      }
-    }
-  }
-
-  Text(
-    text = text,
-    style = MaterialTheme.typography.bodySmall,
-  )
-}
 
 @Composable
 fun ButtonDefaults.addWizardButtonColors() =

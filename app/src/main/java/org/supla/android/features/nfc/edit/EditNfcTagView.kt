@@ -42,6 +42,7 @@ import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.buttons.OutlinedButton
 import org.supla.android.ui.views.configuration.ActionConfigurationScope
 import org.supla.core.shared.infrastructure.LocalizedString
+import java.util.UUID
 
 interface EditNfcTagViewScope : ActionConfigurationScope {
   fun onSave()
@@ -96,6 +97,7 @@ private fun Preview() {
     emptyScope.View(
       EditNfcTagViewState(
         tagName = "Open door tag",
+        tagUuid = UUID.randomUUID().toString(),
         profiles = SingleOptionalSelectionList(
           selected = firstProfile,
           label = R.string.widget_configure_profile_label,
