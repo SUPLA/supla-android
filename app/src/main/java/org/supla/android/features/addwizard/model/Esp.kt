@@ -31,7 +31,8 @@ object Esp {
     "ERGO-",
     "SOMEF-",
     "AURATON-",
-    "HPD-"
+    "HPD-",
+    "WALA-"
   )
 
   private val FULL_PATTERN = Pattern.compile("-[A-Fa-f0-9]{12}$")
