@@ -231,7 +231,7 @@ abstract class WidgetCommandWorkerBase(
         brightness,
         brightness,
         configuration.value!!.toLong(),
-        dimmerCct = IGNORE_CCT,
+        whiteTemperature = IGNORE_CCT,
         colorRandom = false,
         onOff = true
       )
