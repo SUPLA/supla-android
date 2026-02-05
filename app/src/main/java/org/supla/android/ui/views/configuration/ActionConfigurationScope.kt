@@ -30,7 +30,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
-import org.supla.android.data.model.general.SingleSelectionList
+import org.supla.android.data.model.general.SingleOptionalSelectionList
 import org.supla.android.data.model.spinner.ProfileItem
 import org.supla.android.data.model.spinner.SubjectItem
 import org.supla.android.extensions.ucFirst
@@ -54,7 +54,7 @@ interface ActionConfigurationScope {
 }
 
 @Composable
-fun ActionConfigurationScope.Profiles(profiles: SingleSelectionList<ProfileItem>, enabled: Boolean = true) =
+fun ActionConfigurationScope.Profiles(profiles: SingleOptionalSelectionList<ProfileItem>, enabled: Boolean = true) =
   Spinner(
     options = profiles,
     fillMaxWidth = true,
@@ -72,7 +72,7 @@ fun ActionConfigurationScope.SubjectTypes(active: SubjectType, enabled: Boolean 
   )
 
 @Composable
-fun ActionConfigurationScope.Subjects(subjects: SingleSelectionList<SubjectItem>, enabled: Boolean = true) =
+fun ActionConfigurationScope.Subjects(subjects: SingleOptionalSelectionList<SubjectItem>, enabled: Boolean = true) =
   LabelledSpinner(
     options = subjects,
     fillMaxWidth = true,
@@ -103,7 +103,7 @@ fun ActionConfigurationScope.Caption(
   }
 
 @Composable
-fun ActionConfigurationScope.Actions(actions: SingleSelectionList<ActionId>) =
+fun ActionConfigurationScope.Actions(actions: SingleOptionalSelectionList<ActionId>) =
   Spinner(
     options = actions,
     fillMaxWidth = true,

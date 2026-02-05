@@ -21,6 +21,7 @@ import android.graphics.BlurMaskFilter
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -173,6 +174,10 @@ fun Modifier.buttonBackground(shape: SuplaButtonShape) =
         offsetY = 0.dp
       )
   )
+
+@Composable
+fun Modifier.addWizardButton(): Modifier =
+  this.defaultMinSize(minWidth = 130.dp, minHeight = 56.dp)
 
 private fun Modifier.innerShadowForButtonBackground(
   color: Color = Color.Black,

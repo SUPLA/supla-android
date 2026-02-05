@@ -33,7 +33,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -53,12 +52,11 @@ import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.addwizard.view.components.AddWizardContentText
 import org.supla.android.features.addwizard.view.components.AddWizardEmptyScaffold
+import org.supla.android.features.addwizard.view.components.AddWizardRepeatButton
 import org.supla.android.features.addwizard.view.components.AddWizardScaffold
 import org.supla.android.features.addwizard.view.components.AddWizardTextFieldContainer
-import org.supla.android.features.addwizard.view.components.addWizardButtonColors
 import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.Switch
-import org.supla.android.ui.views.buttons.OutlinedButton
 import org.supla.android.ui.views.forms.TextField
 import org.supla.core.shared.extensions.ifTrue
 import java.util.UUID
@@ -79,7 +77,6 @@ sealed interface AddNfcSummary {
   data object Failure : AddNfcSummary
   data object NotUsable : AddNfcSummary
   data object NotEnoughSpace : AddNfcSummary
-  data object Timeout : AddNfcSummary
   data class Success(val tagUuid: String) : AddNfcSummary
   data class Duplicate(val tagId: Long, val tagUuid: String, val name: String) : AddNfcSummary
 
@@ -97,8 +94,6 @@ interface AddNfcTagScope {
   fun onWriteLockChanged(active: Boolean)
   fun onPrepareAnother()
   fun onSaveAndPrepareAnother(uuid: String)
-  fun onSaveAndConfigure(uuid: String)
-  fun onConfigure(id: Long)
 }
 
 @Composable
@@ -205,13 +200,17 @@ private fun Message(
 private fun AddNfcTagScope.Summary(tagName: String, error: Boolean, summary: AddNfcSummary) =
   AddWizardScaffold(
     iconRes = summary.iconRes,
-    buttonTextId = if (summary is AddNfcSummary.Success) R.string.save else R.string.exit,
+    buttonTextId =
+    when (summary) {
+      is AddNfcSummary.Success -> R.string.add_nfc_save_and_configure_tag
+      is AddNfcSummary.Duplicate -> R.string.add_nfc_configure
+      else -> R.string.exit
+    },
     onNext = { onStepFinished(AddNfcStep.TagConfiguration(summary)) }
   ) {
     when (summary) {
       AddNfcSummary.Failure -> Error(R.string.add_nfc_general_error) { onPrepareAnother() }
       AddNfcSummary.NotUsable -> Error(R.string.add_nfc_not_usable) { onPrepareAnother() }
-      AddNfcSummary.Timeout -> Error(R.string.add_nfc_timeout) { onPrepareAnother() }
       AddNfcSummary.NotEnoughSpace -> Error(R.string.add_nfc_not_enough_space) { onPrepareAnother() }
       is AddNfcSummary.Success -> NewTag(tagName, error, summary, this@Summary)
       is AddNfcSummary.Duplicate -> DuplicatedTag(summary, this@Summary)
@@ -226,11 +225,7 @@ private fun ColumnScope.Error(@StringRes textRes: Int, onPrepareAnother: () -> U
 
   Spacer(modifier = Modifier.weight(1f))
 
-  OutlinedButton(
-    text = stringResource(R.string.add_nfc_prepare_another),
-    colors = ButtonDefaults.addWizardButtonColors(),
-    onClick = onPrepareAnother,
-  )
+  AddWizardRepeatButton(textRes = R.string.add_wizard_repeat) { onPrepareAnother() }
 
   Spacer(modifier = Modifier.weight(1f))
 }
@@ -262,19 +257,7 @@ private fun ColumnScope.NewTag(tagName: String, error: Boolean, summary: AddNfcS
 
   Spacer(modifier = Modifier.weight(1f))
 
-  OutlinedButton(
-    text = stringResource(R.string.add_nfc_save_and_configure_tag),
-    colors = ButtonDefaults.addWizardButtonColors(),
-    onClick = { scope.onSaveAndConfigure(summary.tagUuid) },
-    modifier = Modifier
-  )
-
-  OutlinedButton(
-    text = stringResource(R.string.add_nfc_save_and_prepare_another),
-    colors = ButtonDefaults.addWizardButtonColors(),
-    onClick = { scope.onSaveAndPrepareAnother(summary.tagUuid) },
-    modifier = Modifier
-  )
+  AddWizardRepeatButton(textRes = R.string.add_nfc_save_and_prepare_another) { scope.onSaveAndPrepareAnother(summary.tagUuid) }
 
   Spacer(modifier = Modifier.weight(1f))
 }
@@ -287,19 +270,7 @@ private fun ColumnScope.DuplicatedTag(summary: AddNfcSummary.Duplicate, scope: A
 
   Spacer(modifier = Modifier.weight(1f))
 
-  OutlinedButton(
-    text = stringResource(R.string.add_nfc_configure_tag),
-    colors = ButtonDefaults.addWizardButtonColors(),
-    onClick = { scope.onConfigure(summary.tagId) },
-    modifier = Modifier
-  )
-
-  OutlinedButton(
-    text = stringResource(R.string.add_nfc_prepare_another),
-    colors = ButtonDefaults.addWizardButtonColors(),
-    onClick = { scope.onPrepareAnother() },
-    modifier = Modifier
-  )
+  AddWizardRepeatButton { scope.onPrepareAnother() }
 
   Spacer(modifier = Modifier.weight(1f))
 }
@@ -311,8 +282,6 @@ private val previewScope = object : AddNfcTagScope {
   override fun onWriteLockChanged(active: Boolean) {}
   override fun onPrepareAnother() {}
   override fun onSaveAndPrepareAnother(uuid: String) {}
-  override fun onSaveAndConfigure(uuid: String) {}
-  override fun onConfigure(id: Long) {}
 }
 
 @Preview
@@ -361,21 +330,6 @@ private fun PreviewErrorNotUsable() {
       viewState = AddNfcTagViewState(
         step = AddNfcStep.TagConfiguration(
           result = AddNfcSummary.NotUsable
-        ),
-        error = true
-      )
-    )
-  }
-}
-
-@Preview
-@Composable
-private fun PreviewErrorTimeout() {
-  SuplaTheme {
-    previewScope.View(
-      viewState = AddNfcTagViewState(
-        step = AddNfcStep.TagConfiguration(
-          result = AddNfcSummary.Timeout
         ),
         error = true
       )

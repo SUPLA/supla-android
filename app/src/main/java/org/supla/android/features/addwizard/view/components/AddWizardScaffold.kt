@@ -52,6 +52,7 @@ import kotlinx.coroutines.delay
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.extensions.addWizardButton
 import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.buttons.OutlinedButton
 import kotlin.time.Duration.Companion.milliseconds
@@ -150,7 +151,7 @@ private fun NavigationButtons(
       onClick = onNext,
       modifier = Modifier
         .align(Alignment.CenterEnd)
-        .defaultMinSize(minWidth = 130.dp, minHeight = 56.dp),
+        .addWizardButton(),
       enabled = !processing
     ) {
       if (processing) {
