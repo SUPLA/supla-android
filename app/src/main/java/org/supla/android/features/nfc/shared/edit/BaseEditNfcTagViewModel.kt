@@ -74,7 +74,8 @@ open class BaseEditNfcTagViewModel(
         subjectId = tag.subjectId,
         actionId = tag.actionId,
         name = tag.name,
-        id = tag.id
+        id = tag.id,
+        uuid = tag.uuid
       )
     }
   }
@@ -176,13 +177,13 @@ open class BaseEditNfcTagViewModel(
   }
 
   private suspend fun load(
+    uuid: String,
     profileId: Long? = null,
     subjectType: SubjectType? = null,
     subjectId: Int? = null,
     actionId: ActionId? = null,
     name: String = "",
-    id: Long? = null,
-    uuid: String? = null
+    id: Long? = null
   ) {
     val profiles = schedulers.io { runCatching { readAllProfilesUseCase().blockingFirst() }.getOrNull() }
     if (profiles == null) {
@@ -202,12 +203,13 @@ open class BaseEditNfcTagViewModel(
       state.copy(
         screenState = state.screenState.copy(
           tagName = name,
+          tagUuid = uuid,
           profiles = profiles.asSingleSelectionList(profileId),
           subjects = subjectsList,
           subjectType = subjectType,
           actions = subjectsList?.selected?.actionsList(actionId),
         ),
-        mode = uuid?.let { Mode.Insert(it) } ?: id?.let { Mode.Edit(it) } ?: Mode.Unknown
+        mode = id?.let { Mode.Edit(it) } ?: Mode.Insert(uuid)
       )
     }
   }

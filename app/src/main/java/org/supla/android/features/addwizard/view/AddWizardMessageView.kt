@@ -27,8 +27,8 @@ import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.addwizard.AddWizardScope
 import org.supla.android.features.addwizard.model.AddWizardScreen
+import org.supla.android.features.addwizard.view.components.AddWizardActionButton
 import org.supla.android.features.addwizard.view.components.AddWizardContentText
-import org.supla.android.features.addwizard.view.components.AddWizardRepeatButton
 import org.supla.android.features.addwizard.view.components.AddWizardScaffold
 import org.supla.core.shared.infrastructure.localizedString
 
@@ -51,7 +51,7 @@ fun AddWizardMessageScope.AddWizardMessageView(
 
     if (step.showRepeat) {
       Spacer(modifier = Modifier.weight(1f))
-      AddWizardRepeatButton(textRes = R.string.add_wizard_repeat) { onAgain() }
+      AddWizardActionButton(textRes = R.string.add_wizard_repeat) { onAgain() }
       Spacer(modifier = Modifier.weight(1f))
     }
   }

@@ -25,12 +25,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Nfc
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -51,6 +53,9 @@ import kotlinx.coroutines.delay
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.extensions.addWizardButton
+import org.supla.android.features.addwizard.view.components.AddWizardActionButton
+import org.supla.android.features.addwizard.view.components.AddWizardNavigationButton
 import org.supla.android.features.addwizard.view.components.addWizardButtonColors
 import org.supla.android.features.nfc.add.NfcScanningAnimation
 import org.supla.android.features.nfc.call.CallActionFromData
@@ -84,6 +89,9 @@ data class CallActionScreenState(
 
 sealed class TagProcessingStep {
   var succeeded: Boolean = false
+
+  val isFailure: Boolean
+    get() = this is Failure
 
   data object ResolvingTag : TagProcessingStep()
   data object ExecutingAction : TagProcessingStep()
@@ -139,6 +147,16 @@ private fun CallActionScreenScope.View(screenState: CallActionScreenState) {
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.spacedBy(Distance.tiny)
   ) {
+    Text(
+      text = stringResource(R.string.app_name),
+      style = MaterialTheme.typography.displaySmall,
+      color = MaterialTheme.colorScheme.onPrimaryContainer
+    )
+    Text(
+      text = stringResource(R.string.app_sentence),
+      style = MaterialTheme.typography.bodySmall,
+      color = MaterialTheme.colorScheme.onPrimaryContainer
+    )
     Spacer(modifier = Modifier.weight(0.5f))
 
     HeaderIcon(screenState.currentStep)
@@ -146,6 +164,14 @@ private fun CallActionScreenScope.View(screenState: CallActionScreenState) {
     Steps(screenState.steps, screenState.currentStep)
 
     Spacer(modifier = Modifier.weight(1f))
+
+    if (screenState.currentStep.isFailure) {
+      AddWizardNavigationButton(
+        textRes = R.string.exit,
+        modifier = Modifier.align(Alignment.End),
+        onClick = { close() }
+      )
+    }
   }
 }
 
@@ -224,18 +250,15 @@ private fun CallActionScreenScope.FailureStep(type: TagProcessingStep.FailureTyp
   )
 
   Spacer(modifier = Modifier.height(Distance.default))
-
   when (type) {
     is TagProcessingStep.FailureType.TagNotFound ->
-      Button(R.string.nfc_list_add) { addNewTag(type.uuid) }
+      AddWizardActionButton(textRes = R.string.nfc_list_add, icon = Icons.Default.Nfc) { addNewTag(type.uuid) }
 
     is TagProcessingStep.FailureType.TagNotConfigured ->
-      Button(R.string.add_nfc_configure_tag) { configureTag(type.id) }
+      AddWizardActionButton(textRes = R.string.add_nfc_configure_tag, icon = Icons.Default.Edit) { configureTag(type.id) }
 
     else -> {}
   }
-
-  Button(R.string.exit) { close() }
 }
 
 @Composable
@@ -309,7 +332,7 @@ private fun Button(
     contentPadding = PaddingValues(start = Distance.default, top = Distance.tiny, end = Distance.default, bottom = Distance.tiny),
     onClick = onClick,
     modifier = Modifier
-      .defaultMinSize(minWidth = 130.dp),
+      .addWizardButton(),
   ) {
     Text(
       text = stringResource(buttonTextId),
