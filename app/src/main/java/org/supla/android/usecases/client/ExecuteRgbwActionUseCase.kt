@@ -77,7 +77,7 @@ class ExecuteRgbwActionUseCase @Inject constructor(
         colorBrightness = colorBrightness ?: IGNORE_BRIGHTNESS,
         color = color ?: IGNORE_COLOR,
         colorRandom = false,
-        dimmerCct = cct ?: IGNORE_CCT,
+        whiteTemperature = cct ?: IGNORE_CCT,
         onOff = onOff
       )
       Timber.d("Executing RGBW action with parameters: $parameters")

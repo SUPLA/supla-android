@@ -85,7 +85,7 @@ open class BaseActionUseCase<T : ChannelDataBase>(
       color = IGNORE_COLOR,
       colorBrightness = brightness,
       colorRandom = false,
-      dimmerCct = IGNORE_CCT,
+      whiteTemperature = IGNORE_CCT,
       onOff = true
     )
   }
