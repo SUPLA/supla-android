@@ -108,12 +108,13 @@ open class BaseEditNfcTagViewModel(
           updateState { state ->
             val lastSubjectId = state.lastSubjectId(profileItem.id, subjectType)
             val lastActionId = state.lastActionId(profileItem.id, subjectType, lastSubjectId)
+            val subjectsList = subjects.asSingleSelectionList(subjectType, lastSubjectId)
             state.copy(
               screenState = state.screenState.copy(
                 profiles = state.screenState.profiles?.copy(selected = profileItem),
                 subjectType = subjectType,
-                subjects = subjects.asSingleSelectionList(subjectType, lastSubjectId),
-                actions = subjects.firstOrNull { it.isLocation.not() }?.actionsList(lastActionId)
+                subjects = subjectsList,
+                actions = subjectsList?.selected?.actionsList(lastActionId)
               ),
             )
           }
@@ -131,11 +132,12 @@ open class BaseEditNfcTagViewModel(
           updateState { state ->
             val lastSubjectId = state.lastSubjectId(profile.id, subjectType)
             val lastActionId = state.lastActionId(profile.id, subjectType, lastSubjectId)
+            val subjectsList = subjects.asSingleSelectionList(subjectType, lastSubjectId)
             state.copy(
               screenState = state.screenState.copy(
                 subjectType = subjectType,
-                subjects = subjects.asSingleSelectionList(subjectType, lastSubjectId),
-                actions = subjects.firstOrNull { it.isLocation.not() }?.actionsList(lastActionId)
+                subjects = subjectsList,
+                actions = subjectsList?.selected?.actionsList(lastActionId)
               ),
             )
           }
@@ -152,7 +154,8 @@ open class BaseEditNfcTagViewModel(
         screenState = state.screenState.copy(
           subjects = state.screenState.subjects?.copy(selected = subjectItem),
           actions = subjectItem.actionsList(lastActionId)
-        )
+        ),
+        selections = state.updateSelections(subjectItem.id)
       )
     }
   }
@@ -267,6 +270,16 @@ data class EditNfcTagViewModelState(
   override val screenState: EditNfcTagViewState = EditNfcTagViewState()
 ) : ModelViewState<EditNfcTagViewState>() {
 
+  fun updateSelections(subjectId: Int): Set<Selection> =
+    mutableSetOf<Selection>().apply {
+      addAll(selections)
+      val profileId = screenState.profiles?.selected?.id
+
+      if (profileId != null) {
+        addOrReplace(Selection(profileId, screenState.subjectType, subjectId, null))
+      }
+    }
+
   fun updateSelections(actionId: ActionId): Set<Selection> =
     mutableSetOf<Selection>().apply {
       addAll(selections)
@@ -299,7 +312,7 @@ data class Selection(
   val profileId: Long,
   val subjectType: SubjectType,
   val subjectId: Int,
-  val action: ActionId
+  val action: ActionId?
 ) {
   override fun hashCode(): Int {
     return Objects.hash(profileId, subjectType, subjectId)

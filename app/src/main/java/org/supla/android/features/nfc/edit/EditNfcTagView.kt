@@ -29,7 +29,7 @@ import androidx.compose.ui.res.stringResource
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.data.model.general.SingleSelectionList
+import org.supla.android.data.model.general.SingleOptionalSelectionList
 import org.supla.android.data.model.spinner.ProfileItem
 import org.supla.android.data.model.spinner.SubjectItem
 import org.supla.android.features.nfc.shared.edit.EditNfcTagViewState
@@ -86,7 +86,7 @@ private val emptyScope = object : EditNfcTagViewScope {
 @SuplaPreview
 @Composable
 private fun Preview() {
-  val firstProfile = ProfileItem(1, LocalizedString.Constant("Default"))
+  val firstProfile = ProfileItem(1, LocalizedString.Constant("Default"), true)
   val firstSubject = SubjectItem.create(
     id = 1,
     caption = LocalizedString.Constant("Thermostat"),
@@ -96,22 +96,22 @@ private fun Preview() {
     emptyScope.View(
       EditNfcTagViewState(
         tagName = "Open door tag",
-        profiles = SingleSelectionList(
+        profiles = SingleOptionalSelectionList(
           selected = firstProfile,
           label = R.string.widget_configure_profile_label,
           items = listOf(
             firstProfile,
-            ProfileItem(2, LocalizedString.Constant("Test"))
+            ProfileItem(2, LocalizedString.Constant("Test"), true)
           )
         ),
-        subjects = SingleSelectionList(
+        subjects = SingleOptionalSelectionList(
           selected = firstSubject,
           label = R.string.widget_channel,
           items = listOf(
             firstSubject
           )
         ),
-        actions = SingleSelectionList(
+        actions = SingleOptionalSelectionList(
           selected = ActionId.OPEN,
           label = R.string.widget_configure_action_label,
           items = listOf(ActionId.OPEN)

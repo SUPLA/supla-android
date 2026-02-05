@@ -44,9 +44,9 @@ data class NfcTagDataEntity(
 ) {
   fun icon(getChannelIconUseCase: GetChannelIconUseCase, getSceneIconUseCase: GetSceneIconUseCase): ImageId =
     when (tagEntity.subjectType) {
-      SubjectType.GROUP -> getChannelIconUseCase.forState(groupEntity!!, state)
-      SubjectType.SCENE -> getSceneIconUseCase(sceneEntity!!)
-      SubjectType.CHANNEL -> getChannelIconUseCase.forState(channelEntity!!, state)
+      SubjectType.GROUP if groupEntity != null -> getChannelIconUseCase.forState(groupEntity, state)
+      SubjectType.SCENE if sceneEntity != null -> getSceneIconUseCase(sceneEntity)
+      SubjectType.CHANNEL if channelEntity != null -> getChannelIconUseCase.forState(channelEntity, state)
       else -> ImageId(R.drawable.ic_unknown_channel)
     }
 

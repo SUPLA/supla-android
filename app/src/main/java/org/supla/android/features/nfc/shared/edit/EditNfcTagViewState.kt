@@ -17,7 +17,7 @@ package org.supla.android.features.nfc.shared.edit
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.data.model.general.SingleSelectionList
+import org.supla.android.data.model.general.SingleOptionalSelectionList
 import org.supla.android.data.model.spinner.ProfileItem
 import org.supla.android.data.model.spinner.SubjectItem
 import org.supla.android.lib.actions.ActionId
@@ -25,11 +25,11 @@ import org.supla.android.lib.actions.SubjectType
 
 data class EditNfcTagViewState(
   val tagName: String = "",
-  val profiles: SingleSelectionList<ProfileItem>? = null,
+  val profiles: SingleOptionalSelectionList<ProfileItem>? = null,
   val subjectType: SubjectType = SubjectType.CHANNEL,
 
   val isError: Boolean = false,
 
-  val subjects: SingleSelectionList<SubjectItem>? = null,
-  val actions: SingleSelectionList<ActionId>? = null,
+  val subjects: SingleOptionalSelectionList<SubjectItem>? = null,
+  val actions: SingleOptionalSelectionList<ActionId>? = null,
 )

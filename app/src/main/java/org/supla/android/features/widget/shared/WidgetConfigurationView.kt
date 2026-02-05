@@ -45,7 +45,7 @@ import org.supla.android.R
 import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.data.model.general.SingleSelectionList
+import org.supla.android.data.model.general.SingleOptionalSelectionList
 import org.supla.android.data.model.spinner.ProfileItem
 import org.supla.android.data.model.spinner.SubjectItem
 import org.supla.android.extensions.ucFirst
@@ -66,17 +66,20 @@ import org.supla.android.ui.views.texts.Header
 import org.supla.core.shared.infrastructure.LocalizedString
 
 data class WidgetConfigurationViewState(
-  val profiles: SingleSelectionList<ProfileItem>? = null,
+  val profiles: SingleOptionalSelectionList<ProfileItem>? = null,
   val subjectTypes: List<SubjectType>? = null,
   val subjectType: SubjectType = SubjectType.CHANNEL,
-  val subjects: SingleSelectionList<SubjectItem>? = null,
-  val subjectDetails: SingleSelectionList<SubjectDetail>? = null,
+  val subjects: SingleOptionalSelectionList<SubjectItem>? = null,
+  val subjectDetails: SingleOptionalSelectionList<SubjectDetail>? = null,
   val caption: String? = null,
 
   val showWarning: Boolean = false,
-  val saveEnabled: Boolean = false,
   val error: LocalizedString? = null
-)
+) {
+  val saveEnabled: Boolean
+    get() = caption?.isNotEmpty() == true && subjects?.selected != null &&
+      (subjectDetails?.selected != null || subjectDetails == null)
+}
 
 interface WidgetConfigurationScope {
   fun onWarningClick()
@@ -201,7 +204,7 @@ private fun WidgetConfigurationScope.Warning() =
   }
 
 @Composable
-private fun WidgetConfigurationScope.Profiles(profiles: SingleSelectionList<ProfileItem>) =
+private fun WidgetConfigurationScope.Profiles(profiles: SingleOptionalSelectionList<ProfileItem>) =
   Spinner(
     options = profiles,
     fillMaxWidth = true,
@@ -209,7 +212,7 @@ private fun WidgetConfigurationScope.Profiles(profiles: SingleSelectionList<Prof
   )
 
 @Composable
-private fun WidgetConfigurationScope.Subjects(subjects: SingleSelectionList<SubjectItem>) =
+private fun WidgetConfigurationScope.Subjects(subjects: SingleOptionalSelectionList<SubjectItem>) =
   LabelledSpinner(
     options = subjects,
     fillMaxWidth = true,
@@ -235,7 +238,7 @@ private fun WidgetConfigurationScope.Caption(caption: String, isError: Boolean) 
   }
 
 @Composable
-private fun WidgetConfigurationScope.SubjectDetails(actions: SingleSelectionList<SubjectDetail>) =
+private fun WidgetConfigurationScope.SubjectDetails(actions: SingleOptionalSelectionList<SubjectDetail>) =
   Spinner(
     options = actions,
     fillMaxWidth = true,
@@ -256,7 +259,7 @@ private val emptyScope = object : WidgetConfigurationScope {
 @SuplaPreview
 @Composable
 private fun Preview() {
-  val firstProfile = ProfileItem(1, LocalizedString.Constant("Default"))
+  val firstProfile = ProfileItem(1, LocalizedString.Constant("Default"), true)
   val firstSubject = SubjectItem.create(
     id = 1,
     caption = LocalizedString.Constant("Thermostat"),
@@ -265,16 +268,16 @@ private fun Preview() {
   SuplaTheme {
     emptyScope.View(
       WidgetConfigurationViewState(
-        profiles = SingleSelectionList(
+        profiles = SingleOptionalSelectionList(
           selected = firstProfile,
           label = R.string.widget_configure_profile_label,
           items = listOf(
             firstProfile,
-            ProfileItem(2, LocalizedString.Constant("Test"))
+            ProfileItem(2, LocalizedString.Constant("Test"), true)
           )
         ),
         subjectTypes = SubjectType.entries,
-        subjects = SingleSelectionList(
+        subjects = SingleOptionalSelectionList(
           selected = firstSubject,
           label = R.string.widget_configure_channel_label,
           items = listOf(
@@ -282,7 +285,7 @@ private fun Preview() {
           )
         ),
         caption = "Thermostat",
-        subjectDetails = SingleSelectionList(
+        subjectDetails = SingleOptionalSelectionList(
           selected = ActionDetail(ActionId.OPEN),
           label = R.string.widget_configure_action_label,
           items = listOf(ActionDetail(ActionId.OPEN))
