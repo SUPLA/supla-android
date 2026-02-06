@@ -50,14 +50,16 @@ class CallActionViewModel @Inject constructor(
   }
 
   override fun addNewTag(uuid: String) {
-    sendEvent(CallActionViewEvent.SaveNewNfcTag(uuid))
+    sendEvent(CallActionViewEvent.SaveNewNfcTag(uuid, currentState().readOnly))
   }
 
   override fun configureTag(id: Long) {
     sendEvent(CallActionViewEvent.EditMissingAction(id))
   }
 
-  fun onLaunchWithUrl(url: String?) {
+  fun onLaunchWithUrl(url: String?, readOnly: Boolean) {
+    updateState { it.copy(readOnly = readOnly) }
+
     if (url == null) {
       Timber.d("Url not found!")
       setErrorState(TagProcessingStep.FailureType.IllegalIntent)
@@ -75,7 +77,9 @@ class CallActionViewModel @Inject constructor(
     }
   }
 
-  fun onLaunchWithId(tagId: String?) {
+  fun onLaunchWithId(tagId: String?, readOnly: Boolean) {
+    updateState { it.copy(readOnly = readOnly) }
+
     if (tagId == null) {
       Timber.d("Tag id not found!")
       setErrorState(TagProcessingStep.FailureType.IllegalIntent)
@@ -162,9 +166,10 @@ private val NfcTagEntity.Configuration.actionParameters: ActionParameters
 sealed class CallActionViewEvent : ViewEvent {
   data object Close : CallActionViewEvent()
   data class EditMissingAction(val id: Long) : CallActionViewEvent()
-  data class SaveNewNfcTag(val uuid: String) : CallActionViewEvent()
+  data class SaveNewNfcTag(val uuid: String, val readOnly: Boolean) : CallActionViewEvent()
 }
 
 data class CallActionViewModelState(
+  val readOnly: Boolean = false,
   override val screenState: CallActionScreenState = CallActionScreenState()
 ) : ModelViewState<CallActionScreenState>()

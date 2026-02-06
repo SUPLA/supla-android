@@ -17,6 +17,7 @@ package org.supla.android.features.nfc.list
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.nfc.NfcAdapter
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -38,21 +39,44 @@ class NfcTagListViewModel @Inject constructor(
   schedulers: SuplaSchedulers
 ) : BaseViewModel<NfcTagListViewModelState, NfcTagListViewEvent>(NfcTagListViewModelState(), schedulers), NfcTagListScope {
 
-  override fun onStart() {
+  fun onStart(nfcAdapter: NfcAdapter?) {
+    val nfcState = when {
+      nfcAdapter == null -> NfcTagListViewState.NfcState.NOT_SUPPORTED
+      nfcAdapter.isEnabled -> NfcTagListViewState.NfcState.ENABLED
+      else -> NfcTagListViewState.NfcState.DISABLED
+    }
+
     viewModelScope.launch {
       val tags = nfcTagRepository.findAllWithDependencies()
       updateState { state ->
-        state.copy(viewState = state.viewState.copy(items = tags.map { it.toItem }))
+        state.copy(
+          viewState = state.viewState.copy(
+            items = tags.map { it.toItem },
+            nfcState = nfcState
+          )
+        )
       }
     }
   }
 
   override fun onAddClick() {
-    sendEvent(NfcTagListViewEvent.NavigateToAdd)
+    if (currentState().viewState.nfcState == NfcTagListViewState.NfcState.ENABLED) {
+      sendEvent(NfcTagListViewEvent.NavigateToAdd)
+    } else {
+      updateState { it.copy(viewState = it.viewState.copy(showNfcDialog = true)) }
+    }
   }
 
   override fun onItemClick(item: NfcTagItem) {
     sendEvent(NfcTagListViewEvent.NavigateToItemEdit(item.id))
+  }
+
+  override fun onNfcSettingsClick() {
+    sendEvent(NfcTagListViewEvent.NavigateToNfcSettings)
+  }
+
+  override fun onNfcDialogDismiss() {
+    updateState { it.copy(viewState = it.viewState.copy(showNfcDialog = false)) }
   }
 
   private val NfcTagDataEntity.toItem
@@ -61,13 +85,15 @@ class NfcTagListViewModel @Inject constructor(
       uuid = tagEntity.uuid,
       name = tagEntity.name,
       icon = icon(getChannelIconUseCase, getSceneIconUseCase),
-      profileName = profileEntity?.name
+      profileName = profileEntity?.name,
+      readOnly = tagEntity.readOnly
     )
 }
 
 sealed interface NfcTagListViewEvent : ViewEvent {
   data object NavigateToAdd : NfcTagListViewEvent
   data class NavigateToItemEdit(val id: Long) : NfcTagListViewEvent
+  data object NavigateToNfcSettings : NfcTagListViewEvent
 }
 
 data class NfcTagListViewModelState(

@@ -115,7 +115,7 @@ fun CallActionScreen(
   navigator: Navigator,
   viewModel: CallActionViewModel = hiltViewModel()
 ) {
-  LaunchedEffect(key.url) { viewModel.onLaunchWithUrl(key.url) }
+  LaunchedEffect(key.url) { viewModel.onLaunchWithUrl(key.url, key.readOnly) }
   ScreenScaffold(
     viewModel = viewModel,
     eventHandler = { handleEvent(it, navigator) },
@@ -129,7 +129,7 @@ fun CallActionScreen(
   navigator: Navigator,
   viewModel: CallActionViewModel = hiltViewModel()
 ) {
-  LaunchedEffect(key.id) { viewModel.onLaunchWithId(key.id) }
+  LaunchedEffect(key.id) { viewModel.onLaunchWithId(key.id, key.readOnly) }
   ScreenScaffold(
     viewModel = viewModel,
     eventHandler = { handleEvent(it, navigator) },
@@ -322,29 +322,11 @@ private fun ProcessingText() {
   )
 }
 
-@Composable
-private fun Button(
-  @StringRes buttonTextId: Int,
-  onClick: () -> Unit
-) =
-  OutlinedButton(
-    colors = ButtonDefaults.addWizardButtonColors(),
-    contentPadding = PaddingValues(start = Distance.default, top = Distance.tiny, end = Distance.default, bottom = Distance.tiny),
-    onClick = onClick,
-    modifier = Modifier
-      .addWizardButton(),
-  ) {
-    Text(
-      text = stringResource(buttonTextId),
-      style = MaterialTheme.typography.labelLarge,
-    )
-  }
-
 private fun handleEvent(event: CallActionViewEvent, navigator: Navigator) {
   when (event) {
     CallActionViewEvent.Close -> navigator.finish()
     is CallActionViewEvent.EditMissingAction -> navigator.navigateToEditMissingAction(event.id)
-    is CallActionViewEvent.SaveNewNfcTag -> navigator.navigateToSaveNewNfcTag(event.uuid)
+    is CallActionViewEvent.SaveNewNfcTag -> navigator.navigateToSaveNewNfcTag(event.uuid, event.readOnly)
   }
 }
 

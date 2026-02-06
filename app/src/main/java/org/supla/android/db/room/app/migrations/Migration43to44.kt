@@ -1,4 +1,4 @@
-package org.supla.android.features.nfc.call
+package org.supla.android.db.room.app.migrations
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,17 +17,17 @@ package org.supla.android.features.nfc.call
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.navigation3.runtime.NavKey
-import kotlinx.serialization.Serializable
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
+import org.supla.android.data.source.local.entity.NfcTagEntity
+import org.supla.android.db.room.SqlExecutor
 
-@Serializable
-data class CallActionFromUrl(val url: String?, val readOnly: Boolean) : NavKey
+val MIGRATION_43_44: Migration = object : Migration(43, 44), SqlExecutor {
 
-@Serializable
-data class CallActionFromData(val id: String, val readOnly: Boolean) : NavKey
+  private val ALTER_TABLE_SQL =
+    "ALTER TABLE ${NfcTagEntity.TABLE_NAME} ADD ${NfcTagEntity.COLUMN_READ_ONLY} INTEGER NOT NULL DEFAULT 0"
 
-@Serializable
-data class EditMissingAction(val id: Long) : NavKey
-
-@Serializable
-data class SaveNewNfcTag(val uuid: String, val readOnly: Boolean) : NavKey
+  override fun migrate(db: SupportSQLiteDatabase) {
+    execSQL(db, ALTER_TABLE_SQL)
+  }
+}

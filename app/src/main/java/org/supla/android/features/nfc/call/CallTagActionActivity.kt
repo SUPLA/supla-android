@@ -36,7 +36,6 @@ import androidx.navigation3.ui.NavDisplay
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.core.infrastructure.nfc.navKey
-import org.supla.android.core.infrastructure.nfc.ndefMessages
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.extensions.setStatusBarColor
 import org.supla.android.features.nfc.call.screens.Navigator
@@ -54,9 +53,8 @@ class CallTagActionActivity : ComponentActivity() {
     super.onCreate(savedInstanceState)
     setStatusBarColor(R.color.primary_container, R.color.primary_container, false)
 
-    val navKey = intent.ndefMessages?.navKey ?: CallActionFromUrl(intent?.data?.toString())
     setContent {
-      Content(navKey, navigator)
+      Content(intent.navKey, navigator)
     }
   }
 
@@ -87,7 +85,7 @@ class CallTagActionActivity : ComponentActivity() {
           entry<CallActionFromUrl> { CallActionScreen(it, navigator) }
           entry<CallActionFromData> { CallActionScreen(it, navigator) }
           entry<EditMissingAction> { ConfigureActionScreen(it.id, navigator) }
-          entry<SaveNewNfcTag> { ConfigureActionScreen(it.uuid, navigator) }
+          entry<SaveNewNfcTag> { ConfigureActionScreen(it.uuid, it.readOnly, navigator) }
         }
       )
     }

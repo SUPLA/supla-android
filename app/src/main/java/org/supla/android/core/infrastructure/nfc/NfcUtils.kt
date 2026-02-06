@@ -29,6 +29,7 @@ import android.os.Build.VERSION.SDK_INT
 import androidx.navigation3.runtime.NavKey
 import org.supla.android.features.nfc.call.CallActionFromData
 import org.supla.android.features.nfc.call.CallActionFromUrl
+import org.supla.core.shared.extensions.ifTrue
 import timber.log.Timber
 import java.util.UUID
 
@@ -39,7 +40,7 @@ private const val MIME = "application/vnd.org.supla.tag"
 
 sealed interface TagProcessingResult {
   data object NotUsable : TagProcessingResult
-  data class Success(val uuid: String) : TagProcessingResult
+  data class Success(val uuid: String, val readOnly: Boolean) : TagProcessingResult
   data object NotEnoughSpace : TagProcessingResult
   data object Failure : TagProcessingResult
 }
@@ -53,21 +54,32 @@ val Uri.tagUuid: String?
       null
     }
 
-val String.isNfcAction: Boolean
-  get() = when (this) {
-    NfcAdapter.ACTION_NDEF_DISCOVERED,
-    NfcAdapter.ACTION_TECH_DISCOVERED,
-    NfcAdapter.ACTION_TAG_DISCOVERED -> true
-
-    else -> false
-  }
-
 val Intent.nfcTag: Tag?
   get() = when {
     SDK_INT >= 33 -> getParcelableExtra(NfcAdapter.EXTRA_TAG, Tag::class.java)
     else ->
       @Suppress("DEPRECATION")
       getParcelableExtra(NfcAdapter.EXTRA_TAG)
+  }
+
+val Intent.navKey: NavKey
+  get() {
+    val tag = nfcTag
+
+    if (ndefMessages != null) {
+      for (message in ndefMessages) {
+        message.uriFromUriRecord?.let {
+          Timber.d("Found URI in message: $it")
+          return CallActionFromUrl(it.toString(), !tag.isWritable)
+        }
+        message.uuidFromMimeRecord?.let {
+          Timber.d("Found UUID in message: $it")
+          return CallActionFromData(it, !tag.isWritable)
+        }
+      }
+    }
+
+    return CallActionFromUrl(data?.toString(), !tag.isWritable)
   }
 
 val Intent.ndefMessages: List<NdefMessage>?
@@ -92,22 +104,8 @@ val NdefMessage.uriFromUriRecord: Uri?
       .firstOrNull { it.tnf == NdefRecord.TNF_WELL_KNOWN && it.type.contentEquals(NdefRecord.RTD_URI) }
       ?.toUri()
 
-val List<NdefMessage>.navKey: NavKey?
-  get() {
-    for (message in this) {
-      message.uriFromUriRecord?.let {
-        Timber.d("Found URI in message: $it")
-        return CallActionFromUrl(it.toString())
-      }
-      message.uuidFromMimeRecord?.let {
-        Timber.d("Found UUID in message: $it")
-        return CallActionFromData(it)
-      }
-    }
-
-    Timber.d("Nothing found in messages (size: $size)")
-    return null
-  }
+val Tag?.isWritable: Boolean
+  get() = if (this == null) false else Ndef.get(this)?.isWritable ?: (NdefFormatable.get(this) != null)
 
 fun Tag.prepareForSupla(lockTag: Boolean): TagProcessingResult {
   val ndef = Ndef.get(this)
@@ -117,9 +115,10 @@ fun Tag.prepareForSupla(lockTag: Boolean): TagProcessingResult {
 
   val formatable = NdefFormatable.get(this)
   if (formatable != null) {
-    val result = formatable.formatForSupla()
-    if (lockTag) {
+    var result = formatable.formatForSupla()
+    if (result is TagProcessingResult.Success && lockTag) {
       makeReadOnlyAfterFormat()
+      result = result.copy(readOnly = true)
     }
     return result
   }
@@ -136,7 +135,7 @@ private fun NdefFormatable.formatForSupla(): TagProcessingResult {
     connect()
     format(createNdefMessage(id))
 
-    return TagProcessingResult.Success(id)
+    return TagProcessingResult.Success(id, false)
   } catch (ex: Exception) {
     Timber.e(ex)
     return TagProcessingResult.Failure
@@ -155,10 +154,8 @@ private fun Ndef.prepareForSupla(lockTag: Boolean): TagProcessingResult {
 
     if (uuidFromMimeRecord != null && uuidFromMimeRecord == uuidFromUriRecord) {
       Timber.i("NFC tag for supla found (id: $uuidFromMimeRecord)")
-      if (lockTag && isWritable) {
-        makeReadOnly()
-      }
-      return TagProcessingResult.Success(uuidFromMimeRecord)
+      val readOnly = (lockTag && isWritable).ifTrue { makeReadOnly() } ?: !isWritable
+      return TagProcessingResult.Success(uuidFromMimeRecord, readOnly)
     }
 
     Timber.d("No supla NFC record found, trying to create one")
@@ -192,10 +189,8 @@ private fun Ndef.writeSuplaRecord(lockTag: Boolean): TagProcessingResult {
     return if (recordsSize < maxSize) {
       Timber.d("Writing supla message to NFC tag")
       writeNdefMessage(message)
-      if (lockTag) {
-        makeReadOnly()
-      }
-      TagProcessingResult.Success(id)
+      val readOnly = lockTag.ifTrue { makeReadOnly() } ?: false
+      TagProcessingResult.Success(id, readOnly)
     } else {
       Timber.e("Supla message is too big to write to NFC tag ($recordsSize vs $maxSize")
       TagProcessingResult.NotEnoughSpace
