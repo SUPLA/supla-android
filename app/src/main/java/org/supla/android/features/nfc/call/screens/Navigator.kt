@@ -39,9 +39,9 @@ class Navigator @Inject constructor(@param:ActivityContext private val activityC
     this.backStack.value?.add(EditMissingAction(id))
   }
 
-  fun navigateToSaveNewNfcTag(uuid: String) {
+  fun navigateToSaveNewNfcTag(uuid: String, readOnly: Boolean) {
     this.backStack.value?.removeLastOrNull()
-    this.backStack.value?.add(SaveNewNfcTag(uuid))
+    this.backStack.value?.add(SaveNewNfcTag(uuid, readOnly))
   }
 
   fun bind(backStack: NavBackStack<NavKey>) {

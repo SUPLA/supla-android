@@ -56,10 +56,10 @@ import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.views.EmptyListInfoView
-import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.SegmentedComponent
 import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.forms.TextField
+import org.supla.android.ui.views.forms.WarningMessage
 import org.supla.android.ui.views.spinner.LabelledSpinner
 import org.supla.android.ui.views.spinner.Spinner
 import org.supla.android.ui.views.texts.Header
@@ -175,33 +175,10 @@ private fun WidgetConfigurationScope.Header() =
 
 @Composable
 private fun WidgetConfigurationScope.Warning() =
-  Row(
-    verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.spacedBy(Distance.small),
-    modifier = Modifier
-      .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(dimensionResource(R.dimen.radius_default)))
-      .border(
-        width = 1.dp,
-        color = colorResource(id = R.color.gray_lighter),
-        shape = RoundedCornerShape(dimensionResource(R.dimen.radius_default))
-      )
-      .padding(Distance.small)
-      .clickable { onWarningClick() }
-  ) {
-    Image(
-      drawableId = R.drawable.channel_warning_level1,
-      modifier = Modifier.size(dimensionResource(R.dimen.icon_big_size))
-    )
-    Text(
-      text = stringResource(R.string.widget_warning_battery_limitations),
-      style = MaterialTheme.typography.bodyMedium,
-      modifier = Modifier.weight(1f)
-    )
-    Image(
-      drawableId = R.drawable.ic_arrow_right,
-      modifier = Modifier.size(dimensionResource(R.dimen.icon_big_size)),
-    )
-  }
+  WarningMessage(
+    textRes = R.string.widget_warning_battery_limitations,
+    onClick = { onWarningClick() }
+  )
 
 @Composable
 private fun WidgetConfigurationScope.Profiles(profiles: SingleOptionalSelectionList<ProfileItem>) =

@@ -77,7 +77,7 @@ sealed interface AddNfcSummary {
   data object Failure : AddNfcSummary
   data object NotUsable : AddNfcSummary
   data object NotEnoughSpace : AddNfcSummary
-  data class Success(val tagUuid: String) : AddNfcSummary
+  data class Success(val tagUuid: String, val readOnly: Boolean) : AddNfcSummary
   data class Duplicate(val tagId: Long, val tagUuid: String, val name: String) : AddNfcSummary
 
   val iconRes: Int
@@ -93,7 +93,6 @@ interface AddNfcTagScope {
   fun onConfigureTagAction(tagId: Long)
   fun onWriteLockChanged(active: Boolean)
   fun onPrepareAnother()
-  fun onSaveAndPrepareAnother(uuid: String)
 }
 
 @Composable
@@ -236,7 +235,7 @@ private fun ColumnScope.NewTag(tagName: String, error: Boolean, summary: AddNfcS
 
   AddWizardContentText(stringResource(R.string.add_nfc_success, summary.tagUuid))
 
-  AddWizardTextFieldContainer(R.string.add_nfc_name_label) {
+  AddWizardTextFieldContainer(R.string.edit_nfc_tag_name) {
     TextField(
       value = tagName,
       modifier = Modifier.fillMaxWidth(),
@@ -257,7 +256,10 @@ private fun ColumnScope.NewTag(tagName: String, error: Boolean, summary: AddNfcS
 
   Spacer(modifier = Modifier.weight(1f))
 
-  AddWizardActionButton(textRes = R.string.add_nfc_save_and_prepare_another) { scope.onSaveAndPrepareAnother(summary.tagUuid) }
+  AddWizardActionButton(
+    textRes = R.string.add_nfc_save_and_prepare_another,
+    onClick = { scope.onPrepareAnother() }
+  )
 
   Spacer(modifier = Modifier.weight(1f))
 }
@@ -281,7 +283,6 @@ private val previewScope = object : AddNfcTagScope {
   override fun onConfigureTagAction(tagId: Long) {}
   override fun onWriteLockChanged(active: Boolean) {}
   override fun onPrepareAnother() {}
-  override fun onSaveAndPrepareAnother(uuid: String) {}
 }
 
 @Preview
@@ -299,7 +300,7 @@ private fun PreviewSummary() {
     previewScope.View(
       viewState = AddNfcTagViewState(
         step = AddNfcStep.TagConfiguration(
-          result = AddNfcSummary.Success(UUID.randomUUID().toString())
+          result = AddNfcSummary.Success(UUID.randomUUID().toString(), true)
         ),
         error = true
       )

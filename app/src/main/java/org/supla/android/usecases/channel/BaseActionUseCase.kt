@@ -25,13 +25,13 @@ import org.supla.android.data.source.local.entity.isProjectorScreen
 import org.supla.android.data.source.local.entity.isShadingSystem
 import org.supla.android.data.source.local.entity.isThermostat
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
-import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.ActionParameters
 import org.supla.android.lib.actions.IGNORE_CCT
 import org.supla.android.lib.actions.IGNORE_COLOR
 import org.supla.android.lib.actions.RgbwActionParameters
 import org.supla.android.lib.actions.SubjectType
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 open class BaseActionUseCase<T : ChannelDataBase>(
   private val suplaClientProvider: SuplaClientProvider
@@ -42,7 +42,7 @@ open class BaseActionUseCase<T : ChannelDataBase>(
 
   protected open fun performAction(channelBase: T, buttonType: ButtonType, forGroup: Boolean) {
     val client = suplaClientProvider.provide() ?: return
-    if (isRGBW(channelBase.function.value)) {
+    if (isRGBW(channelBase.function)) {
       client.executeAction(getRgbwParameters(buttonType, forGroup, channelBase.remoteId))
     } else if (channelBase.isShadingSystem() || channelBase.isProjectorScreen() || channelBase.isGarageDoorRoller()) {
       if (SuplaChannelFlag.RS_SBS_AND_STOP_ACTIONS inside channelBase.flags) {
@@ -61,10 +61,16 @@ open class BaseActionUseCase<T : ChannelDataBase>(
     }
   }
 
-  private fun isRGBW(function: Int): Boolean =
-    function == SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING ||
-      function == SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING ||
-      function == SuplaConst.SUPLA_CHANNELFNC_DIMMER
+  private fun isRGBW(function: SuplaFunction): Boolean =
+    when (function) {
+      SuplaFunction.DIMMER,
+      SuplaFunction.DIMMER_CCT,
+      SuplaFunction.RGB_LIGHTING,
+      SuplaFunction.DIMMER_CCT_AND_RGB,
+      SuplaFunction.DIMMER_AND_RGB_LIGHTING -> true
+
+      else -> false
+    }
 
   private fun getOnOffValue(buttonType: ButtonType): Int = when (buttonType) {
     ButtonType.LEFT -> 0

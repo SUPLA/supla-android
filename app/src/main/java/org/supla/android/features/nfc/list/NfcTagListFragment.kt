@@ -17,6 +17,9 @@ package org.supla.android.features.nfc.list
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.content.Intent
+import android.nfc.NfcAdapter
+import android.provider.Settings
 import androidx.compose.runtime.Composable
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,10 +44,16 @@ class NfcTagListFragment : BaseComposeFragment<NfcTagListViewModelState, NfcTagL
     }
   }
 
+  override fun onStart() {
+    super.onStart()
+    viewModel.onStart(NfcAdapter.getDefaultAdapter(requireContext()))
+  }
+
   override fun handleEvents(event: NfcTagListViewEvent) {
     when (event) {
       NfcTagListViewEvent.NavigateToAdd -> navigator.navigateTo(R.id.add_nfc_tag_fragment)
       is NfcTagListViewEvent.NavigateToItemEdit -> navigator.navigateTo(R.id.edit_nfc_tag_fragment, EditNfcTagFragment.bundle(event.id))
+      NfcTagListViewEvent.NavigateToNfcSettings -> activity?.startActivity(Intent(Settings.ACTION_NFC_SETTINGS))
     }
   }
 }

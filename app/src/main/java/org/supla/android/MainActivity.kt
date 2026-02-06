@@ -100,7 +100,7 @@ class MainActivity :
   BackHandleOwner,
   NfcHost {
 
-  private val nfcAdapter by lazy { NfcAdapter.getDefaultAdapter(this) }
+  private val nfcAdapter: NfcAdapter? by lazy { NfcAdapter.getDefaultAdapter(this) }
 
   private var downloadUserIcons: DownloadUserIcons? = null
   private var notificationView: RelativeLayout? = null

@@ -46,7 +46,7 @@ import org.supla.android.profile.ProfileIdHolder;
 
 public class DbHelper extends BaseDbHelper {
 
-  public static final int DATABASE_VERSION = 43;
+  public static final int DATABASE_VERSION = 44;
   public static final String DATABASE_NAME = "supla.db";
   private static final Object mutex = new Object();
 

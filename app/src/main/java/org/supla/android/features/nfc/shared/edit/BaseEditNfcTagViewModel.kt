@@ -69,19 +69,20 @@ open class BaseEditNfcTagViewModel(
       }
 
       load(
+        uuid = tag.uuid,
+        readOnly = false, // Not relevant here.
         profileId = tag.profileId,
         subjectType = tag.subjectType,
         subjectId = tag.subjectId,
         actionId = tag.actionId,
         name = tag.name,
-        id = tag.id,
-        uuid = tag.uuid
+        id = tag.id
       )
     }
   }
 
-  fun onViewCreated(uuid: String) {
-    viewModelScope.launch { load(uuid = uuid) }
+  fun onViewCreated(uuid: String, readOnly: Boolean) {
+    viewModelScope.launch { load(uuid = uuid, readOnly = readOnly) }
   }
 
   fun onSave() {
@@ -95,7 +96,7 @@ open class BaseEditNfcTagViewModel(
 
     when (val mode = state.mode) {
       is Mode.Edit -> edit(state, mode.id)
-      is Mode.Insert -> insert(state, mode.uuid)
+      is Mode.Insert -> insert(state, mode.uuid, mode.readOnly)
       Mode.Unknown -> sendEvent(EditNfcTagViewEvent.Close)
     }
   }
@@ -178,6 +179,7 @@ open class BaseEditNfcTagViewModel(
 
   private suspend fun load(
     uuid: String,
+    readOnly: Boolean,
     profileId: Long? = null,
     subjectType: SubjectType? = null,
     subjectId: Int? = null,
@@ -209,7 +211,7 @@ open class BaseEditNfcTagViewModel(
           subjectType = subjectType,
           actions = subjectsList?.selected?.actionsList(actionId),
         ),
-        mode = id?.let { Mode.Edit(it) } ?: Mode.Insert(uuid)
+        mode = id?.let { Mode.Edit(it) } ?: Mode.Insert(uuid, readOnly)
       )
     }
   }
@@ -230,7 +232,7 @@ open class BaseEditNfcTagViewModel(
     }
   }
 
-  private fun insert(state: EditNfcTagViewModelState, uuid: String) {
+  private fun insert(state: EditNfcTagViewModelState, uuid: String, readOnly: Boolean) {
     viewModelScope.launch {
       nfcTagRepository.save(
         entity = NfcTagEntity(
@@ -239,7 +241,8 @@ open class BaseEditNfcTagViewModel(
           profileId = state.screenState.profiles?.selected?.id,
           subjectType = state.screenState.subjectType,
           subjectId = state.screenState.subjects?.selected?.id,
-          actionId = state.screenState.actions?.selected
+          actionId = state.screenState.actions?.selected,
+          readOnly = readOnly
         )
       )
       sendEvent(EditNfcTagViewEvent.Close)
@@ -336,6 +339,6 @@ data class Selection(
 
 sealed interface Mode {
   data class Edit(val id: Long) : Mode
-  data class Insert(val uuid: String) : Mode
+  data class Insert(val uuid: String, val readOnly: Boolean) : Mode
   data object Unknown : Mode
 }

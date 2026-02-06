@@ -30,6 +30,7 @@ import org.supla.android.data.source.local.entity.NfcTagEntity.Companion.COLUMN_
 import org.supla.android.data.source.local.entity.NfcTagEntity.Companion.COLUMN_ID
 import org.supla.android.data.source.local.entity.NfcTagEntity.Companion.COLUMN_NAME
 import org.supla.android.data.source.local.entity.NfcTagEntity.Companion.COLUMN_PROFILE_ID
+import org.supla.android.data.source.local.entity.NfcTagEntity.Companion.COLUMN_READ_ONLY
 import org.supla.android.data.source.local.entity.NfcTagEntity.Companion.COLUMN_SUBJECT_ID
 import org.supla.android.data.source.local.entity.NfcTagEntity.Companion.COLUMN_SUBJECT_TYPE
 import org.supla.android.data.source.local.entity.NfcTagEntity.Companion.COLUMN_UUID
@@ -57,6 +58,7 @@ interface NfcTagDao {
         tag.$COLUMN_SUBJECT_TYPE tag_$COLUMN_SUBJECT_TYPE,
         tag.$COLUMN_SUBJECT_ID tag_$COLUMN_SUBJECT_ID,
         tag.$COLUMN_ACTION_ID tag_$COLUMN_ACTION_ID,
+        tag.$COLUMN_READ_ONLY tag_$COLUMN_READ_ONLY,
         channel.${ChannelEntity.COLUMN_ID} channel_${ChannelEntity.COLUMN_ID}, 
         channel.${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID} channel_${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID}, 
         channel.${ChannelEntity.COLUMN_DEVICE_ID} channel_${ChannelEntity.COLUMN_DEVICE_ID}, 
