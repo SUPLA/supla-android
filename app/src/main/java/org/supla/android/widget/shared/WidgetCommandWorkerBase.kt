@@ -36,6 +36,7 @@ import org.supla.android.core.notifications.NotificationsHelper
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.ActionParameters
 import org.supla.android.lib.actions.IGNORE_CCT
+import org.supla.android.lib.actions.IGNORE_COLOR
 import org.supla.android.lib.actions.RgbwActionParameters
 import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.tools.VibrationHelper
@@ -206,8 +207,10 @@ abstract class WidgetCommandWorkerBase(
         SuplaFunction.ROLLER_GARAGE_DOOR -> callAction(configuration, it)
 
         SuplaFunction.DIMMER,
-        SuplaFunction.DIMMER_AND_RGB_LIGHTING,
-        SuplaFunction.RGB_LIGHTING -> callRgbwAction(configuration, it)
+        SuplaFunction.DIMMER_CCT,
+        SuplaFunction.RGB_LIGHTING,
+        SuplaFunction.DIMMER_CCT_AND_RGB,
+        SuplaFunction.DIMMER_AND_RGB_LIGHTING -> callRgbwAction(configuration, it)
 
         else -> {}
       }
@@ -230,7 +233,7 @@ abstract class WidgetCommandWorkerBase(
         configuration.itemId,
         brightness,
         brightness,
-        configuration.value!!.toLong(),
+        IGNORE_COLOR,
         whiteTemperature = IGNORE_CCT,
         colorRandom = false,
         onOff = true

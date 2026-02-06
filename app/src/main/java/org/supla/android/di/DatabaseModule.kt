@@ -47,6 +47,7 @@ import org.supla.android.db.room.app.migrations.MIGRATION_39_40
 import org.supla.android.db.room.app.migrations.MIGRATION_40_41
 import org.supla.android.db.room.app.migrations.MIGRATION_41_42
 import org.supla.android.db.room.app.migrations.MIGRATION_42_43
+import org.supla.android.db.room.app.migrations.MIGRATION_43_44
 import org.supla.android.db.room.app.migrations.Migration25to26
 import org.supla.android.db.room.app.migrations.Migration26to27
 import org.supla.android.db.room.app.migrations.Migration27to28
@@ -102,7 +103,8 @@ class DatabaseModule {
         MIGRATION_39_40,
         MIGRATION_40_41,
         MIGRATION_41_42,
-        MIGRATION_42_43
+        MIGRATION_42_43,
+        MIGRATION_43_44
       )
       .build()
 

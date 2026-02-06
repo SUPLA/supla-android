@@ -34,7 +34,8 @@ data class NfcTagEntity(
   @ColumnInfo(name = COLUMN_PROFILE_ID) val profileId: Long? = null,
   @ColumnInfo(name = COLUMN_SUBJECT_TYPE) val subjectType: SubjectType? = null,
   @ColumnInfo(name = COLUMN_SUBJECT_ID) val subjectId: Int? = null,
-  @ColumnInfo(name = COLUMN_ACTION_ID) val actionId: ActionId? = null
+  @ColumnInfo(name = COLUMN_ACTION_ID) val actionId: ActionId? = null,
+  @ColumnInfo(name = COLUMN_READ_ONLY) val readOnly: Boolean
 ) {
   val configuration: Configuration?
     get() =
@@ -60,8 +61,9 @@ data class NfcTagEntity(
     const val COLUMN_SUBJECT_TYPE = "subject_type"
     const val COLUMN_SUBJECT_ID = "subject_id"
     const val COLUMN_ACTION_ID = "action_id"
+    const val COLUMN_READ_ONLY = "read_only"
 
     const val ALL_COLUMNS = "$COLUMN_ID, $COLUMN_UUID, $COLUMN_NAME, " +
-      "$COLUMN_PROFILE_ID, $COLUMN_SUBJECT_TYPE, $COLUMN_SUBJECT_ID, $COLUMN_ACTION_ID"
+      "$COLUMN_PROFILE_ID, $COLUMN_SUBJECT_TYPE, $COLUMN_SUBJECT_ID, $COLUMN_ACTION_ID, $COLUMN_READ_ONLY"
   }
 }

@@ -70,10 +70,11 @@ fun ConfigureActionScreen(
 @Composable
 fun ConfigureActionScreen(
   uuid: String,
+  readOnly: Boolean,
   navigator: Navigator,
   viewModel: ConfigureActionViewModel = hiltViewModel()
 ) {
-  LaunchedEffect(uuid) { viewModel.onViewCreated(uuid) }
+  LaunchedEffect(uuid) { viewModel.onViewCreated(uuid, readOnly) }
   ScreenScaffold(
     viewModel = viewModel,
     eventHandler = {
