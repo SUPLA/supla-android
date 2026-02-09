@@ -46,8 +46,6 @@ class ValuesFormatter @Inject constructor(
     return rawValue != null && rawValue > TEMPERATURE_NA_VALUE
   }
 
-  fun getTemperatureString(rawValue: Float?) = thermometerValueFormatter.format(rawValue, withUnit(false))
-
   fun getTemperatureString(rawValue: Double?, withUnit: Boolean = false) =
     thermometerValueFormatter.format(rawValue, withUnit(withUnit))
 

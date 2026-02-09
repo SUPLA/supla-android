@@ -86,7 +86,7 @@ class ScheduleDetailViewModel @Inject constructor(
   private val suplaClientProvider: SuplaClientProvider,
   private val dateProvider: DateProvider,
   private val preferences: Preferences,
-  @Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter,
+  @param:Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<ScheduleDetailViewState, ScheduleDetailViewEvent>(ScheduleDetailViewState(), schedulers), ScheduleDetailViewProxy {
 

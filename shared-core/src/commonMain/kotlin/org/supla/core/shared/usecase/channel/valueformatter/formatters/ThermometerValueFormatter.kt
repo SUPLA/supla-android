@@ -35,11 +35,16 @@ class ThermometerValueFormatter(
   override val invalidValue: InvalidValue = InvalidValue.Companion.Thermometer
 
   override fun format(value: Any?, format: ValueFormat): String {
-    val unit = if (format.withUnit == true) preferences.temperatureUnit.valueUnit else ValueUnit.TEMPERATURE_DEGREE
+    val unit = when (format.withUnit) {
+      true if format.customUnit != null -> format.customUnit
+      true -> preferences.temperatureUnit.valueUnit.toString()
+      else -> null
+    }
+
     return format(
       value = value.toDouble(),
-      precision = format.precision(ValuePrecision.Companion.exact(preferences.temperaturePrecision)),
-      unit = unit.toString(),
+      precision = format.precision(ValuePrecision.exact(preferences.temperaturePrecision)),
+      unit = unit,
       showNoValueText = format.showNoValueText ?: defaultFormatSpecification.showNoValueText
     )
   }

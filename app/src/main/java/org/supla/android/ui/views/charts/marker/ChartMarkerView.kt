@@ -33,7 +33,6 @@ import org.supla.android.data.model.chart.marker.ChartEntryDetails
 import org.supla.android.extensions.visibleIf
 import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
 import org.supla.core.shared.usecase.channel.valueformatter.types.ValueUnit
-import org.supla.core.shared.usecase.channel.valueformatter.types.withUnit
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -65,8 +64,15 @@ class ChartMarkerView(context: Context) : BaseMarkerView(context) {
     val min = details.min
     val max = details.max
     if (min != null && max != null) {
-      val minText = details.valueFormatter.format(min.toDouble(), withUnit(details.type == ChartEntryType.HUMIDITY))
-      val maxText = details.valueFormatter.format(max.toDouble(), withUnit(details.type == ChartEntryType.HUMIDITY))
+      val format = when (details.type) {
+        ChartEntryType.HUMIDITY -> ValueFormat.WithUnit
+        ChartEntryType.PRESET_TEMPERATURE,
+        ChartEntryType.TEMPERATURE -> ValueFormat.TemperatureWithDegree
+
+        else -> ValueFormat.WithoutUnit
+      }
+      val minText = details.valueFormatter.format(min.toDouble(), format)
+      val maxText = details.valueFormatter.format(max.toDouble(), format)
 
       range.text = "($minText - $maxText)"
     } else {
@@ -103,6 +109,8 @@ class ChartMarkerView(context: Context) : BaseMarkerView(context) {
 
   private fun showValueUnit(type: ChartEntryType) =
     when (type) {
+      ChartEntryType.TEMPERATURE,
+      ChartEntryType.PRESET_TEMPERATURE,
       ChartEntryType.HUMIDITY,
       ChartEntryType.GENERAL_PURPOSE_METER,
       ChartEntryType.IMPULSE_COUNTER,
@@ -120,7 +128,8 @@ class ChartMarkerView(context: Context) : BaseMarkerView(context) {
       ChartEntryType.HUMIDITY_ONLY -> ValueUnit.HUMIDITY.toString()
 
       ChartEntryType.TEMPERATURE,
-      ChartEntryType.PRESET_TEMPERATURE,
+      ChartEntryType.PRESET_TEMPERATURE -> ValueUnit.TEMPERATURE_DEGREE.toString()
+
       ChartEntryType.GENERAL_PURPOSE_MEASUREMENT,
       ChartEntryType.GENERAL_PURPOSE_METER,
       ChartEntryType.IMPULSE_COUNTER,
