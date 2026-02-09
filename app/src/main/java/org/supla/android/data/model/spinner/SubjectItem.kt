@@ -19,14 +19,13 @@ package org.supla.android.data.model.spinner
 
 import org.supla.android.R
 import org.supla.android.data.model.general.SingleOptionalSelectionList
-import org.supla.android.data.model.general.SingleSelectionList
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.ProfileEntity
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.complex.SceneDataEntity
 import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.data.source.local.entity.custom.hasPositionSensor
 import org.supla.android.features.widget.shared.subjectdetail.ActionDetail
 import org.supla.android.features.widget.shared.subjectdetail.SubjectDetail
 import org.supla.android.images.ImageId
@@ -113,8 +112,11 @@ interface SubjectItemConversionScope {
   val getChannelIconUseCase: GetChannelIconUseCase
   val getSceneIconUseCase: GetSceneIconUseCase
 
-  fun channelsSubjectItems(items: List<ChannelDataEntity>, getChannelValueStringUseCase: GetChannelValueStringUseCase): List<SubjectItem> =
-    toSubjectItems(items, { it.locationEntity }, { it.subjectItem(getChannelValueStringUseCase) })
+  fun channelsSubjectItems(
+    items: List<ChannelWithChildren>,
+    getChannelValueStringUseCase: GetChannelValueStringUseCase
+  ): List<SubjectItem> =
+    toSubjectItems(items, { it.channel.locationEntity }, { it.subjectItem(getChannelValueStringUseCase) })
 
   fun groupsSubjectItems(items: List<ChannelGroupDataEntity>): List<SubjectItem> =
     toSubjectItems(items, { it.locationEntity }, { it.subjectItem })
@@ -184,26 +186,26 @@ interface SubjectItemConversionScope {
       value = null
     )
 
-  fun ChannelDataEntity.subjectItem(getChannelValueStringUseCase: GetChannelValueStringUseCase): SubjectItem =
+  fun ChannelWithChildren.subjectItem(getChannelValueStringUseCase: GetChannelValueStringUseCase): SubjectItem =
     SubjectItem(
       id = remoteId,
-      caption = getCaptionUseCase(shareable),
-      actions = function.actions,
+      caption = getCaptionUseCase(channel.shareable),
+      actions = actions,
       function = function,
       userIcon = userIcon,
       altIcon = altIcon,
-      icon = getChannelIconUseCase.forState(channelEntity, offlineState),
+      icon = getChannelIconUseCase.forState(channel.channelEntity, offlineState),
       isLocation = false,
       value = when (function) {
         SuplaFunction.DIMMER -> "0"
-        SuplaFunction.RGB_LIGHTING -> "${channelValueEntity.asRgbwwValue().rgb}"
-        SuplaFunction.DIMMER_AND_RGB_LIGHTING -> "${channelValueEntity.asRgbwwValue().rgb}"
+        SuplaFunction.RGB_LIGHTING -> "${channel.channelValueEntity.asRgbwwValue().rgb}"
+        SuplaFunction.DIMMER_AND_RGB_LIGHTING -> "${channel.channelValueEntity.asRgbwwValue().rgb}"
 
         SuplaFunction.THERMOMETER,
         SuplaFunction.GENERAL_PURPOSE_METER,
-        SuplaFunction.GENERAL_PURPOSE_MEASUREMENT -> getChannelValueStringUseCase.invoke(ChannelWithChildren(this))
+        SuplaFunction.GENERAL_PURPOSE_MEASUREMENT -> getChannelValueStringUseCase.invoke(ChannelWithChildren(channel))
 
-        SuplaFunction.HUMIDITY_AND_TEMPERATURE -> ChannelWithChildren(this).let {
+        SuplaFunction.HUMIDITY_AND_TEMPERATURE -> ChannelWithChildren(channel).let {
           val temperature = getChannelValueStringUseCase(it)
           val humidity = getChannelValueStringUseCase(it, valueType = ValueType.SECOND)
           "$temperature\n$humidity"
@@ -244,6 +246,19 @@ interface SubjectItemConversionScope {
       isLocation = false,
       value = NO_VALUE_TEXT
     )
+
+  val ChannelWithChildren.actions: List<ActionId>
+    get() = when (channel.function) {
+      SuplaFunction.CONTROLLING_THE_GATE,
+      SuplaFunction.CONTROLLING_THE_GARAGE_DOOR ->
+        if (hasPositionSensor) {
+          listOf(ActionId.OPEN_CLOSE, ActionId.OPEN, ActionId.CLOSE)
+        } else {
+          listOf(ActionId.OPEN_CLOSE)
+        }
+
+      else -> channel.function.actions
+    }
 
   val SuplaFunction.actions: List<ActionId>
     get() = when (this) {
@@ -296,7 +311,7 @@ interface SubjectItemConversionScope {
       SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK -> listOf(ActionId.OPEN)
 
       SuplaFunction.CONTROLLING_THE_GATE,
-      SuplaFunction.CONTROLLING_THE_GARAGE_DOOR -> listOf(ActionId.OPEN_CLOSE, ActionId.OPEN, ActionId.CLOSE)
+      SuplaFunction.CONTROLLING_THE_GARAGE_DOOR -> listOf(ActionId.OPEN_CLOSE)
 
       SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER,
       SuplaFunction.CONTROLLING_THE_ROOF_WINDOW,

@@ -43,20 +43,27 @@ class ChannelRelationRepository @Inject constructor(
   fun findParentsOf(childId: Int) = channelRelationDao.findParentsOf(childId)
 
   fun findChildrenToParentsRelations(): Observable<Map<Int, List<ChannelRelationEntity>>> =
-    channelRelationDao.getForActiveProfile().map { entities ->
-      mutableMapOf<Int, MutableList<ChannelRelationEntity>>().also { map ->
-        entities.forEach { channelRelation ->
-          if (map.contains(channelRelation.parentId)) {
-            map[channelRelation.parentId]?.add(channelRelation)
-          } else {
-            map[channelRelation.parentId] = mutableListOf(channelRelation)
-          }
-        }
-      }
-    }
+    channelRelationDao.getForActiveProfile().map { it.toRelationsMap }
+
+  fun findChildrenToParentsRelationsForProfile(profileId: Long): Observable<Map<Int, List<ChannelRelationEntity>>> =
+    channelRelationDao.getForProfile(profileId).map { it.toRelationsMap }
 
   override fun count(): Observable<Int> = channelRelationDao.count()
 
   override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = channelRelationDao.deleteKtx(remoteId, profileId)
   override fun deleteByProfile(profileId: Long): Completable = channelRelationDao.deleteByProfile(profileId)
 }
+
+private val List<ChannelRelationEntity>.toRelationsMap: Map<Int, List<ChannelRelationEntity>>
+  get() {
+    val entities = this
+    return mutableMapOf<Int, MutableList<ChannelRelationEntity>>().also { map ->
+      entities.forEach { channelRelation ->
+        if (map.contains(channelRelation.parentId)) {
+          map[channelRelation.parentId]?.add(channelRelation)
+        } else {
+          map[channelRelation.parentId] = mutableListOf(channelRelation)
+        }
+      }
+    }
+  }

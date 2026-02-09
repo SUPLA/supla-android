@@ -123,7 +123,6 @@ private fun GateGeneralScope.PortraitButtons(state: GateGeneralViewState) {
       disabled = state.offline,
       leftButtonClick = { onClose() },
       rightButtonClick = { onOpen() },
-      leftColors = SuplaButtonDefaults.primaryColors(contentDisabled = MaterialTheme.colorScheme.onSurface)
     )
   }
 

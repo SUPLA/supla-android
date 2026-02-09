@@ -20,12 +20,12 @@ package org.supla.android.features.nfc.call.screens.configureaction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.NfcTagRepository
-import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.RoomSceneRepository
 import org.supla.android.features.nfc.shared.edit.BaseEditNfcTagViewModel
 import org.supla.android.features.nfc.shared.edit.EditNfcTagViewEvent
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
+import org.supla.android.usecases.channel.ReadAllChannelsWithChildrenUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.android.usecases.profile.ReadAllProfilesUseCase
@@ -34,10 +34,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ConfigureActionViewModel @Inject constructor(
+  readAllChannelsWithChildrenUseCase: ReadAllChannelsWithChildrenUseCase,
   getChannelValueStringUseCase: GetChannelValueStringUseCase,
   readAllProfilesUseCase: ReadAllProfilesUseCase,
   channelGroupRepository: ChannelGroupRepository,
-  channelRepository: RoomChannelRepository,
   sceneRepository: RoomSceneRepository,
   nfcTagRepository: NfcTagRepository,
   schedulers: SuplaSchedulers,
@@ -45,10 +45,10 @@ class ConfigureActionViewModel @Inject constructor(
   override val getSceneIconUseCase: GetSceneIconUseCase,
   override val getCaptionUseCase: GetCaptionUseCase
 ) : BaseEditNfcTagViewModel(
+  readAllChannelsWithChildrenUseCase,
   getChannelValueStringUseCase,
   readAllProfilesUseCase,
   channelGroupRepository,
-  channelRepository,
   sceneRepository,
   nfcTagRepository,
   schedulers,

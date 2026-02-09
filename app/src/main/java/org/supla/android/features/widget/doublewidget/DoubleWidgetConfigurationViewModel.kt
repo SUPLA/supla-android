@@ -26,8 +26,9 @@ import org.supla.android.data.model.spinner.ProfileItem
 import org.supla.android.data.model.spinner.SubjectItem
 import org.supla.android.data.model.spinner.SubjectItemConversionScope
 import org.supla.android.data.source.ChannelGroupRepository
-import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.RoomSceneRepository
+import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.widget.shared.BaseWidgetViewModel
 import org.supla.android.features.widget.shared.WidgetConfigurationScope
@@ -36,11 +37,13 @@ import org.supla.android.features.widget.shared.subjectdetail.SubjectDetail
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
+import org.supla.android.usecases.channel.ReadAllChannelsWithChildrenUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.android.usecases.profile.ReadAllProfilesUseCase
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.WidgetPreferences
+import org.supla.android.widget.shared.isValueWidget
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.usecase.GetCaptionUseCase
@@ -55,18 +58,18 @@ class DoubleWidgetConfigurationViewModel @Inject constructor(
   override val getSceneIconUseCase: GetSceneIconUseCase,
   override val getCaptionUseCase: GetCaptionUseCase,
   private val widgetPreferences: WidgetPreferences,
+  readAllChannelsWithChildrenUseCase: ReadAllChannelsWithChildrenUseCase,
   getChannelValueStringUseCase: GetChannelValueStringUseCase,
   channelGroupRepository: ChannelGroupRepository,
-  channelRepository: RoomChannelRepository,
   sceneRepository: RoomSceneRepository,
   powerManager: PowerManager,
   schedulers: SuplaSchedulers
 ) : BaseWidgetViewModel(
+  readAllChannelsWithChildrenUseCase,
   getChannelValueStringUseCase,
   channelGroupRepository,
   getChannelIconUseCase,
   getSceneIconUseCase,
-  channelRepository,
   getCaptionUseCase,
   sceneRepository,
   powerManager,
@@ -243,4 +246,10 @@ class DoubleWidgetConfigurationViewModel @Inject constructor(
     widgetPreferences.setWidgetConfiguration(widgetId, configuration)
     sendEvent(WidgetConfigurationViewEvent.Finished(widgetId))
   }
+
+  override fun filter(channelGroupDataEntity: ChannelGroupDataEntity) =
+    channelGroupDataEntity.function.actions.size > 1 || channelGroupDataEntity.function.isValueWidget
+
+  override fun filter(channelWithChildren: ChannelWithChildren) =
+    channelWithChildren.actions.size > 1 || channelWithChildren.channel.function.isValueWidget
 }

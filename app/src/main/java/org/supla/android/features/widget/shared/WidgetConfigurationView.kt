@@ -139,7 +139,7 @@ fun WidgetConfigurationScope.View(
         EmptyListInfoView(modifier = Modifier.padding(Distance.default))
       } else {
         Subjects(viewState.subjects)
-        viewState.caption?.let { Caption(it, !viewState.saveEnabled) }
+        viewState.caption?.let { Caption(it, it.isEmpty()) }
         viewState.subjectDetails?.let { SubjectDetails(it) }
       }
     }

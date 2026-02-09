@@ -54,6 +54,9 @@ interface ChannelRelationDao {
   @Query("SELECT $ALL_COLUMNS FROM $TABLE_NAME WHERE $COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}")
   fun getForActiveProfile(): Observable<List<ChannelRelationEntity>>
 
+  @Query("SELECT $ALL_COLUMNS FROM $TABLE_NAME WHERE $COLUMN_PROFILE_ID = :profileId")
+  fun getForProfile(profileId: Long): Observable<List<ChannelRelationEntity>>
+
   @Query(
     """
       SELECT $ALL_COLUMNS FROM $TABLE_NAME 
