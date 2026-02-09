@@ -42,7 +42,7 @@ class CreateTemperaturesListUseCase @Inject constructor(
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val getChannelBatteryIconUseCase: GetChannelBatteryIconUseCase,
-  @Named(GSON_FOR_REPO) private val gson: Gson
+  @param:Named(GSON_FOR_REPO) private val gson: Gson
 ) {
 
   operator fun invoke(channelWithChildren: ChannelWithChildren): List<MeasurementValue> =

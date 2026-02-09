@@ -36,7 +36,7 @@ data class ScheduleDetailProgramBox(
   val channelFunction: Int,
   val thermostatFunction: ThermostatSubfunction,
   val scheduleProgram: SuplaWeeklyScheduleProgram,
-  @DrawableRes val iconRes: Int? = null
+  @param:DrawableRes val iconRes: Int? = null
 ) {
 
   val setpointTemperatureHeat: Float?
@@ -50,11 +50,11 @@ data class ScheduleDetailProgramBox(
 
   val modeForModify: SuplaHvacMode
     get() = if (scheduleProgram.mode == SuplaHvacMode.NOT_SET) {
-      when {
-        channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT && thermostatFunction == ThermostatSubfunction.HEAT -> SuplaHvacMode.HEAT
-        channelFunction == SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER -> SuplaHvacMode.HEAT
-        channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT && thermostatFunction == ThermostatSubfunction.COOL -> SuplaHvacMode.COOL
-        channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL -> SuplaHvacMode.HEAT_COOL
+      when (channelFunction) {
+        SUPLA_CHANNELFNC_HVAC_THERMOSTAT if thermostatFunction == ThermostatSubfunction.HEAT -> SuplaHvacMode.HEAT
+        SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER -> SuplaHvacMode.HEAT
+        SUPLA_CHANNELFNC_HVAC_THERMOSTAT if thermostatFunction == ThermostatSubfunction.COOL -> SuplaHvacMode.COOL
+        SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL -> SuplaHvacMode.HEAT_COOL
         else -> scheduleProgram.mode
       }
     } else {

@@ -47,6 +47,7 @@ import org.supla.android.data.model.chart.datatype.ChartData
 import org.supla.android.data.model.chart.datatype.CombinedChartData
 import org.supla.android.data.model.chart.style.ChartStyle
 import org.supla.android.data.model.chart.style.HumidityChartStyle
+import org.supla.android.data.model.chart.style.TemperatureChartStyle
 import org.supla.android.extensions.toPx
 import org.supla.core.shared.usecase.channel.valueformatter.formatters.HumidityValueFormatter
 import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
@@ -137,11 +138,15 @@ fun CombinedChart(
       chart.axisLeft.gridColor = chart.axisLeft.textColor
       chart.axisLeft.valueFormatter = object : ValueFormatter() {
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-          val withUnit = chartStyle is HumidityChartStyle
+          val format = when (chartStyle) {
+            is TemperatureChartStyle -> ValueFormat.TemperatureWithDegree
+            is HumidityChartStyle -> ValueFormat.WithUnit
+            else -> ValueFormat.WithUnit
+          }
+
           return data.leftAxisFormatter.format(
             value = value.toDouble(),
-            format = ValueFormat(
-              withUnit = withUnit,
+            format = format.copy(
               precision = custom(exact(chart.axisLeft.mDecimals)),
               showNoValueText = false
             )

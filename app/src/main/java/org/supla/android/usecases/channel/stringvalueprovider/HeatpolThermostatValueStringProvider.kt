@@ -34,7 +34,7 @@ import javax.inject.Singleton
 @Singleton
 class HeatpolThermostatValueStringProvider @Inject constructor(
   private val heatpolThermostatValueProvider: HeatpolThermostatValueProvider,
-  @Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter,
+  @param:Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter,
 ) : ChannelValueStringProvider {
 
   override fun handle(channelWithChildren: ChannelWithChildren): Boolean =

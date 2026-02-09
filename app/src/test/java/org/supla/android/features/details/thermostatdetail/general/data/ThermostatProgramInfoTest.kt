@@ -182,7 +182,7 @@ class ThermostatProgramInfoTest {
     builder.currentTemperature = 18.4f
     builder.channelOnline = true
 
-    every { valueFormatter.format(builder.currentTemperature, ValueFormat.WithoutUnit) } returns temperatureString
+    every { valueFormatter.format(builder.currentTemperature, ValueFormat.TemperatureWithDegree) } returns temperatureString
 
     // when
     val list = builder.build()
@@ -238,8 +238,8 @@ class ThermostatProgramInfoTest {
     every { dateProvider.currentHour() } returns 0
     every { dateProvider.currentMinute() } returns 35
 
-    every { valueFormatter.format(builder.currentTemperature, ValueFormat.WithoutUnit) } returns temperatureString
-    every { valueFormatter.format(22.0, ValueFormat.WithoutUnit) } returns "22.0"
+    every { valueFormatter.format(builder.currentTemperature, ValueFormat.TemperatureWithDegree) } returns temperatureString
+    every { valueFormatter.format(22.0, ValueFormat.TemperatureWithDegree) } returns "22.0"
 
     // when
     val list = builder.build()
@@ -285,7 +285,7 @@ class ThermostatProgramInfoTest {
     every { dateProvider.currentHour() } returns 0
     every { dateProvider.currentMinute() } returns 35
 
-    every { valueFormatter.format(builder.currentTemperature, ValueFormat.WithoutUnit) } returns temperatureString
+    every { valueFormatter.format(builder.currentTemperature, ValueFormat.TemperatureWithDegree) } returns temperatureString
 
     // when
     val list = builder.build()
@@ -319,8 +319,8 @@ class ThermostatProgramInfoTest {
     every { dateProvider.currentHour() } returns 0
     every { dateProvider.currentMinute() } returns 35
 
-    every { valueFormatter.format(builder.currentTemperature, ValueFormat.WithoutUnit) } returns temperatureString
-    every { valueFormatter.format(22.0, ValueFormat.WithoutUnit) } returns "22.0"
+    every { valueFormatter.format(builder.currentTemperature, ValueFormat.TemperatureWithDegree) } returns temperatureString
+    every { valueFormatter.format(22.0, ValueFormat.TemperatureWithDegree) } returns "22.0"
 
     // when
     val list = builder.build()

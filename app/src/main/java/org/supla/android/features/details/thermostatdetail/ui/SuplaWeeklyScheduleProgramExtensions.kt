@@ -35,12 +35,12 @@ fun SuplaWeeklyScheduleProgram.description(thermometerValuesFormatter: ValueForm
     program == SuplaScheduleProgram.OFF ->
       localizedString(R.string.turn_off)
     mode == SuplaHvacMode.HEAT ->
-      LocalizedString.Constant(thermometerValuesFormatter.format(heatTemperature, ValueFormat.WithoutUnit))
+      LocalizedString.Constant(thermometerValuesFormatter.format(heatTemperature, ValueFormat.TemperatureWithDegree))
     mode == SuplaHvacMode.COOL ->
-      LocalizedString.Constant(thermometerValuesFormatter.format(coolTemperature, ValueFormat.WithoutUnit))
+      LocalizedString.Constant(thermometerValuesFormatter.format(coolTemperature, ValueFormat.TemperatureWithDegree))
     mode == SuplaHvacMode.HEAT_COOL -> {
-      val minTemperature = thermometerValuesFormatter.format(heatTemperature, ValueFormat.WithoutUnit)
-      val maxTemperature = thermometerValuesFormatter.format(coolTemperature, ValueFormat.WithoutUnit)
+      val minTemperature = thermometerValuesFormatter.format(heatTemperature, ValueFormat.TemperatureWithDegree)
+      val maxTemperature = thermometerValuesFormatter.format(coolTemperature, ValueFormat.TemperatureWithDegree)
       LocalizedString.Constant("$minTemperature - $maxTemperature")
     }
     else -> LocalizedString.Constant(NO_VALUE_TEXT)

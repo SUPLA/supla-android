@@ -27,6 +27,7 @@ import org.junit.Test
 import org.supla.core.shared.data.model.thermometer.TemperatureUnit
 import org.supla.core.shared.infrastructure.storage.ApplicationPreferences
 import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
+import org.supla.core.shared.usecase.channel.valueformatter.types.ValuePrecision
 
 class ThermometerValueFormatterTest {
 
@@ -80,6 +81,39 @@ class ThermometerValueFormatterTest {
     val temperatureString = formatter.format(temperature, ValueFormat.WithoutUnit)
 
     // then
+    assertThat(temperatureString).isEqualTo("20.00")
+  }
+
+  @Test
+  fun `should format with degree only`() {
+    // given
+    val temperature = 20f
+    every { preferences.temperatureUnit } returns TemperatureUnit.CELSIUS
+    every { preferences.temperaturePrecision } returns 2
+
+    // when
+    val temperatureString = formatter.format(temperature, ValueFormat.TemperatureWithDegree)
+
+    // then
     assertThat(temperatureString).isEqualTo("20.00°")
+  }
+
+  @Test
+  fun `should format with custom unit`() {
+    // given
+    val temperature = 20f
+    every { preferences.temperatureUnit } returns TemperatureUnit.CELSIUS
+    every { preferences.temperaturePrecision } returns 2
+
+    // when
+    val format = ValueFormat(
+      withUnit = true,
+      precision = ValueFormat.Precision.Custom(ValuePrecision.exact(5)),
+      customUnit = "K"
+    )
+    val temperatureString = formatter.format(temperature, format)
+
+    // then
+    assertThat(temperatureString).isEqualTo("20.00000K")
   }
 }
