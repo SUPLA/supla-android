@@ -28,7 +28,6 @@ import org.supla.android.data.model.spinner.SubjectItem
 import org.supla.android.data.model.spinner.SubjectItemConversionScope
 import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.NfcTagRepository
-import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.RoomSceneRepository
 import org.supla.android.data.source.local.entity.NfcTagEntity
 import org.supla.android.extensions.subscribeBy
@@ -36,6 +35,7 @@ import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
+import org.supla.android.usecases.channel.ReadAllChannelsWithChildrenUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.android.usecases.profile.ReadAllProfilesUseCase
@@ -45,10 +45,10 @@ import timber.log.Timber
 import java.util.Objects
 
 open class BaseEditNfcTagViewModel(
+  private val readAllChannelsWithChildrenUseCase: ReadAllChannelsWithChildrenUseCase,
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
   private val readAllProfilesUseCase: ReadAllProfilesUseCase,
   private val channelGroupRepository: ChannelGroupRepository,
-  private val channelRepository: RoomChannelRepository,
   private val sceneRepository: RoomSceneRepository,
   protected val nfcTagRepository: NfcTagRepository,
   private val schedulers: SuplaSchedulers,
@@ -252,8 +252,9 @@ open class BaseEditNfcTagViewModel(
   private fun getSubjectsSource(profileId: Long, subjectType: SubjectType): Single<List<SubjectItem>> =
     when (subjectType) {
       SubjectType.CHANNEL ->
-        channelRepository.findProfileChannels(profileId)
-          .map { channels -> channelsSubjectItems(channels.filter { it.function.actions.isNotEmpty() }, getChannelValueStringUseCase) }
+        readAllChannelsWithChildrenUseCase(profileId)
+          .firstOrError()
+          .map { channels -> channelsSubjectItems(channels.filter { it.actions.isNotEmpty() }, getChannelValueStringUseCase) }
 
       SubjectType.GROUP ->
         channelGroupRepository.findProfileGroups(profileId)

@@ -26,7 +26,6 @@ import org.supla.android.data.model.spinner.ProfileItem
 import org.supla.android.data.model.spinner.SubjectItem
 import org.supla.android.data.model.spinner.SubjectItemConversionScope
 import org.supla.android.data.source.ChannelGroupRepository
-import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.RoomSceneRepository
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.widget.shared.BaseWidgetViewModel
@@ -37,6 +36,7 @@ import org.supla.android.features.widget.shared.subjectdetail.SubjectDetail
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
+import org.supla.android.usecases.channel.ReadAllChannelsWithChildrenUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.android.usecases.profile.ReadAllProfilesUseCase
@@ -56,18 +56,18 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
   override val getSceneIconUseCase: GetSceneIconUseCase,
   override val getCaptionUseCase: GetCaptionUseCase,
   private val widgetPreferences: WidgetPreferences,
+  readAllChannelsWithChildrenUseCase: ReadAllChannelsWithChildrenUseCase,
   getChannelValueStringUseCase: GetChannelValueStringUseCase,
   channelGroupRepository: ChannelGroupRepository,
-  channelRepository: RoomChannelRepository,
   sceneRepository: RoomSceneRepository,
   powerManager: PowerManager,
   schedulers: SuplaSchedulers
 ) : BaseWidgetViewModel(
+  readAllChannelsWithChildrenUseCase,
   getChannelValueStringUseCase,
   channelGroupRepository,
   getChannelIconUseCase,
   getSceneIconUseCase,
-  channelRepository,
   getCaptionUseCase,
   sceneRepository,
   powerManager,
