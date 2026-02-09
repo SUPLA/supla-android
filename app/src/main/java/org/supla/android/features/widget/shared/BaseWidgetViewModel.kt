@@ -25,16 +25,17 @@ import io.reactivex.rxjava3.core.Single
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
-import org.supla.android.data.model.general.ChannelBase
 import org.supla.android.data.model.spinner.SubjectItem
 import org.supla.android.data.model.spinner.SubjectItemConversionScope
 import org.supla.android.data.source.ChannelGroupRepository
-import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.RoomSceneRepository
+import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.features.widget.shared.subjectdetail.SubjectDetail
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
+import org.supla.android.usecases.channel.ReadAllChannelsWithChildrenUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.android.widget.shared.isValueWidget
@@ -42,11 +43,11 @@ import org.supla.core.shared.usecase.GetCaptionUseCase
 import java.util.Objects
 
 abstract class BaseWidgetViewModel(
+  private val readAllChannelsWithChildrenUseCase: ReadAllChannelsWithChildrenUseCase,
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
   private val channelGroupRepository: ChannelGroupRepository,
   override val getChannelIconUseCase: GetChannelIconUseCase,
   override val getSceneIconUseCase: GetSceneIconUseCase,
-  private val channelRepository: RoomChannelRepository,
   override val getCaptionUseCase: GetCaptionUseCase,
   private val sceneRepository: RoomSceneRepository,
   private val powerManager: PowerManager,
@@ -92,7 +93,8 @@ abstract class BaseWidgetViewModel(
   protected fun getSubjectsSource(profileId: Long, subjectType: SubjectType): Single<List<SubjectItem>> =
     when (subjectType) {
       SubjectType.CHANNEL ->
-        channelRepository.findProfileChannels(profileId)
+        readAllChannelsWithChildrenUseCase(profileId)
+          .firstOrError()
           .map { channels -> channelsSubjectItems(channels.filter { filter(it) }, getChannelValueStringUseCase) }
 
       SubjectType.GROUP ->
@@ -104,8 +106,11 @@ abstract class BaseWidgetViewModel(
           .map { scenes -> scenesSubjectItems(scenes) }
     }
 
-  protected open fun filter(channelBase: ChannelBase) =
-    channelBase.function.actions.isNotEmpty() || channelBase.function.isValueWidget
+  protected open fun filter(channelGroupDataEntity: ChannelGroupDataEntity) =
+    channelGroupDataEntity.function.actions.isNotEmpty() || channelGroupDataEntity.function.isValueWidget
+
+  protected open fun filter(channelWithChildren: ChannelWithChildren) =
+    channelWithChildren.actions.isNotEmpty() || channelWithChildren.channel.function.isValueWidget
 }
 
 sealed class WidgetConfigurationViewEvent : ViewEvent {
