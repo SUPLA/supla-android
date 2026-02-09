@@ -67,7 +67,7 @@ data class ThermostatProgramInfo(
     var channelOnline: Boolean? = null
 
     val currentTemperatureString: String
-      get() = thermometerValueFormatter.format(currentTemperature, ValueFormat.WithoutUnit)
+      get() = thermometerValueFormatter.format(currentTemperature, ValueFormat.TemperatureWithDegree)
 
     // internal
     internal var currentDayOfWeek: DayOfWeek? = null

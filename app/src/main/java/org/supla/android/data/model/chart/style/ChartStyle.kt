@@ -34,7 +34,7 @@ sealed class ChartStyle(
   val setMaxValue: Boolean = true
 )
 
-data object Default : ChartStyle(
+data object TemperatureChartStyle : ChartStyle(
   leftAxisColor = R.color.dark_red,
   rightAxisColor = R.color.dark_blue,
   drawBarShadow = false,

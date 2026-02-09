@@ -45,7 +45,7 @@ import org.supla.android.data.model.chart.datatype.ChartData
 import org.supla.android.data.model.chart.datatype.EmptyChartData
 import org.supla.android.data.model.chart.hasCustomFilters
 import org.supla.android.data.model.chart.style.ChartStyle
-import org.supla.android.data.model.chart.style.Default
+import org.supla.android.data.model.chart.style.TemperatureChartStyle
 import org.supla.android.data.model.general.HideableValue
 import org.supla.android.data.model.general.RangeValueType
 import org.supla.android.data.model.general.SingleSelectionList
@@ -644,7 +644,7 @@ data class HistoryDetailViewState(
   val chartCustomFilters: ChartDataSpec.Filters? = null,
   val chartDataSelectionDialogState: ChartDataSelectionDialogState? = null,
 
-  val chartStyle: ChartStyle = Default,
+  val chartStyle: ChartStyle = TemperatureChartStyle,
   val minDate: Date? = null,
   val maxDate: Date? = null,
   val withRightAxis: Boolean = false,
