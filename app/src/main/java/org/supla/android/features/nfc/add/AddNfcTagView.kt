@@ -28,11 +28,9 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,7 +41,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -54,10 +51,8 @@ import org.supla.android.features.addwizard.view.components.AddWizardActionButto
 import org.supla.android.features.addwizard.view.components.AddWizardContentText
 import org.supla.android.features.addwizard.view.components.AddWizardEmptyScaffold
 import org.supla.android.features.addwizard.view.components.AddWizardScaffold
-import org.supla.android.features.addwizard.view.components.AddWizardTextFieldContainer
 import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.Switch
-import org.supla.android.ui.views.forms.TextField
 import org.supla.core.shared.extensions.ifTrue
 import java.util.UUID
 
@@ -70,7 +65,7 @@ data class AddNfcTagViewState(
 
 sealed interface AddNfcStep {
   data object TagReading : AddNfcStep
-  data class TagConfiguration(val result: AddNfcSummary) : AddNfcStep
+  data class TagSummary(val result: AddNfcSummary) : AddNfcStep
 }
 
 sealed interface AddNfcSummary {
@@ -104,7 +99,7 @@ fun AddNfcTagScope.View(viewState: AddNfcTagViewState) {
   ) {
     when (viewState.step) {
       AddNfcStep.TagReading -> TagConfiguration(viewState.lockTag)
-      is AddNfcStep.TagConfiguration -> Summary(viewState.tagName, viewState.error, viewState.step.result)
+      is AddNfcStep.TagSummary -> Summary(viewState.step.result)
     }
   }
 }
@@ -196,23 +191,18 @@ private fun Message(
   }
 
 @Composable
-private fun AddNfcTagScope.Summary(tagName: String, error: Boolean, summary: AddNfcSummary) =
+private fun AddNfcTagScope.Summary(summary: AddNfcSummary) =
   AddWizardScaffold(
     iconRes = summary.iconRes,
-    buttonTextId =
-    when (summary) {
-      is AddNfcSummary.Success -> R.string.add_nfc_save_and_configure_tag
-      is AddNfcSummary.Duplicate -> R.string.add_nfc_configure
-      else -> R.string.exit
-    },
-    onNext = { onStepFinished(AddNfcStep.TagConfiguration(summary)) }
+    buttonTextId = R.string.exit,
+    onNext = { onStepFinished(AddNfcStep.TagSummary(summary)) }
   ) {
     when (summary) {
       AddNfcSummary.Failure -> Error(R.string.add_nfc_general_error) { onPrepareAnother() }
       AddNfcSummary.NotUsable -> Error(R.string.add_nfc_not_usable) { onPrepareAnother() }
       AddNfcSummary.NotEnoughSpace -> Error(R.string.add_nfc_not_enough_space) { onPrepareAnother() }
-      is AddNfcSummary.Success -> NewTag(tagName, error, summary, this@Summary)
-      is AddNfcSummary.Duplicate -> DuplicatedTag(summary, this@Summary)
+      is AddNfcSummary.Success,
+      is AddNfcSummary.Duplicate -> {} // No view, because is handled by another fragment
     }
   }
 
@@ -225,54 +215,6 @@ private fun ColumnScope.Error(@StringRes textRes: Int, onPrepareAnother: () -> U
   Spacer(modifier = Modifier.weight(1f))
 
   AddWizardActionButton(textRes = R.string.add_wizard_repeat) { onPrepareAnother() }
-
-  Spacer(modifier = Modifier.weight(1f))
-}
-
-@Composable
-private fun ColumnScope.NewTag(tagName: String, error: Boolean, summary: AddNfcSummary.Success, scope: AddNfcTagScope) {
-  Spacer(modifier = Modifier.weight(1f))
-
-  AddWizardContentText(stringResource(R.string.add_nfc_success, summary.tagUuid))
-
-  AddWizardTextFieldContainer(R.string.edit_nfc_tag_name) {
-    TextField(
-      value = tagName,
-      modifier = Modifier.fillMaxWidth(),
-      onValueChange = { scope.onTagNameChange(it) },
-      isError = error,
-      keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-    )
-    if (error) {
-      Text(
-        text = stringResource(R.string.add_nfc_empty_name),
-        style = MaterialTheme.typography.titleSmall,
-        color = MaterialTheme.colorScheme.error,
-        textAlign = TextAlign.Center,
-        modifier = Modifier.fillMaxWidth()
-      )
-    }
-  }
-
-  Spacer(modifier = Modifier.weight(1f))
-
-  AddWizardActionButton(
-    textRes = R.string.add_nfc_save_and_prepare_another,
-    onClick = { scope.onPrepareAnother() }
-  )
-
-  Spacer(modifier = Modifier.weight(1f))
-}
-
-@Composable
-private fun ColumnScope.DuplicatedTag(summary: AddNfcSummary.Duplicate, scope: AddNfcTagScope) {
-  Spacer(modifier = Modifier.weight(1f))
-
-  AddWizardContentText(stringResource(R.string.add_nfc_duplicate, summary.tagUuid, summary.name))
-
-  Spacer(modifier = Modifier.weight(1f))
-
-  AddWizardActionButton { scope.onPrepareAnother() }
 
   Spacer(modifier = Modifier.weight(1f))
 }
@@ -299,7 +241,7 @@ private fun PreviewSummary() {
   SuplaTheme {
     previewScope.View(
       viewState = AddNfcTagViewState(
-        step = AddNfcStep.TagConfiguration(
+        step = AddNfcStep.TagSummary(
           result = AddNfcSummary.Success(UUID.randomUUID().toString(), true)
         ),
         error = true
@@ -314,7 +256,7 @@ private fun PreviewDuplicate() {
   SuplaTheme {
     previewScope.View(
       viewState = AddNfcTagViewState(
-        step = AddNfcStep.TagConfiguration(
+        step = AddNfcStep.TagSummary(
           result = AddNfcSummary.Duplicate(1L, UUID.randomUUID().toString(), "Test")
         ),
         error = true
@@ -329,7 +271,7 @@ private fun PreviewErrorNotUsable() {
   SuplaTheme {
     previewScope.View(
       viewState = AddNfcTagViewState(
-        step = AddNfcStep.TagConfiguration(
+        step = AddNfcStep.TagSummary(
           result = AddNfcSummary.NotUsable
         ),
         error = true
@@ -344,7 +286,7 @@ private fun PreviewAnotherError() {
   SuplaTheme {
     previewScope.View(
       viewState = AddNfcTagViewState(
-        step = AddNfcStep.TagConfiguration(
+        step = AddNfcStep.TagSummary(
           result = AddNfcSummary.Failure
         ),
         error = true
