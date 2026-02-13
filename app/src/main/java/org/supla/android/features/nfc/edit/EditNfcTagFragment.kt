@@ -28,9 +28,12 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.nfc.shared.edit.EditNfcTagViewEvent
 import org.supla.android.features.nfc.shared.edit.EditNfcTagViewModelState
 import org.supla.android.navigator.MainNavigator
+import timber.log.Timber
+import java.io.Serializable
 import javax.inject.Inject
 
-private const val ARG_ITEM_ID = "ARG_ITEM_ID"
+private const val ARG_EXISTING_ITEM_ID = "ARG_EXISTING_ITEM_ID"
+private const val ARG_NEW_ITEM_DATA = "ARG_NEW_ITEM_DATA"
 
 @AndroidEntryPoint
 class EditNfcTagFragment : BaseComposeFragment<EditNfcTagViewModelState, EditNfcTagViewEvent>() {
@@ -39,7 +42,8 @@ class EditNfcTagFragment : BaseComposeFragment<EditNfcTagViewModelState, EditNfc
   @Inject
   lateinit var navigator: MainNavigator
 
-  private val itemId: Long? by lazy { arguments?.getLong(ARG_ITEM_ID) }
+  private val itemId: Long? by lazy { arguments?.getLong(ARG_EXISTING_ITEM_ID)?.let { if (it == 0L) null else it } }
+  private val newItemData: NewItemData? by lazy { requireSerializableOptional(ARG_NEW_ITEM_DATA, NewItemData::class.java) }
 
   @Composable
   override fun ComposableContent(modelState: EditNfcTagViewModelState) {
@@ -52,10 +56,17 @@ class EditNfcTagFragment : BaseComposeFragment<EditNfcTagViewModelState, EditNfc
     super.onViewCreated(view, savedInstanceState)
 
     val id = itemId
-    if (id == null) {
-      navigator.back()
-    } else {
+    val newItemData = newItemData
+
+    if (id != null) {
+      Timber.d("Got item id: $id")
       viewModel.onViewCreated(id)
+    } else if (newItemData != null) {
+      Timber.d("Got new item data: $newItemData")
+      viewModel.onViewCreated(newItemData.uuid, newItemData.readOnly)
+    } else {
+      Timber.w("No item id or new item data provided")
+      navigator.back()
     }
   }
 
@@ -66,6 +77,12 @@ class EditNfcTagFragment : BaseComposeFragment<EditNfcTagViewModelState, EditNfc
   }
 
   companion object {
-    fun bundle(itemId: Long): Bundle = bundleOf(ARG_ITEM_ID to itemId)
+    fun bundle(itemId: Long): Bundle = bundleOf(ARG_EXISTING_ITEM_ID to itemId)
+    fun bundle(uuid: String, readOnly: Boolean): Bundle = bundleOf(ARG_NEW_ITEM_DATA to NewItemData(uuid, readOnly))
   }
+
+  data class NewItemData(
+    val uuid: String,
+    val readOnly: Boolean
+  ) : Serializable
 }

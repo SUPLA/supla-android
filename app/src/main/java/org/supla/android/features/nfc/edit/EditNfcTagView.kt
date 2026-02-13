@@ -61,7 +61,7 @@ fun EditNfcTagViewScope.View(viewState: EditNfcTagViewState) {
       horizontalArrangement = Arrangement.spacedBy(Distance.default)
     ) {
       OutlinedButton(
-        text = stringResource(R.string.delete_account),
+        text = stringResource(if (viewState.newTag) R.string.cancel else R.string.delete_account),
         modifier = Modifier.weight(1f),
         onClick = { onDelete() }
       )

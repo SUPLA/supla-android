@@ -200,6 +200,7 @@ open class BaseEditNfcTagViewModel(
       profileId?.let { runCatching { getSubjectsSource(it, subjectType).blockingGet() }.getOrNull() } ?: emptyList()
     }
     val subjectsList = subjects.asSingleSelectionList(subjectType, subjectId)
+    val mode = id?.let { Mode.Edit(it) } ?: Mode.Insert(uuid, readOnly)
 
     updateState { state ->
       state.copy(
@@ -210,8 +211,9 @@ open class BaseEditNfcTagViewModel(
           subjects = subjectsList,
           subjectType = subjectType,
           actions = subjectsList?.selected?.actionsList(actionId),
+          newTag = mode is Mode.Insert
         ),
-        mode = id?.let { Mode.Edit(it) } ?: Mode.Insert(uuid, readOnly)
+        mode = mode
       )
     }
   }
