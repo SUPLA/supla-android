@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -48,6 +49,7 @@ import org.supla.android.images.ImageId
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.dialogs.AlertDialog
 import org.supla.android.ui.extensions.ifTrue
+import org.supla.android.ui.views.EmptyListInfoView
 import org.supla.android.ui.views.buttons.FloatingAddButton
 import org.supla.android.ui.views.forms.WarningMessage
 import org.supla.android.ui.views.list.components.ListItemIcon
@@ -92,20 +94,26 @@ fun NfcTagListScope.View(viewState: NfcTagListViewState) {
     Column(modifier = Modifier.fillMaxSize()) {
       WarningMessage(viewState.nfcState)
 
-      LazyColumn(
-        state = rememberLazyListState(),
-        modifier = Modifier.fillMaxSize()
-      ) {
-        items(
-          items = viewState.items,
-          key = { it.id },
-          itemContent = { item ->
-            ItemView(
-              item = item,
-              onItemClick = { onItemClick(item) },
-            )
-          }
-        )
+      if (viewState.items.isNotEmpty()) {
+        LazyColumn(
+          state = rememberLazyListState(),
+          modifier = Modifier.fillMaxSize()
+        ) {
+          items(
+            items = viewState.items,
+            key = { it.id },
+            itemContent = { item ->
+              ItemView(
+                item = item,
+                onItemClick = { onItemClick(item) },
+              )
+            }
+          )
+        }
+      } else if (viewState.nfcState != NfcTagListViewState.NfcState.NOT_SUPPORTED) {
+        Spacer(modifier = Modifier.weight(1f))
+        EmptyListInfoView(modifier = Modifier.align(Alignment.CenterHorizontally))
+        Spacer(modifier = Modifier.weight(1f))
       }
     }
 

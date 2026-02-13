@@ -63,10 +63,10 @@ class AddNfcTagViewModel @Inject constructor(
   override fun onStepFinished(step: AddNfcStep) {
     when (step) {
       AddNfcStep.TagReading -> {} // Nothing to do
-      is AddNfcStep.TagConfiguration ->
+      is AddNfcStep.TagSummary ->
         when (step.result) {
-          is AddNfcSummary.Success -> saveAndConfigure(step.result.tagUuid, step.result.readOnly)
-          is AddNfcSummary.Duplicate -> sendEvent(AddNfcTagViewEvent.ConfigureTagAction(step.result.tagId))
+          is AddNfcSummary.Success,
+          is AddNfcSummary.Duplicate -> Unit // Nothing to do
           AddNfcSummary.Failure,
           AddNfcSummary.NotEnoughSpace,
           AddNfcSummary.NotUsable -> sendEvent(AddNfcTagViewEvent.Close)
@@ -86,7 +86,7 @@ class AddNfcTagViewModel @Inject constructor(
   override fun onPrepareAnother() {
     val step = currentState().viewState.step
 
-    if (step is AddNfcStep.TagConfiguration) {
+    if (step is AddNfcStep.TagSummary) {
       when (step.result) {
         is AddNfcSummary.Duplicate,
         AddNfcSummary.Failure,
@@ -95,6 +95,7 @@ class AddNfcTagViewModel @Inject constructor(
           updateState { it.copy(viewState = it.viewState.copy(tagName = "", error = false)) }
           changeStep(AddNfcStep.TagReading)
         }
+
         is AddNfcSummary.Success ->
           viewModelScope.launch {
             getTagName()?.let {
@@ -137,8 +138,11 @@ class AddNfcTagViewModel @Inject constructor(
     }
 
     currentJob = viewModelScope.launch {
-      val result = tag.prepareForSupla(state.viewState.lockTag).toSummary()
-      changeStep(AddNfcStep.TagConfiguration(result))
+      when (val result = tag.prepareForSupla(state.viewState.lockTag).toSummary()) {
+        is AddNfcSummary.Success -> sendEvent(AddNfcTagViewEvent.ConfigureNewTag(result.tagUuid, result.readOnly))
+        is AddNfcSummary.Duplicate -> sendEvent(AddNfcTagViewEvent.ConfigureTagAction(result.tagId))
+        else -> changeStep(AddNfcStep.TagSummary(result))
+      }
     }
     currentJob?.invokeOnCompletion {
       if (it != null) {
@@ -152,15 +156,6 @@ class AddNfcTagViewModel @Inject constructor(
   fun handleBack() {
     currentJob?.cancel()
     sendEvent(AddNfcTagViewEvent.Close)
-  }
-
-  private fun saveAndConfigure(uuid: String, readOnly: Boolean) {
-    viewModelScope.launch {
-      getTagName()?.let {
-        val id = saveWithDuplicateCheck(uuid, it, readOnly)
-        sendEvent(AddNfcTagViewEvent.ConfigureTagAction(id))
-      }
-    }
   }
 
   private fun getTagName(): String? {
@@ -228,6 +223,7 @@ class AddNfcTagViewModel @Inject constructor(
 sealed interface AddNfcTagViewEvent : ViewEvent {
   data object Close : AddNfcTagViewEvent
   data class ConfigureTagAction(val tagId: Long) : AddNfcTagViewEvent
+  data class ConfigureNewTag(val uuid: String, val readOnly: Boolean) : AddNfcTagViewEvent
 }
 
 data class AddNfcTagViewModelState(

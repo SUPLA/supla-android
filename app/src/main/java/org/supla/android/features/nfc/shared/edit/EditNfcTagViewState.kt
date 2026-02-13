@@ -30,6 +30,7 @@ data class EditNfcTagViewState(
   val subjectType: SubjectType = SubjectType.CHANNEL,
 
   val isError: Boolean = false,
+  val newTag: Boolean = false,
 
   val subjects: SingleOptionalSelectionList<SubjectItem>? = null,
   val actions: SingleOptionalSelectionList<ActionId>? = null,
