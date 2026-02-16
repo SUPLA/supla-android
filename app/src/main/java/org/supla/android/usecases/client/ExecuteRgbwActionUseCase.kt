@@ -50,7 +50,7 @@ class ExecuteRgbwActionUseCase @Inject constructor(
     invoke(
       type = type,
       remoteId = remoteId,
-      color = color?.color?.toArgb()?.toLong(),
+      color = color?.fullBrightnessColor?.toArgb()?.toLong(),
       colorBrightness = color?.valueAsPercentage?.toShort(),
       brightness = brightness?.toShort(),
       cct = cct?.toShort(),
