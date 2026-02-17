@@ -174,6 +174,8 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     left_onlineStatus = newOnlineStatus(context, false);
     left_onlineStatus.setId(View.generateViewId());
     content.addView(left_onlineStatus);
+    left_onlineStatus.setLayoutParams(getOnlineStatusLayoutParams(false));
+    right_onlineStatus.setLayoutParams(getOnlineStatusLayoutParams(true));
 
     RelativeLayout channelIconContainer = new RelativeLayout(context);
     content.addView(channelIconContainer);
@@ -553,9 +555,6 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     channelStateIcon.setVisibility(INVISIBLE);
 
     SuplaChannelStatus.ShapeType shapeType = SuplaChannelStatus.ShapeType.LinearVertical;
-
-    left_onlineStatus.setLayoutParams(getOnlineStatusLayoutParams(false));
-    right_onlineStatus.setLayoutParams(getOnlineStatusLayoutParams(true));
 
     left_onlineStatus.setPercent(channelGroup.getOnLinePercent());
     left_onlineStatus.setShapeType(shapeType);

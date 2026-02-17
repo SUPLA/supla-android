@@ -37,7 +37,7 @@ import org.supla.core.shared.data.model.lists.ListItemIssues
 
 abstract class BaseChannelsAdapter(
   private val vibrationHelper: VibrationHelper,
-  private val context: Context,
+  context: Context,
   preferences: Preferences
 ) : BaseListAdapter<ChannelDataBase>(preferences) {
 
