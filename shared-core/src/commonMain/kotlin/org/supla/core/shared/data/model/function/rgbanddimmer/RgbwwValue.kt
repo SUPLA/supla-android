@@ -33,7 +33,7 @@ data class RgbwwValue(
 ) {
 
   val rgb: Int
-    get() = (red and 0x00000FF) or ((green shl 8) and 0x0000FF00) or ((blue shl 16) and 0x00FF0000)
+    get() = ((red shl 16) and 0x0FF0000) or ((green shl 8) and 0x0000FF00) or (blue and 0x000000FF)
 
   companion object {
     fun from(status: SuplaChannelAvailabilityStatus, bytes: ByteArray): RgbwwValue {
