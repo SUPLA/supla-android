@@ -17,6 +17,7 @@ package org.supla.android.features.details.rgbanddimmer.rgb
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.viewModelScope
@@ -467,6 +468,7 @@ class RgbDetailViewModel @Inject constructor(
     val groupStateValue: ChannelState.Value? = groupWithChannels.aggregatedState(GroupWithChannels.Policy.Rgb)
     val groupState = ChannelState.Default(groupStateValue ?: ChannelState.Value.OFF)
     val rgbValues = group.channelGroupEntity.rgbValues
+    rgbValues.forEach { Log.d("!@#", "Color: ${it.color.toHexString()}") }
 
     updateState { state ->
       if (state.changing) {
@@ -486,7 +488,7 @@ class RgbDetailViewModel @Inject constructor(
         type = ItemType.GROUP,
         loadingState = state.loadingState.changingLoading(false, dateProvider),
         viewState = state.viewState.copy(
-          value = RgbValue.Multiple(rgbValues.toList()),
+          value = RgbValue.Multiple(rgbValues),
           offline = group.status.offline,
           deviceStateData = DeviceStateData(
             icon = getChannelIconUseCase(group),
