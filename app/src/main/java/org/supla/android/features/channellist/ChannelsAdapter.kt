@@ -26,7 +26,7 @@ import org.supla.android.ui.lists.BaseChannelsAdapter
 import javax.inject.Inject
 
 class ChannelsAdapter @Inject constructor(
-  @ActivityContext private val context: Context,
+  @param:ActivityContext private val context: Context,
   vibrationHelper: VibrationHelper,
   preferences: Preferences
 ) : BaseChannelsAdapter(vibrationHelper, context, preferences) {
