@@ -45,9 +45,6 @@ interface NfcTagDao {
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   suspend fun save(entity: NfcTagEntity): Long
 
-  @Query("SELECT $ALL_COLUMNS FROM $TABLE_NAME")
-  suspend fun findAll(): List<NfcTagEntity>
-
   @Query(
     """
       SELECT
@@ -146,6 +143,105 @@ interface NfcTagDao {
     """
   )
   suspend fun findAllWithDependencies(): List<NfcTagDataEntity>
+
+  @Query(
+    """
+      SELECT
+        tag.$COLUMN_ID tag_$COLUMN_ID,
+        tag.$COLUMN_UUID tag_$COLUMN_UUID,
+        tag.$COLUMN_NAME tag_$COLUMN_NAME,
+        tag.$COLUMN_PROFILE_ID tag_$COLUMN_PROFILE_ID,
+        tag.$COLUMN_SUBJECT_TYPE tag_$COLUMN_SUBJECT_TYPE,
+        tag.$COLUMN_SUBJECT_ID tag_$COLUMN_SUBJECT_ID,
+        tag.$COLUMN_ACTION_ID tag_$COLUMN_ACTION_ID,
+        tag.$COLUMN_READ_ONLY tag_$COLUMN_READ_ONLY,
+        channel.${ChannelEntity.COLUMN_ID} channel_${ChannelEntity.COLUMN_ID}, 
+        channel.${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID} channel_${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID}, 
+        channel.${ChannelEntity.COLUMN_DEVICE_ID} channel_${ChannelEntity.COLUMN_DEVICE_ID}, 
+        channel.${ChannelEntity.COLUMN_CAPTION} channel_${ChannelEntity.COLUMN_CAPTION},
+        channel.${ChannelEntity.COLUMN_TYPE} channel_${ChannelEntity.COLUMN_TYPE}, 
+        channel.${ChannelEntity.COLUMN_FUNCTION} channel_${ChannelEntity.COLUMN_FUNCTION}, 
+        channel.${ChannelEntity.COLUMN_VISIBLE} channel_${ChannelEntity.COLUMN_VISIBLE}, 
+        channel.${ChannelEntity.COLUMN_LOCATION_ID} channel_${ChannelEntity.COLUMN_LOCATION_ID},
+        channel.${ChannelEntity.COLUMN_ALT_ICON} channel_${ChannelEntity.COLUMN_ALT_ICON}, 
+        channel.${ChannelEntity.COLUMN_USER_ICON} channel_${ChannelEntity.COLUMN_USER_ICON}, 
+        channel.${ChannelEntity.COLUMN_MANUFACTURER_ID} channel_${ChannelEntity.COLUMN_MANUFACTURER_ID}, 
+        channel.${ChannelEntity.COLUMN_PRODUCT_ID} channel_${ChannelEntity.COLUMN_PRODUCT_ID},
+        channel.${ChannelEntity.COLUMN_FLAGS} channel_${ChannelEntity.COLUMN_FLAGS}, 
+        channel.${ChannelEntity.COLUMN_PROTOCOL_VERSION} channel_${ChannelEntity.COLUMN_PROTOCOL_VERSION}, 
+        channel.${ChannelEntity.COLUMN_POSITION} channel_${ChannelEntity.COLUMN_POSITION}, 
+        channel.${ChannelEntity.COLUMN_PROFILE_ID} channel_${ChannelEntity.COLUMN_PROFILE_ID},
+        value.${ChannelValueEntity.COLUMN_ID} value_${ChannelValueEntity.COLUMN_ID},
+        value.${ChannelValueEntity.COLUMN_CHANNEL_REMOTE_ID} value_${ChannelValueEntity.COLUMN_CHANNEL_REMOTE_ID},
+        value.${ChannelValueEntity.COLUMN_ONLINE} value_${ChannelValueEntity.COLUMN_ONLINE},
+        value.${ChannelValueEntity.COLUMN_SUB_VALUE_TYPE} value_${ChannelValueEntity.COLUMN_SUB_VALUE_TYPE},
+        value.${ChannelValueEntity.COLUMN_SUB_VALUE} value_${ChannelValueEntity.COLUMN_SUB_VALUE},
+        value.${ChannelValueEntity.COLUMN_VALUE} value_${ChannelValueEntity.COLUMN_VALUE},
+        value.${ChannelValueEntity.COLUMN_PROFILE_ID} value_${ChannelValueEntity.COLUMN_PROFILE_ID},
+        channel_group.${ChannelGroupEntity.COLUMN_ID} channel_group_${ChannelGroupEntity.COLUMN_ID},
+        channel_group.${ChannelGroupEntity.COLUMN_REMOTE_ID} channel_group_${ChannelGroupEntity.COLUMN_REMOTE_ID},
+        channel_group.${ChannelGroupEntity.COLUMN_CAPTION} channel_group_${ChannelGroupEntity.COLUMN_CAPTION},
+        channel_group.${ChannelGroupEntity.COLUMN_ONLINE} channel_group_${ChannelGroupEntity.COLUMN_ONLINE},
+        channel_group.${ChannelGroupEntity.COLUMN_FUNCTION} channel_group_${ChannelGroupEntity.COLUMN_FUNCTION},
+        channel_group.${ChannelGroupEntity.COLUMN_VISIBLE} channel_group_${ChannelGroupEntity.COLUMN_VISIBLE},
+        channel_group.${ChannelGroupEntity.COLUMN_LOCATION_ID} channel_group_${ChannelGroupEntity.COLUMN_LOCATION_ID},
+        channel_group.${ChannelGroupEntity.COLUMN_ALT_ICON} channel_group_${ChannelGroupEntity.COLUMN_ALT_ICON},
+        channel_group.${ChannelGroupEntity.COLUMN_USER_ICON} channel_group_${ChannelGroupEntity.COLUMN_USER_ICON},
+        channel_group.${ChannelGroupEntity.COLUMN_FLAGS} channel_group_${ChannelGroupEntity.COLUMN_FLAGS},
+        channel_group.${ChannelGroupEntity.COLUMN_TOTAL_VALUE} channel_group_${ChannelGroupEntity.COLUMN_TOTAL_VALUE},
+        channel_group.${ChannelGroupEntity.COLUMN_POSITION} channel_group_${ChannelGroupEntity.COLUMN_POSITION},
+        channel_group.${ChannelGroupEntity.COLUMN_PROFILE_ID} channel_group_${ChannelGroupEntity.COLUMN_PROFILE_ID},
+        scene.${SceneEntity.COLUMN_ID} scene_${SceneEntity.COLUMN_ID},
+        scene.${SceneEntity.COLUMN_REMOTE_ID} scene_${SceneEntity.COLUMN_REMOTE_ID}, 
+        scene.${SceneEntity.COLUMN_LOCATION_ID} scene_${SceneEntity.COLUMN_LOCATION_ID}, 
+        scene.${SceneEntity.COLUMN_ALT_ICON} scene_${SceneEntity.COLUMN_ALT_ICON}, 
+        scene.${SceneEntity.COLUMN_USER_ICON} scene_${SceneEntity.COLUMN_USER_ICON}, 
+        scene.${SceneEntity.COLUMN_CAPTION} scene_${SceneEntity.COLUMN_CAPTION},
+        scene.${SceneEntity.COLUMN_STARTED_AT} scene_${SceneEntity.COLUMN_STARTED_AT},
+        scene.${SceneEntity.COLUMN_ESTIMATED_END_DATE} scene_${SceneEntity.COLUMN_ESTIMATED_END_DATE},
+        scene.${SceneEntity.COLUMN_INITIATOR_ID} scene_${SceneEntity.COLUMN_INITIATOR_ID},
+        scene.${SceneEntity.COLUMN_INITIATOR_NAME} scene_${SceneEntity.COLUMN_INITIATOR_NAME},
+        scene.${SceneEntity.COLUMN_SORT_ORDER} scene_${SceneEntity.COLUMN_SORT_ORDER},
+        scene.${SceneEntity.COLUMN_VISIBLE} scene_${SceneEntity.COLUMN_VISIBLE},
+        scene.${SceneEntity.COLUMN_PROFILE_ID} scene_${SceneEntity.COLUMN_PROFILE_ID},
+        profile.${ProfileEntity.COLUMN_ID} profile_${ProfileEntity.COLUMN_ID},
+        profile.${ProfileEntity.COLUMN_NAME} profile_${ProfileEntity.COLUMN_NAME},
+        profile.${ProfileEntity.COLUMN_EMAIL} profile_${ProfileEntity.COLUMN_EMAIL},
+        profile.${ProfileEntity.COLUMN_SERVER_FOR_ACCESS_ID} profile_${ProfileEntity.COLUMN_SERVER_FOR_ACCESS_ID},
+        profile.${ProfileEntity.COLUMN_SERVER_FOR_EMAIL} profile_${ProfileEntity.COLUMN_SERVER_FOR_EMAIL},
+        profile.${ProfileEntity.COLUMN_SERVER_AUTO_DETECT} profile_${ProfileEntity.COLUMN_SERVER_AUTO_DETECT},
+        profile.${ProfileEntity.COLUMN_EMAIL_AUTH} profile_${ProfileEntity.COLUMN_EMAIL_AUTH},
+        profile.${ProfileEntity.COLUMN_ACCESS_ID} profile_${ProfileEntity.COLUMN_ACCESS_ID},
+        profile.${ProfileEntity.COLUMN_ACCESS_ID_PASSWORD} profile_${ProfileEntity.COLUMN_ACCESS_ID_PASSWORD},
+        profile.${ProfileEntity.COLUMN_PREFERRED_PROTOCOL_VERSION} profile_${ProfileEntity.COLUMN_PREFERRED_PROTOCOL_VERSION},
+        profile.${ProfileEntity.COLUMN_ACTIVE} profile_${ProfileEntity.COLUMN_ACTIVE},
+        profile.${ProfileEntity.COLUMN_ADVANCED_MODE} profile_${ProfileEntity.COLUMN_ADVANCED_MODE},
+        profile.${ProfileEntity.COLUMN_POSITION} profile_${ProfileEntity.COLUMN_POSITION},
+        profile.${ProfileEntity.COLUMN_GUID} profile_${ProfileEntity.COLUMN_GUID},
+        profile.${ProfileEntity.COLUMN_AUTH_KEY} profile_${ProfileEntity.COLUMN_AUTH_KEY}
+      FROM $TABLE_NAME tag
+      LEFT JOIN ${ProfileEntity.TABLE_NAME} profile
+        ON tag.$COLUMN_PROFILE_ID = profile.${ProfileEntity.COLUMN_ID}
+      LEFT JOIN ${ChannelEntity.TABLE_NAME} channel
+        ON tag.$COLUMN_SUBJECT_ID = channel.${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID}
+          AND tag.$COLUMN_SUBJECT_TYPE = ${SubjectTypeValue.CHANNEL}
+          AND tag.$COLUMN_PROFILE_ID = channel.${ChannelEntity.COLUMN_PROFILE_ID}
+      LEFT JOIN ${ChannelValueEntity.TABLE_NAME} value
+        ON value.${ChannelValueEntity.COLUMN_CHANNEL_REMOTE_ID} = tag.$COLUMN_SUBJECT_ID
+          AND value.${ChannelValueEntity.COLUMN_PROFILE_ID} = tag.$COLUMN_PROFILE_ID
+          AND tag.$COLUMN_SUBJECT_TYPE = ${SubjectTypeValue.CHANNEL}
+      LEFT JOIN ${ChannelGroupEntity.TABLE_NAME} channel_group
+        ON tag.$COLUMN_SUBJECT_ID = channel_group.${ChannelGroupEntity.COLUMN_REMOTE_ID}
+          AND tag.$COLUMN_SUBJECT_TYPE = ${SubjectTypeValue.GROUP}
+          AND tag.$COLUMN_PROFILE_ID = channel_group.${ChannelGroupEntity.COLUMN_PROFILE_ID}
+      LEFT JOIN ${SceneEntity.TABLE_NAME} scene
+        ON tag.$COLUMN_SUBJECT_ID = scene.${SceneEntity.COLUMN_REMOTE_ID}
+          AND tag.$COLUMN_SUBJECT_TYPE = ${SubjectTypeValue.SCENE}
+          AND tag.$COLUMN_PROFILE_ID = scene.${SceneEntity.COLUMN_PROFILE_ID}
+      WHERE tag.$COLUMN_ID = :id
+    """
+  )
+  suspend fun findByIdWithDependencies(id: Long): NfcTagDataEntity?
 
   @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_ID = :id")
   suspend fun delete(id: Long)

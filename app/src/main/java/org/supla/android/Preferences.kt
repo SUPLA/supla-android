@@ -41,7 +41,6 @@ private const val PREF_SHOULD_SHOW_NEW_GESTURE_INFO = "pref_should_show_new_gest
 private const val PREF_SHOULD_SHOW_EM_HISTORY_INTRODUCTION = "pref_should_show_em_history_introduction"
 private const val PREF_SHOULD_SHOW_EM_GENERAL_INTRODUCTION = "pref_should_show_em_general_introduction"
 private const val PREF_PLAY_ANDROID_AUTO = "pref_play_android_auto"
-private const val PREF_NFC_LOCK_TAG = "pref_nfc_lock_tag"
 
 class Preferences(context: Context) {
   private val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
@@ -88,10 +87,6 @@ class Preferences(context: Context) {
   var playAndroidAuto: Boolean
     get() = sharedPreferences.getBoolean(PREF_PLAY_ANDROID_AUTO, true)
     set(value) = sharedPreferences.edit { putBoolean(PREF_PLAY_ANDROID_AUTO, value) }
-
-  var lockNfcTag: Boolean
-    get() = sharedPreferences.getBoolean(PREF_NFC_LOCK_TAG, false)
-    set(value) = sharedPreferences.edit { putBoolean(PREF_NFC_LOCK_TAG, value) }
 
   fun shouldShowNewGestureInfo(): Boolean {
     return sharedPreferences.getBoolean(PREF_SHOULD_SHOW_NEW_GESTURE_INFO, false)

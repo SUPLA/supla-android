@@ -19,6 +19,7 @@ package org.supla.android.db.room.app
 
 import androidx.room.TypeConverter
 import org.supla.android.data.source.local.entity.ColorEntityType
+import org.supla.android.data.source.local.entity.NfcCallResult
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.lib.actions.ActionId
@@ -103,4 +104,10 @@ class AppDatabaseConverters {
 
   @TypeConverter
   fun intToColorEntityType(value: Int): ColorEntityType = ColorEntityType.from(value)
+
+  @TypeConverter
+  fun nfcCallResultToInt(result: NfcCallResult): Int = result.value
+
+  @TypeConverter
+  fun intToNfcCallResult(value: Int): NfcCallResult = NfcCallResult.from(value)
 }

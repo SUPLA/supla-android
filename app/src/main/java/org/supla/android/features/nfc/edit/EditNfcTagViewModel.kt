@@ -59,17 +59,4 @@ class EditNfcTagViewModel @Inject constructor(
   getSceneIconUseCase,
   getCaptionUseCase
 ),
-  EditNfcTagViewScope {
-
-  override fun onDelete() {
-    when (val mode = currentState().mode) {
-      is Mode.Edit ->
-        viewModelScope.launch {
-          nfcTagRepository.delete(mode.id)
-          sendEvent(EditNfcTagViewEvent.Close)
-        }
-
-      else -> sendEvent(EditNfcTagViewEvent.Close)
-    }
-  }
-}
+  EditNfcTagViewScope

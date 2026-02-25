@@ -67,9 +67,9 @@ fun suplaTypography() = Typography(
   ),
 
   titleLarge = TextStyle(
-    fontSize = 22.sp,
-    letterSpacing = TextUnit(0.025f, TextUnitType.Em),
-    fontWeight = FontWeight.Normal,
+    fontSize = 20.sp,
+    letterSpacing = TextUnit(0.15f, TextUnitType.Sp),
+    fontWeight = FontWeight.SemiBold,
     fontFamily = OpenSansFontFamily
   ),
   titleMedium = TextStyle(

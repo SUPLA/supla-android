@@ -32,30 +32,34 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
+import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.images.ImageId
+import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.dialogs.AlertDialog
 import org.supla.android.ui.extensions.ifTrue
 import org.supla.android.ui.views.EmptyListInfoView
 import org.supla.android.ui.views.buttons.FloatingAddButton
 import org.supla.android.ui.views.forms.WarningMessage
+import org.supla.android.ui.views.icons.LockIcon
 import org.supla.android.ui.views.list.components.ListItemIcon
-import org.supla.android.ui.views.list.components.ListItemProfile
 import org.supla.android.ui.views.list.components.ListItemTitle
-import java.util.UUID
+import org.supla.core.shared.infrastructure.LocalizedString
 
 data class NfcTagListViewState(
   val items: List<NfcTagItem> = emptyList(),
@@ -74,11 +78,13 @@ data class NfcTagListViewState(
 
 data class NfcTagItem(
   val id: Long,
-  val uuid: String,
   val name: String,
   val icon: ImageId?,
   val profileName: String?,
-  val readOnly: Boolean
+  val channelName: LocalizedString?,
+  val action: ActionId?,
+  val readOnly: Boolean,
+  val channelNotExists: Boolean
 )
 
 interface NfcTagListScope {
@@ -193,34 +199,68 @@ private fun ItemView(
           text = item.name,
           onItemClick = onItemClick,
           onLongClick = onItemClick,
-          modifier = Modifier.weight(1f),
-          maxLines = 2
+          maxLines = 1
         )
-
-        item.profileName?.let { ListItemProfile(it) }
         item.readOnly.ifTrue { LockIcon() }
       }
 
-      UuidText(item.uuid)
+      Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(Distance.tiny)
+      ) {
+        if (item.channelNotExists) {
+          ErrorIcon()
+        } else if (item.action == null) {
+          WarningIcon()
+        }
+        ActionText(item.action, item.channelName, item.profileName)
+      }
     }
+    ArrowIcon()
   }
 }
 
 @Composable
-private fun LockIcon() =
+private fun ErrorIcon() =
   Image(
-    imageVector = Icons.Default.Lock,
-    contentDescription = null,
-    modifier = Modifier.size(dimensionResource(R.dimen.icon_small_size))
+    painter = painterResource(R.drawable.channel_warning_level2),
+    contentDescription = stringResource(R.string.nfc_list_warning_channel_missing)
   )
 
 @Composable
-private fun UuidText(uuid: String) =
-  Text(
-    text = uuid,
-    style = MaterialTheme.typography.bodySmall,
-    color = MaterialTheme.colorScheme.onSurface
+private fun WarningIcon() =
+  Image(
+    painter = painterResource(R.drawable.channel_warning_level1),
+    contentDescription = null
   )
+
+@Composable
+private fun ArrowIcon() =
+  Icon(
+    painter = painterResource(R.drawable.ic_arrow_right),
+    contentDescription = null,
+    modifier = Modifier.size(dimensionResource(R.dimen.icon_small_size)),
+  )
+
+@Composable
+private fun ActionText(action: ActionId?, channelName: LocalizedString?, profileName: String?) {
+  val context = LocalContext.current
+  val text =
+    if (action != null && channelName != null && profileName != null) {
+      "${action.label(context)} - ${channelName(context)} ($profileName)"
+    } else if (action != null && channelName != null) {
+      "${action.label(context)} - ${channelName(context)}"
+    } else {
+      stringResource(R.string.nfc_list_missing_action)
+    }
+  Text(
+    text = text,
+    style = MaterialTheme.typography.bodySmall,
+    color = MaterialTheme.colorScheme.onSurface,
+    overflow = TextOverflow.Ellipsis,
+    maxLines = 1
+  )
+}
 
 private val previewScope = object : NfcTagListScope {
   override fun onAddClick() {}
@@ -237,8 +277,8 @@ private fun Preview() {
       viewState = NfcTagListViewState(
         items = listOf(
           item(0, "Tag 1"),
-          item(1, "Tag 2"),
-          item(2, "Tag 3")
+          item(1, "Tag 2", ActionId.OPEN, "Front door"),
+          item(2, "Tag 3", ActionId.TURN_ON, "Living room light")
         ),
         nfcState = NfcTagListViewState.NfcState.DISABLED
       )
@@ -258,12 +298,14 @@ private fun Preview_NfcUnsupported() {
   }
 }
 
-private fun item(id: Long, name: String): NfcTagItem =
+private fun item(id: Long, name: String, action: ActionId? = null, channelName: String? = null): NfcTagItem =
   NfcTagItem(
     id = id,
-    uuid = UUID.randomUUID().toString(),
     name = name,
     icon = null,
     profileName = if (id < 2) "Default" else null,
-    readOnly = id.mod(2) == 1
+    action = action,
+    channelName = channelName?.let { LocalizedString.Constant(it) },
+    readOnly = id.mod(2) == 1,
+    channelNotExists = id == 2L
   )

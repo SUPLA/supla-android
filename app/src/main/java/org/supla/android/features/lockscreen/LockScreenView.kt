@@ -62,13 +62,14 @@ import org.supla.android.core.infrastructure.LocalDateProvider
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.formatting.LocalTimeFormatter
-import org.supla.android.ui.views.BodyLarge
-import org.supla.android.ui.views.BodyMedium
-import org.supla.android.ui.views.BodySmall
-import org.supla.android.ui.views.HeadlineSmall
 import org.supla.android.ui.views.Image
+import org.supla.android.ui.views.LogoWithSentence
 import org.supla.android.ui.views.buttons.TextButton
 import org.supla.android.ui.views.forms.PinTextField
+import org.supla.android.ui.views.texts.BodyLarge
+import org.supla.android.ui.views.texts.BodyMedium
+import org.supla.android.ui.views.texts.BodySmall
+import org.supla.android.ui.views.texts.HeadlineSmall
 import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.infrastructure.LocalizedString
 
@@ -129,7 +130,7 @@ fun LockScreenView(
         .align(Alignment.TopCenter)
     ) {
       if (viewState.unlockAction.showLogo) {
-        Image(Configuration.LockScreen.LOGO_RESOURCE, modifier = Modifier.widthIn(max = 144.dp))
+        LogoWithSentence()
         Spacer(modifier = Modifier.height(logoBottomSpace))
       }
       viewState.unlockAction.messageId?.let {

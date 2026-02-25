@@ -34,8 +34,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.ui.views.BodyMedium
 import org.supla.android.ui.views.buttons.BlueTextButton
+import org.supla.android.ui.views.texts.BodyMedium
 
 @Composable
 fun DeviceCatalogErrorView(

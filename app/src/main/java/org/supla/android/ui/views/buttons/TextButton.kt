@@ -31,14 +31,21 @@ fun TextButton(
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
   color: Color = Color.Unspecified,
+  singleLine: Boolean = false,
   text: String
 ) {
   TextButton(
     onClick = onClick,
     modifier = modifier,
-    enabled = enabled
+    enabled = enabled,
   ) {
-    Text(text = text, color = color, style = MaterialTheme.typography.labelLarge, textAlign = TextAlign.Center)
+    Text(
+      text = text,
+      color = color,
+      style = MaterialTheme.typography.labelLarge,
+      textAlign = TextAlign.Center,
+      maxLines = if (singleLine) 1 else Int.MAX_VALUE
+    )
   }
 }
 

@@ -17,7 +17,6 @@ package org.supla.android.features.nfc.add
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.compose.runtime.Composable
 import androidx.fragment.app.viewModels
@@ -30,12 +29,10 @@ import org.supla.android.features.nfc.NfcHost
 import org.supla.android.features.nfc.edit.EditNfcTagFragment
 import org.supla.android.navigator.MainNavigator
 import org.supla.android.navigator.NavigationSubcontroller
-import org.supla.android.ui.ToolbarVisibilityController
-import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AddNfcTagFragment : BaseComposeFragment<AddNfcTagViewModelState, AddNfcTagViewEvent>(), NavigationSubcontroller, UpHandler {
+class AddNfcTagFragment : BaseComposeFragment<AddNfcTagViewState, AddNfcTagViewEvent>(), NavigationSubcontroller, UpHandler {
   override val viewModel: AddNfcTagViewModel by viewModels()
 
   @Inject
@@ -48,50 +45,38 @@ class AddNfcTagFragment : BaseComposeFragment<AddNfcTagViewModelState, AddNfcTag
   }
 
   @Composable
-  override fun ComposableContent(modelState: AddNfcTagViewModelState) {
+  override fun ComposableContent(modelState: AddNfcTagViewState) {
     SuplaTheme {
-      viewModel.View(modelState.viewState)
+      viewModel.View(modelState)
     }
   }
 
-  fun handle(intent: Intent) {
-    Timber.d("Got an intent (action: ${intent.action})")
-    viewModel.handleIntent(intent)
+  override fun onStart() {
+    super.onStart()
+    (activity as? NfcHost)?.enableNfcReader { viewModel.handleTag(it) }
+  }
+
+  override fun onStop() {
+    super.onStop()
+    (activity as? NfcHost)?.disableNfcReader()
   }
 
   override fun handleEvents(event: AddNfcTagViewEvent) {
     when (event) {
       AddNfcTagViewEvent.Close -> navigator.back()
-      is AddNfcTagViewEvent.ConfigureTagAction -> {
+      is AddNfcTagViewEvent.OpenExisting -> {
         navigator.back()
-        navigator.navigateTo(R.id.edit_nfc_tag_fragment, EditNfcTagFragment.bundle(event.tagId))
+        navigator.navigateTo(R.id.nfc_tag_edit_fragment, EditNfcTagFragment.bundle(event.tagId))
       }
 
       is AddNfcTagViewEvent.ConfigureNewTag -> {
         navigator.back()
-        navigator.navigateTo(R.id.edit_nfc_tag_fragment, EditNfcTagFragment.bundle(event.uuid, event.readOnly))
+        navigator.navigateTo(R.id.nfc_tag_edit_fragment, EditNfcTagFragment.bundle(event.uuid, event.readOnly))
       }
     }
   }
 
-  override fun getToolbarVisibility(): ToolbarVisibilityController.ToolbarVisibility =
-    ToolbarVisibilityController.ToolbarVisibility(
-      visible = true,
-      toolbarColorRes = R.color.primary_container,
-      navigationBarColorRes = R.color.primary_container,
-      shadowVisible = false,
-      isLight = false
-    )
-
   override fun screenTakeoverAllowed(): Boolean = false
-
-  fun enableNfcDispatch() {
-    (activity as? NfcHost)?.enableNfcDispatch { intent -> handle(intent) }
-  }
-
-  fun disableNfcDispatch() {
-    (activity as? NfcHost)?.disableNfcDispatch()
-  }
 
   override fun onUpPressed(): Boolean {
     viewModel.handleBack()

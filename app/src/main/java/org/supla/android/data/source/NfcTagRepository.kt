@@ -29,9 +29,9 @@ class NfcTagRepository @Inject constructor(
 ) {
   suspend fun save(entity: NfcTagEntity): Long = nfcTagDao.save(entity)
 
-  suspend fun findAll(): List<NfcTagEntity> = nfcTagDao.findAll()
-
   suspend fun findAllWithDependencies(): List<NfcTagDataEntity> = nfcTagDao.findAllWithDependencies()
+
+  suspend fun findByIdWithDependencies(id: Long): NfcTagDataEntity? = nfcTagDao.findByIdWithDependencies(id)
 
   suspend fun findById(id: Long): NfcTagEntity? = nfcTagDao.findById(id)
 

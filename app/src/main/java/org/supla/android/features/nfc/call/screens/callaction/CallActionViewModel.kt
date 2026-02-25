@@ -25,9 +25,11 @@ import kotlinx.coroutines.launch
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.infrastructure.nfc.tagUuid
 import org.supla.android.core.ui.BaseViewModel
-import org.supla.android.core.ui.ModelViewState
 import org.supla.android.core.ui.ViewEvent
+import org.supla.android.core.ui.ViewModelState
+import org.supla.android.data.source.NfcCallRepository
 import org.supla.android.data.source.NfcTagRepository
+import org.supla.android.data.source.local.entity.NfcCallResult
 import org.supla.android.data.source.local.entity.NfcTagEntity
 import org.supla.android.lib.actions.ActionParameters
 import org.supla.android.lib.singlecall.SingleCall
@@ -41,6 +43,7 @@ private const val SUCCESS_DELAY_MS: Long = 2000
 @HiltViewModel
 class CallActionViewModel @Inject constructor(
   private val singleCallProvider: SingleCall.Provider,
+  private val nfcCallRepository: NfcCallRepository,
   private val nfcTagRepository: NfcTagRepository,
   private val dateProvider: DateProvider,
   private val schedulers: SuplaSchedulers
@@ -92,7 +95,7 @@ class CallActionViewModel @Inject constructor(
   }
 
   private suspend fun performAction(tagId: String) {
-    var currentTime = dateProvider.currentTimestamp()
+    val currentTime = dateProvider.currentTimestamp()
     val tag = schedulers.io { nfcTagRepository.findByUuid(tagId) }
 
     if (tag == null) {
@@ -103,16 +106,13 @@ class CallActionViewModel @Inject constructor(
     val configuration = tag.configuration
     if (configuration == null) {
       setErrorState(TagProcessingStep.FailureType.TagNotConfigured(tag.id))
+      nfcCallRepository.insert(tag.id, NfcCallResult.ACTION_MISSING)
       return
     }
 
-    delayIfNeeded(currentTime)
-    currentTime = dateProvider.currentTimestamp()
-    setState(TagProcessingStep.ExecutingAction)
-
     val singleCall = singleCallProvider.provide(configuration.profileId)
-
     val result = schedulers.io { singleCall.executeAction(configuration.actionParameters) }
+    nfcCallRepository.insert(tag.id, result.toNfcCallResult)
 
     delayIfNeeded(currentTime)
 
@@ -123,7 +123,7 @@ class CallActionViewModel @Inject constructor(
         sendEvent(CallActionViewEvent.Close)
       }
 
-      SingleCall.Result.NotFound -> setErrorState(TagProcessingStep.FailureType.ChannelNotFound)
+      SingleCall.Result.NotFound -> setErrorState(TagProcessingStep.FailureType.ChannelNotFound(tag.id))
       SingleCall.Result.Offline -> setErrorState(TagProcessingStep.FailureType.ChannelOffline)
       is SingleCall.Result.AccessError,
       is SingleCall.Result.CommandError,
@@ -146,11 +146,7 @@ class CallActionViewModel @Inject constructor(
     setState(TagProcessingStep.Failure(type))
 
   private fun setState(step: TagProcessingStep) =
-    updateState {
-      it.copy(
-        screenState = it.screenState.push(step)
-      )
-    }
+    updateState { it.copy(screenState = it.screenState.copy(step = step)) }
 
   private suspend fun delayIfNeeded(currentTime: Long) {
     val stepTime = dateProvider.currentTimestamp() - currentTime
@@ -163,6 +159,19 @@ class CallActionViewModel @Inject constructor(
 private val NfcTagEntity.Configuration.actionParameters: ActionParameters
   get() = ActionParameters(actionId, subjectType, subjectId)
 
+private val SingleCall.Result.toNfcCallResult: NfcCallResult
+  get() = when (this) {
+    SingleCall.Result.Success -> NfcCallResult.SUCCESS
+    is SingleCall.Result.AccessError,
+    is SingleCall.Result.CommandError,
+    is SingleCall.Result.ConnectionError,
+    SingleCall.Result.Inactive,
+    SingleCall.Result.NoSuchProfile,
+    SingleCall.Result.NotFound,
+    SingleCall.Result.Offline,
+    SingleCall.Result.UnknownError -> NfcCallResult.FAILURE
+  }
+
 sealed class CallActionViewEvent : ViewEvent {
   data object Close : CallActionViewEvent()
   data class EditMissingAction(val id: Long) : CallActionViewEvent()
@@ -172,4 +181,4 @@ sealed class CallActionViewEvent : ViewEvent {
 data class CallActionViewModelState(
   val readOnly: Boolean = false,
   override val screenState: CallActionScreenState = CallActionScreenState()
-) : ModelViewState<CallActionScreenState>()
+) : ViewModelState<CallActionScreenState>()

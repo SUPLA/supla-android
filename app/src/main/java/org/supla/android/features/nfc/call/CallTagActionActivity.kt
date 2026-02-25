@@ -17,6 +17,7 @@ package org.supla.android.features.nfc.call
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.nfc.NfcAdapter
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -25,8 +26,6 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
@@ -41,6 +40,7 @@ import org.supla.android.extensions.setStatusBarColor
 import org.supla.android.features.nfc.call.screens.Navigator
 import org.supla.android.features.nfc.call.screens.callaction.CallActionScreen
 import org.supla.android.features.nfc.call.screens.configureaction.ConfigureActionScreen
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -49,9 +49,11 @@ class CallTagActionActivity : ComponentActivity() {
   @Inject
   lateinit var navigator: Navigator
 
+  private val nfcAdapter: NfcAdapter? by lazy { NfcAdapter.getDefaultAdapter(this) }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setStatusBarColor(R.color.primary_container, R.color.primary_container, false)
+    setStatusBarColor(R.color.background, R.color.background, true)
 
     setContent {
       Content(intent.navKey, navigator)
@@ -65,11 +67,6 @@ class CallTagActionActivity : ComponentActivity() {
     DisposableEffect(backStack) {
       navigator.bind(backStack)
       onDispose { navigator.unbind(backStack) }
-    }
-
-    LaunchedEffect(backStack) {
-      snapshotFlow { backStack.toList() }
-        .collect { updateBackgroundColor(it.lastOrNull()) }
     }
 
     SuplaTheme {
@@ -91,14 +88,22 @@ class CallTagActionActivity : ComponentActivity() {
     }
   }
 
-  private fun updateBackgroundColor(screen: NavKey?) {
-    when (screen) {
-      is EditMissingAction,
-      is SaveNewNfcTag ->
-        setStatusBarColor(R.color.background, R.color.background, true)
+  override fun onStart() {
+    super.onStart()
+    Timber.d("Enable NFC dispatch")
 
-      else ->
-        setStatusBarColor(R.color.primary_container, R.color.primary_container, false)
-    }
+    val adapter = nfcAdapter ?: return
+    val flags = NfcAdapter.FLAG_READER_NFC_A or
+      NfcAdapter.FLAG_READER_NFC_B or
+      NfcAdapter.FLAG_READER_NFC_F or
+      NfcAdapter.FLAG_READER_NFC_V
+
+    adapter.enableReaderMode(this, { }, flags, null)
+  }
+
+  override fun onPause() {
+    super.onPause()
+    Timber.d("Disable NFC dispatch")
+    nfcAdapter?.disableReaderMode(this)
   }
 }

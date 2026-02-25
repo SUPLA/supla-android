@@ -34,12 +34,13 @@ fun Button(
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
   singleLine: Boolean = true,
+  colors: ButtonColors = ButtonDefaults.buttonColors(contentColor = MaterialTheme.colorScheme.onPrimary),
   onClick: () -> Unit
 ) {
   Button(
     onClick = onClick,
     modifier = modifier,
-    colors = ButtonDefaults.buttonColors(contentColor = MaterialTheme.colorScheme.onPrimary),
+    colors = colors,
     enabled = enabled
   ) {
     Text(

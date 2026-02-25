@@ -63,7 +63,7 @@ class NotificationsLogFragment :
   }
 
   override fun onMenuItemClick(menuItem: MenuItem): Boolean {
-    if (menuItem.itemId == R.id.toolbar_delete) {
+    if (menuItem.itemId == R.id.toolbar_delete_all) {
       viewModel.askDeleteAll()
       return true
     }
