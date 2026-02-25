@@ -46,10 +46,10 @@ val MIGRATION_42_43: Migration = object : Migration(42, 43), SqlExecutor {
     """.trimIndent()
 
   override fun migrate(db: SupportSQLiteDatabase) {
-    createWidgetConfigurationTable(db)
+    createNfcTagTable(db)
   }
 
-  private fun createWidgetConfigurationTable(db: SupportSQLiteDatabase) {
+  private fun createNfcTagTable(db: SupportSQLiteDatabase) {
     execSQL(db, CREATE_NFC_TAG_SQL)
   }
 }

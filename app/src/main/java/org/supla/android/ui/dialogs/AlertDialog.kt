@@ -10,7 +10,7 @@ package org.supla.android.ui.dialogs
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-syays GNU General Public License for more details.
+ GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -29,8 +29,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.ui.views.Separator
-import org.supla.android.ui.views.SeparatorStyle
 import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.buttons.OutlinedButton
 
@@ -46,9 +44,7 @@ fun AlertDialog(
 ) {
   Dialog(onDismiss = onDismiss) {
     DialogHeader(title = title)
-    Separator(style = SeparatorStyle.LIGHT)
     DialogMessage(message = message)
-    Separator(style = SeparatorStyle.LIGHT)
     DialogButtonsRow {
       negativeButtonTitle?.let {
         OutlinedButton(
@@ -76,8 +72,9 @@ fun DialogMessage(message: String) =
     text = message,
     style = MaterialTheme.typography.bodyMedium,
     textAlign = TextAlign.Center,
+    color = MaterialTheme.colorScheme.onSurfaceVariant,
     modifier = Modifier
-      .padding(all = Distance.default)
+      .padding(vertical = Distance.tiny, horizontal = Distance.default)
       .fillMaxWidth()
   )
 

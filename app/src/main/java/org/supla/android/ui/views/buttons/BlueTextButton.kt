@@ -21,7 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import org.supla.android.R
-import org.supla.android.ui.views.BodyMedium
+import org.supla.android.ui.views.texts.BodyMedium
 
 @Composable
 fun BlueTextButton(text: String, modifier: Modifier = Modifier, onClick: () -> Unit) =

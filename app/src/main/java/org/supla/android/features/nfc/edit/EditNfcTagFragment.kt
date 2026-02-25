@@ -23,8 +23,10 @@ import androidx.compose.runtime.Composable
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
+import org.supla.android.R
 import org.supla.android.core.ui.BaseComposeFragment
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.features.nfc.NfcHost
 import org.supla.android.features.nfc.shared.edit.EditNfcTagViewEvent
 import org.supla.android.features.nfc.shared.edit.EditNfcTagViewModelState
 import org.supla.android.navigator.MainNavigator
@@ -70,9 +72,21 @@ class EditNfcTagFragment : BaseComposeFragment<EditNfcTagViewModelState, EditNfc
     }
   }
 
+  override fun onStart() {
+    super.onStart()
+    (activity as? NfcHost)?.enableNfcReader { }
+  }
+
+  override fun onStop() {
+    super.onStop()
+    (activity as? NfcHost)?.disableNfcReader()
+  }
+
   override fun handleEvents(event: EditNfcTagViewEvent) {
     when (event) {
       EditNfcTagViewEvent.Close -> navigator.back()
+      is EditNfcTagViewEvent.SetEditTagTitle -> setToolbarTitle(getString(R.string.edit_nfc_tag_title_with_name, event.name))
+      EditNfcTagViewEvent.SetNewTagTitle -> setToolbarTitle(getString(R.string.edit_nfc_new_tag_header))
     }
   }
 

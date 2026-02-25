@@ -25,16 +25,23 @@ import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.NfcTagRepository
+import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.complex.NfcTagDataEntity
+import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.usecases.extensions.invoke
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
+import org.supla.core.shared.extensions.ifFalse
+import org.supla.core.shared.usecase.GetCaptionUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class NfcTagListViewModel @Inject constructor(
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val getSceneIconUseCase: GetSceneIconUseCase,
+  private val profileRepository: RoomProfileRepository,
+  private val getCaptionUseCase: GetCaptionUseCase,
   private val nfcTagRepository: NfcTagRepository,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<NfcTagListViewModelState, NfcTagListViewEvent>(NfcTagListViewModelState(), schedulers), NfcTagListScope {
@@ -47,11 +54,12 @@ class NfcTagListViewModel @Inject constructor(
     }
 
     viewModelScope.launch {
+      val profilesCount = profileRepository.findAllProfilesKtx().count()
       val tags = nfcTagRepository.findAllWithDependencies()
       updateState { state ->
         state.copy(
           viewState = state.viewState.copy(
-            items = tags.map { it.toItem },
+            items = tags.map { it.toItem(profilesCount) },
             nfcState = nfcState
           )
         )
@@ -68,7 +76,7 @@ class NfcTagListViewModel @Inject constructor(
   }
 
   override fun onItemClick(item: NfcTagItem) {
-    sendEvent(NfcTagListViewEvent.NavigateToItemEdit(item.id))
+    sendEvent(NfcTagListViewEvent.NavigateToItemDetail(item.id))
   }
 
   override fun onNfcSettingsClick() {
@@ -79,20 +87,28 @@ class NfcTagListViewModel @Inject constructor(
     updateState { it.copy(viewState = it.viewState.copy(showNfcDialog = false)) }
   }
 
-  private val NfcTagDataEntity.toItem
-    get() = NfcTagItem(
+  private fun NfcTagDataEntity.toItem(profilesCount: Int = 0) =
+    NfcTagItem(
       id = tagEntity.id,
-      uuid = tagEntity.uuid,
       name = tagEntity.name,
       icon = icon(getChannelIconUseCase, getSceneIconUseCase),
-      profileName = profileEntity?.name,
-      readOnly = tagEntity.readOnly
+      profileName = (profilesCount == 1).ifFalse(profileEntity?.name),
+      channelName = channelEntity?.let { getCaptionUseCase(it) },
+      action = tagEntity.actionId,
+      readOnly = tagEntity.readOnly,
+      channelNotExists =
+      when (tagEntity.subjectType) {
+        SubjectType.CHANNEL -> tagEntity.subjectId != null && channelEntity == null
+        SubjectType.GROUP -> tagEntity.subjectId != null && groupEntity == null
+        SubjectType.SCENE -> tagEntity.subjectId != null && sceneEntity == null
+        null -> false
+      }
     )
 }
 
 sealed interface NfcTagListViewEvent : ViewEvent {
   data object NavigateToAdd : NfcTagListViewEvent
-  data class NavigateToItemEdit(val id: Long) : NfcTagListViewEvent
+  data class NavigateToItemDetail(val id: Long) : NfcTagListViewEvent
   data object NavigateToNfcSettings : NfcTagListViewEvent
 }
 

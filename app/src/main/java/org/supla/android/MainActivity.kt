@@ -20,9 +20,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
-import android.app.PendingIntent
-import android.content.Intent
 import android.nfc.NfcAdapter
+import android.nfc.Tag
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -193,30 +192,21 @@ class MainActivity :
     menuLayout.setOnClickListener(this::handleMenuClicks)
   }
 
-  override fun onNewIntent(intent: Intent) {
-    super.onNewIntent(intent)
-    Timber.d("Got an intent (action: ${intent.action})")
-    nfcIntentHandler?.invoke(intent)
-  }
-
-  private var nfcIntentHandler: ((Intent) -> Unit)? = null
-
-  override fun enableNfcDispatch(intentHandler: (Intent) -> Unit) {
+  override fun enableNfcReader(intentHandler: (Tag) -> Unit) {
     Timber.d("Enable NFC dispatch")
-    nfcIntentHandler = intentHandler
 
     val adapter = nfcAdapter ?: return
-    val intent = Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-    val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
-    val pendingIntent = PendingIntent.getActivity(this, 0, intent, flags)
+    val flags = NfcAdapter.FLAG_READER_NFC_A or
+      NfcAdapter.FLAG_READER_NFC_B or
+      NfcAdapter.FLAG_READER_NFC_F or
+      NfcAdapter.FLAG_READER_NFC_V
 
-    adapter.enableForegroundDispatch(this, pendingIntent, null, null)
+    adapter.enableReaderMode(this, { intentHandler(it) }, flags, null)
   }
 
-  override fun disableNfcDispatch() {
+  override fun disableNfcReader() {
     Timber.d("Disable NFC dispatch")
-    nfcIntentHandler = null
-    nfcAdapter?.disableForegroundDispatch(this)
+    nfcAdapter?.disableReaderMode(this)
   }
 
   override fun onStart() {
@@ -388,7 +378,7 @@ class MainActivity :
   }
 
   private fun setDeleteVisible(visible: Boolean) {
-    toolbar.menu.findItem(R.id.toolbar_delete)?.isVisible = visible
+    toolbar.menu.findItem(R.id.toolbar_delete_all)?.isVisible = visible
     toolbar.menu.findItem(R.id.toolbar_delete_older_than_month)?.isVisible = visible
   }
 

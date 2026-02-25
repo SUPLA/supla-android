@@ -23,13 +23,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
 import androidx.core.net.toUri
+import org.supla.android.R
 import org.supla.android.core.ui.BaseComposeActivity
+import org.supla.android.extensions.setStatusBarColor
 
 abstract class BaseWidgetActivity : BaseComposeActivity<WidgetConfigurationViewModelState, WidgetConfigurationViewEvent>() {
   abstract override val viewModel: BaseWidgetViewModel
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    setStatusBarColor(R.color.surface, R.color.surface, true)
 
     // set default response
     setResult(RESULT_CANCELED)

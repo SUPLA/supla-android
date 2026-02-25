@@ -50,6 +50,7 @@ import org.supla.android.core.ui.theme.Distance
 import org.supla.android.data.model.general.SingleOptionalSelectionList
 import org.supla.android.images.ImageId
 import org.supla.android.ui.views.Image
+import org.supla.android.ui.views.texts.Label
 import org.supla.core.shared.extensions.ifTrue
 
 interface SubjectSpinnerItem : SpinnerItem {
@@ -97,9 +98,8 @@ fun <T : SubjectSpinnerItem> LabelledSpinner(
 
 @Composable
 private fun SpinnerLabel(@StringRes labelRes: Int, labelColor: Color) =
-  Text(
-    text = stringResource(id = labelRes).uppercase(),
-    style = MaterialTheme.typography.bodySmall,
+  Label(
+    text = stringResource(id = labelRes),
     color = labelColor,
     modifier = Modifier.padding(horizontal = 12.dp),
   )

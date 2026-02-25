@@ -40,9 +40,9 @@ import org.supla.android.ui.views.configuration.SubjectTypes
 import org.supla.android.ui.views.configuration.Subjects
 
 @Composable
-fun ActionConfigurationScope.NfcActions(viewState: EditNfcTagViewState) {
+fun ActionConfigurationScope.NfcActions(viewState: EditNfcTagViewState, modifier: Modifier = Modifier) {
   Column(
-    modifier = Modifier
+    modifier = modifier
       .padding(Distance.default)
       .padding(bottom = 80.dp)
       .verticalScroll(state = rememberScrollState()),
@@ -58,7 +58,9 @@ fun ActionConfigurationScope.NfcActions(viewState: EditNfcTagViewState) {
     )
 
     viewState.profiles?.let { profiles ->
-      Profiles(profiles)
+      if (profiles.items.size != 1 || profiles.items.firstOrNull() != profiles.selected) {
+        Profiles(profiles)
+      }
       SubjectTypes(viewState.subjectType)
     }
     viewState.subjects?.let { subjects ->

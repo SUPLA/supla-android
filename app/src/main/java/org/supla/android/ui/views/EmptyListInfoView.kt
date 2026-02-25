@@ -25,24 +25,49 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
 
+sealed interface SizeClass {
+  val iconSize: Dp
+  val textStyle: TextStyle
+    @Composable get
+}
+
+data object Normal : SizeClass {
+  override val iconSize: Dp = 64.dp
+  override val textStyle: TextStyle
+    @Composable
+    get() = MaterialTheme.typography.headlineLarge
+}
+
+data object Small : SizeClass {
+  override val iconSize: Dp = 32.dp
+  override val textStyle: TextStyle
+    @Composable
+    get() = MaterialTheme.typography.titleLarge
+}
+
 @Composable
-fun EmptyListInfoView(modifier: Modifier = Modifier) =
+fun EmptyListInfoView(
+  modifier: Modifier = Modifier,
+  size: SizeClass = Normal
+) =
   Column(
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = modifier
   ) {
     Image(
       drawableId = R.drawable.ic_empty,
-      modifier = Modifier.size(64.dp),
+      modifier = Modifier.size(size.iconSize),
       tint = MaterialTheme.colorScheme.onSurfaceVariant
     )
     Text(
       text = stringResource(R.string.main_no_entries),
-      style = MaterialTheme.typography.headlineLarge,
+      style = size.textStyle,
       color = MaterialTheme.colorScheme.onSurfaceVariant,
       textAlign = TextAlign.Center
     )

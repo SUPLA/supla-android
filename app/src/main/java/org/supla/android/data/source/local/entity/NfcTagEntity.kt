@@ -19,12 +19,22 @@ package org.supla.android.data.source.local.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
+import org.supla.android.data.source.local.entity.NfcTagEntity.Companion.COLUMN_UUID
 import org.supla.android.data.source.local.entity.NfcTagEntity.Companion.TABLE_NAME
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 
-@Entity(tableName = TABLE_NAME)
+@Entity(
+  tableName = TABLE_NAME,
+  indices = [
+    Index(
+      value = [COLUMN_UUID],
+      name = "${TABLE_NAME}_${COLUMN_UUID}_index"
+    )
+  ]
+)
 data class NfcTagEntity(
   @ColumnInfo(name = COLUMN_ID)
   @PrimaryKey(autoGenerate = true)

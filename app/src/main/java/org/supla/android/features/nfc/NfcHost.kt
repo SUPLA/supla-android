@@ -17,9 +17,9 @@ package org.supla.android.features.nfc
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.content.Intent
+import android.nfc.Tag
 
 interface NfcHost {
-  fun enableNfcDispatch(intentHandler: (Intent) -> Unit)
-  fun disableNfcDispatch()
+  fun enableNfcReader(intentHandler: (Tag) -> Unit)
+  fun disableNfcReader()
 }

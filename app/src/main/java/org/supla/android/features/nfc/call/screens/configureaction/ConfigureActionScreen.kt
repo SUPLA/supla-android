@@ -20,11 +20,14 @@ package org.supla.android.features.nfc.call.screens.configureaction
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.supla.android.R
@@ -61,6 +64,9 @@ fun ConfigureActionScreen(
     eventHandler = {
       when (it) {
         EditNfcTagViewEvent.Close -> navigator.finish()
+        is EditNfcTagViewEvent.SetEditTagTitle,
+        EditNfcTagViewEvent.SetNewTagTitle -> {
+        } // nothing to do
       }
     },
     content = { View(it, viewModel) }
@@ -80,6 +86,9 @@ fun ConfigureActionScreen(
     eventHandler = {
       when (it) {
         EditNfcTagViewEvent.Close -> navigator.finish()
+        is EditNfcTagViewEvent.SetEditTagTitle,
+        EditNfcTagViewEvent.SetNewTagTitle -> {
+        } // nothing to do
       }
     },
     content = { View(it, viewModel) }
@@ -89,16 +98,16 @@ fun ConfigureActionScreen(
 @Composable
 private fun BoxScope.View(viewState: EditNfcTagViewState, viewScope: ConfigureActionScreenScope) {
   Column {
-    viewScope.Header()
+    viewScope.Header(viewState.newTag)
     viewScope.NfcActions(viewState)
   }
   viewScope.SaveButton(Modifier.align(Alignment.BottomCenter))
 }
 
 @Composable
-private fun ConfigureActionScreenScope.Header() =
+private fun ConfigureActionScreenScope.Header(isNew: Boolean) =
   Header(
-    textRes = R.string.edit_nfc_tag_header,
+    textRes = if (isNew) R.string.edit_nfc_new_tag_header else R.string.edit_nfc_existing_tag_header,
     iconRes = R.drawable.ic_close,
     onClose = { onClose() },
     modifier = Modifier.padding(
@@ -114,7 +123,10 @@ private fun ConfigureActionScreenScope.SaveButton(modifier: Modifier = Modifier)
   Button(
     text = stringResource(R.string.save),
     onClick = { onSave() },
-    modifier = modifier.padding(Distance.default)
+    modifier = modifier
+      .defaultMinSize(minHeight = dimensionResource(R.dimen.button_default_size))
+      .fillMaxWidth()
+      .padding(Distance.default)
   )
 }
 
