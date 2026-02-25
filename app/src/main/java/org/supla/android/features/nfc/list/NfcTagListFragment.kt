@@ -26,7 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.core.ui.BaseComposeFragment
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.features.nfc.edit.EditNfcTagFragment
+import org.supla.android.features.nfc.detail.NfcTagDetailFragment
 import org.supla.android.navigator.MainNavigator
 import javax.inject.Inject
 
@@ -51,9 +51,12 @@ class NfcTagListFragment : BaseComposeFragment<NfcTagListViewModelState, NfcTagL
 
   override fun handleEvents(event: NfcTagListViewEvent) {
     when (event) {
-      NfcTagListViewEvent.NavigateToAdd -> navigator.navigateTo(R.id.add_nfc_tag_fragment)
-      is NfcTagListViewEvent.NavigateToItemEdit -> navigator.navigateTo(R.id.edit_nfc_tag_fragment, EditNfcTagFragment.bundle(event.id))
+      NfcTagListViewEvent.NavigateToAdd -> navigator.navigateTo(R.id.nfc_tag_add_fragment)
       NfcTagListViewEvent.NavigateToNfcSettings -> activity?.startActivity(Intent(Settings.ACTION_NFC_SETTINGS))
+      is NfcTagListViewEvent.NavigateToItemDetail -> navigator.navigateTo(
+        R.id.nfc_tag_detail_fragment,
+        NfcTagDetailFragment.bundle(event.id)
+      )
     }
   }
 }

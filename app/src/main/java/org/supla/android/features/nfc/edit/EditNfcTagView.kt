@@ -17,11 +17,13 @@ package org.supla.android.features.nfc.edit
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,39 +40,46 @@ import org.supla.android.images.ImageId
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaPreview
+import org.supla.android.tools.SuplaPreviewLandscape
+import org.supla.android.tools.SuplaSmallPreview
 import org.supla.android.ui.views.buttons.Button
-import org.supla.android.ui.views.buttons.OutlinedButton
 import org.supla.android.ui.views.configuration.ActionConfigurationScope
+import org.supla.android.ui.views.forms.InfoMessage
+import org.supla.android.ui.views.forms.Success
 import org.supla.core.shared.infrastructure.LocalizedString
 import java.util.UUID
 
 interface EditNfcTagViewScope : ActionConfigurationScope {
   fun onSave()
-  fun onDelete()
 }
 
 @Composable
 fun EditNfcTagViewScope.View(viewState: EditNfcTagViewState) {
-  Box(modifier = Modifier.fillMaxSize()) {
-    NfcActions(viewState)
+  Box(
+    modifier = Modifier
+      .fillMaxSize()
+      .background(color = MaterialTheme.colorScheme.surface)
+  ) {
+    Column {
+      if (viewState.newTag) {
+        InfoMessage(
+          text = stringResource(R.string.nfc_successfully_added),
+          type = Success,
+          modifier = Modifier.padding(start = Distance.default, top = Distance.default, end = Distance.default)
+        )
+      }
 
-    Row(
-      modifier = Modifier
-        .padding(Distance.default)
-        .align(Alignment.BottomCenter),
-      horizontalArrangement = Arrangement.spacedBy(Distance.default)
-    ) {
-      OutlinedButton(
-        text = stringResource(if (viewState.newTag) R.string.cancel else R.string.delete_account),
-        modifier = Modifier.weight(1f),
-        onClick = { onDelete() }
-      )
-      Button(
-        text = stringResource(R.string.save),
-        onClick = { onSave() },
-        modifier = Modifier.weight(1f)
-      )
+      NfcActions(viewState)
     }
+
+    Button(
+      text = stringResource(R.string.save),
+      onClick = { onSave() },
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(Distance.default)
+        .align(Alignment.BottomCenter)
+    )
   }
 }
 
@@ -81,10 +90,11 @@ private val emptyScope = object : EditNfcTagViewScope {
   override fun onCaptionChange(caption: String) {}
   override fun onActionChange(actionId: ActionId) {}
   override fun onSave() {}
-  override fun onDelete() {}
 }
 
 @SuplaPreview
+@SuplaSmallPreview
+@SuplaPreviewLandscape
 @Composable
 private fun Preview() {
   val firstProfile = ProfileItem(1, LocalizedString.Constant("Default"), true)
@@ -118,6 +128,45 @@ private fun Preview() {
           label = R.string.widget_configure_action_label,
           items = listOf(ActionId.OPEN)
         )
+      )
+    )
+  }
+}
+
+@SuplaPreview
+@Composable
+private fun PreviewSingleProfile() {
+  val firstProfile = ProfileItem(1, LocalizedString.Constant("Default"), true)
+  val firstSubject = SubjectItem.create(
+    id = 1,
+    caption = LocalizedString.Constant("Thermostat"),
+    icon = ImageId(R.drawable.fnc_thermostat_dhw)
+  )
+  SuplaTheme {
+    emptyScope.View(
+      EditNfcTagViewState(
+        tagName = "Open door tag",
+        tagUuid = UUID.randomUUID().toString(),
+        profiles = SingleOptionalSelectionList(
+          selected = firstProfile,
+          label = R.string.widget_configure_profile_label,
+          items = listOf(
+            firstProfile,
+          )
+        ),
+        subjects = SingleOptionalSelectionList(
+          selected = firstSubject,
+          label = R.string.widget_channel,
+          items = listOf(
+            firstSubject
+          )
+        ),
+        actions = SingleOptionalSelectionList(
+          selected = ActionId.OPEN,
+          label = R.string.widget_configure_action_label,
+          items = listOf(ActionId.OPEN)
+        ),
+        newTag = true
       )
     )
   }

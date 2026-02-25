@@ -34,6 +34,8 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
+import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.tools.SuplaPreview
 
 @Composable
 fun ChannelOfflineView() =
@@ -56,3 +58,11 @@ fun ChannelOfflineView() =
     )
     Spacer(modifier = Modifier.weight(1f))
   }
+
+@SuplaPreview
+@Composable
+private fun Preview() {
+  SuplaTheme {
+    ChannelOfflineView()
+  }
+}

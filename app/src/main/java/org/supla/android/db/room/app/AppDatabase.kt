@@ -31,6 +31,7 @@ import org.supla.android.data.source.local.dao.ChannelStateDao
 import org.supla.android.data.source.local.dao.ChannelValueDao
 import org.supla.android.data.source.local.dao.ColorListDao
 import org.supla.android.data.source.local.dao.LocationDao
+import org.supla.android.data.source.local.dao.NfcCallDao
 import org.supla.android.data.source.local.dao.NfcTagDao
 import org.supla.android.data.source.local.dao.NotificationDao
 import org.supla.android.data.source.local.dao.ProfileDao
@@ -48,6 +49,7 @@ import org.supla.android.data.source.local.entity.ChannelStateEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.ColorEntity
 import org.supla.android.data.source.local.entity.LocationEntity
+import org.supla.android.data.source.local.entity.NfcCallEntity
 import org.supla.android.data.source.local.entity.NfcTagEntity
 import org.supla.android.data.source.local.entity.NotificationEntity
 import org.supla.android.data.source.local.entity.ProfileEntity
@@ -74,7 +76,8 @@ import org.supla.android.db.DbHelper
     ChannelStateEntity::class,
     AndroidAutoItemEntity::class,
     WidgetConfigurationEntity::class,
-    NfcTagEntity::class
+    NfcTagEntity::class,
+    NfcCallEntity::class
   ],
   version = DbHelper.DATABASE_VERSION,
   exportSchema = false
@@ -98,4 +101,5 @@ abstract class AppDatabase : RoomDatabase() {
   abstract fun androidAutoItemDao(): AndroidAutoItemDao
   abstract fun widgetConfigurationDao(): WidgetConfigurationDao
   abstract fun nfcTagDao(): NfcTagDao
+  abstract fun nfcCallDao(): NfcCallDao
 }

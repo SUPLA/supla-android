@@ -21,8 +21,8 @@ import androidx.lifecycle.viewModelScope
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.launch
 import org.supla.android.core.ui.BaseViewModel
-import org.supla.android.core.ui.ModelViewState
 import org.supla.android.core.ui.ViewEvent
+import org.supla.android.core.ui.ViewModelState
 import org.supla.android.data.model.spinner.ProfileItem
 import org.supla.android.data.model.spinner.SubjectItem
 import org.supla.android.data.model.spinner.SubjectItemConversionScope
@@ -216,6 +216,12 @@ open class BaseEditNfcTagViewModel(
         mode = mode
       )
     }
+
+    when (mode) {
+      is Mode.Edit -> sendEvent(EditNfcTagViewEvent.SetEditTagTitle(name))
+      is Mode.Insert -> sendEvent(EditNfcTagViewEvent.SetNewTagTitle)
+      else -> {} // No title change needed
+    }
   }
 
   private fun edit(state: EditNfcTagViewModelState, id: Long) {
@@ -270,13 +276,15 @@ open class BaseEditNfcTagViewModel(
 
 sealed interface EditNfcTagViewEvent : ViewEvent {
   data object Close : EditNfcTagViewEvent
+  data object SetNewTagTitle : EditNfcTagViewEvent
+  data class SetEditTagTitle(val name: String) : EditNfcTagViewEvent
 }
 
 data class EditNfcTagViewModelState(
   val mode: Mode = Mode.Unknown,
   val selections: Set<Selection> = emptySet(),
   override val screenState: EditNfcTagViewState = EditNfcTagViewState()
-) : ModelViewState<EditNfcTagViewState>() {
+) : ViewModelState<EditNfcTagViewState>() {
 
   fun updateSelections(subjectId: Int): Set<Selection> =
     mutableSetOf<Selection>().apply {

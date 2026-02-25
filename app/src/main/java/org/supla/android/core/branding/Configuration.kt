@@ -33,6 +33,10 @@ object Configuration {
   const val SHOW_LICENCE = true
   const val ANDROID_AUTO_SUPPORT = true
 
+  object General {
+    val LOGO_WITH_IMAGE_RESOURCE = R.drawable.logo_with_name
+  }
+
   object Toolbar {
     val LOGO_INSTEAD_OFF_APP_NAME: AppBar.Title? = null
   }
@@ -45,10 +49,6 @@ object Configuration {
   object Status {
     val LOGO_RESOURCE = R.drawable.logo_light
     val COLOR_FILLER: Int? by lazy { R.color.primary }
-  }
-
-  object LockScreen {
-    val LOGO_RESOURCE = R.drawable.logo_with_name
   }
 
   object ProjectorScreen {

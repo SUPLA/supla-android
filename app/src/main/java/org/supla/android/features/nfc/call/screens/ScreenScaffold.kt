@@ -33,11 +33,11 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import org.supla.android.core.ui.BaseViewModel
-import org.supla.android.core.ui.ModelViewState
 import org.supla.android.core.ui.ViewEvent
+import org.supla.android.core.ui.ViewModelState
 
 @Composable
-fun <SS : Any, S : ModelViewState<SS>, E : ViewEvent> ScreenScaffold(
+fun <SS : Any, S : ViewModelState<SS>, E : ViewEvent> ScreenScaffold(
   viewModel: BaseViewModel<S, E>,
   eventHandler: (E) -> Unit = {},
   content: @Composable BoxScope.(SS) -> Unit

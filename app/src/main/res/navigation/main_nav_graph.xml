@@ -94,9 +94,9 @@
     android:label="@string/app_name_lowercased" />
 
   <fragment
-    android:id="@+id/add_nfc_tag_fragment"
+    android:id="@+id/nfc_tag_add_fragment"
     android:name="org.supla.android.features.nfc.add.AddNfcTagFragment"
-    android:label="@string/add_nfc_tag_title" />
+    android:label="@string/menu_nfc" />
 
   <fragment
     android:id="@+id/nfc_tag_list_fragment"
@@ -104,9 +104,18 @@
     android:label="@string/nfc_list_title" />
 
   <fragment
-    android:id="@+id/edit_nfc_tag_fragment"
+    android:id="@+id/nfc_tag_edit_fragment"
     android:name="org.supla.android.features.nfc.edit.EditNfcTagFragment"
     android:label="@string/edit_nfc_tag_title" />
+
+  <fragment
+    android:id="@+id/nfc_tag_detail_fragment"
+    android:name="org.supla.android.features.nfc.detail.NfcTagDetailFragment" />
+
+  <fragment
+    android:id="@+id/nfc_tag_lock_fragment"
+    android:name="org.supla.android.features.nfc.lock.LockTagFragment"
+    android:label="@string/nfc_lock_tag_label"/>
 
   <!-- Legacy fragment -->
   <fragment

@@ -40,6 +40,7 @@ import org.supla.android.ui.views.SegmentedComponent
 import org.supla.android.ui.views.forms.TextField
 import org.supla.android.ui.views.spinner.LabelledSpinner
 import org.supla.android.ui.views.spinner.Spinner
+import org.supla.android.ui.views.texts.Label
 
 /**
  * Scope can be used in features where action needs to be configured.
@@ -87,11 +88,9 @@ fun ActionConfigurationScope.Caption(
   isError: Boolean = false
 ) =
   Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-    Text(
-      text = stringResource(label).uppercase(),
-      style = MaterialTheme.typography.bodySmall,
-      modifier = Modifier.padding(horizontal = 12.dp),
-      color = colorResource(id = R.color.on_surface_variant)
+    Label(
+      text = stringResource(label),
+      modifier = Modifier.padding(horizontal = 12.dp)
     )
     TextField(
       value = caption,
