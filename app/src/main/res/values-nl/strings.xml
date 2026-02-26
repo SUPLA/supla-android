@@ -804,4 +804,5 @@
   <string name="nfc_update_action">Actie bijwerken</string>
   <string name="general_processing">Bezig met verwerken</string>
   <string name="nfc_tag_finish_editing">Scannen geblokkeerd</string>
+  <string name="nfc_tag_name">Tag \"%1$s\"</string>
 </resources>

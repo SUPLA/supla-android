@@ -31,9 +31,11 @@ import org.supla.android.data.source.NfcCallRepository
 import org.supla.android.data.source.NfcTagRepository
 import org.supla.android.data.source.local.entity.NfcCallResult
 import org.supla.android.data.source.local.entity.NfcTagEntity
+import org.supla.android.data.source.local.entity.complex.NfcTagDataEntity
 import org.supla.android.lib.actions.ActionParameters
 import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.core.shared.usecase.GetCaptionUseCase
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -43,6 +45,7 @@ private const val SUCCESS_DELAY_MS: Long = 2000
 @HiltViewModel
 class CallActionViewModel @Inject constructor(
   private val singleCallProvider: SingleCall.Provider,
+  private val getCaptionUseCase: GetCaptionUseCase,
   private val nfcCallRepository: NfcCallRepository,
   private val nfcTagRepository: NfcTagRepository,
   private val dateProvider: DateProvider,
@@ -94,25 +97,26 @@ class CallActionViewModel @Inject constructor(
     }
   }
 
-  private suspend fun performAction(tagId: String) {
+  private suspend fun performAction(tagUuid: String) {
     val currentTime = dateProvider.currentTimestamp()
-    val tag = schedulers.io { nfcTagRepository.findByUuid(tagId) }
+    val tag = schedulers.io { nfcTagRepository.findByUuidWithDependencies(tagUuid) }
+    updateState { it.copy(screenState = it.screenState.copy(tagData = tag?.tagData)) }
 
     if (tag == null) {
-      setErrorState(TagProcessingStep.FailureType.TagNotFound(tagId))
+      setErrorState(TagProcessingStep.FailureType.TagNotFound(tagUuid))
       return
     }
 
-    val configuration = tag.configuration
+    val configuration = tag.tagEntity.configuration
     if (configuration == null) {
-      setErrorState(TagProcessingStep.FailureType.TagNotConfigured(tag.id))
-      nfcCallRepository.insert(tag.id, NfcCallResult.ACTION_MISSING)
+      setErrorState(TagProcessingStep.FailureType.TagNotConfigured(tag.tagEntity.id))
+      nfcCallRepository.insert(tag.tagEntity.id, NfcCallResult.ACTION_MISSING)
       return
     }
 
     val singleCall = singleCallProvider.provide(configuration.profileId)
     val result = schedulers.io { singleCall.executeAction(configuration.actionParameters) }
-    nfcCallRepository.insert(tag.id, result.toNfcCallResult)
+    nfcCallRepository.insert(tag.tagEntity.id, result.toNfcCallResult)
 
     delayIfNeeded(currentTime)
 
@@ -123,7 +127,7 @@ class CallActionViewModel @Inject constructor(
         sendEvent(CallActionViewEvent.Close)
       }
 
-      SingleCall.Result.NotFound -> setErrorState(TagProcessingStep.FailureType.ChannelNotFound(tag.id))
+      SingleCall.Result.NotFound -> setErrorState(TagProcessingStep.FailureType.ChannelNotFound(tag.tagEntity.id))
       SingleCall.Result.Offline -> setErrorState(TagProcessingStep.FailureType.ChannelOffline)
       is SingleCall.Result.AccessError,
       is SingleCall.Result.CommandError,
@@ -154,6 +158,13 @@ class CallActionViewModel @Inject constructor(
       delay(STEP_MIN_TIME_MS - stepTime)
     }
   }
+
+  private val NfcTagDataEntity.tagData: CallActionScreenState.TagData
+    get() = CallActionScreenState.TagData(
+      name = tagEntity.name,
+      actionId = tagEntity.actionId,
+      subjectName = name(getCaptionUseCase)
+    )
 }
 
 private val NfcTagEntity.Configuration.actionParameters: ActionParameters

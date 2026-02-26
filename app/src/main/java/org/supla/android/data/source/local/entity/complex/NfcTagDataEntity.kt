@@ -29,9 +29,13 @@ import org.supla.android.data.source.local.entity.SceneEntity
 import org.supla.android.images.ImageId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.usecases.channel.GetChannelStateUseCase
+import org.supla.android.usecases.extensions.invoke
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
+import org.supla.core.shared.usecase.GetCaptionUseCase
 
 data class NfcTagDataEntity(
   @Embedded(prefix = "channel_") val channelEntity: ChannelEntity?,
@@ -49,6 +53,14 @@ data class NfcTagDataEntity(
       SubjectType.CHANNEL if channelEntity != null -> getChannelIconUseCase.forState(channelEntity, state)
       else -> ImageId(R.drawable.ic_unknown_channel)
     }
+
+  fun name(getCaptionUseCase: GetCaptionUseCase): LocalizedString =
+    when (tagEntity.subjectType) {
+      SubjectType.CHANNEL -> channelEntity?.let { getCaptionUseCase(it) }
+      SubjectType.GROUP -> groupEntity?.let { getCaptionUseCase(it) }
+      SubjectType.SCENE -> sceneEntity?.let { getCaptionUseCase(it) }
+      null -> null
+    } ?: localizedString(R.string.channel_not_supported)
 
   private val state: ChannelState
     get() {

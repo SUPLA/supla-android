@@ -791,4 +791,5 @@
   <string name="nfc_update_action">Actualizar acción</string>
   <string name="general_processing">Procesando</string>
   <string name="nfc_tag_finish_editing">Escaneo bloqueado</string>
+  <string name="nfc_tag_name">Etiqueta \"%1$s\"</string>
 </resources>

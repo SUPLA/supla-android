@@ -808,4 +808,5 @@
   <string name="nfc_update_action">Aktualizovať akciu</string>
   <string name="general_processing">Spracováva sa</string>
   <string name="nfc_tag_finish_editing">Skenovanie zablokované</string>
+  <string name="nfc_tag_name">Tag „%1$s“</string>
 </resources>
