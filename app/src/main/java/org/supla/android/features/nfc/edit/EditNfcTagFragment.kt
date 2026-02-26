@@ -19,6 +19,7 @@ package org.supla.android.features.nfc.edit
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
@@ -74,7 +75,13 @@ class EditNfcTagFragment : BaseComposeFragment<EditNfcTagViewModelState, EditNfc
 
   override fun onStart() {
     super.onStart()
-    (activity as? NfcHost)?.enableNfcReader { }
+    (activity as? NfcHost)?.enableNfcReader {
+      activity?.let {
+        it.runOnUiThread {
+          Toast.makeText(it, getString(R.string.nfc_tag_finish_editing), Toast.LENGTH_LONG).show()
+        }
+      }
+    }
   }
 
   override fun onStop() {

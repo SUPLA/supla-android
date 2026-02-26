@@ -784,4 +784,5 @@
   <string name="nfc_assign_action">Priskirti veiksmą</string>
   <string name="nfc_update_action">Atnaujinti veiksmą</string>
   <string name="general_processing">Apdorojama</string>
+  <string name="nfc_tag_finish_editing">Skenavimas užblokuotas</string>
 </resources>

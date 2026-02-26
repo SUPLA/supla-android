@@ -802,4 +802,5 @@
   <string name="nfc_assign_action">Művelet hozzárendelése</string>
   <string name="nfc_update_action">Művelet frissítése</string>
   <string name="general_processing">Feldolgozás</string>
+  <string name="nfc_tag_finish_editing">Szkennelés blokkolva</string>
 </resources>

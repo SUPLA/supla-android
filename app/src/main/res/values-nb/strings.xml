@@ -802,4 +802,5 @@
   <string name="nfc_assign_action">Tilordne handling</string>
   <string name="nfc_update_action">Oppdater handling</string>
   <string name="general_processing">Behandler</string>
+  <string name="nfc_tag_finish_editing">Skanning blokkert</string>
 </resources>
