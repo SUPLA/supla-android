@@ -898,4 +898,5 @@
   <string name="nfc_assign_action">Əməliyyat təyin et</string>
   <string name="nfc_update_action">Əməliyyatı yenilə</string>
   <string name="general_processing">Emal edilir</string>
+  <string name="nfc_tag_finish_editing">Skanlama bloklanıb</string>
 </resources>

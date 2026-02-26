@@ -843,7 +843,7 @@
   <string name="edit_nfc_tag_name">Nazwa taga</string>
   <string name="call_nfc_action_calling">Wykonywanie akcji</string>
   <string name="edit_nfc_tag_title">Skonfiguruj tag</string>
-  <string name="call_nfc_action_success">Wykonano akcje</string>
+  <string name="call_nfc_action_success">Wykonano akcję</string>
   <string name="nfc_list_title">Twoje tagi NFC</string>
   <string name="edit_nfc_existing_tag_header">Konfiguracja taga NFC</string>
   <string name="nfc_successfully_added">Tag został zaprogramowany. Skonfiguruj go i zapisz.</string>
@@ -900,11 +900,12 @@
   <string name="nfc_detail_tag_locked">ZABLOKOWANY</string>
   <string name="nfc_detail_delete_locked_dialog_title">Czy chcesz usunąć zablokowany tag z urządzenia?</string>
   <string name="nfc_tag_error_unsupported">Ten tag nie może zostać użyty w aplikacji SUPLA. Użyj kompatybilnego tagu.</string>
-  <string name="nfc_tag_error_write_protected">Ten tag nie może zostać zaprogramowany ponieważ zablokowanu mu zapis danych.</string>
+  <string name="nfc_tag_error_write_protected">Ten tag nie może zostać zaprogramowany, ponieważ zablokowanu mu zapis danych.</string>
   <string name="nfc_tag_error_not_enough_memory">Ten tag nie posiada wystarczająco dużo pamięci, aby zapisać dane.</string>
   <string name="nfc_tag_error_wrong">Zeskanuj prawidłowy tag, aby włączyć ochronę przed zapisaem dla \"%1$s\".</string>
   <string name="nfc_tag_error_protection_failed">Zablokowanie tagu nie powiodło się. Spróbuj zeskanować tag ponownie.</string>
   <string name="nfc_tag_error_write_failed">Coś poszło nie tak podczas zapisywania danych na tagu. Spróbuj ponownie.</string>
   <string name="nfc_lock_tag_error_title">Wystąpił błąd</string>
   <string name="nfc_duplicate_open_tag">Otwórz tag</string>
+  <string name="nfc_tag_finish_editing">Skanowanie zablokowane</string>
 </resources>

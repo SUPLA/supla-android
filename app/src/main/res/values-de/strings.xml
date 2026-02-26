@@ -874,4 +874,5 @@
   <string name="nfc_assign_action">Přiřadit akci</string>
   <string name="nfc_update_action">Aktualizovat akci</string>
   <string name="general_processing">Zpracovávání</string>
+  <string name="nfc_tag_finish_editing">Scannen blockiert</string>
 </resources>
