@@ -434,12 +434,12 @@ class RgbDetailViewModel @Inject constructor(
           onButtonState = SwitchButtonState(
             icon = getButtonIcon(channel, ChannelState.Value.ON),
             textRes = R.string.channel_btn_on,
-            pressed = (channelState as? ChannelState.RgbAndDimmer)?.rgb == ChannelState.Value.ON
+            pressed = channelState.rgbValue == ChannelState.Value.ON
           ),
           offButtonState = SwitchButtonState(
             icon = getButtonIcon(channel, ChannelState.Value.OFF),
             textRes = R.string.channel_btn_off,
-            pressed = (channelState as? ChannelState.RgbAndDimmer)?.rgb == ChannelState.Value.OFF
+            pressed = channelState.rgbValue == ChannelState.Value.OFF
           ),
           loading = false
         )
@@ -468,7 +468,6 @@ class RgbDetailViewModel @Inject constructor(
     val groupStateValue: ChannelState.Value? = groupWithChannels.aggregatedState(GroupWithChannels.Policy.Rgb)
     val groupState = ChannelState.Default(groupStateValue ?: ChannelState.Value.OFF)
     val rgbValues = group.channelGroupEntity.rgbValues
-    rgbValues.forEach { Log.d("!@#", "Color: ${it.color.toHexString()}") }
 
     updateState { state ->
       if (state.changing) {
@@ -569,3 +568,10 @@ data class RgbDetailModelState(
   override fun sentState(): DelayableState = copy(sent = true)
   override fun delayableCopy(): DelayableState = copy()
 }
+
+private val ChannelState.rgbValue: ChannelState.Value
+  get() =
+    when (this) {
+      is ChannelState.Default -> value
+      is ChannelState.RgbAndDimmer -> rgb
+    }
