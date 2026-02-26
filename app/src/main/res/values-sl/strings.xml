@@ -712,6 +712,18 @@
     <item quantity="few">%1$d dnevi ⏱️</item>
     <item quantity="other">%1$d dni ⏱️</item>
   </plurals>
+  <plurals name="time_last_minutes">
+    <item quantity="one">pred %1$d minuto</item>
+    <item quantity="two">pred %1$d minutama</item>
+    <item quantity="few">pred %1$d minutami</item>
+    <item quantity="other">pred %1$d minutami</item>
+  </plurals>
+  <plurals name="time_last_hours">
+    <item quantity="one">pred %1$d uro</item>
+    <item quantity="two">pred %1$d urama</item>
+    <item quantity="few">pred %1$d urami</item>
+    <item quantity="other">pred %1$d urami</item>
+  </plurals>
   <string name="thermostat_calibration_error">Napaka kalibracije</string>
   <string name="toolbar_dimmer">Zatemnilnik</string>
   <string name="rgb_detail_color">Barva:</string>

@@ -712,6 +712,14 @@
     <item quantity="one">%1$d nap ⏱️</item>
     <item quantity="other">%1$d nap ⏱️</item>
   </plurals>
+  <plurals name="time_last_minutes">
+    <item quantity="one">%1$d perce</item>
+    <item quantity="other">%1$d perce</item>
+  </plurals>
+  <plurals name="time_last_hours">
+    <item quantity="one">%1$d órája</item>
+    <item quantity="other">%1$d órája</item>
+  </plurals>
   <string name="thermostat_calibration_error">Kalibrációs hiba</string>
   <string name="toolbar_dimmer">Dimmer</string>
   <string name="rgb_detail_color">Szín:</string>

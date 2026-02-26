@@ -688,6 +688,18 @@
     <item quantity="many">%1$d днів ⏱️</item>
     <item quantity="other">%1$d дня ⏱️</item>
   </plurals>
+  <plurals name="time_last_minutes">
+    <item quantity="one">%1$d хвилину тому</item>
+    <item quantity="few">%1$d хвилини тому</item>
+    <item quantity="many">%1$d хвилин тому</item>
+    <item quantity="other">%1$d хвилини тому</item>
+  </plurals>
+  <plurals name="time_last_hours">
+    <item quantity="one">%1$d годину тому</item>
+    <item quantity="few">%1$d години тому</item>
+    <item quantity="many">%1$d годин тому</item>
+    <item quantity="other">%1$d години тому</item>
+  </plurals>
   <string name="thermostat_calibration_error">Помилка калібрування</string>
   <string name="toolbar_dimmer">Диммер</string>
   <string name="rgb_detail_color">Колір:</string>

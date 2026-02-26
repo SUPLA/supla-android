@@ -709,6 +709,14 @@
     <item quantity="one">%1$d ημέρα ⏱️</item>
     <item quantity="other">%1$d ημέρες ⏱️</item>
   </plurals>
+  <plurals name="time_last_minutes">
+    <item quantity="one">πριν από %1$d λεπτό</item>
+    <item quantity="other">πριν από %1$d λεπτά</item>
+  </plurals>
+  <plurals name="time_last_hours">
+    <item quantity="one">πριν από %1$d ώρα</item>
+    <item quantity="other">πριν από %1$d ώρες</item>
+  </plurals>
   <string name="thermostat_calibration_error">Σφάλμα βαθμονόμησης</string>
   <string name="toolbar_dimmer">Δίμερ</string>
   <string name="rgb_detail_color">Χρώμα:</string>
