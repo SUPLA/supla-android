@@ -308,14 +308,14 @@ abstract class BaseDimmerDetailViewModel(
         return@updateState state // Do not change anything during 3 secs after last user interaction
       }
       Timber.d("updating state with data")
+      Timber.d("Dimmer: Setting RGB brightness to ${value.colorBrightness}")
 
       state.copy(
         remoteId = channel.remoteId,
         profileId = channel.profileId,
         type = ItemType.CHANNEL,
         loadingState = state.loadingState.changingLoading(false, dateProvider),
-        rgbColor = value.color.toHsv(),
-        rgbBrightness = value.colorBrightness,
+        rgbColor = value.color.toHsv(value.colorBrightness),
         viewState = state.viewState.copy(
           offline = channel.status.offline,
           value = DimmerValue.Single(value.brightness, value.cct),
@@ -424,7 +424,6 @@ data class DimmerDetailModelState(
   val changing: Boolean = false,
   val loadingState: LoadingTimeoutManager.LoadingState = LoadingTimeoutManager.LoadingState(),
   val rgbColor: HsvColor? = null,
-  val rgbBrightness: Int? = null,
   val viewState: DimmerDetailViewState = DimmerDetailViewState(),
 ) : ViewState() {
 

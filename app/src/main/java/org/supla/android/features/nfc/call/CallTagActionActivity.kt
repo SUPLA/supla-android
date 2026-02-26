@@ -19,6 +19,7 @@ package org.supla.android.features.nfc.call
 
 import android.nfc.NfcAdapter
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ContentTransform
@@ -98,7 +99,12 @@ class CallTagActionActivity : ComponentActivity() {
       NfcAdapter.FLAG_READER_NFC_F or
       NfcAdapter.FLAG_READER_NFC_V
 
-    adapter.enableReaderMode(this, { }, flags, null)
+    val callback: NfcAdapter.ReaderCallback = NfcAdapter.ReaderCallback {
+      runOnUiThread {
+        Toast.makeText(this, getString(R.string.nfc_tag_finish_editing), Toast.LENGTH_LONG).show()
+      }
+    }
+    adapter.enableReaderMode(this, callback, flags, null)
   }
 
   override fun onPause() {

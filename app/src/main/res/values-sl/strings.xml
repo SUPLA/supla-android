@@ -806,4 +806,5 @@
   <string name="nfc_assign_action">Dodeli dejanje</string>
   <string name="nfc_update_action">Posodobi dejanje</string>
   <string name="general_processing">Obdelava</string>
+  <string name="nfc_tag_finish_editing">Skeniranje blokirano</string>
 </resources>

@@ -792,4 +792,5 @@
   <string name="nfc_assign_action">Atribuir ação</string>
   <string name="nfc_update_action">Atualizar ação</string>
   <string name="general_processing">A processar</string>
+  <string name="nfc_tag_finish_editing">Leitura bloqueada</string>
 </resources>
