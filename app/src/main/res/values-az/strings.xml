@@ -799,6 +799,14 @@
     <item quantity="one">%1$d san</item>
     <item quantity="other">%1$d san</item>
   </plurals>
+  <plurals name="time_last_minutes">
+    <item quantity="one">%1$d dəqiqə əvvəl</item>
+    <item quantity="other">%1$d dəqiqə əvvəl</item>
+  </plurals>
+  <plurals name="time_last_hours">
+    <item quantity="one">%1$d saat əvvəl</item>
+    <item quantity="other">%1$d saat əvvəl</item>
+  </plurals>
   <string name="state_partially_opened">Qismən açıq</string>
   <string name="channel_btn_step_by_step">Aç/Bağla (addım-addım)</string>
   <string name="gate_general_open_and_close_warning">Bütün qapılar üçün açılma sensoru ayarlanmayıb — “Aç” və “Bağla” düymələri düzgün işləməyə bilər.</string>

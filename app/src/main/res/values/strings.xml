@@ -834,10 +834,14 @@
     <item quantity="other">%1$d sec</item>
   </plurals>
   <plurals name="time_last_minutes">
+    <item quantity="one">%1$d minute ago</item>
+    <item quantity="zero">%1$d minutes ago</item>
     <item quantity="other">%1$d minutes ago</item>
   </plurals>
   <plurals name="time_last_hours">
-    <item quantity="other">%1$d hours ego</item>
+    <item quantity="zero">%1$d hours ago</item>
+    <item quantity="one">%1$d hour ago</item>
+    <item quantity="other">%1$d hours ago</item>
   </plurals>
   <string name="state_partially_opened">Partially opened</string>
   <string name="channel_btn_step_by_step">Open/Close (step by step)</string>

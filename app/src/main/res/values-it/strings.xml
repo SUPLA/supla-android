@@ -736,6 +736,14 @@
     <item quantity="many">%1$d giorni ⏱️</item>
     <item quantity="other">%1$d giorni ⏱️</item>
   </plurals>
+  <plurals name="time_last_minutes">
+    <item quantity="one">%1$d minuto fa</item>
+    <item quantity="many">%1$d minuti fa</item>
+  </plurals>
+  <plurals name="time_last_hours">
+    <item quantity="one">%1$d ora fa</item>
+    <item quantity="many">%1$d ore fa</item>
+  </plurals>
   <string name="thermostat_calibration_error">Errore di calibrazione</string>
   <string name="toolbar_dimmer">Dimmer</string>
   <string name="rgb_detail_color">Colore:</string>

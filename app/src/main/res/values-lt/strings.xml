@@ -692,6 +692,16 @@
     <item quantity="many">%1$d dienų ⏱️</item>
     <item quantity="other">%1$d dienų ⏱️</item>
   </plurals>
+  <plurals name="time_last_minutes">
+    <item quantity="one">prieš %1$d minutę</item>
+    <item quantity="few">prieš %1$d minutes</item>
+    <item quantity="many">prieš %1$d minučių</item>
+  </plurals>
+  <plurals name="time_last_hours">
+    <item quantity="one">prieš %1$d valandą</item>
+    <item quantity="few">prieš %1$d valandas</item>
+    <item quantity="many">prieš %1$d valandų</item>
+  </plurals>
   <string name="thermostat_calibration_error">Kalibravimo klaida</string>
   <string name="toolbar_dimmer">Dimmer</string>
   <string name="rgb_detail_color">Spalva:</string>

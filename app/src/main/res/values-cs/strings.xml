@@ -695,6 +695,16 @@
     <item quantity="many">%1$d dní ⏱️</item>
     <item quantity="other">%1$d dne ⏱️</item>
   </plurals>
+  <plurals name="time_last_minutes">
+    <item quantity="one">před %1$d minutou</item>
+    <item quantity="few">před %1$d minutami</item>
+    <item quantity="many">před %1$d minutami</item>
+  </plurals>
+  <plurals name="time_last_hours">
+    <item quantity="one">před %1$d hodinou</item>
+    <item quantity="few">před %1$d hodinami</item>
+    <item quantity="many">před %1$d hodinami</item>
+  </plurals>
   <string name="thermostat_calibration_error">Chyba kalibrace</string>
   <string name="toolbar_dimmer">Stmívač</string>
   <string name="rgb_detail_color">Barva:</string>

@@ -785,6 +785,14 @@
     <item quantity="one">%1$d Tag ⏱️</item>
     <item quantity="other">%1$d Tage ⏱️</item>
   </plurals>
+  <plurals name="time_last_minutes">
+    <item quantity="one">vor %1$d Minute</item>
+    <item quantity="other">vor %1$d Minuten</item>
+  </plurals>
+  <plurals name="time_last_hours">
+    <item quantity="one">vor %1$d Stunde</item>
+    <item quantity="other">vor %1$d Stunden</item>
+  </plurals>
   <string name="toolbar_dimmer">Dimmer</string>
   <string name="rgb_detail_color">Farbe:</string>
   <string name="rgb_detail_brightness">Helligkeit:</string>
