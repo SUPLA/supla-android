@@ -908,4 +908,5 @@
   <string name="nfc_lock_tag_error_title">Wystąpił błąd</string>
   <string name="nfc_duplicate_open_tag">Otwórz tag</string>
   <string name="nfc_tag_finish_editing">Skanowanie zablokowane</string>
+  <string name="nfc_tag_name">Tag \"%1$s\"</string>
 </resources>

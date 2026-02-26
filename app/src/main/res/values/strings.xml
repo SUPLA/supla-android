@@ -934,4 +934,5 @@
   <string name="nfc_update_action">Update action</string>
   <string name="general_processing">Processing</string>
   <string name="nfc_tag_finish_editing">Scanning blocked</string>
+  <string name="nfc_tag_name">Tag \"%1$s\"</string>
 </resources>

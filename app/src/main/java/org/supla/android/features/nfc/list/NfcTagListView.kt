@@ -81,7 +81,7 @@ data class NfcTagItem(
   val name: String,
   val icon: ImageId?,
   val profileName: String?,
-  val channelName: LocalizedString?,
+  val subjectName: LocalizedString?,
   val action: ActionId?,
   val readOnly: Boolean,
   val channelNotExists: Boolean
@@ -213,7 +213,7 @@ private fun ItemView(
         } else if (item.action == null) {
           WarningIcon()
         }
-        ActionText(item.action, item.channelName, item.profileName)
+        ActionText(item.action, item.subjectName, item.profileName)
       }
     }
     ArrowIcon()
@@ -305,7 +305,7 @@ private fun item(id: Long, name: String, action: ActionId? = null, channelName: 
     icon = null,
     profileName = if (id < 2) "Default" else null,
     action = action,
-    channelName = channelName?.let { LocalizedString.Constant(it) },
+    subjectName = channelName?.let { LocalizedString.Constant(it) },
     readOnly = id.mod(2) == 1,
     channelNotExists = id == 2L
   )

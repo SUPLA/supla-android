@@ -65,7 +65,7 @@ enum class ActionId(val value: Int, val nameRes: Int?) : SpinnerItem {
   SHUT_PARTIALLY(51, R.string.channel_btn_shut),
   TURN_ON(60, R.string.turn_on),
   TURN_OFF(70, R.string.turn_off),
-  SET_RGBW_PARAMETERS(80, null),
+  SET_RGBW_PARAMETERS(80, R.string.channel_btn_step_by_step),
   OPEN_CLOSE(90, R.string.channel_btn_openclose),
   STOP(100, R.string.channel_btn_stop),
   TOGGLE(110, R.string.channel_btn_toggle),
