@@ -103,7 +103,7 @@ sealed interface NfcTagDetailViewEvent : ViewEvent {
   data object EditTag : NfcTagDetailViewEvent
   data object Close : NfcTagDetailViewEvent
   data object LockTag : NfcTagDetailViewEvent
-  data class SetToolbarTitle(val tagName: String): NfcTagDetailViewEvent
+  data class SetToolbarTitle(val tagName: String) : NfcTagDetailViewEvent
 }
 
 private val NfcCallEntity.toReadingItem: NfcTagDetailViewState.ReadingItem
