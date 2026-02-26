@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import org.supla.android.core.shared.invoke
 import org.supla.core.shared.infrastructure.LocalizedString
 
@@ -55,23 +56,36 @@ fun TitleLarge(
   @StringRes stringRes: Int,
   modifier: Modifier = Modifier,
   color: Color = MaterialTheme.colorScheme.onSurface,
-  textAlign: TextAlign = TextAlign.Start
+  textAlign: TextAlign = TextAlign.Start,
+  overflow: TextOverflow = TextOverflow.Clip,
+  maxLines: Int = Int.MAX_VALUE
 ) =
-  TitleLarge(text = stringResource(id = stringRes), modifier = modifier, color = color, textAlign = textAlign)
+  TitleLarge(
+    text = stringResource(id = stringRes),
+    modifier = modifier,
+    color = color,
+    textAlign = textAlign,
+    overflow = overflow,
+    maxLines = maxLines,
+  )
 
 @Composable
 fun TitleLarge(
   text: String,
   modifier: Modifier = Modifier,
   color: Color = MaterialTheme.colorScheme.onSurface,
-  textAlign: TextAlign = TextAlign.Start
+  textAlign: TextAlign = TextAlign.Start,
+  overflow: TextOverflow = TextOverflow.Clip,
+  maxLines: Int = Int.MAX_VALUE
 ) =
   Text(
     text = text,
+    modifier = modifier,
     style = MaterialTheme.typography.titleLarge,
     color = color,
     textAlign = textAlign,
-    modifier = modifier
+    overflow = overflow,
+    maxLines = maxLines
   )
 
 @Composable
@@ -101,21 +115,38 @@ fun TitleSmall(text: String, color: Color = MaterialTheme.colorScheme.onSurface,
   )
 
 @Composable
-fun BodyLarge(stringRes: Int, color: Color = MaterialTheme.colorScheme.onSurface, textAlign: TextAlign = TextAlign.Center) =
-  Text(
+fun BodyLarge(
+  stringRes: Int,
+  color: Color = MaterialTheme.colorScheme.onSurface,
+  textAlign: TextAlign = TextAlign.Center,
+  overflow: TextOverflow = TextOverflow.Clip,
+  maxLines: Int = Int.MAX_VALUE
+) =
+  BodyLarge(
     text = stringResource(id = stringRes),
-    style = MaterialTheme.typography.bodyLarge,
     color = color,
-    textAlign = textAlign
+    textAlign = textAlign,
+    overflow = overflow,
+    maxLines = maxLines
   )
 
 @Composable
-fun BodyLarge(text: String, color: Color = MaterialTheme.colorScheme.onSurface, textAlign: TextAlign = TextAlign.Center) =
+fun BodyLarge(
+  text: String,
+  modifier: Modifier = Modifier,
+  color: Color = MaterialTheme.colorScheme.onSurface,
+  textAlign: TextAlign = TextAlign.Center,
+  overflow: TextOverflow = TextOverflow.Clip,
+  maxLines: Int = Int.MAX_VALUE
+) =
   Text(
     text = text,
+    modifier = modifier,
     style = MaterialTheme.typography.bodyLarge,
     color = color,
-    textAlign = textAlign
+    textAlign = textAlign,
+    overflow = overflow,
+    maxLines = maxLines
   )
 
 @Composable

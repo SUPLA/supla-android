@@ -33,17 +33,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.supla.android.R
+import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.nfc.call.CallActionFromData
 import org.supla.android.features.nfc.call.CallActionFromUrl
 import org.supla.android.features.nfc.call.screens.Navigator
 import org.supla.android.features.nfc.call.screens.ScreenScaffold
+import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.DotsLoadingIndicator
 import org.supla.android.ui.views.Image
@@ -52,6 +56,7 @@ import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.buttons.OutlinedButton
 import org.supla.android.ui.views.texts.BodyLarge
 import org.supla.android.ui.views.texts.TitleLarge
+import org.supla.core.shared.infrastructure.LocalizedString
 
 interface CallActionScreenScope {
   fun close()
@@ -60,8 +65,15 @@ interface CallActionScreenScope {
 }
 
 data class CallActionScreenState(
-  val step: TagProcessingStep = TagProcessingStep.Processing
-)
+  val step: TagProcessingStep = TagProcessingStep.Processing,
+  val tagData: TagData? = null
+) {
+  data class TagData(
+    val name: String,
+    val actionId: ActionId?,
+    val subjectName: LocalizedString
+  )
+}
 
 @Composable
 fun CallActionScreen(
@@ -101,11 +113,9 @@ private fun CallActionScreenScope.View(screenState: CallActionScreenState) =
     verticalArrangement = Arrangement.spacedBy(Distance.tiny)
   ) {
     LogoWithSentence()
-
     HeaderIcon(screenState.step)
-
     StepContent(screenState.step)
-
+    screenState.tagData?.let { TagData(it) }
     Buttons(screenState.step, this@View)
   }
 
@@ -126,6 +136,25 @@ private fun HeaderIcon(step: TagProcessingStep) {
     Image(
       drawableId = resource,
       modifier = Modifier.align(Alignment.Center)
+    )
+  }
+}
+
+@Composable
+private fun TagData(data: CallActionScreenState.TagData) {
+  TitleLarge(
+    text = stringResource(R.string.nfc_tag_name, data.name),
+    maxLines = 1,
+    overflow = TextOverflow.Ellipsis,
+    modifier = Modifier.padding(top = Distance.default)
+  )
+  data.actionId?.nameRes?.let { actionRes ->
+    val actionName = stringResource(actionRes)
+    val channelName = data.subjectName.invoke(LocalContext.current)
+    BodyLarge(
+      text = "$actionName - $channelName",
+      maxLines = 1,
+      overflow = TextOverflow.Ellipsis
     )
   }
 }
@@ -196,11 +225,22 @@ private val previewScope = object : CallActionScreenScope {
   override fun configureTag(id: Long) {}
 }
 
+private val tagData =
+  CallActionScreenState.TagData(
+    name = "Living room door",
+    actionId = ActionId.TOGGLE,
+    subjectName = LocalizedString.Constant("Living room light")
+  )
+
 @SuplaPreview
 @Composable
 private fun Preview_Processing() {
   SuplaTheme {
-    previewScope.View(CallActionScreenState())
+    previewScope.View(
+      screenState = CallActionScreenState(
+        tagData = tagData
+      )
+    )
   }
 }
 
@@ -208,7 +248,12 @@ private fun Preview_Processing() {
 @Composable
 private fun Preview_Success() {
   SuplaTheme {
-    previewScope.View(CallActionScreenState(TagProcessingStep.Success))
+    previewScope.View(
+      screenState = CallActionScreenState(
+        tagData = tagData,
+        step = TagProcessingStep.Success
+      )
+    )
   }
 }
 
@@ -218,6 +263,7 @@ private fun Preview_Failure() {
   SuplaTheme {
     previewScope.View(
       screenState = CallActionScreenState(
+        tagData = tagData,
         step = TagProcessingStep.Failure(TagProcessingStep.FailureType.TagNotFound(""))
       )
     )

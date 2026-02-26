@@ -33,6 +33,8 @@ class NfcTagRepository @Inject constructor(
 
   suspend fun findByIdWithDependencies(id: Long): NfcTagDataEntity? = nfcTagDao.findByIdWithDependencies(id)
 
+  suspend fun findByUuidWithDependencies(uuid: String): NfcTagDataEntity? = nfcTagDao.findByUuidWithDependencies(uuid)
+
   suspend fun findById(id: Long): NfcTagEntity? = nfcTagDao.findById(id)
 
   suspend fun findByUuid(uuid: String): NfcTagEntity? = nfcTagDao.findByUuid(uuid)

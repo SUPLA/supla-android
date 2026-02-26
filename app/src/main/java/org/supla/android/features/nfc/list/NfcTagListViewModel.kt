@@ -29,7 +29,6 @@ import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.complex.NfcTagDataEntity
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.usecases.extensions.invoke
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.core.shared.extensions.ifFalse
@@ -93,11 +92,10 @@ class NfcTagListViewModel @Inject constructor(
       name = tagEntity.name,
       icon = icon(getChannelIconUseCase, getSceneIconUseCase),
       profileName = (profilesCount == 1).ifFalse(profileEntity?.name),
-      channelName = channelEntity?.let { getCaptionUseCase(it) },
+      subjectName = name(getCaptionUseCase),
       action = tagEntity.actionId,
       readOnly = tagEntity.readOnly,
-      channelNotExists =
-      when (tagEntity.subjectType) {
+      channelNotExists = when (tagEntity.subjectType) {
         SubjectType.CHANNEL -> tagEntity.subjectId != null && channelEntity == null
         SubjectType.GROUP -> tagEntity.subjectId != null && groupEntity == null
         SubjectType.SCENE -> tagEntity.subjectId != null && sceneEntity == null

@@ -800,4 +800,5 @@
   <string name="nfc_update_action">Ενημέρωση ενέργειας</string>
   <string name="general_processing">Επεξεργασία</string>
   <string name="nfc_tag_finish_editing">Η σάρωση μπλοκαρίστηκε</string>
+  <string name="nfc_tag_name">Ετικέτα «%1$s»</string>
 </resources>
