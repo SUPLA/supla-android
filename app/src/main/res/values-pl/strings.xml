@@ -806,6 +806,16 @@
   <plurals name="second_pattern" tools:ignore="MissingQuantity">
     <item quantity="other">%1$d sek.</item>
   </plurals>
+  <plurals name="time_last_minutes">
+    <item quantity="one">%1$d minutę temu</item>
+    <item quantity="few">%1$d minuty temu</item>
+    <item quantity="many">%1$d minut temu</item>
+  </plurals>
+  <plurals name="time_last_hours">
+    <item quantity="one">%1$d godzinę temu</item>
+    <item quantity="few">%1$d godziny temu</item>
+    <item quantity="many">%1$d godzin temu</item>
+  </plurals>
   <string name="state_partially_opened">częściowo otwarty</string>
   <string name="channel_btn_step_by_step">Otwórz/Zamknij (krok po kroku)</string>
   <string name="gate_general_open_and_close_warning">Nie wszystkie bramy mają skonfigurowany czujnik otwarcia — przyciski „Otwórz” i „Zamknij” mogą nie działać prawidłowo.</string>

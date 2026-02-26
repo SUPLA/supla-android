@@ -700,6 +700,14 @@
     <item quantity="one">%1$d jour ⏱️</item>
     <item quantity="many">%1$d jours ⏱️</item>
   </plurals>
+  <plurals name="time_last_minutes">
+    <item quantity="one">il y a %1$d minute</item>
+    <item quantity="many">il y a %1$d minutes</item>
+  </plurals>
+  <plurals name="time_last_hours">
+    <item quantity="one">il y a %1$d heure</item>
+    <item quantity="many">il y a %1$d heures</item>
+  </plurals>
   <string name="thermostat_calibration_error">Erreur d’étalonnage</string>
   <string name="toolbar_dimmer">Variateur</string>
   <string name="rgb_detail_color">Couleur:</string>

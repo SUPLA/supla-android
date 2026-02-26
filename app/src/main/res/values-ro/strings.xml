@@ -715,6 +715,16 @@
     <item quantity="few">%1$d zile ⏱️</item>
     <item quantity="other">%1$d de zile ⏱️</item>
   </plurals>
+  <plurals name="time_last_minutes">
+    <item quantity="one">acum %1$d minut</item>
+    <item quantity="few">acum %1$d minute</item>
+    <item quantity="other">acum %1$d de minute</item>
+  </plurals>
+  <plurals name="time_last_hours">
+    <item quantity="one">acum %1$d oră</item>
+    <item quantity="few">acum %1$d ore</item>
+    <item quantity="other">acum %1$d de ore</item>
+  </plurals>
   <string name="thermostat_calibration_error">Eroare de calibrare</string>
   <string name="toolbar_dimmer">Dimmer</string>
   <string name="rgb_detail_color">Culoare:</string>
