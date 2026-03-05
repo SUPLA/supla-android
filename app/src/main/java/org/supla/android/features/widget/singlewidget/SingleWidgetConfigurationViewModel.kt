@@ -135,6 +135,8 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
       .attach()
       .subscribeBy(
         onNext = { (profiles, subjects) ->
+          val selectedAction = configuration.actionId?.let { ActionDetail(it) }
+
           updateState { state ->
             state.copy(
               viewState = state.viewState.copy(
@@ -143,9 +145,7 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
                 subjectTypes = SubjectType.entries,
                 subjectType = configuration.subjectType,
                 caption = configuration.caption,
-                subjectDetails = configuration.actionId?.let { actionId ->
-                  subjects.firstOrNull { it.id == configuration.itemId }?.details(ActionDetail(actionId))
-                },
+                subjectDetails = subjects.firstOrNull { it.id == configuration.itemId }?.details(selectedAction)
               )
             )
           }
