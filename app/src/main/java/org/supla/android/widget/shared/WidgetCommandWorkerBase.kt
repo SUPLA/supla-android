@@ -38,6 +38,7 @@ import org.supla.android.lib.actions.ActionParameters
 import org.supla.android.lib.actions.IGNORE_CCT
 import org.supla.android.lib.actions.IGNORE_COLOR
 import org.supla.android.lib.actions.RgbwActionParameters
+import org.supla.android.lib.actions.SubjectType
 import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.widget.WidgetConfiguration
@@ -185,34 +186,38 @@ abstract class WidgetCommandWorkerBase(
       WidgetAction.MANUAL_UPDATE, WidgetAction.REDRAW, WidgetAction.AUTOMATIC_UPDATE -> null
       WidgetAction.BUTTON_PRESSED -> configuration.actionId
       WidgetAction.LEFT_BUTTON_PRESSED,
-      WidgetAction.RIGHT_BUTTON_PRESSED -> widgetAction.getActionId(configuration.subjectFunction)
+      WidgetAction.RIGHT_BUTTON_PRESSED -> widgetAction.getActionId(configuration.subjectType, configuration.subjectFunction)
     }
 
     actionId?.let {
-      when (configuration.subjectFunction) {
-        SuplaFunction.LIGHTSWITCH,
-        SuplaFunction.POWER_SWITCH,
-        SuplaFunction.STAIRCASE_TIMER,
-        SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER,
-        SuplaFunction.CONTROLLING_THE_ROOF_WINDOW,
-        SuplaFunction.CONTROLLING_THE_GATE,
-        SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
-        SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
-        SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
-        SuplaFunction.CONTROLLING_THE_FACADE_BLIND,
-        SuplaFunction.TERRACE_AWNING,
-        SuplaFunction.PROJECTOR_SCREEN,
-        SuplaFunction.CURTAIN,
-        SuplaFunction.VERTICAL_BLIND,
-        SuplaFunction.ROLLER_GARAGE_DOOR -> callAction(configuration, it)
+      when (configuration.subjectType) {
+        SubjectType.SCENE -> callAction(configuration, it)
+        else ->
+          when (configuration.subjectFunction) {
+            SuplaFunction.LIGHTSWITCH,
+            SuplaFunction.POWER_SWITCH,
+            SuplaFunction.STAIRCASE_TIMER,
+            SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER,
+            SuplaFunction.CONTROLLING_THE_ROOF_WINDOW,
+            SuplaFunction.CONTROLLING_THE_GATE,
+            SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
+            SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
+            SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
+            SuplaFunction.CONTROLLING_THE_FACADE_BLIND,
+            SuplaFunction.TERRACE_AWNING,
+            SuplaFunction.PROJECTOR_SCREEN,
+            SuplaFunction.CURTAIN,
+            SuplaFunction.VERTICAL_BLIND,
+            SuplaFunction.ROLLER_GARAGE_DOOR -> callAction(configuration, it)
 
-        SuplaFunction.DIMMER,
-        SuplaFunction.DIMMER_CCT,
-        SuplaFunction.RGB_LIGHTING,
-        SuplaFunction.DIMMER_CCT_AND_RGB,
-        SuplaFunction.DIMMER_AND_RGB_LIGHTING -> callRgbwAction(configuration, it)
+            SuplaFunction.DIMMER,
+            SuplaFunction.DIMMER_CCT,
+            SuplaFunction.RGB_LIGHTING,
+            SuplaFunction.DIMMER_CCT_AND_RGB,
+            SuplaFunction.DIMMER_AND_RGB_LIGHTING -> callRgbwAction(configuration, it)
 
-        else -> {}
+            else -> {}
+          }
       }
     }
 
