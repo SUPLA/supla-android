@@ -182,12 +182,7 @@ abstract class WidgetCommandWorkerBase(
     widgetAction: WidgetAction,
     configuration: WidgetConfiguration,
   ): Result {
-    val actionId: ActionId? = when (widgetAction) {
-      WidgetAction.MANUAL_UPDATE, WidgetAction.REDRAW, WidgetAction.AUTOMATIC_UPDATE -> null
-      WidgetAction.BUTTON_PRESSED -> configuration.actionId
-      WidgetAction.LEFT_BUTTON_PRESSED,
-      WidgetAction.RIGHT_BUTTON_PRESSED -> widgetAction.getActionId(configuration.subjectType, configuration.subjectFunction)
-    }
+    val actionId: ActionId? = widgetAction.getActionId(configuration)
 
     actionId?.let {
       when (configuration.subjectType) {
