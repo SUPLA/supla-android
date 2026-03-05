@@ -62,7 +62,7 @@ class SingleWidget : WidgetProviderBase() {
   ) {
     Timber.d("[SingleWidget] Redrawing widget!")
     // Construct the RemoteViews object
-    val views = buildWidget(context, widgetId, configuration?.subjectFunction)
+    val views = buildWidget(context, widgetId, configuration)
     if (configuration != null && isWidgetValid(configuration)) {
       views.setTextViewText(R.id.single_widget_channel_name, configuration.caption)
 
@@ -153,9 +153,10 @@ class SingleWidget : WidgetProviderBase() {
   }
 }
 
-internal fun buildWidget(context: Context, widgetId: Int, function: SuplaFunction?): RemoteViews {
+internal fun buildWidget(context: Context, widgetId: Int, configuration: WidgetConfiguration?): RemoteViews {
   val views = RemoteViews(context.packageName, R.layout.single_widget)
-  val turnOnPendingIntent = pendingIntent(context, WidgetAction.getSingleButtonAction(function).string, widgetId)
+  val action = WidgetAction.getSingleButtonAction(configuration?.subjectType, configuration?.subjectFunction)
+  val turnOnPendingIntent = pendingIntent(context, action.string, widgetId)
   views.setOnClickPendingIntent(R.id.single_widget_button, turnOnPendingIntent)
   views.setOnClickPendingIntent(R.id.single_widget_button_night_mode, turnOnPendingIntent)
   views.setOnClickPendingIntent(R.id.single_widget_text, turnOnPendingIntent)

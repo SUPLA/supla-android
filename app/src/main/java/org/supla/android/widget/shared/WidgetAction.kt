@@ -19,6 +19,7 @@ package org.supla.android.widget.shared
 
 import android.appwidget.AppWidgetManager
 import org.supla.android.lib.actions.ActionId
+import org.supla.android.lib.actions.SubjectType
 import org.supla.android.widget.shared.WidgetAction.AUTOMATIC_UPDATE
 import org.supla.android.widget.shared.WidgetAction.BUTTON_PRESSED
 import org.supla.android.widget.shared.WidgetAction.LEFT_BUTTON_PRESSED
@@ -48,16 +49,18 @@ enum class WidgetAction(val string: String) {
       return entries.firstOrNull { it.string == string }
     }
 
-    fun getSingleButtonAction(function: SuplaFunction?): WidgetAction = hasAction(function).ifTrue { BUTTON_PRESSED } ?: MANUAL_UPDATE
+    fun getSingleButtonAction(subjectType: SubjectType?, function: SuplaFunction?): WidgetAction =
+      subjectType?.isScene?.ifTrue { BUTTON_PRESSED } ?: hasAction(function).ifTrue { BUTTON_PRESSED } ?: MANUAL_UPDATE
   }
 }
 
 val WidgetAction?.isUpdate: Boolean
   get() = this == MANUAL_UPDATE || this == AUTOMATIC_UPDATE
 
-fun WidgetAction.getActionId(function: SuplaFunction): ActionId? =
+fun WidgetAction.getActionId(subjectType: SubjectType, function: SuplaFunction): ActionId? =
   when (this) {
-    MANUAL_UPDATE, REDRAW, BUTTON_PRESSED, AUTOMATIC_UPDATE -> null
+    MANUAL_UPDATE, REDRAW, AUTOMATIC_UPDATE -> null
+    BUTTON_PRESSED -> subjectType.isScene.ifTrue { ActionId.EXECUTE }
     LEFT_BUTTON_PRESSED -> getLeftButtonAction(function)
     RIGHT_BUTTON_PRESSED -> getRightButtonAction(function)
   }
