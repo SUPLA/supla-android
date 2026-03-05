@@ -26,7 +26,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class DateTimeFormatter {
-  private val defaultFormatter = DateTimeFormatter.ofPattern("dd:MM:yy HH:mm")
+  private val defaultFormatter = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm")
 
   fun format(dateTime: LocalDateTime): LocalizedString {
     val now = LocalDateTime.now()
