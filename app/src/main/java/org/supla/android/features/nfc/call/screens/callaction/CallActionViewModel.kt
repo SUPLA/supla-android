@@ -129,11 +129,11 @@ class CallActionViewModel @Inject constructor(
 
       SingleCall.Result.NotFound -> setErrorState(TagProcessingStep.FailureType.ChannelNotFound(tag.tagEntity.id))
       SingleCall.Result.Offline -> setErrorState(TagProcessingStep.FailureType.ChannelOffline)
+      SingleCall.Result.Inactive -> setErrorState(TagProcessingStep.FailureType.SceneInactive)
       is SingleCall.Result.AccessError,
       is SingleCall.Result.CommandError,
       is SingleCall.Result.ConnectionError,
       SingleCall.Result.NoSuchProfile,
-      SingleCall.Result.Inactive,
       SingleCall.Result.UnknownError -> setErrorState(TagProcessingStep.FailureType.ActionFailed)
     }
   }
