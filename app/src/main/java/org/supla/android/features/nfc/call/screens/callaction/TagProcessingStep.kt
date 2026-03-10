@@ -23,12 +23,10 @@ import org.supla.android.features.nfc.call.screens.callaction.TagProcessingStep.
 import org.supla.android.features.nfc.call.screens.callaction.TagProcessingStep.FailureType.ChannelNotFound
 import org.supla.android.features.nfc.call.screens.callaction.TagProcessingStep.FailureType.ChannelOffline
 import org.supla.android.features.nfc.call.screens.callaction.TagProcessingStep.FailureType.IllegalIntent
+import org.supla.android.features.nfc.call.screens.callaction.TagProcessingStep.FailureType.SceneInactive
 import org.supla.android.features.nfc.call.screens.callaction.TagProcessingStep.FailureType.TagNotConfigured
 import org.supla.android.features.nfc.call.screens.callaction.TagProcessingStep.FailureType.TagNotFound
 import org.supla.android.features.nfc.call.screens.callaction.TagProcessingStep.FailureType.UnknownUrl
-import org.supla.android.ui.views.icons.Error
-import org.supla.android.ui.views.icons.IconType
-import org.supla.android.ui.views.icons.Warning
 
 sealed class TagProcessingStep {
   val asFailure: Failure?
@@ -46,6 +44,7 @@ sealed class TagProcessingStep {
     data object ActionFailed : FailureType
     data class ChannelNotFound(val id: Long) : FailureType
     data object ChannelOffline : FailureType
+    data object SceneInactive : FailureType
   }
 }
 
@@ -56,7 +55,7 @@ val TagProcessingStep.FailureType.titleRes: Int
     UnknownUrl -> R.string.call_nfc_action_failure_unknown_url_title
     is TagNotFound -> R.string.call_nfc_action_failure_not_found_title
     is TagNotConfigured -> R.string.call_nfc_action_not_configured_title
-    ActionFailed -> R.string.call_nfc_action_call_failed_title
+    ActionFailed, SceneInactive -> R.string.call_nfc_action_call_failed_title
     is ChannelNotFound -> R.string.call_nfc_action_channel_not_found_title
     ChannelOffline -> R.string.call_nfc_action_channel_offline_title
   }
@@ -71,6 +70,7 @@ val TagProcessingStep.FailureType.messageRes: Int
     ActionFailed -> R.string.call_nfc_action_call_failed_message
     is ChannelNotFound -> R.string.call_nfc_action_channel_not_found_message
     ChannelOffline -> R.string.call_nfc_action_channel_offline_message
+    SceneInactive -> R.string.scene_inactive
   }
 
 val TagProcessingStep.FailureType.primaryRes: Int?
@@ -79,7 +79,8 @@ val TagProcessingStep.FailureType.primaryRes: Int?
     IllegalIntent,
     UnknownUrl,
     ActionFailed,
-    ChannelOffline -> null
+    ChannelOffline,
+    SceneInactive -> null
 
     is TagNotFound -> R.string.nfc_add_tag
     is TagNotConfigured -> R.string.nfc_assign_action
@@ -94,19 +95,8 @@ val TagProcessingStep.FailureType.secondaryRes: Int
     is TagNotConfigured,
     ActionFailed,
     is ChannelNotFound,
-    ChannelOffline -> R.string.exit
+    ChannelOffline,
+    SceneInactive -> R.string.exit
 
     is TagNotFound -> R.string.cancel
-  }
-
-val TagProcessingStep.FailureType.iconType: IconType
-  get() = when (this) {
-    ChannelOffline,
-    is TagNotFound,
-    is TagNotConfigured -> Warning
-
-    ActionFailed,
-    is ChannelNotFound,
-    IllegalIntent,
-    UnknownUrl -> Error
   }

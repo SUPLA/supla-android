@@ -264,7 +264,7 @@ private fun Preview_Failure() {
     previewScope.View(
       screenState = CallActionScreenState(
         tagData = tagData,
-        step = TagProcessingStep.Failure(TagProcessingStep.FailureType.TagNotFound(""))
+        step = TagProcessingStep.Failure(TagProcessingStep.FailureType.ActionFailed)
       )
     )
   }
