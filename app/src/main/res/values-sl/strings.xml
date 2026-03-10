@@ -328,7 +328,9 @@
   <string name="add_account">Dodajte račun</string>
   <string name="edit_account">Uredite račun</string>
   <string name="delete_account">Izbišite</string>
+  <string name="cfg_label_email_auth">E-pošta</string>
   <string name="cfg_label_access_id_auth">Identifikator</string>
+  <string name="cfg_checkbox_server_auto">Samodejno</string>
   <string name="cfg_channel_height">Višina kanala</string>
   <string name="cfg_temperature_unit">Enota temperature</string>
   <string name="cfg_button_autohide">Samodejno skrivanje gumbov</string>
@@ -344,6 +346,7 @@
   <string name="widget_configure_error">Konfiguracija kanala ni uspela…</string>
   <string name="double_button_widget_description">Pripomoček z dvema gumboma</string>
   <string name="single_button_widget_description">Pripomoček z enim gumbom</string>
+  <string name="extended_value_widget_description">Gradnik za predogled števca električne energije</string>
   <string name="widget_app_not_initialized">Prijavite se!</string>
   <string name="widget_command_no_connection">Ni internetne povezave!</string>
   <string name="widget_command_started">Izvedeno</string>
@@ -464,6 +467,7 @@
 
   <string name="details_general">Splošno</string>
   <string name="details_schedule">Teden</string>
+  <string name="details_timer">Časovnik</string>
   <string name="details_metrics">Meritve</string>
   <string name="details_settings">Nastavitve</string>
   <string name="details_history">Zgodovina</string>
@@ -640,6 +644,7 @@
   <string name="thermostat_detail_main_thermostat">Glavni termostat</string>
   <string name="thermostat_detail_other_thermostats">Odvisni termostati</string>
   <string name="thermostat_battery_cover_open">Odprt pokrov baterije</string>
+  <string name="settings_battery_level_warning">Opozorilo o nizki bateriji</string>
   <string name="channel_battery_level">Raven baterije: %1$d%%</string>
   <string name="channel_battery_level_with_info">Raven baterije (%1$d - %2$s): %3$d%%</string>
   <string name="channel_btn_stop">Ustavi</string>
@@ -687,6 +692,8 @@
   <string name="state_closed">zaprto</string>
   <string name="state_partially_opened">delno odprto</string>
   <string name="channel_btn_step_by_step">Odprite/Zaprite (korak za korakom)</string>
+  <string name="details_em_reverse_reactive_energy_short">Jalova oddana</string>
+  <string name="details_em_energy_label">Energija</string>
   <string name="channel_btn_shut">Zapri</string>
   <string name="channel_btn_reveal">Odpri</string>
   <string name="channel_btn_collapse">Zvij</string>
@@ -808,4 +815,11 @@
   <string name="general_processing">Obdelava</string>
   <string name="nfc_tag_finish_editing">Skeniranje blokirano</string>
   <string name="nfc_tag_name">Oznaka »%1$s«</string>
+  <string name="details_em_hour_marker_title">Ura %1$s</string>
+  <string name="history_data_type">Vrsta podatkov</string>
+  <string name="details_em_forward_active_energy_short">Aktivna prevzeta</string>
+  <string name="details_em_reverse_active_energy_short">Aktivna oddana</string>
+  <string name="details_em_forward_reactive_energy_short">Jalova prevzeta</string>
+  <string name="channel_not_found">Kanal ne obstaja</string>
+  <string name="scene_inactive">Scena je neaktivna</string>
 </resources>

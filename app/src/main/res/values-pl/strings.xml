@@ -94,6 +94,7 @@
 
   <string name="cfg_label_email_auth">Email</string>
   <string name="cfg_label_access_id_auth">Identyfikator</string>
+  <string name="cfg_checkbox_server_auto">Auto</string>
   <string name="cfg_channel_height">Wysokość kanału</string>
   <string name="cfg_temperature_unit">Jednostka temperatury</string>
   <string name="cfg_button_autohide">Auto-ukrywanie przycisków</string>
@@ -464,6 +465,7 @@
 
   <string name="details_general">Ogólne</string>
   <string name="details_schedule">Tydzień</string>
+  <string name="details_timer">Timer</string>
   <string name="details_metrics">Pomiary</string>
   <string name="details_settings">Ustawienia</string>
   <string name="details_history">Historia</string>

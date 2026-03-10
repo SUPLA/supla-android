@@ -328,7 +328,9 @@
   <string name="add_account">Προσθήκη λογαριασμού</string>
   <string name="edit_account">Επεξεργασία λογαριασμού</string>
   <string name="delete_account">Αφαιρώ</string>
+  <string name="cfg_label_email_auth">Email</string>
   <string name="cfg_label_access_id_auth">Αναγνωριστικό</string>
+  <string name="cfg_checkbox_server_auto">Αυτόματα</string>
   <string name="cfg_channel_height">Ύψος καναλιού</string>
   <string name="cfg_temperature_unit">Μονάδα θερμοκρασίας</string>
   <string name="cfg_button_autohide">Αυτόματη απόκρυψη κουμπιών</string>
@@ -344,6 +346,7 @@
   <string name="widget_configure_error">Η ρύθμιση του καναλιού απέτυχε...</string>
   <string name="double_button_widget_description">Γραφικό στοιχείο δύο κουμπιών</string>
   <string name="single_button_widget_description">Γραφικό στοιχείο με ένα κουμπί</string>
+  <string name="extended_value_widget_description">Γραφικό στοιχείο προεπισκόπησης μετρητή ηλεκτρικής ενέργειας</string>
   <string name="widget_app_not_initialized">Παρακαλώ συνδεθείτε!</string>
   <string name="widget_command_no_connection">Δεν υπάρχει σύνδεση στο διαδίκτυο!</string>
   <string name="widget_command_started">Καμωμένος</string>
@@ -462,6 +465,7 @@
 
   <string name="details_general">Γενικά</string>
   <string name="details_schedule">Εβδομάδα</string>
+  <string name="details_timer">Χρονοδιακόπτης</string>
   <string name="details_metrics">Μετρήσεις</string>
   <string name="details_settings">Ρυθμίσεις</string>
   <string name="details_history">Ιστορία</string>
@@ -639,6 +643,7 @@
   <string name="thermostat_detail_other_thermostats">Εξαρτώμενοι θερμοστάτες</string>
   <string name="thermostat_battery_cover_open">Το κάλυμμα της μπαταρίας είναι ανοιχτό</string>
 
+  <string name="settings_battery_level_warning">Προειδοποίηση χαμηλής μπαταρίας</string>
   <string name="channel_battery_level">Επίπεδο μπαταρίας: %1$d%%</string>
   <string name="channel_battery_level_with_info">Επίπεδο μπαταρίας (%1$d - %2$s): %3$d%%</string>
   <string name="channel_btn_stop">Σταμάτημα</string>
@@ -686,6 +691,8 @@
   <string name="state_closed">κλειστό</string>
   <string name="state_partially_opened">μερικώς ανοιχτό</string>
   <string name="channel_btn_step_by_step">Άνοιγμα/Κλείσιμο (βήμα προς βήμα)</string>
+  <string name="details_em_reverse_reactive_energy_short">Άεργη επιστραφείσα</string>
+  <string name="details_em_energy_label">Ενέργεια</string>
   <string name="channel_btn_shut">Κλείσιμο</string>
   <string name="channel_btn_reveal">Άνοιγμα</string>
   <string name="channel_btn_collapse">Μαζεύω</string>
@@ -801,4 +808,11 @@
   <string name="general_processing">Επεξεργασία</string>
   <string name="nfc_tag_finish_editing">Η σάρωση μπλοκαρίστηκε</string>
   <string name="nfc_tag_name">Ετικέτα «%1$s»</string>
+  <string name="details_em_hour_marker_title">Ώρα %1$s</string>
+  <string name="history_data_type">Τύπος δεδομένων</string>
+  <string name="details_em_forward_active_energy_short">Ενεργή ληφθείσα</string>
+  <string name="details_em_reverse_active_energy_short">Ενεργή επιστραφείσα</string>
+  <string name="details_em_forward_reactive_energy_short">Άεργη ληφθείσα</string>
+  <string name="channel_not_found">Το κανάλι δεν υπάρχει</string>
+  <string name="scene_inactive">Η σκηνή είναι ανενεργή</string>
 </resources>

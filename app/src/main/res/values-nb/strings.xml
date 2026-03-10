@@ -331,7 +331,9 @@
   <string name="add_account">Legg til konto</string>
   <string name="edit_account">Rediger konto</string>
   <string name="delete_account">Slett</string>
+  <string name="cfg_label_email_auth">E-post</string>
   <string name="cfg_label_access_id_auth">ID</string>
+  <string name="cfg_checkbox_server_auto">Automatisk</string>
   <string name="cfg_channel_height">Kanalhøyde</string>
   <string name="cfg_temperature_unit">Temperaturenhet</string>
   <string name="cfg_button_autohide">Automatisk skjuling av knapper</string>
@@ -347,6 +349,7 @@
   <string name="widget_configure_error">Kanalkonfigurasjon mislyktes ...</string>
   <string name="double_button_widget_description">To-knapps widget</string>
   <string name="single_button_widget_description">En-knapps widget</string>
+  <string name="extended_value_widget_description">Forhåndsvisningswidget for strømmåler</string>
   <string name="widget_app_not_initialized">Vennligst logg inn!</string>
   <string name="widget_command_no_connection">Ingen internettforbindelse!</string>
   <string name="widget_command_started">Ferdig</string>
@@ -466,6 +469,7 @@
 
   <string name="details_general">Generelt</string>
   <string name="details_schedule">Uke</string>
+  <string name="details_timer">Tidtaker</string>
   <string name="details_metrics">Målinger</string>
   <string name="details_settings">Innstillinger</string>
   <string name="details_history">Historien</string>
@@ -642,6 +646,7 @@
   <string name="thermostat_detail_main_thermostat">Hovedtermostat</string>
   <string name="thermostat_detail_other_thermostats">Avhengige termostater</string>
   <string name="thermostat_battery_cover_open">Åpne batteridekselet</string>
+  <string name="settings_battery_level_warning">Varsel om lavt batteri</string>
   <string name="channel_battery_level">Batterinivå: %1$d%%</string>
   <string name="channel_battery_level_with_info">Batterinivå (%1$d - %2$s): %3$d%%</string>
   <string name="channel_btn_stop">Stopp</string>
@@ -689,6 +694,8 @@
   <string name="state_closed">lukket</string>
   <string name="state_partially_opened">delvis åpen</string>
   <string name="channel_btn_step_by_step">Åpne/Steng (steg for steg)</string>
+  <string name="details_em_reverse_reactive_energy_short">Reaktiv levert</string>
+  <string name="details_em_energy_label">Energi</string>
   <string name="channel_btn_shut">Lukk</string>
   <string name="channel_btn_reveal">Åpne</string>
   <string name="channel_btn_collapse">Rull inn</string>
@@ -804,4 +811,11 @@
   <string name="general_processing">Behandler</string>
   <string name="nfc_tag_finish_editing">Skanning blokkert</string>
   <string name="nfc_tag_name">Tagg \"%1$s\"</string>
+  <string name="details_em_hour_marker_title">Time %1$s</string>
+  <string name="history_data_type">Datatype</string>
+  <string name="details_em_forward_active_energy_short">Aktiv forbruk</string>
+  <string name="details_em_reverse_active_energy_short">Aktiv levert</string>
+  <string name="details_em_forward_reactive_energy_short">Reaktiv forbruk</string>
+  <string name="channel_not_found">Kanalen finnes ikke</string>
+  <string name="scene_inactive">Scenen er inaktiv</string>
 </resources>
