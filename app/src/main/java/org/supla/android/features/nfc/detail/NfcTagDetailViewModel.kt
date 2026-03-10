@@ -67,7 +67,7 @@ class NfcTagDetailViewModel @Inject constructor(
           tagUuid = tagData.tagEntity.uuid,
           tagLocked = tagData.tagEntity.readOnly,
           actionId = tagData.tagEntity.actionId,
-          subjectName = tagData.channelEntity?.let { getCaptionUseCase(it) },
+          subjectName = tagData.name(getCaptionUseCase),
           lastReadingItems = readingItems
         )
       }
