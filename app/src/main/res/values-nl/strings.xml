@@ -331,7 +331,9 @@
   <string name="add_account">Rekening toevoegen</string>
   <string name="edit_account">Rekening bewerken</string>
   <string name="delete_account">Delete</string>
+  <string name="cfg_label_email_auth">E-mail</string>
   <string name="cfg_label_access_id_auth">Identifier</string>
+  <string name="cfg_checkbox_server_auto">Auto</string>
   <string name="cfg_channel_height">Kanaalhoogte</string>
   <string name="cfg_temperature_unit">Temperatuur eenheid</string>
   <string name="cfg_button_autohide">Automatisch verbergen van knoppen</string>
@@ -347,6 +349,7 @@
   <string name="widget_configure_error">Kanaal configuratie mislukt...</string>
   <string name="double_button_widget_description">Widget met twee knoppen</string>
   <string name="single_button_widget_description">Widget met één knop</string>
+  <string name="extended_value_widget_description">Voorbeeldwidget van de elektriciteitsmeter</string>
   <string name="widget_app_not_initialized">Log alsjeblieft in!</string>
   <string name="widget_command_no_connection">Geen internetverbinding!</string>
   <string name="widget_command_started">Uitgevoerd</string>
@@ -467,6 +470,7 @@
 
   <string name="details_general">Algemeen</string>
   <string name="details_schedule">Week</string>
+  <string name="details_timer">Timer</string>
   <string name="details_metrics">Metingen</string>
   <string name="details_settings">Instellingen</string>
   <string name="details_history">Geschiedenis</string>
@@ -643,6 +647,7 @@
   <string name="thermostat_detail_main_thermostat">Hoofdthermostaat</string>
   <string name="thermostat_detail_other_thermostats">Afhankelijke thermostaten</string>
   <string name="thermostat_battery_cover_open">Batterijklep openen</string>
+  <string name="settings_battery_level_warning">Waarschuwing lage batterij</string>
   <string name="channel_battery_level">Batterijniveau: %1$d%%</string>
   <string name="channel_battery_level_with_info">Batterijniveau (%1$d - %2$s): %3$d%%</string>
   <string name="channel_btn_stop">Stoppen</string>
@@ -690,6 +695,8 @@
   <string name="state_closed">gesloten</string>
   <string name="state_partially_opened">gedeeltelijk open</string>
   <string name="channel_btn_step_by_step">Openen/Sluiten (stap voor stap)</string>
+  <string name="details_em_reverse_reactive_energy_short">Reactief teruggeleverd</string>
+  <string name="details_em_energy_label">Energie</string>
   <string name="channel_btn_shut">Sluiten</string>
   <string name="channel_btn_reveal">Openen</string>
   <string name="channel_btn_collapse">Inklappen</string>
@@ -805,4 +812,11 @@
   <string name="general_processing">Bezig met verwerken</string>
   <string name="nfc_tag_finish_editing">Scannen geblokkeerd</string>
   <string name="nfc_tag_name">Tag \"%1$s\"</string>
+  <string name="details_em_hour_marker_title">Uur %1$s</string>
+  <string name="history_data_type">Gegevenstype</string>
+  <string name="details_em_forward_active_energy_short">Actief verbruikt</string>
+  <string name="details_em_reverse_active_energy_short">Actief teruggeleverd</string>
+  <string name="details_em_forward_reactive_energy_short">Reactief verbruikt</string>
+  <string name="channel_not_found">Het kanaal bestaat niet</string>
+  <string name="scene_inactive">De scène is inactief</string>
 </resources>

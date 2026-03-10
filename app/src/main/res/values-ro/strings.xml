@@ -330,7 +330,9 @@
   <string name="add_account">Adaugă cont</string>
   <string name="edit_account">Editează contul</string>
   <string name="delete_account">Șterge</string>
+  <string name="cfg_label_email_auth">Email</string>
   <string name="cfg_label_access_id_auth">Identificator</string>
+  <string name="cfg_checkbox_server_auto">Automat</string>
   <string name="cfg_channel_height">Înălțimea canalului</string>
   <string name="cfg_temperature_unit">Unitate de temperatură</string>
   <string name="cfg_button_autohide">Ascunderea automată a butoanelor</string>
@@ -346,6 +348,7 @@
   <string name="widget_configure_error">Configurarea canalului a eșuat...</string>
   <string name="double_button_widget_description">Widget cu două butoane</string>
   <string name="single_button_widget_description">Widget cu un singur buton</string>
+  <string name="extended_value_widget_description">Widget de previzualizare a contorului de energie electrică</string>
   <string name="widget_app_not_initialized">Vă rugăm să te conectezi!</string>
   <string name="widget_command_no_connection">Lipsă conexiune la internet!</string>
   <string name="widget_command_started">Realizat</string>
@@ -468,6 +471,7 @@
 
   <string name="details_general">Generale</string>
   <string name="details_schedule">Săptămână</string>
+  <string name="details_timer">Temporizator</string>
   <string name="details_metrics">Măsurători</string>
   <string name="details_settings">Setări</string>
   <string name="details_history">Istoric</string>
@@ -644,6 +648,7 @@
   <string name="thermostat_detail_main_thermostat">Termostat principal</string>
   <string name="thermostat_detail_other_thermostats">Termostate dependente</string>
   <string name="thermostat_battery_cover_open">Deschideți capacul bateriei</string>
+  <string name="settings_battery_level_warning">Alertă baterie descărcată</string>
   <string name="channel_battery_level">Nivelul bateriei: %1$d%%</string>
   <string name="channel_battery_level_with_info">Nivelul bateriei (%1$d - %2$s): %3$d%%</string>
   <string name="channel_btn_stop">Oprește</string>
@@ -691,6 +696,8 @@
   <string name="state_closed">închis</string>
   <string name="state_partially_opened">parțial deschis</string>
   <string name="channel_btn_step_by_step">Deschide/Închide (pas cu pas)</string>
+  <string name="details_em_reverse_reactive_energy_short">Reactivă livrată</string>
+  <string name="details_em_energy_label">Energie</string>
   <string name="channel_btn_shut">Închide</string>
   <string name="channel_btn_reveal">Deschide</string>
   <string name="channel_btn_collapse">Strânge</string>
@@ -809,4 +816,11 @@
   <string name="general_processing">Se procesează</string>
   <string name="nfc_tag_finish_editing">Scanare blocată</string>
   <string name="nfc_tag_name">Etichetă „%1$s”</string>
+  <string name="details_em_hour_marker_title">Ora %1$s</string>
+  <string name="history_data_type">Tip de date</string>
+  <string name="details_em_forward_active_energy_short">Activă consumată</string>
+  <string name="details_em_reverse_active_energy_short">Activă returnată</string>
+  <string name="details_em_forward_reactive_energy_short">Reactivă consumată</string>
+  <string name="channel_not_found">Canalul nu există</string>
+  <string name="scene_inactive">Scena este inactivă</string>
 </resources>

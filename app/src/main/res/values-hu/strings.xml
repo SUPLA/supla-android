@@ -331,7 +331,9 @@
   <string name="add_account">Fiók hozzáadása</string>
   <string name="edit_account">Fiók módosítása</string>
   <string name="delete_account">Törlés</string>
+  <string name="cfg_label_email_auth">E-mail</string>
   <string name="cfg_label_access_id_auth">Azonosító</string>
+  <string name="cfg_checkbox_server_auto">Auto</string>
   <string name="cfg_channel_height">Csatorna magassága</string>
   <string name="cfg_temperature_unit">Hőmérsékleti egység</string>
   <string name="cfg_button_autohide">Billentyűk automatikus eltakarása</string>
@@ -347,6 +349,7 @@
   <string name="widget_configure_error">A csatorna konfiguráció sikertelen...</string>
   <string name="double_button_widget_description">Kétgombos widget</string>
   <string name="single_button_widget_description">Egygombos widget</string>
+  <string name="extended_value_widget_description">Villanyóra előnézeti widget</string>
   <string name="widget_app_not_initialized">Kérjük jelentkezzen be!</string>
   <string name="widget_command_no_connection">Nincs internetkapcsolat!</string>
   <string name="widget_command_started">Kész</string>
@@ -466,6 +469,7 @@
 
   <string name="details_general">Általános</string>
   <string name="details_schedule">Hét</string>
+  <string name="details_timer">Időzítő</string>
   <string name="details_metrics">Mérési adatok</string>
   <string name="details_settings">Beállítások</string>
   <string name="details_history">Előzmények</string>
@@ -642,6 +646,7 @@
   <string name="thermostat_detail_main_thermostat">Fő termosztát</string>
   <string name="thermostat_detail_other_thermostats">Mellék termosztátok</string>
   <string name="thermostat_battery_cover_open">Elemfedél nyitva</string>
+  <string name="settings_battery_level_warning">Alacsony akkumulátor figyelmeztetés</string>
   <string name="channel_battery_level">Az akkumulátor töltöttségi szintje: %1$d%%</string>
   <string name="channel_battery_level_with_info">Az akkumulátor töltöttségi szintje (%1$d - %2$s): %3$d%%</string>
   <string name="channel_btn_stop">Állj</string>
@@ -689,6 +694,8 @@
   <string name="state_closed">zárva</string>
   <string name="state_partially_opened">részben nyitva</string>
   <string name="channel_btn_step_by_step">Nyitás/Bezárás (lépésről lépésre)</string>
+  <string name="details_em_reverse_reactive_energy_short">Meddő visszatáplált</string>
+  <string name="details_em_energy_label">Energia</string>
   <string name="channel_btn_shut">Bezár</string>
   <string name="channel_btn_reveal">Kinyit</string>
   <string name="channel_btn_collapse">Összecsuk</string>
@@ -804,4 +811,11 @@
   <string name="general_processing">Feldolgozás</string>
   <string name="nfc_tag_finish_editing">Szkennelés blokkolva</string>
   <string name="nfc_tag_name">Címke: \"%1$s\"</string>
+  <string name="details_em_hour_marker_title">%1$s óra</string>
+  <string name="history_data_type">Adattípus</string>
+  <string name="details_em_forward_active_energy_short">Hatásos vételezett</string>
+  <string name="details_em_reverse_active_energy_short">Hatásos visszatáplált</string>
+  <string name="details_em_forward_reactive_energy_short">Meddő vételezett</string>
+  <string name="channel_not_found">A csatorna nem létezik</string>
+  <string name="scene_inactive">A jelenet inaktív</string>
 </resources>

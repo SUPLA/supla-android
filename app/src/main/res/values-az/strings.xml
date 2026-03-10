@@ -100,7 +100,9 @@
  account or when migrating settings from previous version of
  the app. -->
 
+  <string name="cfg_label_email_auth">E-poçt</string>
   <string name="cfg_label_access_id_auth">Access ID</string>
+  <string name="cfg_checkbox_server_auto">Auto</string>
   <string name="cfg_channel_height">Kanal hündürlüyü</string>
   <string name="cfg_temperature_unit">Temperatur vahidi</string>
   <string name="cfg_button_autohide">Avtomatik gizlət</string>
@@ -456,6 +458,7 @@
 
   <string name="details_general">Ümumi</string>
   <string name="details_schedule">Həftə</string>
+  <string name="details_timer">Taymer</string>
   <string name="details_metrics">Metriklər</string>
   <string name="details_settings">Parametrlər</string>
   <string name="details_history">Tarixçə</string>

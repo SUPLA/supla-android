@@ -311,7 +311,9 @@
   <string name="add_account">Přidat účet</string>
   <string name="edit_account">Upravit účet</string>
   <string name="delete_account">Odstranit</string>
+  <string name="cfg_label_email_auth">E-mail</string>
   <string name="cfg_label_access_id_auth">Identifikátor:</string>
+  <string name="cfg_checkbox_server_auto">Auto</string>
   <string name="cfg_channel_height">Výška kanálu</string>
   <string name="cfg_temperature_unit">Jednotka teploty</string>
   <string name="cfg_button_autohide">Automatické skrývání tlačítek</string>
@@ -327,6 +329,7 @@
   <string name="widget_configure_error">Nastavení kanálu se nezdařilo...</string>
   <string name="double_button_widget_description">Widget se dvěma tlačítky</string>
   <string name="single_button_widget_description">Widget s jedním tlačítkem</string>
+  <string name="extended_value_widget_description">Widget náhledu elektroměru</string>
   <string name="widget_app_not_initialized">Přihlaste se!</string>
   <string name="widget_command_no_connection">Žádné připojení k internetu!</string>
   <string name="widget_command_started">Hotovo</string>
@@ -446,6 +449,7 @@
 
   <string name="details_general">Obecné</string>
   <string name="details_schedule">Týden</string>
+  <string name="details_timer">Časovač</string>
   <string name="details_metrics">Měření</string>
   <string name="details_settings">Nastavení</string>
   <string name="details_history">Historie</string>
@@ -623,6 +627,7 @@
   <string name="thermostat_detail_other_thermostats">Závislé termostaty</string>
   <string name="thermostat_battery_cover_open">Otevřený kryt baterie</string>
 
+  <string name="settings_battery_level_warning">Upozornění na slabou baterii</string>
   <string name="channel_battery_level">Stav baterie: %1$d%%</string>
   <string name="channel_battery_level_with_info">Stav baterie (%1$d - %2$s): %3$d%%</string>
   <string name="channel_btn_stop">Zastavit</string>
@@ -670,6 +675,8 @@
   <string name="state_closed">zavřeno</string>
   <string name="state_partially_opened">částečně otevřeno</string>
   <string name="channel_btn_step_by_step">Otevřít/Zavřít (krok za krokem)</string>
+  <string name="details_em_reverse_reactive_energy_short">Jalová dodaná</string>
+  <string name="details_em_energy_label">Energie</string>
   <string name="channel_btn_shut">Zavřít</string>
   <string name="channel_btn_reveal">Otevřít</string>
   <string name="channel_btn_collapse">Svinout</string>
@@ -789,4 +796,11 @@
   <string name="general_processing">Zpracovávání</string>
   <string name="nfc_tag_finish_editing">Skenování zablokováno</string>
   <string name="nfc_tag_name">Tag „%1$s“</string>
+  <string name="details_em_hour_marker_title">Hodina %1$s</string>
+  <string name="history_data_type">Typ dat</string>
+  <string name="details_em_forward_active_energy_short">Činná odebraná</string>
+  <string name="details_em_reverse_active_energy_short">Činná dodaná</string>
+  <string name="details_em_forward_reactive_energy_short">Jalová odebraná</string>
+  <string name="channel_not_found">Kanál neexistuje</string>
+  <string name="scene_inactive">Scéna je neaktivní</string>
 </resources>

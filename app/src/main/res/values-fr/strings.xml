@@ -318,7 +318,9 @@
   <string name="add_account">Ajouter un compte</string>
   <string name="edit_account">Modifier le compte</string>
   <string name="delete_account">Supprimer</string>
+  <string name="cfg_label_email_auth">Email</string>
   <string name="cfg_label_access_id_auth">ID</string>
+  <string name="cfg_checkbox_server_auto">Auto</string>
   <string name="cfg_channel_height">Hauteur du canal</string>
   <string name="cfg_temperature_unit">Unité de température</string>
   <string name="cfg_button_autohide">Masquage automatique des boutons</string>
@@ -334,6 +336,7 @@
   <string name="widget_configure_error">La configuration du canal a échoué...</string>
   <string name="double_button_widget_description">Widget à deux boutons</string>
   <string name="single_button_widget_description">Widget à un bouton</string>
+  <string name="extended_value_widget_description">Widget d’aperçu du compteur électrique</string>
   <string name="widget_app_not_initialized">Veuillez vous connecter !</string>
   <string name="widget_command_no_connection">Pas de connexion internet !</string>
   <string name="widget_command_started">Réalisé</string>
@@ -453,6 +456,7 @@
 
   <string name="details_general">Informations générales</string>
   <string name="details_schedule">Semaine</string>
+  <string name="details_timer">Minuteur</string>
   <string name="details_metrics">Mesures</string>
   <string name="details_settings">Paramètres</string>
   <string name="details_history">Histoire</string>
@@ -630,6 +634,7 @@
   <string name="thermostat_detail_other_thermostats">Thermostats dépendants</string>
   <string name="thermostat_battery_cover_open">Couvercle de batterie ouvert</string>
 
+  <string name="settings_battery_level_warning">Alerte batterie faible</string>
   <string name="channel_battery_level">Niveau de batterie: %1$d%%</string>
   <string name="channel_battery_level_with_info">Niveau de batterie (%1$d - %2$s): %3$d%%</string>
   <string name="channel_btn_stop">Arrêter</string>
@@ -677,6 +682,8 @@
   <string name="state_closed">fermé</string>
   <string name="state_partially_opened">partiellement ouvert</string>
   <string name="channel_btn_step_by_step">Ouvrir/Fermer (étape par étape)</string>
+  <string name="details_em_reverse_reactive_energy_short">Réactive injectée</string>
+  <string name="details_em_energy_label">Énergie</string>
   <string name="channel_btn_shut">Fermer</string>
   <string name="channel_btn_reveal">Ouvrir</string>
   <string name="channel_btn_collapse">Enrouler</string>
@@ -792,4 +799,11 @@
   <string name="general_processing">Traitement en cours</string>
   <string name="nfc_tag_finish_editing">Analyse bloquée</string>
   <string name="nfc_tag_name">Étiquette « %1$s »</string>
+  <string name="details_em_hour_marker_title">Heure %1$s</string>
+  <string name="history_data_type">Type de données</string>
+  <string name="details_em_forward_active_energy_short">Active consommée</string>
+  <string name="details_em_reverse_active_energy_short">Active injectée</string>
+  <string name="details_em_forward_reactive_energy_short">Réactive consommée</string>
+  <string name="channel_not_found">Le canal n\'existe pas</string>
+  <string name="scene_inactive">La scène est inactive</string>
 </resources>
