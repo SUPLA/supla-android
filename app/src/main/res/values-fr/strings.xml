@@ -806,4 +806,5 @@
   <string name="details_em_forward_reactive_energy_short">Réactive consommée</string>
   <string name="channel_not_found">Le canal n\'existe pas</string>
   <string name="scene_inactive">La scène est inactive</string>
+  <string name="nfc_detail_action_added">Ajouté à l’application</string>
 </resources>

@@ -903,4 +903,5 @@
   <string name="general_processing">Emal edilir</string>
   <string name="nfc_tag_finish_editing">Skanlama bloklanıb</string>
   <string name="nfc_tag_name">Teq \"%1$s\"</string>
+  <string name="nfc_detail_action_added">Tətbiqə əlavə edildi</string>
 </resources>

@@ -27,8 +27,10 @@ import org.supla.android.data.model.spinner.ProfileItem
 import org.supla.android.data.model.spinner.SubjectItem
 import org.supla.android.data.model.spinner.SubjectItemConversionScope
 import org.supla.android.data.source.ChannelGroupRepository
+import org.supla.android.data.source.NfcCallRepository
 import org.supla.android.data.source.NfcTagRepository
 import org.supla.android.data.source.RoomSceneRepository
+import org.supla.android.data.source.local.entity.NfcCallResult
 import org.supla.android.data.source.local.entity.NfcTagEntity
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.lib.actions.ActionId
@@ -50,7 +52,8 @@ open class BaseEditNfcTagViewModel(
   private val readAllProfilesUseCase: ReadAllProfilesUseCase,
   private val channelGroupRepository: ChannelGroupRepository,
   private val sceneRepository: RoomSceneRepository,
-  protected val nfcTagRepository: NfcTagRepository,
+  private val nfcCallRepository: NfcCallRepository,
+  private val nfcTagRepository: NfcTagRepository,
   private val schedulers: SuplaSchedulers,
   override val getChannelIconUseCase: GetChannelIconUseCase,
   override val getSceneIconUseCase: GetSceneIconUseCase,
@@ -242,7 +245,7 @@ open class BaseEditNfcTagViewModel(
 
   private fun insert(state: EditNfcTagViewModelState, uuid: String, readOnly: Boolean) {
     viewModelScope.launch {
-      nfcTagRepository.save(
+      val id = nfcTagRepository.save(
         entity = NfcTagEntity(
           uuid = uuid,
           name = state.screenState.tagName,
@@ -253,6 +256,8 @@ open class BaseEditNfcTagViewModel(
           readOnly = readOnly
         )
       )
+      nfcCallRepository.insert(id, NfcCallResult.TAG_ADDED)
+
       sendEvent(EditNfcTagViewEvent.Close)
     }
   }

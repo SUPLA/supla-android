@@ -818,4 +818,5 @@
   <string name="details_em_forward_reactive_energy_short">Reaktiv forbruk</string>
   <string name="channel_not_found">Kanalen finnes ikke</string>
   <string name="scene_inactive">Scenen er inaktiv</string>
+  <string name="nfc_detail_action_added">Lagt til i appen</string>
 </resources>
