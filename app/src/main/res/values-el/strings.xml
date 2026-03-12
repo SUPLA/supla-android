@@ -815,4 +815,5 @@
   <string name="details_em_forward_reactive_energy_short">Άεργη ληφθείσα</string>
   <string name="channel_not_found">Το κανάλι δεν υπάρχει</string>
   <string name="scene_inactive">Η σκηνή είναι ανενεργή</string>
+  <string name="nfc_detail_action_added">Προστέθηκε στην εφαρμογή</string>
 </resources>

@@ -19,6 +19,7 @@ package org.supla.android.features.nfc.call.screens.configureaction
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.data.source.ChannelGroupRepository
+import org.supla.android.data.source.NfcCallRepository
 import org.supla.android.data.source.NfcTagRepository
 import org.supla.android.data.source.RoomSceneRepository
 import org.supla.android.features.nfc.shared.edit.BaseEditNfcTagViewModel
@@ -39,6 +40,7 @@ class ConfigureActionViewModel @Inject constructor(
   readAllProfilesUseCase: ReadAllProfilesUseCase,
   channelGroupRepository: ChannelGroupRepository,
   sceneRepository: RoomSceneRepository,
+  nfcCallRepository: NfcCallRepository,
   nfcTagRepository: NfcTagRepository,
   schedulers: SuplaSchedulers,
   override val getChannelIconUseCase: GetChannelIconUseCase,
@@ -50,6 +52,7 @@ class ConfigureActionViewModel @Inject constructor(
   readAllProfilesUseCase,
   channelGroupRepository,
   sceneRepository,
+  nfcCallRepository,
   nfcTagRepository,
   schedulers,
   getChannelIconUseCase,

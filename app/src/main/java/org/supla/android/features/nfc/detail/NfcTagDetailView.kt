@@ -287,6 +287,10 @@ private fun ItemResultText(result: NfcCallResult) =
       BodyMedium(R.string.notifications_inactive, color = MaterialTheme.colorScheme.error)
       BodyMedium(R.string.nfc_detail_action_failure_missing)
     }
+    NfcCallResult.TAG_ADDED -> {
+      BodyMedium("✦", color = MaterialTheme.colorScheme.secondary)
+      BodyMedium(R.string.nfc_detail_action_added)
+    }
   }
 
 @Composable
