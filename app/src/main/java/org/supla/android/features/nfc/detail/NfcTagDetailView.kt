@@ -82,6 +82,7 @@ data class NfcTagDetailViewState(
   val tagLocked: Boolean = false,
   val actionId: ActionId? = null,
   val subjectName: LocalizedString? = null,
+  val profileName: String? = null,
   val lastReadingItems: List<ReadingItem> = emptyList(),
 
   val dialogToShow: DialogType? = null
@@ -151,19 +152,7 @@ private fun NfcTagDetailViewScope.TagDetails(viewState: NfcTagDetailViewState) =
     Spacer(modifier = Modifier.height(Distance.small))
 
     Label(text = stringResource(R.string.widget_configure_action_label))
-    if (viewState.actionId != null && viewState.subjectName != null) {
-      val action = viewState.actionId.label(LocalContext.current)
-      val subjectName = viewState.subjectName(LocalContext.current)
-      BodyLarge(text = "$action - $subjectName")
-    } else {
-      Row(
-        horizontalArrangement = Arrangement.spacedBy(Distance.tiny),
-        verticalAlignment = Alignment.CenterVertically
-      ) {
-        WarningIcon()
-        BodyLarge(text = stringResource(R.string.nfc_list_missing_action))
-      }
-    }
+    ActionView(viewState.actionId, viewState.subjectName, viewState.profileName)
     Spacer(modifier = Modifier.height(Distance.small))
 
     Label(text = "UUID")
@@ -179,6 +168,27 @@ private fun NfcTagDetailViewScope.TagDetails(viewState: NfcTagDetailViewState) =
       }
     }
   }
+
+@Composable
+private fun ActionView(actionId: ActionId?, subjectName: LocalizedString?, profileName: String?) {
+  if (actionId != null && subjectName != null && profileName != null) {
+    val action = actionId.label(LocalContext.current)
+    val subjectName = subjectName(LocalContext.current)
+    BodyLarge(text = "$action - $subjectName ($profileName)")
+  } else if (actionId != null && subjectName != null) {
+    val action = actionId.label(LocalContext.current)
+    val subjectName = subjectName(LocalContext.current)
+    BodyLarge(text = "$action - $subjectName")
+  } else {
+    Row(
+      horizontalArrangement = Arrangement.spacedBy(Distance.tiny),
+      verticalAlignment = Alignment.CenterVertically
+    ) {
+      WarningIcon()
+      BodyLarge(text = stringResource(R.string.nfc_list_missing_action))
+    }
+  }
+}
 
 @Composable
 private fun NfcTagDetailViewScope.LockButton(modifier: Modifier = Modifier) =
@@ -279,14 +289,17 @@ private fun ItemResultText(result: NfcCallResult) =
       BodyMedium(R.string.notifications_active, color = MaterialTheme.colorScheme.primary)
       BodyMedium(R.string.nfc_detail_action_completed)
     }
+
     NfcCallResult.FAILURE -> {
       BodyMedium(R.string.notifications_inactive, color = MaterialTheme.colorScheme.error)
       BodyMedium(R.string.nfc_detail_action_failure_other)
     }
+
     NfcCallResult.ACTION_MISSING -> {
       BodyMedium(R.string.notifications_inactive, color = MaterialTheme.colorScheme.error)
       BodyMedium(R.string.nfc_detail_action_failure_missing)
     }
+
     NfcCallResult.TAG_ADDED -> {
       BodyMedium("✦", color = MaterialTheme.colorScheme.secondary)
       BodyMedium(R.string.nfc_detail_action_added)

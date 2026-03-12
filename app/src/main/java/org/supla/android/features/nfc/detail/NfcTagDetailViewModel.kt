@@ -24,6 +24,7 @@ import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.source.NfcCallRepository
 import org.supla.android.data.source.NfcTagRepository
+import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.NfcCallEntity
 import org.supla.android.data.source.local.entity.NfcCallResult
 import org.supla.android.extensions.toLocalDateTime
@@ -34,6 +35,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NfcTagDetailViewModel @Inject constructor(
+  private val profileRepository: RoomProfileRepository,
   private val getCaptionUseCase: GetCaptionUseCase,
   private val nfcCallRepository: NfcCallRepository,
   private val nfcTagRepository: NfcTagRepository,
@@ -60,6 +62,8 @@ class NfcTagDetailViewModel @Inject constructor(
     viewModelScope.launch {
       val tagData = schedulers.io { nfcTagRepository.findByIdWithDependencies(itemId) } ?: return@launch
       val readingItems = schedulers.io { nfcCallRepository.findLastForId(tagData.tagEntity.id).map { it.toReadingItem } }
+      val profiles = schedulers.io { profileRepository.findAllProfilesKtx() }
+      val profileName = profiles.firstOrNull { it.id == tagData.tagEntity.profileId }?.name
 
       updateState { state ->
         state.copy(
@@ -68,6 +72,7 @@ class NfcTagDetailViewModel @Inject constructor(
           tagLocked = tagData.tagEntity.readOnly,
           actionId = tagData.tagEntity.actionId,
           subjectName = tagData.name(getCaptionUseCase),
+          profileName = if (profiles.count() > 1) profileName else null,
           lastReadingItems = readingItems
         )
       }
