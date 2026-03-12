@@ -94,6 +94,9 @@ abstract class ProfileDao {
   @Query("SELECT ($COLUMN_ID) FROM $TABLE_NAME")
   abstract fun count(): Observable<Int>
 
+  @Query("SELECT ($COLUMN_ID) FROM $TABLE_NAME")
+  abstract suspend fun countKtx(): Int
+
   @Query("UPDATE $TABLE_NAME SET $COLUMN_POSITION = :order WHERE $COLUMN_ID = :id")
   abstract fun setOrder(id: Long, order: Int)
 

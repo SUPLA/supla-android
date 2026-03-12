@@ -43,5 +43,7 @@ class RoomProfileRepository @Inject constructor(private val profileDao: ProfileD
 
   fun setItemsOrder(orderedIds: List<Long>) = profileDao.setItemsOrder(orderedIds)
 
+  suspend fun countKtx(): Int = profileDao.countKtx()
+
   override fun count(): Observable<Int> = profileDao.count()
 }
