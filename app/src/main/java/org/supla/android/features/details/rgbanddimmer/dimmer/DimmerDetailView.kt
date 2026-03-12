@@ -77,7 +77,6 @@ private fun DimmerDetailScope.BrightnessSelector(state: DimmerDetailViewState, m
           .fillMaxHeight()
           .width(40.dp)
       )
-
     DimmerSelectorType.CIRCULAR ->
       CircularColorSelector(
         value = state.value.brightness?.div(100f)?.coerceIn(0f, 1f),

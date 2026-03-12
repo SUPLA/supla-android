@@ -157,15 +157,12 @@ val ResultException.toResult: SingleCall.Result
     SUPLA_RESULT_HOST_NOT_FOUND,
     SUPLA_RESULT_CANT_CONNECT_TO_HOST,
     SUPLA_RESULT_RESPONSE_TIMEOUT -> SingleCall.Result.ConnectionError(result)
-
     SUPLA_RESULTCODE_CLIENT_NOT_EXISTS,
     SUPLA_RESULTCODE_BAD_CREDENTIALS,
     SUPLA_RESULTCODE_CLIENT_DISABLED,
     SUPLA_RESULTCODE_ACCESSID_NOT_ASSIGNED,
     SUPLA_RESULTCODE_ACCESSID_DISABLED -> SingleCall.Result.AccessError(result)
-
     SUPLA_RESULTCODE_ACCESSID_INACTIVE -> SingleCall.Result.Inactive
-
     SUPLA_RESULTCODE_CHANNEL_IS_OFFLINE -> SingleCall.Result.Offline
     SUPLA_RESULTCODE_SUBJECT_NOT_FOUND -> SingleCall.Result.NotFound
     else -> SingleCall.Result.CommandError(result)

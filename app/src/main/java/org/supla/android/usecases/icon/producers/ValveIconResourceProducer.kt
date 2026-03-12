@@ -28,7 +28,6 @@ class ValveIconResourceProducer : IconResourceProducer {
     when (function) {
       SuplaFunction.VALVE_PERCENTAGE,
       SuplaFunction.VALVE_OPEN_CLOSE -> true
-
       else -> false
     }
 

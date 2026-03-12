@@ -204,13 +204,11 @@ abstract class WidgetCommandWorkerBase(
             SuplaFunction.CURTAIN,
             SuplaFunction.VERTICAL_BLIND,
             SuplaFunction.ROLLER_GARAGE_DOOR -> callAction(configuration, it)
-
             SuplaFunction.DIMMER,
             SuplaFunction.DIMMER_CCT,
             SuplaFunction.RGB_LIGHTING,
             SuplaFunction.DIMMER_CCT_AND_RGB,
             SuplaFunction.DIMMER_AND_RGB_LIGHTING -> callRgbwAction(configuration, it)
-
             else -> {}
           }
       }
@@ -264,19 +262,16 @@ abstract class WidgetCommandWorkerBase(
           applicationContext.resources.getString(R.string.widget_command_no_access, result.code),
           Toast.LENGTH_LONG
         )
-
       is SingleCall.Result.CommandError ->
         showToast(
           applicationContext.resources.getString(R.string.widget_command_error, result.code),
           Toast.LENGTH_SHORT
         )
-
       is SingleCall.Result.ConnectionError ->
         showToast(
           applicationContext.resources.getString(R.string.widget_command_connection_failure, result.code),
           Toast.LENGTH_LONG
         )
-
       SingleCall.Result.NotFound -> showNotFoundToast(configuration)
       SingleCall.Result.Offline -> showOfflineToast(configuration)
       SingleCall.Result.Inactive,
@@ -285,7 +280,6 @@ abstract class WidgetCommandWorkerBase(
           applicationContext.resources.getString(R.string.widget_command_error, INTERNAL_ERROR),
           Toast.LENGTH_SHORT
         )
-
       SingleCall.Result.NoSuchProfile,
       SingleCall.Result.Success -> {
       } // nothing to do
@@ -393,6 +387,5 @@ private val UpdateResult.toWorkResult: WorkResult
       is SingleCall.Result.ConnectionError -> WorkResult.Retry
       else -> WorkResult.Failure
     }
-
     UpdateResult.Empty -> WorkResult.Failure
   }

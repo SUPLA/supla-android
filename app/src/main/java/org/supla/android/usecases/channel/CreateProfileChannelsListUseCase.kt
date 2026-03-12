@@ -128,19 +128,15 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       SuplaFunction.DIMMER_CCT,
       SuplaFunction.VALVE_OPEN_CLOSE,
       SuplaFunction.VALVE_PERCENTAGE -> toIconWithButtonsItem(channelData, childrenMap)
-
       SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS -> toHeatpolThermostatItem(channelData, childrenMap)
-
       SuplaFunction.CONTROLLING_THE_GATE,
       SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
       SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
       SuplaFunction.CONTROLLING_THE_DOOR_LOCK -> toIconWithRightButtonItem(channelData, childrenMap)
-
       SuplaFunction.HVAC_THERMOSTAT,
       SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
       SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL -> toThermostatItem(channelData, childrenMap)
       SuplaFunction.HUMIDITY_AND_TEMPERATURE -> toDoubleValueItem(channelData, childrenMap)
-
       SuplaFunction.UNKNOWN,
       SuplaFunction.NONE,
       SuplaFunction.ALARM_ARMAMENT_SENSOR,

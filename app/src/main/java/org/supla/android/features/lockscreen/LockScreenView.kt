@@ -205,7 +205,6 @@ private fun getTopDistance(viewState: LockScreenViewState): Dp =
   when (viewState.unlockAction) {
     UnlockAction.AuthorizeAccountsCreate,
     is UnlockAction.AuthorizeAccountsEdit -> dimensionResource(id = R.dimen.top_bar_height)
-
     else -> 0.dp
   }
 

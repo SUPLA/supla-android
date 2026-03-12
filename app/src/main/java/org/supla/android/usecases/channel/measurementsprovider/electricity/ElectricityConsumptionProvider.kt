@@ -99,7 +99,6 @@ class ElectricityConsumptionProvider @Inject constructor(
           spec.aggregation.groupingStringLength
         )
           .map { aggregatingBalancedValues(it, spec) }
-
       else ->
         electricityMeterLogRepository.findMeasurementsGrouped(
           channel.remoteId,
@@ -122,7 +121,6 @@ class ElectricityConsumptionProvider @Inject constructor(
           HistoryDataSet.LabelData.reversed(formatter.format(result.nextSum()))
         )
       )
-
       ElectricityMeterChartType.BALANCE_CHART_AGGREGATED -> HistoryDataSet.Label.Multiple(
         values = listOf(
           HistoryDataSet.LabelData(R.color.on_surface_variant),
@@ -131,7 +129,6 @@ class ElectricityConsumptionProvider @Inject constructor(
           HistoryDataSet.LabelData(R.color.on_surface_variant)
         )
       )
-
       else -> HistoryDataSet.Label.Multiple(
         values = mutableListOf<HistoryDataSet.LabelData>().apply {
           spec.customFilters?.ifPhase1 {
@@ -201,13 +198,11 @@ class ElectricityConsumptionProvider @Inject constructor(
     val sum = when ((spec.customFilters as? ElectricityChartFilters)?.type) {
       ElectricityMeterChartType.BALANCE_VECTOR ->
         listOf(measurements.map { (it.faeBalanced ?: 0f) }.sum(), measurements.map { (it.raeBalanced ?: 0f) }.sum())
-
       ElectricityMeterChartType.BALANCE_ARITHMETIC ->
         listOf(
           measurements.map { (it.phase1Fae ?: 0f) + (it.phase2Fae ?: 0f) + (it.phase3Fae ?: 0f) }.sum(),
           measurements.map { (it.phase1Rae ?: 0f) + (it.phase2Rae ?: 0f) + (it.phase3Rae ?: 0f) }.sum()
         )
-
       ElectricityMeterChartType.BALANCE_CHART_AGGREGATED -> {
         if (spec.aggregation == ChartDataAggregation.MINUTES) {
           listOf(
@@ -230,7 +225,6 @@ class ElectricityConsumptionProvider @Inject constructor(
           listOf(balanced.map { it.forwarded }.sum(), balanced.map { it.reversed }.sum())
         }
       }
-
       else -> {
         mutableListOf<Float>().apply {
           spec.customFilters?.ifPhase1 { add(measurements.map { (it.phase1.valueFor(spec) ?: 0f) }.sum()) }

@@ -11,7 +11,6 @@ fun ElectricityMeterLogEntity.getValues(spec: ChartDataSpec): FloatArray =
     ElectricityMeterChartType.BALANCE_VECTOR -> vectorBalance()
     ElectricityMeterChartType.BALANCE_ARITHMETIC -> arithmeticBalance()
     ElectricityMeterChartType.BALANCE_CHART_AGGREGATED -> arithmeticChartBalance()
-
     else -> phasesValues(spec.customFilters)
   }
 

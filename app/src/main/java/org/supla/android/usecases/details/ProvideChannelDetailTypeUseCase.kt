@@ -40,20 +40,15 @@ class ProvideChannelDetailTypeUseCase @Inject constructor() : BaseDetailTypeProv
       SuplaFunction.STAIRCASE_TIMER,
       SuplaFunction.PUMP_SWITCH,
       SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH -> StandardDetailType(getSwitchDetailPages(channelWithChildren))
-
       SuplaFunction.HVAC_THERMOSTAT -> ThermostatDetailType(getThermostatDetailPages(channelWithChildren))
-
       SuplaFunction.IC_ELECTRICITY_METER,
       SuplaFunction.IC_GAS_METER,
       SuplaFunction.IC_HEAT_METER,
       SuplaFunction.IC_WATER_METER -> IcDetailType(getImpulseCounterPages(channelWithChildren))
-
       SuplaFunction.VALVE_OPEN_CLOSE,
       SuplaFunction.VALVE_PERCENTAGE -> StandardDetailType(listOf(DetailPage.VALVE_GENERAL))
-
       SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS ->
         ThermostatDetailType(listOf(DetailPage.THERMOSTAT_HEATPOL_GENERAL, DetailPage.THERMOSTAT_HEATPOL_HISTORY))
-
       else -> provide(
         function = function,
         manufacturerId = channelWithChildren.channel.channelEntity.manufacturerId.toInt(),

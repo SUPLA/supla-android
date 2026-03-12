@@ -71,25 +71,18 @@ abstract class BaseChannelsAdapter(
     return when (viewType) {
       ViewType.CHANNEL_ITEM.ordinal ->
         ChannelListItemViewHolder(LiChannelItemBinding.inflate(inflater, parent, false))
-
       ViewType.HVAC_ITEM.ordinal ->
         ThermostatListItemViewHolder(LiMainThermostatItemBinding.inflate(inflater, parent, false))
-
       ViewType.HEATPOL_ITEM.ordinal ->
         HeatpolThermostatListItemViewHolder(LiMainHeatpolThermostatItemBinding.inflate(inflater, parent, false))
-
       ViewType.ICON_VALUE_ITEM.ordinal ->
         IconValueListItemViewHolder(LiMainIconValueItemBinding.inflate(inflater, parent, false))
-
       ViewType.ICON_WITH_BUTTONS_ITEM.ordinal ->
         IconWithButtonsItemViewHolder(LiMainIconValueWithButtonsItemBinding.inflate(inflater, parent, false))
-
       ViewType.DOUBLE_VALUE_ITEM.ordinal ->
         DoubleValueListItemViewHolder(LiMainDoubleValueItemBinding.inflate(inflater, parent, false))
-
       ViewType.ICON_WITH_RIGHT_BUTTON_ITEM.ordinal ->
         IconWithRightButtonItemViewHolder(LiMainIconValueWithRightButtonItemBinding.inflate(inflater, parent, false))
-
       else -> super.onCreateViewHolder(parent, viewType)
     }
   }

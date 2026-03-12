@@ -242,7 +242,6 @@ class AddWizardViewModel @Inject constructor(
               )
             )
           }
-
         is WiFiScanner.Result.Success ->
           updateState { state ->
             state.copy(
@@ -283,7 +282,6 @@ class AddWizardViewModel @Inject constructor(
           updateState { it.copy(processing = true) }
         }
       }
-
       is AddWizardScreen.Message, is AddWizardScreen.Success ->
         sendEvent(AddWizardViewEvent.Close(suplaClientStateHolder.isNotFinished))
     }
@@ -469,25 +467,18 @@ class AddWizardViewModel @Inject constructor(
       when (result) {
         ConfigureEspUseCase.Result.ConnectionError ->
           configurationStateHolder.handleEvent(EspConfigurationFailure(EspConfigurationError.Communication))
-
         ConfigureEspUseCase.Result.Failed ->
           configurationStateHolder.handleEvent(EspConfigurationFailure(EspConfigurationError.Configuration))
-
         ConfigureEspUseCase.Result.Incompatible ->
           configurationStateHolder.handleEvent(EspConfigurationFailure(EspConfigurationError.Compatibility))
-
         ConfigureEspUseCase.Result.Timeout ->
           configurationStateHolder.handleEvent(EspConfigurationFailure(EspConfigurationError.ConfigureTimeout))
-
         ConfigureEspUseCase.Result.CredentialsNeeded ->
           configurationStateHolder.handleEvent(CredentialsNeeded)
-
         ConfigureEspUseCase.Result.SetupNeeded ->
           configurationStateHolder.handleEvent(SetupNeeded)
-
         ConfigureEspUseCase.Result.TemporarilyLocked ->
           configurationStateHolder.handleEvent(EspConfigurationFailure(EspConfigurationError.TemporarilyLocked))
-
         is ConfigureEspUseCase.Result.Success -> {
           updateState { it.copy(espConfigResult = result.result) }
           configurationStateHolder.handleEvent(EspConfigured)
@@ -676,7 +667,6 @@ class AddWizardViewModel @Inject constructor(
           updateState { it.copy(providePasswordState = null) }
           configurationStateHolder.handleEvent(PasswordProvided)
         }
-
         AuthorizeEspUseCase.Result.FAILURE_WRONG_PASSWORD ->
           updateState {
             it.copy(
@@ -686,7 +676,6 @@ class AddWizardViewModel @Inject constructor(
               )
             )
           }
-
         AuthorizeEspUseCase.Result.FAILURE_UNKNOWN ->
           updateState {
             it.copy(
@@ -696,7 +685,6 @@ class AddWizardViewModel @Inject constructor(
               )
             )
           }
-
         AuthorizeEspUseCase.Result.TEMPORARILY_LOCKED -> {
           updateState { it.copy(providePasswordState = null) }
           configurationStateHolder.handleEvent(EspConfigurationFailure(EspConfigurationError.TemporarilyLocked))
@@ -721,10 +709,8 @@ class AddWizardViewModel @Inject constructor(
             updateState { it.copy(setPasswordState = null) }
             configurationStateHolder.handleEvent(PasswordProvided)
           }
-
           CreateEspPasswordUseCase.Result.FAILURE ->
             updateState { it.copy(setPasswordState = it.setPasswordState?.copy(error = true, processing = false)) }
-
           CreateEspPasswordUseCase.Result.TEMPORARILY_LOCKED -> {
             updateState { it.copy(setPasswordState = null) }
             configurationStateHolder.handleEvent(EspConfigurationFailure(EspConfigurationError.TemporarilyLocked))

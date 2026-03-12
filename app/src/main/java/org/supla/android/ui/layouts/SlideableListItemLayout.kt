@@ -93,7 +93,6 @@ class SlideableListItemLayout @JvmOverloads constructor(
         (leftItem == null && position > 0) ||
         (rightItem == null && position < 0) ||
         content.isOnline.not() -> 0
-
       else -> position
     }
 

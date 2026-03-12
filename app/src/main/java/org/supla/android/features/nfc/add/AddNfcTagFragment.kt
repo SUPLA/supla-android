@@ -68,7 +68,6 @@ class AddNfcTagFragment : BaseComposeFragment<AddNfcTagViewState, AddNfcTagViewE
         navigator.back()
         navigator.navigateTo(R.id.nfc_tag_edit_fragment, EditNfcTagFragment.bundle(event.tagId))
       }
-
       is AddNfcTagViewEvent.ConfigureNewTag -> {
         navigator.back()
         navigator.navigateTo(R.id.nfc_tag_edit_fragment, EditNfcTagFragment.bundle(event.uuid, event.readOnly))

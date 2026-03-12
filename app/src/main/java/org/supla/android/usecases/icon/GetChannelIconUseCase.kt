@@ -179,10 +179,8 @@ class GetChannelIconUseCase @Inject constructor(
     when (function) {
       SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ->
         ImageId(userIconId, if (iconType == IconType.SECOND) 1 else 2, profileId)
-
       SUPLA_CHANNELFNC_THERMOMETER ->
         ImageId(userIconId, 1, profileId = profileId)
-
       SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
       SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR ->
         when (state.value) {
@@ -190,7 +188,6 @@ class GetChannelIconUseCase @Inject constructor(
           ChannelState.Value.OPEN -> ImageId(userIconId, 1, profileId = profileId)
           else -> ImageId(userIconId, 2, profileId = profileId)
         }
-
       SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING ->
         when (state) {
           is ChannelState.RgbAndDimmer -> {
@@ -204,7 +201,6 @@ class GetChannelIconUseCase @Inject constructor(
           }
           else -> ImageId(userIconId, if (state.isActive) 4 else 1, profileId)
         }
-
       else -> ImageId(userIconId, if (state.isActive) 2 else 1, profileId)
     }
 

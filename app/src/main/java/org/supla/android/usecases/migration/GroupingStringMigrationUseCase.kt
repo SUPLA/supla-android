@@ -48,25 +48,18 @@ class GroupingStringMigrationUseCase @Inject constructor(
     return when {
       channelWithChildren.isOrHasElectricityMeter ->
         electricityMeterLogRepository.migrateGroupingString(channelWithChildren.remoteId, channelWithChildren.profileId)
-
       channelWithChildren.isOrHasImpulseCounter ->
         impulseCounterLogRepository.migrateGroupingString(channelWithChildren.remoteId, channelWithChildren.profileId)
-
       channelWithChildren.isGpMeasurement() ->
         generalPurposeMeasurementLogRepository.migrateGroupingString(channelWithChildren.remoteId, channelWithChildren.profileId)
-
       channelWithChildren.isGpMeter() ->
         generalPurposeMeterLogRepository.migrateGroupingString(channelWithChildren.remoteId, channelWithChildren.profileId)
-
       channelWithChildren.function == SuplaFunction.HUMIDITY ->
         humidityLogRepository.migrateGroupingString(channelWithChildren.remoteId, channelWithChildren.profileId)
-
       channelWithChildren.function == SuplaFunction.HUMIDITY_AND_TEMPERATURE ->
         temperatureAndHumidityLogRepository.migrateGroupingString(channelWithChildren.remoteId, channelWithChildren.profileId)
-
       channelWithChildren.function == SuplaFunction.THERMOMETER ->
         temperatureLogRepository.migrateGroupingString(channelWithChildren.remoteId, channelWithChildren.profileId)
-
       else ->
         Completable.fromRunnable {
           Timber.w("No migration defined for function: ${channelWithChildren.function} (channel id: ${channelWithChildren.remoteId})")

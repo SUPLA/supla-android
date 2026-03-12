@@ -65,19 +65,14 @@ class SettingsFragment : BaseFragment<SettingsViewState, SettingsViewEvent>(R.la
     when (event) {
       SettingsViewEvent.NavigateToLocalizationsOrdering ->
         navigator.navigateTo(R.id.location_ordering_fragment)
-
       SettingsViewEvent.NavigateToAndroidAuto ->
         navigator.navigateTo(R.id.android_auto_items_fragment)
-
       SettingsViewEvent.NavigateToNfc ->
         navigator.navigateTo(R.id.nfc_tag_list_fragment)
-
       is SettingsViewEvent.NavigateToPinSetup ->
         navigator.navigateTo(R.id.pin_setup_fragment, PinSetupFragment.bundle(event.lockScreenScope))
-
       is SettingsViewEvent.NavigateToPinVerification ->
         navigator.navigateTo(R.id.lock_screen_fragment, LockScreenFragment.bundle(event.verificationAction))
-
       SettingsViewEvent.NavigateToSettings -> {
         Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
           data = Uri.fromParts("package", requireActivity().packageName, null)

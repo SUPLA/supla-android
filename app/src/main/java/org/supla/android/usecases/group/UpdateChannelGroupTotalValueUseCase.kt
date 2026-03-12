@@ -94,13 +94,11 @@ private fun ChannelGroupEntity.getGroupValue(value: ChannelValueEntity): GroupVa
     SuplaFunction.CONTROLLING_THE_GATE,
     SuplaFunction.CONTROLLING_THE_GARAGE_DOOR ->
       OpenedClosedGroupValue(value.getSensorHighValue())
-
     SuplaFunction.POWER_SWITCH,
     SuplaFunction.LIGHTSWITCH,
     SuplaFunction.STAIRCASE_TIMER,
     SuplaFunction.VALVE_OPEN_CLOSE ->
       OpenedClosedGroupValue(value.getValueHi())
-
     SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER,
     SuplaFunction.CONTROLLING_THE_ROOF_WINDOW,
     SuplaFunction.TERRACE_AWNING,
@@ -108,33 +106,24 @@ private fun ChannelGroupEntity.getGroupValue(value: ChannelValueEntity): GroupVa
     SuplaFunction.VERTICAL_BLIND,
     SuplaFunction.ROLLER_GARAGE_DOOR ->
       ShadingSystemGroupValue(value.asRollerShutterValue().alwaysValidPosition, (value.getSubValueHi() and 0x1) == 0x1)
-
     SuplaFunction.CONTROLLING_THE_FACADE_BLIND ->
       value.asFacadeBlindValue().let { ShadowingBlindGroupValue(it.alwaysValidPosition, it.alwaysValidTilt) }
-
     SuplaFunction.PROJECTOR_SCREEN ->
       ProjectorScreenGroupValue(value.asRollerShutterValue().alwaysValidPosition)
-
     SuplaFunction.DIMMER ->
       DimmerGroupValue(value.asRgbwwValue().brightness)
-
     SuplaFunction.DIMMER_CCT ->
       value.asRgbwwValue().let { DimmerCctGroupValue(it.brightness, it.cct) }
-
     SuplaFunction.RGB_LIGHTING ->
       value.asRgbwwValue().let { RgbGroupValue(it.rgb, it.colorBrightness) }
-
     SuplaFunction.DIMMER_AND_RGB_LIGHTING ->
       value.asRgbwwValue().let { DimmerAndRgbGroupValue(it.rgb, it.colorBrightness, it.brightness) }
-
     SuplaFunction.DIMMER_CCT_AND_RGB ->
       value.asRgbwwValue().let { DimmerCctAndRgbGroupValue(it.rgb, it.colorBrightness, it.brightness, it.cct) }
-
     SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS ->
       value.asHeatpolThermostatValue().let {
         HeatpolThermostatGroupValue(value.getValueHi(), it.measuredTemperature, it.presetTemperature)
       }
-
     SuplaFunction.UNKNOWN,
     SuplaFunction.NONE,
     SuplaFunction.THERMOMETER,

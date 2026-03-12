@@ -44,7 +44,6 @@ operator fun LocalizedString.invoke(context: Context): String {
         throw IllegalStateException("Arguments contain unsupported type: $arguments")
       }
     }
-
     is LocalizedString.WithFormat -> {
       val parsed = arguments.map { if (it is LocalizedString) it(context) else it }
       if (parsed.hasAllowedTypes) {
@@ -62,7 +61,6 @@ operator fun LocalizedString.invoke(context: Context): String {
         throw IllegalStateException("Arguments contain unsupported type: $arguments")
       }
     }
-
     is LocalizedString.WithResourceAndArguments -> {
       val parsed = arguments.map { if (it is LocalizedString) it(context) else it }
       if (parsed.hasAllowedTypes) {
@@ -80,12 +78,10 @@ operator fun LocalizedString.invoke(context: Context): String {
         throw IllegalStateException("Arguments contain unsupported type: $arguments")
       }
     }
-
     is LocalizedString.WithResourceAndDate -> {
       val format = context.getString(R.string.hour_string_format)
       context.getString(id, DateFormat.format(format, Date(timestamp)))
     }
-
     is LocalizedString.Quantity -> context.resources.getQuantityString(id, quantity, quantity)
   }
 }

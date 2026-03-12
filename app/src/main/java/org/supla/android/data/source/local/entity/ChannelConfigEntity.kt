@@ -47,19 +47,14 @@ data class ChannelConfigEntity(
     when (configType) {
       ChannelConfigType.GENERAL_PURPOSE_MEASUREMENT ->
         gson.fromJson(config, SuplaChannelGeneralPurposeMeasurementConfig::class.java)
-
       ChannelConfigType.GENERAL_PURPOSE_METER ->
         gson.fromJson(config, SuplaChannelGeneralPurposeMeterConfig::class.java)
-
       ChannelConfigType.HVAC ->
         gson.fromJson(config, SuplaChannelHvacConfig::class.java)
-
       ChannelConfigType.CONTAINER ->
         gson.fromJson(config, SuplaChannelContainerConfig::class.java)
-
       ChannelConfigType.FACADE_BLIND ->
         gson.fromJson(config, SuplaChannelFacadeBlindConfig::class.java)
-
       ChannelConfigType.DEFAULT,
       ChannelConfigType.WEEKLY_SCHEDULE,
       ChannelConfigType.UNKNOWN ->

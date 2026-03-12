@@ -114,29 +114,23 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
         updateState { state -> stateCopy(state, moveStartTime = null, manualMoving = false) { it.copy(touchTime = null) } }
         executeSimpleActionUseCase.invoke(ActionId.REVEAL, itemType.toSubjectType(), remoteId).runIt()
       }
-
       is ShadingSystemAction.Close -> {
         updateState { state -> stateCopy(state, moveStartTime = null, manualMoving = false) { it.copy(touchTime = null) } }
         executeSimpleActionUseCase.invoke(ActionId.SHUT, itemType.toSubjectType(), remoteId).runIt()
       }
-
       is ShadingSystemAction.MoveUp -> {
         updateState { updateMoveStartTime(it) }
         callSuplaClientOperationUseCase.invoke(remoteId, itemType, SuplaClientOperation.MoveUp).runIt()
       }
-
       is ShadingSystemAction.MoveDown -> {
         updateState { updateMoveStartTime(it) }
         callSuplaClientOperationUseCase.invoke(remoteId, itemType, SuplaClientOperation.MoveDown).runIt()
       }
-
       is ShadingSystemAction.Stop -> {
         updateState { state -> stateCopy(calculateMoveTime(state), manualMoving = false) }
         executeSimpleActionUseCase.invoke(ActionId.STOP, itemType.toSubjectType(), remoteId).runIt()
       }
-
       is ShadingSystemAction.Calibrate -> updateState { state -> stateCopy(state, manualMoving = false, showCalibrationDialog = true) }
-
       is ShadingSystemAction.OpenAt ->
         updateState { state ->
           if (state.viewState.calibrating) {
@@ -152,7 +146,6 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
             stateCopy(state, moveStartTime = null, manualMoving = false) { it.copy(touchTime = null) }
           }
         }
-
       is ShadingSystemAction.MoveTo ->
         updateState { state ->
           if (state.viewState.calibrating) {
@@ -162,7 +155,6 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
             stateCopy(updatePosition(state, action.position), manualMoving = true) { it.copy(touchTime = null, positionUnknown = false) }
           }
         }
-
       else -> {} // just nothing, should be handled by child classes
     }
   }

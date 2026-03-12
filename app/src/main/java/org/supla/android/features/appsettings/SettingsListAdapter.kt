@@ -288,47 +288,36 @@ data class SettingItemViewHolder<T : ViewBinding>(val binding: T) : RecyclerView
         R.layout.li_settings_channel_height -> {
           SettingItemViewHolder(LiSettingsChannelHeightBinding.inflate(inflater, parent, false))
         }
-
         R.layout.li_settings_temperature_unit -> {
           SettingItemViewHolder(LiSettingsTemperatureUnitBinding.inflate(inflater, parent, false))
         }
-
         R.layout.li_settings_temperature_precision -> {
           SettingItemViewHolder(LiSettingsTemperaturePrecisionBinding.inflate(inflater, parent, false))
         }
-
         R.layout.li_settings_roller_shutter -> {
           SettingItemViewHolder(LiSettingsRollerShutterBinding.inflate(inflater, parent, false))
         }
-
         R.layout.li_settings_switch -> {
           SettingItemViewHolder(LiSettingsSwitchBinding.inflate(inflater, parent, false))
         }
-
         R.layout.li_settings_arrow_button -> {
           SettingItemViewHolder(LiSettingsArrowButtonBinding.inflate(inflater, parent, false))
         }
-
         R.layout.li_settings_permission -> {
           SettingItemViewHolder(LiSettingsPermissionBinding.inflate(inflater, parent, false))
         }
-
         R.layout.li_settings_header -> {
           SettingItemViewHolder(LiSettingsHeaderBinding.inflate(inflater, parent, false))
         }
-
         R.layout.li_settings_night_mode -> {
           SettingItemViewHolder(LiSettingsNightModeBinding.inflate(inflater, parent, false))
         }
-
         R.layout.li_settings_lock_screen -> {
           SettingItemViewHolder(LiSettingsLockScreenBinding.inflate(inflater, parent, false))
         }
-
         R.layout.li_settings_edit_text -> {
           SettingItemViewHolder(LiSettingsEditTextBinding.inflate(inflater, parent, false))
         }
-
         else -> throw IllegalArgumentException("Unsupported view type $viewId")
       }
     }

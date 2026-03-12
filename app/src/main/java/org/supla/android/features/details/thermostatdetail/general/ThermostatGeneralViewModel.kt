@@ -485,7 +485,6 @@ class ThermostatGeneralViewModel @Inject constructor(
     return when {
       setPointMinTemperatureString != null && setPointMaxTemperatureString != null ->
         LocalizedString.Constant("$setPointMinTemperatureString - $setPointMaxTemperatureString")
-
       setPointMinTemperatureString != null -> LocalizedString.Constant(setPointMinTemperatureString)
       setPointMaxTemperatureString != null -> LocalizedString.Constant(setPointMaxTemperatureString)
       else -> LocalizedString.Empty
@@ -704,10 +703,8 @@ data class ThermostatGeneralViewState(
         return when {
           viewModelState?.mode == SuplaHvacMode.HEAT || viewModelState?.mode == SuplaHvacMode.HEAT_COOL ->
             heat.minus(min).div(max - min)
-
           viewModelState?.mode == SuplaHvacMode.OFF && programmedModeActive ->
             heat.minus(min).div(max - min)
-
           else -> null
         }
       }
@@ -724,10 +721,8 @@ data class ThermostatGeneralViewState(
         return when {
           viewModelState?.mode == SuplaHvacMode.COOL || viewModelState?.mode == SuplaHvacMode.HEAT_COOL ->
             cool.minus(min).div(max - min)
-
           viewModelState?.mode == SuplaHvacMode.OFF && programmedModeActive ->
             cool.minus(min).div(max - min)
-
           else -> null
         }
       }

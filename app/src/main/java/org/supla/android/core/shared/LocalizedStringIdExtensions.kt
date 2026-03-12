@@ -31,10 +31,8 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.GENERAL_REVEAL -> R.string.channel_btn_reveal
     LocalizedStringId.GENERAL_COLLAPSE -> R.string.channel_btn_collapse
     LocalizedStringId.GENERAL_EXPAND -> R.string.channel_btn_expand
-
     LocalizedStringId.GENERAL_YES -> R.string.yes
     LocalizedStringId.GENERAL_NO -> R.string.no
-
     LocalizedStringId.CHANNEL_CAPTION_OPEN_SENSOR_GATEWAY -> R.string.channel_caption_gatewayopeningsensor
     LocalizedStringId.CHANNEL_CAPTION_CONTROLLING_THE_GATEWAY_LOCK -> R.string.channel_caption_gateway
     LocalizedStringId.CHANNEL_CAPTION_OPEN_SENSOR_GATE -> R.string.channel_caption_gateopeningsensor
@@ -93,36 +91,28 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.CHANNEL_CAPTION_UNKNOWN -> R.string.channel_not_supported
     LocalizedStringId.CHANNEL_CAPTION_MOTION_SENSOR -> R.string.channel_caption_motion_sensor
     LocalizedStringId.CHANNEL_CAPTION_BINARY_SENSOR -> R.string.channel_caption_binary_sensor
-
     LocalizedStringId.CHANNEL_STATUS_AWAITING -> R.string.channel_status_awaiting
     LocalizedStringId.CHANNEL_STATUS_UPDATING -> R.string.channel_status_updating
     LocalizedStringId.CHANNEL_STATUS_NOT_AVAILABLE -> R.string.channel_not_available
-
     LocalizedStringId.CHANNEL_BATTERY_LEVEL -> R.string.channel_battery_level
     LocalizedStringId.CHANNEL_BATTERY_LEVEL_WITH_INFO -> R.string.channel_battery_level_with_info
-
     LocalizedStringId.MOTOR_PROBLEM -> R.string.motor_problem
     LocalizedStringId.CALIBRATION_LOST -> R.string.calibration_lost
     LocalizedStringId.CALIBRATION_FAILED -> R.string.calibration_failed
-
     LocalizedStringId.OVERCURRENT_WARNING -> R.string.overcurrent_warning
-
     LocalizedStringId.THERMOSTAT_THERMOMETER_ERROR -> R.string.thermostat_thermometer_error
     LocalizedStringId.THERMOSTAT_BATTER_COVER_OPEN -> R.string.thermostat_battery_cover_open
     LocalizedStringId.THERMOSTAT_CLOCK_ERROR -> R.string.thermostat_clock_error
     LocalizedStringId.THERMOSTAT_CALIBRATION_ERROR -> R.string.thermostat_calibration_error
-
     LocalizedStringId.FLOOD_SENSOR_ACTIVE -> R.string.flooding_alarm_message
     LocalizedStringId.VALVE_MANUALLY_CLOSED -> R.string.valve_warning
     LocalizedStringId.VALVE_FLOODING -> R.string.valve_warning_flooding_short
     LocalizedStringId.VALVE_MOTOR_PROBLEM -> R.string.valve_warning_motor_problem
     LocalizedStringId.VALVE_SENSOR_OFFLINE -> R.string.valve_error_sensor_offline
-
     LocalizedStringId.CONTAINER_WARNING_LEVEL -> R.string.container_warning_level
     LocalizedStringId.CONTAINER_ALARM_LEVEL -> R.string.container_alarm_level
     LocalizedStringId.CONTAINER_INVALID_SENSOR_STATE -> R.string.container_invalid_sensor_state
     LocalizedStringId.CONTAINER_SOUND_ALARM -> R.string.container_sound_alarm
-
     // Add wizard
     LocalizedStringId.DEVICE_REGISTRATION_REQUEST_TIMEOUT -> R.string.device_reg_request_timeout
     LocalizedStringId.ENABLING_REGISTRATION_TIMEOUT -> R.string.enabling_registration_timeout
@@ -140,7 +130,6 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.ADD_WIZARD_STATE_CONNECTING -> R.string.wizard_state_connecting
     LocalizedStringId.ADD_WIZARD_STATE_CONFIGURING -> R.string.wizard_state_configuring
     LocalizedStringId.ADD_WIZARD_STATE_FINISHING -> R.string.wizard_state_finishing
-
     LocalizedStringId.CHANNEL_STATE_UPTIME -> R.string.channel_state_uptime
     LocalizedStringId.CHANNEL_STATE_BATTERY_POWERED -> R.string.channel_state_battery_powered
     LocalizedStringId.CHANNEL_STATE_MAINS_POWERED -> R.string.channel_state_main_powered
@@ -148,7 +137,6 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.LAST_CONNECTION_RESET_CAUSE_ACTIVITY_TIMEOUT -> R.string.lastconnectionresetcause_activity_timeout
     LocalizedStringId.LAST_CONNECTION_RESET_CAUSE_WIFI_CONNECTION_LOST -> R.string.lastconnectionresetcause_wifi_connection_lost
     LocalizedStringId.LAST_CONNECTION_RESET_CAUSE_SERVER_CONNECTION_LOST -> R.string.lastconnectionresetcause_server_connection_lost
-
     LocalizedStringId.RESULT_CODE_TEMPORARILY_UNAVAILABLE -> R.string.status_temporarily_unavailable
     LocalizedStringId.RESULT_CODE_CLIENT_LIMIT_EXCEEDED -> R.string.status_climit_exceded
     LocalizedStringId.RESULT_CODE_DEVICE_DISABLED -> R.string.status_device_disabled
@@ -159,7 +147,6 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.RESULT_CODE_INCORRECT_EMAIL_OR_PASSWORD -> R.string.incorrect_email_or_password
     LocalizedStringId.RESULT_CODE_BAD_CREDENTIALS -> R.string.status_bad_credentials
     LocalizedStringId.RESULT_CODE_UNKNOWN_ERROR -> R.string.status_unknown_err
-
     LocalizedStringId.LIFESPAN_WARNING_REPLACE -> R.string.channel_uv_error
     LocalizedStringId.LIFESPAN_WARNING_SCHEDULE -> R.string.channel_uv_warning
     LocalizedStringId.LIFESPAN_WARNING -> R.string.channel_lightsource_warning

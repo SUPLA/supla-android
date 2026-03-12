@@ -68,7 +68,6 @@ open class BaseActionUseCase<T : ChannelDataBase>(
       SuplaFunction.RGB_LIGHTING,
       SuplaFunction.DIMMER_CCT_AND_RGB,
       SuplaFunction.DIMMER_AND_RGB_LIGHTING -> true
-
       else -> false
     }
 
