@@ -1,42 +1,28 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 plugins {
   alias(libs.plugins.kotlin.multiplatform)
-  alias(libs.plugins.android.library)
+  alias(libs.plugins.android.multiplatform.library)
   alias(libs.plugins.skie)
   alias(libs.plugins.spotless)
   alias(libs.plugins.kotlin.serialization)
 }
 
-android {
-  namespace = "org.supla.core.shared"
-  compileSdk = libs.versions.compileSdk.get().toInt()
-
-  defaultConfig {
+kotlin {
+  android {
+    namespace = "org.supla.core.shared"
+    compileSdk = libs.versions.compileSdk.get().toInt()
     minSdk = libs.versions.minSdk.get().toInt()
 
-    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    compilerOptions {
+      jvmTarget.set(JvmTarget.JVM_21)
+    }
+
+    withHostTest {  }
   }
 
-  buildTypes {
-    release {
-      isMinifyEnabled = false
-    }
-    create("internaltest") {
-      initWith(buildTypes.getByName("debug"))
-    }
-    create("internalTestRelease") {
-      initWith(buildTypes.getByName("release"))
-    }
-  }
-  compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
-  }
-}
-
-kotlin {
-  androidTarget()
+  jvmToolchain(21)
 
   val xcf = XCFramework("SharedCore")
 
@@ -62,13 +48,17 @@ kotlin {
       implementation(libs.kotlinx.serialization)
       implementation(libs.kotlin.bitops.endian)
     }
-  }
-}
 
-dependencies {
-  testImplementation(libs.testing.junit)
-  testImplementation(libs.testing.mockk)
-  testImplementation(libs.testing.assertj)
+    commonTest.dependencies {
+      implementation(kotlin("test"))
+    }
+
+    getByName("androidHostTest").dependencies {
+      implementation(libs.testing.junit)
+      implementation(libs.testing.mockk)
+      implementation(libs.testing.assertj)
+    }
+  }
 }
 
 tasks.register<Exec>("applyXCFramework") {
