@@ -18,6 +18,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import android.app.Application;
 import android.app.UiModeManager;
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -31,7 +32,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.hilt.work.HiltWorkerFactory;
 import androidx.lifecycle.ProcessLifecycleOwner;
-import androidx.multidex.MultiDexApplication;
 import androidx.work.Configuration.Builder;
 import androidx.work.ExistingWorkPolicy;
 import androidx.work.WorkManager;
@@ -66,7 +66,7 @@ import timber.log.Timber;
 import timber.log.Timber.DebugTree;
 
 @HiltAndroidApp
-public class SuplaApp extends MultiDexApplication
+public class SuplaApp extends Application
     implements SuplaClientMessageHandler.Listener, ValuesFormatterProvider, SuplaAppApi {
 
   private static final Object _lck1 = new Object();
