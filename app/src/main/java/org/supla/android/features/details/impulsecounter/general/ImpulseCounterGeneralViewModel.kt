@@ -100,7 +100,6 @@ class ImpulseCounterGeneralViewModel @Inject constructor(
       is DownloadEventsManager.State.Started -> {
         updateState { it.copy(viewState = it.viewState.copy(currentMonthDownloading = true)) }
       }
-
       else -> {
         loadData(currentState().remoteId, cleanupDownloading = true)
       }

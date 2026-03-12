@@ -36,7 +36,6 @@ fun MenuItemsLayout.hide(
         .translationY(position)
         .setDuration(200)
         .setListener(provideListener(onEndCallback))
-
     MenuItemsAnimationType.FADE_IN_OUT -> {
       animate()
         .alpha(0f)
@@ -67,7 +66,6 @@ fun MenuItemsLayout.show(
         .translationY(0f)
         .setDuration(200)
         .setListener(provideListener(onEndCallback))
-
     MenuItemsAnimationType.FADE_IN_OUT -> {
       alpha = 0f
       translationY = 0f

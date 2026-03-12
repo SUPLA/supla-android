@@ -50,7 +50,6 @@ data class ElectricityMarkerCustomData(
       ElectricityMeterChartType.BALANCE_VECTOR,
       ElectricityMeterChartType.BALANCE_ARITHMETIC,
       ElectricityMeterChartType.BALANCE_HOURLY -> true
-
       else -> false
     }
 
@@ -107,13 +106,10 @@ class ElectricityMarkerView(context: Context) : BaseMarkerView(context) {
         ElectricityMeterChartType.REVERSED_REACTIVE_ENERGY,
         ElectricityMeterChartType.FORWARDED_REACTIVE_ENERGY ->
           showPhases(filters.selectedPhases, highlight, barEntry, customData)
-
         ElectricityMeterChartType.BALANCE_HOURLY,
         ElectricityMeterChartType.BALANCE_VECTOR,
         ElectricityMeterChartType.BALANCE_ARITHMETIC -> showBalanceTwoValues(highlight, barEntry, customData)
-
         ElectricityMeterChartType.BALANCE_CHART_AGGREGATED -> showBalanceThreeValues(highlight, barEntry)
-
         ElectricityMeterChartType.VOLTAGE,
         ElectricityMeterChartType.CURRENT,
         ElectricityMeterChartType.POWER_ACTIVE -> {} // nothing to do, as here is line chart used

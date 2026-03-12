@@ -339,14 +339,12 @@ class TimerDetailViewModel @Inject constructor(
     return when (channel.func) {
       SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER ->
         thermostatValue.setpointTemperatureHeat
-
       SUPLA_CHANNELFNC_HVAC_THERMOSTAT ->
         if (thermostatValue.subfunction == ThermostatSubfunction.HEAT) {
           thermostatValue.setpointTemperatureHeat
         } else {
           thermostatValue.setpointTemperatureCool
         }
-
       else -> null
     }
   }
@@ -441,11 +439,9 @@ data class TimerDetailViewState(
       return when {
         selectedMode == DeviceMode.OFF ->
           localizedString(R.string.details_timer_info_thermostat_off, timeString)
-
         channelFunction == SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER ||
           subfunction == ThermostatSubfunction.HEAT ->
           localizedString(R.string.details_timer_info_thermostat_heating, timeString)
-
         else -> localizedString(R.string.details_timer_info_thermostat_cooling, timeString)
       }
     }

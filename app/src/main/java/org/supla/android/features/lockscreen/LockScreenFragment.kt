@@ -128,12 +128,10 @@ class LockScreenFragment : BaseFragment<LockScreenViewModelState, LockScreenView
       UnlockAction.TurnOffPin,
       UnlockAction.ConfirmAuthorizeAccounts,
       UnlockAction.ConfirmAuthorizeApplication -> configNavigator.back()
-
       UnlockAction.AuthorizeAccountsCreate -> {
         configNavigator.back()
         configNavigator.navigateTo(R.id.cfgNewProfile)
       }
-
       is UnlockAction.AuthorizeAccountsEdit -> {
         configNavigator.back()
         configNavigator.navigateTo(R.id.cfgEditProfile, CreateAccountFragment.bundle(action.profileId))

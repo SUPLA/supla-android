@@ -220,7 +220,6 @@ private fun HistoryDetailScope.Charts(viewState: HistoryDetailViewState, modifie
         chartStyle = viewState.chartStyle,
         modifier = modifier.padding(horizontal = Distance.tiny)
       )
-
     is PieChartData ->
       PieChart(
         data = data,

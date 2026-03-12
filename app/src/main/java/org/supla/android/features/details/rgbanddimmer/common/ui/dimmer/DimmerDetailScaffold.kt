@@ -66,14 +66,12 @@ fun DimmerDetailScope.Scaffold(
   SizeClassBox(Modifier.fillMaxSize()) {
     when (it) {
       SizeClass.LANDSCAPE_SMALL -> LandscapeNarrow(state, brightnessBox, brightnessControl, savedColorItemContent)
-
       SizeClass.SQUARE_SMALL,
       SizeClass.SQUARE_MEDIUM,
       SizeClass.SQUARE_BIG,
       SizeClass.PORTRAIT_SMALL,
       SizeClass.PORTRAIT_MEDIUM,
       SizeClass.PORTRAIT_BIG -> Portrait(state, brightnessBox, brightnessControl, savedColorItemContent)
-
       SizeClass.LANDSCAPE_MEDIUM,
       SizeClass.LANDSCAPE_BIG -> Landscape(state, brightnessBox, brightnessControl, savedColorItemContent)
     }

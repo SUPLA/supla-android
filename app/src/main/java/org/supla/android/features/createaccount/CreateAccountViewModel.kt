@@ -202,13 +202,10 @@ class CreateAccountViewModel @Inject constructor(
   private fun handleSaveError(error: Throwable) = when (error) {
     is SaveProfileUseCase.SaveAccountException.EmptyName ->
       sendEvent(CreateAccountViewEvent.ShowEmptyNameDialog)
-
     is SaveProfileUseCase.SaveAccountException.DuplicatedName ->
       sendEvent(CreateAccountViewEvent.ShowDuplicatedNameDialog)
-
     is SaveProfileUseCase.SaveAccountException.DataIncomplete ->
       sendEvent(CreateAccountViewEvent.ShowRequiredDataMissingDialog)
-
     else -> sendEvent(CreateAccountViewEvent.ShowUnknownErrorDialog)
   }
 

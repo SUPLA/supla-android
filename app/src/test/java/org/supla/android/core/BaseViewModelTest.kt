@@ -64,12 +64,10 @@ abstract class BaseViewModelTest<S : ViewState, E : ViewEvent, VM : BaseViewMode
         whenever(schedulers.io).thenReturn(Schedulers.trampoline())
         whenever(schedulers.ui).thenReturn(Schedulers.trampoline())
       }
-
       MockSchedulers.MOCKK -> {
         every { schedulers.io } returns Schedulers.trampoline()
         every { schedulers.ui } returns Schedulers.trampoline()
       }
-
       MockSchedulers.NONE -> {} // No mocks
     }
 

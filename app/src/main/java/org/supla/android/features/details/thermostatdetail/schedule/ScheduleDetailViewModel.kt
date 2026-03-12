@@ -284,10 +284,8 @@ class ScheduleDetailViewModel @Inject constructor(
       when {
         value.isEmpty() && modeForTemperature == SuplaHvacMode.HEAT ->
           updateState { it.copy(programSettings = it.programSettings?.cleanSetpointMin()) }
-
         value.isEmpty() && modeForTemperature == SuplaHvacMode.COOL ->
           updateState { it.copy(programSettings = it.programSettings?.cleanSetpointMax()) }
-
         else -> currentState().programSettings?.let { settings ->
           val textProvider: (Float) -> String = when {
             value == "-" -> { _ -> "-" }
@@ -351,7 +349,6 @@ class ScheduleDetailViewModel @Inject constructor(
           withCorrection,
           state.programSettings?.setpointTemperatureCool
         )
-
       programMode == SuplaHvacMode.HEAT_COOL && modeForTemperature == SuplaHvacMode.COOL ->
         changeProgramTemperatureMax(
           temperatureModifier,
@@ -359,7 +356,6 @@ class ScheduleDetailViewModel @Inject constructor(
           withCorrection,
           state.programSettings?.setpointTemperatureHeat
         )
-
       else -> throw IllegalStateException("Trying to change temperature for illegal mode: $modeForTemperature")
     }
   }
@@ -456,16 +452,12 @@ class ScheduleDetailViewModel @Inject constructor(
   private fun programAvailableModes(state: ScheduleDetailViewState) = when {
     state.channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT && state.thermostatFunction == ThermostatSubfunction.HEAT ->
       listOf(SuplaHvacMode.HEAT)
-
     state.channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT && state.thermostatFunction == ThermostatSubfunction.COOL ->
       listOf(SuplaHvacMode.COOL)
-
     state.channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL ->
       listOf(SuplaHvacMode.HEAT_COOL, SuplaHvacMode.HEAT, SuplaHvacMode.COOL)
-
     state.channelFunction == SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER ->
       listOf(SuplaHvacMode.HEAT)
-
     else -> listOf()
   }
 
@@ -568,10 +560,8 @@ data class ScheduleDetailViewState(
             val icon = when {
               function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL && program.scheduleProgram.mode == SuplaHvacMode.HEAT ->
                 R.drawable.ic_heat
-
               function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL && program.scheduleProgram.mode == SuplaHvacMode.COOL ->
                 R.drawable.ic_cool
-
               else -> null
             }
 

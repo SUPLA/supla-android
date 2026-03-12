@@ -58,7 +58,6 @@ abstract class BaseWidgetActivity : BaseComposeActivity<WidgetConfigurationViewM
           it.data = "package:$packageName".toUri()
           startActivity(it)
         }
-
       is WidgetConfigurationViewEvent.Finished -> {
         sendBroadcast(updateIntent(event.widgetId))
         setResult(RESULT_OK, Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, event.widgetId))

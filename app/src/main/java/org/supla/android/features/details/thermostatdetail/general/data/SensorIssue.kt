@@ -65,7 +65,6 @@ data class SensorIssue(
           message = when (it.function) {
             SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW,
             SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW -> localizedString(R.string.thermostat_detail_off_by_window)
-
             SUPLA_CHANNELFNC_HOTELCARDSENSOR -> localizedString(R.string.thermostat_detail_off_by_card)
             else -> localizedString(R.string.thermostat_detail_off_by_sensor)
           }

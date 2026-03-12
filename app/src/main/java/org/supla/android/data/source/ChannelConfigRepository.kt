@@ -76,19 +76,14 @@ class ChannelConfigRepository @Inject constructor(
         when (type) {
           ChannelConfigType.GENERAL_PURPOSE_MEASUREMENT ->
             gson.fromJson(it.config, SuplaChannelGeneralPurposeMeasurementConfig::class.java)
-
           ChannelConfigType.GENERAL_PURPOSE_METER ->
             gson.fromJson(it.config, SuplaChannelGeneralPurposeMeterConfig::class.java)
-
           ChannelConfigType.FACADE_BLIND ->
             gson.fromJson(it.config, SuplaChannelFacadeBlindConfig::class.java)
-
           ChannelConfigType.CONTAINER ->
             gson.fromJson(it.config, SuplaChannelContainerConfig::class.java)
-
           ChannelConfigType.HVAC ->
             gson.fromJson(it.config, SuplaChannelHvacConfig::class.java)
-
           else ->
             gson.fromJson(it.config, SuplaChannelConfig::class.java)
         }

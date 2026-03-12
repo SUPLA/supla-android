@@ -28,7 +28,6 @@ class RoofWindowIconResourceProducer : IconResourceProducer {
     when (function) {
       SuplaFunction.OPEN_SENSOR_ROOF_WINDOW,
       SuplaFunction.CONTROLLING_THE_ROOF_WINDOW -> true
-
       else -> false
     }
 

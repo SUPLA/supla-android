@@ -69,7 +69,6 @@ fun ElectricityMeterContent(state: ExtendedValueWidgetState, widgetSize: DpSize)
           widgetSize.isMicroLong() -> ElectricityMicroLongView(state.icon, state.value)
           else -> ElectricityMicroView(state.value)
         }
-
       is WidgetValue.Offline -> Offline()
       else -> NoValue()
     }
