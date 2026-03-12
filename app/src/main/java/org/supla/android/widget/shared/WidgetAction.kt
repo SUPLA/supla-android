@@ -112,21 +112,17 @@ private fun getLeftButtonAction(function: SuplaFunction): ActionId? =
     SuplaFunction.NONE,
     SuplaFunction.MOTION_SENSOR,
     SuplaFunction.BINARY_SENSOR -> null
-
     SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
     SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK -> ActionId.OPEN
-
     SuplaFunction.CONTROLLING_THE_GATE,
     SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
     SuplaFunction.VALVE_OPEN_CLOSE,
     SuplaFunction.VALVE_PERCENTAGE -> ActionId.OPEN
-
     SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER,
     SuplaFunction.CONTROLLING_THE_ROOF_WINDOW,
     SuplaFunction.CONTROLLING_THE_FACADE_BLIND,
     SuplaFunction.VERTICAL_BLIND,
     SuplaFunction.ROLLER_GARAGE_DOOR -> ActionId.REVEAL
-
     SuplaFunction.POWER_SWITCH,
     SuplaFunction.LIGHTSWITCH,
     SuplaFunction.STAIRCASE_TIMER,
@@ -139,7 +135,6 @@ private fun getLeftButtonAction(function: SuplaFunction): ActionId? =
     SuplaFunction.HVAC_THERMOSTAT,
     SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
     SuplaFunction.HVAC_DOMESTIC_HOT_WATER -> ActionId.TURN_OFF
-
     SuplaFunction.TERRACE_AWNING,
     SuplaFunction.PROJECTOR_SCREEN,
     SuplaFunction.CURTAIN -> ActionId.COLLAPSE
@@ -191,21 +186,17 @@ private fun getRightButtonAction(function: SuplaFunction): ActionId? =
     SuplaFunction.NONE,
     SuplaFunction.MOTION_SENSOR,
     SuplaFunction.BINARY_SENSOR -> null
-
     SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
     SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK -> ActionId.OPEN
-
     SuplaFunction.CONTROLLING_THE_GATE,
     SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
     SuplaFunction.VALVE_OPEN_CLOSE,
     SuplaFunction.VALVE_PERCENTAGE -> ActionId.CLOSE
-
     SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER,
     SuplaFunction.CONTROLLING_THE_ROOF_WINDOW,
     SuplaFunction.CONTROLLING_THE_FACADE_BLIND,
     SuplaFunction.VERTICAL_BLIND,
     SuplaFunction.ROLLER_GARAGE_DOOR -> ActionId.SHUT
-
     SuplaFunction.POWER_SWITCH,
     SuplaFunction.LIGHTSWITCH,
     SuplaFunction.STAIRCASE_TIMER,
@@ -218,7 +209,6 @@ private fun getRightButtonAction(function: SuplaFunction): ActionId? =
     SuplaFunction.HVAC_THERMOSTAT,
     SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
     SuplaFunction.HVAC_DOMESTIC_HOT_WATER -> ActionId.TURN_ON
-
     SuplaFunction.TERRACE_AWNING,
     SuplaFunction.PROJECTOR_SCREEN,
     SuplaFunction.CURTAIN -> ActionId.EXPAND
@@ -292,10 +282,8 @@ private fun getDefaultAction(function: SuplaFunction): ActionId? =
     SuplaFunction.TERRACE_AWNING,
     SuplaFunction.PROJECTOR_SCREEN,
     SuplaFunction.CURTAIN -> null
-
     SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
     SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK -> ActionId.OPEN
-
     SuplaFunction.CONTROLLING_THE_GATE,
     SuplaFunction.CONTROLLING_THE_GARAGE_DOOR -> ActionId.OPEN_CLOSE
   }
@@ -347,7 +335,6 @@ private fun hasAction(function: SuplaFunction?): Boolean =
     SuplaFunction.NONE,
     SuplaFunction.MOTION_SENSOR,
     SuplaFunction.BINARY_SENSOR -> false
-
     SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
     SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
     SuplaFunction.CONTROLLING_THE_GATE,

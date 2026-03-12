@@ -28,7 +28,6 @@ class RollerShutterIconResourceProducer : IconResourceProducer {
     when (function) {
       SuplaFunction.OPEN_SENSOR_ROLLER_SHUTTER,
       SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER -> true
-
       else -> false
     }
 

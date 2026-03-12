@@ -27,7 +27,6 @@ class FacadeBlindIconResourceProducer : IconResourceProducer {
   override fun accepts(function: SuplaFunction): Boolean =
     when (function) {
       SuplaFunction.CONTROLLING_THE_FACADE_BLIND -> true
-
       else -> false
     }
 

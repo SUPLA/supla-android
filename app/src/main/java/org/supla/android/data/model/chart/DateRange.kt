@@ -75,13 +75,11 @@ data class DateRange(
       ChartRange.LAST_MONTH,
       ChartRange.LAST_QUARTER,
       ChartRange.LAST_YEAR -> shift(if (forward) range.roundedDaysCount else -range.roundedDaysCount)
-
       ChartRange.DAY -> if (forward) nextDay() else previousDay()
       ChartRange.WEEK -> if (forward) nextWeek() else previousWeek()
       ChartRange.MONTH -> if (forward) nextMonth() else previousMonth()
       ChartRange.QUARTER -> if (forward) nextQuarter() else previousQuarter()
       ChartRange.YEAR -> if (forward) nextYear() else previousYear()
-
       ChartRange.CUSTOM, // Currently no shift supported
       ChartRange.ALL_HISTORY -> this
     }

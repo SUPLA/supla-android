@@ -68,13 +68,10 @@ abstract class ValueFormatter {
     return when {
       predecessor != null && unit != null ->
         "${predecessor}${stringValue}$unit"
-
       predecessor != null ->
         "${predecessor}$stringValue"
-
       unit != null ->
         "${stringValue}$unit"
-
       else -> stringValue
     }
   }

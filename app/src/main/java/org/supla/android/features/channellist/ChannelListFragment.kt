@@ -105,12 +105,10 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
           ItemType.CHANNEL
         )
       }
-
       is ChannelListViewEvent.ReassignAdapter -> {
         binding.channelsList.adapter = null
         binding.channelsList.adapter = adapter
       }
-
       is ChannelListViewEvent.BaseDetail -> navigator.navigateTo(
         destinationId = event.fragmentId,
         bundle = event.fragmentArguments

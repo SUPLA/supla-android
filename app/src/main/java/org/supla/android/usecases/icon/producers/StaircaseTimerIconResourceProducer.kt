@@ -34,7 +34,6 @@ class StaircaseTimerIconResourceProducer : IconResourceProducer {
       } else {
         R.drawable.fnc_staircasetimer_1_off
       }
-
       else -> if (data.state.value == ChannelState.Value.ON) {
         R.drawable.fnc_staircasetimer_on
       } else {

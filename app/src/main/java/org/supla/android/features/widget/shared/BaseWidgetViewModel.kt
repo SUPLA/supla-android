@@ -96,11 +96,9 @@ abstract class BaseWidgetViewModel(
         readAllChannelsWithChildrenUseCase(profileId)
           .firstOrError()
           .map { channels -> channelsSubjectItems(channels.filter { filter(it) }, getChannelValueStringUseCase) }
-
       SubjectType.GROUP ->
         channelGroupRepository.findProfileGroups(profileId)
           .map { groups -> groupsSubjectItems(groups.filter { filter(it) }) }
-
       SubjectType.SCENE ->
         sceneRepository.findProfileScenes(profileId)
           .map { scenes -> scenesSubjectItems(scenes) }

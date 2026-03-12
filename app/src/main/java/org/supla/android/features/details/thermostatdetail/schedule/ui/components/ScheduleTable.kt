@@ -281,7 +281,6 @@ private fun drawScheduleBoxMultiColor(
           bottomRight = cornerRadius
         )
       )
-
       else -> path.addRect(rect = Rect(offset = offset, size = quarterSize))
     }
     val color = when (i) {

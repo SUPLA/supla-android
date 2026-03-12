@@ -75,7 +75,6 @@ sealed interface ChannelState {
       when (function) {
         SuplaFunction.DIGIGLASS_VERTICAL,
         SuplaFunction.DIGIGLASS_HORIZONTAL -> Default(Value.TRANSPARENT)
-
         SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
         SuplaFunction.CONTROLLING_THE_GATE,
         SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
@@ -97,7 +96,6 @@ sealed interface ChannelState {
         SuplaFunction.OPEN_SENSOR_ROOF_WINDOW,
         SuplaFunction.VALVE_OPEN_CLOSE,
         SuplaFunction.VALVE_PERCENTAGE -> Default(Value.CLOSED)
-
         SuplaFunction.POWER_SWITCH,
         SuplaFunction.STAIRCASE_TIMER,
         SuplaFunction.NO_LIQUID_SENSOR,
@@ -109,14 +107,11 @@ sealed interface ChannelState {
         SuplaFunction.DIMMER,
         SuplaFunction.DIMMER_CCT,
         SuplaFunction.RGB_LIGHTING -> Default(Value.ON)
-
         SuplaFunction.DIMMER_AND_RGB_LIGHTING,
         SuplaFunction.DIMMER_CCT_AND_RGB -> RgbAndDimmer(Value.ON, Value.ON)
-
         SuplaFunction.CONTAINER,
         SuplaFunction.WATER_TANK,
         SuplaFunction.SEPTIC_TANK -> Default(Value.FULL)
-
         SuplaFunction.UNKNOWN,
         SuplaFunction.NONE,
         SuplaFunction.THERMOMETER,
@@ -154,7 +149,6 @@ sealed interface ChannelState {
       when (function) {
         SuplaFunction.DIGIGLASS_VERTICAL,
         SuplaFunction.DIGIGLASS_HORIZONTAL -> Default(Value.OPAQUE)
-
         SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
         SuplaFunction.CONTROLLING_THE_GATE,
         SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
@@ -176,7 +170,6 @@ sealed interface ChannelState {
         SuplaFunction.OPEN_SENSOR_ROOF_WINDOW,
         SuplaFunction.VALVE_OPEN_CLOSE,
         SuplaFunction.VALVE_PERCENTAGE -> Default(Value.OPEN)
-
         SuplaFunction.POWER_SWITCH,
         SuplaFunction.STAIRCASE_TIMER,
         SuplaFunction.NO_LIQUID_SENSOR,
@@ -188,14 +181,11 @@ sealed interface ChannelState {
         SuplaFunction.DIMMER,
         SuplaFunction.DIMMER_CCT,
         SuplaFunction.RGB_LIGHTING -> Default(Value.OFF)
-
         SuplaFunction.DIMMER_AND_RGB_LIGHTING,
         SuplaFunction.DIMMER_CCT_AND_RGB -> RgbAndDimmer(Value.OFF, Value.OFF)
-
         SuplaFunction.CONTAINER,
         SuplaFunction.WATER_TANK,
         SuplaFunction.SEPTIC_TANK -> Default(Value.EMPTY)
-
         SuplaFunction.UNKNOWN,
         SuplaFunction.NONE,
         SuplaFunction.THERMOMETER,

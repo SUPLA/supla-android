@@ -96,7 +96,6 @@ fun FacadeBlindsWindowView(
                 )
               }
             }
-
             MotionEvent.ACTION_MOVE -> {
               val horizontalAllowed = moveState.value.initialPoint?.let {
                 abs(it.x - event.x) > HORIZONTAL_MOVE_HYSTERESIS.dp.toPx()
@@ -110,7 +109,6 @@ fun FacadeBlindsWindowView(
                 .getPositionFromState(moveState.value)
                 ?.let { offset -> onPositionChanging?.let { it(offset.x, offset.y) } }
             }
-
             MotionEvent.ACTION_UP -> {
               onPositionChanged?.let { it(windowState.slatTilt?.value ?: 0f, windowState.position.value) }
               moveState.value = moveState.value.copy(initialPoint = null)

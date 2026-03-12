@@ -97,7 +97,6 @@ fun VerticalBlindsWindowView(
                 )
               }
             }
-
             MotionEvent.ACTION_MOVE -> {
               val verticalAllowed = moveState.value.initialPoint?.let {
                 abs(it.y - event.y) > MOVE_HYSTERESIS.dp.toPx()
@@ -111,7 +110,6 @@ fun VerticalBlindsWindowView(
                 .getPositionFromState(moveState.value, bidirectional = true)
                 ?.let { offset -> onPositionChanging?.let { it(offset.y, offset.x) } }
             }
-
             MotionEvent.ACTION_UP -> {
               onPositionChanged?.let { it(windowState.slatTilt?.value ?: 0f, windowState.position.value) }
               moveState.value = moveState.value.copy(initialPoint = null)

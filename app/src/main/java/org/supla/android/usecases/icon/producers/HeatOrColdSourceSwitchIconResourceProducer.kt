@@ -34,31 +34,26 @@ object HeatOrColdSourceSwitchIconResourceProducer : IconResourceProducer {
       } else {
         R.drawable.fnc_heat_or_cold_source_switch_2_off
       }
-
       2 -> if (data.state.value == ChannelState.Value.ON) {
         R.drawable.fnc_heat_or_cold_source_switch_3_on
       } else {
         R.drawable.fnc_heat_or_cold_source_switch_3_off
       }
-
       3 -> if (data.state.value == ChannelState.Value.ON) {
         R.drawable.fnc_heat_or_cold_source_switch_4_on
       } else {
         R.drawable.fnc_heat_or_cold_source_switch_4_off
       }
-
       4 -> if (data.state.value == ChannelState.Value.ON) {
         R.drawable.fnc_heat_or_cold_source_switch_5_on
       } else {
         R.drawable.fnc_heat_or_cold_source_switch_5_off
       }
-
       5 -> if (data.state.value == ChannelState.Value.ON) {
         R.drawable.fnc_heat_or_cold_source_switch_6_on
       } else {
         R.drawable.fnc_heat_or_cold_source_switch_6_off
       }
-
       else -> if (data.state.value == ChannelState.Value.ON) {
         R.drawable.fnc_heat_or_cold_source_switch_on
       } else {

@@ -204,7 +204,6 @@ fun ThermostatControl(
                   }
                 }
               }
-
               MotionEvent.ACTION_MOVE -> currentTouchPoint = Offset(it.x, it.y)
               MotionEvent.ACTION_UP -> {
                 onPositionChangeEnded(lastMinSetpoint, lastMaxSetpoint)

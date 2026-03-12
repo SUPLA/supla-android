@@ -129,7 +129,6 @@ fun ElectricityMeterMetricsView(
           state.vectorBalancedValues?.let { SingleValueTable(headerRes = R.string.em_phase_to_phase_balance, data = it) }
           state.electricGridParameters?.let { SingleValueTable(headerRes = R.string.em_electric_grid_parameters, data = it) }
         }
-
         false -> ChannelOfflineView()
         null -> {}
       }

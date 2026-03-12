@@ -61,7 +61,6 @@ enum class ElectricityMeterChartType(override val label: LocalizedString) : Spin
       VOLTAGE,
       CURRENT,
       POWER_ACTIVE -> true
-
       BALANCE_VECTOR,
       BALANCE_ARITHMETIC,
       BALANCE_HOURLY,
@@ -77,7 +76,6 @@ enum class ElectricityMeterChartType(override val label: LocalizedString) : Spin
       VOLTAGE,
       CURRENT,
       POWER_ACTIVE -> true
-
       FORWARDED_ACTIVE_ENERGY,
       REVERSED_ACTIVE_ENERGY,
       FORWARDED_REACTIVE_ENERGY,

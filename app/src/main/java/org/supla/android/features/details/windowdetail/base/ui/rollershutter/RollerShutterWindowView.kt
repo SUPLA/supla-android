@@ -90,14 +90,12 @@ fun RollerShutterWindowView(
                 )
               }
             }
-
             MotionEvent.ACTION_MOVE -> {
               moveState.value = moveState.value.copy(lastPoint = Offset(event.x, event.y))
               windowDimens
                 .getPositionFromState(moveState.value)
                 ?.let { position -> onPositionChanging?.let { it(position.y) } }
             }
-
             MotionEvent.ACTION_UP -> {
               onPositionChanged?.let { it(windowState.position.value) }
               moveState.value = moveState.value.copy(initialPoint = null)
@@ -140,7 +138,6 @@ private object WindowDrawer : WindowDrawerBase<RuntimeDimens, RollerShutterWindo
         runtimeDimens.slatsDistances
           .times(100f.minus(position))
           .div(100f.minus(windowState.bottomPosition))
-
       else -> null
     }
     var slatsCorrection = availableSpaceForSlatDistances?.let { runtimeDimens.slatsDistances.minus(it) } ?: 0f

@@ -70,7 +70,6 @@ abstract class BaseListAdapter<D>(
       is ListItem.IconWithButtonsItem -> ViewType.ICON_WITH_BUTTONS_ITEM
       is ListItem.DoubleValueItem -> ViewType.DOUBLE_VALUE_ITEM
       is ListItem.IconWithRightButtonItem -> ViewType.ICON_WITH_RIGHT_BUTTON_ITEM
-
       else -> throw IllegalStateException("Could find evaluate view item type")
     }.ordinal
   }

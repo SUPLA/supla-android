@@ -51,7 +51,6 @@ class Idle(
         espConfigurationController.setupEspConfiguration()
         espConfigurationController.checkRegistration()
       }
-
       else -> {
         stateHolder.setState(ConfigurationFailure(stateHolder, espConfigurationController))
         espConfigurationController.showError(EspConfigurationError.RegistrationCheck)
@@ -78,22 +77,18 @@ class CheckingRegistration(
         stateHolder.setState(NetworkSearch(stateHolder, espConfigurationController))
         espConfigurationController.findEspNetwork()
       }
-
       EspConfigurationEvent.RegistrationDisabled -> {
         stateHolder.setState(Authorizing(stateHolder, espConfigurationController))
         espConfigurationController.authorize()
       }
-
       EspConfigurationEvent.Close -> {
         stateHolder.setState(Canceling(stateHolder, espConfigurationController, AddWizardFinalAction.Close))
         espConfigurationController.cancel()
       }
-
       EspConfigurationEvent.Back -> {
         stateHolder.setState(Canceling(stateHolder, espConfigurationController, AddWizardFinalAction.Back))
         espConfigurationController.cancel()
       }
-
       else -> {
         stateHolder.setState(ConfigurationFailure(stateHolder, espConfigurationController))
         espConfigurationController.showError(EspConfigurationError.RegistrationCheck)
@@ -116,17 +111,14 @@ class Authorizing(
         stateHolder.setState(ActivatingRegistration(stateHolder, espConfigurationController))
         espConfigurationController.activateRegistration()
       }
-
       EspConfigurationEvent.Close -> {
         stateHolder.setState(Canceling(stateHolder, espConfigurationController, AddWizardFinalAction.Close))
         espConfigurationController.cancel()
       }
-
       EspConfigurationEvent.Back -> {
         stateHolder.setState(Canceling(stateHolder, espConfigurationController, AddWizardFinalAction.Back))
         espConfigurationController.cancel()
       }
-
       else -> {
         stateHolder.setState(ConfigurationFailure(stateHolder, espConfigurationController))
         espConfigurationController.showError(EspConfigurationError.RegistrationCheck)
@@ -149,17 +141,14 @@ class ActivatingRegistration(
         stateHolder.setState(NetworkSearch(stateHolder, espConfigurationController))
         espConfigurationController.findEspNetwork()
       }
-
       EspConfigurationEvent.Close -> {
         stateHolder.setState(Canceling(stateHolder, espConfigurationController, AddWizardFinalAction.Close))
         espConfigurationController.cancel()
       }
-
       EspConfigurationEvent.Back -> {
         stateHolder.setState(Canceling(stateHolder, espConfigurationController, AddWizardFinalAction.Back))
         espConfigurationController.cancel()
       }
-
       else -> {
         stateHolder.setState(ConfigurationFailure(stateHolder, espConfigurationController))
         espConfigurationController.showError(EspConfigurationError.RegistrationEnable)
@@ -182,37 +171,30 @@ class NetworkSearch(
         stateHolder.setState(ChangingNetwork(stateHolder, espConfigurationController))
         espConfigurationController.connectToNetwork(event.ssid)
       }
-
       is EspConfigurationEvent.MultipleNetworksFound -> {
         stateHolder.setState(NetworkSearch(stateHolder, espConfigurationController))
         espConfigurationController.showNetworkSelector(event.ssids, false)
       }
-
       is EspConfigurationEvent.NetworkScanDisabled -> {
         stateHolder.setState(NetworkSearch(stateHolder, espConfigurationController))
         espConfigurationController.showNetworkSelector(event.cached, true)
       }
-
       is EspConfigurationEvent.NetworkNotFound -> {
         stateHolder.setState(ConfigurationFailure(stateHolder, espConfigurationController))
         espConfigurationController.showError(EspConfigurationError.NotFound)
       }
-
       EspConfigurationEvent.Close -> {
         stateHolder.setState(Canceling(stateHolder, espConfigurationController, AddWizardFinalAction.Close))
         espConfigurationController.cancel()
       }
-
       EspConfigurationEvent.Back -> {
         stateHolder.setState(Canceling(stateHolder, espConfigurationController, AddWizardFinalAction.Back))
         espConfigurationController.cancel()
       }
-
       EspConfigurationEvent.NetworkConnected -> {
         stateHolder.setState(ConfiguringEsp(stateHolder, espConfigurationController))
         espConfigurationController.configureEsp()
       }
-
       else -> {
         stateHolder.setState(ConfigurationFailure(stateHolder, espConfigurationController))
         espConfigurationController.showError(EspConfigurationError.Scan)
@@ -235,23 +217,19 @@ class ChangingNetwork(
         stateHolder.setState(ConfiguringEsp(stateHolder, espConfigurationController))
         espConfigurationController.configureEsp()
       }
-
       EspConfigurationEvent.Close -> {
         stateHolder.setState(Canceling(stateHolder, espConfigurationController, AddWizardFinalAction.Close, reconnect = true))
         espConfigurationController.cancel()
       }
-
       EspConfigurationEvent.Back -> {
         stateHolder.setState(Canceling(stateHolder, espConfigurationController, AddWizardFinalAction.Back, reconnect = true))
         espConfigurationController.cancel()
       }
-
       EspConfigurationEvent.NetworkConnectionInternalError -> {
         val finalAction = AddWizardFinalAction.Error(EspConfigurationError.InternalError)
         stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, finalAction))
         espConfigurationController.reconnect()
       }
-
       else -> {
         val finalAction = AddWizardFinalAction.Error(EspConfigurationError.Connect)
         stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, finalAction))
@@ -275,33 +253,27 @@ class ConfiguringEsp(
         stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, AddWizardFinalAction.Success))
         espConfigurationController.reconnect()
       }
-
       EspConfigurationEvent.SetupNeeded -> {
         stateHolder.setState(ConfiguringPassword(stateHolder, espConfigurationController))
         espConfigurationController.configurePassword()
       }
-
       EspConfigurationEvent.CredentialsNeeded -> {
         stateHolder.setState(ProvidingPassword(stateHolder, espConfigurationController))
         espConfigurationController.providePassword()
       }
-
       is EspConfigurationEvent.EspConfigurationFailure -> {
         val finalAction = AddWizardFinalAction.Error(event.error)
         stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, finalAction))
         espConfigurationController.reconnect()
       }
-
       EspConfigurationEvent.Close -> {
         stateHolder.setState(Canceling(stateHolder, espConfigurationController, AddWizardFinalAction.Close, reconnect = true))
         espConfigurationController.cancel()
       }
-
       EspConfigurationEvent.Back -> {
         stateHolder.setState(Canceling(stateHolder, espConfigurationController, AddWizardFinalAction.Back, reconnect = true))
         espConfigurationController.cancel()
       }
-
       else -> {
         val finalAction = AddWizardFinalAction.Error(EspConfigurationError.ConfigureTimeout)
         stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, finalAction))
@@ -325,22 +297,18 @@ class ConfiguringPassword(
         stateHolder.setState(ConfiguringEsp(stateHolder, espConfigurationController))
         espConfigurationController.configureEsp()
       }
-
       EspConfigurationEvent.Cancel -> {
         stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, AddWizardFinalAction.Reinitialize))
         espConfigurationController.reconnect()
       }
-
       is EspConfigurationEvent.EspConfigurationFailure -> {
         stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, AddWizardFinalAction.Error(event.error)))
         espConfigurationController.reconnect()
       }
-
       EspConfigurationEvent.Back -> {
         stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, AddWizardFinalAction.Back))
         espConfigurationController.reconnect()
       }
-
       else -> {
         val finalAction = AddWizardFinalAction.Error(EspConfigurationError.Configuration)
         stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, finalAction))
@@ -364,22 +332,18 @@ class ProvidingPassword(
         stateHolder.setState(ConfiguringEsp(stateHolder, espConfigurationController))
         espConfigurationController.configureEsp()
       }
-
       EspConfigurationEvent.Cancel -> {
         stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, AddWizardFinalAction.Reinitialize))
         espConfigurationController.reconnect()
       }
-
       is EspConfigurationEvent.EspConfigurationFailure -> {
         stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, AddWizardFinalAction.Error(event.error)))
         espConfigurationController.reconnect()
       }
-
       EspConfigurationEvent.Back -> {
         stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, AddWizardFinalAction.Back))
         espConfigurationController.reconnect()
       }
-
       else -> {
         val finalAction = AddWizardFinalAction.Error(EspConfigurationError.Configuration)
         stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, finalAction))
@@ -403,13 +367,11 @@ class Reconnecting(
       EspConfigurationEvent.Reconnected -> {
         handleFinalAction(stateHolder, finalAction, espConfigurationController)
       }
-
       EspConfigurationEvent.Close,
       EspConfigurationEvent.Cancel,
       EspConfigurationEvent.Back -> {
         // Do nothing, just wait for result
       }
-
       else -> {
         stateHolder.setState(ConfigurationFailure(stateHolder, espConfigurationController))
         if (finalAction is AddWizardFinalAction.Error) {
@@ -442,7 +404,6 @@ class Canceling(
           handleFinalAction(stateHolder, finalAction, espConfigurationController)
         }
       }
-
       else -> {
         // Do nothing
       }
@@ -478,7 +439,6 @@ class Finished(
         stateHolder.setState(CheckingRegistration(stateHolder, espConfigurationController))
         espConfigurationController.checkRegistration()
       }
-
       else -> {
         // Do nothing
       }
@@ -500,7 +460,6 @@ class ConfigurationFailure(
         stateHolder.setState(CheckingRegistration(stateHolder, espConfigurationController))
         espConfigurationController.checkRegistration()
       }
-
       else -> {
         // Do nothing
       }
@@ -522,22 +481,18 @@ private fun handleFinalAction(
       stateHolder.setState(Canceled)
       espConfigurationController.close()
     }
-
     is AddWizardFinalAction.Error -> {
       stateHolder.setState(ConfigurationFailure(stateHolder, espConfigurationController))
       espConfigurationController.showError(finalAction.error)
     }
-
     AddWizardFinalAction.Success -> {
       stateHolder.setState(Finished(stateHolder, espConfigurationController))
       espConfigurationController.showFinished()
     }
-
     AddWizardFinalAction.Back -> {
       stateHolder.setState(Idle(stateHolder, espConfigurationController))
       espConfigurationController.back()
     }
-
     AddWizardFinalAction.Reinitialize -> {
       stateHolder.setState(Idle(stateHolder, espConfigurationController))
       espConfigurationController.reinitialize()

@@ -91,7 +91,9 @@ spotless {
         "ktlint_standard_function-expression-body" to "disabled",
         "ktlint_standard_class-signature" to "disabled",
         "ktlint_standard_function-signature" to "disabled",
-        "ktlint_standard_enum-wrapping" to "disabled"
+        "ktlint_standard_enum-wrapping" to "disabled",
+        "ktlint_standard_blank-line-between-when-entries" to "disabled",
+        "ij_kotlin_line_break_after_multiline_when_entry" to "false"
       )
     )
   }

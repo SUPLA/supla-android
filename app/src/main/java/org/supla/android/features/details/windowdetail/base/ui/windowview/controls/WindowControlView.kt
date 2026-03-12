@@ -55,7 +55,6 @@ fun WindowControlView(
         onPositionChanging = { if (viewState.enabled) onAction(ShadingSystemAction.MoveTo(it)) },
         onPositionChanged = { if (viewState.enabled) onAction(ShadingSystemAction.OpenAt(it)) }
       )
-
     is RollerShutterWindowState ->
       RollerShutterWindowView(
         windowState = windowState,
@@ -64,7 +63,6 @@ fun WindowControlView(
         onPositionChanging = { if (viewState.enabled) onAction(ShadingSystemAction.MoveTo(it)) },
         onPositionChanged = { if (viewState.enabled) onAction(ShadingSystemAction.OpenAt(it)) }
       )
-
     is FacadeBlindWindowState ->
       FacadeBlindsWindowView(
         windowState = windowState,
@@ -73,7 +71,6 @@ fun WindowControlView(
         onPositionChanging = { tilt, position -> if (viewState.enabled) onAction(ShadingSystemAction.MoveAndTiltTo(position, tilt)) },
         onPositionChanged = { tilt, position -> if (viewState.enabled) onAction(ShadingSystemAction.MoveAndTiltSetTo(position, tilt)) }
       )
-
     is TerraceAwningState ->
       TerraceAwningView(
         windowState = windowState,
@@ -82,7 +79,6 @@ fun WindowControlView(
         onPositionChanging = { position -> if (viewState.enabled) onAction(ShadingSystemAction.MoveTo(position)) },
         onPositionChanged = { position -> if (viewState.enabled) onAction(ShadingSystemAction.OpenAt(position)) }
       )
-
     is ProjectorScreenState ->
       ProjectorScreenView(
         windowState = windowState,
@@ -91,7 +87,6 @@ fun WindowControlView(
         onPositionChanging = { position -> if (viewState.enabled) onAction(ShadingSystemAction.MoveTo(position)) },
         onPositionChanged = { position -> if (viewState.enabled) onAction(ShadingSystemAction.OpenAt(position)) }
       )
-
     is CurtainWindowState ->
       CurtainWindowView(
         windowState = windowState,
@@ -100,7 +95,6 @@ fun WindowControlView(
         onPositionChanging = { position -> if (viewState.enabled) onAction(ShadingSystemAction.MoveTo(position)) },
         onPositionChanged = { position -> if (viewState.enabled) onAction(ShadingSystemAction.OpenAt(position)) }
       )
-
     is VerticalBlindWindowState ->
       VerticalBlindsWindowView(
         windowState = windowState,
@@ -109,7 +103,6 @@ fun WindowControlView(
         onPositionChanging = { tilt, position -> if (viewState.enabled) onAction(ShadingSystemAction.MoveAndTiltTo(position, tilt)) },
         onPositionChanged = { tilt, position -> if (viewState.enabled) onAction(ShadingSystemAction.MoveAndTiltSetTo(position, tilt)) }
       )
-
     is GarageDoorState ->
       GarageDoorScreenView(
         windowState = windowState,

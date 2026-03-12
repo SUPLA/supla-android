@@ -16,7 +16,6 @@ object OpenedClosedGroupActivePercentageProvider : GroupActivePercentageProvider
       SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
       SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER,
       SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE -> true
-
       else -> false
     }
 

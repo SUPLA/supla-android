@@ -57,28 +57,24 @@ class DownloadChannelMeasurementsUseCase @Inject constructor(
           ExistingWorkPolicy.KEEP,
           DownloadTemperaturesWorker.build(remoteId, profileId)
         )
-
       function == SuplaFunction.HUMIDITY_AND_TEMPERATURE ->
         workManagerProxy.enqueueUniqueWork(
           "${DownloadTemperaturesAndHumidityWorker.WORK_ID}.$remoteId",
           ExistingWorkPolicy.KEEP,
           DownloadTemperaturesAndHumidityWorker.build(remoteId, profileId)
         )
-
       function == SuplaFunction.GENERAL_PURPOSE_MEASUREMENT ->
         workManagerProxy.enqueueUniqueWork(
           "${DownloadGeneralPurposeMeasurementsWorker.WORK_ID}.$remoteId",
           ExistingWorkPolicy.KEEP,
           DownloadGeneralPurposeMeasurementsWorker.build(remoteId, profileId)
         )
-
       function == SuplaFunction.GENERAL_PURPOSE_METER ->
         workManagerProxy.enqueueUniqueWork(
           "${DownloadGeneralPurposeMeterWorker.WORK_ID}.$remoteId",
           ExistingWorkPolicy.KEEP,
           DownloadGeneralPurposeMeterWorker.build(remoteId, profileId)
         )
-
       channelWithChildren.isOrHasElectricityMeter &&
         type == DownloadEventsManager.DataType.ELECTRICITY_VOLTAGE_TYPE ->
         workManagerProxy.enqueueUniqueWork(
@@ -86,7 +82,6 @@ class DownloadChannelMeasurementsUseCase @Inject constructor(
           ExistingWorkPolicy.KEEP,
           DownloadVoltageMeasurementsWorker.build(remoteId, profileId)
         )
-
       channelWithChildren.isOrHasElectricityMeter &&
         type == DownloadEventsManager.DataType.ELECTRICITY_CURRENT_TYPE ->
         workManagerProxy.enqueueUniqueWork(
@@ -94,7 +89,6 @@ class DownloadChannelMeasurementsUseCase @Inject constructor(
           ExistingWorkPolicy.KEEP,
           DownloadCurrentMeasurementsWorker.build(remoteId, profileId)
         )
-
       channelWithChildren.isOrHasElectricityMeter &&
         type == DownloadEventsManager.DataType.ELECTRICITY_POWER_ACTIVE_TYPE ->
         workManagerProxy.enqueueUniqueWork(
@@ -102,35 +96,30 @@ class DownloadChannelMeasurementsUseCase @Inject constructor(
           ExistingWorkPolicy.KEEP,
           DownloadPowerActiveMeasurementsWorker.build(remoteId, profileId)
         )
-
       function == SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS ->
         workManagerProxy.enqueueUniqueWork(
           "${DownloadThermostatHeatpolWorker.WORK_ID}.$remoteId",
           ExistingWorkPolicy.KEEP,
           DownloadThermostatHeatpolWorker.build(remoteId, profileId)
         )
-
       channelWithChildren.isOrHasElectricityMeter ->
         workManagerProxy.enqueueUniqueWork(
           "${DownloadElectricityMeasurementsWorker.WORK_ID}.$remoteId",
           ExistingWorkPolicy.KEEP,
           DownloadElectricityMeasurementsWorker.build(remoteId, profileId)
         )
-
       channelWithChildren.isOrHasImpulseCounter ->
         workManagerProxy.enqueueUniqueWork(
           "${DownloadImpulseCounterWorker.WORK_ID}.$remoteId",
           ExistingWorkPolicy.KEEP,
           DownloadImpulseCounterWorker.build(remoteId, profileId)
         )
-
       function == SuplaFunction.HUMIDITY ->
         workManagerProxy.enqueueUniqueWork(
           "${DownloadHumidityWorker.WORK_ID}.$remoteId",
           ExistingWorkPolicy.KEEP,
           DownloadHumidityWorker.build(remoteId, profileId)
         )
-
       else -> Timber.w("Tries to download something what is not supported (function: `$function`)")
     }
   }

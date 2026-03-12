@@ -81,7 +81,6 @@ fun WindowViewSmallContent(
         when (viewState.orientation) {
           ShadingSystemOrientation.HORIZONTAL ->
             HorizontalControlButtons(viewState.enabled, onAction = onAction, modifier = Modifier.align(Alignment.Center))
-
           ShadingSystemOrientation.VERTICAL ->
             HoldToMoveVerticalButtons(viewState.enabled, onAction = onAction, modifier = Modifier.align(Alignment.Center))
         }
@@ -119,7 +118,6 @@ fun WindowViewSmallContent(
         when (viewState.orientation) {
           ShadingSystemOrientation.HORIZONTAL ->
             HorizontalPressToMoveButtons(enabled = viewState.enabled, onAction = onAction)
-
           ShadingSystemOrientation.VERTICAL ->
             VerticalPressToMoveButtons(enabled = viewState.enabled, onAction = onAction)
         }

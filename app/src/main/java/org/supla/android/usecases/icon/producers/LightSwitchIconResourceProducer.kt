@@ -34,13 +34,11 @@ class LightSwitchIconResourceProducer : IconResourceProducer {
       } else {
         R.drawable.fnc_light_1_off
       }
-
       2 -> if (data.state.value == ChannelState.Value.ON) {
         R.drawable.fnc_light_2_on
       } else {
         R.drawable.fnc_light_2_off
       }
-
       else -> if (data.state.value == ChannelState.Value.ON) {
         R.drawable.fnc_light_on
       } else {

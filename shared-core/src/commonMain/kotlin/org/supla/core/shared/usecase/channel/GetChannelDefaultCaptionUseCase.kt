@@ -108,7 +108,6 @@ class GetChannelDefaultCaptionUseCase {
       SuplaFunction.RGB_LIGHTING -> localizedString(CHANNEL_CAPTION_RGB_LIGHTING)
       SuplaFunction.DIMMER_AND_RGB_LIGHTING, SuplaFunction.DIMMER_CCT_AND_RGB ->
         localizedString(CHANNEL_CAPTION_DIMMER_AND_RGB_LIGHTING)
-
       SuplaFunction.DEPTH_SENSOR -> localizedString(CHANNEL_CAPTION_DEPTH_SENSOR)
       SuplaFunction.DISTANCE_SENSOR -> localizedString(CHANNEL_CAPTION_DISTANCE_SENSOR)
       SuplaFunction.OPENING_SENSOR_WINDOW -> localizedString(CHANNEL_CAPTION_OPENING_SENSOR_WINDOW)
@@ -122,18 +121,14 @@ class GetChannelDefaultCaptionUseCase {
       SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS -> localizedString(CHANNEL_CAPTION_THERMOSTAT_HEATPOL_HOMEPLUS)
       SuplaFunction.VALVE_OPEN_CLOSE,
       SuplaFunction.VALVE_PERCENTAGE -> localizedString(CHANNEL_CAPTION_VALVE)
-
       SuplaFunction.GENERAL_PURPOSE_MEASUREMENT -> localizedString(CHANNEL_CAPTION_GENERAL_PURPOSE_MEASUREMENT)
       SuplaFunction.GENERAL_PURPOSE_METER -> localizedString(CHANNEL_CAPTION_GENERAL_PURPOSE_METER)
       SuplaFunction.HVAC_THERMOSTAT,
       SuplaFunction.HVAC_DOMESTIC_HOT_WATER -> localizedString(CHANNEL_CAPTION_THERMOSTAT)
-
       SuplaFunction.ELECTRICITY_METER,
       SuplaFunction.IC_ELECTRICITY_METER -> localizedString(CHANNEL_CAPTION_ELECTRICITY_METER)
-
       SuplaFunction.DIGIGLASS_VERTICAL,
       SuplaFunction.DIGIGLASS_HORIZONTAL -> localizedString(CHANNEL_CAPTION_DIGIGLASS)
-
       SuplaFunction.TERRACE_AWNING -> localizedString(CHANNEL_CAPTION_TERRACE_AWNING)
       SuplaFunction.PROJECTOR_SCREEN -> localizedString(CHANNEL_CAPTION_PROJECTOR_SCREEN)
       SuplaFunction.CURTAIN -> localizedString(CHANNEL_CAPTION_CURTAIN)
@@ -148,7 +143,6 @@ class GetChannelDefaultCaptionUseCase {
       SuplaFunction.FLOOD_SENSOR -> localizedString(CHANNEL_CAPTION_FLOOD_SENSOR)
       SuplaFunction.MOTION_SENSOR -> localizedString(CHANNEL_CAPTION_MOTION_SENSOR)
       SuplaFunction.BINARY_SENSOR -> localizedString(CHANNEL_CAPTION_BINARY_SENSOR)
-
       SuplaFunction.UNKNOWN,
       SuplaFunction.NONE,
       SuplaFunction.RING,

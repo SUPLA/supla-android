@@ -37,7 +37,6 @@ val Channel.isHvacThermostat: Boolean
     SuplaFunction.HVAC_THERMOSTAT,
     SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
     SuplaFunction.HVAC_DOMESTIC_HOT_WATER -> true
-
     else -> false
   }
 
@@ -52,6 +51,5 @@ val Channel.isShadingSystem: Boolean
     SuplaFunction.TERRACE_AWNING,
     SuplaFunction.CURTAIN,
     SuplaFunction.VERTICAL_BLIND -> true
-
     else -> false
   }

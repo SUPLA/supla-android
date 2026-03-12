@@ -262,13 +262,10 @@ private class CombinedChartAxisXFormatter(
     return when {
       converter.aggregation == ChartDataAggregation.YEARS ->
         dateFormatter.getYearString(Date(converter.fromCoordinate(value).toLong().times(1000))) ?: ""
-
       distanceInDays > 1.1 && distanceInDaysFromChart <= 2 ->
         dateFormatter.getDayAndHourShortDateString(Date(converter.fromCoordinate(value).toLong().times(1000))) ?: ""
-
       distanceInDaysFromChart <= 1.1 ->
         dateFormatter.getHourString(Date(converter.fromCoordinate(value).toLong().times(1000))) ?: ""
-
       else -> dateFormatter.getMonthString(Date(converter.fromCoordinate(value).toLong().times(1000))) ?: ""
     }
   }

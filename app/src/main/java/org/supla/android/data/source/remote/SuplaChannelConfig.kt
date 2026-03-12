@@ -45,18 +45,14 @@ enum class ChannelConfigType(val value: Int) {
       when (channel.function) {
         SuplaFunction.GENERAL_PURPOSE_MEASUREMENT -> GENERAL_PURPOSE_MEASUREMENT
         SuplaFunction.GENERAL_PURPOSE_METER -> GENERAL_PURPOSE_METER
-
         SuplaFunction.VERTICAL_BLIND,
         SuplaFunction.CONTROLLING_THE_FACADE_BLIND -> FACADE_BLIND
-
         SuplaFunction.CONTAINER,
         SuplaFunction.SEPTIC_TANK,
         SuplaFunction.WATER_TANK -> CONTAINER
-
         SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
         SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
         SuplaFunction.HVAC_THERMOSTAT -> HVAC
-
         else -> throw IllegalArgumentException("Channel not supported (function: `${channel.function}`)")
       }
   }

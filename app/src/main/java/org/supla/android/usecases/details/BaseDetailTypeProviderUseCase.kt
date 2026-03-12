@@ -33,7 +33,6 @@ abstract class BaseDetailTypeProviderUseCase {
         }
       )
     SuplaFunction.DIMMER_CCT -> StandardDetailType(listOf(DetailPage.DIMMER_CCT))
-
     SuplaFunction.DIMMER_AND_RGB_LIGHTING ->
       StandardDetailType(
         pages = if (shouldShowRgbSettings(manufacturerId, productId)) {
@@ -43,7 +42,6 @@ abstract class BaseDetailTypeProviderUseCase {
         }
       )
     SuplaFunction.DIMMER_CCT_AND_RGB -> StandardDetailType(listOf(DetailPage.RGB, DetailPage.DIMMER_CCT))
-
     SuplaFunction.RGB_LIGHTING ->
       StandardDetailType(
         pages = if (shouldShowRgbSettings(manufacturerId, productId)) {
@@ -52,53 +50,39 @@ abstract class BaseDetailTypeProviderUseCase {
           listOf(DetailPage.RGB)
         }
       )
-
     SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER ->
       StandardDetailType(listOf(DetailPage.ROLLER_SHUTTER))
-
     SuplaFunction.CONTROLLING_THE_ROOF_WINDOW ->
       StandardDetailType(listOf(DetailPage.ROOF_WINDOW))
-
     SuplaFunction.CONTROLLING_THE_FACADE_BLIND ->
       StandardDetailType(listOf(DetailPage.FACADE_BLINDS))
-
     SuplaFunction.TERRACE_AWNING ->
       StandardDetailType(listOf(DetailPage.TERRACE_AWNING))
-
     SuplaFunction.PROJECTOR_SCREEN ->
       StandardDetailType(listOf(DetailPage.PROJECTOR_SCREEN))
-
     SuplaFunction.CURTAIN ->
       StandardDetailType(listOf(DetailPage.CURTAIN))
-
     SuplaFunction.VERTICAL_BLIND ->
       StandardDetailType(listOf(DetailPage.VERTICAL_BLIND))
-
     SuplaFunction.ROLLER_GARAGE_DOOR ->
       StandardDetailType(listOf(DetailPage.GARAGE_DOOR_ROLLER))
-
     SuplaFunction.LIGHTSWITCH,
     SuplaFunction.POWER_SWITCH,
     SuplaFunction.STAIRCASE_TIMER,
     SuplaFunction.PUMP_SWITCH,
     SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH ->
       StandardDetailType(listOf(DetailPage.SWITCH))
-
     SuplaFunction.ELECTRICITY_METER ->
       StandardDetailType(listOf(DetailPage.EM_GENERAL, DetailPage.EM_HISTORY, DetailPage.EM_SETTINGS))
-
     SuplaFunction.IC_ELECTRICITY_METER,
     SuplaFunction.IC_GAS_METER,
     SuplaFunction.IC_WATER_METER,
     SuplaFunction.IC_HEAT_METER ->
       IcDetailType(listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY))
-
     SuplaFunction.THERMOMETER,
     SuplaFunction.HUMIDITY_AND_TEMPERATURE ->
       ThermometerDetailType(listOf(DetailPage.THERMOMETER_HISTORY))
-
     SuplaFunction.HUMIDITY -> HumidityDetailType(listOf(DetailPage.HUMIDITY_HISTORY))
-
     SuplaFunction.HVAC_THERMOSTAT,
 //    Temporarily commented out, because is not supported yet.
 //    SuplaConst.SuplaChannelFunction.HVAC_THERMOSTAT_AUTO,
@@ -114,25 +98,20 @@ abstract class BaseDetailTypeProviderUseCase {
           DetailPage.THERMOSTAT_HISTORY
         )
       )
-
     SuplaFunction.DIGIGLASS_VERTICAL,
     SuplaFunction.DIGIGLASS_HORIZONTAL ->
       LegacyDetailType.DIGIGLASS
-
     SuplaFunction.GENERAL_PURPOSE_MEASUREMENT,
     SuplaFunction.GENERAL_PURPOSE_METER ->
       GpmDetailType(listOf(DetailPage.GPM_HISTORY))
-
     SuplaFunction.CONTAINER,
     SuplaFunction.SEPTIC_TANK,
     SuplaFunction.WATER_TANK ->
       StandardDetailType(listOf(DetailPage.CONTAINER_GENERAL))
-
     SuplaFunction.CONTROLLING_THE_GATE,
     SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
     SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
     SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK -> StandardDetailType(listOf(DetailPage.GATE_GENERAL))
-
     SuplaFunction.UNKNOWN,
     SuplaFunction.NONE,
     SuplaFunction.OPEN_SENSOR_GATEWAY,
@@ -167,7 +146,7 @@ abstract class BaseDetailTypeProviderUseCase {
   }
 
   private fun shouldShowRgbSettings(manufacturerId: Int?, productId: Int?): Boolean =
-    manufacturerId == SuplaConst.SUPLA_MFR_DOYLETRATT && productId == 1 ||
-      manufacturerId == SuplaConst.SUPLA_MFR_ZAMEL && productId == SuplaConst.ZAM_PRODID_DIW_01 ||
-      manufacturerId == SuplaConst.SUPLA_MFR_COMELIT && productId == SuplaConst.COM_PRODID_WDIM100
+    (manufacturerId == SuplaConst.SUPLA_MFR_DOYLETRATT && productId == 1) ||
+      (manufacturerId == SuplaConst.SUPLA_MFR_ZAMEL && productId == SuplaConst.ZAM_PRODID_DIW_01) ||
+      (manufacturerId == SuplaConst.SUPLA_MFR_COMELIT && productId == SuplaConst.COM_PRODID_WDIM100)
 }

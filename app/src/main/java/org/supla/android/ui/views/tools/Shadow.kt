@@ -44,7 +44,6 @@ fun Shadow(modifier: Modifier = Modifier, orientation: ShadowOrientation = Shado
             brush = Brush.verticalGradient(colorStops = orientation.colors())
           )
       )
-
     ShadowOrientation.STARTING_LEFT,
     ShadowOrientation.STARTING_RIGHT ->
       Box(

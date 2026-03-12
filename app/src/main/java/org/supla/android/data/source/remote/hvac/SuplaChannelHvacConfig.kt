@@ -75,7 +75,6 @@ fun SuplaTemperatureControlType?.filterRelationType(relationType: ChannelRelatio
     ChannelRelationType.AUX_THERMOMETER_WATER,
     ChannelRelationType.AUX_THERMOMETER_GENERIC_COOLER,
     ChannelRelationType.AUX_THERMOMETER_GENERIC_HEATER -> this == AUX_HEATER_COOLER_TEMPERATURE
-
     ChannelRelationType.MAIN_THERMOMETER -> this != AUX_HEATER_COOLER_TEMPERATURE
     else -> false
   }

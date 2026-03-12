@@ -323,7 +323,6 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
       ElectricityMeterChartType.VOLTAGE,
       ElectricityMeterChartType.CURRENT,
       ElectricityMeterChartType.POWER_ACTIVE -> ElectricityHistoryChartStyle
-
       else -> ElectricityChartStyle
     }
     updateState { it.copy(chartCustomFilters = customFilters, chartStyle = chartStyle) }

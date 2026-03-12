@@ -42,7 +42,6 @@ class ElectricityMeterValueProvider @Inject constructor(
     when (userStateHolder.getElectricityMeterSettings(channelWithChildren.profileId, channelWithChildren.remoteId).showOnListSafe) {
       SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY ->
         channelWithChildren.channel.Electricity.value?.summary?.totalReverseActiveEnergy ?: UNKNOWN_VALUE
-
       SuplaElectricityMeasurementType.POWER_ACTIVE,
       SuplaElectricityMeasurementType.POWER_ACTIVE_KW ->
         channelWithChildren.channel.Electricity.value?.let { value ->
@@ -57,7 +56,6 @@ class ElectricityMeterValueProvider @Inject constructor(
             powerActive
           }
         } ?: UNKNOWN_VALUE
-
       SuplaElectricityMeasurementType.VOLTAGE ->
         channelWithChildren.channel.Electricity.value?.let { value ->
           Phase.entries
@@ -65,7 +63,6 @@ class ElectricityMeterValueProvider @Inject constructor(
             .mapNotNull { value.getMeasurement(it.value, 0)?.voltage }
             .average()
         } ?: UNKNOWN_VALUE
-
       else -> asIntValue(channelWithChildren.channel.channelValueEntity, startPos = 1, endPos = 4)?.div(100.0) ?: UNKNOWN_VALUE
     }
 

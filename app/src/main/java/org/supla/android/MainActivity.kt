@@ -224,14 +224,12 @@ class MainActivity :
               is SuplaClientState.Disconnecting,
               SuplaClientState.Locking,
               is SuplaClientState.Finished -> navigator.navigateToStatus()
-
               SuplaClientState.Locked -> {
                 if (menuIsVisible()) {
                   setMenuVisible(false)
                 }
                 navigator.navigateTo(R.id.lock_screen_fragment, LockScreenFragment.bundle(UnlockAction.AuthorizeApplication))
               }
-
               else -> {}
             }
           }
@@ -404,7 +402,7 @@ class MainActivity :
 
   override fun onEventMsg(event: SuplaEvent) {
     super.onEventMsg(event)
-    if (event.Owner && event.Event != SuplaConst.SUPLA_EVENT_SET_BRIDGE_VALUE_FAILED || event.ChannelID == 0) return
+    if ((event.Owner && event.Event != SuplaConst.SUPLA_EVENT_SET_BRIDGE_VALUE_FAILED) || event.ChannelID == 0) return
     val channel = getDbHelper()?.getChannel(event.ChannelID) ?: return
     var imgResId = 0
     var imgId: ImageId? = null

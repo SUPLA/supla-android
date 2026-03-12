@@ -94,19 +94,15 @@ class CheckPinUseCase @Inject constructor(
         } else if (result == Result.UnlockedNoAccount) {
           suplaClientStateHolder.handleEvent(SuplaClientEvent.NoAccount)
         }
-
       UnlockAction.TurnOffPin -> {
         encryptedPreferences.lockScreenSettings = LockScreenSettings.DEFAULT
       }
-
       UnlockAction.ConfirmAuthorizeApplication -> {
         encryptedPreferences.lockScreenSettings = encryptedPreferences.lockScreenSettings.copy(scope = LockScreenScope.APPLICATION)
       }
-
       UnlockAction.ConfirmAuthorizeAccounts -> {
         encryptedPreferences.lockScreenSettings = encryptedPreferences.lockScreenSettings.copy(scope = LockScreenScope.ACCOUNTS)
       }
-
       UnlockAction.AuthorizeAccountsCreate,
       is UnlockAction.AuthorizeAccountsEdit -> {
       } // Nothing to do

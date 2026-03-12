@@ -48,7 +48,6 @@ class HumidityAndTemperatureValueStringProvider @Inject constructor(
         value = value,
         format = withUnit.ifTrue { ValueFormat.WithUnit } ?: ValueFormat.TemperatureWithDegree
       )
-
       ValueType.SECOND -> HumidityValueFormatter.format(value, withUnit(withUnit))
     }
   }

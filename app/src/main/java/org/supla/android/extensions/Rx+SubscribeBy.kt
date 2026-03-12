@@ -1,7 +1,4 @@
 package org.supla.android.extensions
-/**
- * Copied from https://github.com/ReactiveX/RxKotlin/blob/3.x/src/main/kotlin/io/reactivex/rxjava3/kotlin/subscribers.kt
- */
 
 import io.reactivex.rxjava3.annotations.BackpressureKind
 import io.reactivex.rxjava3.annotations.BackpressureSupport
@@ -16,6 +13,10 @@ import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.functions.Action
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.internal.functions.Functions
+
+/**
+ * Copied from https://github.com/ReactiveX/RxKotlin/blob/3.x/src/main/kotlin/io/reactivex/rxjava3/kotlin/subscribers.kt
+ */
 
 private val onNextStub: (Any) -> Unit = {}
 private val onErrorStub: (Throwable) -> Unit = {}

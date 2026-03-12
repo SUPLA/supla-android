@@ -71,14 +71,12 @@ fun AddWizardScope.View(modelState: AddWizardViewModelState) {
       AddWizardScreen.NetworkSelection -> AddWizardNetworkSelectionView(
         state = modelState.networkSelectionState ?: AddWizardNetworkSelectionState()
       )
-
       AddWizardScreen.Configuration ->
         AddWizardConfigurationView(
           processing = modelState.processing,
           progress = modelState.processingProgress,
           progressLabel = modelState.processingProgressLabel
         )
-
       AddWizardScreen.Welcome, null -> AddWizardWelcomeView()
       is AddWizardScreen.Message -> AddWizardMessageView(screen)
       is AddWizardScreen.Success -> AddWizardSuccessView(modelState.parameters)

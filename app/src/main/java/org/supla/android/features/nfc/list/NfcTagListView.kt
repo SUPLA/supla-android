@@ -138,14 +138,12 @@ private fun NfcTagListScope.WarningMessage(nfcState: NfcTagListViewState.NfcStat
         modifier = Modifier.padding(Distance.default),
         withArrow = false
       )
-
     NfcTagListViewState.NfcState.DISABLED ->
       WarningMessage(
         textRes = R.string.nfc_list_nfc_disabled,
         modifier = Modifier.padding(Distance.default),
         onClick = { onNfcSettingsClick() }
       )
-
     NfcTagListViewState.NfcState.ENABLED -> {}
   }
 

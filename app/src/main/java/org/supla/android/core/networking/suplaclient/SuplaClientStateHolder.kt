@@ -54,7 +54,6 @@ class SuplaClientStateHolder @Inject constructor(
               // that's why this initialization is added here.
               suplaAppProvider.provide().SuplaClientInitIfNeed(applicationContext)
             }
-
             else -> {}
           }
         }

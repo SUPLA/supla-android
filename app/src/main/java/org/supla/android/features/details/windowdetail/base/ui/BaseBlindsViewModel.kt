@@ -108,10 +108,8 @@ abstract class BaseBlindsViewModel<S : BaseBlindsViewModelState>(
             val markers = when {
               state.tiltControlType == SuplaTiltControlType.TILTS_ONLY_WHEN_FULLY_CLOSED ->
                 emptyList()
-
               state.windowState.position is WindowGroupedValue.Different ->
                 state.windowState.markers.map { marker -> ShadingBlindMarker(marker.position, action.tilt) }
-
               else -> emptyList()
             }
             val position = when {
@@ -124,7 +122,6 @@ abstract class BaseBlindsViewModel<S : BaseBlindsViewModelState>(
             ) { it.copy(touchTime = null, positionUnknown = false) }
           }
         }
-
       is ShadingSystemAction.TiltSetTo ->
         updateState {
           if (it.viewState.calibrating) {
@@ -140,7 +137,6 @@ abstract class BaseBlindsViewModel<S : BaseBlindsViewModelState>(
             stateCopy(it, manualMoving = false)
           }
         }
-
       is ShadingSystemAction.MoveAndTiltTo ->
         updateState { state ->
           if (state.viewState.calibrating) {
@@ -159,7 +155,6 @@ abstract class BaseBlindsViewModel<S : BaseBlindsViewModelState>(
             ) { it.copy(touchTime = null, positionUnknown = false) }
           }
         }
-
       is ShadingSystemAction.MoveAndTiltSetTo ->
         updateState {
           if (it.viewState.calibrating) {
@@ -182,7 +177,6 @@ abstract class BaseBlindsViewModel<S : BaseBlindsViewModelState>(
             stateCopy(it, manualMoving = false)
           }
         }
-
       else -> super.handleAction(action, remoteId, itemType)
     }
   }
@@ -191,7 +185,6 @@ abstract class BaseBlindsViewModel<S : BaseBlindsViewModelState>(
     when (itemType) {
       ItemType.CHANNEL ->
         suplaClientProvider.provide()?.getChannelConfig(remoteId, ChannelConfigType.DEFAULT)
-
       ItemType.GROUP ->
         readGroupTiltingDetailsUseCase(remoteId)
           .attachSilent()

@@ -77,7 +77,6 @@ class ThermostatDetailViewModel @Inject constructor(
           super.shouldCloseDetail(channelDataBase, initialFunction)
         }
       }
-
       else -> super.shouldCloseDetail(channelDataBase, initialFunction)
     }
 }

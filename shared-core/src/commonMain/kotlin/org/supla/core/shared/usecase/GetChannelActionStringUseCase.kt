@@ -29,18 +29,14 @@ class GetChannelActionStringUseCase {
       SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
       SuplaFunction.VALVE_OPEN_CLOSE,
       SuplaFunction.VALVE_PERCENTAGE -> LocalizedStringId.GENERAL_OPEN
-
       SuplaFunction.CONTROLLING_THE_GATE,
       SuplaFunction.CONTROLLING_THE_GARAGE_DOOR -> LocalizedStringId.GENERAL_OPEN_CLOSE
-
       SuplaFunction.CONTROLLING_THE_FACADE_BLIND,
       SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER,
       SuplaFunction.VERTICAL_BLIND,
       SuplaFunction.CURTAIN -> LocalizedStringId.GENERAL_REVEAL
-
       SuplaFunction.TERRACE_AWNING,
       SuplaFunction.PROJECTOR_SCREEN -> LocalizedStringId.GENERAL_COLLAPSE
-
       SuplaFunction.POWER_SWITCH,
       SuplaFunction.LIGHTSWITCH,
       SuplaFunction.STAIRCASE_TIMER,
@@ -55,7 +51,6 @@ class GetChannelActionStringUseCase {
       SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
       SuplaFunction.PUMP_SWITCH,
       SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH -> LocalizedStringId.GENERAL_TURN_ON
-
       SuplaFunction.UNKNOWN,
       SuplaFunction.NONE,
       SuplaFunction.THERMOMETER,
@@ -106,15 +101,12 @@ class GetChannelActionStringUseCase {
       SuplaFunction.ROLLER_GARAGE_DOOR,
       SuplaFunction.VALVE_OPEN_CLOSE,
       SuplaFunction.VALVE_PERCENTAGE -> LocalizedStringId.GENERAL_CLOSE
-
       SuplaFunction.CONTROLLING_THE_FACADE_BLIND,
       SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER,
       SuplaFunction.VERTICAL_BLIND,
       SuplaFunction.CURTAIN -> LocalizedStringId.GENERAL_SHUT
-
       SuplaFunction.TERRACE_AWNING,
       SuplaFunction.PROJECTOR_SCREEN -> LocalizedStringId.GENERAL_EXPAND
-
       SuplaFunction.POWER_SWITCH,
       SuplaFunction.LIGHTSWITCH,
       SuplaFunction.STAIRCASE_TIMER,
@@ -129,7 +121,6 @@ class GetChannelActionStringUseCase {
       SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
       SuplaFunction.PUMP_SWITCH,
       SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH -> LocalizedStringId.GENERAL_TURN_OFF
-
       SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
       SuplaFunction.CONTROLLING_THE_GATE,
       SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,

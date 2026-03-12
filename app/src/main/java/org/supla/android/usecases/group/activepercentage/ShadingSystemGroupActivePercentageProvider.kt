@@ -12,7 +12,6 @@ object ShadingSystemGroupActivePercentageProvider : GroupActivePercentageProvide
     SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING,
     SuplaConst.SUPLA_CHANNELFNC_CURTAIN,
     SuplaConst.SUPLA_CHANNELFNC_ROLLER_GARAGE_DOOR -> true
-
     else -> false
   }
 

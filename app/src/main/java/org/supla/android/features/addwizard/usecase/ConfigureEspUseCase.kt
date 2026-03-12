@@ -68,22 +68,18 @@ class ConfigureEspUseCase @Inject constructor(
         Timber.w("Could not connect to the ESP device")
         Result.ConnectionError
       }
-
       is GetResult.CredentialsNeeded -> {
         Timber.w("Configuration broken, credentials needed")
         Result.CredentialsNeeded
       }
-
       is GetResult.SetupNeeded -> {
         Timber.w("Configuration broken, setup needed")
         Result.SetupNeeded
       }
-
       is GetResult.TemporarilyLocked -> {
         Timber.w("Device temporarily locked")
         Result.TemporarilyLocked
       }
-
       is GetResult.Success -> performConfigurationUpdate(profile, getResult, inputData, fieldMap)
     }
   }

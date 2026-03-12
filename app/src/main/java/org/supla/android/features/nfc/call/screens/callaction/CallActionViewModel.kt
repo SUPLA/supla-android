@@ -126,7 +126,6 @@ class CallActionViewModel @Inject constructor(
         delay(SUCCESS_DELAY_MS)
         sendEvent(CallActionViewEvent.Close)
       }
-
       SingleCall.Result.NotFound -> setErrorState(TagProcessingStep.FailureType.ChannelNotFound(tag.tagEntity.id))
       SingleCall.Result.Offline -> setErrorState(TagProcessingStep.FailureType.ChannelOffline)
       SingleCall.Result.Inactive -> setErrorState(TagProcessingStep.FailureType.SceneInactive)

@@ -100,7 +100,6 @@ class StandardDetailPagerAdapter(
     DetailPage.LEGACY_RGBW -> LegacyDetailFragment().apply {
       arguments = LegacyDetailFragment.bundle(itemBundle.remoteId, LegacyDetailType.RGBW, itemBundle.itemType)
     }
-
     DetailPage.THERMOSTAT_HEATPOL_GENERAL -> LegacyDetailFragment().apply {
       arguments = LegacyDetailFragment.bundle(itemBundle.remoteId, LegacyDetailType.THERMOSTAT_HP, itemBundle.itemType)
     }

@@ -313,7 +313,6 @@ private fun ContainerViewScope.getControlLevelTextPosition(
         middleLine - specification.alertTextMargin
       }
     }
-
     nextLevel != null -> {
       val desiredPosition = levelPosition - halfTextHeight
       val nextDesiredPosition = specification.levelPosition(targetRect, nextLevel.level)
@@ -325,7 +324,6 @@ private fun ContainerViewScope.getControlLevelTextPosition(
         middleLine - textHeight + specification.alertTextMargin
       }
     }
-
     else -> levelPosition - halfTextHeight
   }
 }

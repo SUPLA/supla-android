@@ -34,19 +34,16 @@ class ThermostatHomePlusIconResourceProducer : IconResourceProducer {
       } else {
         R.drawable.thermostat_hp_homeplusoff_1
       }
-
       2 -> if (data.state.value == ChannelState.Value.ON) {
         R.drawable.thermostat_hp_homepluson_2
       } else {
         R.drawable.thermostat_hp_homeplusoff_2
       }
-
       3 -> if (data.state.value == ChannelState.Value.ON) {
         R.drawable.thermostat_hp_homepluson_3
       } else {
         R.drawable.thermostat_hp_homeplusoff_3
       }
-
       else -> if (data.state.value == ChannelState.Value.ON) {
         R.drawable.thermostat_hp_homepluson
       } else {

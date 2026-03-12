@@ -33,7 +33,6 @@ class ImpulseCounterValueProvider @Inject constructor() : ChannelValueProvider, 
       SuplaFunction.IC_WATER_METER,
       SuplaFunction.IC_HEAT_METER,
       SuplaFunction.IC_GAS_METER -> true
-
       else -> false
     }
 

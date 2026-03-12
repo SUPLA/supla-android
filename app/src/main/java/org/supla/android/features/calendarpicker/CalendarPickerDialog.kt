@@ -455,7 +455,6 @@ private fun isDaySelected(day: Date, state: CalendarPickerState): Boolean {
   return when (state) {
     is CalendarDatePickerState ->
       state.selectedDate?.sameDay(day) == true
-
     is CalendarRangePickerState ->
       state.selectedRange?.start?.sameDay(day) == true || state.selectedRange?.end?.sameDay(day) == true
   }
@@ -465,7 +464,6 @@ private fun isDayEnabled(day: Date, visibleDate: Date, state: CalendarPickerStat
   when (state) {
     is CalendarDatePickerState ->
       return isDaySelectable(day, visibleDate, state)
-
     is CalendarRangePickerState -> {
       val (range) = guardLet(state.selectedRange) { return isDaySelectable(day, visibleDate, state) }
       return if (range.start != range.end) {
@@ -489,7 +487,6 @@ private fun isDayHighlighted(day: Date, state: CalendarPickerState): Boolean {
   when (state) {
     is CalendarDatePickerState ->
       return false
-
     is CalendarRangePickerState -> {
       val (range) = guardLet(state.selectedRange) { return false }
       return day.after(range.start) && day.before(range.end)

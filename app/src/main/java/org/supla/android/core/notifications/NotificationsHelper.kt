@@ -114,11 +114,9 @@ class NotificationsHelper @Inject constructor(
       ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED -> {
         // do nothing, we have permission
       }
-
       activity.shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
         // do nothing, user blocked notifications
       }
-
       else -> {
         if (preferences.isNotificationsPopupDisplayed.not()) {
           askPermissionCallback()

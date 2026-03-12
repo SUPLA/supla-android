@@ -58,7 +58,6 @@ class StatusFragment : BaseFragment<StatusViewModelState, StatusViewEvent>(R.lay
               viewState = modelState.viewState,
               onCancelAndGoToProfilesClick = { viewModel.cancelAndOpenProfiles() }
             )
-
           StatusViewModelState.ViewType.ERROR ->
             ErrorStatusView(
               viewState = modelState.viewState,

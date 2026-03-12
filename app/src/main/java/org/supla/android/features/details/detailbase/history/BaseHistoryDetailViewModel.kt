@@ -481,7 +481,6 @@ abstract class BaseHistoryDetailViewModel(
       ChartRange.LAST_QUARTER -> dateProvider.currentDate().let {
         DateRange(it.shift(-selectedRange.roundedDaysCount).dayStart().nextDay(), it.dayEnd())
       }
-
       else -> chartState.dateRange ?: dateProvider.currentDate().let { DateRange(it.shift(-selectedRange.roundedDaysCount), it) }
     }
 
@@ -545,18 +544,15 @@ abstract class BaseHistoryDetailViewModel(
       is DownloadEventsManager.State.Started -> {
         updateState { it.copy(downloadState = downloadState, loading = true) }
       }
-
       is DownloadEventsManager.State.Finished -> {
         updateState { state ->
           triggerMeasurementsLoad(state)
           state.copy(downloadState = downloadState)
         }
       }
-
       is DownloadEventsManager.State.Refresh -> {
         refresh()
       }
-
       else -> {
         updateState { it.copy(downloadState = downloadState, loading = false) }
       }
@@ -600,7 +596,6 @@ abstract class BaseHistoryDetailViewModel(
     ChartRange.LAST_MONTH,
     ChartRange.LAST_QUARTER,
     ChartRange.LAST_YEAR -> currentDate.shift(-range.roundedDaysCount).dayStart().nextDay()
-
     ChartRange.WEEK -> date.weekStart()
     ChartRange.MONTH -> date.monthStart()
     ChartRange.QUARTER -> date.quarterStart()
@@ -616,7 +611,6 @@ abstract class BaseHistoryDetailViewModel(
     ChartRange.LAST_MONTH,
     ChartRange.LAST_QUARTER,
     ChartRange.LAST_YEAR -> currentDate.dayEnd()
-
     ChartRange.WEEK -> end.weekEnd()
     ChartRange.MONTH -> end.monthEnd()
     ChartRange.QUARTER -> end.quarterEnd()
@@ -677,12 +671,10 @@ data class HistoryDetailViewState(
   val emptyChartMessage: LocalizedString
     get() = when (downloadState) {
       is DownloadEventsManager.State.Started -> localizedString(R.string.history_refreshing)
-
       is DownloadEventsManager.State.InProgress -> {
         val percentage = ValuesFormatter.getPercentageString(downloadState.progress)
         localizedString("%s %s", localizedString(R.string.retrieving_data_from_the_server), percentage)
       }
-
       is DownloadEventsManager.State.Finished -> {
         if (loading) {
           localizedString(R.string.history_refreshing)
@@ -696,7 +688,6 @@ data class HistoryDetailViewState(
           localizedString(R.string.no_chart_data_available)
         }
       }
-
       is DownloadEventsManager.State.Failed -> localizedString(R.string.history_refreshing_failed)
       else -> {
         if (loading.not() && chartData.sets.isEmpty()) {
@@ -714,7 +705,6 @@ data class HistoryDetailViewState(
       ChartRange.MONTH,
       ChartRange.QUARTER,
       ChartRange.YEAR -> true
-
       else -> false
     }
 
@@ -746,18 +736,14 @@ data class HistoryDetailViewState(
       return when (chartRange) {
         ChartRange.DAY -> dateFormatter.getDateString(dateRange.start)
         ChartRange.LAST_DAY -> weekdayAndHourString(dateRange)
-
         ChartRange.LAST_WEEK,
         ChartRange.LAST_MONTH -> dayAndHourString(dateRange)
-
         ChartRange.WEEK,
         ChartRange.LAST_QUARTER,
         ChartRange.QUARTER,
         ChartRange.LAST_YEAR -> dateString(dateRange)
-
         ChartRange.MONTH -> dateFormatter.getMonthAndYearString(dateRange.start)?.capitalize(Locale.current)
         ChartRange.YEAR -> dateFormatter.getYearString(dateRange.start)
-
         ChartRange.CUSTOM,
         ChartRange.ALL_HISTORY -> longDateString(dateRange)
       }
@@ -771,7 +757,6 @@ data class HistoryDetailViewState(
       ChartRange.QUARTER,
       ChartRange.YEAR,
       ChartRange.CUSTOM -> chartRange
-
       else -> ChartRange.CUSTOM
     }
     return copy(

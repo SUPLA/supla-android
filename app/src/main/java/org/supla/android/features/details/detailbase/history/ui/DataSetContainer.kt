@@ -173,7 +173,6 @@ private fun DataSetItemsRow(
         showColor = label.value.presentColor,
         active = historyEnabled && active
       )
-
       is HistoryDataSet.Label.Multiple -> {
         label.values.forEach {
           if (!it.justColor) {
@@ -217,7 +216,6 @@ private fun DataSetItemsColumn(
         showColor = label.value.presentColor,
         active = historyEnabled && active
       )
-
       is HistoryDataSet.Label.Multiple ->
         label.values.forEach {
           if (!it.justColor) {

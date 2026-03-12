@@ -48,7 +48,6 @@ class RelayIssuesProvider : ChannelIssuesProvider {
       SuplaFunction.POWER_SWITCH,
       SuplaFunction.LIGHTSWITCH,
       SuplaFunction.STAIRCASE_TIMER -> true
-
       else -> false
     }
 }

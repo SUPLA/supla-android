@@ -31,15 +31,15 @@ import java.util.Date
   tableName = TABLE_NAME,
   indices = [
     Index(
-      value = [ COLUMN_CHANNEL_ID ],
+      value = [COLUMN_CHANNEL_ID],
       name = "${TABLE_NAME}_${COLUMN_CHANNEL_ID}_index"
     ),
     Index(
-      value = [ COLUMN_TIMESTAMP ],
+      value = [COLUMN_TIMESTAMP],
       name = "${TABLE_NAME}_${COLUMN_TIMESTAMP}_index"
     ),
     Index(
-      value = [ COLUMN_CHANNEL_ID, COLUMN_TIMESTAMP, COLUMN_PROFILEID ],
+      value = [COLUMN_CHANNEL_ID, COLUMN_TIMESTAMP, COLUMN_PROFILEID],
       name = "${TABLE_NAME}_unique_index",
       unique = true
     )

@@ -40,7 +40,6 @@ object DimmerCctAndRgbIconResourceProducer : IconResourceProducer {
           R.drawable.fnc_dimmer_cct_rgb_off_off
         }
       }
-
       else -> null
     }
   }

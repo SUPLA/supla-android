@@ -172,7 +172,6 @@ private fun PhaseWithMeasurements.Companion.allPhases(
       when (val value = it.value!!) {
         is SuplaElectricityMeasurementType.Value.Single ->
           formatter.custom(value.value, it.key.precision)
-
         is SuplaElectricityMeasurementType.Value.Double ->
           "${formatter.custom(value.first, 0)} - ${formatter.custom(value.second, 0)}"
       }

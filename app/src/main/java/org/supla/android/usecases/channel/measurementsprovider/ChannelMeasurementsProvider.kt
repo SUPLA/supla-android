@@ -125,14 +125,11 @@ open class MeasurementsProvider(
     return when (type) {
       ChartEntryType.HUMIDITY,
       ChartEntryType.HUMIDITY_ONLY -> HumidityValueFormatter
-
       ChartEntryType.TEMPERATURE,
       ChartEntryType.PRESET_TEMPERATURE -> ThermometerValueFormatter(preferences)
-
       ChartEntryType.GENERAL_PURPOSE_MEASUREMENT,
       ChartEntryType.GENERAL_PURPOSE_METER ->
         GpmValueFormatter.staticFormatter(channelWithChildren.channel.configEntity?.toSuplaConfig(gson))
-
       ChartEntryType.ELECTRICITY -> ElectricityMeterValueFormatter()
       ChartEntryType.IMPULSE_COUNTER -> ImpulseCounterValueFormatter.staticFormatter(channelWithChildren)
       ChartEntryType.VOLTAGE -> VoltageValueFormatter

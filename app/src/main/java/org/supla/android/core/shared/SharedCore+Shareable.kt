@@ -48,13 +48,11 @@ val ChannelDataBase.shareable: BaseData
       status = status,
       value = channelValueEntity.getValueAsByteArray()
     )
-
     is ChannelGroupDataEntity -> Group(
       remoteId = remoteId,
       function = function,
       caption = caption
     )
-
     else -> throw IllegalStateException("Unexpected type")
   }
 

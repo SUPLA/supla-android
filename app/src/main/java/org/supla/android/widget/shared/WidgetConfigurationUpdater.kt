@@ -70,16 +70,13 @@ class WidgetConfigurationUpdater @Inject constructor(
       SuplaFunction.HUMIDITY,
       SuplaFunction.HUMIDITY_AND_TEMPERATURE ->
         handleThermometerWidget(configuration, withUnit)
-
       SuplaFunction.GENERAL_PURPOSE_METER,
       SuplaFunction.GENERAL_PURPOSE_MEASUREMENT ->
         handleGpmWidget(configuration, withUnit)
-
       SuplaFunction.CONTAINER,
       SuplaFunction.WATER_TANK,
       SuplaFunction.SEPTIC_TANK ->
         handleContainer(configuration)
-
       else -> {
         Timber.w("Trying to update widget value of unsupported function ${configuration.subjectFunction}")
         null

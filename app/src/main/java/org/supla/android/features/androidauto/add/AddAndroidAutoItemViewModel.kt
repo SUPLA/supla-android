@@ -271,11 +271,9 @@ class AddAndroidAutoItemViewModel @Inject constructor(
         readAllChannelsWithChildrenUseCase(profileId)
           .firstOrError()
           .map { channels -> channelsSubjectItems(channels.filter { it.actions.isNotEmpty() }, getChannelValueStringUseCase) }
-
       SubjectType.GROUP ->
         channelGroupRepository.findProfileGroups(profileId)
           .map { groups -> groupsSubjectItems(groups.filter { it.function.actions.isNotEmpty() }) }
-
       SubjectType.SCENE ->
         sceneRepository.findProfileScenes(profileId)
           .map { scenes -> scenesSubjectItems(scenes) }

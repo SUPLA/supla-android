@@ -27,7 +27,6 @@ class DigiglassHorizontalIconResourceProducer : IconResourceProducer {
   override fun accepts(function: SuplaFunction): Boolean =
     when (function) {
       SuplaFunction.DIGIGLASS_HORIZONTAL -> true
-
       else -> false
     }
 
@@ -38,7 +37,6 @@ class DigiglassHorizontalIconResourceProducer : IconResourceProducer {
       } else {
         R.drawable.fnc_digiglass_horizontal_1_transparent
       }
-
       else -> if (data.state.value == ChannelState.Value.OPAQUE) {
         R.drawable.fnc_digiglass_horizontal
       } else {

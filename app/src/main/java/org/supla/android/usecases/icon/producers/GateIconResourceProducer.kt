@@ -28,7 +28,6 @@ class GateIconResourceProducer : IconResourceProducer {
     when (function) {
       SuplaFunction.OPEN_SENSOR_GATE,
       SuplaFunction.CONTROLLING_THE_GATE -> true
-
       else -> false
     }
 
@@ -39,13 +38,11 @@ class GateIconResourceProducer : IconResourceProducer {
         ChannelState.Value.OPEN -> R.drawable.fnc_gate_1_opened
         else -> R.drawable.fnc_gate_1_closed
       }
-
       2 -> if (data.state.value == ChannelState.Value.OPEN) {
         R.drawable.fnc_barier_opened
       } else {
         R.drawable.fnc_barier_closed
       }
-
       else -> when (data.state.value) {
         ChannelState.Value.PARTIALLY_OPENED -> R.drawable.fnc_gate_closed_50_percent
         ChannelState.Value.OPEN -> R.drawable.fnc_gate_opened

@@ -28,7 +28,6 @@ class GatewayIconResourceProducer : IconResourceProducer {
     when (function) {
       SuplaFunction.OPEN_SENSOR_GATEWAY,
       SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK -> true
-
       else -> false
     }
 

@@ -42,7 +42,6 @@ class SuplaRegisterError {
       SuplaConst.SUPLA_RESULTCODE_TEMPORARILY_UNAVAILABLE -> localizedString(R.string.status_temporarily_unavailable)
       SuplaConst.SUPLA_RESULTCODE_BAD_CREDENTIALS ->
         localizedString(if (authDialog) R.string.incorrect_email_or_password else R.string.status_bad_credentials)
-
       SuplaConst.SUPLA_RESULTCODE_CLIENT_LIMITEXCEEDED -> localizedString(R.string.status_climit_exceded)
       SuplaConst.SUPLA_RESULTCODE_CLIENT_DISABLED -> localizedString(R.string.status_device_disabled)
       SuplaConst.SUPLA_RESULTCODE_ACCESSID_DISABLED -> localizedString(R.string.status_accessid_disabled)

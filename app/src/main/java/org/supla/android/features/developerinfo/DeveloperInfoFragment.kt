@@ -66,25 +66,18 @@ class DeveloperInfoFragment : BaseComposeFragment<DeveloperInfoViewModelState, D
     when (event) {
       DeveloperInfoViewEvent.UpdateOrientationLock ->
         activity?.setupOrientationLock(applicationPreferences)
-
       DeveloperInfoViewEvent.ExportSuplaDatabase ->
         exportSuplaDbLauncher.launch("supla-${System.currentTimeMillis()}.db")
-
       DeveloperInfoViewEvent.ExportMeasurementsDatabase ->
         exportMeasurementsDbLauncher.launch("measurements-${System.currentTimeMillis()}.db")
-
       DeveloperInfoViewEvent.ExportLogFile ->
         exportLogFileLauncher.launch(DebugFileLoggingTree.FILE_NAME)
-
       DeveloperInfoViewEvent.LogFileRemovalFailed ->
         Toast.makeText(requireContext(), "Log file removal failed!", Toast.LENGTH_SHORT).show()
-
       DeveloperInfoViewEvent.LogFileRemoved ->
         Toast.makeText(requireContext(), "Log file removed", Toast.LENGTH_SHORT).show()
-
       DeveloperInfoViewEvent.SuplaExportNotPossible ->
         Toast.makeText(requireContext(), "Export failed", Toast.LENGTH_SHORT).show()
-
       DeveloperInfoViewEvent.ExportCanceled ->
         Toast.makeText(requireContext(), "File export cancelled.", Toast.LENGTH_SHORT).show()
     }

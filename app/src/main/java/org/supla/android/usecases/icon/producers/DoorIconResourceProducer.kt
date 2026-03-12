@@ -28,7 +28,6 @@ class DoorIconResourceProducer : IconResourceProducer {
     when (function) {
       SuplaFunction.OPEN_SENSOR_DOOR,
       SuplaFunction.CONTROLLING_THE_DOOR_LOCK -> true
-
       else -> false
     }
 

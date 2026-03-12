@@ -82,14 +82,12 @@ fun CurtainWindowView(
                 )
               }
             }
-
             MotionEvent.ACTION_MOVE -> {
               moveState.value = moveState.value.copy(lastPoint = Offset(event.x, event.y))
               windowDimens
                 .getPositionFromState(moveState.value, bidirectional = true)
                 ?.let { position -> onPositionChanging?.let { it(position.x) } }
             }
-
             MotionEvent.ACTION_UP -> {
               onPositionChanged?.let { it(windowState.position.value) }
               moveState.value = moveState.value.copy(initialPoint = null)

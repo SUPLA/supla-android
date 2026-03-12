@@ -81,7 +81,6 @@ val TagProcessingStep.FailureType.primaryRes: Int?
     ActionFailed,
     ChannelOffline,
     SceneInactive -> null
-
     is TagNotFound -> R.string.nfc_add_tag
     is TagNotConfigured -> R.string.nfc_assign_action
     is ChannelNotFound -> R.string.nfc_update_action
@@ -97,6 +96,5 @@ val TagProcessingStep.FailureType.secondaryRes: Int
     is ChannelNotFound,
     ChannelOffline,
     SceneInactive -> R.string.exit
-
     is TagNotFound -> R.string.cancel
   }

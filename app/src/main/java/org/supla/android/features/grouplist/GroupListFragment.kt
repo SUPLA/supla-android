@@ -95,12 +95,10 @@ class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R
           ItemType.GROUP
         )
       }
-
       is GroupListViewEvent.ReassignAdapter -> {
         binding.groupsList.adapter = null
         binding.groupsList.adapter = adapter
       }
-
       is GroupListViewEvent.BaseDetail -> navigator.navigateTo(
         destinationId = event.fragmentId,
         bundle = event.fragmentArguments

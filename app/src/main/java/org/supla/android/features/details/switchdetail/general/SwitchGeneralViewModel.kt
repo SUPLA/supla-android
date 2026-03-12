@@ -255,7 +255,6 @@ class SwitchGeneralViewModel @Inject constructor(
           )
         }
       }
-
       else -> {
         with(currentState()) {
           loadData(remoteId, itemType, cleanupDownloading = true)
@@ -347,6 +346,5 @@ private val SuplaFunction.switchWithButtons: Boolean
     SuplaFunction.POWER_SWITCH,
     SuplaFunction.STAIRCASE_TIMER,
     SuplaFunction.LIGHTSWITCH -> true
-
     else -> false
   }

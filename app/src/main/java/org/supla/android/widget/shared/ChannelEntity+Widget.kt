@@ -33,7 +33,6 @@ val SuplaFunction.isValueWidget: Boolean
     SuplaFunction.CONTAINER,
     SuplaFunction.WATER_TANK,
     SuplaFunction.SEPTIC_TANK -> true
-
     SuplaFunction.UNKNOWN,
     SuplaFunction.NONE,
     SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,

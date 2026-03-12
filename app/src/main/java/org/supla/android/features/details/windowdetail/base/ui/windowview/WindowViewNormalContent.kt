@@ -129,7 +129,6 @@ fun WindowViewNormalContent(
           modifier = Modifier.align(Alignment.Center),
           onAction = onAction
         )
-
         ShadingSystemOrientation.HORIZONTAL -> HorizontalControlButtons(
           viewState = viewState,
           windowState = windowState,

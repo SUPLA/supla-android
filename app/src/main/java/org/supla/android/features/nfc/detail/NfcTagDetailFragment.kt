@@ -72,7 +72,6 @@ class NfcTagDetailFragment : BaseComposeFragment<NfcTagDetailViewState, NfcTagDe
       is NfcTagDetailViewEvent.SetToolbarTitle -> setToolbarTitle(event.tagName)
       NfcTagDetailViewEvent.EditTag ->
         itemId?.let { navigator.navigateTo(R.id.nfc_tag_edit_fragment, EditNfcTagFragment.bundle(it)) }
-
       NfcTagDetailViewEvent.LockTag ->
         itemId?.let { navigator.navigateTo(R.id.nfc_tag_lock_fragment, LockTagFragment.bundle(it)) }
     }

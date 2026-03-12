@@ -111,7 +111,6 @@ class AddWizardFragment : BaseComposeFragment<AddWizardViewModelState, AddWizard
           }
           .addOnCanceledListener { Timber.i("Barcode scanner canceled") }
           .addOnFailureListener { Timber.i("Barcode scanner failure") }
-
       AddWizardViewEvent.CheckPermissions -> checkPermissions()
       AddWizardViewEvent.OpenCloud -> navigator.navigateToCloudExternal()
     }

@@ -194,10 +194,8 @@ data class HistoryDataSet(
     when (val value = entity.value) {
       is AggregatedValue.Single ->
         ChartEntryDetails.Default(aggregation, type, entity.date, value.min, value.max, value.open, value.close, valueFormatter, customData)
-
       is AggregatedValue.Multiple ->
         ChartEntryDetails.Default(aggregation, type, entity.date, valueFormatter = valueFormatter, customData = customData)
-
       is AggregatedValue.WithPhase ->
         ChartEntryDetails.WithPhase(aggregation, type, entity.date, value.min, value.max, valueFormatter, customData, value.phase)
     }

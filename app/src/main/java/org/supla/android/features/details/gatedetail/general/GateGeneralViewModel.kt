@@ -203,7 +203,6 @@ class GateGeneralViewModel @Inject constructor(
     when (function) {
       SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
       SuplaFunction.CONTROLLING_THE_DOOR_LOCK -> localizedString(R.string.channel_btn_open)
-
       else -> localizedString(R.string.channel_btn_step_by_step)
     }
 }
@@ -218,7 +217,6 @@ private val SuplaFunction.supportsOpenAndClose: Boolean
   get() = when (this) {
     SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
     SuplaFunction.CONTROLLING_THE_GATE -> true
-
     else -> false
   }
 

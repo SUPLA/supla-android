@@ -65,7 +65,6 @@ class ExtendedValueWidgetConfigurationActivity : BaseWidgetActivity() {
         setResult(RESULT_OK, Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, event.widgetId))
         finish()
       }
-
       else -> super.handleEvent(event)
     }
   }

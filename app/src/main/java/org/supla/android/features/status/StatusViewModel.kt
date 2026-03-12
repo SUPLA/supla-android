@@ -69,7 +69,6 @@ class StatusViewModel @Inject constructor(
           when (state) {
             SuplaClientState.Connected -> sendEvent(StatusViewEvent.NavigateToMain)
             is SuplaClientState.Finished -> handleErrorState(state)
-
             SuplaClientState.Initialization ->
               updateState {
                 it.copy(
@@ -77,7 +76,6 @@ class StatusViewModel @Inject constructor(
                   viewState = it.viewState.copy(stateText = StatusViewStateText.INITIALIZING)
                 )
               }
-
             is SuplaClientState.Connecting ->
               updateState {
                 it.copy(
@@ -91,7 +89,6 @@ class StatusViewModel @Inject constructor(
                   )
                 )
               }
-
             is SuplaClientState.Disconnecting,
             SuplaClientState.Locking ->
               updateState {
@@ -100,7 +97,6 @@ class StatusViewModel @Inject constructor(
                   viewState = it.viewState.copy(stateText = StatusViewStateText.DISCONNECTING)
                 )
               }
-
             else -> {}
           }
         }
@@ -156,7 +152,6 @@ class StatusViewModel @Inject constructor(
         } else {
           null
         }
-
       is SuplaClientState.Reason.RegisterError -> reason.error.codeToString(true)
       SuplaClientState.Reason.NoNetwork,
       SuplaClientState.Reason.VersionError,

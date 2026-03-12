@@ -106,7 +106,6 @@ fun PinSetupView(
     when (viewState.biometricStatus) {
       BiometricUtils.AuthenticationStatus.POSSIBLE ->
         BiometricSwitch(viewState, onBiometricAuthenticationChange)
-
       BiometricUtils.AuthenticationStatus.NOT_ENROLLED ->
         Text(
           text = stringResource(id = R.string.pin_setup_biometric_not_enrolled),
@@ -114,7 +113,6 @@ fun PinSetupView(
           color = MaterialTheme.colorScheme.error,
           textAlign = TextAlign.Center
         )
-
       else -> {}
     }
 
