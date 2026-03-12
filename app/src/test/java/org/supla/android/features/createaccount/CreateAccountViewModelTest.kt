@@ -496,7 +496,7 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
     viewModel.deleteProfile(profileId)
 
     // then
-    assertThat(states).isEmpty()
+    assertThat(states).hasSize(2) // because of loading flag change
     assertThat(events).containsExactly(event)
 
     verify { deleteProfileUseCase(profileId) }

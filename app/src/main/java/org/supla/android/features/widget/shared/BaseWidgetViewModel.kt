@@ -25,32 +25,33 @@ import io.reactivex.rxjava3.core.Single
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
-import org.supla.android.data.model.general.ChannelBase
 import org.supla.android.data.model.spinner.SubjectItem
 import org.supla.android.data.model.spinner.SubjectItemConversionScope
 import org.supla.android.data.source.ChannelGroupRepository
-import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.RoomSceneRepository
+import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.features.widget.shared.subjectdetail.SubjectDetail
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
+import org.supla.android.usecases.channel.ReadAllChannelsWithChildrenUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
-import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.android.widget.shared.isValueWidget
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import java.util.Objects
 
 abstract class BaseWidgetViewModel(
+  private val readAllChannelsWithChildrenUseCase: ReadAllChannelsWithChildrenUseCase,
+  private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
+  private val channelGroupRepository: ChannelGroupRepository,
   override val getChannelIconUseCase: GetChannelIconUseCase,
   override val getSceneIconUseCase: GetSceneIconUseCase,
   override val getCaptionUseCase: GetCaptionUseCase,
-  private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
-  private val channelGroupRepository: ChannelGroupRepository,
-  private val channelRepository: RoomChannelRepository,
   private val sceneRepository: RoomSceneRepository,
   private val powerManager: PowerManager,
-  @ApplicationContext private val context: Context,
+  @param:ApplicationContext private val context: Context,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<WidgetConfigurationViewModelState, WidgetConfigurationViewEvent>(
   WidgetConfigurationViewModelState(),
@@ -58,7 +59,7 @@ abstract class BaseWidgetViewModel(
 ),
   SubjectItemConversionScope {
 
-  fun setWidgetId(widgetId: Int?) {
+  open fun setWidgetId(widgetId: Int?) {
     updateState { it.copy(widgetId = widgetId) }
   }
 
@@ -73,10 +74,7 @@ abstract class BaseWidgetViewModel(
   fun onCaptionChange(caption: String) {
     updateState { state ->
       state.copy(
-        viewState = state.viewState.copy(
-          caption = caption,
-          saveEnabled = caption.isNotEmpty()
-        ),
+        viewState = state.viewState.copy(caption = caption),
         selections = state.updateSelections(caption)
       )
     }
@@ -95,7 +93,8 @@ abstract class BaseWidgetViewModel(
   protected fun getSubjectsSource(profileId: Long, subjectType: SubjectType): Single<List<SubjectItem>> =
     when (subjectType) {
       SubjectType.CHANNEL ->
-        channelRepository.findProfileChannels(profileId)
+        readAllChannelsWithChildrenUseCase(profileId)
+          .firstOrError()
           .map { channels -> channelsSubjectItems(channels.filter { filter(it) }, getChannelValueStringUseCase) }
 
       SubjectType.GROUP ->
@@ -107,21 +106,11 @@ abstract class BaseWidgetViewModel(
           .map { scenes -> scenesSubjectItems(scenes) }
     }
 
-  protected open fun filter(channelBase: ChannelBase) =
-    channelBase.function.actions.isNotEmpty() || isValueWidget(channelBase.function)
+  protected open fun filter(channelGroupDataEntity: ChannelGroupDataEntity) =
+    channelGroupDataEntity.function.actions.isNotEmpty() || channelGroupDataEntity.function.isValueWidget
 
-  protected fun isValueWidget(function: SuplaFunction?): Boolean =
-    when (function) {
-      SuplaFunction.THERMOMETER,
-      SuplaFunction.HUMIDITY_AND_TEMPERATURE,
-      SuplaFunction.GENERAL_PURPOSE_METER,
-      SuplaFunction.GENERAL_PURPOSE_MEASUREMENT,
-      SuplaFunction.CONTAINER,
-      SuplaFunction.SEPTIC_TANK,
-      SuplaFunction.WATER_TANK -> true
-
-      else -> false
-    }
+  protected open fun filter(channelWithChildren: ChannelWithChildren) =
+    channelWithChildren.actions.isNotEmpty() || channelWithChildren.channel.function.isValueWidget
 }
 
 sealed class WidgetConfigurationViewEvent : ViewEvent {
@@ -136,6 +125,16 @@ data class WidgetConfigurationViewModelState(
   val viewState: WidgetConfigurationViewState = WidgetConfigurationViewState(),
   val selections: Set<Selection> = emptySet(),
 ) : ViewState() {
+
+  fun updateSelections(subjectId: Int): Set<Selection> =
+    mutableSetOf<Selection>().apply {
+      addAll(selections)
+      val profileId = viewState.profiles?.selected?.id
+
+      if (profileId != null) {
+        addOrReplace(Selection(profileId, viewState.subjectType, subjectId, null, null))
+      }
+    }
 
   fun updateSelections(detail: SubjectDetail): Set<Selection> =
     mutableSetOf<Selection>().apply {
@@ -185,9 +184,9 @@ data class WidgetConfigurationViewModelState(
 data class Selection(
   val profileId: Long,
   val subjectType: SubjectType,
-  val subjectId: Int,
-  val caption: String,
-  val subjectDetail: SubjectDetail
+  val subjectId: Int?,
+  val caption: String?,
+  val subjectDetail: SubjectDetail?
 ) {
   override fun hashCode(): Int {
     return Objects.hash(profileId, subjectType, subjectId)

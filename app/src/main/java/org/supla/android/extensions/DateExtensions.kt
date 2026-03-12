@@ -19,6 +19,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.source.local.calendar.Hour
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.Calendar
 import java.util.Date
 import java.util.GregorianCalendar
@@ -276,4 +278,10 @@ private fun endOfDay(day: Date): Calendar {
   calendar.set(Calendar.MILLISECOND, 999)
 
   return calendar
+}
+
+fun Date.toLocalDateTime(): LocalDateTime {
+  return this.toInstant()
+    .atZone(ZoneId.systemDefault())
+    .toLocalDateTime()
 }

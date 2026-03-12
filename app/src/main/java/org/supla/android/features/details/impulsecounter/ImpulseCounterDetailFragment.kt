@@ -26,11 +26,11 @@ import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.core.shared.invoke
+import org.supla.android.core.ui.bundle
 import org.supla.android.databinding.FragmentStandardDetailBinding
 import org.supla.android.features.details.detailbase.base.BaseDetailFragment
 import org.supla.android.features.details.detailbase.base.DetailPage
 import org.supla.android.features.details.detailbase.base.ItemBundle
-import org.supla.android.features.details.impulsecounter.counterphoto.CounterPhotoFragment
 import org.supla.android.ui.ToolbarItemsClickHandler
 
 @AndroidEntryPoint
@@ -72,7 +72,7 @@ class ImpulseCounterDetailFragment :
 
   override fun onMenuItemClick(menuItem: MenuItem): Boolean {
     if (menuItem.itemId == R.id.toolbar_ocr) {
-      navigator.navigateTo(R.id.counter_photo_fragment, CounterPhotoFragment.bundle(item))
+      navigator.navigateTo(R.id.counter_photo_fragment, bundle(item))
       return true
     }
 

@@ -22,12 +22,10 @@ import android.os.PowerManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.core.Single
-import org.supla.android.core.infrastructure.WorkManagerProxy
 import org.supla.android.data.model.spinner.ProfileItem
 import org.supla.android.data.model.spinner.SubjectItem
 import org.supla.android.data.model.spinner.SubjectItemConversionScope
 import org.supla.android.data.source.ChannelGroupRepository
-import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.RoomSceneRepository
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.widget.shared.BaseWidgetViewModel
@@ -38,12 +36,12 @@ import org.supla.android.features.widget.shared.subjectdetail.SubjectDetail
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
+import org.supla.android.usecases.channel.ReadAllChannelsWithChildrenUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.android.usecases.profile.ReadAllProfilesUseCase
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.WidgetPreferences
-import org.supla.android.widget.single.SingleWidgetCommandWorker
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.usecase.GetCaptionUseCase
@@ -52,26 +50,25 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SingleWidgetConfigurationViewModel @Inject constructor(
-  @ApplicationContext private val context: Context,
+  @param:ApplicationContext private val context: Context,
   private val readAllProfilesUseCase: ReadAllProfilesUseCase,
   override val getChannelIconUseCase: GetChannelIconUseCase,
   override val getSceneIconUseCase: GetSceneIconUseCase,
   override val getCaptionUseCase: GetCaptionUseCase,
   private val widgetPreferences: WidgetPreferences,
-  private val workManagerProxy: WorkManagerProxy,
+  readAllChannelsWithChildrenUseCase: ReadAllChannelsWithChildrenUseCase,
   getChannelValueStringUseCase: GetChannelValueStringUseCase,
   channelGroupRepository: ChannelGroupRepository,
-  channelRepository: RoomChannelRepository,
   sceneRepository: RoomSceneRepository,
   powerManager: PowerManager,
   schedulers: SuplaSchedulers
 ) : BaseWidgetViewModel(
+  readAllChannelsWithChildrenUseCase,
+  getChannelValueStringUseCase,
+  channelGroupRepository,
   getChannelIconUseCase,
   getSceneIconUseCase,
   getCaptionUseCase,
-  getChannelValueStringUseCase,
-  channelGroupRepository,
-  channelRepository,
   sceneRepository,
   powerManager,
   context,
@@ -80,7 +77,9 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
   WidgetConfigurationScope,
   SubjectItemConversionScope {
 
-  override fun onViewCreated() {
+  override fun setWidgetId(widgetId: Int?) {
+    super.setWidgetId(widgetId)
+
     val configuration = currentState().widgetId?.let { widgetPreferences.getWidgetConfiguration(it) }
 
     if (configuration != null) {
@@ -103,13 +102,14 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
         onNext = { (profiles, subjects) ->
           val activeProfile = profiles.first { it.active == true }
           updateState { state ->
+            val subjectsList = subjects.asSingleSelectionList(SubjectType.CHANNEL)
             state.copy(
               viewState = state.viewState.copy(
                 profiles = profiles.asSingleSelectionList(activeProfile.id),
                 subjectTypes = SubjectType.entries,
-                subjects = subjects.asSingleSelectionList(SubjectType.CHANNEL),
+                subjects = subjectsList,
                 caption = null,
-                subjectDetails = subjects.firstOrNull { it.isLocation.not() }?.details(),
+                subjectDetails = subjectsList?.selected?.details(),
               )
             )
           }
@@ -135,6 +135,8 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
       .attach()
       .subscribeBy(
         onNext = { (profiles, subjects) ->
+          val selectedAction = configuration.actionId?.let { ActionDetail(it) }
+
           updateState { state ->
             state.copy(
               viewState = state.viewState.copy(
@@ -143,10 +145,7 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
                 subjectTypes = SubjectType.entries,
                 subjectType = configuration.subjectType,
                 caption = configuration.caption,
-                subjectDetails = configuration.actionId?.let { actionId ->
-                  subjects.firstOrNull { it.id == configuration.itemId }?.details(ActionDetail(actionId))
-                },
-                saveEnabled = true
+                subjectDetails = subjects.firstOrNull { it.id == configuration.itemId }?.details(selectedAction)
               )
             )
           }
@@ -176,13 +175,15 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
             val lastSubjectId = state.lastSubjectId(profileItem.id, subjectType)
             val lastCaption = state.lastCaption(profileItem.id, subjectType, lastSubjectId)
             val lastDetail = state.lastDetail(profileItem.id, subjectType, lastSubjectId)
+            val subjectsList = subjects.asSingleSelectionList(subjectType, lastSubjectId)
+
             state.copy(
               viewState = state.viewState.copy(
                 profiles = state.viewState.profiles?.copy(selected = profileItem),
                 subjectType = subjectType,
-                subjects = subjects.asSingleSelectionList(subjectType, lastSubjectId),
+                subjects = subjectsList,
                 caption = lastCaption,
-                subjectDetails = subjects.firstOrNull { it.isLocation.not() }?.details(lastDetail)
+                subjectDetails = subjectsList?.selected?.details(lastDetail)
               ),
             )
           }
@@ -201,12 +202,13 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
             val lastSubjectId = state.lastSubjectId(profile.id, subjectType)
             val lastCaption = state.lastCaption(profile.id, subjectType, lastSubjectId)
             val lastDetail = state.lastDetail(profile.id, subjectType, lastSubjectId)
+            val subjectsList = subjects.asSingleSelectionList(subjectType, lastSubjectId)
             state.copy(
               viewState = state.viewState.copy(
                 subjectType = subjectType,
-                subjects = subjects.asSingleSelectionList(subjectType, lastSubjectId),
+                subjects = subjectsList,
                 caption = lastCaption,
-                subjectDetails = subjects.firstOrNull { it.isLocation.not() }?.details(lastDetail)
+                subjectDetails = subjectsList?.selected?.details(lastDetail)
               ),
             )
           }
@@ -225,7 +227,8 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
           subjects = state.viewState.subjects?.copy(selected = subjectItem),
           caption = lastCaption,
           subjectDetails = subjectItem.details(lastDetail)
-        )
+        ),
+        selections = state.updateSelections(subjectItem.id)
       )
     }
   }
@@ -261,10 +264,6 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
     )
 
     widgetPreferences.setWidgetConfiguration(widgetId, configuration)
-    if (isValueWidget(subject.function)) {
-      SingleWidgetCommandWorker.enqueue(intArrayOf(widgetId), workManagerProxy)
-    }
-
     sendEvent(WidgetConfigurationViewEvent.Finished(widgetId))
   }
 }

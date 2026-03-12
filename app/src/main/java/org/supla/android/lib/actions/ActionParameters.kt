@@ -37,6 +37,9 @@ enum class SubjectType(val value: Int, val nameRes: Int, val widgetNameRes: Int)
   GROUP(SubjectTypeValue.GROUP, R.string.widget_group, R.string.widget_configure_type_group_label),
   SCENE(SubjectTypeValue.SCENE, R.string.widget_scene, R.string.widget_configure_type_scene_label);
 
+  val isScene: Boolean
+    get() = this == SCENE
+
   companion object {
     fun from(value: Int): SubjectType {
       entries.forEach {
@@ -68,7 +71,7 @@ enum class ActionId(val value: Int, val nameRes: Int?) : SpinnerItem {
   TOGGLE(110, R.string.channel_btn_toggle),
   UP_OR_STOP(140, R.string.channel_btn_reveal),
   DOWN_OR_STOP(150, R.string.channel_btn_shut),
-  STEP_BY_STEP(160, null),
+  STEP_BY_STEP(160, R.string.channel_btn_step_by_step),
   UP(170, R.string.channel_btn_reveal),
   DOWN(180, R.string.channel_btn_shut),
   SET_HVAC_PARAMETERS(230, null),

@@ -17,6 +17,7 @@ package org.supla.android.features.details.rgbanddimmer.rgb
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.viewModelScope
@@ -67,7 +68,6 @@ import org.supla.android.usecases.client.ExecuteRgbwActionUseCase
 import org.supla.android.usecases.group.GroupWithChannels
 import org.supla.android.usecases.group.ReadGroupWithChannelsUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
-import org.supla.core.shared.data.model.function.rgbanddimmer.RgbBaseValue
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.extensions.ifTrue
 import org.supla.core.shared.infrastructure.LocalizedString
@@ -184,12 +184,12 @@ class RgbDetailViewModel @Inject constructor(
       it.copy(
         lastInteractionTime = null,
         viewState = it.viewState.copy(
-          value = RgbValue.Single(color.color.toHsv(color.brightness))
+          value = RgbValue.Single(color.asColor.toHsv(color.brightness))
         )
       )
     }
 
-    setRgbColors(color = color.color, colorBrightness = color.brightness)
+    setRgbColors(color = color.asColor, colorBrightness = color.brightness)
   }
 
   override fun onSaveCurrentColor() {
@@ -402,7 +402,7 @@ class RgbDetailViewModel @Inject constructor(
   private fun handleChannel(channelWithChildren: ChannelWithChildren) {
     val channel = channelWithChildren.channel
     val channelState = getChannelStateUseCase(channel)
-    val value = getValue(channel)
+    val value = channel.channelValueEntity.asRgbwwValue()
 
     updateState { state ->
       if (state.changing) {
@@ -421,7 +421,8 @@ class RgbDetailViewModel @Inject constructor(
         type = ItemType.CHANNEL,
         profileId = channel.profileId,
         loadingState = state.loadingState.changingLoading(false, dateProvider),
-        dimmerBrightness = getDimmerBrightness(channel),
+        dimmerBrightness = value.brightness,
+        dimmerCct = value.cct,
         viewState = state.viewState.copy(
           offline = channel.status.offline,
           value = RgbValue.Single(value.color.toHsv(value.colorBrightness)),
@@ -433,31 +434,18 @@ class RgbDetailViewModel @Inject constructor(
           onButtonState = SwitchButtonState(
             icon = getButtonIcon(channel, ChannelState.Value.ON),
             textRes = R.string.channel_btn_on,
-            pressed = (channelState as? ChannelState.RgbAndDimmer)?.rgb == ChannelState.Value.ON
+            pressed = channelState.rgbValue == ChannelState.Value.ON
           ),
           offButtonState = SwitchButtonState(
             icon = getButtonIcon(channel, ChannelState.Value.OFF),
             textRes = R.string.channel_btn_off,
-            pressed = (channelState as? ChannelState.RgbAndDimmer)?.rgb == ChannelState.Value.OFF
+            pressed = channelState.rgbValue == ChannelState.Value.OFF
           ),
           loading = false
         )
       )
     }
   }
-
-  private fun getValue(channel: ChannelDataEntity): RgbBaseValue =
-    when (channel.function) {
-      SuplaFunction.RGB_LIGHTING -> channel.channelValueEntity.asRgbValue()
-      SuplaFunction.DIMMER_AND_RGB_LIGHTING -> channel.channelValueEntity.asRgbwValue()
-      else -> throw IllegalStateException("Unsupported function: ${channel.function}")
-    }
-
-  private fun getDimmerBrightness(channel: ChannelDataEntity): Int =
-    when (channel.function) {
-      SuplaFunction.DIMMER_AND_RGB_LIGHTING -> channel.channelValueEntity.asRgbwValue().brightness
-      else -> 0
-    }
 
   private fun observeGroup(remoteId: Int) {
     Observable.combineLatest(
@@ -499,7 +487,7 @@ class RgbDetailViewModel @Inject constructor(
         type = ItemType.GROUP,
         loadingState = state.loadingState.changingLoading(false, dateProvider),
         viewState = state.viewState.copy(
-          value = RgbValue.Multiple(rgbValues.toList()),
+          value = RgbValue.Multiple(rgbValues),
           offline = group.status.offline,
           deviceStateData = DeviceStateData(
             icon = getChannelIconUseCase(group),
@@ -572,6 +560,7 @@ data class RgbDetailModelState(
   val changing: Boolean = false,
   val loadingState: LoadingTimeoutManager.LoadingState = LoadingTimeoutManager.LoadingState(),
   val dimmerBrightness: Int? = null,
+  val dimmerCct: Int? = null,
   val viewState: RgbDetailViewState = RgbDetailViewState(),
   override val sent: Boolean = false
 ) : ViewState(), DelayableState {
@@ -579,3 +568,10 @@ data class RgbDetailModelState(
   override fun sentState(): DelayableState = copy(sent = true)
   override fun delayableCopy(): DelayableState = copy()
 }
+
+private val ChannelState.rgbValue: ChannelState.Value
+  get() =
+    when (this) {
+      is ChannelState.Default -> value
+      is ChannelState.RgbAndDimmer -> rgb
+    }

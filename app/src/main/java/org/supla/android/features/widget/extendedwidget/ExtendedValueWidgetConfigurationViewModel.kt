@@ -24,15 +24,15 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.R
-import org.supla.android.data.model.general.ChannelBase
 import org.supla.android.data.model.spinner.ProfileItem
 import org.supla.android.data.model.spinner.SubjectItem
 import org.supla.android.data.model.spinner.SubjectItemConversionScope
 import org.supla.android.data.source.ChannelGroupRepository
-import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.RoomSceneRepository
 import org.supla.android.data.source.local.dao.WidgetConfigurationDao
 import org.supla.android.data.source.local.entity.WidgetConfigurationEntity
+import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.widget.shared.BaseWidgetViewModel
 import org.supla.android.features.widget.shared.WidgetConfigurationScope
@@ -43,6 +43,7 @@ import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
+import org.supla.android.usecases.channel.ReadAllChannelsWithChildrenUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.android.usecases.profile.ReadAllProfilesUseCase
@@ -54,25 +55,25 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ExtendedValueWidgetConfigurationViewModel @Inject constructor(
-  @ApplicationContext private val context: Context,
+  @param:ApplicationContext private val context: Context,
   private val readAllProfilesUseCase: ReadAllProfilesUseCase,
   private val widgetConfigurationDao: WidgetConfigurationDao,
   override val getChannelIconUseCase: GetChannelIconUseCase,
   override val getSceneIconUseCase: GetSceneIconUseCase,
   override val getCaptionUseCase: GetCaptionUseCase,
+  readAllChannelsWithChildrenUseCase: ReadAllChannelsWithChildrenUseCase,
   getChannelValueStringUseCase: GetChannelValueStringUseCase,
   channelGroupRepository: ChannelGroupRepository,
-  channelRepository: RoomChannelRepository,
   sceneRepository: RoomSceneRepository,
   powerManager: PowerManager,
   schedulers: SuplaSchedulers
 ) : BaseWidgetViewModel(
+  readAllChannelsWithChildrenUseCase,
+  getChannelValueStringUseCase,
+  channelGroupRepository,
   getChannelIconUseCase,
   getSceneIconUseCase,
   getCaptionUseCase,
-  getChannelValueStringUseCase,
-  channelGroupRepository,
-  channelRepository,
   sceneRepository,
   powerManager,
   context,
@@ -145,7 +146,6 @@ class ExtendedValueWidgetConfigurationViewModel @Inject constructor(
                 subjects = subjects.asSingleSelectionList(configuration.subjectType, configuration.subjectId),
                 subjectType = configuration.subjectType,
                 caption = configuration.caption,
-                saveEnabled = true
               )
             )
           }
@@ -218,7 +218,8 @@ class ExtendedValueWidgetConfigurationViewModel @Inject constructor(
         viewState = state.viewState.copy(
           subjects = state.viewState.subjects?.copy(selected = subjectItem),
           caption = lastCaption
-        )
+        ),
+        selections = state.updateSelections(subjectItem.id)
       )
     }
   }
@@ -247,8 +248,11 @@ class ExtendedValueWidgetConfigurationViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  override fun filter(channelBase: ChannelBase): Boolean =
-    channelBase.function == SuplaFunction.ELECTRICITY_METER
+  override fun filter(channelGroupDataEntity: ChannelGroupDataEntity): Boolean =
+    channelGroupDataEntity.function == SuplaFunction.ELECTRICITY_METER
+
+  override fun filter(channelWithChildren: ChannelWithChildren): Boolean =
+    channelWithChildren.function == SuplaFunction.ELECTRICITY_METER
 }
 
 fun WidgetConfigurationViewModelState.configuration(glanceId: GlanceId): WidgetConfigurationEntity? {

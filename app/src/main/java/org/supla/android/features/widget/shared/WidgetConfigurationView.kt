@@ -45,7 +45,7 @@ import org.supla.android.R
 import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.data.model.general.SingleSelectionList
+import org.supla.android.data.model.general.SingleOptionalSelectionList
 import org.supla.android.data.model.spinner.ProfileItem
 import org.supla.android.data.model.spinner.SubjectItem
 import org.supla.android.extensions.ucFirst
@@ -56,27 +56,30 @@ import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.views.EmptyListInfoView
-import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.SegmentedComponent
 import org.supla.android.ui.views.buttons.Button
-import org.supla.android.ui.views.buttons.IconButton
 import org.supla.android.ui.views.forms.TextField
+import org.supla.android.ui.views.forms.WarningMessage
 import org.supla.android.ui.views.spinner.LabelledSpinner
 import org.supla.android.ui.views.spinner.Spinner
+import org.supla.android.ui.views.texts.Header
 import org.supla.core.shared.infrastructure.LocalizedString
 
 data class WidgetConfigurationViewState(
-  val profiles: SingleSelectionList<ProfileItem>? = null,
+  val profiles: SingleOptionalSelectionList<ProfileItem>? = null,
   val subjectTypes: List<SubjectType>? = null,
   val subjectType: SubjectType = SubjectType.CHANNEL,
-  val subjects: SingleSelectionList<SubjectItem>? = null,
-  val subjectDetails: SingleSelectionList<SubjectDetail>? = null,
+  val subjects: SingleOptionalSelectionList<SubjectItem>? = null,
+  val subjectDetails: SingleOptionalSelectionList<SubjectDetail>? = null,
   val caption: String? = null,
 
   val showWarning: Boolean = false,
-  val saveEnabled: Boolean = false,
   val error: LocalizedString? = null
-)
+) {
+  val saveEnabled: Boolean
+    get() = caption?.isNotEmpty() == true && subjects?.selected != null &&
+      (subjectDetails?.selected != null || subjectDetails == null)
+}
 
 interface WidgetConfigurationScope {
   fun onWarningClick()
@@ -136,7 +139,7 @@ fun WidgetConfigurationScope.View(
         EmptyListInfoView(modifier = Modifier.padding(Distance.default))
       } else {
         Subjects(viewState.subjects)
-        viewState.caption?.let { Caption(it, !viewState.saveEnabled) }
+        viewState.caption?.let { Caption(it, it.isEmpty()) }
         viewState.subjectDetails?.let { SubjectDetails(it) }
       }
     }
@@ -164,52 +167,21 @@ fun WidgetConfigurationScope.View(
 
 @Composable
 private fun WidgetConfigurationScope.Header() =
-  Row(verticalAlignment = Alignment.Bottom) {
-    Text(
-      stringResource(R.string.widget_configure_title),
-      style = MaterialTheme.typography.titleLarge,
-      modifier = Modifier.weight(1f)
-    )
-    IconButton(
-      icon = R.drawable.ic_close,
-      onClick = { onClose() },
-      iconSize = dimensionResource(R.dimen.icon_default_size),
-      tint = MaterialTheme.colorScheme.onBackground
-    )
-  }
+  Header(
+    textRes = R.string.widget_configure_title,
+    iconRes = R.drawable.ic_close,
+    onClose = { onClose() }
+  )
 
 @Composable
 private fun WidgetConfigurationScope.Warning() =
-  Row(
-    verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.spacedBy(Distance.small),
-    modifier = Modifier
-      .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(dimensionResource(R.dimen.radius_default)))
-      .border(
-        width = 1.dp,
-        color = colorResource(id = R.color.gray_lighter),
-        shape = RoundedCornerShape(dimensionResource(R.dimen.radius_default))
-      )
-      .padding(Distance.small)
-      .clickable { onWarningClick() }
-  ) {
-    Image(
-      drawableId = R.drawable.channel_warning_level1,
-      modifier = Modifier.size(dimensionResource(R.dimen.icon_big_size))
-    )
-    Text(
-      text = stringResource(R.string.widget_warning_battery_limitations),
-      style = MaterialTheme.typography.bodyMedium,
-      modifier = Modifier.weight(1f)
-    )
-    Image(
-      drawableId = R.drawable.ic_arrow_right,
-      modifier = Modifier.size(dimensionResource(R.dimen.icon_big_size)),
-    )
-  }
+  WarningMessage(
+    textRes = R.string.widget_warning_battery_limitations,
+    onClick = { onWarningClick() }
+  )
 
 @Composable
-private fun WidgetConfigurationScope.Profiles(profiles: SingleSelectionList<ProfileItem>) =
+private fun WidgetConfigurationScope.Profiles(profiles: SingleOptionalSelectionList<ProfileItem>) =
   Spinner(
     options = profiles,
     fillMaxWidth = true,
@@ -217,7 +189,7 @@ private fun WidgetConfigurationScope.Profiles(profiles: SingleSelectionList<Prof
   )
 
 @Composable
-private fun WidgetConfigurationScope.Subjects(subjects: SingleSelectionList<SubjectItem>) =
+private fun WidgetConfigurationScope.Subjects(subjects: SingleOptionalSelectionList<SubjectItem>) =
   LabelledSpinner(
     options = subjects,
     fillMaxWidth = true,
@@ -243,7 +215,7 @@ private fun WidgetConfigurationScope.Caption(caption: String, isError: Boolean) 
   }
 
 @Composable
-private fun WidgetConfigurationScope.SubjectDetails(actions: SingleSelectionList<SubjectDetail>) =
+private fun WidgetConfigurationScope.SubjectDetails(actions: SingleOptionalSelectionList<SubjectDetail>) =
   Spinner(
     options = actions,
     fillMaxWidth = true,
@@ -264,7 +236,7 @@ private val emptyScope = object : WidgetConfigurationScope {
 @SuplaPreview
 @Composable
 private fun Preview() {
-  val firstProfile = ProfileItem(1, LocalizedString.Constant("Default"))
+  val firstProfile = ProfileItem(1, LocalizedString.Constant("Default"), true)
   val firstSubject = SubjectItem.create(
     id = 1,
     caption = LocalizedString.Constant("Thermostat"),
@@ -273,16 +245,16 @@ private fun Preview() {
   SuplaTheme {
     emptyScope.View(
       WidgetConfigurationViewState(
-        profiles = SingleSelectionList(
+        profiles = SingleOptionalSelectionList(
           selected = firstProfile,
           label = R.string.widget_configure_profile_label,
           items = listOf(
             firstProfile,
-            ProfileItem(2, LocalizedString.Constant("Test"))
+            ProfileItem(2, LocalizedString.Constant("Test"), true)
           )
         ),
         subjectTypes = SubjectType.entries,
-        subjects = SingleSelectionList(
+        subjects = SingleOptionalSelectionList(
           selected = firstSubject,
           label = R.string.widget_configure_channel_label,
           items = listOf(
@@ -290,7 +262,7 @@ private fun Preview() {
           )
         ),
         caption = "Thermostat",
-        subjectDetails = SingleSelectionList(
+        subjectDetails = SingleOptionalSelectionList(
           selected = ActionDetail(ActionId.OPEN),
           label = R.string.widget_configure_action_label,
           items = listOf(ActionDetail(ActionId.OPEN))

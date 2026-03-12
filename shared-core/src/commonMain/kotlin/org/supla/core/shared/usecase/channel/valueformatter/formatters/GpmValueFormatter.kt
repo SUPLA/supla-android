@@ -22,7 +22,7 @@ import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import org.supla.core.shared.usecase.channel.valueformatter.types.InvalidValue
 
 class GpmValueFormatter(
-  override val defaultFormatSpecification: ValueFormatSpecification = ValueFormatSpecification.Companion.Gpm
+  override val defaultFormatSpecification: ValueFormatSpecification = ValueFormatSpecification.Gpm
 ) : ValueFormatter() {
 
   override val invalidValue: InvalidValue = InvalidValue.NaN

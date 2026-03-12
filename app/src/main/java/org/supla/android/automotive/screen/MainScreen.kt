@@ -49,13 +49,10 @@ import org.supla.android.extensions.subscribeBy
 import org.supla.android.extensions.ucFirst
 import org.supla.android.images.ImageCache
 import org.supla.android.lib.actions.ActionParameters
-import org.supla.android.lib.actions.SubjectType
-import org.supla.android.lib.singlecall.ResultException
 import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
-import org.supla.core.shared.data.model.suplaclient.SuplaResultCode
 import timber.log.Timber
 
 class MainScreen(
@@ -123,23 +120,22 @@ class MainScreen(
     )
   }
 
-  override fun onGetTemplate(): Template {
+  override fun onGetTemplate(): Template =
     if (state.loading) {
-      return GridTemplate.Builder()
+      GridTemplate.Builder()
         .setHeader(Header.Builder().setTitle(CarText.create(carContext.getString(R.string.app_name))).build())
         .setLoading(true)
         .build()
     } else if (state.items.isEmpty()) {
-      return MessageTemplate.Builder(CarText.create(carContext.getString(R.string.android_auto_empty)))
+      MessageTemplate.Builder(CarText.create(carContext.getString(R.string.android_auto_empty)))
         .setHeader(Header.Builder().setTitle(CarText.create(carContext.getString(R.string.app_name))).build())
         .build()
     } else {
-      return GridTemplate.Builder()
+      GridTemplate.Builder()
         .setHeader(Header.Builder().setTitle(CarText.create(carContext.getString(R.string.app_name))).build())
         .setSingleList(getGridList())
         .build()
     }
-  }
 
   private fun getGridList(): ItemList {
     val list = ItemList.Builder()
@@ -151,11 +147,11 @@ class MainScreen(
       if (imageId.userImage) {
         val bitmap = ImageCache.getBitmapForAuto(carContext, imageId, true)
         IconCompat.createFromIcon(carContext, Icon.createWithBitmap(bitmap))
-          ?.let { icon ->
+          .let { icon ->
             gridItem.setImage(CarIcon.Builder(icon).build())
           }
       } else {
-        IconCompat.createFromIcon(carContext, Icon.createWithResource(carContext, imageId.id))?.let { icon ->
+        IconCompat.createFromIcon(carContext, Icon.createWithResource(carContext, imageId.id)).let { icon ->
           gridItem.setImage(CarIcon.Builder(icon).setTint(PRIMARY).build())
         }
       }
@@ -181,7 +177,7 @@ class MainScreen(
       state.executing.add(item.androidAutoItemEntity.id)
 
       launch(Dispatchers.IO) {
-        try {
+        val result =
           singleCallProvider.provide(item.androidAutoItemEntity.profileId).executeAction(
             ActionParameters(
               action = item.androidAutoItemEntity.action,
@@ -189,14 +185,17 @@ class MainScreen(
               subjectId = item.androidAutoItemEntity.subjectId
             )
           )
-        } catch (e: Exception) {
-          Timber.e(e, "Could not execute action")
-          val errorString = carContext.getString(getErrorMessage(e, item.androidAutoItemEntity))
+
+        if (result !is SingleCall.Result.Success) {
+          Timber.e("Action execution failed with result: `$result`")
+
+          val errorString = carContext.getString(getErrorMessage(result, item.androidAutoItemEntity))
           state.errors[item.androidAutoItemEntity.id] = errorString
-          if (preferences.playAndroidAuto()) {
+          if (preferences.playAndroidAuto) {
             textToSpeechHelper.speak(errorString)
           }
         }
+
         invalidate()
 
         delay(5000)
@@ -208,21 +207,13 @@ class MainScreen(
     }
   }
 
-  private fun getErrorMessage(error: Exception, item: AndroidAutoItemEntity): Int {
-    if (error is ResultException) {
-      when (error.resultCode) {
-        SuplaResultCode.CHANNEL_IS_OFFLINE -> return R.string.channel_offline
-        SuplaResultCode.CHANNEL_NOT_FOUND -> return R.string.channel_not_found
-        SuplaResultCode.INACTIVE ->
-          if (item.subjectType == SubjectType.SCENE) {
-            return R.string.scene_inactive
-          }
-
-        else -> return R.string.android_auto_error
-      }
+  private fun getErrorMessage(result: SingleCall.Result, item: AndroidAutoItemEntity): Int {
+    return when (result) {
+      SingleCall.Result.Offline -> R.string.channel_offline
+      SingleCall.Result.NotFound -> R.string.channel_not_found
+      SingleCall.Result.Inactive -> if (item.subjectType.isScene) R.string.scene_inactive else R.string.android_auto_error
+      else -> R.string.android_auto_error
     }
-
-    return R.string.android_auto_error
   }
 }
 

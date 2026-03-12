@@ -22,5 +22,12 @@ import androidx.annotation.StringRes
 data class SingleSelectionList<T>(
   val selected: T,
   val items: List<T>,
-  @StringRes val label: Int?
+  @param:StringRes val label: Int?
+)
+
+data class SingleOptionalSelectionList<T>(
+  val selected: T?,
+  val items: List<T>,
+  @param:StringRes val label: Int?,
+  val isError: Boolean = false
 )

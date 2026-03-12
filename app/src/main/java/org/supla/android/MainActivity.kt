@@ -20,6 +20,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
+import android.nfc.NfcAdapter
+import android.nfc.Tag
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -67,6 +69,7 @@ import org.supla.android.extensions.subscribeBy
 import org.supla.android.extensions.visibleIf
 import org.supla.android.features.lockscreen.LockScreenFragment
 import org.supla.android.features.lockscreen.UnlockAction
+import org.supla.android.features.nfc.NfcHost
 import org.supla.android.images.ImageCache
 import org.supla.android.images.ImageId
 import org.supla.android.lib.SuplaConst
@@ -93,7 +96,10 @@ class MainActivity :
   LoadableContent,
   ToolbarItemsController,
   ToolbarVisibilityController,
-  BackHandleOwner {
+  BackHandleOwner,
+  NfcHost {
+
+  private val nfcAdapter: NfcAdapter? by lazy { NfcAdapter.getDefaultAdapter(this) }
 
   private var downloadUserIcons: DownloadUserIcons? = null
   private var notificationView: RelativeLayout? = null
@@ -184,6 +190,23 @@ class MainActivity :
     }
 
     menuLayout.setOnClickListener(this::handleMenuClicks)
+  }
+
+  override fun enableNfcReader(intentHandler: (Tag) -> Unit) {
+    Timber.d("Enable NFC dispatch")
+
+    val adapter = nfcAdapter ?: return
+    val flags = NfcAdapter.FLAG_READER_NFC_A or
+      NfcAdapter.FLAG_READER_NFC_B or
+      NfcAdapter.FLAG_READER_NFC_F or
+      NfcAdapter.FLAG_READER_NFC_V
+
+    adapter.enableReaderMode(this, { intentHandler(it) }, flags, null)
+  }
+
+  override fun disableNfcReader() {
+    Timber.d("Disable NFC dispatch")
+    nfcAdapter?.disableReaderMode(this)
   }
 
   override fun onStart() {
@@ -355,7 +378,7 @@ class MainActivity :
   }
 
   private fun setDeleteVisible(visible: Boolean) {
-    toolbar.menu.findItem(R.id.toolbar_delete)?.isVisible = visible
+    toolbar.menu.findItem(R.id.toolbar_delete_all)?.isVisible = visible
     toolbar.menu.findItem(R.id.toolbar_delete_older_than_month)?.isVisible = visible
   }
 

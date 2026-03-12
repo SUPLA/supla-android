@@ -44,12 +44,14 @@ fun OutlinedButton(
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
   singleLine: Boolean = true,
+  colors: ButtonColors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.onBackground),
   onClick: () -> Unit
 ) {
   OutlinedButton(
     onClick = onClick,
     modifier = modifier,
-    enabled = enabled
+    enabled = enabled,
+    colors = colors
   ) {
     Text(
       text = text,

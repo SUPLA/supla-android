@@ -25,6 +25,7 @@ import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.data.source.local.entity.custom.hasPositionSensor
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.extensions.subscribeBy
@@ -40,7 +41,6 @@ import org.supla.android.usecases.group.ChannelInGroup
 import org.supla.android.usecases.group.GroupWithChannels
 import org.supla.android.usecases.group.ReadGroupWithChannelsUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
-import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.extensions.ifTrue
 import org.supla.core.shared.infrastructure.LocalizedString
@@ -95,7 +95,7 @@ class GateGeneralViewModel @Inject constructor(
   private fun handleChannel(channelWithChildren: ChannelWithChildren) {
     val channel = channelWithChildren.channel
     val channelState = getChannelStateUseCase(channel)
-    val showOpenAndClose = channelWithChildren.hasSensor && channelWithChildren.function.supportsOpenAndClose
+    val showOpenAndClose = channelWithChildren.hasPositionSensor && channelWithChildren.function.supportsOpenAndClose
 
     updateState { state ->
       state.copy(
@@ -208,14 +208,10 @@ class GateGeneralViewModel @Inject constructor(
     }
 }
 
-private val ChannelWithChildren.hasSensor: Boolean
-  get() = children.firstOrNull { it.relationType == ChannelRelationType.OPENING_SENSOR } != null ||
-    children.firstOrNull { it.relationType == ChannelRelationType.PARTIAL_OPENING_SENSOR } != null
-
 private val ChannelInGroup.hasSensor: Boolean
   get() = when (this) {
     ChannelInGroup.Invisible -> false
-    is ChannelInGroup.Visible -> channelWithChildren.hasSensor
+    is ChannelInGroup.Visible -> channelWithChildren.hasPositionSensor
   }
 
 private val SuplaFunction.supportsOpenAndClose: Boolean

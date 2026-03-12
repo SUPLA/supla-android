@@ -23,7 +23,6 @@ import android.content.Context
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.extensions.getAllWidgetIds
 import org.supla.android.features.icons.LoadUserIconsIntoCacheWorker
 import org.supla.android.images.ImageCache
@@ -32,10 +31,7 @@ import org.supla.android.widget.INVALID_LONG
 import org.supla.android.widget.RemoveWidgetsWorker
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.WidgetPreferences
-import org.supla.core.shared.data.model.general.SuplaFunction
 import timber.log.Timber
-
-private const val WORK_ID_PREFIX = "ON_OF_WIDGET_"
 
 /**
  * IMPORTANT: Always when adding new widget, please adapt [getAllWidgetIds].
@@ -82,29 +78,20 @@ abstract class WidgetProviderBase : AppWidgetProvider() {
     widgetId: Int,
     configuration: WidgetConfiguration?
   )
-
-  protected val ChannelEntity.isValueWidget: Boolean
-    get() = function == SuplaFunction.THERMOMETER ||
-      function == SuplaFunction.HUMIDITY_AND_TEMPERATURE ||
-      function == SuplaFunction.GENERAL_PURPOSE_METER ||
-      function == SuplaFunction.GENERAL_PURPOSE_MEASUREMENT ||
-      function == SuplaFunction.CONTAINER ||
-      function == SuplaFunction.WATER_TANK ||
-      function === SuplaFunction.SEPTIC_TANK
 }
 
 internal fun isWidgetValid(configuration: WidgetConfiguration) = configuration.visibility &&
   configuration.profileId != INVALID_LONG &&
   configuration.itemId != INVALID_INT
 
-internal fun getWorkId(widgetIds: IntArray): String {
-  return if (widgetIds.size != 1) {
-    WORK_ID_PREFIX
-  } else {
-    WORK_ID_PREFIX + widgetIds[0]
-  }
+internal fun getWorkId(prefix: String, widgetIds: IntArray): String {
+  return prefix + widgetIds.toWorkIdSuffix()
 }
 
 fun IntArray.toReadableString(): String {
   return this.map { it.toString() }.reduce { acc, string -> "$acc $string" }
+}
+
+private fun IntArray.toWorkIdSuffix(): String {
+  return this.map { it.toString() }.reduce { acc, string -> "${acc}_$string" }
 }

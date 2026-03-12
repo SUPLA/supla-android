@@ -17,13 +17,10 @@ package org.supla.android.features.details.gpmdetail.history
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.features.details.detailbase.history.BaseHistoryDetailFragment
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
-
-private const val ARG_REMOTE_ID = "ARG_REMOTE_ID"
 
 @AndroidEntryPoint
 class GpmHistoryDetailFragment : BaseHistoryDetailFragment() {
@@ -32,13 +29,9 @@ class GpmHistoryDetailFragment : BaseHistoryDetailFragment() {
 
   override fun onSuplaMessage(message: SuplaClientMessage) {
     (message as? SuplaClientMessage.ChannelDataChanged)?.let {
-      if (it.channelId == remoteId) {
+      if (it.channelId == item.remoteId) {
         viewModel.reloadMeasurements()
       }
     }
-  }
-
-  companion object {
-    fun bundle(remoteId: Int) = bundleOf(ARG_REMOTE_ID to remoteId)
   }
 }

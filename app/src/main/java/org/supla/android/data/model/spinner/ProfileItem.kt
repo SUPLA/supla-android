@@ -22,5 +22,6 @@ import org.supla.core.shared.infrastructure.LocalizedString
 
 data class ProfileItem(
   val id: Long,
-  override val label: LocalizedString
+  override val label: LocalizedString,
+  val active: Boolean
 ) : SpinnerItem

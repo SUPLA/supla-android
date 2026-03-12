@@ -25,8 +25,8 @@ android {
     minSdk = libs.versions.minSdk.get().toInt()
     targetSdk = libs.versions.targetSdk.get().toInt()
     multiDexEnabled = true
-    versionCode = 313
-    versionName = "26.01"
+    versionCode = 317
+    versionName = "26.03"
 
     ndk {
       moduleName = "suplaclient"
@@ -159,6 +159,10 @@ dependencies {
   implementation(libs.androidx.glance.widget.preview)
   implementation(libs.androidx.glance.material)
   implementation(libs.androidx.glance.preview)
+  implementation(libs.androidx.navigation3.runtime)
+  implementation(libs.androidx.navigation3.ui)
+  implementation(libs.androidx.navigation3.viewmodel)
+  implementation(libs.hilt.navigation.compose)
 
   implementation(libs.rxjava)
   implementation(libs.rxandroid)

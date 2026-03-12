@@ -166,6 +166,10 @@ class CreateAccountViewModel @Inject constructor(
       .disposeBySelf()
   }
 
+  override fun setLoading(loading: Boolean) {
+    updateState { it.copy(loading = loading) }
+  }
+
   private fun getSaveSingle(profileId: Long?, defaultName: String): Completable = profileId.let { id ->
     return@let if (id == null) {
       profileRepository.findAllProfiles()
@@ -235,7 +239,7 @@ class CreateAccountViewModel @Inject constructor(
       profileManager.read(profileId)
         .toSingle()
         .flatMap(this::deleteAndGetReturnInfo)
-        .attach()
+        .attachLoadable()
         .subscribeBy(
           onSuccess = {
             if (it.noAccountsRegistered) {

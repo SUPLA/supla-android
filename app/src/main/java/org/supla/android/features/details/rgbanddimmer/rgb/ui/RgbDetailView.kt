@@ -17,8 +17,6 @@ package org.supla.android.features.details.rgbanddimmer.rgb.ui
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,20 +25,13 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.stringResource
 import org.supla.android.R
 import org.supla.android.core.ui.LocalSizeClassProvider
 import org.supla.android.core.ui.SizeClass
@@ -53,8 +44,12 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.extensions.HsvColor
 import org.supla.android.features.details.rgbanddimmer.common.SavedColor
-import org.supla.android.features.details.rgbanddimmer.common.SavedColorListScope
-import org.supla.android.features.details.rgbanddimmer.common.SavedColors
+import org.supla.android.features.details.rgbanddimmer.common.ui.SavedColorListScope
+import org.supla.android.features.details.rgbanddimmer.common.ui.SavedColors
+import org.supla.android.features.details.rgbanddimmer.common.ui.ValuesCard
+import org.supla.android.features.details.rgbanddimmer.common.ui.dimmer.BrightnessValueView
+import org.supla.android.features.details.rgbanddimmer.common.ui.dimmer.ValueLabel
+import org.supla.android.features.details.rgbanddimmer.common.ui.dimmer.ValueRow
 import org.supla.android.features.details.rgbanddimmer.rgb.model.RgbDetailViewState
 import org.supla.android.features.details.rgbanddimmer.rgb.model.RgbValue
 import org.supla.android.images.ImageId
@@ -172,7 +167,11 @@ private fun RgbDetailScope.LandscapeNarrow(state: RgbDetailViewState) {
   Column {
     ColorAndBrightnessBox(color, state.value, !state.offline, Modifier.padding(horizontal = Distance.horizontal, vertical = Distance.small))
 
-    Row(modifier = Modifier.weight(1f).padding(horizontal = Distance.horizontal)) {
+    Row(
+      modifier = Modifier
+        .weight(1f)
+        .padding(horizontal = Distance.horizontal)
+    ) {
       ColorPickerComponent(
         color = state.value.hsv,
         enabled = !state.offline,
@@ -263,57 +262,19 @@ private fun RgbDetailScope.Portrait(state: RgbDetailViewState) {
 
 @Composable
 private fun RgbDetailScope.ColorAndBrightnessBox(color: HsvColor?, value: RgbValue, online: Boolean, modifier: Modifier = Modifier) =
-  Row(
-    modifier = modifier
+  ValuesCard(
+    horizontalArrangement = Arrangement.spacedBy(Distance.default),
+    modifier = modifier,
+    enabled = online,
+    onClick = { onOpenColorDialog() },
   ) {
-    Spacer(Modifier.weight(1f))
-    Row(
-      horizontalArrangement = Arrangement.spacedBy(Distance.default),
-      verticalAlignment = Alignment.CenterVertically,
-      modifier = Modifier
-        .clickable(enabled = online) { onOpenColorDialog() }
-        .background(
-          color = MaterialTheme.colorScheme.surface,
-          shape = RoundedCornerShape(dimensionResource(R.dimen.radius_default))
-        )
-        .padding(vertical = Distance.small, horizontal = Distance.default)
-    ) {
-      ColorRow(color?.color)
-      BrightnessBox(color?.value?.let { ValuesFormatter.getPercentageString(it) } ?: value.brightnessString)
+    ValueRow {
+      ValueLabel(R.string.rgb_detail_color)
+      ColorBox(color?.color)
     }
-    Spacer(Modifier.weight(1f))
-  }
-
-@Composable
-private fun ColorRow(color: Color?) =
-  Row(
-    verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.spacedBy(Distance.tiny)
-  ) {
-    Text(
-      text = stringResource(R.string.rgb_detail_color),
-      style = MaterialTheme.typography.labelMedium,
-      color = MaterialTheme.colorScheme.onSurfaceVariant
-    )
-    ColorBox(color)
-  }
-
-@Composable
-private fun BrightnessBox(brightness: String) =
-  Row(
-    verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.spacedBy(Distance.tiny)
-  ) {
-    Text(
-      text = stringResource(R.string.rgb_detail_brightness),
-      style = MaterialTheme.typography.labelMedium,
-      color = MaterialTheme.colorScheme.onSurfaceVariant
-    )
-    Text(
-      text = brightness,
-      style = MaterialTheme.typography.bodyMedium,
-      color = MaterialTheme.colorScheme.onSurface
-    )
+    ValueRow {
+      BrightnessValueView(color?.value?.let { ValuesFormatter.getPercentageString(it) } ?: value.brightnessString)
+    }
   }
 
 private val previewScope = object : RgbDetailScope {
@@ -353,10 +314,10 @@ private fun Preview() {
           icon = ImageId(R.drawable.fnc_rgb_on),
           textRes = R.string.channel_btn_on,
         ),
-        savedColors = listOf(savedColor(0xFFFF0000), savedColor(0xFF00FF00), savedColor(0xFF0000FF))
+        savedColors = listOf(savedColor(0xFF0000), savedColor(0x00FF00), savedColor(0x0000FF))
       )
     )
   }
 }
 
-private fun savedColor(color: Long) = SavedColor(0, Color(color), 100)
+private fun savedColor(color: Int) = SavedColor(0, color, 100)

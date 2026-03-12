@@ -47,9 +47,10 @@ import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
-import org.supla.android.data.model.general.SingleSelectionList
+import org.supla.android.data.model.general.SingleOptionalSelectionList
 import org.supla.android.images.ImageId
 import org.supla.android.ui.views.Image
+import org.supla.android.ui.views.texts.Label
 import org.supla.core.shared.extensions.ifTrue
 
 interface SubjectSpinnerItem : SpinnerItem {
@@ -63,7 +64,7 @@ interface SubjectSpinnerItem : SpinnerItem {
 
 @Composable
 fun <T : SubjectSpinnerItem> LabelledSpinner(
-  options: SingleSelectionList<T>,
+  options: SingleOptionalSelectionList<T>,
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
   fillMaxWidth: Boolean = false,
@@ -71,13 +72,13 @@ fun <T : SubjectSpinnerItem> LabelledSpinner(
   onOptionSelected: (selected: T) -> Unit
 ) {
   var expanded by remember { mutableStateOf(false) }
-  val selectedOptionText = options.selected.label(LocalContext.current)
+  val selectedOptionText = options.selected?.label(LocalContext.current)
 
   Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
     options.label?.let { SpinnerLabel(it, labelTextColor) }
 
     ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { ifTrue(enabled) { expanded = it } }) {
-      SpinnerTextField(selectedOptionText, expanded, enabled, fillMaxWidth)
+      SpinnerTextField(selectedOptionText ?: "---", expanded, enabled, fillMaxWidth)
       ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
         options.items.forEach { option ->
           DropdownMenuItem(
@@ -97,9 +98,8 @@ fun <T : SubjectSpinnerItem> LabelledSpinner(
 
 @Composable
 private fun SpinnerLabel(@StringRes labelRes: Int, labelColor: Color) =
-  Text(
-    text = stringResource(id = labelRes).uppercase(),
-    style = MaterialTheme.typography.bodySmall,
+  Label(
+    text = stringResource(id = labelRes),
     color = labelColor,
     modifier = Modifier.padding(horizontal = 12.dp),
   )

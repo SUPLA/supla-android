@@ -39,10 +39,10 @@ import org.supla.android.R
 import org.supla.android.core.branding.Configuration
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.ui.views.BodyMedium
 import org.supla.android.ui.views.buttons.BlueTextButton
 import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.buttons.OutlinedButton
+import org.supla.android.ui.views.texts.BodyMedium
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 

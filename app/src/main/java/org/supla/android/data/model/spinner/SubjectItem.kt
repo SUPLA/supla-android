@@ -18,14 +18,14 @@ package org.supla.android.data.model.spinner
  */
 
 import org.supla.android.R
-import org.supla.android.data.model.general.SingleSelectionList
+import org.supla.android.data.model.general.SingleOptionalSelectionList
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.ProfileEntity
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.complex.SceneDataEntity
 import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.data.source.local.entity.custom.hasPositionSensor
 import org.supla.android.features.widget.shared.subjectdetail.ActionDetail
 import org.supla.android.features.widget.shared.subjectdetail.SubjectDetail
 import org.supla.android.images.ImageId
@@ -59,22 +59,22 @@ data class SubjectItem(
   override val label: LocalizedString
     get() = caption
 
-  fun actionsList(selectedAction: ActionId? = null): SingleSelectionList<ActionId>? =
+  fun actionsList(selectedAction: ActionId? = null): SingleOptionalSelectionList<ActionId>? =
     if (actions.isEmpty()) {
       null
     } else {
-      SingleSelectionList(
-        selected = actions.firstOrNull { it == selectedAction } ?: actions.first(),
+      SingleOptionalSelectionList(
+        selected = actions.firstOrNull { it == selectedAction },
         label = R.string.widget_configure_action_label,
         items = actions
       )
     }
 
-  fun details(selected: SubjectDetail? = null): SingleSelectionList<SubjectDetail>? =
+  fun details(selected: SubjectDetail? = null): SingleOptionalSelectionList<SubjectDetail>? =
     actions.isNotEmpty().ifTrue {
       with(actions.map { ActionDetail(it) }) {
-        SingleSelectionList(
-          selected = this.firstOrNull { it == selected } ?: ActionDetail(actions.first()),
+        SingleOptionalSelectionList(
+          selected = this.firstOrNull { it == selected },
           label = R.string.widget_configure_action_label,
           items = this
         )
@@ -112,8 +112,11 @@ interface SubjectItemConversionScope {
   val getChannelIconUseCase: GetChannelIconUseCase
   val getSceneIconUseCase: GetSceneIconUseCase
 
-  fun channelsSubjectItems(items: List<ChannelDataEntity>, getChannelValueStringUseCase: GetChannelValueStringUseCase): List<SubjectItem> =
-    toSubjectItems(items, { it.locationEntity }, { it.subjectItem(getChannelValueStringUseCase) })
+  fun channelsSubjectItems(
+    items: List<ChannelWithChildren>,
+    getChannelValueStringUseCase: GetChannelValueStringUseCase
+  ): List<SubjectItem> =
+    toSubjectItems(items, { it.channel.locationEntity }, { it.subjectItem(getChannelValueStringUseCase) })
 
   fun groupsSubjectItems(items: List<ChannelGroupDataEntity>): List<SubjectItem> =
     toSubjectItems(items, { it.locationEntity }, { it.subjectItem })
@@ -145,29 +148,29 @@ interface SubjectItemConversionScope {
     }
   }
 
-  fun List<SubjectItem>.asSingleSelectionList(type: SubjectType, selectedId: Int? = null): SingleSelectionList<SubjectItem>? =
+  fun List<SubjectItem>.asSingleSelectionList(type: SubjectType, selectedId: Int? = null): SingleOptionalSelectionList<SubjectItem>? =
     if (isEmpty()) {
       null
     } else {
-      SingleSelectionList(
-        selected = firstOrNull { it.id == selectedId } ?: first { !it.isLocation },
+      SingleOptionalSelectionList(
+        selected = firstOrNull { it.id == selectedId },
         label = type.nameRes,
         items = this
       )
     }
 
-  fun List<ProfileEntity>.asSingleSelectionList(selectedId: Long? = null): SingleSelectionList<ProfileItem>? =
-    map { ProfileItem(it.id!!, LocalizedString.Constant(it.name)) }
+  fun List<ProfileEntity>.asSingleSelectionList(selectedId: Long? = null): SingleOptionalSelectionList<ProfileItem>? =
+    map { ProfileItem(it.id!!, LocalizedString.Constant(it.name), it.active ?: false) }
       .asSingleSelectionList(R.string.widget_configure_profile_label)
       ?.let { list ->
-        list.copy(selected = list.items.firstOrNull { it.id == selectedId } ?: list.items.first())
+        list.copy(selected = list.items.firstOrNull { it.id == selectedId } ?: list.items.first { it.active })
       }
 
-  fun <T : SpinnerItem> List<T>.asSingleSelectionList(label: Int): SingleSelectionList<T>? =
+  fun <T : SpinnerItem> List<T>.asSingleSelectionList(label: Int): SingleOptionalSelectionList<T>? =
     if (isEmpty()) {
       null
     } else {
-      SingleSelectionList(selected = first(), label = label, items = this)
+      SingleOptionalSelectionList(selected = first(), label = label, items = this)
     }
 
   val LocationEntity.subjectItem: SubjectItem
@@ -183,26 +186,26 @@ interface SubjectItemConversionScope {
       value = null
     )
 
-  fun ChannelDataEntity.subjectItem(getChannelValueStringUseCase: GetChannelValueStringUseCase): SubjectItem =
+  fun ChannelWithChildren.subjectItem(getChannelValueStringUseCase: GetChannelValueStringUseCase): SubjectItem =
     SubjectItem(
       id = remoteId,
-      caption = getCaptionUseCase(shareable),
-      actions = function.actions,
+      caption = getCaptionUseCase(channel.shareable),
+      actions = actions,
       function = function,
       userIcon = userIcon,
       altIcon = altIcon,
-      icon = getChannelIconUseCase.forState(channelEntity, offlineState),
+      icon = getChannelIconUseCase.forState(channel.channelEntity, offlineState),
       isLocation = false,
       value = when (function) {
         SuplaFunction.DIMMER -> "0"
-        SuplaFunction.RGB_LIGHTING -> "${channelValueEntity.asRgbValue().rgb}"
-        SuplaFunction.DIMMER_AND_RGB_LIGHTING -> "${channelValueEntity.asRgbwValue().rgb}"
+        SuplaFunction.RGB_LIGHTING -> "${channel.channelValueEntity.asRgbwwValue().rgb}"
+        SuplaFunction.DIMMER_AND_RGB_LIGHTING -> "${channel.channelValueEntity.asRgbwwValue().rgb}"
 
         SuplaFunction.THERMOMETER,
         SuplaFunction.GENERAL_PURPOSE_METER,
-        SuplaFunction.GENERAL_PURPOSE_MEASUREMENT -> getChannelValueStringUseCase.invoke(ChannelWithChildren(this))
+        SuplaFunction.GENERAL_PURPOSE_MEASUREMENT -> getChannelValueStringUseCase.invoke(ChannelWithChildren(channel))
 
-        SuplaFunction.HUMIDITY_AND_TEMPERATURE -> ChannelWithChildren(this).let {
+        SuplaFunction.HUMIDITY_AND_TEMPERATURE -> ChannelWithChildren(channel).let {
           val temperature = getChannelValueStringUseCase(it)
           val humidity = getChannelValueStringUseCase(it, valueType = ValueType.SECOND)
           "$temperature\n$humidity"
@@ -243,6 +246,19 @@ interface SubjectItemConversionScope {
       isLocation = false,
       value = NO_VALUE_TEXT
     )
+
+  val ChannelWithChildren.actions: List<ActionId>
+    get() = when (channel.function) {
+      SuplaFunction.CONTROLLING_THE_GATE,
+      SuplaFunction.CONTROLLING_THE_GARAGE_DOOR ->
+        if (hasPositionSensor) {
+          listOf(ActionId.OPEN_CLOSE, ActionId.OPEN, ActionId.CLOSE)
+        } else {
+          listOf(ActionId.OPEN_CLOSE)
+        }
+
+      else -> channel.function.actions
+    }
 
   val SuplaFunction.actions: List<ActionId>
     get() = when (this) {
@@ -295,7 +311,7 @@ interface SubjectItemConversionScope {
       SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK -> listOf(ActionId.OPEN)
 
       SuplaFunction.CONTROLLING_THE_GATE,
-      SuplaFunction.CONTROLLING_THE_GARAGE_DOOR -> listOf(ActionId.OPEN_CLOSE, ActionId.OPEN, ActionId.CLOSE)
+      SuplaFunction.CONTROLLING_THE_GARAGE_DOOR -> listOf(ActionId.OPEN_CLOSE)
 
       SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER,
       SuplaFunction.CONTROLLING_THE_ROOF_WINDOW,

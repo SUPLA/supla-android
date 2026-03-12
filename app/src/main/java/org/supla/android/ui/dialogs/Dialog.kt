@@ -41,10 +41,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import org.supla.android.R
+import org.supla.android.core.ui.theme.Distance
 import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.buttons.OutlinedButton
 
@@ -75,7 +77,7 @@ fun Dialog(
 fun DialogHeader(title: String) =
   Text(
     text = title,
-    style = MaterialTheme.typography.headlineSmall,
+    style = MaterialTheme.typography.titleLarge,
     textAlign = TextAlign.Center,
     modifier = Modifier
       .padding(all = dimensionResource(id = R.dimen.distance_default))
@@ -94,13 +96,16 @@ fun DialogButtonsRow(content: @Composable RowScope.() -> Unit) =
   )
 
 @Composable
-fun DialogButtonsColumn(content: @Composable ColumnScope.() -> Unit) =
+fun DialogButtonsColumn(
+  spacing: Dp = Distance.small,
+  content: @Composable ColumnScope.() -> Unit
+) =
   Column(
     modifier = Modifier
       .fillMaxWidth()
       .padding(all = dimensionResource(id = R.dimen.distance_default)),
     content = content,
-    verticalArrangement = Arrangement.spacedBy(16.dp),
+    verticalArrangement = Arrangement.spacedBy(spacing),
     horizontalAlignment = Alignment.CenterHorizontally
   )
 
