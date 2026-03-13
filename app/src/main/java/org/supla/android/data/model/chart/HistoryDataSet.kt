@@ -217,11 +217,11 @@ data class HistoryDataSet(
   data class LabelData(
     val imageId: ImageId?,
     val value: String,
-    @ColorRes val color: Int,
+    @param:ColorRes val color: Int,
     val presentColor: Boolean = true,
     val useColor: Boolean = true,
     val justColor: Boolean = false,
-    @DimenRes val iconSize: Int? = null,
+    @param:DimenRes val iconSize: Int? = null,
     val description: LocalizedString? = null
   ) {
 

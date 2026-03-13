@@ -68,7 +68,7 @@ class TimerDetailFragment : BaseFragment<TimerDetailViewState, TimerDetailViewEv
   }
 }
 
-enum class DeviceMode(val position: Int, @StringRes val stringRes: Int) {
+enum class DeviceMode(val position: Int, @param:StringRes val stringRes: Int) {
   OFF(0, R.string.turn_off),
   MANUAL(1, R.string.details_timer_manual_mode);
 

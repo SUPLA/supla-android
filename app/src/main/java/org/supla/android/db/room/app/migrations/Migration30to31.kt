@@ -23,7 +23,7 @@ import org.supla.android.data.source.local.entity.ChannelConfigEntity
 import org.supla.android.db.room.SqlExecutor
 
 val MIGRATION_30_31: Migration = object : Migration(30, 31), SqlExecutor {
-  override fun migrate(database: SupportSQLiteDatabase) {
-    execSQL(database, ChannelConfigEntity.SQL)
+  override fun migrate(db: SupportSQLiteDatabase) {
+    execSQL(db, ChannelConfigEntity.SQL)
   }
 }

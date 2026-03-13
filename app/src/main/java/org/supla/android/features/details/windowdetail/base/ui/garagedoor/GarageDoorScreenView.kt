@@ -114,9 +114,9 @@ fun GarageDoorScreenView(
     val position = if (windowState.markers.isEmpty()) windowState.position.value else windowState.markers.max()
     val topCorrection = windowDimens.movementMaxHeight.times(100f.minus(position)).div(100)
 
-    GarageDoorDrawer.drawGarageBuilding(windowDimens, colors)
-    GarageDoorDrawer.drawGarageContent(garageContentPainter, windowDimens)
-    GarageDoorDrawer.drawSlats(windowDimens, colors, topCorrection)
+    GarageDoorDrawer.drawGarageBuilding(this@Canvas, windowDimens, colors)
+    GarageDoorDrawer.drawGarageContent(this@Canvas, garageContentPainter, windowDimens)
+    GarageDoorDrawer.drawSlats(this@Canvas, windowDimens, colors, topCorrection)
 
     for (marker in windowState.markers) {
       val markerCorrection = windowDimens.movementMaxHeight.times(marker).div(100)
@@ -137,8 +137,7 @@ private object GarageDoorDrawer {
   private val path: Path = Path()
   private val paint = Paint().asFrameworkPaint()
 
-  context(DrawScope)
-  fun drawGarageBuilding(dimens: RuntimeDimens, colors: GarageDoorScreenColors) {
+  fun drawGarageBuilding(scope: DrawScope, dimens: RuntimeDimens, colors: GarageDoorScreenColors) {
     path.reset()
     path.moveTo(dimens.canvasRect.left, dimens.canvasRect.bottom)
     path.lineTo(dimens.canvasRect.left, dimens.canvasRect.bottom.minus(dimens.wallHeight))
@@ -147,18 +146,19 @@ private object GarageDoorDrawer {
     path.lineTo(dimens.canvasRect.right, dimens.canvasRect.bottom)
     path.close()
 
-    paint.applyForWindow(colors.building, colors.shadow)
-    drawContext.canvas.nativeCanvas.drawPath(path.asAndroidPath(), paint)
+    with(scope) {
+      paint.applyForWindow(colors.building, colors.shadow, scope)
+      drawContext.canvas.nativeCanvas.drawPath(path.asAndroidPath(), paint)
+    }
   }
 
-  context(DrawScope)
-  fun drawGarageContent(painter: Painter, dimens: RuntimeDimens) {
+  fun drawGarageContent(scope: DrawScope, painter: Painter, dimens: RuntimeDimens) {
     path.reset()
     path.addRoundRect(RoundRect(dimens.doorRect, dimens.doorRadius, dimens.doorRadius))
     path.close()
 
     with(painter) {
-      clipPath(path) {
+      scope.clipPath(path) {
         translate(left = dimens.doorRect.left, top = dimens.doorRect.top) {
           draw(size = dimens.doorRect.size)
         }
@@ -166,13 +166,12 @@ private object GarageDoorDrawer {
     }
   }
 
-  context(DrawScope)
-  fun drawSlats(dimens: RuntimeDimens, colors: GarageDoorScreenColors, topCorrection: Float) {
+  fun drawSlats(scope: DrawScope, dimens: RuntimeDimens, colors: GarageDoorScreenColors, topCorrection: Float) {
     path.reset()
     path.addRoundRect(RoundRect(dimens.doorRect, dimens.doorRadius, dimens.doorRadius))
     path.close()
 
-    clipPath(path) {
+    scope.clipPath(path) {
       for (slat in dimens.slats) {
         val topLeft = Offset(slat.left, slat.top.minus(topCorrection))
         drawRect(colors.slatBackground, topLeft, slat.size)

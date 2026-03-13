@@ -53,7 +53,6 @@ class DeviceCatalogFragment : WebContentFragment<DeviceCatalogViewState, DeviceC
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
-    (binding.root.layoutParams as FrameLayout.LayoutParams).topMargin = 0
     binding.webCompose.apply {
       setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
       setContent {

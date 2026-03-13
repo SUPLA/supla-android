@@ -19,11 +19,24 @@ package org.supla.android.extensions
 
 import android.content.Context
 import android.util.TypedValue
+import android.view.View
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 
-context(Fragment)
-fun Int.toPx(): Int {
-  return toPx(requireContext())
+@Suppress("UnusedReceiverParameter")
+fun Fragment.clearEdgeToEdgePaddings(view: View) {
+  ViewCompat.setOnApplyWindowInsetsListener(view) { view, insets ->
+    view.setPadding(0, 0, 0, 0)
+    insets
+  }
+}
+
+interface IntConverter {
+  fun requireContext(): Context
+
+  fun Int.toPx(): Int {
+    return toPx(requireContext())
+  }
 }
 
 fun Int.toPx(context: Context): Int {

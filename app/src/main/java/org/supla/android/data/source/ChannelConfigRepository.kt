@@ -41,7 +41,7 @@ import javax.inject.Singleton
 @Singleton
 class ChannelConfigRepository @Inject constructor(
   private val channelConfigDao: ChannelConfigDao,
-  @Named(GSON_FOR_REPO) private val gson: Gson
+  @param:Named(GSON_FOR_REPO) private val gson: Gson
 ) : CountProvider, RemoveHiddenChannelsUseCase.ChannelsDeletable, DeleteProfileUseCase.ProfileRemover {
 
   fun findForRemoteId(remoteId: Int) = channelConfigDao.findForRemoteId(remoteId)

@@ -28,10 +28,10 @@ import javax.inject.Singleton
 
 @Singleton
 class Migration27to28 @Inject constructor() : Migration(27, 28), SqlExecutor {
-  override fun migrate(database: SupportSQLiteDatabase) {
+  override fun migrate(db: SupportSQLiteDatabase) {
     val sql = "ALTER TABLE $TABLE_NAME ADD COLUMN $COLUMN_TIMER_START_TIME INTEGER"
-    execSQL(database, sql)
-    execSQL(database, "DROP VIEW IF EXISTS " + ChannelView.NAME)
-    execSQL(database, ChannelView.SQL)
+    execSQL(db, sql)
+    execSQL(db, "DROP VIEW IF EXISTS " + ChannelView.NAME)
+    execSQL(db, ChannelView.SQL)
   }
 }

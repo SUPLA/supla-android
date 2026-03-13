@@ -95,13 +95,6 @@ fun NotificationsLogView(viewProxy: NotificationsLogViewProxy) {
       itemContent = { item ->
         val currentItem by rememberUpdatedState(item)
         val dismissState = rememberSwipeToDismissBoxState(
-          confirmValueChange = {
-            if (it == SwipeToDismissBoxValue.StartToEnd) {
-              viewProxy.delete(currentItem.notificationEntity)
-              return@rememberSwipeToDismissBoxState true
-            }
-            false
-          },
           positionalThreshold = { it * 0.25f }
         )
         LaunchedEffect(Any()) { dismissState.reset() }
@@ -110,6 +103,11 @@ fun NotificationsLogView(viewProxy: NotificationsLogViewProxy) {
             state = dismissState,
             enableDismissFromStartToEnd = true,
             enableDismissFromEndToStart = false,
+            onDismiss = {
+              if (it == SwipeToDismissBoxValue.StartToEnd) {
+                viewProxy.delete(currentItem.notificationEntity)
+              }
+            },
             backgroundContent = { NotificationRowBackground() }
           ) {
             NotificationRow(item.notificationEntity)

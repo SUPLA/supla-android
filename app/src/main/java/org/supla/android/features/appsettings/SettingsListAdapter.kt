@@ -73,7 +73,7 @@ sealed class SettingItem(val viewResource: Int) {
   abstract fun bind(holder: SettingItemViewHolder<*>)
 
   data class HeaderItem(
-    @StringRes val headerResource: Int
+    @param:StringRes val headerResource: Int
   ) : SettingItem(R.layout.li_settings_header) {
     override fun bind(holder: SettingItemViewHolder<*>) {
       (holder.binding as LiSettingsHeaderBinding).apply {

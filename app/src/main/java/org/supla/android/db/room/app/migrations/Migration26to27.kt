@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.supla.android.db.room.app.migrations
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.

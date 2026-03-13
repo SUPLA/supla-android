@@ -9,7 +9,7 @@ import javax.inject.Singleton
 
 @Singleton
 class PermissionsHelper @Inject constructor(
-  @ApplicationContext private val context: Context
+  @param:ApplicationContext private val context: Context
 ) {
 
   fun checkPermissionGranted(permission: String) =

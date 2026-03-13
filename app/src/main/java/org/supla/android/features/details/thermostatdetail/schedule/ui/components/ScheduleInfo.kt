@@ -106,8 +106,7 @@ private fun FadeInBlock(
   )
 
 @Composable
-context (BoxScope)
-private fun CloseIcon(onClick: () -> Unit) =
+private fun BoxScope.CloseIcon(onClick: () -> Unit) =
   IconButton(
     icon = R.drawable.ic_close,
     onClick = onClick,
@@ -167,8 +166,7 @@ private fun ProgramButtonText() =
   )
 
 @Composable
-context (BoxScope)
-private fun ProgramBoxInfo(
+private fun BoxScope.ProgramBoxInfo(
   state: MutableTransitionState<Boolean>,
   topMargin: Dp,
   boxWidth: Dp,
@@ -234,8 +232,7 @@ private fun SampleBoxText(topMargin: Dp, boxWidth: Dp, boxHeight: Dp) =
   )
 
 @Composable
-context (BoxScope)
-private fun DarkCornerInfo(
+private fun BoxScope.DarkCornerInfo(
   state: MutableTransitionState<Boolean>,
   topMargin: Dp,
   boxWidth: Dp,
