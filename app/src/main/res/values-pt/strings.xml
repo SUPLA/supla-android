@@ -801,7 +801,7 @@
   <string name="general_processing">A processar</string>
   <string name="nfc_tag_finish_editing">Leitura bloqueada</string>
   <string name="nfc_tag_name">Etiqueta \"%1$s\"</string>
-  <string name="details_em_hour_marker_title">Hora %1$s</string>
+  <string name="details_em_hour_marker_title">Hora %1$d</string>
   <string name="history_data_type">Tipo de dados</string>
   <string name="details_em_forward_active_energy_short">Ativa consumida</string>
   <string name="details_em_reverse_active_energy_short">Ativa injetada</string>

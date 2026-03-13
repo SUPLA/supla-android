@@ -811,7 +811,7 @@
   <string name="general_processing">Behandler</string>
   <string name="nfc_tag_finish_editing">Skanning blokkert</string>
   <string name="nfc_tag_name">Tagg \"%1$s\"</string>
-  <string name="details_em_hour_marker_title">Time %1$s</string>
+  <string name="details_em_hour_marker_title">Time %1$d</string>
   <string name="history_data_type">Datatype</string>
   <string name="details_em_forward_active_energy_short">Aktiv forbruk</string>
   <string name="details_em_reverse_active_energy_short">Aktiv levert</string>

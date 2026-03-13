@@ -799,7 +799,7 @@
   <string name="general_processing">Traitement en cours</string>
   <string name="nfc_tag_finish_editing">Analyse bloquée</string>
   <string name="nfc_tag_name">Étiquette « %1$s »</string>
-  <string name="details_em_hour_marker_title">Heure %1$s</string>
+  <string name="details_em_hour_marker_title">Heure %1$d</string>
   <string name="history_data_type">Type de données</string>
   <string name="details_em_forward_active_energy_short">Active consommée</string>
   <string name="details_em_reverse_active_energy_short">Active injectée</string>

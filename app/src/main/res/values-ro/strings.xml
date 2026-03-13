@@ -816,7 +816,7 @@
   <string name="general_processing">Se procesează</string>
   <string name="nfc_tag_finish_editing">Scanare blocată</string>
   <string name="nfc_tag_name">Etichetă „%1$s”</string>
-  <string name="details_em_hour_marker_title">Ora %1$s</string>
+  <string name="details_em_hour_marker_title">Ora %1$d</string>
   <string name="history_data_type">Tip de date</string>
   <string name="details_em_forward_active_energy_short">Activă consumată</string>
   <string name="details_em_reverse_active_energy_short">Activă returnată</string>

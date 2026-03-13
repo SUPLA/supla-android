@@ -811,7 +811,7 @@
   <string name="general_processing">Feldolgozás</string>
   <string name="nfc_tag_finish_editing">Szkennelés blokkolva</string>
   <string name="nfc_tag_name">Címke: \"%1$s\"</string>
-  <string name="details_em_hour_marker_title">%1$s óra</string>
+  <string name="details_em_hour_marker_title">%1$d óra</string>
   <string name="history_data_type">Adattípus</string>
   <string name="details_em_forward_active_energy_short">Hatásos vételezett</string>
   <string name="details_em_reverse_active_energy_short">Hatásos visszatáplált</string>

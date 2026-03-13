@@ -796,7 +796,7 @@
   <string name="general_processing">Zpracovávání</string>
   <string name="nfc_tag_finish_editing">Skenování zablokováno</string>
   <string name="nfc_tag_name">Tag „%1$s“</string>
-  <string name="details_em_hour_marker_title">Hodina %1$s</string>
+  <string name="details_em_hour_marker_title">Hodina %1$d</string>
   <string name="history_data_type">Typ dat</string>
   <string name="details_em_forward_active_energy_short">Činná odebraná</string>
   <string name="details_em_reverse_active_energy_short">Činná dodaná</string>

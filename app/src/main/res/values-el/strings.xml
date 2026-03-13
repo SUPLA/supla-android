@@ -808,7 +808,7 @@
   <string name="general_processing">Επεξεργασία</string>
   <string name="nfc_tag_finish_editing">Η σάρωση μπλοκαρίστηκε</string>
   <string name="nfc_tag_name">Ετικέτα «%1$s»</string>
-  <string name="details_em_hour_marker_title">Ώρα %1$s</string>
+  <string name="details_em_hour_marker_title">Ώρα %1$d</string>
   <string name="history_data_type">Τύπος δεδομένων</string>
   <string name="details_em_forward_active_energy_short">Ενεργή ληφθείσα</string>
   <string name="details_em_reverse_active_energy_short">Ενεργή επιστραφείσα</string>
