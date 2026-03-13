@@ -37,7 +37,7 @@ private const val UNKNOWN_SSID = "<unknown ssid>"
 
 @Singleton
 class CurrentWifiNetworkInfoProvider @Inject constructor(
-  @ApplicationContext private val context: Context
+  @param:ApplicationContext private val context: Context
 ) {
 
   private var networkInfo: NetworkInfo? = null

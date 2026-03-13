@@ -21,7 +21,7 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 class EmptyMigration(startVersion: Int, endVersion: Int) : Migration(startVersion, endVersion) {
-  override fun migrate(database: SupportSQLiteDatabase) {
+  override fun migrate(db: SupportSQLiteDatabase) {
     // Should stay empty
   }
 }

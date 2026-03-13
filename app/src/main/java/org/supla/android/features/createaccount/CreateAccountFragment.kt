@@ -175,7 +175,7 @@ class CreateAccountFragment : BaseFragment<CreateAccountViewState, CreateAccount
       return if (profileId == null) {
         Bundle()
       } else {
-        bundleOf(ARG_PROFILE_ID to profileId)
+        Bundle().apply { putLong(ARG_PROFILE_ID, profileId) }
       }
     }
   }

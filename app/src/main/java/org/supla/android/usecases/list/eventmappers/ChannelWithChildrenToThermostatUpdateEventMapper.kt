@@ -46,8 +46,8 @@ class ChannelWithChildrenToThermostatUpdateEventMapper @Inject constructor(
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
   private val getChannelIssuesForListUseCase: GetChannelIssuesForListUseCase,
-  @Named(GSON_FOR_REPO) private val gson: Gson,
-  @Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter
+  @param:Named(GSON_FOR_REPO) private val gson: Gson,
+  @param:Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter
 ) :
   CreateListItemUpdateEventDataUseCase.Mapper {
   override fun handle(item: Any): Boolean {

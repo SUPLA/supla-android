@@ -98,8 +98,8 @@ class EditNfcTagFragment : BaseComposeFragment<EditNfcTagViewModelState, EditNfc
   }
 
   companion object {
-    fun bundle(itemId: Long): Bundle = bundleOf(ARG_EXISTING_ITEM_ID to itemId)
-    fun bundle(uuid: String, readOnly: Boolean): Bundle = bundleOf(ARG_NEW_ITEM_DATA to NewItemData(uuid, readOnly))
+    fun bundle(itemId: Long): Bundle = Bundle().apply { putLong(ARG_EXISTING_ITEM_ID, itemId) }
+    fun bundle(uuid: String, readOnly: Boolean): Bundle = Bundle().apply { putSerializable(ARG_NEW_ITEM_DATA, NewItemData(uuid, readOnly)) }
   }
 
   data class NewItemData(

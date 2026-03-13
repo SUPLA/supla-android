@@ -41,7 +41,7 @@ sealed class SlideableListItemData {
     override val infoSupported: Boolean,
     val value: String,
     val subValue: String,
-    @DrawableRes val indicatorIcon: Int?
+    @param:DrawableRes val indicatorIcon: Int?
   ) : SlideableListItemData() {
     companion object
   }

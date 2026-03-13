@@ -29,6 +29,7 @@ import org.supla.android.R
 import org.supla.android.core.notifications.NotificationsHelper
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.databinding.FragmentMainBinding
+import org.supla.android.extensions.clearEdgeToEdgePaddings
 import org.supla.android.extensions.visibleIf
 import org.supla.android.features.notificationinfo.NotificationInfoDialog
 import org.supla.android.ui.layouts.BottomBarHeightHandler
@@ -73,6 +74,8 @@ class MainFragment :
     notificationsHelper.setup(requireActivity()) {
       NotificationInfoDialog.create().show(requireActivity().supportFragmentManager, null)
     }
+
+    clearEdgeToEdgePaddings(binding.mainBottomBar)
   }
 
   override fun onResume() {

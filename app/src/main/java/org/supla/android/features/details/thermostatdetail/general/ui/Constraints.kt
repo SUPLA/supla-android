@@ -52,8 +52,7 @@ object Constraints {
     constrainSwitchesIcons(viewState, isSmallScreen, distanceFromCenter, controlWheel)
   }
 
-  context(ConstraintSetScope)
-  private fun constrainIncreaseDecreaseButtons(
+  private fun ConstraintSetScope.constrainIncreaseDecreaseButtons(
     viewState: ThermostatGeneralViewState,
     isSmallScreen: Boolean,
     controlWheel: ConstrainedLayoutReference,
@@ -87,8 +86,7 @@ object Constraints {
     }
   }
 
-  context(ConstraintSetScope)
-  private fun constrainHeatingIndicator(
+  private fun ConstraintSetScope.constrainHeatingIndicator(
     viewState: ThermostatGeneralViewState,
     distanceFromCenter: Dp,
     controlWheel: ConstrainedLayoutReference,
@@ -112,8 +110,7 @@ object Constraints {
     }
   }
 
-  context(ConstraintSetScope)
-  private fun constrainCoolingIndicator(
+  private fun ConstraintSetScope.constrainCoolingIndicator(
     viewState: ThermostatGeneralViewState,
     distanceFromCenter: Dp,
     controlWheel: ConstrainedLayoutReference,
@@ -137,8 +134,7 @@ object Constraints {
     }
   }
 
-  context(ConstraintSetScope)
-  private fun constrainSwitchesIcons(
+  private fun ConstraintSetScope.constrainSwitchesIcons(
     viewState: ThermostatGeneralViewState,
     isSmallScreen: Boolean,
     distanceFromCenter: Dp,

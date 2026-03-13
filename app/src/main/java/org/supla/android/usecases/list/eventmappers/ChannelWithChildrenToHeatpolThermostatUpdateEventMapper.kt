@@ -40,7 +40,7 @@ class ChannelWithChildrenToHeatpolThermostatUpdateEventMapper @Inject constructo
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
   private val getChannelIssuesForListUseCase: GetChannelIssuesForListUseCase,
-  @Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter
+  @param:Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter
 ) :
   CreateListItemUpdateEventDataUseCase.Mapper {
   override fun handle(item: Any): Boolean {

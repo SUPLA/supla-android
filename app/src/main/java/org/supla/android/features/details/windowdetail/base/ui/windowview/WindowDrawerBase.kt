@@ -33,40 +33,39 @@ abstract class WindowDrawerBase<D : WindowDimensBase, S : WindowState, C : Windo
   protected val paint = Paint().asFrameworkPaint()
   protected val path = Path()
 
-  context(DrawScope)
-  protected abstract fun drawShadowingElements(windowState: S, runtimeDimens: D, colors: C)
+  protected abstract fun DrawScope.drawShadowingElements(windowState: S, runtimeDimens: D, colors: C)
 
-  context(DrawScope)
-  protected abstract fun drawMarkers(windowState: S, runtimeDimens: D, colors: C)
+  protected abstract fun DrawScope.drawMarkers(windowState: S, runtimeDimens: D, colors: C)
 
-  context(DrawScope)
-  fun drawWindow(runtimeDimens: D, colors: C, windowState: S) {
-    val windowFrameRadius = WINDOW_FRAME_RADIUS.dp.toPx().times(runtimeDimens.scale)
+  fun drawWindow(scope: DrawScope, runtimeDimens: D, colors: C, windowState: S) {
+    with(scope) {
+      val windowFrameRadius = WINDOW_FRAME_RADIUS.dp.toPx().times(runtimeDimens.scale)
 
-    paint.applyForWindow(colors.window, colors.shadow)
-    drawContext.canvas.nativeCanvas.drawRoundRect(
-      runtimeDimens.windowRect.left,
-      runtimeDimens.windowRect.top,
-      runtimeDimens.windowRect.right,
-      runtimeDimens.windowRect.bottom,
-      windowFrameRadius,
-      windowFrameRadius,
-      paint
-    )
+      paint.applyForWindow(colors.window, colors.shadow, scope)
+      drawContext.canvas.nativeCanvas.drawRoundRect(
+        runtimeDimens.windowRect.left,
+        runtimeDimens.windowRect.top,
+        runtimeDimens.windowRect.right,
+        runtimeDimens.windowRect.bottom,
+        windowFrameRadius,
+        windowFrameRadius,
+        paint
+      )
 
-    drawGlasses(runtimeDimens, colors)
-    drawShadowingElements(windowState, runtimeDimens, colors)
+      drawGlasses(runtimeDimens, colors)
+      drawShadowingElements(windowState, runtimeDimens, colors)
 
-    paint.applyForWindow(colors.window, colors.shadow)
-    drawContext.canvas.nativeCanvas.drawRect(
-      runtimeDimens.topLineRect.left,
-      runtimeDimens.topLineRect.top,
-      runtimeDimens.topLineRect.right,
-      runtimeDimens.topLineRect.bottom,
-      paint
-    )
+      paint.applyForWindow(colors.window, colors.shadow, scope)
+      drawContext.canvas.nativeCanvas.drawRect(
+        runtimeDimens.topLineRect.left,
+        runtimeDimens.topLineRect.top,
+        runtimeDimens.topLineRect.right,
+        runtimeDimens.topLineRect.bottom,
+        paint
+      )
 
-    drawMarkers(windowState, runtimeDimens, colors)
+      drawMarkers(windowState, runtimeDimens, colors)
+    }
   }
 
   private fun DrawScope.drawGlasses(dimens: D, colors: C) {

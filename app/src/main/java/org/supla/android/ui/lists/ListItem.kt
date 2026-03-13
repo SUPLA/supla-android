@@ -94,7 +94,7 @@ sealed interface ListItem {
     issues: ListItemIssues,
     private val estimatedTimerEndDate: Date?,
     private val subValue: String,
-    @DrawableRes private val indicatorIcon: Int?
+    @param:DrawableRes private val indicatorIcon: Int?
   ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, issues) {
     override fun toSlideableListItemData(): SlideableListItemData {
       return SlideableListItemData.Thermostat(

@@ -30,7 +30,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class VibrationHelper @Inject constructor(@ApplicationContext private val context: Context) {
+class VibrationHelper @Inject constructor(@param:ApplicationContext private val context: Context) {
 
   fun vibrate() {
     getVibrator()?.apply {

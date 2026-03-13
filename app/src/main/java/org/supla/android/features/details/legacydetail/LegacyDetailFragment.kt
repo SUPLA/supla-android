@@ -163,10 +163,10 @@ class LegacyDetailFragment : BaseFragment<LegacyDetailViewState, LegacyDetailVie
   }
 
   companion object {
-    fun bundle(remoteId: Int, legacyDetailType: LegacyDetailType, itemType: ItemType) = bundleOf(
-      ARG_REMOTE_ID to remoteId,
-      ARG_DETAIL_TYPE to legacyDetailType,
-      ARG_ITEM_TYPE to itemType
-    )
+    fun bundle(remoteId: Int, legacyDetailType: LegacyDetailType, itemType: ItemType) = Bundle().apply {
+      putInt(ARG_REMOTE_ID, remoteId)
+      putSerializable(ARG_DETAIL_TYPE, legacyDetailType)
+      putSerializable(ARG_ITEM_TYPE, itemType)
+    }
   }
 }

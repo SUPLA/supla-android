@@ -44,7 +44,7 @@ import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 
 data class DeviceParameter(
-  @StringRes val nameRes: Int,
+  @param:StringRes val nameRes: Int,
   val value: String
 )
 

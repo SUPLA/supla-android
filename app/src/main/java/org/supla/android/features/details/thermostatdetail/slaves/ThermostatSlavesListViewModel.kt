@@ -51,7 +51,7 @@ import javax.inject.Named
 
 @HiltViewModel
 class ThermostatSlavesListViewModel @Inject constructor(
-  @Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter,
+  @param:Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter,
   private val readChannelWithChildrenTreeUseCase: ReadChannelWithChildrenTreeUseCase,
   private val getChannelIssuesForSlavesUseCase: GetChannelIssuesForSlavesUseCase,
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,

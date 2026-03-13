@@ -106,7 +106,7 @@ fun ContainerIconView(
   }
 
   Canvas(modifier = modifier) {
-    context.drawFluidContainer(fillLevel, controlLevels, textLayoutResults) {
+    context.drawFluidContainer(fillLevel, controlLevels, textLayoutResults, this@Canvas) {
       targetRect.width.div(CONTAINER_WIDTH).let {
         (it != scale).ifTrue { scale = it }
       }
@@ -140,40 +140,41 @@ private abstract class ContainerViewScope {
   abstract val specification: ContainerSpecification
 }
 
-context(DrawScope)
 private fun ContainerViewScope.drawFluidContainer(
   fillLevel: Float?,
   controlLevels: List<ControlLevel>,
   textLayoutResults: Map<ControlLevel, TextLayoutResult>,
+  scope: DrawScope,
   updateScaleCallback: ContainerViewScope.() -> Unit
 ) {
-  targetRect = targetRect(containerMargin)
-  updateScaleCallback()
+  with(scope) {
+    targetRect = targetRect(containerMargin)
+    updateScaleCallback()
 
-  val containerRect = containerRect(targetRect, specification)
-  clipPath.reset()
-  clipPath.addRoundRect(roundRect = containerRect)
-  containerPath.setupContainer(targetRect, containerRect, specification)
+    val containerRect = containerRect(targetRect, specification)
+    clipPath.reset()
+    clipPath.addRoundRect(roundRect = containerRect)
+    containerPath.setupContainer(targetRect, containerRect, specification)
 
-  drawPath(path = containerPath, color = contentColor)
-  drawFluid(fillLevel)
-  drawControlLevelsLines(controlLevels)
+    drawPath(path = containerPath, color = contentColor)
+    drawFluid(fillLevel, scope)
+    drawControlLevelsLines(controlLevels, scope)
 
-  drawPath(
-    path = containerPath,
-    color = borderColor,
-    style = Stroke(width = containerStrokeWidth, pathEffect = PathEffect.cornerPathEffect(1f))
-  )
+    drawPath(
+      path = containerPath,
+      color = borderColor,
+      style = Stroke(width = containerStrokeWidth, pathEffect = PathEffect.cornerPathEffect(1f))
+    )
 
-  warningUpper?.let { drawWarningControlLevel(it, textLayoutResults[it], nextLevel = warningLower) }
-  warningLower?.let { drawWarningControlLevel(it, textLayoutResults[it], previousLevel = warningUpper) }
-  alarmUpper?.let { drawAlarmControlLevel(it, textLayoutResults[it], nextLevel = alarmLower) }
-  alarmLower?.let { drawAlarmControlLevel(it, textLayoutResults[it], previousLevel = alarmUpper) }
+    warningUpper?.let { drawWarningControlLevel(it, textLayoutResults[it], nextLevel = warningLower, scope = scope) }
+    warningLower?.let { drawWarningControlLevel(it, textLayoutResults[it], previousLevel = warningUpper, scope = scope) }
+    alarmUpper?.let { drawAlarmControlLevel(it, textLayoutResults[it], nextLevel = alarmLower, scope = scope) }
+    alarmLower?.let { drawAlarmControlLevel(it, textLayoutResults[it], previousLevel = alarmUpper, scope = scope) }
+  }
 }
 
-context(DrawScope)
-private fun ContainerViewScope.drawFluid(fillLevel: Float?) {
-  clipPath(path = clipPath) {
+private fun ContainerViewScope.drawFluid(fillLevel: Float?, scope: DrawScope) {
+  scope.clipPath(path = clipPath) {
     fillLevel?.let {
       fluidPath.setupFluid(fillLevel, targetRect, specification)
       drawPath(path = fluidPath, color = fluidColor)
@@ -183,21 +184,19 @@ private fun ContainerViewScope.drawFluid(fillLevel: Float?) {
   }
 }
 
-context(DrawScope)
-private fun ContainerViewScope.drawControlLevelsLines(controlLevels: List<ControlLevel>) {
+private fun ContainerViewScope.drawControlLevelsLines(controlLevels: List<ControlLevel>, scope: DrawScope) {
   alarmUpper = controlLevels.firstOrNull { it is ErrorLevel && it.type == ControlLevel.Type.UPPER }
   alarmLower = controlLevels.firstOrNull { it is ErrorLevel && it.type == ControlLevel.Type.LOWER }
   warningUpper = controlLevels.firstOrNull { it is WarningLevel && it.type == ControlLevel.Type.UPPER }
   warningLower = controlLevels.firstOrNull { it is WarningLevel && it.type == ControlLevel.Type.LOWER }
 
-  warningLower?.let { drawControlLine(it) }
-  warningUpper?.let { drawControlLine(it) }
-  alarmLower?.let { drawControlLine(it) }
-  alarmUpper?.let { drawControlLine(it) }
+  warningLower?.let { drawControlLine(it, scope) }
+  warningUpper?.let { drawControlLine(it, scope) }
+  alarmLower?.let { drawControlLine(it, scope) }
+  alarmUpper?.let { drawControlLine(it, scope) }
 }
 
-context(DrawScope)
-private fun ContainerViewScope.targetRect(containerMargin: Float): Rect {
+private fun DrawScope.targetRect(containerMargin: Float): Rect {
   val canvasRatio = size.width / size.height
   val doubleMargin = containerMargin.times(2)
 
@@ -230,12 +229,12 @@ private fun containerRect(targetRect: Rect, specification: ContainerSpecificatio
   )
 }
 
-context(DrawScope)
 private fun ContainerViewScope.drawControlLine(
   controlLevel: ControlLevel,
+  scope: DrawScope
 ) {
   val levelPosition = specification.levelPosition(targetRect, controlLevel.level)
-  drawLine(
+  scope.drawLine(
     color = controlLevel.color,
     start = Offset(targetRect.left, levelPosition),
     end = Offset(targetRect.right, levelPosition),
@@ -244,12 +243,12 @@ private fun ContainerViewScope.drawControlLine(
   )
 }
 
-context(DrawScope)
 private fun ContainerViewScope.drawAlarmControlLevel(
   controlLevel: ControlLevel,
   textLayoutResult: TextLayoutResult?,
   previousLevel: ControlLevel? = null,
-  nextLevel: ControlLevel? = null
+  nextLevel: ControlLevel? = null,
+  scope: DrawScope
 ) {
   val textWidth = textLayoutResult?.size?.width ?: 0
   val levelPosition = specification.levelPosition(targetRect, controlLevel.level)
@@ -260,7 +259,7 @@ private fun ContainerViewScope.drawAlarmControlLevel(
   val topPosition = getControlLevelTextPosition(previousLevel, nextLevel, levelPosition, textLayoutResult)
 
   textLayoutResult?.let {
-    translate(left = textStartPosition, top = topPosition) {
+    scope.translate(left = textStartPosition, top = topPosition) {
       labelPath.setupLabel(specification, controlLevel, it.size)
       drawPath(labelPath, contentColor)
       drawPath(labelPath, borderColor, style = Stroke(containerStrokeWidth))
@@ -269,12 +268,12 @@ private fun ContainerViewScope.drawAlarmControlLevel(
   }
 }
 
-context(DrawScope)
 private fun ContainerViewScope.drawWarningControlLevel(
   controlLevel: ControlLevel,
   textLayoutResult: TextLayoutResult?,
   previousLevel: ControlLevel? = null,
-  nextLevel: ControlLevel? = null
+  nextLevel: ControlLevel? = null,
+  scope: DrawScope
 ) {
   val levelPosition = specification.levelPosition(targetRect, controlLevel.level)
   val textStartPosition = targetRect.left
@@ -283,7 +282,7 @@ private fun ContainerViewScope.drawWarningControlLevel(
   val topPosition = getControlLevelTextPosition(previousLevel, nextLevel, levelPosition, textLayoutResult)
 
   textLayoutResult?.let {
-    translate(left = textStartPosition, top = topPosition) {
+    scope.translate(left = textStartPosition, top = topPosition) {
       labelPath.setupLabel(specification, controlLevel, it.size)
       drawPath(labelPath, contentColor)
       drawPath(labelPath, borderColor, style = Stroke(containerStrokeWidth))

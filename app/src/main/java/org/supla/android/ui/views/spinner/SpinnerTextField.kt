@@ -21,8 +21,8 @@ package org.supla.android.ui.views.spinner
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBoxScope
-import androidx.compose.material3.MenuAnchorType
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import org.supla.android.ui.views.forms.TextField
@@ -35,7 +35,7 @@ fun ExposedDropdownMenuBoxScope.SpinnerTextField(
   fillMaxWidth: Boolean = false,
   isError: Boolean = false
 ) {
-  var textFieldModifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable)
+  var textFieldModifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
   if (fillMaxWidth) {
     textFieldModifier = textFieldModifier.fillMaxWidth()
   }
@@ -46,7 +46,7 @@ fun ExposedDropdownMenuBoxScope.SpinnerTextField(
       SpinnerTrailingIcon(
         expanded = expanded,
         enabled = enabled,
-        modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable)
+        modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
       )
     },
     modifier = textFieldModifier,

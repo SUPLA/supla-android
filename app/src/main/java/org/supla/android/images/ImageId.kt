@@ -19,7 +19,7 @@ package org.supla.android.images
 
 import kotlinx.serialization.Serializable
 
-@Suppress("DataClassPrivateConstructor")
+@ConsistentCopyVisibility
 @Serializable
 data class ImageId private constructor(
   val id: Int,

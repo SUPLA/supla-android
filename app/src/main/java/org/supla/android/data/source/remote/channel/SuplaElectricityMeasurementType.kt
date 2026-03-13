@@ -24,7 +24,7 @@ import org.supla.android.ui.views.spinner.SpinnerItem
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 
-enum class SuplaElectricityMeasurementType(val rawValue: Int, val ordering: Int, @StringRes val labelRes: Int) : SpinnerItem {
+enum class SuplaElectricityMeasurementType(val rawValue: Int, val ordering: Int, @param:StringRes val labelRes: Int) : SpinnerItem {
   FREQUENCY(0x1, 1, R.string.details_em_frequency),
   VOLTAGE(0x2, 3, R.string.details_em_voltage),
   CURRENT(0x4, 4, R.string.details_em_current),
