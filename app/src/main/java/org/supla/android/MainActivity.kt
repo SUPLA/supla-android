@@ -29,17 +29,22 @@ import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.children
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -88,6 +93,7 @@ import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Date
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class MainActivity :
@@ -176,11 +182,25 @@ class MainActivity :
     super.onCreate(savedInstanceState)
     setupOrientationLock(applicationPreferences)
 
+    enableEdgeToEdge()
+
     handleSplashScreen()
     legacySetup()
     navigationSetup()
     toolbarSetup()
     backCallbackSetup()
+
+    ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.coordinator)) { view, insets ->
+      val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+      view.setPadding(0, 0, 0, bars.bottom)
+      val appBarHeight = resources.getDimension(R.dimen.top_bar_height).roundToInt()
+      menuLayout.layoutParams = (menuLayout.layoutParams as CoordinatorLayout.LayoutParams)
+        .apply { topMargin = bars.top + appBarHeight }
+      appBarLayoutSpacer.layoutParams = (appBarLayoutSpacer.layoutParams as LinearLayout.LayoutParams)
+        .apply { height = bars.top + appBarHeight }
+      appBarLayout.setPadding(0, bars.top, 0, 0)
+      insets
+    }
 
     if (preferences.shouldShowNewGestureInfo() && preferences.isNewGestureInfoPresented.not()) {
       newGestureInfo.bringToFront()

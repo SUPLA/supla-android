@@ -220,7 +220,7 @@ sealed class GroupListViewEvent : ViewEvent {
     BaseDetail(R.id.standard_detail_fragment, StandardDetailFragment.bundle(itemBundle, pages.toTypedArray()))
 
   abstract class BaseDetail(
-    @IdRes val fragmentId: Int,
+    @param:IdRes val fragmentId: Int,
     val fragmentArguments: Bundle
   ) : GroupListViewEvent()
 }

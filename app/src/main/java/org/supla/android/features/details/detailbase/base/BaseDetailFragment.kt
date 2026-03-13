@@ -23,13 +23,13 @@ import android.view.MenuItem
 import android.view.View
 import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
-import androidx.core.os.bundleOf
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.supla.android.core.storage.RuntimeStateHolder
 import org.supla.android.core.ui.ARG_ITEM_BUNDLE
 import org.supla.android.core.ui.BaseFragment
+import org.supla.android.extensions.clearEdgeToEdgePaddings
 import org.supla.android.extensions.visibleIf
 import org.supla.android.navigator.MainNavigator
 import org.supla.android.ui.layouts.BottomBarHeightHandler
@@ -83,6 +83,8 @@ abstract class BaseDetailFragment<S : BaseDetailViewState, E : BaseDetailViewEve
 
     viewModel.observeUpdates(item.remoteId, item.itemType, item.function)
     viewModel.loadData(item.remoteId, item.itemType, item.function)
+
+    clearEdgeToEdgePaddings(detailBottomBar)
   }
 
   @CallSuper
@@ -122,9 +124,9 @@ abstract class BaseDetailFragment<S : BaseDetailViewState, E : BaseDetailViewEve
   }
 
   companion object Companion {
-    fun bundle(subjectBundle: ItemBundle, pages: Array<DetailPage>) = bundleOf(
-      ARG_ITEM_BUNDLE to subjectBundle,
-      ARG_PAGES to pages
-    )
+    fun bundle(subjectBundle: ItemBundle, pages: Array<DetailPage>) = Bundle().apply {
+      putSerializable(ARG_ITEM_BUNDLE, subjectBundle)
+      putSerializable(ARG_PAGES, pages)
+    }
   }
 }

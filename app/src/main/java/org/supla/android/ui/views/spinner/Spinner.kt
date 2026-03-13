@@ -32,9 +32,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -181,7 +181,7 @@ fun <T : SpinnerItem> TextSpinner(
           style = MaterialTheme.typography.bodySmall,
           color = if (enabled) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.outline,
           modifier = Modifier
-            .menuAnchor(MenuAnchorType.PrimaryEditable)
+            .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryEditable)
             .weight(1f, false),
           maxLines = 1,
           overflow = TextOverflow.Ellipsis
@@ -192,7 +192,7 @@ fun <T : SpinnerItem> TextSpinner(
           modifier = Modifier
             .width(16.dp)
             .height(8.dp)
-            .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+            .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
         )
       }
 

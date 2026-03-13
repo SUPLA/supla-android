@@ -45,12 +45,12 @@ import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
 data class ThermostatProgramInfo(
   val type: Type,
   val time: LocalizedString? = null,
-  @DrawableRes val icon: Int?,
-  @ColorRes val iconColor: Int?,
+  @param:DrawableRes val icon: Int?,
+  @param:ColorRes val iconColor: Int?,
   val descriptionProvider: LocalizedString?,
   val manualActive: Boolean = false
 ) {
-  enum class Type(@StringRes val stringRes: Int) {
+  enum class Type(@param:StringRes val stringRes: Int) {
     CURRENT(R.string.thermostat_detail_program_current), NEXT(R.string.thermostat_detail_program_next)
   }
 

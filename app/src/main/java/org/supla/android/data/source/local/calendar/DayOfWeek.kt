@@ -21,7 +21,7 @@ import org.supla.android.R
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-enum class DayOfWeek(val day: Int, @StringRes val fullText: Int, @StringRes val shortText: Int) {
+enum class DayOfWeek(val day: Int, @param:StringRes val fullText: Int, @param:StringRes val shortText: Int) {
   MONDAY(1, R.string.monday, R.string.monday_short),
   TUESDAY(2, R.string.tuesday, R.string.tuesday_short),
   WEDNESDAY(3, R.string.wednesday, R.string.wednesday_short),

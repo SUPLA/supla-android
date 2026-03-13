@@ -52,7 +52,7 @@ data class ProvidePasswordState(
   val processing: Boolean = false,
   val ssid: String? = null
 ) {
-  enum class Error(@StringRes val descriptionRes: Int) {
+  enum class Error(@param:StringRes val descriptionRes: Int) {
     INVALID_CREDENTIALS(R.string.incorrect_password),
     UNKNOWN_ERROR(R.string.status_unknown_err)
   }

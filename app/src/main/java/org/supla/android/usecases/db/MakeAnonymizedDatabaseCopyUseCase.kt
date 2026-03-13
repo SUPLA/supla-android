@@ -34,7 +34,7 @@ const val DATABASE_COPY_FILE_NAME = "supla_copy.db"
 
 @Singleton
 class MakeAnonymizedDatabaseCopyUseCase @Inject constructor(
-  @ApplicationContext private val context: Context
+  @param:ApplicationContext private val context: Context
 ) {
 
   var file: File = File(context.filesDir, DATABASE_COPY_FILE_NAME)

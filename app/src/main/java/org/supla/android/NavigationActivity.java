@@ -155,27 +155,6 @@ public class NavigationActivity extends BaseActivity
     Content = (ViewGroup) Inflate(layoutResID, getContentLayout());
   }
 
-  public void showBackButton() {
-    getMenuBarLayout();
-    setBtnBackground(MenuButton, R.drawable.back);
-    MenuButton.setVisibility(View.VISIBLE);
-    MenuButton.setTag(1);
-    ProfileButton.setVisibility(View.GONE);
-  }
-
-  public void showMenuBar() {
-
-    RelativeLayout.LayoutParams lp =
-        new RelativeLayout.LayoutParams(
-            RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-    lp.addRule(RelativeLayout.BELOW, getMenuBarLayout().getId());
-    getContentLayout().setLayoutParams(lp);
-
-    if (MenuBarLayout != null) {
-      MenuBarLayout.setVisibility(View.VISIBLE);
-    }
-  }
-
   public void showZWaveConfigurationWizard() {
     showActivity(this, ZWaveConfigurationWizardActivity.class);
   }
@@ -185,10 +164,6 @@ public class NavigationActivity extends BaseActivity
         new ProfileChooser(this, activateProfileUseCase, readAllProfilesUseCase);
     profileChooser.setListener(this);
     profileChooser.show();
-  }
-
-  private void setBtnBackground(Button btn, int imgResId) {
-    btn.setBackground(ResourcesCompat.getDrawable(getResources(), imgResId, null));
   }
 
   @Override

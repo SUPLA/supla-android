@@ -147,8 +147,7 @@ fun ScheduleTable(
   }
 }
 
-context(DrawScope)
-private fun scheduleTableDays(
+private fun DrawScope.scheduleTableDays(
   days: List<DrawableText<DayOfWeek>>,
   textColor: Color,
   currentHighlightColor: Color,
@@ -178,8 +177,7 @@ private fun scheduleTableDays(
   }
 }
 
-context(DrawScope)
-private fun scheduleTableBoxes(
+private fun DrawScope.scheduleTableBoxes(
   gridHeight: Float,
   hours: List<DrawableText<Int>>,
   days: List<DrawableText<DayOfWeek>>,
@@ -241,8 +239,7 @@ private fun scheduleTableBoxes(
   }
 }
 
-context(DrawScope)
-private fun drawScheduleBoxSingleColor(
+private fun DrawScope.drawScheduleBoxSingleColor(
   topLeft: Offset,
   size: Size,
   cornerRadius: CornerRadius,
@@ -256,8 +253,7 @@ private fun drawScheduleBoxSingleColor(
   )
 }
 
-context(DrawScope)
-private fun drawScheduleBoxMultiColor(
+private fun DrawScope.drawScheduleBoxMultiColor(
   path: Path,
   topLeft: Offset,
   size: Size,

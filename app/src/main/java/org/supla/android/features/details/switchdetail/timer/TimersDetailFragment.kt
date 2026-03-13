@@ -108,7 +108,7 @@ class TimersDetailFragment : BaseFragment<TimersDetailViewState, TimersDetailVie
     val showTimer = state.timerData != null
     binding.detailsTimerState.deviceStateLabel.text = if (showTimer) {
       val formatString = getString(R.string.hour_string_format)
-      getString(R.string.details_timer_state_label_for_timer, DateFormat.format(formatString, state.timerData!!.endTime))
+      getString(R.string.details_timer_state_label_for_timer, DateFormat.format(formatString, state.timerData.endTime))
     } else {
       getString(R.string.details_timer_state_label)
     }

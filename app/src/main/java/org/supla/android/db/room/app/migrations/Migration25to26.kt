@@ -31,9 +31,9 @@ class Migration25to26 @Inject constructor(
   private val preferences: Preferences
 ) : Migration(25, 26), SqlExecutor {
 
-  override fun migrate(database: SupportSQLiteDatabase) {
+  override fun migrate(db: SupportSQLiteDatabase) {
     preferences.setShouldShowNewGestureInfo()
-    execSQL(database, SceneEntity.SQL)
-    execSQL(database, SceneView.SQL)
+    execSQL(db, SceneEntity.SQL)
+    execSQL(db, SceneView.SQL)
   }
 }

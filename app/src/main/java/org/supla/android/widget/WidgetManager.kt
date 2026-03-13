@@ -36,7 +36,7 @@ import javax.inject.Singleton
 
 @Singleton
 class WidgetManager @Inject constructor(
-  @ApplicationContext private val context: Context,
+  @param:ApplicationContext private val context: Context,
   private val appWidgetManager: AppWidgetManager,
   private val widgetPreferences: WidgetPreferences
 ) {

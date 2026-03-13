@@ -26,8 +26,8 @@ import org.supla.android.ui.views.charts.marker.ElectricityMarkerView
 import org.supla.android.ui.views.charts.marker.ImpulseCounterMarkerView
 
 sealed class ChartStyle(
-  @ColorRes val leftAxisColor: Int,
-  @ColorRes val rightAxisColor: Int,
+  @param:ColorRes val leftAxisColor: Int,
+  @param:ColorRes val rightAxisColor: Int,
   val drawBarShadow: Boolean,
   val markerViewProvider: (context: Context) -> BaseMarkerView,
   val setMinValue: Boolean = true,

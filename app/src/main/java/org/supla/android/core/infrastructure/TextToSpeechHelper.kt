@@ -24,6 +24,7 @@ import android.media.AudioManager
 import android.os.Build
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
+import androidx.annotation.RequiresApi
 import org.supla.core.shared.extensions.guardLet
 import timber.log.Timber
 import java.util.Locale
@@ -43,7 +44,7 @@ class TextToSpeechHelper(
     override fun onDone(speechId: String?) {
       speeches.remove(speechId)
       if (speeches.isEmpty()) {
-        audioManager.abandonAudioFocus(null)
+        abandonAudioFocus()
       }
     }
   }
@@ -100,15 +101,27 @@ class TextToSpeechHelper(
 
   private fun requestAudioFocus(): Int {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      val focusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
-        .setAudioAttributes(audioAttributes)
-        .build()
       audioManager.requestAudioFocus(focusRequest)
     } else {
       @Suppress("DEPRECATION")
       audioManager.requestAudioFocus(null, AudioManager.STREAM_NOTIFICATION, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
     }
   }
+
+  private fun abandonAudioFocus() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      audioManager.abandonAudioFocusRequest(focusRequest)
+    } else {
+      @Suppress("DEPRECATION")
+      audioManager.abandonAudioFocus(null)
+    }
+  }
+
+  @RequiresApi(Build.VERSION_CODES.O)
+  private val focusRequest =
+    AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
+      .setAudioAttributes(audioAttributes)
+      .build()
 
   private val audioAttributes: AudioAttributes
     get() = AudioAttributes.Builder()

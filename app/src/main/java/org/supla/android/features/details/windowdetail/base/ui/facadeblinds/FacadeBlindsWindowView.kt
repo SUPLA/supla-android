@@ -122,7 +122,7 @@ fun FacadeBlindsWindowView(
       return@Canvas // Skip drawing when view size is not set yet
     }
 
-    WindowDrawer.drawWindow(runtimeDimens = windowDimens, colors = colors, windowState = windowState)
+    WindowDrawer.drawWindow(this@Canvas, runtimeDimens = windowDimens, colors = colors, windowState = windowState)
     if (enabled.not()) {
       drawRect(colors.disabledOverlay)
     }
@@ -136,13 +136,16 @@ private object WindowDrawer : WindowDrawerBase<RuntimeDimens, FacadeBlindWindowS
   private const val TILT_RANGE = 180f
   private const val TILT_HALF_RANGE = 90f
 
-  context (DrawScope)
-  override fun drawShadowingElements(windowState: FacadeBlindWindowState, runtimeDimens: RuntimeDimens, colors: FacadeBlindColors) {
+  override fun DrawScope.drawShadowingElements(
+    windowState: FacadeBlindWindowState,
+    runtimeDimens: RuntimeDimens,
+    colors: FacadeBlindColors
+  ) {
     val topCorrection = windowState.position.value.div(100f)
       .times(runtimeDimens.movementLimit)
       .plus(runtimeDimens.slatDistance.times(1.5f)) // Needed to align slats bottom with window bottom
 
-    // When the roller shutter position is bigger then bottom position we need to start "closing slats".
+    // When the roller shutter position is bigger than bottom position we need to start "closing slats".
     // Here the available space for "opened" slats is calculated
     val slatsCount = runtimeDimens.slats.size
     val progression = windowState.slatTiltDegrees?.let { if (it > 50) 1..slatsCount else null } ?: (slatsCount downTo 1)
@@ -157,8 +160,7 @@ private object WindowDrawer : WindowDrawerBase<RuntimeDimens, FacadeBlindWindowS
     }
   }
 
-  context(DrawScope)
-  override fun drawMarkers(
+  override fun DrawScope.drawMarkers(
     windowState: FacadeBlindWindowState,
     runtimeDimens: RuntimeDimens,
     colors: FacadeBlindColors
@@ -181,8 +183,7 @@ private object WindowDrawer : WindowDrawerBase<RuntimeDimens, FacadeBlindWindowS
     }
   }
 
-  context(DrawScope)
-  private fun drawSlat(
+  private fun DrawScope.drawSlat(
     topCorrection: Float,
     rect: Rect,
     runtimeDimens: RuntimeDimens,
@@ -219,13 +220,12 @@ private object WindowDrawer : WindowDrawerBase<RuntimeDimens, FacadeBlindWindowS
     path.lineTo(rect.left - horizontalSlatCorrection, bottom)
     path.close()
 
-    paint.applyForSlat(colors)
+    applyForSlat(paint, colors)
     drawContext.canvas.nativeCanvas.drawPath(path.asAndroidPath(), paint)
     drawPath(path = path, color = colors.slatBorder, style = Stroke(width = 1.dp.toPx()))
   }
 
-  context (DrawScope)
-  private fun drawMarker(offset: Offset, tilt: Float, runtimeDimens: RuntimeDimens, windowColors: FacadeBlindColors) {
+  private fun DrawScope.drawMarker(offset: Offset, tilt: Float, runtimeDimens: RuntimeDimens, windowColors: FacadeBlindColors) {
     drawCircle(color = windowColors.slatBackground, radius = runtimeDimens.markerInfoRadius, center = offset)
     drawCircle(
       color = windowColors.slatBorder,
@@ -253,12 +253,13 @@ private object WindowDrawer : WindowDrawerBase<RuntimeDimens, FacadeBlindWindowS
   }
 }
 
-context(DrawScope)
-private fun NativePaint.applyForSlat(colors: FacadeBlindColors) {
-  style = android.graphics.Paint.Style.FILL
-  strokeCap = android.graphics.Paint.Cap.SQUARE
-  color = colors.slatBackground.toArgb()
-  setShadowLayer(slatShadowRadius.toPx(), 0f, 1.5.dp.toPx(), colors.shadow.toArgb())
+private fun DrawScope.applyForSlat(paint: NativePaint, colors: FacadeBlindColors) {
+  with(paint) {
+    style = android.graphics.Paint.Style.FILL
+    strokeCap = android.graphics.Paint.Cap.SQUARE
+    color = colors.slatBackground.toArgb()
+    setShadowLayer(slatShadowRadius.toPx(), 0f, 1.5.dp.toPx(), colors.shadow.toArgb())
+  }
 }
 
 private data class RuntimeDimens(

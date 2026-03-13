@@ -42,8 +42,8 @@ val MIGRATION_28_29: Migration = object : Migration(28, 29), SqlExecutor {
       )
     """.trimIndent()
 
-  override fun migrate(database: SupportSQLiteDatabase) {
-    createChannelRelationTable(database)
+  override fun migrate(db: SupportSQLiteDatabase) {
+    createChannelRelationTable(db)
   }
 
   private fun createChannelRelationTable(db: SupportSQLiteDatabase) {

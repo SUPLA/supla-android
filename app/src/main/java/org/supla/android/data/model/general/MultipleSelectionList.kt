@@ -22,7 +22,7 @@ import androidx.annotation.StringRes
 data class MultipleSelectionList<T>(
   val selected: Set<T>,
   val items: Set<T>,
-  @StringRes val label: Int? = null,
+  @param:StringRes val label: Int? = null,
   val disabled: Set<T> = emptySet()
 ) {
   fun select(item: T): MultipleSelectionList<T> =

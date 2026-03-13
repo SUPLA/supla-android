@@ -176,8 +176,11 @@ private fun ScheduleProgramsRow(content: @Composable RowScope.() -> Unit) =
   )
 
 @Composable
-context(ColumnScope)
-private fun ScheduleDetailTable(viewState: ScheduleDetailViewState, viewProxy: ScheduleDetailViewProxy, onBoxSizeChanged: (Size) -> Unit) =
+private fun ColumnScope.ScheduleDetailTable(
+  viewState: ScheduleDetailViewState,
+  viewProxy: ScheduleDetailViewProxy,
+  onBoxSizeChanged: (Size) -> Unit
+) =
   Box(
     modifier = Modifier
       .fillMaxWidth()

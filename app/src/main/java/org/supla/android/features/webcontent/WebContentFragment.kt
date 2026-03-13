@@ -54,6 +54,7 @@ abstract class WebContentFragment<S : WebContentViewState, E : ViewEvent> : Base
       }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onReceivedError(view: WebView?, errorCode: Int, description: String?, failingUrl: String?) {
       if (failingUrl != null) {
         viewModel.handleError(failingUrl, errorCode)

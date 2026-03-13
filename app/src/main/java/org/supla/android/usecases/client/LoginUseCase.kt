@@ -32,7 +32,7 @@ import javax.inject.Singleton
 
 @Singleton
 class LoginUseCase @Inject constructor(
-  @ApplicationContext private val applicationContext: Context,
+  @param:ApplicationContext private val applicationContext: Context,
   private val suplaAppProvider: SuplaAppProvider,
   private val suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper,
   threadHandler: ThreadHandler

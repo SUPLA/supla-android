@@ -35,7 +35,7 @@ import org.supla.android.usecases.location.CollapsedFlag
 import javax.inject.Inject
 
 class ScenesAdapter @Inject constructor(
-  @ActivityContext private val context: Context,
+  @param:ActivityContext private val context: Context,
   private val vibrationHelper: VibrationHelper,
   preferences: Preferences
 ) : BaseListAdapter<SceneDataEntity>(preferences) {

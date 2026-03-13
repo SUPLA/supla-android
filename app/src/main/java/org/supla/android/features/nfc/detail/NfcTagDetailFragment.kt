@@ -87,6 +87,6 @@ class NfcTagDetailFragment : BaseComposeFragment<NfcTagDetailViewState, NfcTagDe
   }
 
   companion object {
-    fun bundle(itemId: Long): Bundle = bundleOf(ARG_BUNDLE_ID to itemId)
+    fun bundle(itemId: Long): Bundle = Bundle().apply { putLong(ARG_BUNDLE_ID, itemId) }
   }
 }

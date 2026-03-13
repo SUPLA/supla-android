@@ -109,7 +109,7 @@ fun RollerShutterWindowView(
       return@Canvas // Skip drawing when view size is not set yet
     }
 
-    WindowDrawer.drawWindow(runtimeDimens = windowDimens, colors = colors, windowState = windowState)
+    WindowDrawer.drawWindow(this@Canvas, runtimeDimens = windowDimens, colors = colors, windowState = windowState)
     if (enabled.not()) {
       drawRect(colors.disabledOverlay)
     }
@@ -118,8 +118,11 @@ fun RollerShutterWindowView(
 
 private object WindowDrawer : WindowDrawerBase<RuntimeDimens, RollerShutterWindowState, RollerShutterColors>() {
 
-  context (DrawScope)
-  override fun drawShadowingElements(windowState: RollerShutterWindowState, runtimeDimens: RuntimeDimens, colors: RollerShutterColors) {
+  override fun DrawScope.drawShadowingElements(
+    windowState: RollerShutterWindowState,
+    runtimeDimens: RuntimeDimens,
+    colors: RollerShutterColors
+  ) {
     // 0 ... 1 -> 0 ... 100%
     val position = if (windowState.markers.isEmpty()) windowState.position.value else windowState.markers.max()
     val positionCorrectedByBottomPosition = position
@@ -131,7 +134,7 @@ private object WindowDrawer : WindowDrawerBase<RuntimeDimens, RollerShutterWindo
       .minus(runtimeDimens.slatsDistances)
       .plus(runtimeDimens.slatDistance.times(1.5f)) // Needed to align slats bottom with window bottom
 
-    // When the roller shutter position is bigger then bottom position we need to start "closing slats".
+    // When the roller shutter position is bigger than bottom position we need to start "closing slats".
     // Here the available space for "opened" slats is calculated
     val availableSpaceForSlatDistances = when {
       position > windowState.bottomPosition ->
@@ -145,7 +148,7 @@ private object WindowDrawer : WindowDrawerBase<RuntimeDimens, RollerShutterWindo
     runtimeDimens.slats.forEachIndexed { idx, slat ->
       if (availableSpaceForSlatDistances != null) {
         val summarizedDistance = idx.times(runtimeDimens.slatDistance)
-        // When the summarized distance used between slats is bigger then available,
+        // When the summarized distance used between slats is bigger than available,
         // add additional slat correction, to make slats displayed next to each other (without distance)
         if (summarizedDistance > availableSpaceForSlatDistances) {
           slatsCorrection -= summarizedDistance.minus(availableSpaceForSlatDistances).let {
@@ -163,8 +166,7 @@ private object WindowDrawer : WindowDrawerBase<RuntimeDimens, RollerShutterWindo
     }
   }
 
-  context(DrawScope)
-  override fun drawMarkers(windowState: RollerShutterWindowState, runtimeDimens: RuntimeDimens, colors: RollerShutterColors) {
+  override fun DrawScope.drawMarkers(windowState: RollerShutterWindowState, runtimeDimens: RuntimeDimens, colors: RollerShutterColors) {
     windowState.markers.forEach { position ->
       val topPosition = runtimeDimens.topLineRect.bottom
         .plus(runtimeDimens.movementLimit.minus(runtimeDimens.slatDistance).times(position).div(100f))
@@ -173,8 +175,7 @@ private object WindowDrawer : WindowDrawerBase<RuntimeDimens, RollerShutterWindo
     }
   }
 
-  context(DrawScope)
-  private fun drawSlat(topCorrection: Float, rect: Rect, runtimeDimens: RuntimeDimens, colors: RollerShutterColors) {
+  private fun DrawScope.drawSlat(topCorrection: Float, rect: Rect, runtimeDimens: RuntimeDimens, colors: RollerShutterColors) {
     val bottom = rect.bottom + topCorrection
     if (bottom < runtimeDimens.topLineRect.bottom) {
       // skip slats over screen
@@ -191,13 +192,12 @@ private object WindowDrawer : WindowDrawerBase<RuntimeDimens, RollerShutterWindo
     path.lineTo(rect.left, bottom)
     path.close()
 
-    paint.applyForSlat(colors.slatBackground, colors.shadow)
+    paint.applyForSlat(colors.slatBackground, colors.shadow, this)
     drawContext.canvas.nativeCanvas.drawPath(path.asAndroidPath(), paint)
     drawPath(path = path, color = colors.slatBorder, style = Stroke(width = 1.dp.toPx()))
   }
 
-  context (DrawScope)
-  private fun drawMarker(offset: Offset, runtimeDimens: RuntimeDimens, windowColors: RollerShutterColors) {
+  private fun DrawScope.drawMarker(offset: Offset, runtimeDimens: RuntimeDimens, windowColors: RollerShutterColors) {
     runtimeDimens.markerPath.translate(offset)
     drawPath(
       path = runtimeDimens.markerPath,

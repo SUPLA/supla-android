@@ -22,7 +22,7 @@ import org.supla.android.data.source.remote.channel.SuplaChannelFlag
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-enum class Phase(val value: Int, @StringRes val label: Int) {
+enum class Phase(val value: Int, @param:StringRes val label: Int) {
   PHASE_1(1, R.string.details_em_phase1), PHASE_2(2, R.string.details_em_phase2), PHASE_3(3, R.string.details_em_phase3);
 
   val disabledFlag: SuplaChannelFlag

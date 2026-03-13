@@ -253,7 +253,7 @@ interface SuplaCloudService {
     private val configHolder: SuplaCloudConfigHolder,
     private val okHttpClientProvider: OkHttpClientProvider,
     private val suplaClientProvider: SuplaClientProvider,
-    @Named(GSON_FOR_API) private val gson: Gson
+    @param:Named(GSON_FOR_API) private val gson: Gson
   ) {
 
     private var retrofitInstance: Retrofit? = null

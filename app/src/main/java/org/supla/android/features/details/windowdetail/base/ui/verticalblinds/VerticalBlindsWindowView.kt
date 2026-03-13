@@ -123,7 +123,7 @@ fun VerticalBlindsWindowView(
       return@Canvas // Skip drawing when view size is not set yet
     }
 
-    WindowDrawer.drawWindow(runtimeDimens = windowDimens, colors = colors, windowState = windowState)
+    WindowDrawer.drawWindow(this@Canvas, runtimeDimens = windowDimens, colors = colors, windowState = windowState)
     if (enabled.not()) {
       drawRect(colors.disabledOverlay)
     }
@@ -137,8 +137,11 @@ private object WindowDrawer : WindowDrawerBase<RuntimeDimens, VerticalBlindWindo
   private const val TILT_RANGE = 180f
   private const val TILT_HALF_RANGE = 90f
 
-  context (DrawScope)
-  override fun drawShadowingElements(windowState: VerticalBlindWindowState, runtimeDimens: RuntimeDimens, colors: VerticalBlindColors) {
+  override fun DrawScope.drawShadowingElements(
+    windowState: VerticalBlindWindowState,
+    runtimeDimens: RuntimeDimens,
+    colors: VerticalBlindColors
+  ) {
     val leftCorrection = windowState.position.value
       .times(runtimeDimens.movementLimit)
       .div(100f)
@@ -164,8 +167,7 @@ private object WindowDrawer : WindowDrawerBase<RuntimeDimens, VerticalBlindWindo
     }
   }
 
-  context(DrawScope)
-  override fun drawMarkers(
+  override fun DrawScope.drawMarkers(
     windowState: VerticalBlindWindowState,
     runtimeDimens: RuntimeDimens,
     colors: VerticalBlindColors
@@ -189,8 +191,7 @@ private object WindowDrawer : WindowDrawerBase<RuntimeDimens, VerticalBlindWindo
     }
   }
 
-  context(DrawScope)
-  private fun drawSlat(
+  private fun DrawScope.drawSlat(
     horizontalCorrection: Float,
     rect: Rect,
     runtimeDimens: RuntimeDimens,
@@ -227,13 +228,12 @@ private object WindowDrawer : WindowDrawerBase<RuntimeDimens, VerticalBlindWindo
     path.lineTo(left, bottom - verticalSlatCorrection)
     path.close()
 
-    paint.applyForSlat(colors)
+    applyForSlat(paint, colors)
     drawContext.canvas.nativeCanvas.drawPath(path.asAndroidPath(), paint)
     drawPath(path = path, color = colors.slatBorder, style = Stroke(width = 1.dp.toPx()))
   }
 
-  context (DrawScope)
-  private fun drawMarker(offset: Offset, tilt: Float, runtimeDimens: RuntimeDimens, windowColors: VerticalBlindColors) {
+  private fun DrawScope.drawMarker(offset: Offset, tilt: Float, runtimeDimens: RuntimeDimens, windowColors: VerticalBlindColors) {
     drawCircle(color = windowColors.slatBackground, radius = runtimeDimens.markerInfoRadius, center = offset)
     drawCircle(
       color = windowColors.slatBorder,
@@ -261,12 +261,13 @@ private object WindowDrawer : WindowDrawerBase<RuntimeDimens, VerticalBlindWindo
   }
 }
 
-context(DrawScope)
-private fun NativePaint.applyForSlat(colors: VerticalBlindColors) {
-  style = android.graphics.Paint.Style.FILL
-  strokeCap = android.graphics.Paint.Cap.SQUARE
-  color = colors.slatBackground.toArgb()
-  setShadowLayer(slatShadowRadius.toPx(), 0f, 1.5.dp.toPx(), colors.shadow.toArgb())
+private fun DrawScope.applyForSlat(paint: NativePaint, colors: VerticalBlindColors) {
+  with(paint) {
+    style = android.graphics.Paint.Style.FILL
+    strokeCap = android.graphics.Paint.Cap.SQUARE
+    color = colors.slatBackground.toArgb()
+    setShadowLayer(slatShadowRadius.toPx(), 0f, 1.5.dp.toPx(), colors.shadow.toArgb())
+  }
 }
 
 private data class RuntimeDimens(

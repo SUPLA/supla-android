@@ -61,7 +61,7 @@ open class BaseCredentialsUseCase(private val threadHandler: ThreadHandler) {
 sealed class AuthorizationException : Exception() {
   abstract val localizedErrorMessage: LocalizedString
 
-  data class WithResource(@StringRes private val resourceId: Int) : AuthorizationException() {
+  data class WithResource(@param:StringRes private val resourceId: Int) : AuthorizationException() {
     override val localizedErrorMessage: LocalizedString = localizedString(resourceId)
   }
 

@@ -25,7 +25,7 @@ const val CHANNEL_GROUP_VALUE_VIEW_NAME = "channelgroupvalue_v1"
 
 val MIGRATION_35_36: Migration = object : Migration(35, 36), SqlExecutor {
 
-  override fun migrate(database: SupportSQLiteDatabase) {
-    execSQL(database, "DROP VIEW $CHANNEL_GROUP_VALUE_VIEW_NAME")
+  override fun migrate(db: SupportSQLiteDatabase) {
+    execSQL(db, "DROP VIEW $CHANNEL_GROUP_VALUE_VIEW_NAME")
   }
 }

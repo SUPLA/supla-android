@@ -68,10 +68,10 @@ class DeleteAccountWebFragment : WebContentFragment<DeleteAccountWebViewState, D
   }
 
   companion object {
-    fun bundle(serverAddress: String?, destination: EndDestination): Bundle = bundleOf(
-      ARG_SERVER_ADDRESS to serverAddress,
-      ARG_DESTINATION to destination
-    )
+    fun bundle(serverAddress: String?, destination: EndDestination): Bundle = Bundle().apply {
+      putString(ARG_SERVER_ADDRESS, serverAddress)
+      putSerializable(ARG_DESTINATION, destination)
+    }
   }
 
   enum class EndDestination : Serializable {

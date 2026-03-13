@@ -24,10 +24,10 @@ import org.supla.android.db.room.SqlExecutor
 
 val MIGRATION_34_35: Migration = object : Migration(34, 35), SqlExecutor {
 
-  override fun migrate(database: SupportSQLiteDatabase) {
-    execSQL(database, "ALTER TABLE ${UserIconEntity.TABLE_NAME} ADD ${UserIconEntity.COLUMN_IMAGE_1_DARK} BLOB")
-    execSQL(database, "ALTER TABLE ${UserIconEntity.TABLE_NAME} ADD ${UserIconEntity.COLUMN_IMAGE_2_DARK} BLOB")
-    execSQL(database, "ALTER TABLE ${UserIconEntity.TABLE_NAME} ADD ${UserIconEntity.COLUMN_IMAGE_3_DARK} BLOB")
-    execSQL(database, "ALTER TABLE ${UserIconEntity.TABLE_NAME} ADD ${UserIconEntity.COLUMN_IMAGE_4_DARK} BLOB")
+  override fun migrate(db: SupportSQLiteDatabase) {
+    execSQL(db, "ALTER TABLE ${UserIconEntity.TABLE_NAME} ADD ${UserIconEntity.COLUMN_IMAGE_1_DARK} BLOB")
+    execSQL(db, "ALTER TABLE ${UserIconEntity.TABLE_NAME} ADD ${UserIconEntity.COLUMN_IMAGE_2_DARK} BLOB")
+    execSQL(db, "ALTER TABLE ${UserIconEntity.TABLE_NAME} ADD ${UserIconEntity.COLUMN_IMAGE_3_DARK} BLOB")
+    execSQL(db, "ALTER TABLE ${UserIconEntity.TABLE_NAME} ADD ${UserIconEntity.COLUMN_IMAGE_4_DARK} BLOB")
   }
 }

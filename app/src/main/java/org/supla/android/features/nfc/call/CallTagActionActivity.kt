@@ -22,11 +22,16 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.ContentTransform
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
@@ -56,6 +61,8 @@ class CallTagActionActivity : ComponentActivity() {
     super.onCreate(savedInstanceState)
     setStatusBarColor(R.color.background, R.color.background, true)
 
+    enableEdgeToEdge()
+
     setContent {
       Content(intent.navKey, navigator)
     }
@@ -73,6 +80,9 @@ class CallTagActionActivity : ComponentActivity() {
     SuplaTheme {
       NavDisplay(
         backStack = backStack,
+        modifier = Modifier
+          .background(MaterialTheme.colorScheme.background)
+          .systemBarsPadding(),
         onBack = { backStack.removeLastOrNull() },
         transitionSpec = { ContentTransform(EnterTransition.None, ExitTransition.None) },
         entryDecorators = listOf(

@@ -25,9 +25,9 @@ import org.supla.android.data.source.local.entity.ProfileEntity.Companion.TABLE_
 import org.supla.android.db.room.SqlExecutor
 
 val MIGRATION_24_25: Migration = object : Migration(24, 25), SqlExecutor {
-  override fun migrate(database: SupportSQLiteDatabase) {
+  override fun migrate(db: SupportSQLiteDatabase) {
     // Related to:
     // https://github.com/SUPLA/supla-core/commit/2a2f2cec89e4e20a49d37e4e89306cf178dd1d05
-    execSQL(database, "UPDATE $TABLE_NAME SET $COLUMN_AUTH_KEY = $COLUMN_GUID")
+    execSQL(db, "UPDATE $TABLE_NAME SET $COLUMN_AUTH_KEY = $COLUMN_GUID")
   }
 }

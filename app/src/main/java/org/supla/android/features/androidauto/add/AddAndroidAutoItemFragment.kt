@@ -75,6 +75,6 @@ class AddAndroidAutoItemFragment : BaseComposeFragment<AddAndroidAutoItemViewMod
 
   companion object {
     fun bundle(itemId: Long): Bundle =
-      bundleOf(ARG_ITEM_ID to itemId)
+      Bundle().apply { putLong(ARG_ITEM_ID, itemId) }
   }
 }

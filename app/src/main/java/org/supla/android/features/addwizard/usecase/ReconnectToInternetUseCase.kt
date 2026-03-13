@@ -35,7 +35,7 @@ private val TIMEOUT = 30.seconds
 
 @Singleton
 class ReconnectToInternetUseCase @Inject constructor(
-  @ApplicationContext private val context: Context,
+  @param:ApplicationContext private val context: Context,
   private val connectToSsidUseCase: ConnectToSsidUseCase,
   wifiManager: WifiManager
 ) {

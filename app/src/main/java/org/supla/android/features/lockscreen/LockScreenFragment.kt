@@ -149,8 +149,8 @@ class LockScreenFragment : BaseFragment<LockScreenViewModelState, LockScreenView
   }
 
   companion object {
-    fun bundle(unlockAction: UnlockAction) = bundleOf(
-      ARG_LOCK_SCREEN_ACTION to unlockAction
-    )
+    fun bundle(unlockAction: UnlockAction) = Bundle().apply {
+      putSerializable(ARG_LOCK_SCREEN_ACTION, unlockAction)
+    }
   }
 }

@@ -113,7 +113,7 @@ data class ElectricityChartFilters(
   }
 }
 
-enum class PhaseItem(@ColorRes override val color: Int, @StringRes override val label: Int) : CheckboxItem {
+enum class PhaseItem(@param:ColorRes override val color: Int, @param:StringRes override val label: Int) : CheckboxItem {
   PHASE_1(R.color.phase1, R.string.details_em_phase1),
   PHASE_2(R.color.phase2, R.string.details_em_phase2),
   PHASE_3(R.color.phase3, R.string.details_em_phase3)

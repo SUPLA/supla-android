@@ -43,8 +43,8 @@ val MIGRATION_37_38: Migration = object : Migration(37, 38), SqlExecutor {
       )
     """.trimIndent()
 
-  override fun migrate(database: SupportSQLiteDatabase) {
-    createAndroidAutoItemTable(database)
+  override fun migrate(db: SupportSQLiteDatabase) {
+    createAndroidAutoItemTable(db)
   }
 
   private fun createAndroidAutoItemTable(db: SupportSQLiteDatabase) {

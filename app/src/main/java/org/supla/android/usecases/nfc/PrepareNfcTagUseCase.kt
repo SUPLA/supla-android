@@ -122,7 +122,6 @@ class PrepareNfcTagUseCase @Inject constructor(
     return NdefMessage(arrayOf(wwwUri, aarRecord))
   }
 
-
   sealed interface Result
   data class Success(val uuid: String, val readOnly: Boolean) : Result
   data class Failure(val error: TagOperationError) : Result
