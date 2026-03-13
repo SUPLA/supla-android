@@ -17,11 +17,13 @@ package org.supla.android.usecases.nfc
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.content.Context
 import android.nfc.NdefMessage
 import android.nfc.NdefRecord
 import android.nfc.Tag
 import android.nfc.tech.Ndef
 import android.nfc.tech.NdefFormatable
+import dagger.hilt.android.qualifiers.ApplicationContext
 import org.supla.android.core.infrastructure.nfc.tagUuid
 import org.supla.android.core.infrastructure.nfc.uriFromUriRecord
 import org.supla.android.core.infrastructure.nfc.uuidFromMimeRecord
@@ -34,10 +36,10 @@ import javax.inject.Singleton
 private const val HOST = "supla.org"
 private const val PATH = "tag"
 private const val URL = "https://$HOST/$PATH/"
-private const val MIME = "application/vnd.org.supla.tag"
 
 @Singleton
 class PrepareNfcTagUseCase @Inject constructor(
+  @param:ApplicationContext private val context: Context,
   private val schedulers: SuplaSchedulers
 ) {
   suspend operator fun invoke(tag: Tag): Result {
@@ -114,13 +116,14 @@ class PrepareNfcTagUseCase @Inject constructor(
     }
   }
 
+  private fun createNdefMessage(id: String): NdefMessage {
+    val wwwUri = NdefRecord.createUri("${URL}$id")
+    val aarRecord = NdefRecord.createApplicationRecord(context.packageName)
+    return NdefMessage(arrayOf(wwwUri, aarRecord))
+  }
+
+
   sealed interface Result
   data class Success(val uuid: String, val readOnly: Boolean) : Result
   data class Failure(val error: TagOperationError) : Result
-}
-
-private fun createNdefMessage(id: String): NdefMessage {
-  val mimeRecord = NdefRecord.createMime(MIME, id.toByteArray(Charsets.UTF_8))
-  val wwwUri = NdefRecord.createUri("${URL}$id")
-  return NdefMessage(arrayOf(mimeRecord, wwwUri))
 }
