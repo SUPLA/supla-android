@@ -26,6 +26,9 @@ import org.supla.android.data.source.local.entity.NotificationEntity
 import org.supla.android.data.source.local.entity.NotificationEntity.Companion.ALL_COLUMNS_STRING
 import org.supla.android.data.source.local.entity.NotificationEntity.Companion.COLUMN_DATE
 import org.supla.android.data.source.local.entity.NotificationEntity.Companion.COLUMN_ID
+import org.supla.android.data.source.local.entity.NotificationEntity.Companion.COLUMN_MESSAGE
+import org.supla.android.data.source.local.entity.NotificationEntity.Companion.COLUMN_PROFILE_NAME
+import org.supla.android.data.source.local.entity.NotificationEntity.Companion.COLUMN_TITLE
 import org.supla.android.data.source.local.entity.NotificationEntity.Companion.TABLE_NAME
 import java.time.LocalDateTime
 
@@ -37,6 +40,18 @@ interface NotificationDao {
 
   @Query("SELECT $ALL_COLUMNS_STRING FROM $TABLE_NAME ORDER BY $COLUMN_DATE DESC")
   fun loadAll(): Observable<List<NotificationEntity>>
+
+  @Query(
+    """
+      SELECT $ALL_COLUMNS_STRING 
+        FROM $TABLE_NAME 
+        WHERE $COLUMN_TITLE LIKE '%' || :filterString || '%' 
+          OR $COLUMN_MESSAGE LIKE '%' || :filterString || '%'
+          OR $COLUMN_PROFILE_NAME LIKE '%' || :filterString || '%'
+        ORDER BY $COLUMN_DATE DESC
+      """
+  )
+  fun loadAll(filterString: String): Observable<List<NotificationEntity>>
 
   @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_ID = :id")
   fun delete(id: Long): Completable

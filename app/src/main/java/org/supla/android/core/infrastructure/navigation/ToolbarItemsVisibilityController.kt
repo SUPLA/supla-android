@@ -1,4 +1,4 @@
-package org.supla.android.usecases.notifications
+package org.supla.android.core.infrastructure.navigation
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,21 +17,6 @@ package org.supla.android.usecases.notifications
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import io.reactivex.rxjava3.core.Observable
-import org.supla.android.data.source.NotificationRepository
-import org.supla.android.data.source.local.entity.NotificationEntity
-import javax.inject.Inject
-import javax.inject.Singleton
-
-@Singleton
-class LoadAllNotificationsUseCase @Inject constructor(
-  private val notificationRepository: NotificationRepository
-) {
-
-  operator fun invoke(filterString: String? = null): Observable<List<NotificationEntity>> =
-    if (filterString != null) {
-      notificationRepository.loadAllNotifications(filterString)
-    } else {
-      notificationRepository.loadAllNotifications()
-    }
+interface ToolbarItemsVisibilityController {
+  val toolbarItems: List<Int>
 }

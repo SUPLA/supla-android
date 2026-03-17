@@ -26,6 +26,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import org.supla.android.R
+import org.supla.android.core.infrastructure.navigation.ToolbarItemsVisibilityController
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.databinding.FragmentComposeBinding
@@ -34,10 +35,13 @@ import org.supla.android.ui.ToolbarItemsClickHandler
 
 abstract class BaseHistoryDetailFragment :
   BaseFragment<HistoryDetailViewState, HistoryDetailViewEvent>(R.layout.fragment_compose),
-  ToolbarItemsClickHandler {
+  ToolbarItemsClickHandler,
+  ToolbarItemsVisibilityController {
 
   abstract override val viewModel: BaseHistoryDetailViewModel
   private val binding by viewBinding(FragmentComposeBinding::bind)
+
+  override val toolbarItems: List<Int> = listOf(R.id.toolbar_delete_chart_history)
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)

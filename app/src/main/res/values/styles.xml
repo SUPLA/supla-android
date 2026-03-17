@@ -42,6 +42,17 @@
     <item name="android:padding">12dp</item>
   </style>
 
+  <style name="AppTheme.ToolbarSearch">
+    <item name="android:height">40dp</item>
+    <item name="android:background">@drawable/background_widget_configuration_field</item>
+    <item name="android:maxLines">1</item>
+    <item name="android:singleLine">true</item>
+    <item name="android:textAppearance">@style/AppTheme.TextAppearance.Body2</item>
+    <item name="android:textColor">@color/on_surface</item>
+    <item name="android:paddingHorizontal">@dimen/distance_tiny</item>
+    <item name="android:paddingVertical">@dimen/distance_tiny</item>
+  </style>
+
   <style name="Switch" parent="">
     <item name="colorControlActivated">@color/primary</item>
     <item name="android:buttonTint">@color/primary</item>

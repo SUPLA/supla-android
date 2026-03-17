@@ -40,8 +40,9 @@ class NotificationRepository @Inject constructor(
       )
     )
 
-  fun loadAllNotifications(): Observable<List<NotificationEntity>> =
-    notificationDao.loadAll()
+  fun loadAllNotifications() = notificationDao.loadAll()
+
+  fun loadAllNotifications(filterString: String) = notificationDao.loadAll(filterString)
 
   fun delete(id: Long) = notificationDao.delete(id)
 

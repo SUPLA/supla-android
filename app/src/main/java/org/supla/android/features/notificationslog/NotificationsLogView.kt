@@ -12,7 +12,7 @@ package org.supla.android.features.notificationslog
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-syays GNU General Public License for more details.
+ GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -38,7 +38,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,38 +47,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import org.supla.android.R
-import org.supla.android.core.ui.BaseViewProxy
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.source.local.entity.NotificationEntity
+import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.dialogs.AlertDialog
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-interface NotificationsLogViewProxy : BaseViewProxy<NotificationsLogViewState> {
-  fun delete(entity: NotificationEntity) {}
-  fun cancelDeletion(id: Long) {}
-  fun askDeleteAll() {}
-  fun cancelDeleteAll() {}
-  fun deleteAll() {}
+interface NotificationsLogViewScope {
+  fun delete(entity: NotificationEntity)
+  fun cancelDeleteAll()
+  fun deleteAll()
 }
 
 @Composable
-fun NotificationsLogView(viewProxy: NotificationsLogViewProxy) {
-  val viewState by viewProxy.getViewState().collectAsState()
-
+fun NotificationsLogViewScope.View(viewState: NotificationsLogViewState) {
   if (viewState.showDeletionDialog) {
     AlertDialog(
       title = stringResource(id = R.string.notification_delete_all_title),
       message = stringResource(id = R.string.notification_delete_all_message),
       positiveButtonTitle = stringResource(id = R.string.notification_delete_all_proceed),
-      onNegativeClick = { viewProxy.cancelDeleteAll() },
-      onPositiveClick = { viewProxy.deleteAll() }
+      onNegativeClick = { cancelDeleteAll() },
+      onPositiveClick = { deleteAll() }
     )
   }
 
@@ -105,7 +97,7 @@ fun NotificationsLogView(viewProxy: NotificationsLogViewProxy) {
             enableDismissFromEndToStart = false,
             onDismiss = {
               if (it == SwipeToDismissBoxValue.StartToEnd) {
-                viewProxy.delete(currentItem.notificationEntity)
+                delete(currentItem.notificationEntity)
               }
             },
             backgroundContent = { NotificationRowBackground() }
@@ -187,18 +179,18 @@ private fun NotificationRowBackground() =
     )
   }
 
-@Composable
-@Preview
-private fun Preview() {
-  SuplaTheme {
-    NotificationsLogView(PreviewProxy())
-  }
+val previewScope = object : NotificationsLogViewScope {
+  override fun delete(entity: NotificationEntity) {}
+  override fun cancelDeleteAll() {}
+  override fun deleteAll() {}
 }
 
-private class PreviewProxy : NotificationsLogViewProxy {
-  override fun getViewState(): StateFlow<NotificationsLogViewState> =
-    MutableStateFlow(
-      value = NotificationsLogViewState(
+@Composable
+@SuplaPreview
+private fun Preview() {
+  SuplaTheme {
+    previewScope.View(
+      NotificationsLogViewState(
         items = listOf(
           NotificationItem(
             NotificationEntity(
@@ -212,4 +204,5 @@ private class PreviewProxy : NotificationsLogViewProxy {
         )
       )
     )
+  }
 }
