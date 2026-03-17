@@ -20,6 +20,8 @@ package org.supla.android.extensions
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import dagger.hilt.android.EntryPointAccessors
 import org.supla.android.Preferences
@@ -66,3 +68,13 @@ fun Context.allGranted(permissions: List<String>): Boolean =
   permissions.fold(true) { acc, permission ->
     acc && (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED)
   }
+
+fun Context.showKeyboard(view: View) {
+  val inputMethodManager = getSystemService(InputMethodManager::class.java)
+  inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+}
+
+fun Context.hideKeyboard(view: View) {
+  val inputMethodManager = getSystemService(InputMethodManager::class.java)
+  inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+}

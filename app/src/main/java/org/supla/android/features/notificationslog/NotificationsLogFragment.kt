@@ -10,7 +10,7 @@ package org.supla.android.features.notificationslog
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-syays GNU General Public License for more details.
+ GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -20,31 +20,57 @@ syays GNU General Public License for more details.
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.OnBackPressedCallback
+import androidx.compose.runtime.Composable
 import androidx.fragment.app.viewModels
 import com.google.android.material.snackbar.Snackbar
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
-import org.supla.android.core.ui.BaseFragment
+import org.supla.android.core.infrastructure.navigation.ToolbarItemsVisibilityController
+import org.supla.android.core.ui.BaseComposeFragment
+import org.supla.android.core.ui.UpHandler
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.databinding.FragmentComposeBinding
+import org.supla.android.navigator.MainNavigator
 import org.supla.android.ui.ToolbarItemsClickHandler
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class NotificationsLogFragment :
-  BaseFragment<NotificationsLogViewState, NotificationsLogViewEvent>(R.layout.fragment_compose),
-  ToolbarItemsClickHandler {
+  BaseComposeFragment<NotificationsLogViewState, NotificationsLogViewEvent>(),
+  ToolbarItemsClickHandler,
+  ToolbarItemsVisibilityController,
+  UpHandler {
 
   override val viewModel: NotificationsLogViewModel by viewModels()
   private val binding by viewBinding(FragmentComposeBinding::bind)
 
+  override val toolbarItems = listOf(R.id.toolbar_delete_all, R.id.toolbar_delete_older_than_month, R.id.toolbar_search)
+
+  @Inject
+  lateinit var navigator: MainNavigator
+
+  private val onBackPressedCallback = object : OnBackPressedCallback(true) {
+    override fun handleOnBackPressed() {
+      if (toolbar?.inSearchMode() == true) {
+        toolbar?.hideSearch()
+      } else {
+        navigator.back()
+      }
+    }
+  }
+
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
-    binding.composeContent.setContent {
-      SuplaTheme {
-        NotificationsLogView(viewModel)
-      }
+    requireActivity().onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+  }
+
+  @Composable
+  override fun ComposableContent(modelState: NotificationsLogViewState) {
+    SuplaTheme {
+      viewModel.View(modelState)
     }
   }
 
@@ -69,6 +95,21 @@ class NotificationsLogFragment :
     }
     if (menuItem.itemId == R.id.toolbar_delete_older_than_month) {
       viewModel.askDeleteOlderThanMonth()
+      return true
+    }
+    if (menuItem.itemId == R.id.toolbar_search) {
+      toolbar?.showSearch(
+        onTextChanged = { viewModel.search(it) },
+        onSearchClosed = { viewModel.loadAll() }
+      )
+    }
+
+    return false
+  }
+
+  override fun onUpPressed(): Boolean {
+    if (toolbar?.inSearchMode() == true) {
+      toolbar?.hideSearch()
       return true
     }
 

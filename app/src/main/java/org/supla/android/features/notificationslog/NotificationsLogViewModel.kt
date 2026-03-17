@@ -10,7 +10,7 @@ package org.supla.android.features.notificationslog
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-syays GNU General Public License for more details.
+ GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -42,17 +42,13 @@ class NotificationsLogViewModel @Inject constructor(
   private val deleteNotificationsUseCase: DeleteNotificationsUseCase,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<NotificationsLogViewState, NotificationsLogViewEvent>(NotificationsLogViewState(), schedulers),
-  NotificationsLogViewProxy {
+  NotificationsLogViewScope {
 
   private val deletionDisposablesMap: MutableMap<Long, Disposable> = mutableMapOf()
+  private var lastFilterString: String? = null
 
   override fun onViewCreated() {
-    loadAllNotificationsUseCase()
-      .attach()
-      .subscribeBy(
-        onNext = this::setItems
-      )
-      .disposeBySelf()
+    loadAll()
   }
 
   override fun delete(entity: NotificationEntity) {
@@ -66,13 +62,39 @@ class NotificationsLogViewModel @Inject constructor(
     invalidateItems()
   }
 
-  override fun cancelDeletion(id: Long) {
+  fun loadAll() {
+    loadAllNotificationsUseCase()
+      .attach()
+      .subscribeBy(
+        onNext = this::setItems
+      )
+      .disposeBySelf()
+  }
+
+  fun search(filterString: String) {
+    if (filterString.trim().length > 1) {
+      if (filterString != lastFilterString) {
+        loadAllNotificationsUseCase(filterString)
+          .attach()
+          .subscribeBy(
+            onNext = this::setItems
+          )
+          .disposeBySelf()
+      }
+      lastFilterString = filterString
+    } else if (lastFilterString != null) {
+      lastFilterString = null
+      loadAll()
+    }
+  }
+
+  fun cancelDeletion(id: Long) {
     deletionDisposablesMap[id]?.dispose()
     deletionDisposablesMap.remove(id)
     invalidateItems()
   }
 
-  override fun askDeleteAll() {
+  fun askDeleteAll() {
     updateState { it.copy(showDeletionDialog = true, deleteAction = DeleteNotificationsUseCase.Action.ALL) }
   }
 
@@ -105,6 +127,10 @@ class NotificationsLogViewModel @Inject constructor(
     updateState { state ->
       state.copy(items = state.items.map { it.copy(deleted = deletionDisposablesMap.containsKey(it.notificationEntity.id)) })
     }
+  }
+
+  override fun onCleared() {
+    deletionDisposablesMap.clear()
   }
 }
 
