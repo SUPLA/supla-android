@@ -49,8 +49,7 @@
     <item name="android:singleLine">true</item>
     <item name="android:textAppearance">@style/AppTheme.TextAppearance.Body2</item>
     <item name="android:textColor">@color/on_surface</item>
-    <item name="android:paddingHorizontal">@dimen/distance_tiny</item>
-    <item name="android:paddingVertical">@dimen/distance_tiny</item>
+    <item name="android:padding">@dimen/distance_tiny</item>
   </style>
 
   <style name="Switch" parent="">
