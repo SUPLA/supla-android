@@ -23,6 +23,7 @@ import android.os.NetworkOnMainThreadException
 import androidx.annotation.WorkerThread
 import androidx.room.rxjava3.EmptyResultSetException
 import dagger.hilt.android.qualifiers.ApplicationContext
+import org.supla.android.core.infrastructure.NativeLoader
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.db.AuthProfileItem
@@ -145,7 +146,7 @@ class SingleCall private constructor(
 
   companion object {
     init {
-      System.loadLibrary("suplaclient")
+      NativeLoader.loadLibrary("suplaclient")
     }
 
     const val CONNECTION_NO_TIMEOUT: Int = 0

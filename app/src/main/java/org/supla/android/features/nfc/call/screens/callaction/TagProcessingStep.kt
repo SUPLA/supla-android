@@ -32,6 +32,7 @@ sealed class TagProcessingStep {
   val asFailure: Failure?
     get() = this as? Failure
 
+  data object Pending : TagProcessingStep()
   data object Processing : TagProcessingStep()
   data object Success : TagProcessingStep()
   data class Failure(val type: FailureType) : TagProcessingStep()
