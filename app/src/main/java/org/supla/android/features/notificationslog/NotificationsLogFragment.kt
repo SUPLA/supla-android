@@ -64,7 +64,7 @@ class NotificationsLogFragment :
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
-    requireActivity().onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+    requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
   }
 
   @Composable
