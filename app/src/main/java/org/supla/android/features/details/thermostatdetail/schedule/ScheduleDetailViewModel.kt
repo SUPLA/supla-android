@@ -44,7 +44,6 @@ import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.details.thermostatdetail.schedule.data.ProgramSettingsData
-import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailEntryBoxKey
 import org.supla.android.features.details.thermostatdetail.schedule.data.ThermostatScheduleDetailEntryBoxValue
 import org.supla.android.features.details.thermostatdetail.schedule.extensions.viewProgramBoxesList
 import org.supla.android.features.details.thermostatdetail.schedule.extensions.viewScheduleBoxesMap
@@ -52,6 +51,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxKey
 import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.extensions.ifFalse
 import org.supla.core.shared.usecase.channel.valueformatter.DefaultValueFormatter

@@ -44,13 +44,13 @@ import org.supla.android.R
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.features.details.thermostatdetail.schedule.ui.components.ScheduleInfo
 import org.supla.android.features.details.thermostatdetail.schedule.ui.components.ScheduleProgramButton
-import org.supla.android.features.details.thermostatdetail.schedule.ui.components.ScheduleTable
-import org.supla.android.features.details.thermostatdetail.schedule.ui.components.ScheduleTableScope
 import org.supla.android.features.details.thermostatdetail.schedule.ui.dialogs.ProgramDialog
 import org.supla.android.features.details.thermostatdetail.schedule.ui.dialogs.ProgramSettingsScope
 import org.supla.android.features.details.thermostatdetail.schedule.ui.dialogs.QuartersDialog
 import org.supla.android.features.details.thermostatdetail.schedule.ui.dialogs.QuartersSelectionDialogScope
 import org.supla.android.ui.views.LoadingScrim
+import org.supla.android.ui.views.schedule.ScheduleTable
+import org.supla.android.ui.views.schedule.ScheduleTableScope
 import org.supla.android.ui.views.tools.Shadow
 import org.supla.android.ui.views.tools.ShadowOrientation
 import org.supla.core.shared.extensions.ifLet

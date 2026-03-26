@@ -26,35 +26,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import org.supla.android.R
-import org.supla.android.data.source.local.calendar.DayOfWeek
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
-import org.supla.android.features.details.thermostatdetail.schedule.extensions.colorRes
-import org.supla.android.features.details.thermostatdetail.schedule.ui.components.ResourceCache
-
-@JvmInline
-value class ScheduleDetailEntryBoxKey private constructor(private val packed: Int) {
-  constructor(dayOfWeek: DayOfWeek, hour: Short) : this(dayOfWeek.day.times(100).plus(hour))
-
-  val dayOfWeek: DayOfWeek
-    get() = DayOfWeek.from(packed.div(100))
-
-  val hour: Short
-    get() = packed.mod(100).toShort()
-
-  fun copy(): ScheduleDetailEntryBoxKey = ScheduleDetailEntryBoxKey(packed)
-}
-
-interface ScheduleDetailEntryBoxValue {
-  val program: SuplaScheduleProgram?
-
-  fun drawBox(
-    drawScope: DrawScope,
-    topLeft: Offset,
-    size: Size,
-    cornerRadius: CornerRadius,
-    resourceCache: ResourceCache
-  )
-}
+import org.supla.android.ui.ResourceCache
+import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxValue
+import org.supla.android.ui.views.schedule.colorRes
 
 data class ThermostatScheduleDetailEntryBoxValue(
   val firstQuarterProgram: SuplaScheduleProgram,

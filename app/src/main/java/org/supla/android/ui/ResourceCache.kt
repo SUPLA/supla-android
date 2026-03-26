@@ -1,4 +1,4 @@
-package org.supla.android.features.details.thermostatdetail.schedule.ui.components
+package org.supla.android.ui
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 

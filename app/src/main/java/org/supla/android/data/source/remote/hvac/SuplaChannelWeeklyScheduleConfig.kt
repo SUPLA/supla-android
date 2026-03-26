@@ -1,9 +1,4 @@
 package org.supla.android.data.source.remote.hvac
-
-import org.supla.android.data.source.local.calendar.DayOfWeek
-import org.supla.android.data.source.local.calendar.QuarterOfHour
-import org.supla.android.data.source.remote.SuplaChannelConfig
-
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -21,6 +16,10 @@ import org.supla.android.data.source.remote.SuplaChannelConfig
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+
+import org.supla.android.data.source.local.calendar.DayOfWeek
+import org.supla.android.data.source.local.calendar.QuarterOfHour
+import org.supla.android.data.source.remote.SuplaChannelConfig
 
 enum class SuplaScheduleProgram(val value: Int) {
   OFF(0),
