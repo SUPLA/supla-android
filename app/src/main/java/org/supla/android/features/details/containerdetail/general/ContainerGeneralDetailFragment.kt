@@ -50,10 +50,10 @@ class ContainerGeneralDetailFragment : BaseComposeFragment<ContainerGeneralDetai
   }
 
   @Composable
-  override fun ComposableContent(modelState: ContainerGeneralDetailViewModeState) {
+  override fun ComposableContent(viewState: ContainerGeneralDetailViewModeState) {
     SuplaTheme {
       viewModel.View(
-        state = modelState.viewState,
+        state = viewState.viewState,
         showStateDialog = stateDialogViewModel::showDialog,
         showCaptionChangeDialog = captionChangeViewModel::showChannelDialog
       )
@@ -61,7 +61,7 @@ class ContainerGeneralDetailFragment : BaseComposeFragment<ContainerGeneralDetai
       stateDialogViewModel.View()
       captionChangeViewModel.View()
 
-      modelState.authorizationDialogState?.let {
+      viewState.authorizationDialogState?.let {
         viewModel.AuthorizationDialog(state = it)
       }
     }

@@ -48,10 +48,10 @@ class GateGeneralFragment : BaseComposeFragment<GateGeneralModelState, GateGener
   }
 
   @Composable
-  override fun ComposableContent(modelState: GateGeneralModelState) {
+  override fun ComposableContent(viewState: GateGeneralModelState) {
     SuplaTheme {
       viewModel.View(
-        state = modelState.viewState,
+        state = viewState.viewState,
         onInfoClick = { stateDialogViewModel.showDialog(it.channelId) },
         onCaptionLongPress = { captionChangeViewModel.showChannelDialog(it.channelId, it.profileId, it.userCaption) }
       )

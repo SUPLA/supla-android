@@ -21,14 +21,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import org.supla.android.Preferences
-import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
-import org.supla.android.core.networking.suplaclient.DelayableState
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
-import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.temperature.TemperatureCorrection
 import org.supla.android.data.source.local.calendar.DayOfWeek
 import org.supla.android.data.source.local.calendar.QuarterOfHour
@@ -39,8 +36,6 @@ import org.supla.android.data.source.remote.hvac.SuplaChannelHvacConfig
 import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
-import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleEntry
-import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.data.source.remote.isAutomaticTimeSyncDisabled
 import org.supla.android.di.FORMATTER_THERMOMETER
@@ -48,20 +43,15 @@ import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.extensions.subscribeBy
-import org.supla.android.extensions.toSuplaTemperature
 import org.supla.android.features.details.thermostatdetail.schedule.data.ProgramSettingsData
-import org.supla.android.features.details.thermostatdetail.schedule.data.QuartersSelectionData
 import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailEntryBoxKey
-import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailEntryBoxValue
-import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailProgramBox
+import org.supla.android.features.details.thermostatdetail.schedule.data.ThermostatScheduleDetailEntryBoxValue
 import org.supla.android.features.details.thermostatdetail.schedule.extensions.viewProgramBoxesList
 import org.supla.android.features.details.thermostatdetail.schedule.extensions.viewScheduleBoxesMap
-import org.supla.android.features.details.thermostatdetail.schedule.ui.ScheduleDetailViewProxy
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.extensions.ifFalse
 import org.supla.core.shared.usecase.channel.valueformatter.DefaultValueFormatter
@@ -73,8 +63,6 @@ import javax.inject.Inject
 import javax.inject.Named
 
 private const val REFRESH_DELAY_MS = 3000L
-private const val DEFAULT_HEAT_TEMPERATURE = 21f
-private const val DEFAULT_WATER_TEMPERATURE = 40f
 
 @HiltViewModel
 class ScheduleDetailViewModel @Inject constructor(
@@ -88,7 +76,7 @@ class ScheduleDetailViewModel @Inject constructor(
   private val preferences: Preferences,
   @param:Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter,
   schedulers: SuplaSchedulers
-) : BaseViewModel<ScheduleDetailViewState, ScheduleDetailViewEvent>(ScheduleDetailViewState(), schedulers), ScheduleDetailViewProxy {
+) : BaseViewModel<ScheduleDetailViewState, ScheduleDetailViewEvent>(ScheduleDetailViewState(), schedulers), ScheduleDetailViewScope {
 
   private val updateSubject = PublishSubject.create<Int>()
 
@@ -136,24 +124,26 @@ class ScheduleDetailViewModel @Inject constructor(
     suplaClientProvider.provide()?.getDeviceConfig(deviceId)
   }
 
-  override fun updateSchedule() {
+  override fun onScheduleTableReload() {
     delayedWeeklyScheduleConfigSubject.emit(currentState())
     updateState { it.copy(changing = false, lastInteractionTime = System.currentTimeMillis()) }
   }
 
-  override fun changeScheduleEntry(key: ScheduleDetailEntryBoxKey) {
+  override fun onScheduleTableTouched(key: ScheduleDetailEntryBoxKey) {
     currentState().let { state ->
       if (state.activeProgram == null) {
         return // No active program, so nothing to change.
       }
 
-      if (state.schedule[key] == null || state.schedule[key]?.singleProgram() != state.activeProgram) {
+      if (state.scheduleTableState.schedule[key] == null || state.scheduleTableState.schedule[key]?.program != state.activeProgram) {
         updateState { _ ->
           state.copy(
-            schedule = mutableMapOf<ScheduleDetailEntryBoxKey, ScheduleDetailEntryBoxValue>().also {
-              it.putAll(state.schedule)
-              it[key] = ScheduleDetailEntryBoxValue(singleProgram = state.activeProgram)
-            },
+            scheduleTableState = state.scheduleTableState.copy(
+              schedule = mutableMapOf<ScheduleDetailEntryBoxKey, ThermostatScheduleDetailEntryBoxValue>().also {
+                it.putAll(state.scheduleTableState.schedule)
+                it[key] = ThermostatScheduleDetailEntryBoxValue(singleProgram = state.activeProgram)
+              }
+            ),
             changing = true,
             lastInteractionTime = System.currentTimeMillis()
           )
@@ -164,7 +154,7 @@ class ScheduleDetailViewModel @Inject constructor(
     }
   }
 
-  override fun invalidateSchedule() {
+  override fun onScheduleTableInvalidate() {
     reloadConfig(currentState().remoteId)
   }
 
@@ -174,15 +164,15 @@ class ScheduleDetailViewModel @Inject constructor(
     }
   }
 
-  override fun startQuartersDialog(key: ScheduleDetailEntryBoxKey?) {
+  override fun onScheduleTableLongPress(key: ScheduleDetailEntryBoxKey?) {
     updateState { it.copy(quarterSelection = it.quarterSelectionData(key)) }
   }
 
-  override fun cancelQuartersDialog() {
+  override fun onQuartersSelectionDismiss() {
     updateState { it.copy(quarterSelection = null) }
   }
 
-  override fun onQuartersDialogProgramChange(program: SuplaScheduleProgram) {
+  override fun onQuartersSelectionProgramChange(program: SuplaScheduleProgram) {
     updateState {
       val newProgram = getProgramForChange(program, it)
       it.copy(
@@ -192,7 +182,7 @@ class ScheduleDetailViewModel @Inject constructor(
     }
   }
 
-  override fun onQueartersDialogQuarterChange(quarterOfHour: QuarterOfHour) {
+  override fun onQuartersSelectionQuarterChange(quarterOfHour: QuarterOfHour) {
     updateState { state ->
       if (state.quarterSelection?.activeProgram == null) {
         return@updateState state
@@ -211,14 +201,16 @@ class ScheduleDetailViewModel @Inject constructor(
     }
   }
 
-  override fun saveQuartersDialogChanges() {
+  override fun onQuartersSelectionFinish() {
     updateState { state ->
       state.quarterSelection?.let { selection ->
         val newState = state.copy(
-          schedule = mutableMapOf<ScheduleDetailEntryBoxKey, ScheduleDetailEntryBoxValue>().also {
-            it.putAll(state.schedule)
-            it[selection.entryKey] = selection.entryValue
-          },
+          scheduleTableState = state.scheduleTableState.copy(
+            schedule = mutableMapOf<ScheduleDetailEntryBoxKey, ThermostatScheduleDetailEntryBoxValue>().also {
+              it.putAll(state.scheduleTableState.schedule)
+              it[selection.entryKey] = selection.entryValue
+            }
+          ),
           activeProgram = state.quarterSelection.activeProgram,
           quarterSelection = null,
           lastInteractionTime = System.currentTimeMillis()
@@ -237,11 +229,11 @@ class ScheduleDetailViewModel @Inject constructor(
     }
   }
 
-  override fun cancelProgramDialog() {
+  override fun onProgramSettingsDismiss() {
     updateState { it.copy(programSettings = null) }
   }
 
-  override fun saveProgramDialogChanges() {
+  override fun onProgramSettingsSave() {
     updateState { state ->
       state.copy(
         programs = state.updatedPrograms(state.channelFunction),
@@ -254,47 +246,46 @@ class ScheduleDetailViewModel @Inject constructor(
     }
   }
 
-  override fun onProgramDialogTemperatureClickChange(
-    programMode: SuplaHvacMode,
-    modeForTemperature: SuplaHvacMode,
-    correction: TemperatureCorrection
-  ) {
+  override fun onProgramSettingsTemperatureClickChange(forMode: SuplaHvacMode, correction: TemperatureCorrection) {
+    val (programMode) = guardLet(currentState().programSettings?.selectedMode) { return }
     changeProgramTemperature(
       programMode,
-      modeForTemperature,
+      forMode,
       { DefaultValueFormatter.format(it.toDouble()) },
       { it.plus(correction.step()) },
       true
     )
   }
 
-  override fun onProgramDialogTemperatureManualChange(programMode: SuplaHvacMode, modeForTemperature: SuplaHvacMode, value: String) {
+  override fun onProgramSettingsTemperatureManualChange(forMode: SuplaHvacMode, value: String) {
+    val (programMode) = guardLet(currentState().programSettings?.selectedMode) { return }
+
     try {
       if (value.length > 6) {
         throw IllegalArgumentException("Provided value is to long")
       }
 
       val temperature = value.replace(',', '.').toFloat()
-      changeProgramTemperature(programMode, modeForTemperature, { value }, { temperature }, false)
+      changeProgramTemperature(programMode, forMode, { value }, { temperature }, false)
     } catch (ex: Exception) {
       if ((ex is NumberFormatException || ex is IllegalArgumentException).not()) {
         throw ex
       }
 
       when {
-        value.isEmpty() && modeForTemperature == SuplaHvacMode.HEAT ->
+        value.isEmpty() && forMode == SuplaHvacMode.HEAT ->
           updateState { it.copy(programSettings = it.programSettings?.cleanSetpointMin()) }
-        value.isEmpty() && modeForTemperature == SuplaHvacMode.COOL ->
+        value.isEmpty() && forMode == SuplaHvacMode.COOL ->
           updateState { it.copy(programSettings = it.programSettings?.cleanSetpointMax()) }
         else -> currentState().programSettings?.let { settings ->
           val textProvider: (Float) -> String = when {
             value == "-" -> { _ -> "-" }
-            modeForTemperature == SuplaHvacMode.HEAT -> { _ -> settings.setpointTemperatureHeatString ?: "" }
-            modeForTemperature == SuplaHvacMode.COOL -> { _ -> settings.setpointTemperatureCoolString ?: "" }
+            forMode == SuplaHvacMode.HEAT -> { _ -> settings.setpointTemperatureHeatString ?: "" }
+            forMode == SuplaHvacMode.COOL -> { _ -> settings.setpointTemperatureCoolString ?: "" }
             else -> { _ -> "" }
           }
 
-          val temperatureModifier: (Float) -> Float = when (modeForTemperature) {
+          val temperatureModifier: (Float) -> Float = when (forMode) {
             SuplaHvacMode.HEAT -> { _ -> settings.setpointTemperatureHeat ?: 0f }
             SuplaHvacMode.COOL -> { _ -> settings.setpointTemperatureCool ?: 0f }
             else -> { _ -> 0f }
@@ -302,7 +293,7 @@ class ScheduleDetailViewModel @Inject constructor(
 
           changeProgramTemperature(
             programMode = programMode,
-            modeForTemperature = modeForTemperature,
+            modeForTemperature = forMode,
             textProvider = textProvider,
             temperatureModifier = temperatureModifier,
             withCorrection = false
@@ -339,17 +330,17 @@ class ScheduleDetailViewModel @Inject constructor(
     withCorrection: Boolean
   ) {
     val state = currentState()
-    when {
-      programMode == SuplaHvacMode.HEAT -> changeProgramTemperatureMin(temperatureModifier, textProvider, withCorrection)
-      programMode == SuplaHvacMode.COOL -> changeProgramTemperatureMax(temperatureModifier, textProvider, withCorrection)
-      programMode == SuplaHvacMode.HEAT_COOL && modeForTemperature == SuplaHvacMode.HEAT ->
+    when (programMode) {
+      SuplaHvacMode.HEAT -> changeProgramTemperatureMin(temperatureModifier, textProvider, withCorrection)
+      SuplaHvacMode.COOL -> changeProgramTemperatureMax(temperatureModifier, textProvider, withCorrection)
+      SuplaHvacMode.HEAT_COOL if modeForTemperature == SuplaHvacMode.HEAT ->
         changeProgramTemperatureMin(
           temperatureModifier,
           textProvider,
           withCorrection,
           state.programSettings?.setpointTemperatureCool
         )
-      programMode == SuplaHvacMode.HEAT_COOL && modeForTemperature == SuplaHvacMode.COOL ->
+      SuplaHvacMode.HEAT_COOL if modeForTemperature == SuplaHvacMode.COOL ->
         changeProgramTemperatureMax(
           temperatureModifier,
           textProvider,
@@ -449,15 +440,11 @@ class ScheduleDetailViewModel @Inject constructor(
     return null
   }
 
-  private fun programAvailableModes(state: ScheduleDetailViewState) = when {
-    state.channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT && state.thermostatFunction == ThermostatSubfunction.HEAT ->
-      listOf(SuplaHvacMode.HEAT)
-    state.channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT && state.thermostatFunction == ThermostatSubfunction.COOL ->
-      listOf(SuplaHvacMode.COOL)
-    state.channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL ->
-      listOf(SuplaHvacMode.HEAT_COOL, SuplaHvacMode.HEAT, SuplaHvacMode.COOL)
-    state.channelFunction == SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER ->
-      listOf(SuplaHvacMode.HEAT)
+  private fun programAvailableModes(state: ScheduleDetailViewState) = when (state.channelFunction) {
+    SUPLA_CHANNELFNC_HVAC_THERMOSTAT if state.thermostatFunction == ThermostatSubfunction.HEAT -> listOf(SuplaHvacMode.HEAT)
+    SUPLA_CHANNELFNC_HVAC_THERMOSTAT if state.thermostatFunction == ThermostatSubfunction.COOL -> listOf(SuplaHvacMode.COOL)
+    SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL -> listOf(SuplaHvacMode.HEAT_COOL, SuplaHvacMode.HEAT, SuplaHvacMode.COOL)
+    SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER -> listOf(SuplaHvacMode.HEAT)
     else -> listOf()
   }
 
@@ -497,12 +484,16 @@ class ScheduleDetailViewModel @Inject constructor(
       it.copy(
         loadingState = it.loadingState.changingLoading(false, dateProvider),
         channelFunction = channelFunction,
-        schedule = data.weeklyScheduleConfig.viewScheduleBoxesMap(),
+        scheduleTableState = it.scheduleTableState.copy(
+          schedule = data.weeklyScheduleConfig.viewScheduleBoxesMap(),
+          currentDayOfWeek = data.deviceConfig.isAutomaticTimeSyncDisabled()
+            .ifFalse(DayOfWeek.from(calendar.get(Calendar.DAY_OF_WEEK) - 1)),
+          currentHour = data.deviceConfig.isAutomaticTimeSyncDisabled()
+            .ifFalse(calendar.get(Calendar.HOUR_OF_DAY)),
+        ),
         programs = data.weeklyScheduleConfig.viewProgramBoxesList(thermostatFunction),
         configTemperatureMin = minTemperature,
         configTemperatureMax = maxTemperature,
-        currentDayOfWeek = data.deviceConfig.isAutomaticTimeSyncDisabled().ifFalse(DayOfWeek.from(calendar.get(Calendar.DAY_OF_WEEK) - 1)),
-        currentHour = data.deviceConfig.isAutomaticTimeSyncDisabled().ifFalse(calendar.get(Calendar.HOUR_OF_DAY)),
         thermostatFunction = thermostatFunction
       )
     }
@@ -518,103 +509,3 @@ class ScheduleDetailViewModel @Inject constructor(
 }
 
 sealed class ScheduleDetailViewEvent : ViewEvent
-
-data class ScheduleDetailViewState(
-  val loadingState: LoadingTimeoutManager.LoadingState = LoadingTimeoutManager.LoadingState(),
-  val lastInteractionTime: Long? = null,
-  val changing: Boolean = false,
-
-  val remoteId: Int = 0,
-  val channelFunction: Int = 0,
-  val thermostatFunction: ThermostatSubfunction? = null,
-  val configTemperatureMin: Float = 0f,
-  val configTemperatureMax: Float = 0f,
-
-  val activeProgram: SuplaScheduleProgram? = null,
-  val programs: List<ScheduleDetailProgramBox> = emptyList(),
-  val schedule: Map<ScheduleDetailEntryBoxKey, ScheduleDetailEntryBoxValue> = emptyMap(),
-  val quarterSelection: QuartersSelectionData? = null,
-  val programSettings: ProgramSettingsData? = null,
-  val currentDayOfWeek: DayOfWeek? = null,
-  val currentHour: Int? = null,
-  val showHelp: Boolean = false,
-  override val sent: Boolean = false
-) : ViewState(), DelayableState {
-
-  fun quarterSelectionData(forKey: ScheduleDetailEntryBoxKey?): QuartersSelectionData? {
-    val (key) = guardLet(forKey) { return null }
-    val (value) = guardLet(schedule[forKey]) { return null }
-
-    return QuartersSelectionData(
-      entryKey = key.copy(),
-      entryValue = value.copy(),
-      activeProgram = activeProgram
-    )
-  }
-
-  fun updatedPrograms(function: Int): List<ScheduleDetailProgramBox> =
-    programSettings?.let { programToUpdate ->
-      mutableListOf<ScheduleDetailProgramBox>().apply {
-        for (program in programs) {
-          if (program.scheduleProgram.program == programToUpdate.program) {
-            val icon = when {
-              function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL && program.scheduleProgram.mode == SuplaHvacMode.HEAT ->
-                R.drawable.ic_heat
-              function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL && program.scheduleProgram.mode == SuplaHvacMode.COOL ->
-                R.drawable.ic_cool
-              else -> null
-            }
-
-            ScheduleDetailProgramBox(
-              channelFunction = function,
-              thermostatFunction = thermostatFunction!!,
-              SuplaWeeklyScheduleProgram(
-                program = programToUpdate.program,
-                mode = programToUpdate.selectedMode,
-                setpointTemperatureHeat = programToUpdate.setpointTemperatureHeat?.toSuplaTemperature(),
-                setpointTemperatureCool = programToUpdate.setpointTemperatureCool?.toSuplaTemperature()
-              ),
-              iconRes = icon
-            ).also {
-              add(it)
-            }
-          } else {
-            add(program)
-          }
-        }
-      }
-    } ?: programs
-
-  fun suplaPrograms(): List<SuplaWeeklyScheduleProgram> = mutableListOf<SuplaWeeklyScheduleProgram>().apply {
-    for (program in programs) {
-      if (program.scheduleProgram.program == SuplaScheduleProgram.OFF) {
-        continue
-      }
-      add(program.scheduleProgram.copy())
-    }
-  }
-
-  fun suplaSchedule(): List<SuplaWeeklyScheduleEntry> = mutableListOf<SuplaWeeklyScheduleEntry>().apply {
-    for (entry in schedule) {
-      add(SuplaWeeklyScheduleEntry(entry.key.dayOfWeek, entry.key.hour.toInt(), QuarterOfHour.FIRST, entry.value.firstQuarterProgram))
-      add(SuplaWeeklyScheduleEntry(entry.key.dayOfWeek, entry.key.hour.toInt(), QuarterOfHour.SECOND, entry.value.secondQuarterProgram))
-      add(SuplaWeeklyScheduleEntry(entry.key.dayOfWeek, entry.key.hour.toInt(), QuarterOfHour.THIRD, entry.value.thirdQuarterProgram))
-      add(SuplaWeeklyScheduleEntry(entry.key.dayOfWeek, entry.key.hour.toInt(), QuarterOfHour.FOURTH, entry.value.fourthQuarterProgram))
-    }
-  }
-
-  fun alignTemperature(temperature: Float?): Float {
-    val temperatureToAlign = temperature
-      ?: if (channelFunction == SuplaFunction.HVAC_DOMESTIC_HOT_WATER.value) DEFAULT_WATER_TEMPERATURE else DEFAULT_HEAT_TEMPERATURE
-    return if (temperatureToAlign < configTemperatureMin) {
-      configTemperatureMin
-    } else if (temperatureToAlign > configTemperatureMax) {
-      configTemperatureMax
-    } else {
-      temperatureToAlign
-    }
-  }
-
-  override fun sentState(): DelayableState = copy(sent = true)
-  override fun delayableCopy(): DelayableState = copy()
-}

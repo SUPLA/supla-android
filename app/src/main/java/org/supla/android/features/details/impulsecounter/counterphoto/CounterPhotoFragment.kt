@@ -34,10 +34,10 @@ class CounterPhotoFragment : BaseComposeFragment<CounterPhotoViewModelState, Cou
   lateinit var navigator: MainNavigator
 
   @Composable
-  override fun ComposableContent(modelState: CounterPhotoViewModelState) {
+  override fun ComposableContent(viewState: CounterPhotoViewModelState) {
     SuplaTheme {
       CounterPhotoView(
-        state = modelState.viewState,
+        state = viewState.viewState,
         onCloudClick = viewModel::onCloudClick,
         onRefresh = viewModel::onRefresh
       )

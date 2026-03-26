@@ -54,10 +54,10 @@ class DeveloperInfoFragment : BaseComposeFragment<DeveloperInfoViewModelState, D
   ) { uri: Uri? -> viewModel.writeLogFile(uri) }
 
   @Composable
-  override fun ComposableContent(modelState: DeveloperInfoViewModelState) {
+  override fun ComposableContent(viewState: DeveloperInfoViewModelState) {
     SuplaTheme {
       viewModel.View(
-        viewState = modelState.state
+        viewState = viewState.state
       )
     }
   }

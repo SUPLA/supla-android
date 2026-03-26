@@ -68,9 +68,9 @@ class NotificationsLogFragment :
   }
 
   @Composable
-  override fun ComposableContent(modelState: NotificationsLogViewState) {
+  override fun ComposableContent(viewState: NotificationsLogViewState) {
     SuplaTheme {
-      viewModel.View(modelState)
+      viewModel.View(viewState)
     }
   }
 

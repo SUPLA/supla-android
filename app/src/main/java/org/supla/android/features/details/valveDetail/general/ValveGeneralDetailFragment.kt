@@ -51,9 +51,9 @@ class ValveGeneralDetailFragment : BaseComposeFragment<ValveGeneralDetailViewMod
   }
 
   @Composable
-  override fun ComposableContent(modelState: ValveGeneralDetailViewModeState) {
+  override fun ComposableContent(viewState: ValveGeneralDetailViewModeState) {
     SuplaTheme {
-      modelState.dialog?.let { dialog ->
+      viewState.dialog?.let { dialog ->
         AlertDialog(
           title = stringResource(id = android.R.string.dialog_alert_title),
           message = stringResource(dialog.messageRes),
@@ -66,7 +66,7 @@ class ValveGeneralDetailFragment : BaseComposeFragment<ValveGeneralDetailViewMod
       stateDialogViewModel.View()
       captionChangeViewModel.View()
       ValveGeneralDetailView(
-        state = modelState.viewState,
+        state = viewState.viewState,
         onOpenClick = { viewModel.onActionClick(item.remoteId, ValveAction.OPEN) },
         onCloseClick = { viewModel.onActionClick(item.remoteId, ValveAction.CLOSE) },
         onInfoClick = { stateDialogViewModel.showDialog(it.channelId) },

@@ -36,9 +36,9 @@ class ProfilesListFragment : BaseComposeFragment<ProfilesListState, ProfilesList
   internal lateinit var navigator: CfgActivityNavigator
 
   @Composable
-  override fun ComposableContent(modelState: ProfilesListState) {
+  override fun ComposableContent(viewState: ProfilesListState) {
     SuplaTheme {
-      viewModel.View(modelState.viewState)
+      viewModel.View(viewState.viewState)
     }
   }
 

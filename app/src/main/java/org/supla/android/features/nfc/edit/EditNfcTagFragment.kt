@@ -21,7 +21,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.compose.runtime.Composable
-import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
@@ -49,9 +48,9 @@ class EditNfcTagFragment : BaseComposeFragment<EditNfcTagViewModelState, EditNfc
   private val newItemData: NewItemData? by lazy { requireSerializableOptional(ARG_NEW_ITEM_DATA, NewItemData::class.java) }
 
   @Composable
-  override fun ComposableContent(modelState: EditNfcTagViewModelState) {
+  override fun ComposableContent(viewState: EditNfcTagViewModelState) {
     SuplaTheme {
-      viewModel.View(modelState.screenState)
+      viewModel.View(viewState.screenState)
     }
   }
 

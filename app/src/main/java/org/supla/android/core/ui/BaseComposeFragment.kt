@@ -40,7 +40,7 @@ abstract class BaseComposeFragment<S : ViewState, E : ViewEvent> : BaseFragment<
   }
 
   @Composable
-  abstract fun ComposableContent(modelState: S)
+  abstract fun ComposableContent(viewState: S)
 
   override fun handleViewState(state: S) {
   }

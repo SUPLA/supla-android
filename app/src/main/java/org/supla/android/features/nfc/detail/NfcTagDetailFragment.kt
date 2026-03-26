@@ -54,9 +54,9 @@ class NfcTagDetailFragment :
   }
 
   @Composable
-  override fun ComposableContent(modelState: NfcTagDetailViewState) {
+  override fun ComposableContent(viewState: NfcTagDetailViewState) {
     SuplaTheme {
-      viewModel.View(modelState)
+      viewModel.View(viewState)
     }
   }
 

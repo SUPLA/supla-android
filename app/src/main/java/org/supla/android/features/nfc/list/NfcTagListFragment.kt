@@ -38,9 +38,9 @@ class NfcTagListFragment : BaseComposeFragment<NfcTagListViewModelState, NfcTagL
   lateinit var navigator: MainNavigator
 
   @Composable
-  override fun ComposableContent(modelState: NfcTagListViewModelState) {
+  override fun ComposableContent(viewState: NfcTagListViewModelState) {
     SuplaTheme {
-      viewModel.View(modelState.viewState)
+      viewModel.View(viewState.viewState)
     }
   }
 

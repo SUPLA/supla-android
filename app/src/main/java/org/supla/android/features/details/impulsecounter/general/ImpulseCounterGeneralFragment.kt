@@ -33,9 +33,9 @@ class ImpulseCounterGeneralFragment : BaseComposeFragment<ImpulseCounterGeneralV
   override val viewModel: ImpulseCounterGeneralViewModel by viewModels()
 
   @Composable
-  override fun ComposableContent(modelState: ImpulseCounterGeneralViewModelState) {
+  override fun ComposableContent(viewState: ImpulseCounterGeneralViewModelState) {
     SuplaTheme {
-      ImpulseCounterMetricsView(modelState.viewState)
+      ImpulseCounterMetricsView(viewState.viewState)
     }
   }
 
