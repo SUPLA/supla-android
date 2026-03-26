@@ -53,10 +53,10 @@ class SwitchGeneralFragment : BaseComposeFragment<SwitchGeneralViewState, Switch
   lateinit var getChannelIconUseCase: GetChannelIconUseCase
 
   @Composable
-  override fun ComposableContent(modelState: SwitchGeneralViewState) {
+  override fun ComposableContent(viewState: SwitchGeneralViewState) {
     SuplaTheme {
       viewModel.View(
-        state = modelState,
+        state = viewState,
         onInfoClick = { stateDialogViewModel.showDialog(it.channelId) },
         onCaptionLongPress = { captionChangeViewModel.showChannelDialog(it.channelId, it.profileId, it.userCaption) }
       )
@@ -64,7 +64,7 @@ class SwitchGeneralFragment : BaseComposeFragment<SwitchGeneralViewState, Switch
       stateDialogViewModel.View()
       captionChangeViewModel.View()
 
-      if (modelState.showOvercurrentDialog) {
+      if (viewState.showOvercurrentDialog) {
         AlertDialog(
           title = stringResource(android.R.string.dialog_alert_title),
           message = stringResource(R.string.overcurrent_question),

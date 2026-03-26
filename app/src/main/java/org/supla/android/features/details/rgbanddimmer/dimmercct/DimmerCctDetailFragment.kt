@@ -29,9 +29,9 @@ class DimmerCctDetailFragment : BaseDimmerDetailFragment() {
   override val viewModel: DimmerCctDetailViewModel by viewModels()
 
   @Composable
-  override fun ComposableContent(modelState: DimmerDetailModelState) {
+  override fun ComposableContent(viewState: DimmerDetailModelState) {
     SuplaTheme {
-      viewModel.View(modelState.viewState)
+      viewModel.View(viewState.viewState)
     }
   }
 }

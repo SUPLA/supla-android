@@ -52,9 +52,9 @@ class ThermostatSlavesListFragment : BaseComposeFragment<ThermostatSlavesListVie
   lateinit var navigator: MainNavigator
 
   @Composable
-  override fun ComposableContent(modelState: ThermostatSlavesListViewModelState) {
+  override fun ComposableContent(viewState: ThermostatSlavesListViewModelState) {
     SuplaTheme {
-      modelState.showMessage?.let {
+      viewState.showMessage?.let {
         AlertDialog(
           title = stringResource(id = android.R.string.dialog_alert_title),
           message = it,
@@ -67,7 +67,7 @@ class ThermostatSlavesListFragment : BaseComposeFragment<ThermostatSlavesListVie
       captionChangeViewModel.View()
 
       viewModel.View(
-        state = modelState.viewState,
+        state = viewState.viewState,
       )
     }
   }

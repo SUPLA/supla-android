@@ -19,31 +19,27 @@ package org.supla.android.features.details.thermostatdetail.schedule
 
 import android.os.Bundle
 import android.view.View
+import androidx.compose.runtime.Composable
 import androidx.fragment.app.viewModels
-import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import org.supla.android.R
-import org.supla.android.core.ui.BaseFragment
+import org.supla.android.core.ui.BaseComposeFragment
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.databinding.FragmentComposeBinding
-import org.supla.android.features.details.thermostatdetail.schedule.ui.ScheduleDetail
 
 @AndroidEntryPoint
-class ScheduleDetailFragment : BaseFragment<ScheduleDetailViewState, ScheduleDetailViewEvent>(R.layout.fragment_compose) {
+class ScheduleDetailFragment : BaseComposeFragment<ScheduleDetailViewState, ScheduleDetailViewEvent>() {
 
   override val viewModel: ScheduleDetailViewModel by viewModels()
-  private val binding by viewBinding(FragmentComposeBinding::bind)
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-
-    binding.composeContent.setContent {
-      SuplaTheme {
-        ScheduleDetail(viewModel)
-      }
-    }
-
     viewModel.observeConfig(remoteId = item.remoteId, deviceId = item.deviceId)
+  }
+
+  @Composable
+  override fun ComposableContent(viewState: ScheduleDetailViewState) {
+    SuplaTheme {
+      viewModel.View(viewState)
+    }
   }
 
   override fun handleEvents(event: ScheduleDetailViewEvent) {

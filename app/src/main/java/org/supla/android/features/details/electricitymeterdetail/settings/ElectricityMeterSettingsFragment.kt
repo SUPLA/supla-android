@@ -30,10 +30,10 @@ class ElectricityMeterSettingsFragment :
   override val viewModel: ElectricityMeterSettingsViewModel by viewModels()
 
   @Composable
-  override fun ComposableContent(modelState: ElectricityMeterSettingsViewModelState) {
+  override fun ComposableContent(viewState: ElectricityMeterSettingsViewModelState) {
     SuplaTheme {
       ElectricityMeterSettingsView(
-        state = modelState.viewState,
+        state = viewState.viewState,
         onListValueChanged = viewModel::onListValueChange,
         onBalancingChanged = viewModel::onBalanceValueChange
       )
