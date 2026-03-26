@@ -48,7 +48,6 @@ import org.supla.android.data.model.temperature.TemperatureCorrection
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.features.details.thermostatdetail.schedule.data.ProgramSettingsData
-import org.supla.android.features.details.thermostatdetail.schedule.extensions.colorRes
 import org.supla.android.features.details.thermostatdetail.schedule.extensions.number
 import org.supla.android.ui.dialogs.Dialog
 import org.supla.android.ui.dialogs.DialogButtonsRow
@@ -59,6 +58,7 @@ import org.supla.android.ui.views.buttons.MinusIconButton
 import org.supla.android.ui.views.buttons.OutlinedButton
 import org.supla.android.ui.views.buttons.PlusIconButton
 import org.supla.android.ui.views.forms.TextField
+import org.supla.android.ui.views.schedule.colorRes
 import org.supla.android.ui.views.spinner.Spinner
 import org.supla.core.shared.data.model.thermometer.TemperatureUnit
 

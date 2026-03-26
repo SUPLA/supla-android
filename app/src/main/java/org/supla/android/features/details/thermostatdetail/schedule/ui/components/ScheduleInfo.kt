@@ -58,8 +58,8 @@ import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.extensions.toDp
 import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailProgramBox
-import org.supla.android.features.details.thermostatdetail.schedule.extensions.colorRes
 import org.supla.android.ui.views.buttons.IconButton
+import org.supla.android.ui.views.schedule.colorRes
 
 @Composable
 fun ScheduleInfo(boxSize: Size, onClose: () -> Unit) {

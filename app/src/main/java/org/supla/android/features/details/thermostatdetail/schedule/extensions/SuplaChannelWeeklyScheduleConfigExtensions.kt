@@ -25,11 +25,11 @@ import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.data.source.remote.hvac.icon
-import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailEntryBoxKey
 import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailProgramBox
 import org.supla.android.features.details.thermostatdetail.schedule.data.ThermostatScheduleDetailEntryBoxValue
 import org.supla.android.features.details.thermostatdetail.ui.OFF
 import org.supla.android.lib.SuplaConst
+import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxKey
 
 fun SuplaChannelWeeklyScheduleConfig.viewScheduleBoxesMap() =
   mutableMapOf<ScheduleDetailEntryBoxKey, ThermostatScheduleDetailEntryBoxValue>().apply {

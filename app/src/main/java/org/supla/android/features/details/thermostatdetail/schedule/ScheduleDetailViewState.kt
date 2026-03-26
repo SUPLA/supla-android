@@ -30,11 +30,11 @@ import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.extensions.toSuplaTemperature
 import org.supla.android.features.details.thermostatdetail.schedule.data.ProgramSettingsData
 import org.supla.android.features.details.thermostatdetail.schedule.data.QuartersSelectionData
-import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailEntryBoxKey
 import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailProgramBox
 import org.supla.android.features.details.thermostatdetail.schedule.data.ThermostatScheduleDetailEntryBoxValue
-import org.supla.android.features.details.thermostatdetail.schedule.ui.components.ScheduleTableState
 import org.supla.android.lib.SuplaConst
+import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxKey
+import org.supla.android.ui.views.schedule.ScheduleTableState
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.extensions.guardLet
 

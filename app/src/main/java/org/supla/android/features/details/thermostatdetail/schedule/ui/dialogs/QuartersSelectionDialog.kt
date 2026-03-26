@@ -51,10 +51,8 @@ import org.supla.android.data.source.local.calendar.DayOfWeek
 import org.supla.android.data.source.local.calendar.QuarterOfHour
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.features.details.thermostatdetail.schedule.data.QuartersSelectionData
-import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailEntryBoxKey
 import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailProgramBox
 import org.supla.android.features.details.thermostatdetail.schedule.data.ThermostatScheduleDetailEntryBoxValue
-import org.supla.android.features.details.thermostatdetail.schedule.extensions.colorRes
 import org.supla.android.features.details.thermostatdetail.schedule.ui.components.ScheduleHourCaption
 import org.supla.android.features.details.thermostatdetail.schedule.ui.components.ScheduleProgramButton
 import org.supla.android.ui.dialogs.Dialog
@@ -63,6 +61,8 @@ import org.supla.android.ui.views.Separator
 import org.supla.android.ui.views.SeparatorStyle
 import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.buttons.OutlinedButton
+import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxKey
+import org.supla.android.ui.views.schedule.colorRes
 
 interface QuartersSelectionDialogScope {
   fun onQuartersSelectionProgramChange(program: SuplaScheduleProgram)

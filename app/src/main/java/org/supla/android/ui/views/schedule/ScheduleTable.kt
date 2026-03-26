@@ -1,4 +1,4 @@
-package org.supla.android.features.details.thermostatdetail.schedule.ui.components
+package org.supla.android.ui.views.schedule
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -61,13 +61,11 @@ import androidx.compose.ui.unit.sp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.source.local.calendar.DayOfWeek
+import org.supla.android.data.source.local.calendar.toHour
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.extensions.toPx
-import org.supla.android.features.details.thermostatdetail.schedule.data.MotionEventStateHolder
-import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailEntryBoxKey
-import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailEntryBoxValue
 import org.supla.android.features.details.thermostatdetail.schedule.data.ThermostatScheduleDetailEntryBoxValue
-import org.supla.android.features.details.thermostatdetail.schedule.extensions.colorRes
+import org.supla.android.ui.ResourceCache
 
 const val ROWS_COUNT = 25
 val columnsCount = DayOfWeek.entries.size

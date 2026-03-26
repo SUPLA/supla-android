@@ -51,7 +51,7 @@ import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.extensions.thermometerValuesFormatter
 import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailProgramBox
-import org.supla.android.features.details.thermostatdetail.schedule.extensions.colorRes
+import org.supla.android.ui.views.schedule.colorRes
 
 @Composable
 fun ScheduleProgramButton(
