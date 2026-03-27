@@ -1,9 +1,11 @@
 package org.supla.android.features.details.thermostatdetail.schedule.extensions
 
+import io.mockk.MockKAnnotations
+import io.mockk.every
+import io.mockk.impl.annotations.MockK
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.R
 import org.supla.android.data.source.local.calendar.DayOfWeek
 import org.supla.android.data.source.local.calendar.QuarterOfHour
@@ -19,9 +21,21 @@ import org.supla.android.features.details.thermostatdetail.ui.OFF
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
 import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxKey
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
+import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
 
-@RunWith(MockitoJUnitRunner::class)
 class SuplaChannelWeeklyScheduleConfigExtensionsTest {
+
+  @MockK
+  private lateinit var valueFormatter: ValueFormatter
+
+  @Before
+  fun setUp() {
+    MockKAnnotations.init(this)
+  }
 
   @Test
   fun `should create schedule map for schedule table`() {
@@ -99,50 +113,62 @@ class SuplaChannelWeeklyScheduleConfigExtensionsTest {
       ),
       schedule = emptyList()
     )
+    every { valueFormatter.format(23f, ValueFormat.TemperatureWithDegree) } returns "23.0"
+    every { valueFormatter.format(21f, ValueFormat.TemperatureWithDegree) } returns "21.0"
 
     // when
-    val programs = config.viewProgramBoxesList(thermostatFunction)
+    val programs = config.viewProgramBoxesList(thermostatFunction, valueFormatter)
 
     // then
     assertThat(programs).containsExactly(
       ScheduleDetailProgramBox(
         function,
         thermostatFunction,
-        SuplaWeeklyScheduleProgram(
-          SuplaScheduleProgram.PROGRAM_1,
-          SuplaHvacMode.HEAT,
-          2300,
-          null
-        ),
+        SuplaScheduleProgram.PROGRAM_1,
+        SuplaHvacMode.HEAT,
+        23f,
+        null,
+        LocalizedString.Constant("23.0"),
         R.drawable.ic_heat
       ),
       ScheduleDetailProgramBox(
         function,
         thermostatFunction,
-        SuplaWeeklyScheduleProgram(SuplaScheduleProgram.PROGRAM_2, SuplaHvacMode.OFF, null, null),
+        SuplaScheduleProgram.PROGRAM_2,
+        SuplaHvacMode.OFF,
+        null,
+        null,
+        LocalizedString.Constant("---"),
         null
       ),
       ScheduleDetailProgramBox(
         function,
         thermostatFunction,
-        SuplaWeeklyScheduleProgram(
-          SuplaScheduleProgram.PROGRAM_3,
-          SuplaHvacMode.COOL,
-          null,
-          2100
-        ),
+        SuplaScheduleProgram.PROGRAM_3,
+        SuplaHvacMode.COOL,
+        null,
+        21f,
+        LocalizedString.Constant("21.0"),
         R.drawable.ic_cool
       ),
       ScheduleDetailProgramBox(
         function,
         thermostatFunction,
-        SuplaWeeklyScheduleProgram(SuplaScheduleProgram.PROGRAM_4, SuplaHvacMode.HEAT_COOL, 2100, 2300),
+        SuplaScheduleProgram.PROGRAM_4,
+        SuplaHvacMode.HEAT_COOL,
+        21f,
+        23f,
+        LocalizedString.Constant("21.0 - 23.0"),
         null
       ),
       ScheduleDetailProgramBox(
         function,
         thermostatFunction,
-        SuplaWeeklyScheduleProgram.OFF,
+        SuplaScheduleProgram.OFF,
+        SuplaHvacMode.OFF,
+        null,
+        null,
+        localizedString(R.string.turn_off),
         R.drawable.ic_power_button
       )
     )
@@ -179,34 +205,51 @@ class SuplaChannelWeeklyScheduleConfigExtensionsTest {
       ),
       schedule = emptyList()
     )
+    every { valueFormatter.format(23f, ValueFormat.TemperatureWithDegree) } returns "23.0"
 
     // when
-    val programs = config.viewProgramBoxesList(thermostatFunction)
+    val programs = config.viewProgramBoxesList(thermostatFunction, valueFormatter)
 
     // then
     assertThat(programs).containsExactly(
       ScheduleDetailProgramBox(
         function,
         thermostatFunction,
-        SuplaWeeklyScheduleProgram(SuplaScheduleProgram.PROGRAM_1, SuplaHvacMode.HEAT, 2300, null),
+        SuplaScheduleProgram.PROGRAM_1,
+        SuplaHvacMode.HEAT,
+        23f,
+        null,
+        LocalizedString.Constant("23.0"),
         null
       ),
       ScheduleDetailProgramBox(
         function,
         thermostatFunction,
-        SuplaWeeklyScheduleProgram(SuplaScheduleProgram.PROGRAM_2, SuplaHvacMode.OFF, null, null),
+        SuplaScheduleProgram.PROGRAM_2,
+        SuplaHvacMode.OFF,
+        null,
+        null,
+        LocalizedString.Constant(NO_VALUE_TEXT),
         null
       ),
       ScheduleDetailProgramBox(
         function,
         thermostatFunction,
-        SuplaWeeklyScheduleProgram(SuplaScheduleProgram.PROGRAM_3, SuplaHvacMode.NOT_SET, null, null),
+        SuplaScheduleProgram.PROGRAM_3,
+        SuplaHvacMode.NOT_SET,
+        null,
+        null,
+        LocalizedString.Constant(NO_VALUE_TEXT),
         null
       ),
       ScheduleDetailProgramBox(
         function,
         thermostatFunction,
-        SuplaWeeklyScheduleProgram.OFF,
+        SuplaScheduleProgram.OFF,
+        SuplaHvacMode.OFF,
+        null,
+        null,
+        localizedString(R.string.turn_off),
         R.drawable.ic_power_button
       )
     )
@@ -243,34 +286,51 @@ class SuplaChannelWeeklyScheduleConfigExtensionsTest {
       ),
       schedule = emptyList()
     )
+    every { valueFormatter.format(23f, ValueFormat.TemperatureWithDegree) } returns "23.0"
 
     // when
-    val programs = config.viewProgramBoxesList(thermostatFunction)
+    val programs = config.viewProgramBoxesList(thermostatFunction, valueFormatter)
 
     // then
     assertThat(programs).containsExactly(
       ScheduleDetailProgramBox(
         function,
         thermostatFunction,
-        SuplaWeeklyScheduleProgram(SuplaScheduleProgram.PROGRAM_1, SuplaHvacMode.COOL, null, 2300),
+        SuplaScheduleProgram.PROGRAM_1,
+        SuplaHvacMode.COOL,
+        null,
+        23f,
+        LocalizedString.Constant("23.0"),
         null
       ),
       ScheduleDetailProgramBox(
         function,
         thermostatFunction,
-        SuplaWeeklyScheduleProgram(SuplaScheduleProgram.PROGRAM_2, SuplaHvacMode.OFF),
+        SuplaScheduleProgram.PROGRAM_2,
+        SuplaHvacMode.OFF,
+        null,
+        null,
+        LocalizedString.Constant(NO_VALUE_TEXT),
         null
       ),
       ScheduleDetailProgramBox(
         function,
         thermostatFunction,
-        SuplaWeeklyScheduleProgram(SuplaScheduleProgram.PROGRAM_3, SuplaHvacMode.NOT_SET),
+        SuplaScheduleProgram.PROGRAM_3,
+        SuplaHvacMode.NOT_SET,
+        null,
+        null,
+        LocalizedString.Constant(NO_VALUE_TEXT),
         null
       ),
       ScheduleDetailProgramBox(
         function,
         thermostatFunction,
-        SuplaWeeklyScheduleProgram.OFF,
+        SuplaScheduleProgram.OFF,
+        SuplaHvacMode.OFF,
+        null,
+        null,
+        localizedString(R.string.turn_off),
         R.drawable.ic_power_button
       )
     )

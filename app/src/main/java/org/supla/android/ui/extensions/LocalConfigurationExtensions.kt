@@ -32,3 +32,7 @@ fun <T> Configuration.ifPortrait(composable: @Composable () -> T): T? =
 @Composable
 fun Configuration.orientated(portrait: Dp, landscape: Dp): Dp =
   if (orientation == Configuration.ORIENTATION_LANDSCAPE) landscape else portrait
+
+val Configuration.isPhoneLandscape: Boolean
+  @Composable
+  get() = ifLandscape { smallestScreenWidthDp < 600 } ?: false

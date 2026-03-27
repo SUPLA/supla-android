@@ -37,6 +37,7 @@ import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxKey
 import org.supla.android.ui.views.schedule.ScheduleTableState
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.extensions.guardLet
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 
 private const val DEFAULT_HEAT_TEMPERATURE = 21f
 private const val DEFAULT_WATER_TEMPERATURE = 40f
@@ -72,28 +73,25 @@ data class ScheduleDetailViewState(
     )
   }
 
-  fun updatedPrograms(function: Int): List<ScheduleDetailProgramBox> =
+  fun updatedPrograms(function: Int, thermometerValueFormatter: ValueFormatter): List<ScheduleDetailProgramBox> =
     programSettings?.let { programToUpdate ->
       mutableListOf<ScheduleDetailProgramBox>().apply {
         for (program in programs) {
-          if (program.scheduleProgram.program == programToUpdate.program) {
+          if (program.program == programToUpdate.program) {
             val icon = when (function) {
-              SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL if program.scheduleProgram.mode == SuplaHvacMode.HEAT ->
-                R.drawable.ic_heat
-              SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL if program.scheduleProgram.mode == SuplaHvacMode.COOL ->
-                R.drawable.ic_cool
+              SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL if program.mode == SuplaHvacMode.HEAT -> R.drawable.ic_heat
+              SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL if program.mode == SuplaHvacMode.COOL -> R.drawable.ic_cool
               else -> null
             }
 
             ScheduleDetailProgramBox(
               channelFunction = function,
               thermostatFunction = thermostatFunction!!,
-              SuplaWeeklyScheduleProgram(
-                program = programToUpdate.program,
-                mode = programToUpdate.selectedMode,
-                setpointTemperatureHeat = programToUpdate.setpointTemperatureHeat?.toSuplaTemperature(),
-                setpointTemperatureCool = programToUpdate.setpointTemperatureCool?.toSuplaTemperature()
-              ),
+              program = programToUpdate.program,
+              mode = programToUpdate.selectedMode,
+              setpointTemperatureHeat = programToUpdate.setpointTemperatureHeat,
+              setpointTemperatureCool = programToUpdate.setpointTemperatureCool,
+              valueFormatter = thermometerValueFormatter,
               iconRes = icon
             ).also {
               add(it)
@@ -107,10 +105,17 @@ data class ScheduleDetailViewState(
 
   fun suplaPrograms(): List<SuplaWeeklyScheduleProgram> = mutableListOf<SuplaWeeklyScheduleProgram>().apply {
     for (program in programs) {
-      if (program.scheduleProgram.program == SuplaScheduleProgram.OFF) {
+      if (program.program == SuplaScheduleProgram.OFF) {
         continue
       }
-      add(program.scheduleProgram.copy())
+      add(
+        SuplaWeeklyScheduleProgram(
+          program = program.program,
+          mode = program.modeForModify,
+          setpointTemperatureHeat = program.setpointTemperatureHeat?.toSuplaTemperature(),
+          setpointTemperatureCool = program.setpointTemperatureCool?.toSuplaTemperature()
+        )
+      )
     }
   }
 
