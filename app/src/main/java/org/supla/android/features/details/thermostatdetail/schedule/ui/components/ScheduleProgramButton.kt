@@ -49,7 +49,6 @@ import org.supla.android.R
 import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.extensions.thermometerValuesFormatter
 import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailProgramBox
 import org.supla.android.ui.views.schedule.colorRes
 
@@ -61,9 +60,10 @@ fun ScheduleProgramButton(
   onClick: () -> Unit = { },
   onLongClick: () -> Unit = { }
 ) {
+  val context = LocalContext.current
   Button(
-    contentColor = colorResource(id = programBox.scheduleProgram.program.colorRes()),
-    text = programBox.textProvider(LocalContext.current.thermometerValuesFormatter)(LocalContext.current),
+    contentColor = colorResource(id = programBox.program.colorRes()),
+    text = programBox.label(context),
     iconRes = programBox.iconRes,
     active = active,
     onClick = onClick,

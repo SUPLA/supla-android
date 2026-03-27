@@ -49,12 +49,15 @@ import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.source.local.calendar.DayOfWeek
 import org.supla.android.data.source.local.calendar.QuarterOfHour
+import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
+import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.features.details.thermostatdetail.schedule.data.QuartersSelectionData
 import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailProgramBox
 import org.supla.android.features.details.thermostatdetail.schedule.data.ThermostatScheduleDetailEntryBoxValue
 import org.supla.android.features.details.thermostatdetail.schedule.ui.components.ScheduleHourCaption
 import org.supla.android.features.details.thermostatdetail.schedule.ui.components.ScheduleProgramButton
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.ui.dialogs.Dialog
 import org.supla.android.ui.dialogs.DialogButtonsRow
 import org.supla.android.ui.views.Separator
@@ -63,6 +66,8 @@ import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.buttons.OutlinedButton
 import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxKey
 import org.supla.android.ui.views.schedule.colorRes
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 
 interface QuartersSelectionDialogScope {
   fun onQuartersSelectionProgramChange(program: SuplaScheduleProgram)
@@ -86,8 +91,8 @@ fun QuartersSelectionDialogScope.QuartersDialog(
         ScheduleProgramButton(
           programBox = programBox,
           modifier = Modifier.padding(vertical = 4.dp),
-          active = programBox.scheduleProgram.program == data.activeProgram,
-          onClick = { onQuartersSelectionProgramChange(programBox.scheduleProgram.program) }
+          active = programBox.program == data.activeProgram,
+          onClick = { onQuartersSelectionProgramChange(programBox.program) }
         )
       }
     }
@@ -205,7 +210,60 @@ private fun Preview() {
         ThermostatScheduleDetailEntryBoxValue(SuplaScheduleProgram.PROGRAM_1),
         SuplaScheduleProgram.PROGRAM_1
       ),
-      ScheduleDetailProgramBox.default(),
+      programs,
     )
   }
 }
+
+private val programs = listOf(
+  ScheduleDetailProgramBox(
+    SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
+    ThermostatSubfunction.HEAT,
+    SuplaScheduleProgram.PROGRAM_1,
+    SuplaHvacMode.HEAT,
+    20f,
+    null,
+    LocalizedString.Constant("20.0°"),
+    R.drawable.ic_heat
+  ),
+  ScheduleDetailProgramBox(
+    SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
+    ThermostatSubfunction.HEAT,
+    SuplaScheduleProgram.PROGRAM_2,
+    SuplaHvacMode.COOL,
+    null,
+    22.5f,
+    LocalizedString.Constant("22.5°"),
+    R.drawable.ic_cool
+  ),
+  ScheduleDetailProgramBox(
+    SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
+    ThermostatSubfunction.HEAT,
+    SuplaScheduleProgram.PROGRAM_3,
+    SuplaHvacMode.HEAT_COOL,
+    21f,
+    22.5f,
+    LocalizedString.Constant("21.0° - 22.5°"),
+    R.drawable.ic_heat
+  ),
+  ScheduleDetailProgramBox(
+    SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
+    ThermostatSubfunction.HEAT,
+    SuplaScheduleProgram.PROGRAM_4,
+    SuplaHvacMode.HEAT,
+    23f,
+    null,
+    LocalizedString.Constant("23.5°"),
+    R.drawable.ic_cool
+  ),
+  ScheduleDetailProgramBox(
+    SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
+    ThermostatSubfunction.HEAT,
+    SuplaScheduleProgram.OFF,
+    SuplaHvacMode.OFF,
+    null,
+    null,
+    localizedString(R.string.turn_off),
+    R.drawable.ic_power_button
+  )
+)

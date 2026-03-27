@@ -51,7 +51,7 @@ import org.supla.android.features.details.thermostatdetail.schedule.data.Thermos
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.tools.SuplaPreviewLandscape
 import org.supla.android.ui.ResourceCache
-import org.supla.android.ui.extensions.ifLandscape
+import org.supla.android.ui.extensions.isPhoneLandscape
 
 const val ROWS_COUNT = 25
 val columnsCount = DayOfWeek.entries.size
@@ -77,7 +77,7 @@ fun <Value : ScheduleDetailEntryBoxValue> ScheduleTableScope.ScheduleTable(
   onBoxSizeChanged: ((Size) -> Unit)? = null
 ) {
   val configuration = LocalConfiguration.current
-  val useLandscape = configuration.ifLandscape { configuration.smallestScreenWidthDp < 600 } ?: false
+  val useLandscape = configuration.isPhoneLandscape
   val resources = LocalResources.current
   val resourceCache = remember { ResourceCache(resources) }
 

@@ -36,7 +36,7 @@ import org.supla.android.R
 import org.supla.android.data.source.local.calendar.DayOfWeek
 import org.supla.android.extensions.toPx
 
-private val boxSpacing = boxPadding.times(2)
+val boxSpacing = boxPadding.times(2)
 private val textPadding = 8.dp
 
 data class ScheduleInternalState(

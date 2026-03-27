@@ -236,7 +236,7 @@ class ScheduleDetailViewModel @Inject constructor(
   override fun onProgramSettingsSave() {
     updateState { state ->
       state.copy(
-        programs = state.updatedPrograms(state.channelFunction),
+        programs = state.updatedPrograms(state.channelFunction, thermometerValueFormatter),
         activeProgram = state.programSettings?.program,
         programSettings = null,
         lastInteractionTime = System.currentTimeMillis()
@@ -314,7 +314,7 @@ class ScheduleDetailViewModel @Inject constructor(
     }
 
     for (programConfiguration in state.programs) {
-      if (programConfiguration.scheduleProgram.program == program && programConfiguration.scheduleProgram.mode == SuplaHvacMode.NOT_SET) {
+      if (programConfiguration.program == program && programConfiguration.mode == SuplaHvacMode.NOT_SET) {
         return null // Don't allow to set program with NOT_SET mode
       }
     }
@@ -417,7 +417,7 @@ class ScheduleDetailViewModel @Inject constructor(
 
   private fun createProgramSettingData(state: ScheduleDetailViewState, program: SuplaScheduleProgram): ProgramSettingsData? {
     for (programBox in state.programs) {
-      if (programBox.scheduleProgram.program == program) {
+      if (programBox.program == program) {
         val heatTemperature = state.alignTemperature(programBox.setpointTemperatureHeat)
         val coolTemperature = state.alignTemperature(programBox.setpointTemperatureCool)
         return ProgramSettingsData(
@@ -491,7 +491,7 @@ class ScheduleDetailViewModel @Inject constructor(
           currentHour = data.deviceConfig.isAutomaticTimeSyncDisabled()
             .ifFalse(calendar.get(Calendar.HOUR_OF_DAY)),
         ),
-        programs = data.weeklyScheduleConfig.viewProgramBoxesList(thermostatFunction),
+        programs = data.weeklyScheduleConfig.viewProgramBoxesList(thermostatFunction, thermometerValueFormatter),
         configTemperatureMin = minTemperature,
         configTemperatureMax = maxTemperature,
         thermostatFunction = thermostatFunction
