@@ -22,7 +22,8 @@ import org.supla.core.shared.data.model.general.SuplaFunction
 
 fun ChannelBase.isHvacThermostat() =
   function == SuplaFunction.HVAC_THERMOSTAT ||
-    function == SuplaFunction.HVAC_DOMESTIC_HOT_WATER
+    function == SuplaFunction.HVAC_DOMESTIC_HOT_WATER ||
+    function == SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL
 
 fun ChannelBase.isThermostat(): Boolean =
   isHvacThermostat() || function == SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS

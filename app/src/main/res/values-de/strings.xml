@@ -881,5 +881,6 @@
   <string name="nfc_tag_name">Tag „%1$s“</string>
   <string name="nfc_detail_action_added">Zur App hinzugefügt</string>
   <string name="general_search">Suchen</string>
-  <string name="toolbar_search_hint">Geben Sie mindestens 2 Zeichen ein...</string>
+  <string name="toolbar_search_hint">Geben Sie mindestens 2 Zeichen ein…</string>
+  <string name="details_timer_select_program">Programm auswählen</string>
 </resources>

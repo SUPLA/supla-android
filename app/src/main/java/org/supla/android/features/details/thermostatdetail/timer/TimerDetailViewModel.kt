@@ -17,6 +17,8 @@ package org.supla.android.features.details.thermostatdetail.timer
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
@@ -53,10 +55,11 @@ import org.supla.android.extensions.setHour
 import org.supla.android.extensions.shift
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.extensions.yearNo
-import org.supla.android.features.details.thermostatdetail.timer.ui.TimerDetailViewProxy
+import org.supla.android.features.details.thermostatdetail.timer.ui.ThermostatTimerViewScope
 import org.supla.android.features.details.thermostatdetail.ui.TimerHeaderState
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
@@ -81,22 +84,9 @@ class TimerDetailViewModel @Inject constructor(
   private val loadingTimeoutManager: LoadingTimeoutManager,
   @param:Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter,
   schedulers: SuplaSchedulers
-) : BaseViewModel<TimerDetailViewState, TimerDetailViewEvent>(TimerDetailViewState(), schedulers), TimerDetailViewProxy {
+) : BaseViewModel<TimerDetailViewState, TimerDetailViewEvent>(TimerDetailViewState(), schedulers), ThermostatTimerViewScope {
 
   private val channelSubject: PublishSubject<Channel> = PublishSubject.create()
-
-  override val timerLeftTime: Int?
-    get() {
-      val state = currentState()
-      val (timerEndTime) = guardLet(state.timerEndDate) { return null }
-      val currentDate = dateProvider.currentDate()
-
-      return if (currentDate.after(timerEndTime)) {
-        null
-      } else {
-        timerEndTime.time.minus(currentDate.time).div(1000).toInt()
-      }
-    }
 
   override fun onViewCreated() {
     loadingTimeoutManager.watch({ currentState().loadingState }) {
@@ -143,7 +133,25 @@ class TimerDetailViewModel @Inject constructor(
 
   override fun toggleDeviceMode(deviceMode: DeviceMode) {
     updateState {
-      it.copy(selectedMode = deviceMode)
+      val workingMode = when {
+        deviceMode == DeviceMode.MANUAL && it.channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL -> WorkingMode.AUTO
+        else -> null
+      }
+
+      it.copy(
+        selectedMode = deviceMode,
+        workingMode = workingMode,
+        currentTemperatureString = it.temperature?.toString(workingMode, thermometerValueFormatter)
+      )
+    }
+  }
+
+  override fun toggleWorkingMode(workingMode: WorkingMode) {
+    updateState {
+      it.copy(
+        workingMode = workingMode,
+        currentTemperatureString = it.temperature?.toString(workingMode, thermometerValueFormatter)
+      )
     }
   }
 
@@ -181,19 +189,63 @@ class TimerDetailViewModel @Inject constructor(
 
   override fun onTemperatureChange(temperature: Float) {
     updateState {
+      val newTemperature = when (it.temperature) {
+        is SetpointTemperature.Heat -> SetpointTemperature.Heat(temperature)
+        is SetpointTemperature.Cool -> SetpointTemperature.Cool(temperature)
+        is SetpointTemperature.HeatAndCool -> when (it.workingMode) {
+          WorkingMode.HEATING -> it.temperature.copy(heat = temperature)
+          WorkingMode.COOLING -> it.temperature.copy(cool = temperature)
+          else -> null
+        }
+        else -> null
+      }
+
       it.copy(
-        currentTemperature = temperature,
-        currentTemperatureString = thermometerValueFormatter.format(temperature)
+        temperature = newTemperature,
+        currentTemperatureString = newTemperature?.toString(it.workingMode, thermometerValueFormatter)
+      )
+    }
+  }
+
+  override fun onTemperatureChange(range: ClosedFloatingPointRange<Float>) {
+    updateState {
+      val lastCool = it.temperature?.setpointCool ?: 0f
+      val lastTouchOnHeat = lastCool == range.endInclusive
+      val temperature = SetpointTemperature.HeatAndCool(
+        heat = range.start,
+        cool = range.endInclusive,
+        lastTouchOnHeat = lastTouchOnHeat
+      )
+
+      it.copy(
+        temperature = temperature,
+        currentTemperatureString = temperature.toString(it.workingMode, thermometerValueFormatter)
       )
     }
   }
 
   override fun onTemperatureChange(step: TemperatureCorrection) {
     updateState {
-      val temperature = it.currentTemperature?.plus(step.step())
+      val temperature = when (val temperature = it.temperature) {
+        is SetpointTemperature.Heat -> SetpointTemperature.Heat(temperature.value + step.step())
+        is SetpointTemperature.Cool -> SetpointTemperature.Cool(temperature.value + step.step())
+        is SetpointTemperature.HeatAndCool ->
+          when (it.workingMode) {
+            WorkingMode.AUTO ->
+              if (temperature.lastTouchOnHeat) {
+                temperature.copy(heat = temperature.heat + step.step())
+              } else {
+                temperature.copy(cool = temperature.cool + step.step())
+              }
+            WorkingMode.HEATING -> it.temperature.copy(heat = it.temperature.heat + step.step())
+            WorkingMode.COOLING -> it.temperature.copy(cool = it.temperature.cool + step.step())
+            null -> TODO()
+          }
+        else -> null
+      }
       it.copy(
-        currentTemperature = temperature,
-        currentTemperatureString = thermometerValueFormatter.format(temperature)
+        temperature = temperature,
+        currentTemperatureString = temperature?.toString(it.workingMode, thermometerValueFormatter)
       )
     }
   }
@@ -211,12 +263,18 @@ class TimerDetailViewModel @Inject constructor(
       )
     }
 
-    val mode = if (state.selectedMode == DeviceMode.OFF) {
-      SuplaHvacMode.OFF
-    } else if (state.usingHeatSetpoint) {
-      SuplaHvacMode.HEAT
-    } else {
-      SuplaHvacMode.COOL
+    val mode = when {
+      state.selectedMode == DeviceMode.OFF -> SuplaHvacMode.OFF
+      state.temperature is SetpointTemperature.Heat -> SuplaHvacMode.HEAT
+      state.temperature is SetpointTemperature.Cool -> SuplaHvacMode.COOL
+      state.temperature is SetpointTemperature.HeatAndCool ->
+        when (state.workingMode) {
+          WorkingMode.AUTO -> SuplaHvacMode.HEAT_COOL
+          WorkingMode.HEATING -> SuplaHvacMode.HEAT
+          WorkingMode.COOLING -> SuplaHvacMode.COOL
+          else -> null
+        }
+      else -> null
     }
     val sendTemperature = state.selectedMode == DeviceMode.MANUAL
 
@@ -224,8 +282,8 @@ class TimerDetailViewModel @Inject constructor(
       type = SubjectType.CHANNEL,
       remoteId = remoteId,
       mode = mode,
-      setpointTemperatureHeat = (sendTemperature && state.usingHeatSetpoint).ifTrue(state.currentTemperature),
-      setpointTemperatureCool = (sendTemperature && state.usingHeatSetpoint.not()).ifTrue(state.currentTemperature),
+      setpointTemperatureHeat = sendTemperature.ifTrue(state.temperature?.setpointHeat),
+      setpointTemperatureCool = sendTemperature.ifTrue(state.temperature?.setpointCool),
       durationInSec = duration.toLong()
     ).attachSilent()
       .subscribe()
@@ -312,11 +370,13 @@ class TimerDetailViewModel @Inject constructor(
 
     val initialCalendarDate = currentDate.shift(7)
     val temperature = getSetpointTemperature(channel, thermostatValue)
+
     updateState {
       it.copy(
         remoteId = channel.remoteId,
         currentMode = thermostatValue.mode,
         currentDate = currentDate,
+        channelFunction = channel.func,
         calendarValue = initialCalendarDate,
         calendarTimeValue = initialCalendarDate.hour(),
         isTimerOn = isTimerOn,
@@ -326,32 +386,33 @@ class TimerDetailViewModel @Inject constructor(
         subfunction = thermostatValue.subfunction,
         minTemperature = minTemperature,
         maxTemperature = maxTemperature,
-        currentTemperature = getSetpointTemperature(channel, thermostatValue),
-        currentTemperatureString = thermometerValueFormatter.format(temperature),
-        usingHeatSetpoint = useHeatSetpoint(channel, thermostatValue),
+        temperature = temperature,
+        currentTemperatureString = temperature?.toString(it.workingMode, thermometerValueFormatter),
 
         loadingState = it.loadingState.changingLoading(false, dateProvider)
       )
     }
   }
 
-  private fun getSetpointTemperature(channel: Channel, thermostatValue: ThermostatValue): Float? {
+  private fun getSetpointTemperature(channel: Channel, thermostatValue: ThermostatValue): SetpointTemperature? {
     return when (channel.func) {
       SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER ->
-        thermostatValue.setpointTemperatureHeat
+        SetpointTemperature.Heat(thermostatValue.setpointTemperatureHeat)
       SUPLA_CHANNELFNC_HVAC_THERMOSTAT ->
         if (thermostatValue.subfunction == ThermostatSubfunction.HEAT) {
-          thermostatValue.setpointTemperatureHeat
+          SetpointTemperature.Heat(thermostatValue.setpointTemperatureHeat)
         } else {
-          thermostatValue.setpointTemperatureCool
+          SetpointTemperature.Cool(thermostatValue.setpointTemperatureCool)
         }
+      SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL -> {
+        SetpointTemperature.HeatAndCool(
+          heat = thermostatValue.setpointTemperatureHeat,
+          cool = thermostatValue.setpointTemperatureCool,
+          lastTouchOnHeat = false
+        )
+      }
       else -> null
     }
-  }
-
-  private fun useHeatSetpoint(channel: Channel, thermostatValue: ThermostatValue): Boolean {
-    return channel.func == SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER ||
-      (channel.func == SUPLA_CHANNELFNC_HVAC_THERMOSTAT && thermostatValue.subfunction == ThermostatSubfunction.HEAT)
   }
 }
 
@@ -363,12 +424,12 @@ data class TimerDetailViewState(
   val subfunction: ThermostatSubfunction? = null,
   val minTemperature: Float? = null,
   val maxTemperature: Float? = null,
-  val currentTemperature: Float? = null,
+  val temperature: SetpointTemperature? = null,
   val currentTemperatureString: String? = null,
-  val usingHeatSetpoint: Boolean = false,
   var loadingState: LoadingTimeoutManager.LoadingState = LoadingTimeoutManager.LoadingState(),
 
   val selectedMode: DeviceMode = DeviceMode.OFF,
+  val workingMode: WorkingMode? = null,
   val isTimerOn: Boolean = false,
   val isChannelOnline: Boolean = false,
   val editTime: Boolean = false,
@@ -458,33 +519,23 @@ data class TimerDetailViewState(
   override fun currentStateValue(thermometerValuesFormatter: ValueFormatter): LocalizedString =
     TimerHeaderState.currentStateValue(
       currentMode,
-      currentTemperature,
-      currentTemperature,
+      temperature?.setpointHeat,
+      temperature?.setpointCool,
       thermometerValuesFormatter
     )
 
   val startEnabled: Boolean =
     isChannelOnline && getTimerDuration(Date())?.let { it > 0 } ?: false
 
-  val thumbIcon: Int
+  val timerLeftTime: Int?
     get() {
-      return if (channelFunction == SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER ||
-        subfunction == ThermostatSubfunction.HEAT
-      ) {
-        R.drawable.ic_heat
-      } else {
-        R.drawable.ic_cool
-      }
-    }
+      val (timerEndTime) = guardLet(timerEndDate) { return null }
+      val currentDate = Date()
 
-  val thumbColor: Int
-    get() {
-      return if (channelFunction == SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER ||
-        subfunction == ThermostatSubfunction.HEAT
-      ) {
-        R.color.red
+      return if (currentDate.after(timerEndTime)) {
+        null
       } else {
-        R.color.blue
+        timerEndTime.time.minus(currentDate.time).div(1000).toInt()
       }
     }
 
@@ -503,6 +554,70 @@ data class TimerDetailViewState(
     } else {
       timerValue
     }
+  }
+}
+
+sealed interface SetpointTemperature {
+  val setpointHeat: Float?
+  val setpointCool: Float?
+
+  @get:ColorRes
+  val thumbColorRes: Int
+
+  @get:ColorRes
+  val thumbIconRes: Int
+
+  @get:ColorRes
+  val activeSetpointColorRes: Int
+
+  fun toString(workingMode: WorkingMode?, valueFormatter: ValueFormatter): String
+
+  data class Heat(val value: Float) : SetpointTemperature {
+    override val setpointHeat: Float = value
+    override val setpointCool: Float? = null
+    override val thumbColorRes: Int = R.color.red
+    override val thumbIconRes: Int = R.drawable.ic_heat
+    override val activeSetpointColorRes: Int = thumbColorRes
+
+    override fun toString(workingMode: WorkingMode?, valueFormatter: ValueFormatter) = valueFormatter.format(value)
+  }
+
+  data class Cool(val value: Float) : SetpointTemperature {
+    override val setpointHeat: Float? = null
+    override val setpointCool: Float = value
+    override val thumbColorRes: Int = R.color.secondary
+    override val thumbIconRes: Int = R.drawable.ic_cool
+    override val activeSetpointColorRes: Int = thumbColorRes
+
+    override fun toString(workingMode: WorkingMode?, valueFormatter: ValueFormatter) = valueFormatter.format(value)
+  }
+
+  data class HeatAndCool(val heat: Float, val cool: Float, val lastTouchOnHeat: Boolean) : SetpointTemperature {
+    override val setpointHeat: Float = heat
+    override val setpointCool: Float = cool
+    override val thumbColorRes: Int = R.color.red
+    override val thumbIconRes: Int = R.drawable.ic_heat
+
+    @DrawableRes
+    val secondThumbIconRes: Int = R.drawable.ic_cool
+
+    @ColorRes
+    val secondThumbColorRes: Int = R.color.secondary
+
+    override val activeSetpointColorRes: Int = if (lastTouchOnHeat) thumbColorRes else secondThumbColorRes
+
+    override fun toString(workingMode: WorkingMode?, valueFormatter: ValueFormatter): String =
+      when (workingMode) {
+        WorkingMode.AUTO -> {
+          val heat = valueFormatter.format(heat)
+          val cool = valueFormatter.format(cool)
+
+          "$heat - $cool"
+        }
+        WorkingMode.HEATING -> valueFormatter.format(heat)
+        WorkingMode.COOLING -> valueFormatter.format(cool)
+        null -> ""
+      }
   }
 }
 

@@ -124,6 +124,7 @@ class GetChannelDefaultCaptionUseCase {
       SuplaFunction.GENERAL_PURPOSE_MEASUREMENT -> localizedString(CHANNEL_CAPTION_GENERAL_PURPOSE_MEASUREMENT)
       SuplaFunction.GENERAL_PURPOSE_METER -> localizedString(CHANNEL_CAPTION_GENERAL_PURPOSE_METER)
       SuplaFunction.HVAC_THERMOSTAT,
+      SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
       SuplaFunction.HVAC_DOMESTIC_HOT_WATER -> localizedString(CHANNEL_CAPTION_THERMOSTAT)
       SuplaFunction.ELECTRICITY_METER,
       SuplaFunction.IC_ELECTRICITY_METER -> localizedString(CHANNEL_CAPTION_ELECTRICITY_METER)

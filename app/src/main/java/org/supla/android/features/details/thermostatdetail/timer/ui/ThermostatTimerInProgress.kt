@@ -52,10 +52,18 @@ import org.supla.android.features.details.thermostatdetail.ui.TimerHeader
 import org.supla.android.ui.views.TimerProgressView
 import org.supla.android.ui.views.buttons.TextButton
 import org.supla.android.ui.views.buttons.supla.SuplaButton
+import org.supla.core.shared.infrastructure.LocalizedString
 import kotlin.time.Duration.Companion.milliseconds
 
+interface ThermostatTimerInProgressScope {
+  fun editTimer()
+  fun formatLeftTime(leftTime: Int?): LocalizedString
+  fun cancelTimerStartManual()
+  fun cancelTimerStartProgram()
+}
+
 @Composable
-fun ThermostatTimerInProgress(state: TimerDetailViewState, viewProxy: TimerDetailViewProxy) {
+fun ThermostatTimerInProgressScope.InProgressView(state: TimerDetailViewState) {
   Box(
     modifier = Modifier
       .fillMaxWidth()
@@ -72,20 +80,20 @@ fun ThermostatTimerInProgress(state: TimerDetailViewState, viewProxy: TimerDetai
       modifier = Modifier.align(Alignment.Center),
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
-      TimerProgress(state, viewProxy)
-      EditTimeButton { viewProxy.editTimer() }
+      TimerProgress(state)
+      EditTimeButton { editTimer() }
     }
-    BottomButtons(viewProxy, modifier = Modifier.align(Alignment.BottomCenter))
+    BottomButtons(Modifier.align(Alignment.BottomCenter))
   }
 }
 
 @Composable
-private fun TimerProgress(state: TimerDetailViewState, viewProxy: TimerDetailViewProxy) {
+private fun ThermostatTimerInProgressScope.TimerProgress(state: TimerDetailViewState) {
   var leftTime by remember { mutableStateOf<Int?>(0) }
 
   LaunchedEffect(state.timerEndDate) {
     do {
-      leftTime = viewProxy.timerLeftTime
+      leftTime = state.timerLeftTime
       delay(100.milliseconds)
     } while (leftTime != null)
   }
@@ -93,7 +101,7 @@ private fun TimerProgress(state: TimerDetailViewState, viewProxy: TimerDetailVie
   Box {
     TimerProgressView(progress = 0f, indeterminate = true)
     Text(
-      text = viewProxy.formatLeftTime(leftTime)(LocalContext.current),
+      text = formatLeftTime(leftTime)(LocalContext.current),
       style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
       textAlign = TextAlign.Center,
       modifier = Modifier.align(Alignment.Center)
@@ -119,7 +127,7 @@ private fun EditTimeButton(onClick: () -> Unit) =
   }
 
 @Composable
-private fun BottomButtons(viewProxy: TimerDetailViewProxy, modifier: Modifier = Modifier) {
+private fun ThermostatTimerInProgressScope.BottomButtons(modifier: Modifier = Modifier) {
   Column(
     modifier = modifier.padding(start = Distance.default, end = Distance.default, bottom = Distance.default),
     horizontalAlignment = Alignment.CenterHorizontally,
@@ -134,12 +142,12 @@ private fun BottomButtons(viewProxy: TimerDetailViewProxy, modifier: Modifier = 
     ) {
       SuplaButton(
         text = stringResource(id = R.string.thermostat_detail_mode_manual),
-        onClick = { viewProxy.cancelTimerStartManual() },
+        onClick = { cancelTimerStartManual() },
         modifier = Modifier.weight(0.5f)
       )
       SuplaButton(
         text = stringResource(id = R.string.thermostat_detail_mode_weekly_schedule),
-        onClick = { viewProxy.cancelTimerStartProgram() },
+        onClick = { cancelTimerStartProgram() },
         modifier = Modifier.weight(0.5f)
       )
     }

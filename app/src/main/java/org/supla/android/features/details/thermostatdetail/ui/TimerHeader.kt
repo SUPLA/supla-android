@@ -83,6 +83,11 @@ interface TimerHeaderState {
         SuplaHvacMode.OFF -> LocalizedString.Constant("OFF")
         SuplaHvacMode.HEAT -> LocalizedString.Constant(thermometerValuesFormatter.format(heatSetpoint, ValueFormat.WithoutUnit))
         SuplaHvacMode.COOL -> LocalizedString.Constant(thermometerValuesFormatter.format(coolSetpoint, ValueFormat.WithoutUnit))
+        SuplaHvacMode.HEAT_COOL -> {
+          val min = thermometerValuesFormatter.format(heatSetpoint, ValueFormat.WithoutUnit)
+          val max = thermometerValuesFormatter.format(coolSetpoint, ValueFormat.WithoutUnit)
+          LocalizedString.Constant("$min - $max")
+        }
         else -> LocalizedString.Empty
       }
   }

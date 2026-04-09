@@ -833,5 +833,6 @@
   <string name="scene_inactive">La scena è inattiva</string>
   <string name="nfc_detail_action_added">Aggiunto all’app</string>
   <string name="general_search">Cerca</string>
-  <string name="toolbar_search_hint">Inserisci almeno 2 caratteri...</string>
+  <string name="toolbar_search_hint">Inserisci almeno 2 caratteri…</string>
+  <string name="details_timer_select_program">Seleziona un programma</string>
 </resources>

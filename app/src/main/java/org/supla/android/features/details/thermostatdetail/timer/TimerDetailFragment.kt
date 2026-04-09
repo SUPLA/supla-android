@@ -20,32 +20,30 @@ package org.supla.android.features.details.thermostatdetail.timer
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Composable
 import androidx.fragment.app.viewModels
-import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
-import org.supla.android.core.ui.BaseFragment
+import org.supla.android.core.ui.BaseComposeFragment
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.databinding.FragmentComposeBinding
-import org.supla.android.features.details.thermostatdetail.timer.ui.ThermostatTimerDetail
+import org.supla.android.features.details.thermostatdetail.timer.ui.View
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 
 @AndroidEntryPoint
-class TimerDetailFragment : BaseFragment<TimerDetailViewState, TimerDetailViewEvent>(R.layout.fragment_compose) {
+class TimerDetailFragment : BaseComposeFragment<TimerDetailViewState, TimerDetailViewEvent>() {
 
   override val viewModel: TimerDetailViewModel by viewModels()
-  private val binding by viewBinding(FragmentComposeBinding::bind)
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-
-    binding.composeContent.setContent {
-      SuplaTheme {
-        ThermostatTimerDetail(viewModel)
-      }
-    }
-
     viewModel.observeData(item.remoteId)
+  }
+
+  @Composable
+  override fun ComposableContent(viewState: TimerDetailViewState) {
+    SuplaTheme {
+      viewModel.View(viewState)
+    }
   }
 
   override fun onResume() {
@@ -54,9 +52,6 @@ class TimerDetailFragment : BaseFragment<TimerDetailViewState, TimerDetailViewEv
   }
 
   override fun handleEvents(event: TimerDetailViewEvent) {
-  }
-
-  override fun handleViewState(state: TimerDetailViewState) {
   }
 
   override fun onSuplaMessage(message: SuplaClientMessage) {
@@ -75,6 +70,24 @@ enum class DeviceMode(val position: Int, @param:StringRes val stringRes: Int) {
   companion object {
     fun from(idx: Int): DeviceMode {
       entries.forEachIndexed { index, deviceMode ->
+        if (idx == index) {
+          return deviceMode
+        }
+      }
+
+      throw IllegalArgumentException("Device Mode for idx `$idx` not found")
+    }
+  }
+}
+
+enum class WorkingMode(val position: Int, @param:StringRes val stringRes: Int) {
+  AUTO(0, R.string.auto),
+  HEATING(1, R.string.hvac_mode_heating),
+  COOLING(2, R.string.hvac_mode_cooling);
+
+  companion object {
+    fun from(idx: Int): WorkingMode {
+      WorkingMode.entries.forEachIndexed { index, deviceMode ->
         if (idx == index) {
           return deviceMode
         }

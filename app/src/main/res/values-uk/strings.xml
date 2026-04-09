@@ -800,5 +800,6 @@
   <string name="scene_inactive">Сцена неактивна</string>
   <string name="nfc_detail_action_added">Додано до застосунку</string>
   <string name="general_search">Пошук</string>
-  <string name="toolbar_search_hint">Введіть щонайменше 2 символи...</string>
+  <string name="toolbar_search_hint">Введіть щонайменше 2 символи…</string>
+  <string name="details_timer_select_program">Виберіть програму</string>
 </resources>

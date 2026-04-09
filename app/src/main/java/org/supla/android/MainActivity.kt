@@ -185,8 +185,6 @@ class MainActivity :
     super.onCreate(savedInstanceState)
     setupOrientationLock(applicationPreferences)
 
-    enableEdgeToEdge()
-
     handleSplashScreen()
     legacySetup()
     navigationSetup()
@@ -377,9 +375,11 @@ class MainActivity :
   }
 
   private fun edgeToEdgeSetup() {
+    enableEdgeToEdge()
+
     ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.coordinator)) { view, insets ->
       val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-      view.setPadding(0, 0, 0, bars.bottom)
+      view.setPadding(bars.left, 0, bars.right, bars.bottom)
       val appBarHeight = resources.getDimension(R.dimen.top_bar_height).roundToInt()
       menuLayout.layoutParams = (menuLayout.layoutParams as CoordinatorLayout.LayoutParams)
         .apply { topMargin = bars.top + appBarHeight }

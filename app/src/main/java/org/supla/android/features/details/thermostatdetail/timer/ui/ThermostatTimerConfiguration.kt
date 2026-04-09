@@ -26,7 +26,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,6 +37,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RangeSlider
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
@@ -57,8 +57,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import org.supla.android.R
 import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
@@ -67,7 +65,9 @@ import org.supla.android.core.ui.theme.gray
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.model.temperature.TemperatureCorrection
 import org.supla.android.features.details.thermostatdetail.timer.DeviceMode
+import org.supla.android.features.details.thermostatdetail.timer.SetpointTemperature
 import org.supla.android.features.details.thermostatdetail.timer.TimerDetailViewState
+import org.supla.android.features.details.thermostatdetail.timer.WorkingMode
 import org.supla.android.ui.views.LoadingScrim
 import org.supla.android.ui.views.SegmentedComponent
 import org.supla.android.ui.views.Separator
@@ -81,8 +81,24 @@ import org.supla.android.ui.views.slider.ThermostatThumb
 import org.supla.android.ui.views.thermostat.TemperatureControlButton
 import java.util.Date
 
+interface ThermostatTimerConfigurationScope {
+  fun toggleDeviceMode(deviceMode: DeviceMode)
+  fun toggleWorkingMode(workingMode: WorkingMode)
+  fun onTemperatureChange(step: TemperatureCorrection)
+  fun onTemperatureChange(temperature: Float)
+  fun onTemperatureChange(range: ClosedFloatingPointRange<Float>)
+  fun toggleSelectorMode()
+  fun onDateChanged(selectedDateMillis: Long?)
+  fun onTimerDaysChange(days: Int)
+  fun onTimerHoursChange(hours: Int)
+  fun onTimerMinutesChange(minutes: Int)
+  fun onTimeClicked()
+  fun editTimerCancel()
+  fun onStartTimer()
+}
+
 @Composable
-fun ThermostatTimerConfiguration(state: TimerDetailViewState, viewProxy: TimerDetailViewProxy) {
+fun ThermostatTimerConfigurationScope.ConfigurationView(state: TimerDetailViewState) {
   Box(
     modifier = Modifier
       .fillMaxWidth()
@@ -100,26 +116,35 @@ fun ThermostatTimerConfiguration(state: TimerDetailViewState, viewProxy: TimerDe
         items = DeviceMode.entries.map { stringResource(id = it.stringRes) },
         activeItem = state.selectedMode.position,
         modifier = Modifier.padding(top = Distance.tiny),
-        onClick = { viewProxy.toggleDeviceMode(DeviceMode.from(it)) }
+        onClick = { toggleDeviceMode(DeviceMode.from(it)) }
       )
 
-      if (state.selectedMode != DeviceMode.OFF) {
-        TemperatureSelector(state, viewProxy)
+      state.workingMode?.let { mode ->
+        HeaderText(text = stringResource(id = R.string.details_timer_select_program), modifier = Modifier.padding(top = Distance.small))
+        SegmentedComponent(
+          items = WorkingMode.entries.map { stringResource(id = it.stringRes) },
+          activeItem = mode.position,
+          modifier = Modifier.padding(top = Distance.tiny),
+          onClick = { toggleWorkingMode(WorkingMode.from(it)) }
+        )
       }
 
-      TimeSelectionHeader(state) { viewProxy.toggleSelectorMode() }
+      if (state.selectedMode != DeviceMode.OFF) {
+        TemperatureSelector(state)
+      }
 
-      TimerSelector(state, viewProxy)
+      TimeSelectionHeader(state) { toggleSelectorMode() }
+
+      TimerSelector(state)
 
       InfoText(state)
     }
 
     if (state.isTimerOn) {
-      BottomSummaryEdit(viewProxy = viewProxy, modifier = Modifier.align(Alignment.BottomCenter))
+      BottomSummaryEdit(Modifier.align(Alignment.BottomCenter))
     } else {
       BottomSummaryNotRunning(
         state = state,
-        viewProxy = viewProxy,
         modifier = Modifier.align(Alignment.BottomCenter)
       )
     }
@@ -140,7 +165,7 @@ private fun HeaderText(text: String, modifier: Modifier = Modifier) =
   )
 
 @Composable
-private fun TemperatureSelector(state: TimerDetailViewState, viewProxy: TimerDetailViewProxy) {
+private fun ThermostatTimerConfigurationScope.TemperatureSelector(state: TimerDetailViewState) {
   Row(
     modifier = Modifier.padding(top = Distance.default),
     verticalAlignment = Alignment.CenterVertically
@@ -162,48 +187,106 @@ private fun TemperatureSelector(state: TimerDetailViewState, viewProxy: TimerDet
   ) {
     TemperatureControlButton(
       icon = R.drawable.ic_minus,
-      color = colorResource(id = state.thumbColor),
+      color = colorResource(id = state.temperature?.thumbColorRes ?: R.color.primary),
       size = dimensionResource(id = R.dimen.button_default_size),
-      onClick = { viewProxy.onTemperatureChange(TemperatureCorrection.DOWN) }
+      onClick = { onTemperatureChange(TemperatureCorrection.DOWN) }
     )
-    TemperatureSlider(state, viewProxy)
+    TemperatureSlider(state, Modifier.weight(1f))
     TemperatureControlButton(
       icon = R.drawable.ic_plus,
-      color = colorResource(id = state.thumbColor),
+      color = colorResource(id = state.temperature?.thumbColorRes ?: R.color.primary),
       size = dimensionResource(id = R.dimen.button_default_size),
-      onClick = { viewProxy.onTemperatureChange(TemperatureCorrection.UP) }
+      onClick = { onTemperatureChange(TemperatureCorrection.UP) }
     )
   }
 }
 
 @Composable
-private fun RowScope.TemperatureSlider(state: TimerDetailViewState, viewProxy: TimerDetailViewProxy) {
+private fun ThermostatTimerConfigurationScope.TemperatureSlider(state: TimerDetailViewState, modifier: Modifier = Modifier) {
+  when (val temperature = state.temperature) {
+    is SetpointTemperature.Heat -> TemperatureSlider(temperature.value, temperature, state, modifier)
+    is SetpointTemperature.Cool -> TemperatureSlider(temperature.value, temperature, state, modifier)
+    is SetpointTemperature.HeatAndCool -> {
+      when (state.workingMode) {
+        WorkingMode.AUTO -> RangeSlider(temperature, state, modifier)
+        WorkingMode.HEATING -> TemperatureSlider(temperature.setpointHeat, temperature, state, modifier)
+        WorkingMode.COOLING -> TemperatureSlider(temperature.setpointCool, temperature, state, modifier)
+        null -> {}
+      }
+    }
+    else -> {}
+  }
+}
+
+@Composable
+private fun ThermostatTimerConfigurationScope.TemperatureSlider(
+  value: Float,
+  temperature: SetpointTemperature,
+  state: TimerDetailViewState,
+  modifier: Modifier = Modifier
+) {
   val lightGrayColor = colorResource(id = R.color.gray_light)
+
   val colors = SliderDefaults.colors(
     activeTrackColor = lightGrayColor,
+    activeTickColor = lightGrayColor,
     disabledActiveTrackColor = lightGrayColor,
     disabledInactiveTrackColor = lightGrayColor,
     inactiveTrackColor = lightGrayColor,
-    activeTickColor = lightGrayColor,
     disabledActiveTickColor = lightGrayColor,
     disabledInactiveTickColor = lightGrayColor,
     inactiveTickColor = lightGrayColor
   )
+
   val interactionSource = remember { MutableInteractionSource() }
   Slider(
-    value = state.currentTemperature ?: 0f,
+    value = value,
     valueRange = state.temperaturesRange,
     steps = state.temperatureSteps,
-    onValueChange = { viewProxy.onTemperatureChange(it) },
+    onValueChange = { onTemperatureChange(it) },
     interactionSource = interactionSource,
-    thumb = {
+    thumb = { ThermostatThumb(interactionSource, temperature) },
+    modifier = modifier,
+    colors = colors
+  )
+}
+
+@Composable
+private fun ThermostatTimerConfigurationScope.RangeSlider(
+  temperature: SetpointTemperature.HeatAndCool,
+  state: TimerDetailViewState,
+  modifier: Modifier = Modifier
+) {
+  val lightGrayColor = colorResource(id = R.color.gray_light)
+  val colors = SliderDefaults.colors(
+    activeTrackColor = MaterialTheme.colorScheme.primary,
+    activeTickColor = MaterialTheme.colorScheme.primary,
+    disabledActiveTrackColor = lightGrayColor,
+    disabledInactiveTrackColor = lightGrayColor,
+    inactiveTrackColor = lightGrayColor,
+    disabledActiveTickColor = lightGrayColor,
+    disabledInactiveTickColor = lightGrayColor,
+    inactiveTickColor = lightGrayColor
+  )
+
+  val startInteractionSource = remember { MutableInteractionSource() }
+  val endInteractionSource = remember { MutableInteractionSource() }
+  RangeSlider(
+    value = temperature.heat..temperature.cool,
+    onValueChange = { onTemperatureChange(it) },
+    valueRange = state.temperaturesRange,
+    steps = state.temperatureSteps,
+    startInteractionSource = startInteractionSource,
+    startThumb = { ThermostatThumb(startInteractionSource, temperature) },
+    endInteractionSource = endInteractionSource,
+    endThumb = {
       ThermostatThumb(
-        interactionSource = interactionSource,
-        iconRes = state.thumbIcon,
-        color = colorResource(id = state.thumbColor)
+        interactionSource = startInteractionSource,
+        iconRes = temperature.secondThumbIconRes,
+        color = colorResource(temperature.secondThumbColorRes)
       )
     },
-    modifier = Modifier.weight(1f),
+    modifier = modifier,
     colors = colors
   )
 }
@@ -236,11 +319,11 @@ private fun EditModeButton(state: TimerDetailViewState, onClick: () -> Unit) =
   }
 
 @Composable
-private fun TimerSelector(state: TimerDetailViewState, viewProxy: TimerDetailViewProxy) {
+private fun ThermostatTimerConfigurationScope.TimerSelector(state: TimerDetailViewState) {
   if (state.showCalendar) {
-    TimerSelectorCalendar(state, viewProxy)
+    TimerSelectorCalendar(state)
   } else {
-    TimerSelectorCounter(state, viewProxy)
+    TimerSelectorCounter(state)
   }
 }
 
@@ -257,7 +340,7 @@ private fun InfoText(state: TimerDetailViewState) =
   )
 
 @Composable
-fun TimerSelectorCalendar(state: TimerDetailViewState, viewProxy: TimerDetailViewProxy) {
+fun ThermostatTimerConfigurationScope.TimerSelectorCalendar(state: TimerDetailViewState) {
   @Suppress("DEPRECATION")
   val pickerState = rememberDatePickerState(
     yearRange = state.yearsRange,
@@ -279,7 +362,7 @@ fun TimerSelectorCalendar(state: TimerDetailViewState, viewProxy: TimerDetailVie
         do {
           val event: PointerEvent = awaitPointerEvent()
         } while (event.changes.any { it.pressed })
-        viewProxy.onDateChanged(pickerState.selectedDateMillis)
+        onDateChanged(pickerState.selectedDateMillis)
       }
     }
   )
@@ -298,7 +381,7 @@ fun TimerSelectorCalendar(state: TimerDetailViewState, viewProxy: TimerDetailVie
       .fillMaxWidth()
       .padding(top = 4.dp),
     readOnly = true,
-    onClicked = { viewProxy.onTimeClicked() }
+    onClicked = { onTimeClicked() }
   )
 }
 
@@ -312,7 +395,7 @@ private fun CaptionText(text: String, modifier: Modifier = Modifier) =
   )
 
 @Composable
-fun TimerSelectorCounter(viewState: TimerDetailViewState, viewProxy: TimerDetailViewProxy) {
+fun ThermostatTimerConfigurationScope.TimerSelectorCounter(viewState: TimerDetailViewState) {
   Box(
     modifier = Modifier.padding(top = Distance.small)
   ) {
@@ -335,7 +418,7 @@ fun TimerSelectorCounter(viewState: TimerDetailViewState, viewProxy: TimerDetail
         formatter = { context, i ->
           context.resources.getQuantityString(R.plurals.day_pattern, i, i)
         },
-        onValueChanged = { viewProxy.onTimerDaysChange(it) }
+        onValueChanged = { onTimerDaysChange(it) }
       )
       NumberPicker(
         range = IntRange(0, 23),
@@ -343,7 +426,7 @@ fun TimerSelectorCounter(viewState: TimerDetailViewState, viewProxy: TimerDetail
         formatter = { context, i ->
           context.resources.getQuantityString(R.plurals.hour_pattern, i, i)
         },
-        onValueChanged = { viewProxy.onTimerHoursChange(it) }
+        onValueChanged = { onTimerHoursChange(it) }
       )
       NumberPicker(
         range = IntRange(0, 59),
@@ -351,7 +434,7 @@ fun TimerSelectorCounter(viewState: TimerDetailViewState, viewProxy: TimerDetail
         formatter = { context, i ->
           context.resources.getQuantityString(R.plurals.minute_pattern, i, i)
         },
-        onValueChanged = { viewProxy.onTimerMinutesChange(it) }
+        onValueChanged = { onTimerMinutesChange(it) }
       )
       Spacer(modifier = Modifier.weight(1f))
     }
@@ -359,9 +442,8 @@ fun TimerSelectorCounter(viewState: TimerDetailViewState, viewProxy: TimerDetail
 }
 
 @Composable
-private fun BottomSummaryNotRunning(
+private fun ThermostatTimerConfigurationScope.BottomSummaryNotRunning(
   state: TimerDetailViewState,
-  viewProxy: TimerDetailViewProxy,
   modifier: Modifier = Modifier
 ) =
   Column(
@@ -370,7 +452,7 @@ private fun BottomSummaryNotRunning(
     Separator()
     Button(
       text = stringResource(id = R.string.details_timer_start),
-      onClick = { viewProxy.onStartTimer() },
+      onClick = { onStartTimer() },
       enabled = state.startEnabled,
       modifier = Modifier
         .fillMaxWidth()
@@ -379,8 +461,7 @@ private fun BottomSummaryNotRunning(
   }
 
 @Composable
-private fun BottomSummaryEdit(
-  viewProxy: TimerDetailViewProxy,
+private fun ThermostatTimerConfigurationScope.BottomSummaryEdit(
   modifier: Modifier = Modifier
 ) =
   Column(
@@ -392,23 +473,38 @@ private fun BottomSummaryEdit(
       modifier = Modifier
         .fillMaxWidth()
         .padding(start = Distance.default, top = Distance.small, end = Distance.default)
-    ) { viewProxy.editTimerCancel() }
+    ) { editTimerCancel() }
     Button(
       text = stringResource(id = R.string.save),
-      onClick = { viewProxy.onStartTimer() },
+      onClick = { onStartTimer() },
       modifier = Modifier
         .fillMaxWidth()
         .padding(start = Distance.default, top = Distance.small, end = Distance.default, bottom = Distance.small)
     )
   }
 
+private val previewScope = object : ThermostatTimerConfigurationScope {
+  override fun toggleDeviceMode(deviceMode: DeviceMode) {}
+  override fun toggleWorkingMode(workingMode: WorkingMode) {}
+  override fun onTemperatureChange(step: TemperatureCorrection) {}
+  override fun onTemperatureChange(temperature: Float) {}
+  override fun onTemperatureChange(range: ClosedFloatingPointRange<Float>) {}
+  override fun toggleSelectorMode() {}
+  override fun onDateChanged(selectedDateMillis: Long?) {}
+  override fun onTimerDaysChange(days: Int) {}
+  override fun onTimerHoursChange(hours: Int) {}
+  override fun onTimerMinutesChange(minutes: Int) {}
+  override fun onTimeClicked() {}
+  override fun editTimerCancel() {}
+  override fun onStartTimer() {}
+}
+
 @Preview
 @Composable
 private fun Preview() {
   SuplaTheme {
-    ThermostatTimerConfiguration(
+    previewScope.ConfigurationView(
       state = TimerDetailViewState(),
-      viewProxy = PreviewProxy2(TimerDetailViewState())
     )
   }
 }
@@ -417,17 +513,29 @@ private fun Preview() {
 @Composable
 private fun Preview_Manual() {
   SuplaTheme {
-    ThermostatTimerConfiguration(
+    previewScope.ConfigurationView(
       state = TimerDetailViewState(
-        selectedMode = DeviceMode.MANUAL
-      ),
-      viewProxy = PreviewProxy2(TimerDetailViewState())
+        selectedMode = DeviceMode.MANUAL,
+        temperature = SetpointTemperature.Cool(21f),
+        minTemperature = 10f,
+        maxTemperature = 40f
+      )
     )
   }
 }
 
-private class PreviewProxy2(val state: TimerDetailViewState) : TimerDetailViewProxy {
-  override val timerLeftTime: Int = 0
-  override fun getViewState(): StateFlow<TimerDetailViewState> =
-    MutableStateFlow(state)
+@Preview
+@Composable
+private fun Preview_Auto() {
+  SuplaTheme {
+    previewScope.ConfigurationView(
+      state = TimerDetailViewState(
+        selectedMode = DeviceMode.MANUAL,
+        workingMode = WorkingMode.AUTO,
+        temperature = SetpointTemperature.HeatAndCool(18f, 35f, false),
+        minTemperature = 10f,
+        maxTemperature = 40f
+      )
+    )
+  }
 }

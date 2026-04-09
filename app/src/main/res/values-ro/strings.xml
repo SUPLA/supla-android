@@ -825,5 +825,6 @@
   <string name="scene_inactive">Scena este inactivă</string>
   <string name="nfc_detail_action_added">Adăugat în aplicație</string>
   <string name="general_search">Căutare</string>
-  <string name="toolbar_search_hint">Introduceți cel puțin 2 caractere...</string>
+  <string name="toolbar_search_hint">Introduceți cel puțin 2 caractere…</string>
+  <string name="details_timer_select_program">Selectați un program</string>
 </resources>

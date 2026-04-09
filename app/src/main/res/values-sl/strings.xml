@@ -824,5 +824,6 @@
   <string name="scene_inactive">Scena je neaktivna</string>
   <string name="nfc_detail_action_added">Dodano v aplikacijo</string>
   <string name="general_search">Iskanje</string>
-  <string name="toolbar_search_hint">Vnesite vsaj 2 znaka...</string>
+  <string name="toolbar_search_hint">Vnesite vsaj 2 znaka…</string>
+  <string name="details_timer_select_program">Izberite program</string>
 </resources>

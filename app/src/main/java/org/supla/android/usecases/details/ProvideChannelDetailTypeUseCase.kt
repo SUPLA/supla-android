@@ -40,7 +40,8 @@ class ProvideChannelDetailTypeUseCase @Inject constructor() : BaseDetailTypeProv
       SuplaFunction.STAIRCASE_TIMER,
       SuplaFunction.PUMP_SWITCH,
       SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH -> StandardDetailType(getSwitchDetailPages(channelWithChildren))
-      SuplaFunction.HVAC_THERMOSTAT -> ThermostatDetailType(getThermostatDetailPages(channelWithChildren))
+      SuplaFunction.HVAC_THERMOSTAT,
+      SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL -> ThermostatDetailType(getThermostatDetailPages(channelWithChildren))
       SuplaFunction.IC_ELECTRICITY_METER,
       SuplaFunction.IC_GAS_METER,
       SuplaFunction.IC_HEAT_METER,
