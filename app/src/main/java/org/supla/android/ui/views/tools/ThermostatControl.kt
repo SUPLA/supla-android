@@ -66,6 +66,7 @@ import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.core.ui.theme.progressPointShadow
 import org.supla.android.extensions.distanceTo
+import org.supla.android.extensions.isNull
 import org.supla.android.extensions.nonScaledSp
 import org.supla.android.extensions.toPx
 import java.lang.Float.min
@@ -179,17 +180,19 @@ fun ThermostatControl(
     lastMinSetpoint = minSetpoint
     lastMaxSetpoint = maxSetpoint
   }
-  val currentPointConfig = ControlPointConfig.build(currentValue, greenColor, pointShadowColor)
-  val minPointConfig = ControlPointConfig.build(minSetpoint, minPointColor, minPointShadowColor, minPointIcon) { lastMinSetpoint = it }
-  val maxPointConfig = ControlPointConfig.build(maxSetpoint, maxPointColor, maxPointShadowColor, maxPointIcon) { lastMaxSetpoint = it }
+  val currentPointConfig = ControlPointConfig.build(currentValue, greenColor, pointShadowColor, true)
+  val minPointConfig =
+    ControlPointConfig.build(minSetpoint, minPointColor, minPointShadowColor, maxSetpoint.isNull, minPointIcon) { lastMinSetpoint = it }
+  val maxPointConfig =
+    ControlPointConfig.build(maxSetpoint, maxPointColor, maxPointShadowColor, minSetpoint.isNull, maxPointIcon) { lastMaxSetpoint = it }
 
   Canvas(
     modifier = modifier
-      .let {
+      .let { modifier ->
         if (isDisabled) {
-          it
+          modifier
         } else {
-          it.pointerInteropFilter {
+          modifier.pointerInteropFilter {
             when (it.action) {
               MotionEvent.ACTION_DOWN -> {
                 initialTouchPoint = Offset(it.x, it.y)
@@ -269,7 +272,9 @@ fun ThermostatControl(
       center = center,
       initialPoint = initialTouchPoint,
       movingPoint = currentTouchPoint,
-      isOffline = isOffline
+      isOffline = isOffline,
+      lastMinSetpoint = lastMinSetpoint,
+      lastMaxSetpoint = lastMaxSetpoint
     )
   }
 }
@@ -360,10 +365,10 @@ private fun DrawScope.drawSetTemperatureCircle(
   // circle with shadow
   drawContext.canvas.nativeCanvas.drawCircle(center.x, center.y, radius, temperatureCirclePaint)
 
-  // white circle over shadow
+  // white circle overshadow
   drawCircle(color = surfaceColor, radius = radius, style = Fill, center = center)
 
-  // temperature text inside of the circle
+  // temperature text inside the circle
   drawText(text, textColor, topLeft = Offset(center.x - textSize.width.div(2f), center.y - textSize.height.div(2f)))
 }
 
@@ -376,12 +381,16 @@ private fun DrawScope.drawControlPoints(
   center: Offset,
   initialPoint: Offset?,
   movingPoint: Offset?,
-  isOffline: Boolean
+  isOffline: Boolean,
+  lastMinSetpoint: Float?,
+  lastMaxSetpoint: Float?
 ) {
   val radiusForPoints = outerRadius - controlCircleWidth.toPx().div(2)
   if (maxSetpointConfig != null && minSetpointConfig != null) {
-    val startAngle = START_ANGLE + SWEEP_ANGLE.times(minSetpointConfig.value)
-    val sweepAngle = SWEEP_ANGLE.times(maxSetpointConfig.value) - SWEEP_ANGLE.times(minSetpointConfig.value)
+    val minSetpoint = lastMinSetpoint ?: minSetpointConfig.value
+    val maxSetpoint = lastMaxSetpoint ?: maxSetpointConfig.value
+    val startAngle = START_ANGLE + SWEEP_ANGLE.times(minSetpoint)
+    val sweepAngle = SWEEP_ANGLE.times(maxSetpoint) - SWEEP_ANGLE.times(minSetpoint)
 
     drawArc(
       color = primaryColor,
@@ -426,8 +435,7 @@ private fun DrawScope.drawSetPoint(
 ) {
   val angle = START_ANGLE + SWEEP_ANGLE.times(config.value)
   val centerPoint = getPositionOnCircle(angle, radius, center).run {
-    val distance = initialPoint.distanceTo(center)
-    if (distance != null && abs(radius - distance) < setpointRadius.toPx()) {
+    if (config.canMove(initialPoint, this, center, radius)) {
       getNearestCirclePoint(movingPoint!!, center, radius, minAlpha, maxAlpha, config.positionObserver!!)
     } else {
       this
@@ -589,20 +597,34 @@ private data class ControlPointConfig(
   val value: Float,
   val pointColor: Color,
   val shadowColor: Color,
+  val single: Boolean,
   val icon: Painter?,
   val positionObserver: ((Float) -> Unit)?
 ) {
+
+  fun canMove(initialTouchPoint: Offset?, initialSetpointPosition: Offset, center: Offset, radius: Float): Boolean =
+    if (initialTouchPoint == null) {
+      false
+    } else if (single) {
+      val distance = initialTouchPoint.distanceTo(center)
+      distance != null && abs(radius - distance) < setpointRadius.toPx()
+    } else {
+      val distance = initialTouchPoint.distanceTo(initialSetpointPosition)
+      distance != null && abs(distance) < setpointRadius.toPx()
+    }
+
   companion object {
     fun build(
       value: Float?,
       pointColor: Color,
       shadowColor: Color,
+      single: Boolean,
       icon: Painter? = null,
       positionObserver: ((Float) -> Unit)? = null
     ): ControlPointConfig? = if (value == null) {
       null
     } else {
-      ControlPointConfig(value, pointColor, shadowColor, icon, positionObserver)
+      ControlPointConfig(value, pointColor, shadowColor, single, icon, positionObserver)
     }
   }
 }

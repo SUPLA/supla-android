@@ -335,8 +335,11 @@ class ProvideChannelDetailTypeUseCaseTest {
   }
 
   @Test
-  fun `should not provide detail for hvac thermostat auto`() {
-    testDetailType(SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL, null)
+  fun `should provide detail for hvac thermostat auto`() {
+    testDetailType(
+      SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
+      ThermostatDetailType(listOf(DetailPage.THERMOSTAT, DetailPage.SCHEDULE, DetailPage.THERMOSTAT_TIMER, DetailPage.THERMOSTAT_HISTORY))
+    )
   }
 
   @Test

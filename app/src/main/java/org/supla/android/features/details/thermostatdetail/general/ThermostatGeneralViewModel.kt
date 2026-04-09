@@ -152,8 +152,9 @@ class ThermostatGeneralViewModel @Inject constructor(
     currentState().viewModelState?.let { viewModelState ->
       val newMode = when (val mode = viewModelState.mode) {
         SuplaHvacMode.HEAT_COOL -> SuplaHvacMode.COOL
-        SuplaHvacMode.COOL -> SuplaHvacMode.HEAT
-        SuplaHvacMode.HEAT -> SuplaHvacMode.COOL
+        SuplaHvacMode.COOL -> SuplaHvacMode.HEAT_COOL
+        SuplaHvacMode.HEAT -> SuplaHvacMode.OFF
+        SuplaHvacMode.OFF -> SuplaHvacMode.HEAT
         else -> mode
       }
 
@@ -167,8 +168,9 @@ class ThermostatGeneralViewModel @Inject constructor(
     currentState().viewModelState?.let { viewModelState ->
       val newMode = when (val mode = viewModelState.mode) {
         SuplaHvacMode.HEAT_COOL -> SuplaHvacMode.HEAT
-        SuplaHvacMode.COOL -> SuplaHvacMode.HEAT
-        SuplaHvacMode.HEAT -> SuplaHvacMode.COOL
+        SuplaHvacMode.COOL -> SuplaHvacMode.OFF
+        SuplaHvacMode.HEAT -> SuplaHvacMode.HEAT_COOL
+        SuplaHvacMode.OFF -> SuplaHvacMode.COOL
         else -> mode
       }
 

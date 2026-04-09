@@ -808,5 +808,6 @@
   <string name="scene_inactive">La scène est inactive</string>
   <string name="nfc_detail_action_added">Ajouté à l’application</string>
   <string name="general_search">Rechercher</string>
-  <string name="toolbar_search_hint">Saisissez au moins 2 caractères...</string>
+  <string name="toolbar_search_hint">Saisissez au moins 2 caractères…</string>
+  <string name="details_timer_select_program">Sélectionnez un programme</string>
 </resources>

@@ -937,5 +937,6 @@
   <string name="nfc_tag_name">Tag \"%1$s\"</string>
   <string name="nfc_detail_action_added">Added to application</string>
   <string name="general_search">Search</string>
-  <string name="toolbar_search_hint">Type 2 characters for search...</string>
+  <string name="toolbar_search_hint">Type 2 characters for search…</string>
+  <string name="details_timer_select_program">Select program</string>
 </resources>

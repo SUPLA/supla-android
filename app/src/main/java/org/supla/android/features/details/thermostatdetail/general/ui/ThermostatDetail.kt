@@ -150,7 +150,16 @@ private fun ThermostatView(viewState: ThermostatGeneralViewState, viewProxy: The
     } else {
       Column {
         if (viewState.isOff.not() && viewState.isAutoFunction && !viewState.programmedModeActive) {
-          HeatingCoolingRow(viewState = viewState, viewProxy = viewProxy)
+          if (viewState.viewModelState?.timerEndDate != null) {
+            TimerHeader(
+              state = viewState,
+              modifier = Modifier
+                .fillMaxWidth()
+                .height(80.dp)
+            )
+          } else {
+            HeatingCoolingRow(viewState = viewState, viewProxy = viewProxy)
+          }
         } else if (viewState.sensorIssue != null) {
           SensorIssueView(sensorIssue = viewState.sensorIssue)
         } else if (viewState.isOffline.not() && viewState.viewModelState?.timerEndDate != null) {

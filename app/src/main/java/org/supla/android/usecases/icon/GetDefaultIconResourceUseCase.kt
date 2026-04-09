@@ -61,6 +61,7 @@ import org.supla.android.usecases.icon.producers.StaticIconResourceProducer
 import org.supla.android.usecases.icon.producers.TerraceAwningIconResourceProducer
 import org.supla.android.usecases.icon.producers.ThermometerIconResourceProducer
 import org.supla.android.usecases.icon.producers.ThermostatHomePlusIconResourceProducer
+import org.supla.android.usecases.icon.producers.ThermostatHvacHeatCoolIconResourceProducer
 import org.supla.android.usecases.icon.producers.ThermostatHvacIconResourceProducer
 import org.supla.android.usecases.icon.producers.ValveIconResourceProducer
 import org.supla.android.usecases.icon.producers.VerticalBlindsIconResourceProducer
@@ -86,6 +87,7 @@ class GetDefaultIconResourceUseCase @Inject constructor() {
     StaircaseTimerIconResourceProducer(),
     static(SuplaFunction.HVAC_DOMESTIC_HOT_WATER, R.drawable.fnc_thermostat_dhw),
     ThermostatHvacIconResourceProducer(),
+    ThermostatHvacHeatCoolIconResourceProducer,
     ThermometerIconResourceProducer(),
     static(SuplaFunction.HUMIDITY, R.drawable.fnc_humidity),
     HumidityAndTemperatureIconResourceProducer(),

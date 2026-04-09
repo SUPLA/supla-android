@@ -802,5 +802,6 @@
   <string name="scene_inactive">Scena neaktyvi</string>
   <string name="nfc_detail_action_added">Pridėta prie programėlės</string>
   <string name="general_search">Ieškoti</string>
-  <string name="toolbar_search_hint">Įveskite bent 2 simbolius...</string>
+  <string name="toolbar_search_hint">Įveskite bent 2 simbolius…</string>
+  <string name="details_timer_select_program">Pasirinkite programą</string>
 </resources>
