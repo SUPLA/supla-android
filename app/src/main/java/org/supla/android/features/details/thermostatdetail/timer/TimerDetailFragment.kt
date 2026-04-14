@@ -27,6 +27,9 @@ import org.supla.android.R
 import org.supla.android.core.ui.BaseComposeFragment
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.details.thermostatdetail.timer.ui.View
+import org.supla.android.ui.views.SegmentedComponentItem
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 
 @AndroidEntryPoint
@@ -63,37 +66,18 @@ class TimerDetailFragment : BaseComposeFragment<TimerDetailViewState, TimerDetai
   }
 }
 
-enum class DeviceMode(val position: Int, @param:StringRes val stringRes: Int) {
-  OFF(0, R.string.turn_off),
-  MANUAL(1, R.string.details_timer_manual_mode);
+enum class DeviceMode(@param:StringRes val stringRes: Int) : SegmentedComponentItem {
+  OFF(R.string.turn_off),
+  MANUAL(R.string.details_timer_manual_mode),
+
+  AUTO(R.string.auto),
+  HEATING(R.string.hvac_mode_heating),
+  COOLING(R.string.hvac_mode_cooling);
+
+  override val label: LocalizedString = localizedString(stringRes)
 
   companion object {
-    fun from(idx: Int): DeviceMode {
-      entries.forEachIndexed { index, deviceMode ->
-        if (idx == index) {
-          return deviceMode
-        }
-      }
-
-      throw IllegalArgumentException("Device Mode for idx `$idx` not found")
-    }
-  }
-}
-
-enum class WorkingMode(val position: Int, @param:StringRes val stringRes: Int) {
-  AUTO(0, R.string.auto),
-  HEATING(1, R.string.hvac_mode_heating),
-  COOLING(2, R.string.hvac_mode_cooling);
-
-  companion object {
-    fun from(idx: Int): WorkingMode {
-      WorkingMode.entries.forEachIndexed { index, deviceMode ->
-        if (idx == index) {
-          return deviceMode
-        }
-      }
-
-      throw IllegalArgumentException("Device Mode for idx `$idx` not found")
-    }
+    val defaultModes = listOf(OFF, MANUAL)
+    val heatCoolModes = listOf(OFF, AUTO, HEATING, COOLING)
   }
 }

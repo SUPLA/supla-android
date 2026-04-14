@@ -129,9 +129,9 @@ fun WidgetConfigurationScope.View(
             modifier = Modifier.padding(horizontal = 12.dp),
           )
           SegmentedComponent(
-            items = types.map { stringResource(it.widgetNameRes).ucFirst() },
-            activeItem = viewState.subjectType.value - 1,
-            onClick = { onSubjectTypeSelected(SubjectType.from(it + 1)) }
+            items = types,
+            activeItem = viewState.subjectType,
+            onClick = { onSubjectTypeSelected(it) }
           )
         }
       }

@@ -19,9 +19,14 @@ package org.supla.android.core.shared
 
 import android.content.Context
 import android.text.format.DateFormat
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import org.supla.android.R
 import org.supla.core.shared.infrastructure.LocalizedString
 import java.util.Date
+
+@Composable
+operator fun LocalizedString.invoke(): String = invoke(LocalContext.current)
 
 operator fun LocalizedString.invoke(context: Context): String {
   return when (this) {

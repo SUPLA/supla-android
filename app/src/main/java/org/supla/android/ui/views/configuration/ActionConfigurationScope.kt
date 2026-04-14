@@ -66,9 +66,9 @@ fun ActionConfigurationScope.Profiles(profiles: SingleOptionalSelectionList<Prof
 @Composable
 fun ActionConfigurationScope.SubjectTypes(active: SubjectType, enabled: Boolean = true) =
   SegmentedComponent(
-    items = SubjectType.entries.map { stringResource(it.nameRes).ucFirst() },
-    activeItem = active.value - 1,
-    onClick = { onSubjectTypeSelected(SubjectType.from(it + 1)) },
+    items = SubjectType.entries,
+    activeItem = active,
+    onClick = { onSubjectTypeSelected(it) },
     enabled = enabled
   )
 

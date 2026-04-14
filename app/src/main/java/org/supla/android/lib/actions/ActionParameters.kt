@@ -19,6 +19,7 @@ package org.supla.android.lib.actions
 
 import org.supla.android.R
 import org.supla.android.tools.UsedFromNativeCode
+import org.supla.android.ui.views.SegmentedComponentItem
 import org.supla.android.ui.views.spinner.SpinnerItem
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
@@ -32,13 +33,15 @@ object SubjectTypeValue {
   const val SCENE = 3
 }
 
-enum class SubjectType(val value: Int, val nameRes: Int, val widgetNameRes: Int) {
+enum class SubjectType(val value: Int, val nameRes: Int, val widgetNameRes: Int) : SegmentedComponentItem {
   CHANNEL(SubjectTypeValue.CHANNEL, R.string.widget_channel, R.string.widget_configure_type_channel_label),
   GROUP(SubjectTypeValue.GROUP, R.string.widget_group, R.string.widget_configure_type_group_label),
   SCENE(SubjectTypeValue.SCENE, R.string.widget_scene, R.string.widget_configure_type_scene_label);
 
   val isScene: Boolean
     get() = this == SCENE
+
+  override val label: LocalizedString = localizedString(widgetNameRes)
 
   companion object {
     fun from(value: Int): SubjectType {

@@ -25,6 +25,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import org.supla.android.R
 import org.supla.android.databinding.ViewTimerConfigurationBinding
 import org.supla.android.extensions.visibleIf
+import org.supla.android.ui.views.SegmentedComponentItem
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 
 private const val TIME_FORMAT = "%02d:%02d:%02d"
 
@@ -76,7 +79,7 @@ class TimerConfigurationView @JvmOverloads constructor(
   }
 
   fun setTargetAction(action: TimerTargetAction) {
-    binding.detailsTimerActionSwitch.activeItem = action.id
+    binding.detailsTimerActionSwitch.activeItem = action
   }
 
   private fun setupView() {
@@ -98,18 +101,13 @@ class TimerConfigurationView @JvmOverloads constructor(
       updateInfoText()
       onTimeChangedListener(calculateTimeInSeconds())
     }
-    binding.detailsTimerActionSwitch.items = listOf(
-      context.getString(R.string.details_timer_turn_on_for),
-      context.getString(R.string.details_timer_turn_off_for)
-    )
-    binding.detailsTimerActionSwitch.selectedItemListener = { position ->
-      TimerTargetAction.from(position)?.let {
-        onActionChangeListener(it)
-        updateInfoText(it)
-      }
+    binding.detailsTimerActionSwitch.items = TimerTargetAction.entries
+    binding.detailsTimerActionSwitch.selectedItemListener = { action ->
+      onActionChangeListener(action)
+      updateInfoText(action)
     }
     binding.detailsTimerStartButton.setOnClickListener { _ ->
-      TimerTargetAction.from(binding.detailsTimerActionSwitch.activeItem)?.let {
+      binding.detailsTimerActionSwitch.activeItem?.let {
         onStartClickListener(timeInSeconds, it)
       }
     }
@@ -140,7 +138,7 @@ class TimerConfigurationView @JvmOverloads constructor(
   }
 
   private fun updateInfoText() {
-    TimerTargetAction.from(binding.detailsTimerActionSwitch.activeItem)?.let {
+    binding.detailsTimerActionSwitch.activeItem?.let {
       updateInfoText(it)
     }
   }
@@ -189,8 +187,10 @@ class TimerConfigurationView @JvmOverloads constructor(
     .plus(binding.detailsTimerHour.value.times(3600))
 }
 
-enum class TimerTargetAction(val id: Int) {
-  TURN_ON(0), TURN_OFF(1);
+enum class TimerTargetAction(val id: Int, labelRes: Int) : SegmentedComponentItem {
+  TURN_ON(0, R.string.details_timer_turn_on_for), TURN_OFF(1, R.string.details_timer_turn_off_for);
+
+  override val label: LocalizedString = localizedString(labelRes)
 
   companion object {
     fun from(id: Int): TimerTargetAction? {
