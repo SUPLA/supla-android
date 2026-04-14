@@ -18,15 +18,16 @@ package org.supla.android.features.details.thermostatdetail.timer.ui
 */
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.model.temperature.TemperatureCorrection
 import org.supla.android.data.source.local.calendar.Hour
 import org.supla.android.features.details.thermostatdetail.timer.DeviceMode
 import org.supla.android.features.details.thermostatdetail.timer.TimerDetailViewState
-import org.supla.android.features.details.thermostatdetail.timer.WorkingMode
+import org.supla.android.tools.SuplaPreview
+import org.supla.android.tools.SuplaPreviewLandscape
 import org.supla.android.ui.dialogs.TimePickerDialog
 import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.usecase.channel.valueformatter.DefaultValueFormatter
 
 interface ThermostatTimerViewScope : ThermostatTimerConfigurationScope, ThermostatTimerInProgressScope {
   fun onTimeChanged(hour: Hour)
@@ -54,7 +55,6 @@ private val previewScope = object : ThermostatTimerViewScope {
   override fun onTimeChanged(hour: Hour) {}
   override fun onTimePickerDismiss() {}
   override fun toggleDeviceMode(deviceMode: DeviceMode) {}
-  override fun toggleWorkingMode(workingMode: WorkingMode) {}
   override fun onTemperatureChange(step: TemperatureCorrection) {}
   override fun onTemperatureChange(temperature: Float) {}
   override fun onTemperatureChange(range: ClosedFloatingPointRange<Float>) {}
@@ -72,18 +72,30 @@ private val previewScope = object : ThermostatTimerViewScope {
   override fun cancelTimerStartProgram() {}
 }
 
-@Preview
+@SuplaPreview
+@SuplaPreviewLandscape
 @Composable
 private fun PreviewInProgress() {
   SuplaTheme {
-    previewScope.View(TimerDetailViewState(isTimerOn = false))
+    previewScope.View(
+      TimerDetailViewState(
+        thermometerValueFormatter = DefaultValueFormatter,
+        isTimerOn = false
+      )
+    )
   }
 }
 
-@Preview
+@SuplaPreview
+@SuplaPreviewLandscape
 @Composable
 private fun PreviewConfiguration() {
   SuplaTheme {
-    previewScope.View(TimerDetailViewState(isTimerOn = true))
+    previewScope.View(
+      TimerDetailViewState(
+        thermometerValueFormatter = DefaultValueFormatter,
+        isTimerOn = true
+      )
+    )
   }
 }

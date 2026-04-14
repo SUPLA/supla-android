@@ -79,6 +79,7 @@ import org.supla.android.ui.views.tools.ThermostatControl
 import org.supla.android.usecases.thermostat.MeasurementValue
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
 import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.usecase.channel.valueformatter.DefaultValueFormatter
 
 interface ThermostatGeneralViewProxy : BaseViewProxy<ThermostatGeneralViewState> {
   fun heatingModeChanged()
@@ -515,6 +516,7 @@ private fun Preview() {
     ThermostatDetail(
       PreviewProxy(
         ThermostatGeneralViewState(
+          thermometerValueFormatter = DefaultValueFormatter,
           showHeatingIndicator = true,
           currentPower = 18f,
           pumpSwitchIcon = ImageId(R.drawable.fnc_pump_switch_on),
@@ -532,6 +534,7 @@ private fun PreviewCooling() {
     ThermostatDetail(
       PreviewProxy(
         ThermostatGeneralViewState(
+          thermometerValueFormatter = DefaultValueFormatter,
           showCoolingIndicator = true,
           currentPower = 18f,
           pumpSwitchIcon = ImageId(R.drawable.fnc_pump_switch_off),
@@ -549,6 +552,7 @@ private fun PreviewTemporaryOverride() {
     ThermostatDetail(
       PreviewProxy(
         ThermostatGeneralViewState(
+          thermometerValueFormatter = DefaultValueFormatter,
           temporaryChangeActive = true,
           temporaryProgramInfo = listOf(
             ThermostatProgramInfo(
@@ -586,6 +590,7 @@ private fun PreviewSmall() {
       ThermostatDetail(
         PreviewProxy(
           ThermostatGeneralViewState(
+            thermometerValueFormatter = DefaultValueFormatter,
             issues = listOf(
               ChannelIssueItem.warning(R.string.thermostat_detail_mode_manual)
             )
@@ -604,6 +609,7 @@ private fun PreviewVerySmall() {
       ThermostatDetail(
         PreviewProxy(
           ThermostatGeneralViewState(
+            thermometerValueFormatter = DefaultValueFormatter,
             showHeatingIndicator = true,
             showCoolingIndicator = true,
             currentPower = 18f,
@@ -616,8 +622,12 @@ private fun PreviewVerySmall() {
   }
 }
 
-private class PreviewProxy(private var initialState: ThermostatGeneralViewState = ThermostatGeneralViewState(isAutoFunction = true)) :
-  ThermostatGeneralViewProxy {
+private class PreviewProxy(
+  private var initialState: ThermostatGeneralViewState = ThermostatGeneralViewState(
+    thermometerValueFormatter = DefaultValueFormatter,
+    isAutoFunction = true
+  )
+) : ThermostatGeneralViewProxy {
   override fun getViewState(): StateFlow<ThermostatGeneralViewState> =
     MutableStateFlow(
       value = initialState.copy(
