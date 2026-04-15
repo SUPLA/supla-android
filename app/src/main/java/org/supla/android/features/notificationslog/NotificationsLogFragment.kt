@@ -44,8 +44,6 @@ class NotificationsLogFragment :
   UpHandler {
 
   override val viewModel: NotificationsLogViewModel by viewModels()
-  private val binding by viewBinding(FragmentComposeBinding::bind)
-
   override val toolbarItems = listOf(R.id.toolbar_delete_all, R.id.toolbar_delete_older_than_month, R.id.toolbar_search)
 
   @Inject
