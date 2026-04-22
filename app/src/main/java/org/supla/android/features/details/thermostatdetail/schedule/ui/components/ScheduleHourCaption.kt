@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import org.supla.android.data.source.local.calendar.QuarterOfHour
+import org.supla.android.data.source.local.calendar.toHour
 
 @Composable
 fun ScheduleHourCaption(hour: Short, withQuarter: QuarterOfHour? = null) {
@@ -37,13 +38,3 @@ fun ScheduleHourCaption(hour: Int, withQuarter: QuarterOfHour? = null) {
     textAlign = TextAlign.Left
   )
 }
-
-fun Int.toHour(withQuarter: QuarterOfHour? = null): String =
-  (if (this < 10) "0$this" else "$this").let first@{ string ->
-    return withQuarter?.let second@{
-      return@second "$string:${withQuarter.startingMinuteString}"
-    } ?: string
-  }
-
-fun Short.toHour(withQuarter: QuarterOfHour?): String =
-  this.toInt().toHour(withQuarter = withQuarter)

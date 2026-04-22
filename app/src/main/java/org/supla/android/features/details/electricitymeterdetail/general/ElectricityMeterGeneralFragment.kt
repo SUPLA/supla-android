@@ -33,10 +33,10 @@ class ElectricityMeterGeneralFragment :
   override val viewModel: ElectricityMeterGeneralViewModel by viewModels()
 
   @Composable
-  override fun ComposableContent(modelState: ElectricityMeterGeneralViewModelState) {
+  override fun ComposableContent(viewState: ElectricityMeterGeneralViewModelState) {
     SuplaTheme {
       ElectricityMeterGeneralView(
-        state = modelState.viewState,
+        state = viewState.viewState,
         onIntroductionClose = viewModel::onIntroductionClose
       )
     }

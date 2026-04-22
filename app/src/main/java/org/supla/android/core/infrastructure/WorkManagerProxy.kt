@@ -27,7 +27,7 @@ import javax.inject.Singleton
 
 @Singleton
 class WorkManagerProxy @Inject constructor(
-  @ApplicationContext private val context: Context
+  @param:ApplicationContext private val context: Context
 ) {
 
   fun enqueueUniqueWork(uniqueWorkName: String, existingWorkPolicy: ExistingWorkPolicy, work: OneTimeWorkRequest) {

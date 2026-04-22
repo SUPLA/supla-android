@@ -20,10 +20,10 @@ package org.supla.android.features.nfc.detail
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.compose.runtime.Composable
-import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
+import org.supla.android.core.infrastructure.navigation.ToolbarItemsVisibilityController
 import org.supla.android.core.ui.BaseComposeFragment
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.nfc.edit.EditNfcTagFragment
@@ -35,8 +35,12 @@ import javax.inject.Inject
 private const val ARG_BUNDLE_ID = "ARG_BUNDLE_ID"
 
 @AndroidEntryPoint
-class NfcTagDetailFragment : BaseComposeFragment<NfcTagDetailViewState, NfcTagDetailViewEvent>(), ToolbarItemsClickHandler {
+class NfcTagDetailFragment :
+  BaseComposeFragment<NfcTagDetailViewState, NfcTagDetailViewEvent>(),
+  ToolbarItemsClickHandler,
+  ToolbarItemsVisibilityController {
   override val viewModel: NfcTagDetailViewModel by viewModels()
+  override val toolbarItems: List<Int> = listOf(R.id.toolbar_delete)
 
   @Inject
   lateinit var navigator: MainNavigator
@@ -49,20 +53,10 @@ class NfcTagDetailFragment : BaseComposeFragment<NfcTagDetailViewState, NfcTagDe
     itemId?.let { viewModel.setItemId(it) }
   }
 
-  override fun onResume() {
-    super.onResume()
-    setToolbarItemVisible(R.id.toolbar_delete, true)
-  }
-
-  override fun onPause() {
-    super.onPause()
-    setToolbarItemVisible(R.id.toolbar_delete, false)
-  }
-
   @Composable
-  override fun ComposableContent(modelState: NfcTagDetailViewState) {
+  override fun ComposableContent(viewState: NfcTagDetailViewState) {
     SuplaTheme {
-      viewModel.View(modelState)
+      viewModel.View(viewState)
     }
   }
 
@@ -72,7 +66,6 @@ class NfcTagDetailFragment : BaseComposeFragment<NfcTagDetailViewState, NfcTagDe
       is NfcTagDetailViewEvent.SetToolbarTitle -> setToolbarTitle(event.tagName)
       NfcTagDetailViewEvent.EditTag ->
         itemId?.let { navigator.navigateTo(R.id.nfc_tag_edit_fragment, EditNfcTagFragment.bundle(it)) }
-
       NfcTagDetailViewEvent.LockTag ->
         itemId?.let { navigator.navigateTo(R.id.nfc_tag_lock_fragment, LockTagFragment.bundle(it)) }
     }
@@ -88,6 +81,6 @@ class NfcTagDetailFragment : BaseComposeFragment<NfcTagDetailViewState, NfcTagDe
   }
 
   companion object {
-    fun bundle(itemId: Long): Bundle = bundleOf(ARG_BUNDLE_ID to itemId)
+    fun bundle(itemId: Long): Bundle = Bundle().apply { putLong(ARG_BUNDLE_ID, itemId) }
   }
 }

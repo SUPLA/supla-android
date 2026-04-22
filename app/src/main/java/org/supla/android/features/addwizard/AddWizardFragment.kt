@@ -87,15 +87,15 @@ class AddWizardFragment : BaseComposeFragment<AddWizardViewModelState, AddWizard
   }
 
   @Composable
-  override fun ComposableContent(modelState: AddWizardViewModelState) {
+  override fun ComposableContent(viewState: AddWizardViewModelState) {
     SuplaTheme {
       Box(
         modifier = Modifier
           .fillMaxSize()
           .background(MaterialTheme.colorScheme.primaryContainer)
       ) {
-        viewModel.View(modelState)
-        modelState.authorizationDialogState?.let { viewModel.AuthorizationDialog(it) }
+        viewModel.View(viewState)
+        viewState.authorizationDialogState?.let { viewModel.AuthorizationDialog(it) }
       }
     }
   }
@@ -111,7 +111,6 @@ class AddWizardFragment : BaseComposeFragment<AddWizardViewModelState, AddWizard
           }
           .addOnCanceledListener { Timber.i("Barcode scanner canceled") }
           .addOnFailureListener { Timber.i("Barcode scanner failure") }
-
       AddWizardViewEvent.CheckPermissions -> checkPermissions()
       AddWizardViewEvent.OpenCloud -> navigator.navigateToCloudExternal()
     }

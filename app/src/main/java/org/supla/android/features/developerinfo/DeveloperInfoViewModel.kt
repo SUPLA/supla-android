@@ -60,6 +60,8 @@ class DeveloperInfoViewModel @Inject constructor(
 ) : BaseViewModel<DeveloperInfoViewModelState, DeveloperInfoViewEvent>(DeveloperInfoViewModelState(), suplaSchedulers),
   DeveloperInfoScope {
 
+  private var notificationId = 0
+
   override fun onViewCreated() {
     super.onViewCreated()
 
@@ -159,7 +161,13 @@ class DeveloperInfoViewModel @Inject constructor(
   }
 
   override fun sendTestNotification() {
-    notificationsHelper.showNotification(context, "Test notification title", "Test notification message", "Test profile")
+    notificationId++
+    notificationsHelper.showNotification(
+      context = context,
+      title = "Test notification title $notificationId",
+      text = "Test notification message $notificationId",
+      profileName = "Test profile $notificationId"
+    )
   }
 
   override fun exportSuplaDatabase() {

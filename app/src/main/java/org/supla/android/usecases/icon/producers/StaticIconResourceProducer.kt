@@ -24,7 +24,7 @@ import org.supla.core.shared.data.model.general.SuplaFunction
 
 class StaticIconResourceProducer(
   private val function: SuplaFunction,
-  @DrawableRes private val day: Int
+  @param:DrawableRes private val day: Int
 ) : IconResourceProducer {
   override fun accepts(function: SuplaFunction): Boolean = function == this.function
 

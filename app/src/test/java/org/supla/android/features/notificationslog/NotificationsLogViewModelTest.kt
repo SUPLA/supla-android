@@ -10,7 +10,7 @@ package org.supla.android.features.notificationslog
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-syays GNU General Public License for more details.
+ GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -165,5 +165,84 @@ class NotificationsLogViewModelTest : BaseViewModelTest<NotificationsLogViewStat
       deleteNotificationUseCase.invoke(notificationId)
     }
     confirmVerified(loadAllNotificationsUseCase, deleteNotificationsUseCase)
+  }
+
+  @Test
+  fun `should call filtered use case when query length greater than 2 and filter changed`() {
+    // given
+    val searchText = "abc"
+    every { loadAllNotificationsUseCase.invoke(searchText) } returns Observable.just(emptyList())
+
+    // when
+    viewModel.search(searchText)
+
+    // then
+    verify(exactly = 1) { loadAllNotificationsUseCase(searchText) }
+    confirmVerified(loadAllNotificationsUseCase)
+  }
+
+  @Test
+  fun `should not call filtered use case again when filter did not change`() {
+    // given
+    val searchText = "abc"
+    every { loadAllNotificationsUseCase.invoke(searchText) } returns Observable.just(emptyList())
+
+    // when
+    viewModel.search(searchText)
+    viewModel.search(searchText)
+
+    // then
+    verify(exactly = 1) { loadAllNotificationsUseCase(searchText) }
+    confirmVerified(loadAllNotificationsUseCase)
+  }
+
+  @Test
+  fun `should not call anything when filter length after trim is less than or equal to 2 and there was no previous filter`() {
+    // when
+    viewModel.search("a")
+
+    // then
+    confirmVerified(loadAllNotificationsUseCase)
+  }
+
+  @Test
+  fun `should call loadAll when filter length after trim is less than or equal to 2 and previous filter existed`() {
+    // given
+    val firstSearch = "abcd"
+    val secondSearch = "a"
+    every { loadAllNotificationsUseCase.invoke(firstSearch) } returns Observable.just(emptyList())
+    every { loadAllNotificationsUseCase.invoke() } returns Observable.just(emptyList())
+
+    viewModel.search(firstSearch)
+
+    // when
+    viewModel.search(secondSearch)
+
+    // then
+    verify {
+      loadAllNotificationsUseCase(firstSearch)
+      loadAllNotificationsUseCase()
+    }
+    confirmVerified(loadAllNotificationsUseCase)
+  }
+
+  @Test
+  fun `should call filtered use case again when filter changes`() {
+    // given
+    val firstSearch = "abc"
+    val secondSearch = "abcd"
+    every { loadAllNotificationsUseCase.invoke(firstSearch) } returns Observable.just(emptyList())
+    every { loadAllNotificationsUseCase.invoke(secondSearch) } returns Observable.just(emptyList())
+
+    // when
+    viewModel.search(firstSearch)
+    viewModel.search(secondSearch)
+
+    // then
+    verify {
+      loadAllNotificationsUseCase(firstSearch)
+      loadAllNotificationsUseCase(secondSearch)
+    }
+    confirmVerified(loadAllNotificationsUseCase)
   }
 }

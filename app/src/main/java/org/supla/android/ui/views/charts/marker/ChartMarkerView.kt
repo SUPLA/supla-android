@@ -68,7 +68,6 @@ class ChartMarkerView(context: Context) : BaseMarkerView(context) {
         ChartEntryType.HUMIDITY -> ValueFormat.WithUnit
         ChartEntryType.PRESET_TEMPERATURE,
         ChartEntryType.TEMPERATURE -> ValueFormat.TemperatureWithDegree
-
         else -> ValueFormat.WithoutUnit
       }
       val minText = details.valueFormatter.format(min.toDouble(), format)
@@ -118,7 +117,6 @@ class ChartMarkerView(context: Context) : BaseMarkerView(context) {
       ChartEntryType.CURRENT,
       ChartEntryType.POWER_ACTIVE,
       ChartEntryType.HUMIDITY_ONLY -> true
-
       else -> false
     }
 
@@ -126,10 +124,8 @@ class ChartMarkerView(context: Context) : BaseMarkerView(context) {
     when (type) {
       ChartEntryType.HUMIDITY,
       ChartEntryType.HUMIDITY_ONLY -> ValueUnit.HUMIDITY.toString()
-
       ChartEntryType.TEMPERATURE,
       ChartEntryType.PRESET_TEMPERATURE -> ValueUnit.TEMPERATURE_DEGREE.toString()
-
       ChartEntryType.GENERAL_PURPOSE_MEASUREMENT,
       ChartEntryType.GENERAL_PURPOSE_METER,
       ChartEntryType.IMPULSE_COUNTER,

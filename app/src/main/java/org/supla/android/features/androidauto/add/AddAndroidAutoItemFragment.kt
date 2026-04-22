@@ -21,7 +21,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
@@ -43,11 +42,11 @@ class AddAndroidAutoItemFragment : BaseComposeFragment<AddAndroidAutoItemViewMod
   private val itemId: Long? by lazy { arguments?.getLong(ARG_ITEM_ID)?.let { if (it == 0L) null else it } }
 
   @Composable
-  override fun ComposableContent(modelState: AddAndroidAutoItemViewModelState) {
+  override fun ComposableContent(viewState: AddAndroidAutoItemViewModelState) {
     SuplaTheme {
-      viewModel.View(modelState.viewState)
+      viewModel.View(viewState.viewState)
 
-      if (modelState.showDeletePopup) {
+      if (viewState.showDeletePopup) {
         AlertDialog(
           title = stringResource(R.string.android_auto_delete_title),
           message = stringResource(R.string.android_auto_delete_message),
@@ -75,6 +74,6 @@ class AddAndroidAutoItemFragment : BaseComposeFragment<AddAndroidAutoItemViewMod
 
   companion object {
     fun bundle(itemId: Long): Bundle =
-      bundleOf(ARG_ITEM_ID to itemId)
+      Bundle().apply { putLong(ARG_ITEM_ID, itemId) }
   }
 }

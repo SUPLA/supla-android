@@ -11,7 +11,6 @@ object BlindsGroupActivePercentageProvider : GroupActivePercentageProvider {
     when (function) {
       SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND,
       SUPLA_CHANNELFNC_VERTICAL_BLIND -> true
-
       else -> false
     }
 

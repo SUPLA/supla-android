@@ -68,7 +68,7 @@ class GpmHistoryDetailViewModel @Inject constructor(
   private val channelConfigEventsManager: ChannelConfigEventsManager,
   private val loadChannelConfigUseCase: LoadChannelConfigUseCase,
   private val downloadEventsManager: DownloadEventsManager,
-  @Named(GSON_FOR_REPO) private val gson: Gson,
+  @param:Named(GSON_FOR_REPO) private val gson: Gson,
   deleteChannelMeasurementsUseCase: DeleteChannelMeasurementsUseCase,
   readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   groupingStringMigrationUseCase: GroupingStringMigrationUseCase,

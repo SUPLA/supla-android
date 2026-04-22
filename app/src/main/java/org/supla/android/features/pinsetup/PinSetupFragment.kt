@@ -72,8 +72,6 @@ class PinSetupFragment : BaseFragment<PinSetupViewModelState, PinSetupViewEvent>
   }
 
   companion object {
-    fun bundle(lockScreenScope: LockScreenScope) = bundleOf(
-      ARG_LOCK_SCREEN_SETTINGS to lockScreenScope
-    )
+    fun bundle(lockScreenScope: LockScreenScope) = Bundle().apply { putSerializable(ARG_LOCK_SCREEN_SETTINGS, lockScreenScope) }
   }
 }

@@ -29,22 +29,28 @@ import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.children
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.customview.widget.Openable
-import androidx.navigation.NavDestination
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
@@ -53,6 +59,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import org.supla.android.core.branding.Configuration
+import org.supla.android.core.infrastructure.navigation.ToolbarItemsVisibilityController
+import org.supla.android.core.infrastructure.navigation.ToolbarOwner
 import org.supla.android.core.networking.suplaclient.SuplaClientState
 import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
 import org.supla.android.core.notifications.NotificationsHelper
@@ -88,6 +96,7 @@ import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Date
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class MainActivity :
@@ -97,7 +106,8 @@ class MainActivity :
   ToolbarItemsController,
   ToolbarVisibilityController,
   BackHandleOwner,
-  NfcHost {
+  NfcHost,
+  ToolbarOwner {
 
   private val nfcAdapter: NfcAdapter? by lazy { NfcAdapter.getDefaultAdapter(this) }
 
@@ -110,7 +120,7 @@ class MainActivity :
   private var animatingMenu = false
   private val handler = Handler(Looper.getMainLooper())
 
-  private val toolbar: AppBar by lazy { findViewById(R.id.supla_toolbar) }
+  override val toolbar: AppBar by lazy { findViewById(R.id.supla_toolbar) }
   private val menuLayout: MenuItemsLayout by lazy { findViewById(R.id.main_menu) }
   private val toolbarItemsClickHandlers = mutableListOf<ToolbarItemsClickHandler>()
   private val newGestureInfo: ConstraintLayout by lazy { findViewById(R.id.new_gesture_info) }
@@ -118,7 +128,6 @@ class MainActivity :
   private val appBarLayout: AppBarLayout by lazy { findViewById(R.id.app_bar_layout) }
   private val appBarLayoutSpacer: View by lazy { findViewById(R.id.main_content_top_spacer) }
 
-  private var lastDestinationId: Int? = null
   private val disposables: CompositeDisposable = CompositeDisposable()
   private var keepSplashScreen = true
   private var splashScreenDisposable: Disposable? = null
@@ -181,6 +190,8 @@ class MainActivity :
     navigationSetup()
     toolbarSetup()
     backCallbackSetup()
+    toolbarItemVisibilitySetup()
+    edgeToEdgeSetup()
 
     if (preferences.shouldShowNewGestureInfo() && preferences.isNewGestureInfoPresented.not()) {
       newGestureInfo.bringToFront()
@@ -224,14 +235,12 @@ class MainActivity :
               is SuplaClientState.Disconnecting,
               SuplaClientState.Locking,
               is SuplaClientState.Finished -> navigator.navigateToStatus()
-
               SuplaClientState.Locked -> {
                 if (menuIsVisible()) {
                   setMenuVisible(false)
                 }
                 navigator.navigateTo(R.id.lock_screen_fragment, LockScreenFragment.bundle(UnlockAction.AuthorizeApplication))
               }
-
               else -> {}
             }
           }
@@ -272,7 +281,6 @@ class MainActivity :
     val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
     val navController = navHostFragment.navController
     navController.setGraph(R.navigation.main_nav_graph)
-    navController.addOnDestinationChangedListener { _, destination, _ -> configureToolbarOnDestinationChange(destination) }
 
     val appBarConfiguration = AppBarConfiguration
       .Builder(setOf(R.id.status_fragment, R.id.main_fragment))
@@ -343,19 +351,47 @@ class MainActivity :
     )
   }
 
-  private fun configureToolbarOnDestinationChange(destination: NavDestination) {
-    lastDestinationId = destination.id
+  private fun toolbarItemVisibilitySetup() {
+    supportFragmentManager.registerFragmentLifecycleCallbacks(
+      object : FragmentManager.FragmentLifecycleCallbacks() {
+        override fun onFragmentResumed(fragmentManager: FragmentManager, fragment: Fragment) {
+          if (fragment is ToolbarItemsVisibilityController) {
+            fragment.toolbarItems.forEach {
+              setToolbarItemVisible(it, true)
+            }
+          }
+        }
 
-    setAccountItemVisible(profileManager.getAllProfiles().blockingFirst().size > 1 && lastDestinationId == R.id.main_fragment)
-    setDeleteVisible(lastDestinationId == R.id.notifications_log_fragment)
-    setDeleteHistoryVisible(lastDestinationId == R.id.single_history_detail_fragment)
+        override fun onFragmentPaused(fm: FragmentManager, f: Fragment) {
+          if (f is ToolbarItemsVisibilityController) {
+            f.toolbarItems.forEach {
+              setToolbarItemVisible(it, false)
+            }
+          }
+        }
+      },
+      true
+    )
+  }
+
+  private fun edgeToEdgeSetup() {
+    enableEdgeToEdge()
+
+    ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.coordinator)) { view, insets ->
+      val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+      view.setPadding(bars.left, 0, bars.right, bars.bottom)
+      val appBarHeight = resources.getDimension(R.dimen.top_bar_height).roundToInt()
+      menuLayout.layoutParams = (menuLayout.layoutParams as CoordinatorLayout.LayoutParams)
+        .apply { topMargin = bars.top + appBarHeight }
+      appBarLayoutSpacer.layoutParams = (appBarLayoutSpacer.layoutParams as LinearLayout.LayoutParams)
+        .apply { height = bars.top + appBarHeight }
+      appBarLayout.setPadding(0, bars.top, 0, 0)
+      insets
+    }
   }
 
   override fun onResume() {
     super.onResume()
-    setAccountItemVisible(profileManager.getAllProfiles().blockingFirst().size > 1 && lastDestinationId == R.id.main_fragment)
-    setDeleteVisible(lastDestinationId == R.id.notifications_log_fragment)
-
     if (SuperuserAuthorizationDialog.lastOneIsStillShowing()) {
       return
     }
@@ -371,19 +407,6 @@ class MainActivity :
   override fun onPause() {
     super.onPause()
     handler.removeCallbacksAndMessages(null)
-  }
-
-  private fun setAccountItemVisible(visible: Boolean) {
-    toolbar.menu.findItem(R.id.toolbar_accounts)?.isVisible = visible
-  }
-
-  private fun setDeleteVisible(visible: Boolean) {
-    toolbar.menu.findItem(R.id.toolbar_delete_all)?.isVisible = visible
-    toolbar.menu.findItem(R.id.toolbar_delete_older_than_month)?.isVisible = visible
-  }
-
-  private fun setDeleteHistoryVisible(visible: Boolean) {
-    toolbar.menu.findItem(R.id.toolbar_delete_chart_history)?.isVisible = visible
   }
 
   private fun runDownloadTask() {
@@ -404,8 +427,8 @@ class MainActivity :
 
   override fun onEventMsg(event: SuplaEvent) {
     super.onEventMsg(event)
-    if (event.Owner && event.Event != SuplaConst.SUPLA_EVENT_SET_BRIDGE_VALUE_FAILED || event.ChannelID == 0) return
-    val channel = getDbHelper()?.getChannel(event.ChannelID) ?: return
+    if ((event.Owner && event.Event != SuplaConst.SUPLA_EVENT_SET_BRIDGE_VALUE_FAILED) || event.ChannelID == 0) return
+    val channel = getDbHelper().getChannel(event.ChannelID) ?: return
     var imgResId = 0
     var imgId: ImageId? = null
     var msg: String

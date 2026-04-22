@@ -26,9 +26,11 @@ import androidx.viewpager2.widget.ViewPager2
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
+import org.supla.android.core.infrastructure.navigation.ToolbarItemsVisibilityController
 import org.supla.android.core.notifications.NotificationsHelper
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.databinding.FragmentMainBinding
+import org.supla.android.extensions.clearEdgeToEdgePaddings
 import org.supla.android.extensions.visibleIf
 import org.supla.android.features.notificationinfo.NotificationInfoDialog
 import org.supla.android.ui.layouts.BottomBarHeightHandler
@@ -36,11 +38,12 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainFragment :
-  BaseFragment<MainViewState, MainViewEvent>(R.layout.fragment_main) {
+  BaseFragment<MainViewState, MainViewEvent>(R.layout.fragment_main), ToolbarItemsVisibilityController {
 
   override val viewModel: MainViewModel by viewModels()
   private val binding by viewBinding(FragmentMainBinding::bind)
   private val pages = ListPage.entries.toTypedArray()
+  private val activeToolbarItems: MutableSet<Int> = mutableSetOf()
 
   private val onBackCallback = object : OnBackPressedCallback(true) {
     override fun handleOnBackPressed() {
@@ -73,6 +76,8 @@ class MainFragment :
     notificationsHelper.setup(requireActivity()) {
       NotificationInfoDialog.create().show(requireActivity().supportFragmentManager, null)
     }
+
+    clearEdgeToEdgePaddings(binding.mainBottomBar)
   }
 
   override fun onResume() {
@@ -81,9 +86,21 @@ class MainFragment :
     binding.mainBottomBar.visibleIf(viewModel.getBottomMenuVisible())
     binding.detailShadow.visibleIf(viewModel.getBottomMenuVisible())
     binding.mainBottomBar.layoutParams = bottomBarHeightHandler.getLayoutParams(resources)
+
+    viewModel.checkProfilesCount()
   }
 
   override fun handleEvents(event: MainViewEvent) {
+    when (event) {
+      MainViewEvent.ShowProfileSelector -> {
+        activeToolbarItems.add(R.id.toolbar_accounts)
+        setToolbarItemVisible(R.id.toolbar_accounts, true)
+      }
+      MainViewEvent.HideProfileSelector -> {
+        activeToolbarItems.clear()
+        setToolbarItemVisible(R.id.toolbar_accounts, false)
+      }
+    }
   }
 
   override fun handleViewState(state: MainViewState) {
@@ -101,4 +118,7 @@ class MainFragment :
       binding.mainBottomBar.selectedItemId = pages[position].menuId
     }
   }
+
+  override val toolbarItems: List<Int>
+    get() = activeToolbarItems.toList()
 }

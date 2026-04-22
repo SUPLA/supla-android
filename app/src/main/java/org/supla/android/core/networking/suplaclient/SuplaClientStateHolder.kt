@@ -32,7 +32,7 @@ import javax.inject.Singleton
 @Singleton
 @SuppressLint("CheckResult")
 class SuplaClientStateHolder @Inject constructor(
-  @ApplicationContext private val applicationContext: Context,
+  @param:ApplicationContext private val applicationContext: Context,
   private val suplaAppProvider: SuplaAppProvider,
   suplaSchedulers: SuplaSchedulers
 ) {
@@ -54,7 +54,6 @@ class SuplaClientStateHolder @Inject constructor(
               // that's why this initialization is added here.
               suplaAppProvider.provide().SuplaClientInitIfNeed(applicationContext)
             }
-
             else -> {}
           }
         }

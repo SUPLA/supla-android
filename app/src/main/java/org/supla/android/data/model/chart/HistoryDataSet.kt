@@ -194,10 +194,8 @@ data class HistoryDataSet(
     when (val value = entity.value) {
       is AggregatedValue.Single ->
         ChartEntryDetails.Default(aggregation, type, entity.date, value.min, value.max, value.open, value.close, valueFormatter, customData)
-
       is AggregatedValue.Multiple ->
         ChartEntryDetails.Default(aggregation, type, entity.date, valueFormatter = valueFormatter, customData = customData)
-
       is AggregatedValue.WithPhase ->
         ChartEntryDetails.WithPhase(aggregation, type, entity.date, value.min, value.max, valueFormatter, customData, value.phase)
     }
@@ -219,11 +217,11 @@ data class HistoryDataSet(
   data class LabelData(
     val imageId: ImageId?,
     val value: String,
-    @ColorRes val color: Int,
+    @param:ColorRes val color: Int,
     val presentColor: Boolean = true,
     val useColor: Boolean = true,
     val justColor: Boolean = false,
-    @DimenRes val iconSize: Int? = null,
+    @param:DimenRes val iconSize: Int? = null,
     val description: LocalizedString? = null
   ) {
 

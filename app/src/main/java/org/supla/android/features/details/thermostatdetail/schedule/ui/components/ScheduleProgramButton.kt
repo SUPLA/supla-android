@@ -39,6 +39,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -49,9 +50,8 @@ import org.supla.android.R
 import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.extensions.thermometerValuesFormatter
 import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailProgramBox
-import org.supla.android.features.details.thermostatdetail.schedule.extensions.colorRes
+import org.supla.android.ui.views.schedule.colorRes
 
 @Composable
 fun ScheduleProgramButton(
@@ -61,9 +61,10 @@ fun ScheduleProgramButton(
   onClick: () -> Unit = { },
   onLongClick: () -> Unit = { }
 ) {
+  val context = LocalContext.current
   Button(
-    contentColor = colorResource(id = programBox.scheduleProgram.program.colorRes()),
-    text = programBox.textProvider(LocalContext.current.thermometerValuesFormatter)(LocalContext.current),
+    contentColor = colorResource(id = programBox.program.colorRes()),
+    text = programBox.label(context),
     iconRes = programBox.iconRes,
     active = active,
     onClick = onClick,
@@ -119,7 +120,8 @@ private fun Button(
           painter = painterResource(id = it),
           contentDescription = null,
           alignment = Alignment.Center,
-          modifier = Modifier.size(20.dp)
+          modifier = Modifier.size(20.dp),
+          colorFilter = ColorFilter.tint(Color.Black)
         )
       }
       Text(

@@ -33,7 +33,6 @@ class SwitchWithImpulseCounterValueProvider @Inject constructor() : ChannelValue
       SuplaFunction.POWER_SWITCH,
       SuplaFunction.LIGHTSWITCH,
       SuplaFunction.STAIRCASE_TIMER -> channelWithChildren.isOrHasImpulseCounter
-
       else -> false
     }
 

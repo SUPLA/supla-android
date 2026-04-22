@@ -40,9 +40,9 @@ abstract class BaseWindowFragment<S : BaseWindowViewModelState> : BaseComposeFra
   }
 
   @Composable
-  override fun ComposableContent(modelState: S) {
+  override fun ComposableContent(viewState: S) {
     SuplaTheme {
-      if (modelState.showCalibrationDialog) {
+      if (viewState.showCalibrationDialog) {
         AlertDialog(
           title = stringResource(id = R.string.roller_shutter_calibration),
           message = stringResource(id = R.string.roller_shutter_start_calibration_message),
@@ -52,14 +52,14 @@ abstract class BaseWindowFragment<S : BaseWindowViewModelState> : BaseComposeFra
           onNegativeClick = { viewModel.cancelCalibration() }
         )
       }
-      modelState.authorizationDialogState?.let {
+      viewState.authorizationDialogState?.let {
         viewModel.AuthorizationDialog(state = it)
       }
 
       Box {
         WindowView(
-          windowState = modelState.windowState,
-          viewState = modelState.viewState
+          windowState = viewState.windowState,
+          viewState = viewState.viewState
         ) {
           viewModel.handleAction(it, item.remoteId, item.itemType)
         }

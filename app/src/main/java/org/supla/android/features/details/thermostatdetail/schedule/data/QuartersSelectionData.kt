@@ -18,9 +18,10 @@ package org.supla.android.features.details.thermostatdetail.schedule.data
  */
 
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
+import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxKey
 
 data class QuartersSelectionData(
   val entryKey: ScheduleDetailEntryBoxKey,
-  val entryValue: ScheduleDetailEntryBoxValue,
+  val entryValue: ThermostatScheduleDetailEntryBoxValue,
   val activeProgram: SuplaScheduleProgram?
 )

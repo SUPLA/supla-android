@@ -23,6 +23,7 @@ import android.os.NetworkOnMainThreadException
 import androidx.annotation.WorkerThread
 import androidx.room.rxjava3.EmptyResultSetException
 import dagger.hilt.android.qualifiers.ApplicationContext
+import org.supla.android.core.infrastructure.NativeLoader
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.db.AuthProfileItem
@@ -145,7 +146,7 @@ class SingleCall private constructor(
 
   companion object {
     init {
-      System.loadLibrary("suplaclient")
+      NativeLoader.loadLibrary("suplaclient")
     }
 
     const val CONNECTION_NO_TIMEOUT: Int = 0
@@ -157,15 +158,12 @@ val ResultException.toResult: SingleCall.Result
     SUPLA_RESULT_HOST_NOT_FOUND,
     SUPLA_RESULT_CANT_CONNECT_TO_HOST,
     SUPLA_RESULT_RESPONSE_TIMEOUT -> SingleCall.Result.ConnectionError(result)
-
     SUPLA_RESULTCODE_CLIENT_NOT_EXISTS,
     SUPLA_RESULTCODE_BAD_CREDENTIALS,
     SUPLA_RESULTCODE_CLIENT_DISABLED,
     SUPLA_RESULTCODE_ACCESSID_NOT_ASSIGNED,
     SUPLA_RESULTCODE_ACCESSID_DISABLED -> SingleCall.Result.AccessError(result)
-
     SUPLA_RESULTCODE_ACCESSID_INACTIVE -> SingleCall.Result.Inactive
-
     SUPLA_RESULTCODE_CHANNEL_IS_OFFLINE -> SingleCall.Result.Offline
     SUPLA_RESULTCODE_SUBJECT_NOT_FOUND -> SingleCall.Result.NotFound
     else -> SingleCall.Result.CommandError(result)

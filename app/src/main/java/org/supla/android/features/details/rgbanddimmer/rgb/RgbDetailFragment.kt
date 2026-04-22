@@ -38,9 +38,9 @@ class RgbDetailFragment : BaseComposeFragment<RgbDetailModelState, RgbDetailView
   }
 
   @Composable
-  override fun ComposableContent(modelState: RgbDetailModelState) {
+  override fun ComposableContent(viewState: RgbDetailModelState) {
     SuplaTheme {
-      viewModel.View(modelState.viewState)
+      viewModel.View(viewState.viewState)
     }
   }
 

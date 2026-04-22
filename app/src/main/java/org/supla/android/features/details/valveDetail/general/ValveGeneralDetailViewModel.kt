@@ -93,16 +93,12 @@ class ValveGeneralDetailViewModel @Inject constructor(
           when (error) {
             is ActionException.ValveFloodingAlarm ->
               updateState { it.copy(dialog = ValveAlertDialog.Confirmation(R.string.valve_warning_flooding, ActionId.OPEN)) }
-
             is ActionException.ValveClosedManually ->
               updateState { it.copy(dialog = ValveAlertDialog.Confirmation(R.string.valve_warning_manually_closed, ActionId.OPEN)) }
-
             is ActionException.ValveMotorProblemOpening ->
               updateState { it.copy(dialog = ValveAlertDialog.Confirmation(R.string.valve_warning_motor_problem_opening, ActionId.OPEN)) }
-
             is ActionException.ValveMotorProblemClosing ->
               updateState { it.copy(dialog = ValveAlertDialog.Confirmation(R.string.valve_warning_motor_problem_closing, ActionId.CLOSE)) }
-
             else -> updateState { it.copy(dialog = ValveAlertDialog.Failure) }
           }
         }

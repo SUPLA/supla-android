@@ -128,12 +128,10 @@ class LockScreenFragment : BaseFragment<LockScreenViewModelState, LockScreenView
       UnlockAction.TurnOffPin,
       UnlockAction.ConfirmAuthorizeAccounts,
       UnlockAction.ConfirmAuthorizeApplication -> configNavigator.back()
-
       UnlockAction.AuthorizeAccountsCreate -> {
         configNavigator.back()
         configNavigator.navigateTo(R.id.cfgNewProfile)
       }
-
       is UnlockAction.AuthorizeAccountsEdit -> {
         configNavigator.back()
         configNavigator.navigateTo(R.id.cfgEditProfile, CreateAccountFragment.bundle(action.profileId))
@@ -151,8 +149,8 @@ class LockScreenFragment : BaseFragment<LockScreenViewModelState, LockScreenView
   }
 
   companion object {
-    fun bundle(unlockAction: UnlockAction) = bundleOf(
-      ARG_LOCK_SCREEN_ACTION to unlockAction
-    )
+    fun bundle(unlockAction: UnlockAction) = Bundle().apply {
+      putSerializable(ARG_LOCK_SCREEN_ACTION, unlockAction)
+    }
   }
 }

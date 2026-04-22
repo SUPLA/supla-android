@@ -515,7 +515,6 @@ class RgbDetailViewModel @Inject constructor(
     state.value == ChannelState.Value.ON -> localizedString(R.string.details_timer_device_on)
     state is ChannelState.RgbAndDimmer && state.rgb == ChannelState.Value.ON ->
       localizedString(R.string.details_timer_device_on)
-
     else -> localizedString(R.string.details_timer_device_off)
   }
 

@@ -44,6 +44,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -54,12 +55,14 @@ import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
-import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.extensions.toDp
 import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailProgramBox
-import org.supla.android.features.details.thermostatdetail.schedule.extensions.colorRes
+import org.supla.android.ui.extensions.isPhoneLandscape
 import org.supla.android.ui.views.buttons.IconButton
+import org.supla.android.ui.views.schedule.boxSpacing
+import org.supla.android.ui.views.schedule.colorRes
+import org.supla.core.shared.infrastructure.LocalizedString
 
 @Composable
 fun ScheduleInfo(boxSize: Size, onClose: () -> Unit) {
@@ -85,7 +88,9 @@ fun ScheduleInfo(boxSize: Size, onClose: () -> Unit) {
     CloseIcon(onClick = onClose)
     ProgramButtonInfo(state)
 
-    val topMargin = 94.dp.plus(boxHeight.times(6))
+    val topSpace = if (LocalConfiguration.current.isPhoneLandscape) 24 else 74
+    val row = if (LocalConfiguration.current.isPhoneLandscape) 1 else 6
+    val topMargin = topSpace.dp.plus(boxHeight.times(row).plus(boxSpacing.times(row - 1)))
     ProgramBoxInfo(state = state, topMargin = topMargin, boxWidth = boxWidth, boxHeight = boxHeight)
     DarkCornerInfo(state = state, topMargin = topMargin, boxWidth = boxWidth, boxHeight = boxHeight)
   }
@@ -106,8 +111,7 @@ private fun FadeInBlock(
   )
 
 @Composable
-context (BoxScope)
-private fun CloseIcon(onClick: () -> Unit) =
+private fun BoxScope.CloseIcon(onClick: () -> Unit) =
   IconButton(
     icon = R.drawable.ic_close,
     onClick = onClick,
@@ -138,16 +142,16 @@ private fun SampleProgramButton() =
     programBox = ScheduleDetailProgramBox(
       channelFunction = 0,
       thermostatFunction = ThermostatSubfunction.HEAT,
-      scheduleProgram = SuplaWeeklyScheduleProgram(
-        program = SuplaScheduleProgram.PROGRAM_1,
-        mode = SuplaHvacMode.HEAT,
-        setpointTemperatureHeat = 1900
-      )
+      program = SuplaScheduleProgram.PROGRAM_1,
+      mode = SuplaHvacMode.HEAT,
+      setpointTemperatureHeat = 19f,
+      setpointTemperatureCool = null,
+      label = LocalizedString.Constant("19.0°")
     ),
     active = false,
     onClick = { },
     onLongClick = { },
-    modifier = Modifier.padding(horizontal = 26.dp, vertical = 18.dp)
+    modifier = Modifier.padding(start = Distance.default, top = 20.dp)
   )
 
 @Composable
@@ -167,8 +171,7 @@ private fun ProgramButtonText() =
   )
 
 @Composable
-context (BoxScope)
-private fun ProgramBoxInfo(
+private fun BoxScope.ProgramBoxInfo(
   state: MutableTransitionState<Boolean>,
   topMargin: Dp,
   boxWidth: Dp,
@@ -234,14 +237,14 @@ private fun SampleBoxText(topMargin: Dp, boxWidth: Dp, boxHeight: Dp) =
   )
 
 @Composable
-context (BoxScope)
-private fun DarkCornerInfo(
+private fun BoxScope.DarkCornerInfo(
   state: MutableTransitionState<Boolean>,
   topMargin: Dp,
   boxWidth: Dp,
   boxHeight: Dp
 ) {
-  val arrowTopMargin = topMargin.plus(boxHeight.times(11)).plus(44.dp)
+  val row = if (LocalConfiguration.current.isPhoneLandscape) 3 else 11
+  val arrowTopMargin = topMargin.plus(boxHeight.times(row).plus(boxSpacing.times(row)))
   FadeInBlock(state = state, delay = 500, modifier = Modifier.align(Alignment.TopEnd)) {
     SampleDarkCornerBox(topMargin = arrowTopMargin, boxWidth = boxWidth, boxHeight = boxHeight)
   }

@@ -17,18 +17,7 @@ package org.supla.android.features.details.thermostatdetail.schedule.extensions
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.annotation.ColorRes
-import org.supla.android.R
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
-
-@ColorRes
-fun SuplaScheduleProgram.colorRes(): Int = when (this) {
-  SuplaScheduleProgram.OFF -> R.color.disabled
-  SuplaScheduleProgram.PROGRAM_1 -> R.color.light_blue
-  SuplaScheduleProgram.PROGRAM_2 -> R.color.light_green
-  SuplaScheduleProgram.PROGRAM_3 -> R.color.light_orange
-  SuplaScheduleProgram.PROGRAM_4 -> R.color.light_red
-}
 
 fun SuplaScheduleProgram.number(): Int = when (this) {
   SuplaScheduleProgram.PROGRAM_1 -> 1

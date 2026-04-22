@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Date
 
 plugins {
@@ -13,7 +14,7 @@ plugins {
 
 android {
   compileSdk = libs.versions.compileSdk.get().toInt()
-  buildToolsVersion = libs.versions.buildTools.get()
+  buildToolsVersion = "36.0.0"
   namespace = "org.supla.android"
 
   useLibrary("android.test.runner")
@@ -24,9 +25,8 @@ android {
     applicationId = "org.supla.android"
     minSdk = libs.versions.minSdk.get().toInt()
     targetSdk = libs.versions.targetSdk.get().toInt()
-    multiDexEnabled = true
-    versionCode = 317
-    versionName = "26.03"
+    versionCode = 320
+    versionName = "26.04"
 
     ndk {
       moduleName = "suplaclient"
@@ -46,7 +46,7 @@ android {
   buildTypes {
     getByName("release") {
       isMinifyEnabled = false
-      proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+      proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
     }
     create("internaltest") {
       initWith(buildTypes.getByName("debug"))
@@ -61,13 +61,13 @@ android {
 
   sourceSets {
     getByName("internaltest") {
-      res.srcDir("internaltest/res")
+      res.directories.add("internaltest/res")
     }
     getByName("internalTestRelease") {
-      res.srcDir("internaltest/res")
+      res.directories.add("internaltest/res")
     }
     getByName("main") {
-      jniLibs.srcDir("src/main/libs")
+      jniLibs.directories.add("src/main/libs")
     }
   }
 
@@ -102,10 +102,6 @@ android {
     buildConfig = true
   }
 
-  kotlinOptions {
-    jvmTarget = "21"
-    freeCompilerArgs = listOf("-Xcontext-receivers", "-Xjvm-default=all")
-  }
   packaging {
     jniLibs {
       useLegacyPackaging = false
@@ -113,10 +109,15 @@ android {
   }
 }
 
+kotlin {
+  compilerOptions {
+    jvmTarget.set(JvmTarget.JVM_21)
+  }
+}
+
 dependencies {
   implementation(project(":shared-core"))
 
-  implementation(libs.multidex)
   implementation(libs.androidChart)
   implementation(libs.googleMaterial)
   implementation(libs.coroutines.android)
@@ -232,7 +233,9 @@ spotless {
         "ktlint_standard_function-signature" to "disabled",
         "ktlint_standard_enum-wrapping" to "disabled",
         "ktlint_standard_value-parameter-comment" to "disabled",
-        "ktlint_function_naming_ignore_when_annotated_with" to "Composable"
+        "ktlint_function_naming_ignore_when_annotated_with" to "Composable",
+        "ktlint_standard_blank-line-between-when-entries" to "disabled",
+        "ij_kotlin_line_break_after_multiline_when_entry" to "false"
       )
     )
   }

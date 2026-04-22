@@ -32,6 +32,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.core.content.res.ResourcesCompat;
 import dagger.hilt.android.AndroidEntryPoint;
@@ -174,6 +175,16 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
     mDeviceListSpinner.setOnItemSelectedListener(this);
     mChannelListSpinner.setOnItemSelectedListener(this);
     mFunctionListSpinner.setOnItemSelectedListener(this);
+
+    getOnBackPressedDispatcher()
+        .addCallback(
+            this,
+            new OnBackPressedCallback(true) {
+              @Override
+              public void handleOnBackPressed() {
+                handleBackPressed();
+              }
+            });
   }
 
   private String getChannelName(Channel channel) {
@@ -1364,9 +1375,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
   @Override
   public void onNothingSelected(AdapterView<?> parent) {}
 
-  @Override
-  public void onBackPressed() {
-    super.onBackPressed();
+  public void handleBackPressed() {
     switch (getVisiblePageId()) {
       case PAGE_ZWAVE_ERROR:
         if (mPreviousPage > 0) {

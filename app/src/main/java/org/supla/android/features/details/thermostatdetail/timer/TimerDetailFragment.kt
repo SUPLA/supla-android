@@ -20,32 +20,33 @@ package org.supla.android.features.details.thermostatdetail.timer
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Composable
 import androidx.fragment.app.viewModels
-import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
-import org.supla.android.core.ui.BaseFragment
+import org.supla.android.core.ui.BaseComposeFragment
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.databinding.FragmentComposeBinding
-import org.supla.android.features.details.thermostatdetail.timer.ui.ThermostatTimerDetail
+import org.supla.android.features.details.thermostatdetail.timer.ui.View
+import org.supla.android.ui.views.SegmentedComponentItem
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 
 @AndroidEntryPoint
-class TimerDetailFragment : BaseFragment<TimerDetailViewState, TimerDetailViewEvent>(R.layout.fragment_compose) {
+class TimerDetailFragment : BaseComposeFragment<TimerDetailViewState, TimerDetailViewEvent>() {
 
   override val viewModel: TimerDetailViewModel by viewModels()
-  private val binding by viewBinding(FragmentComposeBinding::bind)
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-
-    binding.composeContent.setContent {
-      SuplaTheme {
-        ThermostatTimerDetail(viewModel)
-      }
-    }
-
     viewModel.observeData(item.remoteId)
+  }
+
+  @Composable
+  override fun ComposableContent(viewState: TimerDetailViewState) {
+    SuplaTheme {
+      viewModel.View(viewState)
+    }
   }
 
   override fun onResume() {
@@ -54,9 +55,6 @@ class TimerDetailFragment : BaseFragment<TimerDetailViewState, TimerDetailViewEv
   }
 
   override fun handleEvents(event: TimerDetailViewEvent) {
-  }
-
-  override fun handleViewState(state: TimerDetailViewState) {
   }
 
   override fun onSuplaMessage(message: SuplaClientMessage) {
@@ -68,19 +66,18 @@ class TimerDetailFragment : BaseFragment<TimerDetailViewState, TimerDetailViewEv
   }
 }
 
-enum class DeviceMode(val position: Int, @StringRes val stringRes: Int) {
-  OFF(0, R.string.turn_off),
-  MANUAL(1, R.string.details_timer_manual_mode);
+enum class DeviceMode(@param:StringRes val stringRes: Int) : SegmentedComponentItem {
+  OFF(R.string.turn_off),
+  MANUAL(R.string.details_timer_manual_mode),
+
+  AUTO(R.string.auto),
+  HEATING(R.string.hvac_mode_heating),
+  COOLING(R.string.hvac_mode_cooling);
+
+  override val label: LocalizedString = localizedString(stringRes)
 
   companion object {
-    fun from(idx: Int): DeviceMode {
-      entries.forEachIndexed { index, deviceMode ->
-        if (idx == index) {
-          return deviceMode
-        }
-      }
-
-      throw IllegalArgumentException("Device Mode for idx `$idx` not found")
-    }
+    val defaultModes = listOf(OFF, MANUAL)
+    val heatCoolModes = listOf(OFF, AUTO, HEATING, COOLING)
   }
 }

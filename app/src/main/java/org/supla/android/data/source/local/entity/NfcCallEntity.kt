@@ -62,13 +62,15 @@ data class NfcCallEntity(
 enum class NfcCallResult(val value: Int) {
   SUCCESS(1),
   FAILURE(2),
-  ACTION_MISSING(3);
+  ACTION_MISSING(3),
+  TAG_ADDED(4);
 
   companion object {
     fun from(value: Int): NfcCallResult =
       when (value) {
         1 -> SUCCESS
         3 -> ACTION_MISSING
+        4 -> TAG_ADDED
         else -> FAILURE
       }
   }

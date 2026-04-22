@@ -144,7 +144,6 @@ fun SuplaFunction.hasCustomFilters(): Boolean =
     SuplaFunction.FLOOD_SENSOR,
     SuplaFunction.MOTION_SENSOR,
     SuplaFunction.BINARY_SENSOR -> false
-
     SuplaFunction.ELECTRICITY_METER,
     SuplaFunction.POWER_SWITCH,
     SuplaFunction.LIGHTSWITCH,

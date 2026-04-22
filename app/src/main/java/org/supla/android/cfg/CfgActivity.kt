@@ -19,6 +19,10 @@ package org.supla.android.cfg
 
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.enableEdgeToEdge
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
@@ -40,6 +44,7 @@ import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.BaseActivity
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.databinding.ActivityCfgBinding
+import org.supla.android.extensions.setStatusBarColor
 import org.supla.android.extensions.setupOrientationLock
 import org.supla.android.features.createaccount.CreateAccountFragment
 import org.supla.android.navigator.CfgActivityNavigator
@@ -47,6 +52,7 @@ import org.supla.android.profile.ProfileManager
 import org.supla.android.ui.AppBar
 import org.supla.android.usecases.profile.GetProfilesCountUseCase
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class CfgActivity : BaseActivity() {
@@ -94,6 +100,8 @@ class CfgActivity : BaseActivity() {
     super.onCreate(savedInstanceState)
     setupOrientationLock(applicationPreferences)
 
+    enableEdgeToEdge()
+
     binding = DataBindingUtil.setContentView(this, R.layout.activity_cfg)
     binding.lifecycleOwner = this
 
@@ -130,19 +138,33 @@ class CfgActivity : BaseActivity() {
     navController.addOnDestinationChangedListener { _, _, _ -> configureNavBar() }
 
     onBackPressedDispatcher.addCallback(this, onBackCallback)
+
+    ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.nav_area)) { view, insets ->
+      val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+      val appBarHeight = resources.getDimension(R.dimen.top_bar_height).roundToInt()
+      binding.incToolbar.appBarLayout.setPadding(0, bars.top, 0, 0)
+      binding.navHostContainer.layoutParams = (binding.navHostContainer.layoutParams as CoordinatorLayout.LayoutParams)
+        .apply { topMargin = bars.top + appBarHeight }
+
+      view.setPadding(0, 0, 0, bars.bottom)
+      insets
+    }
   }
 
   override fun onResume() {
     super.onResume()
+    setStatusBarColor(R.color.primary_container, R.color.surface, false)
+
     val navController = findNavController(R.id.nav_host_fragment)
     val dest = navController.currentDestination
     if (dest != null) {
       // Temporary hack to match look and feel of the rest of the app
       // prior to moving everything into navigation graph.
       if (dest.id == R.id.cfgAuth) {
-        supportActionBar?.setTitle(dest.label ?: "")
+        supportActionBar?.title = dest.label ?: ""
       } else {
-        supportActionBar?.setSubtitle(dest.label ?: "")
+        supportActionBar?.subtitle = dest.label ?: ""
       }
     }
 

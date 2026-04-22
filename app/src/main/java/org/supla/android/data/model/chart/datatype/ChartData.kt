@@ -227,7 +227,6 @@ abstract class ChartData(
     ChartRange.LAST_YEAR,
     ChartRange.CUSTOM,
     ChartRange.ALL_HISTORY -> false
-
     else -> true
   }
 

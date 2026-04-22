@@ -68,7 +68,6 @@ class GroupTotalValue {
           SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER,
           SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE ->
             OpenedClosedGroupValue(it)
-
           SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
           SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW,
           SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING,
@@ -76,25 +75,18 @@ class GroupTotalValue {
           SuplaConst.SUPLA_CHANNELFNC_VERTICAL_BLIND,
           SuplaConst.SUPLA_CHANNELFNC_ROLLER_GARAGE_DOOR ->
             ShadingSystemGroupValue(it)
-
           SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND ->
             ShadowingBlindGroupValue(it)
-
           SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN ->
             ProjectorScreenGroupValue(it)
-
           SuplaConst.SUPLA_CHANNELFNC_DIMMER ->
             DimmerGroupValue(it)
-
           SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING ->
             RgbGroupValue(it)
-
           SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING ->
             DimmerAndRgbGroupValue(it)
-
           SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS ->
             HeatpolThermostatGroupValue(it)
-
           else -> throw IllegalStateException("Parse not supported for function `$function`")
         }
       }

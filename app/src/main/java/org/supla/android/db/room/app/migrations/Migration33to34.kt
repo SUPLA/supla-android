@@ -35,8 +35,8 @@ val MIGRATION_33_34: Migration = object : Migration(33, 34), SqlExecutor {
       )
   """.trimIndent()
 
-  override fun migrate(database: SupportSQLiteDatabase) {
-    execSQL(database, "DROP TABLE ${NotificationEntity.TABLE_NAME}")
-    execSQL(database, CREATE_NOTIFICATION_TABLE)
+  override fun migrate(db: SupportSQLiteDatabase) {
+    execSQL(db, "DROP TABLE ${NotificationEntity.TABLE_NAME}")
+    execSQL(db, CREATE_NOTIFICATION_TABLE)
   }
 }

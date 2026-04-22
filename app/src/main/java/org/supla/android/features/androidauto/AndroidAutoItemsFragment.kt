@@ -36,9 +36,9 @@ class AndroidAutoItemsFragment : BaseComposeFragment<AndroidAutoItemsViewModelSt
   lateinit var navigator: MainNavigator
 
   @Composable
-  override fun ComposableContent(modelState: AndroidAutoItemsViewModelState) {
+  override fun ComposableContent(viewState: AndroidAutoItemsViewModelState) {
     SuplaTheme {
-      viewModel.View(viewState = modelState.viewState)
+      viewModel.View(viewState = viewState.viewState)
     }
   }
 

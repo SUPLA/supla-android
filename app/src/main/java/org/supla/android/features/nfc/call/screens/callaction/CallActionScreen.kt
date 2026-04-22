@@ -65,7 +65,7 @@ interface CallActionScreenScope {
 }
 
 data class CallActionScreenState(
-  val step: TagProcessingStep = TagProcessingStep.Processing,
+  val step: TagProcessingStep = TagProcessingStep.Pending,
   val tagData: TagData? = null
 ) {
   data class TagData(
@@ -124,6 +124,7 @@ private fun HeaderIcon(step: TagProcessingStep) {
   val resource =
     when (step) {
       is TagProcessingStep.Failure -> R.drawable.nfc_scanning_error
+      TagProcessingStep.Pending,
       TagProcessingStep.Processing -> R.drawable.nfc_scanning_in_progress
       TagProcessingStep.Success -> R.drawable.nfc_scanning_success
     }
@@ -162,6 +163,7 @@ private fun TagData(data: CallActionScreenState.TagData) {
 @Composable
 private fun StepContent(step: TagProcessingStep) {
   when (step) {
+    TagProcessingStep.Pending,
     TagProcessingStep.Processing -> ProcessingInfo()
     TagProcessingStep.Success -> TitleLarge(R.string.call_nfc_action_success)
     is TagProcessingStep.Failure -> FailureInfo(step.type)
@@ -264,7 +266,7 @@ private fun Preview_Failure() {
     previewScope.View(
       screenState = CallActionScreenState(
         tagData = tagData,
-        step = TagProcessingStep.Failure(TagProcessingStep.FailureType.TagNotFound(""))
+        step = TagProcessingStep.Failure(TagProcessingStep.FailureType.ActionFailed)
       )
     )
   }

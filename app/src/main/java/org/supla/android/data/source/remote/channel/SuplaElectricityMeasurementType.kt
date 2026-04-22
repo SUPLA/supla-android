@@ -24,7 +24,7 @@ import org.supla.android.ui.views.spinner.SpinnerItem
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 
-enum class SuplaElectricityMeasurementType(val rawValue: Int, val ordering: Int, @StringRes val labelRes: Int) : SpinnerItem {
+enum class SuplaElectricityMeasurementType(val rawValue: Int, val ordering: Int, @param:StringRes val labelRes: Int) : SpinnerItem {
   FREQUENCY(0x1, 1, R.string.details_em_frequency),
   VOLTAGE(0x2, 3, R.string.details_em_voltage),
   CURRENT(0x4, 4, R.string.details_em_current),
@@ -68,7 +68,6 @@ enum class SuplaElectricityMeasurementType(val rawValue: Int, val ordering: Int,
       POWER_ACTIVE_KW,
       POWER_REACTIVE_KVAR,
       POWER_APPARENT_KVA -> true
-
       else -> false
     }
 
@@ -90,7 +89,6 @@ enum class SuplaElectricityMeasurementType(val rawValue: Int, val ordering: Int,
       REVERSE_ACTIVE_ENERGY -> { _, sum -> sum.totalReverseActiveEnergy.toFloat() }
       FORWARD_REACTIVE_ENERGY -> { _, sum -> sum.totalForwardReactiveEnergy.toFloat() }
       REVERSE_REACTIVE_ENERGY -> { _, sum -> sum.totalReverseReactiveEnergy.toFloat() }
-
       else -> null
     }
 
@@ -108,7 +106,6 @@ enum class SuplaElectricityMeasurementType(val rawValue: Int, val ordering: Int,
       REVERSE_ACTIVE_ENERGY,
       FORWARD_ACTIVE_ENERGY_BALANCED,
       REVERSE_ACTIVE_ENERGY_BALANCED -> "kWh"
-
       FORWARD_REACTIVE_ENERGY, REVERSE_REACTIVE_ENERGY -> "kvarh"
       VOLTAGE_PHASE_SEQUENCE, CURRENT_PHASE_SEQUENCE -> ""
     }
@@ -125,13 +122,10 @@ enum class SuplaElectricityMeasurementType(val rawValue: Int, val ordering: Int,
       PHASE_ANGLE -> 2
       FORWARD_ACTIVE_ENERGY,
       REVERSE_ACTIVE_ENERGY -> 5
-
       FORWARD_REACTIVE_ENERGY,
       REVERSE_REACTIVE_ENERGY -> 5
-
       VOLTAGE_PHASE_ANGLE_12,
       VOLTAGE_PHASE_ANGLE_13 -> 1
-
       else -> 0
     }
 
@@ -141,7 +135,6 @@ enum class SuplaElectricityMeasurementType(val rawValue: Int, val ordering: Int,
       REVERSE_ACTIVE_ENERGY,
       FORWARD_REACTIVE_ENERGY,
       REVERSE_REACTIVE_ENERGY -> true
-
       else -> false
     }
 
@@ -181,7 +174,6 @@ enum class SuplaElectricityMeasurementType(val rawValue: Int, val ordering: Int,
       REVERSE_ACTIVE_ENERGY,
       FORWARD_REACTIVE_ENERGY,
       REVERSE_REACTIVE_ENERGY -> Value.Single(values.sum())
-
       else -> null
     }
 

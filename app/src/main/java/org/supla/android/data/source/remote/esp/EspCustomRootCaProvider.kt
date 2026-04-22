@@ -35,7 +35,7 @@ private const val CA_FILE_NAME = "supla_org_cert.crt"
 
 @Singleton
 class EspCustomRootCaProvider @Inject constructor(
-  @ApplicationContext private val context: Context
+  @param:ApplicationContext private val context: Context
 ) {
 
   var customTrustManager: X509TrustManager? = null

@@ -200,17 +200,14 @@ interface SubjectItemConversionScope {
         SuplaFunction.DIMMER -> "0"
         SuplaFunction.RGB_LIGHTING -> "${channel.channelValueEntity.asRgbwwValue().rgb}"
         SuplaFunction.DIMMER_AND_RGB_LIGHTING -> "${channel.channelValueEntity.asRgbwwValue().rgb}"
-
         SuplaFunction.THERMOMETER,
         SuplaFunction.GENERAL_PURPOSE_METER,
         SuplaFunction.GENERAL_PURPOSE_MEASUREMENT -> getChannelValueStringUseCase.invoke(ChannelWithChildren(channel))
-
         SuplaFunction.HUMIDITY_AND_TEMPERATURE -> ChannelWithChildren(channel).let {
           val temperature = getChannelValueStringUseCase(it)
           val humidity = getChannelValueStringUseCase(it, valueType = ValueType.SECOND)
           "$temperature\n$humidity"
         }
-
         else -> NO_VALUE_TEXT
       }
     )
@@ -229,7 +226,6 @@ interface SubjectItemConversionScope {
         SuplaFunction.RGB_LIGHTING,
         SuplaFunction.DIMMER_AND_RGB_LIGHTING,
         SuplaFunction.DIMMER -> "0"
-
         else -> NO_VALUE_TEXT
       }
     )
@@ -256,7 +252,6 @@ interface SubjectItemConversionScope {
         } else {
           listOf(ActionId.OPEN_CLOSE)
         }
-
       else -> channel.function.actions
     }
 
@@ -306,19 +301,15 @@ interface SubjectItemConversionScope {
       SuplaFunction.MOTION_SENSOR,
       SuplaFunction.BINARY_SENSOR,
       SuplaFunction.NONE -> emptyList()
-
       SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
       SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK -> listOf(ActionId.OPEN)
-
       SuplaFunction.CONTROLLING_THE_GATE,
       SuplaFunction.CONTROLLING_THE_GARAGE_DOOR -> listOf(ActionId.OPEN_CLOSE)
-
       SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER,
       SuplaFunction.CONTROLLING_THE_ROOF_WINDOW,
       SuplaFunction.CONTROLLING_THE_FACADE_BLIND,
       SuplaFunction.VERTICAL_BLIND,
       SuplaFunction.ROLLER_GARAGE_DOOR -> listOf(ActionId.SHUT, ActionId.REVEAL)
-
       SuplaFunction.POWER_SWITCH,
       SuplaFunction.LIGHTSWITCH,
       SuplaFunction.STAIRCASE_TIMER,
@@ -331,10 +322,8 @@ interface SubjectItemConversionScope {
       SuplaFunction.HVAC_THERMOSTAT,
       SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
       SuplaFunction.HVAC_DOMESTIC_HOT_WATER -> listOf(ActionId.TURN_ON, ActionId.TURN_OFF, ActionId.TOGGLE)
-
       SuplaFunction.VALVE_OPEN_CLOSE,
       SuplaFunction.VALVE_PERCENTAGE -> listOf(ActionId.OPEN, ActionId.CLOSE)
-
       SuplaFunction.TERRACE_AWNING,
       SuplaFunction.PROJECTOR_SCREEN,
       SuplaFunction.CURTAIN -> listOf(ActionId.EXPAND, ActionId.COLLAPSE)

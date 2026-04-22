@@ -191,9 +191,7 @@ class ChannelListViewModel @Inject constructor(
       is ThermometerDetailType -> sendEvent(ChannelListViewEvent.OpenSingleHistoryDetail(ItemBundle.from(channel), detailType.pages))
       is GpmDetailType -> sendEvent(ChannelListViewEvent.OpenSingleHistoryDetail(ItemBundle.from(channel), detailType.pages))
       is HumidityDetailType -> sendEvent(ChannelListViewEvent.OpenSingleHistoryDetail(ItemBundle.from(channel), detailType.pages))
-
       is StandardDetailType -> sendEvent(ChannelListViewEvent.OpenStandardDetail(ItemBundle.from(channel), detailType.pages))
-
       is ThermostatDetailType -> sendEvent(ChannelListViewEvent.OpenThermostatDetail(ItemBundle.from(channel), detailType.pages))
       is IcDetailType -> sendEvent(ChannelListViewEvent.OpenIcDetail(ItemBundle.from(channel), detailType.pages))
       is LegacyDetailType -> sendEvent(ChannelListViewEvent.OpenLegacyDetails(channel.remoteId, detailType))

@@ -28,7 +28,7 @@ import org.supla.android.databinding.FragmentComposeBinding
 
 abstract class BaseComposeFragment<S : ViewState, E : ViewEvent> : BaseFragment<S, E>(R.layout.fragment_compose) {
 
-  private val binding by viewBinding(FragmentComposeBinding::bind)
+  protected val binding by viewBinding(FragmentComposeBinding::bind)
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -40,7 +40,7 @@ abstract class BaseComposeFragment<S : ViewState, E : ViewEvent> : BaseFragment<
   }
 
   @Composable
-  abstract fun ComposableContent(modelState: S)
+  abstract fun ComposableContent(viewState: S)
 
   override fun handleViewState(state: S) {
   }

@@ -26,7 +26,7 @@ import javax.inject.Singleton
 
 @Singleton
 class ReconnectUseCase @Inject constructor(
-  @ApplicationContext private val applicationContext: Context,
+  @param:ApplicationContext private val applicationContext: Context,
   private val disconnectUseCase: DisconnectUseCase,
   private val suplaAppProvider: SuplaAppProvider,
 ) {

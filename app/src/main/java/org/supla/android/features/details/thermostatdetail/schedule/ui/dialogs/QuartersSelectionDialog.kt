@@ -49,69 +49,76 @@ import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.source.local.calendar.DayOfWeek
 import org.supla.android.data.source.local.calendar.QuarterOfHour
+import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
+import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.features.details.thermostatdetail.schedule.data.QuartersSelectionData
-import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailEntryBoxKey
-import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailEntryBoxValue
 import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailProgramBox
-import org.supla.android.features.details.thermostatdetail.schedule.extensions.colorRes
-import org.supla.android.features.details.thermostatdetail.schedule.ui.PreviewProxy
-import org.supla.android.features.details.thermostatdetail.schedule.ui.ScheduleDetailViewProxy
+import org.supla.android.features.details.thermostatdetail.schedule.data.ThermostatScheduleDetailEntryBoxValue
 import org.supla.android.features.details.thermostatdetail.schedule.ui.components.ScheduleHourCaption
 import org.supla.android.features.details.thermostatdetail.schedule.ui.components.ScheduleProgramButton
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.ui.dialogs.Dialog
 import org.supla.android.ui.dialogs.DialogButtonsRow
 import org.supla.android.ui.views.Separator
 import org.supla.android.ui.views.SeparatorStyle
 import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.buttons.OutlinedButton
+import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxKey
+import org.supla.android.ui.views.schedule.colorRes
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
+
+interface QuartersSelectionDialogScope {
+  fun onQuartersSelectionProgramChange(program: SuplaScheduleProgram)
+  fun onQuartersSelectionQuarterChange(quarterOfHour: QuarterOfHour)
+  fun onQuartersSelectionDismiss()
+  fun onQuartersSelectionFinish()
+}
 
 @Composable
-fun QuartersSelectionDialog(
+fun QuartersSelectionDialogScope.QuartersDialog(
   data: QuartersSelectionData,
   programs: List<ScheduleDetailProgramBox>,
-  viewProxy: ScheduleDetailViewProxy,
-  onDismiss: () -> Unit,
-  onNegativeClick: () -> Unit,
-  onPositiveClick: () -> Unit
 ) {
   val key = data.entryKey
   val value = data.entryValue
 
-  Dialog(onDismiss = onDismiss, usePlatformDefaultWidth = true) {
+  Dialog(onDismiss = { onQuartersSelectionDismiss() }, usePlatformDefaultWidth = true) {
     DialogHeader(hour = key.hour)
     ScheduleProgramsRow {
       for (programBox in programs) {
         ScheduleProgramButton(
           programBox = programBox,
           modifier = Modifier.padding(vertical = 4.dp),
-          active = programBox.scheduleProgram.program == data.activeProgram,
-          onClick = { viewProxy.onQuartersDialogProgramChange(programBox.scheduleProgram.program) }
+          active = programBox.program == data.activeProgram,
+          onClick = { onQuartersSelectionProgramChange(programBox.program) }
         )
       }
     }
 
     DayLabel(textRes = key.dayOfWeek.fullText)
 
-    QuarterRow(key = key, program = value.firstQuarterProgram, quarterOfHour = QuarterOfHour.FIRST, viewProxy = viewProxy)
-    QuarterRow(key = key, program = value.secondQuarterProgram, quarterOfHour = QuarterOfHour.SECOND, viewProxy = viewProxy)
-    QuarterRow(key = key, program = value.thirdQuarterProgram, quarterOfHour = QuarterOfHour.THIRD, viewProxy = viewProxy)
-    QuarterRow(key = key, program = value.fourthQuarterProgram, quarterOfHour = QuarterOfHour.FOURTH, viewProxy = viewProxy)
+    QuarterRow(key = key, program = value.firstQuarterProgram, quarterOfHour = QuarterOfHour.FIRST)
+    QuarterRow(key = key, program = value.secondQuarterProgram, quarterOfHour = QuarterOfHour.SECOND)
+    QuarterRow(key = key, program = value.thirdQuarterProgram, quarterOfHour = QuarterOfHour.THIRD)
+    QuarterRow(key = key, program = value.fourthQuarterProgram, quarterOfHour = QuarterOfHour.FOURTH)
 
     Separator(style = SeparatorStyle.LIGHT, modifier = Modifier.padding(top = dimensionResource(id = R.dimen.distance_default)))
     DialogButtonsRow {
-      OutlinedButton(onClick = onNegativeClick, text = stringResource(id = R.string.cancel), modifier = Modifier.weight(1f))
-      Button(onClick = onPositiveClick, text = stringResource(id = R.string.save), modifier = Modifier.weight(1f))
+      OutlinedButton(onClick = {
+        onQuartersSelectionDismiss()
+      }, text = stringResource(id = R.string.cancel), modifier = Modifier.weight(1f))
+      Button(onClick = { onQuartersSelectionFinish() }, text = stringResource(id = R.string.save), modifier = Modifier.weight(1f))
     }
   }
 }
 
 @Composable
-private fun QuarterRow(
+private fun QuartersSelectionDialogScope.QuarterRow(
   key: ScheduleDetailEntryBoxKey,
   program: SuplaScheduleProgram,
   quarterOfHour: QuarterOfHour = QuarterOfHour.FIRST,
-  viewProxy: ScheduleDetailViewProxy
 ) =
   Row(
     modifier = Modifier
@@ -132,7 +139,7 @@ private fun QuarterRow(
         .clickable(
           interactionSource = remember { MutableInteractionSource() },
           indication = null,
-          onClick = { viewProxy.onQueartersDialogQuarterChange(quarterOfHour) }
+          onClick = { onQuartersSelectionQuarterChange(quarterOfHour) }
         )
     )
   }
@@ -186,21 +193,77 @@ private fun ScheduleBoxSingleColor(modifier: Modifier = Modifier, @ColorRes colo
       .background(colorResource(id = colorRes))
   )
 
+private val previewScope = object : QuartersSelectionDialogScope {
+  override fun onQuartersSelectionProgramChange(program: SuplaScheduleProgram) {}
+  override fun onQuartersSelectionQuarterChange(quarterOfHour: QuarterOfHour) {}
+  override fun onQuartersSelectionDismiss() {}
+  override fun onQuartersSelectionFinish() {}
+}
+
 @Preview
 @Composable
 private fun Preview() {
   SuplaTheme {
-    QuartersSelectionDialog(
+    previewScope.QuartersDialog(
       QuartersSelectionData(
         ScheduleDetailEntryBoxKey(DayOfWeek.FRIDAY, 6),
-        ScheduleDetailEntryBoxValue(SuplaScheduleProgram.PROGRAM_1),
+        ThermostatScheduleDetailEntryBoxValue(SuplaScheduleProgram.PROGRAM_1),
         SuplaScheduleProgram.PROGRAM_1
       ),
-      ScheduleDetailProgramBox.default(),
-      PreviewProxy(emptyMap()),
-      {},
-      {},
-      {}
+      programs,
     )
   }
 }
+
+private val programs = listOf(
+  ScheduleDetailProgramBox(
+    SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
+    ThermostatSubfunction.HEAT,
+    SuplaScheduleProgram.PROGRAM_1,
+    SuplaHvacMode.HEAT,
+    20f,
+    null,
+    LocalizedString.Constant("20.0°"),
+    R.drawable.ic_heat
+  ),
+  ScheduleDetailProgramBox(
+    SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
+    ThermostatSubfunction.HEAT,
+    SuplaScheduleProgram.PROGRAM_2,
+    SuplaHvacMode.COOL,
+    null,
+    22.5f,
+    LocalizedString.Constant("22.5°"),
+    R.drawable.ic_cool
+  ),
+  ScheduleDetailProgramBox(
+    SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
+    ThermostatSubfunction.HEAT,
+    SuplaScheduleProgram.PROGRAM_3,
+    SuplaHvacMode.HEAT_COOL,
+    21f,
+    22.5f,
+    LocalizedString.Constant("21.0° - 22.5°"),
+    R.drawable.ic_heat
+  ),
+  ScheduleDetailProgramBox(
+    SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
+    ThermostatSubfunction.HEAT,
+    SuplaScheduleProgram.PROGRAM_4,
+    SuplaHvacMode.HEAT,
+    23f,
+    null,
+    LocalizedString.Constant("23.5°"),
+    R.drawable.ic_cool
+  ),
+  ScheduleDetailProgramBox(
+    SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
+    ThermostatSubfunction.HEAT,
+    SuplaScheduleProgram.OFF,
+    SuplaHvacMode.OFF,
+    null,
+    null,
+    localizedString(R.string.turn_off),
+    R.drawable.ic_power_button
+  )
+)

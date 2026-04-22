@@ -82,14 +82,12 @@ fun CurtainWindowView(
                 )
               }
             }
-
             MotionEvent.ACTION_MOVE -> {
               moveState.value = moveState.value.copy(lastPoint = Offset(event.x, event.y))
               windowDimens
                 .getPositionFromState(moveState.value, bidirectional = true)
                 ?.let { position -> onPositionChanging?.let { it(position.x) } }
             }
-
             MotionEvent.ACTION_UP -> {
               onPositionChanged?.let { it(windowState.position.value) }
               moveState.value = moveState.value.copy(initialPoint = null)
@@ -103,7 +101,7 @@ fun CurtainWindowView(
       return@Canvas // Skip drawing when view size is not set yet
     }
 
-    WindowDrawer.drawWindow(runtimeDimens = windowDimens, colors = colors, windowState = windowState)
+    WindowDrawer.drawWindow(this@Canvas, runtimeDimens = windowDimens, colors = colors, windowState = windowState)
     if (enabled.not()) {
       drawRect(colors.disabledOverlay)
     }
@@ -112,8 +110,7 @@ fun CurtainWindowView(
 
 private object WindowDrawer : WindowDrawerBase<RuntimeDimens, CurtainWindowState, CurtainColors>() {
 
-  context (DrawScope)
-  override fun drawShadowingElements(windowState: CurtainWindowState, runtimeDimens: RuntimeDimens, colors: CurtainColors) {
+  override fun DrawScope.drawShadowingElements(windowState: CurtainWindowState, runtimeDimens: RuntimeDimens, colors: CurtainColors) {
     val position = if (windowState.markers.isEmpty()) windowState.position.value else windowState.markers.max()
 
     val curtainWidthDiff = runtimeDimens.leftCurtainRect.width.minus(runtimeDimens.curtainMinWidth).times(100.minus(position)).div(100)
@@ -122,8 +119,7 @@ private object WindowDrawer : WindowDrawerBase<RuntimeDimens, CurtainWindowState
     drawCurtain(runtimeDimens.rightCurtainRect.narrowToRight(curtainWidthDiff), colors)
   }
 
-  context(DrawScope)
-  override fun drawMarkers(windowState: CurtainWindowState, runtimeDimens: RuntimeDimens, colors: CurtainColors) {
+  override fun DrawScope.drawMarkers(windowState: CurtainWindowState, runtimeDimens: RuntimeDimens, colors: CurtainColors) {
     windowState.markers.forEach { markerPosition ->
       val curtainWidthDiffForMarker = runtimeDimens.leftCurtainRect.width
         .minus(runtimeDimens.curtainMinWidth)
@@ -138,14 +134,12 @@ private object WindowDrawer : WindowDrawerBase<RuntimeDimens, CurtainWindowState
     }
   }
 
-  context (DrawScope)
-  private fun drawCurtain(rect: Rect, colors: CurtainColors) {
+  private fun DrawScope.drawCurtain(rect: Rect, colors: CurtainColors) {
     drawRect(colors.curtainBackground, rect.topLeft, rect.size)
     drawRect(colors.curtainBorder, rect.topLeft, rect.size, style = Stroke(width = 1.dp.toPx()))
   }
 
-  context(DrawScope)
-  private fun drawMarker(offset: Offset, runtimeDimens: RuntimeDimens, colors: CurtainColors) {
+  private fun DrawScope.drawMarker(offset: Offset, runtimeDimens: RuntimeDimens, colors: CurtainColors) {
     runtimeDimens.markerPath.translate(offset)
     drawPath(runtimeDimens.markerPath, colors.markerBackground)
     drawPath(runtimeDimens.markerPath, colors.markerBorder, style = Stroke(1.dp.toPx()))

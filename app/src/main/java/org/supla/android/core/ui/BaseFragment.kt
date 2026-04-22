@@ -27,6 +27,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.FlowPreview
 import org.supla.android.MainActivity
+import org.supla.android.core.infrastructure.navigation.ToolbarOwner
+import org.supla.android.extensions.IntConverter
 import org.supla.android.extensions.visibleIf
 import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.lib.AndroidSuplaClientMessageHandler
@@ -45,7 +47,7 @@ import javax.inject.Inject
 
 const val ARG_ITEM_BUNDLE = "ARG_ITEM_BUNDLE"
 
-abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayoutId: Int) : Fragment(contentLayoutId) {
+abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayoutId: Int) : Fragment(contentLayoutId), IntConverter {
 
   private val suplaMessageListener: SuplaClientMessageHandler.Listener = object : SuplaClientMessageHandler.Listener {
     override fun onReceived(message: SuplaClientMessage) {
@@ -57,6 +59,8 @@ abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayo
 
   protected abstract val viewModel: BaseViewModel<S, E>
   protected open val helperViewModels: List<BaseViewModel<*, *>> = emptyList()
+  protected val toolbar: AppBar?
+    get() = (activity as? ToolbarOwner)?.toolbar
 
   protected val item: ItemBundle by lazy { requireSerializable(ARG_ITEM_BUNDLE, ItemBundle::class.java) }
 

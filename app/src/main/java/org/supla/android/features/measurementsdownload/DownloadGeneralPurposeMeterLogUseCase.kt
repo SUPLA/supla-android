@@ -123,10 +123,8 @@ class DownloadGeneralPurposeMeterLogUseCase @Inject constructor(
     val reset = when (channelConfig.counterType) {
       SuplaChannelConfigMeterCounterType.ALWAYS_INCREMENT ->
         valueDiff < 0 && abs(valueDiff) > oldest.value.times(0.1)
-
       SuplaChannelConfigMeterCounterType.ALWAYS_DECREMENT ->
         valueDiff > 0 && valueDiff > oldest.value.times(0.1)
-
       SuplaChannelConfigMeterCounterType.INCREMENT_AND_DECREMENT -> false
     }
     val timeDiff = entry.date.toTimestamp() - oldest.date.toTimestamp()
@@ -134,10 +132,8 @@ class DownloadGeneralPurposeMeterLogUseCase @Inject constructor(
     val valueIncrement = when (channelConfig.counterType) {
       SuplaChannelConfigMeterCounterType.ALWAYS_INCREMENT ->
         if (reset || valueDiff < 0) 0f else valueDiff
-
       SuplaChannelConfigMeterCounterType.ALWAYS_DECREMENT ->
         if (reset || valueDiff > 0) 0f else valueDiff
-
       SuplaChannelConfigMeterCounterType.INCREMENT_AND_DECREMENT -> valueDiff
     }
 

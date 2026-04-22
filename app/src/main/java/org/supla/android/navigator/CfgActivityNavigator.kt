@@ -17,7 +17,7 @@ import org.supla.android.features.deleteaccountweb.DeleteAccountWebFragment
 import javax.inject.Inject
 
 @ActivityScoped
-class CfgActivityNavigator @Inject constructor(@ActivityContext private val activityContext: Context) {
+class CfgActivityNavigator @Inject constructor(@param:ActivityContext private val activityContext: Context) {
 
   private val navController: NavController
     get() = (activityContext as Activity).findNavController(R.id.nav_host_fragment)

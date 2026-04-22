@@ -37,4 +37,10 @@
     android:title="@string/toolbar_ocr"
     android:visible="false"
     app:showAsAction="always" />
+  <item
+    android:id="@+id/toolbar_search"
+    android:icon="@drawable/ic_search"
+    android:title="@string/general_search"
+    android:visible="false"
+    app:showAsAction="always" />
 </menu>

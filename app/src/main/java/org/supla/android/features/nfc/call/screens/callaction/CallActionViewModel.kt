@@ -17,12 +17,12 @@ package org.supla.android.features.nfc.call.screens.callaction
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.core.net.toUri
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.supla.android.core.infrastructure.DateProvider
+import org.supla.android.core.infrastructure.UriProxy
 import org.supla.android.core.infrastructure.nfc.tagUuid
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
@@ -49,8 +49,10 @@ class CallActionViewModel @Inject constructor(
   private val nfcCallRepository: NfcCallRepository,
   private val nfcTagRepository: NfcTagRepository,
   private val dateProvider: DateProvider,
-  private val schedulers: SuplaSchedulers
+  private val uriProxy: UriProxy,
+  private val schedulers: SuplaSchedulers,
 ) : BaseViewModel<CallActionViewModelState, CallActionViewEvent>(CallActionViewModelState(), schedulers), CallActionScreenScope {
+
   override fun close() {
     sendEvent(CallActionViewEvent.Close)
   }
@@ -67,13 +69,13 @@ class CallActionViewModel @Inject constructor(
     updateState { it.copy(readOnly = readOnly) }
 
     if (url == null) {
-      Timber.d("Url not found!")
+      Timber.e("Url not found!")
       setErrorState(TagProcessingStep.FailureType.IllegalIntent)
       return
     }
     val tagId = resolveUrlToId(url)
     if (tagId == null) {
-      Timber.d("Tag id not found!")
+      Timber.e("Tag id not found!")
       setErrorState(TagProcessingStep.FailureType.UnknownUrl)
       return
     }
@@ -87,7 +89,7 @@ class CallActionViewModel @Inject constructor(
     updateState { it.copy(readOnly = readOnly) }
 
     if (tagId == null) {
-      Timber.d("Tag id not found!")
+      Timber.e("Tag id not found!")
       setErrorState(TagProcessingStep.FailureType.IllegalIntent)
       return
     }
@@ -98,6 +100,12 @@ class CallActionViewModel @Inject constructor(
   }
 
   private suspend fun performAction(tagUuid: String) {
+    if (currentState().screenState.step != TagProcessingStep.Pending) {
+      Timber.w("Tag processing already in progress!")
+      return
+    }
+    setState(TagProcessingStep.Processing)
+
     val currentTime = dateProvider.currentTimestamp()
     val tag = schedulers.io { nfcTagRepository.findByUuidWithDependencies(tagUuid) }
     updateState { it.copy(screenState = it.screenState.copy(tagData = tag?.tagData)) }
@@ -126,23 +134,22 @@ class CallActionViewModel @Inject constructor(
         delay(SUCCESS_DELAY_MS)
         sendEvent(CallActionViewEvent.Close)
       }
-
       SingleCall.Result.NotFound -> setErrorState(TagProcessingStep.FailureType.ChannelNotFound(tag.tagEntity.id))
       SingleCall.Result.Offline -> setErrorState(TagProcessingStep.FailureType.ChannelOffline)
+      SingleCall.Result.Inactive -> setErrorState(TagProcessingStep.FailureType.SceneInactive)
       is SingleCall.Result.AccessError,
       is SingleCall.Result.CommandError,
       is SingleCall.Result.ConnectionError,
       SingleCall.Result.NoSuchProfile,
-      SingleCall.Result.Inactive,
       SingleCall.Result.UnknownError -> setErrorState(TagProcessingStep.FailureType.ActionFailed)
     }
   }
 
   private fun resolveUrlToId(url: String): String? =
     try {
-      url.toUri().tagUuid
+      uriProxy.toUri(url).tagUuid
     } catch (ex: Exception) {
-      Timber.d(ex, "Could not parse url $url")
+      Timber.e(ex, "Could not parse url $url")
       null
     }
 

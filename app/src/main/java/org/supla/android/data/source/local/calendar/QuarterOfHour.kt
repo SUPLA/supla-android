@@ -38,3 +38,13 @@ enum class QuarterOfHour(val startingMinute: Int) {
     }
   }
 }
+
+fun Int.toHour(withQuarter: QuarterOfHour? = null): String =
+  (if (this < 10) "0$this" else "$this").let first@{ string ->
+    return withQuarter?.let second@{
+      return@second "$string:${withQuarter.startingMinuteString}"
+    } ?: string
+  }
+
+fun Short.toHour(withQuarter: QuarterOfHour?): String =
+  this.toInt().toHour(withQuarter = withQuarter)

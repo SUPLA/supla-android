@@ -48,7 +48,6 @@ import org.supla.android.data.model.temperature.TemperatureCorrection
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.features.details.thermostatdetail.schedule.data.ProgramSettingsData
-import org.supla.android.features.details.thermostatdetail.schedule.extensions.colorRes
 import org.supla.android.features.details.thermostatdetail.schedule.extensions.number
 import org.supla.android.ui.dialogs.Dialog
 import org.supla.android.ui.dialogs.DialogButtonsRow
@@ -59,19 +58,22 @@ import org.supla.android.ui.views.buttons.MinusIconButton
 import org.supla.android.ui.views.buttons.OutlinedButton
 import org.supla.android.ui.views.buttons.PlusIconButton
 import org.supla.android.ui.views.forms.TextField
+import org.supla.android.ui.views.schedule.colorRes
 import org.supla.android.ui.views.spinner.Spinner
 import org.supla.core.shared.data.model.thermometer.TemperatureUnit
 
+interface ProgramSettingsScope {
+  fun onProgramSettingsTemperatureClickChange(forMode: SuplaHvacMode, correction: TemperatureCorrection)
+  fun onProgramSettingsTemperatureManualChange(forMode: SuplaHvacMode, value: String)
+  fun onProgramSettingsDismiss()
+  fun onProgramSettingsSave()
+}
+
 @Composable
-fun ProgramSettingsDialog(
-  data: ProgramSettingsData,
-  onTemperatureClickChange: (forMode: SuplaHvacMode, correction: TemperatureCorrection) -> Unit,
-  onTemperatureManualChange: (forMode: SuplaHvacMode, value: String) -> Unit,
-  onDismiss: () -> Unit,
-  onNegativeClick: () -> Unit,
-  onPositiveClick: () -> Unit
+fun ProgramSettingsScope.ProgramDialog(
+  data: ProgramSettingsData
 ) {
-  Dialog(onDismiss = onDismiss) {
+  Dialog(onDismiss = { onProgramSettingsDismiss() }) {
     DialogHeader(program = data.program)
     Separator(style = SeparatorStyle.LIGHT)
     if (data.modes.size > 1) {
@@ -97,9 +99,9 @@ fun ProgramSettingsDialog(
         plusAllowed = data.setpointTemperatureHeatPlusAllowed,
         minusAllowed = data.setpointTemperatureHeatMinusAllowed,
         unit = data.temperatureUnit,
-        onDownClicked = { onTemperatureClickChange(SuplaHvacMode.HEAT, TemperatureCorrection.DOWN) },
-        onUpClicked = { onTemperatureClickChange(SuplaHvacMode.HEAT, TemperatureCorrection.UP) },
-        onValueChanged = { onTemperatureManualChange(SuplaHvacMode.HEAT, it) }
+        onDownClicked = { onProgramSettingsTemperatureClickChange(SuplaHvacMode.HEAT, TemperatureCorrection.DOWN) },
+        onUpClicked = { onProgramSettingsTemperatureClickChange(SuplaHvacMode.HEAT, TemperatureCorrection.UP) },
+        onValueChanged = { onProgramSettingsTemperatureManualChange(SuplaHvacMode.HEAT, it) }
       )
       TemperatureControlRow(
         headerTextRes = SuplaHvacMode.COOL.temperatureTextRes(),
@@ -108,9 +110,9 @@ fun ProgramSettingsDialog(
         plusAllowed = data.setpointTemperatureCoolPlusAllowed,
         minusAllowed = data.setpointTemperatureCoolMinusAllowed,
         unit = data.temperatureUnit,
-        onDownClicked = { onTemperatureClickChange(SuplaHvacMode.COOL, TemperatureCorrection.DOWN) },
-        onUpClicked = { onTemperatureClickChange(SuplaHvacMode.COOL, TemperatureCorrection.UP) },
-        onValueChanged = { onTemperatureManualChange(SuplaHvacMode.COOL, it) }
+        onDownClicked = { onProgramSettingsTemperatureClickChange(SuplaHvacMode.COOL, TemperatureCorrection.DOWN) },
+        onUpClicked = { onProgramSettingsTemperatureClickChange(SuplaHvacMode.COOL, TemperatureCorrection.UP) },
+        onValueChanged = { onProgramSettingsTemperatureManualChange(SuplaHvacMode.COOL, it) }
       )
     } else {
       val mode = data.selectedMode
@@ -126,17 +128,21 @@ fun ProgramSettingsDialog(
         plusAllowed = plus,
         minusAllowed = minus,
         unit = data.temperatureUnit,
-        onDownClicked = { onTemperatureClickChange(data.selectedMode, TemperatureCorrection.DOWN) },
-        onUpClicked = { onTemperatureClickChange(data.selectedMode, TemperatureCorrection.UP) },
-        onValueChanged = { onTemperatureManualChange(data.selectedMode, it) }
+        onDownClicked = { onProgramSettingsTemperatureClickChange(data.selectedMode, TemperatureCorrection.DOWN) },
+        onUpClicked = { onProgramSettingsTemperatureClickChange(data.selectedMode, TemperatureCorrection.UP) },
+        onValueChanged = { onProgramSettingsTemperatureManualChange(data.selectedMode, it) }
       )
     }
 
     Separator(style = SeparatorStyle.LIGHT, modifier = Modifier.padding(top = dimensionResource(id = R.dimen.distance_default)))
     DialogButtonsRow {
-      OutlinedButton(onClick = onNegativeClick, text = stringResource(id = R.string.cancel), modifier = Modifier.weight(1f))
+      OutlinedButton(
+        text = stringResource(id = R.string.cancel),
+        onClick = { onProgramSettingsDismiss() },
+        modifier = Modifier.weight(1f)
+      )
       Button(
-        onClick = onPositiveClick,
+        onClick = { onProgramSettingsSave() },
         text = stringResource(id = R.string.save),
         enabled = when (data.selectedMode) {
           SuplaHvacMode.HEAT -> data.temperatureHeatCorrect
@@ -227,12 +233,19 @@ private fun SuplaHvacMode.temperatureTextRes(): Int = when (this) {
   else -> R.string.hvac_mode_no_caption
 }
 
+private val previewScope = object : ProgramSettingsScope {
+  override fun onProgramSettingsTemperatureClickChange(forMode: SuplaHvacMode, correction: TemperatureCorrection) {}
+  override fun onProgramSettingsTemperatureManualChange(forMode: SuplaHvacMode, value: String) {}
+  override fun onProgramSettingsDismiss() {}
+  override fun onProgramSettingsSave() {}
+}
+
 @Preview
 @Composable
 private fun PreviewAuto() {
   Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
     SuplaTheme {
-      ProgramSettingsDialog(ProgramSettingsData.auto(), { _, _ -> }, { _, _ -> }, {}, {}, {})
+      previewScope.ProgramDialog(ProgramSettingsData.auto())
     }
   }
 }
@@ -242,7 +255,7 @@ private fun PreviewAuto() {
 private fun PreviewHeat() {
   Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
     SuplaTheme {
-      ProgramSettingsDialog(ProgramSettingsData.heat(), { _, _ -> }, { _, _ -> }, {}, {}, {})
+      previewScope.ProgramDialog(ProgramSettingsData.heat())
     }
   }
 }

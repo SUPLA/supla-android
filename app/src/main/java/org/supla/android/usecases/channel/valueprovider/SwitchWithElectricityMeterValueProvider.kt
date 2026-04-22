@@ -38,7 +38,6 @@ class SwitchWithElectricityMeterValueProvider @Inject constructor(
       SuplaFunction.POWER_SWITCH,
       SuplaFunction.LIGHTSWITCH,
       SuplaFunction.STAIRCASE_TIMER -> channelWithChildren.isOrHasElectricityMeter
-
       else -> false
     }
 
@@ -49,7 +48,6 @@ class SwitchWithElectricityMeterValueProvider @Inject constructor(
       SuplaElectricityMeasurementType.POWER_ACTIVE_KW,
       SuplaElectricityMeasurementType.VOLTAGE ->
         electricityMeterValueProvider.value(channelWithChildren, valueType)
-
       else -> asIntValue(
         channelWithChildren.channel.channelValueEntity.getSubValueAsByteArray(),
         startPos = 1,

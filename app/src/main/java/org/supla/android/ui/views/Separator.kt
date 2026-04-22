@@ -48,7 +48,7 @@ fun Separator(
   )
 }
 
-enum class SeparatorStyle(@ColorRes val backgroundColor: Int) {
+enum class SeparatorStyle(@param:ColorRes val backgroundColor: Int) {
   DEFAULT(R.color.separator), LIGHT(R.color.gray_light), OUTLINE(R.color.outline)
 }
 

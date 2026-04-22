@@ -1,4 +1,4 @@
-package org.supla.android.features.details.thermostatdetail.schedule.data
+package org.supla.android.ui.views.schedule
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -25,7 +25,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.supla.android.extensions.toPx
-import org.supla.android.features.details.thermostatdetail.schedule.ui.ScheduleDetailViewProxy
 import org.supla.core.shared.extensions.ifLet
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -38,15 +37,18 @@ data class MotionEventStateHolder(
 
   fun handleEvent(
     event: MotionEvent,
-    viewProxy: ScheduleDetailViewProxy,
     context: Context,
-    coroutineScope: CoroutineScope
+    coroutineScope: CoroutineScope,
+    onLongPress: (ScheduleDetailEntryBoxKey?) -> Unit,
+    onTouched: (ScheduleDetailEntryBoxKey) -> Unit,
+    onInvalidate: () -> Unit,
+    onFinished: () -> Unit
   ): Boolean {
     when (event.action) {
-      MotionEvent.ACTION_DOWN -> handleDownEvent(event, boxes, boxSize, coroutineScope, context, viewProxy)
-      MotionEvent.ACTION_MOVE -> handleMoveEvent(event, boxes, boxSize, viewProxy, context)
-      MotionEvent.ACTION_UP -> handleUpEvent(boxes, event, boxSize, viewProxy, context)
-      else -> viewProxy.invalidateSchedule()
+      MotionEvent.ACTION_DOWN -> handleDownEvent(event, boxes, boxSize, coroutineScope, context, onLongPress)
+      MotionEvent.ACTION_MOVE -> handleMoveEvent(event, boxes, boxSize, context, onTouched)
+      MotionEvent.ACTION_UP -> handleUpEvent(boxes, event, boxSize, context, onTouched, onFinished)
+      else -> onInvalidate()
     }
 
     return true
@@ -58,7 +60,7 @@ data class MotionEventStateHolder(
     boxSize: Size,
     coroutineScope: CoroutineScope,
     context: Context,
-    viewProxy: ScheduleDetailViewProxy
+    onLongPress: (ScheduleDetailEntryBoxKey?) -> Unit
   ) {
     val eventOffset = Offset(event.rawX, event.rawY)
 
@@ -74,7 +76,7 @@ data class MotionEventStateHolder(
       delay(MotionEventState.LONG_PRESS_TIME_MS.toLong())
       if (initialState === state && state?.longPressed(context) == true) {
         state?.consume()
-        viewProxy.startQuartersDialog(state?.downPositionBox)
+        onLongPress(state?.downPositionBox)
       }
     }
   }
@@ -83,8 +85,8 @@ data class MotionEventStateHolder(
     event: MotionEvent,
     boxes: Map<ScheduleDetailEntryBoxKey, Offset>,
     boxSize: Size,
-    viewProxy: ScheduleDetailViewProxy,
-    context: Context
+    context: Context,
+    onTouched: (ScheduleDetailEntryBoxKey) -> Unit
   ) {
     if (state?.isConsumed() == true) {
       return // Long press watcher used this event
@@ -92,7 +94,7 @@ data class MotionEventStateHolder(
 
     // Mark touched boxes
     if (state?.moved(context) == true) {
-      boxes.entries.firstOrNull { event.inside(it.value, boxSize) }?.key?.let { viewProxy.changeScheduleEntry(it) }
+      boxes.entries.firstOrNull { event.inside(it.value, boxSize) }?.key?.let { onTouched(it) }
     }
 
     // Update distance for long press
@@ -111,14 +113,15 @@ data class MotionEventStateHolder(
     boxes: Map<ScheduleDetailEntryBoxKey, Offset>,
     event: MotionEvent,
     boxSize: Size,
-    viewProxy: ScheduleDetailViewProxy,
-    context: Context
+    context: Context,
+    onTouched: (ScheduleDetailEntryBoxKey) -> Unit,
+    onFinished: () -> Unit
   ) {
     if (state?.isConsumed() == false) {
       if (state?.moved(context) == false) {
-        boxes.entries.firstOrNull { event.inside(it.value, boxSize) }?.key?.let { viewProxy.changeScheduleEntry(it) }
+        boxes.entries.firstOrNull { event.inside(it.value, boxSize) }?.key?.let { onTouched(it) }
       }
-      viewProxy.updateSchedule()
+      onFinished()
     }
     state = null
   }

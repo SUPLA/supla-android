@@ -42,9 +42,7 @@ class RemoveConfirmationDialogFragment : DialogFragment() {
   companion object {
     fun create(profileId: Long): RemoveConfirmationDialogFragment =
       RemoveConfirmationDialogFragment().also {
-        it.arguments = bundleOf(
-          ARG_PROFILE_ID to profileId
-        )
+        it.arguments = Bundle().apply { putLong(ARG_PROFILE_ID, profileId) }
       }
   }
 }

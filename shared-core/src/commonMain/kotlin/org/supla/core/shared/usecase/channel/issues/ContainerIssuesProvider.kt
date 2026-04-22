@@ -59,6 +59,5 @@ private val ChannelWithChildren.isContainer: Boolean
     SuplaFunction.CONTAINER,
     SuplaFunction.WATER_TANK,
     SuplaFunction.SEPTIC_TANK -> true
-
     else -> false
   }

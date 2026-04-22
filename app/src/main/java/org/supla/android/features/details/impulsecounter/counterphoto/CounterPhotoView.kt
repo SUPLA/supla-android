@@ -257,8 +257,7 @@ private fun PhotoRow(photo: OcrPhoto) =
   }
 
 @Composable
-context(BoxScope)
-private fun CounterParsedValue(value: OcrPhoto.Value) =
+private fun BoxScope.CounterParsedValue(value: OcrPhoto.Value) =
   Text(
     value.value(LocalContext.current),
     style = MaterialTheme.typography.bodyMedium,

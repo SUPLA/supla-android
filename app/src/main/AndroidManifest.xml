@@ -152,12 +152,20 @@
       android:name=".features.nfc.call.CallTagActionActivity"
       android:launchMode="singleTop"
       android:exported="true">
+      <tools:validation testUrl="https://supla.org/tag/123e4567-e89b-12d3-a456-426614174000" />
 
       <intent-filter android:autoVerify="true">
         <action android:name="android.intent.action.VIEW" />
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
         <data android:scheme="https" android:host="supla.org" android:pathPrefix="/tag/"/>
+      </intent-filter>
+
+      <intent-filter>
+        <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="https" android:host="supla.org" android:pathPrefix="/tag/" />
       </intent-filter>
 
       <intent-filter>

@@ -59,22 +59,16 @@ class DeleteChannelMeasurementsUseCase @Inject constructor(
         when {
           channelWithChildren.function == SuplaFunction.THERMOMETER ->
             temperatureLogRepository.delete(remoteId, profileId)
-
           channelWithChildren.function == SuplaFunction.HUMIDITY_AND_TEMPERATURE ->
             temperatureAndHumidityLogRepository.delete(remoteId, profileId)
-
           channelWithChildren.function == SuplaFunction.GENERAL_PURPOSE_MEASUREMENT ->
             generalPurposeMeasurementLogRepository.delete(remoteId, profileId)
-
           channelWithChildren.function == SuplaFunction.GENERAL_PURPOSE_METER ->
             generalPurposeMeterLogRepository.delete(remoteId, profileId)
-
           channelWithChildren.function == SuplaFunction.HUMIDITY ->
             humidityLogRepository.delete(remoteId, profileId)
-
           channelWithChildren.function == SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS ->
             homePlusThermostatLogRepository.delete(remoteId, profileId)
-
           channelWithChildren.isOrHasElectricityMeter ->
             Completable.merge(
               listOf(
@@ -84,10 +78,8 @@ class DeleteChannelMeasurementsUseCase @Inject constructor(
                 powerActiveLogRepository.delete(remoteId, profileId)
               )
             )
-
           channelWithChildren.isOrHasImpulseCounter ->
             impulseCounterLogRepository.delete(remoteId, profileId)
-
           channelWithChildren.channel.isHvacThermostat() ->
             Completable.merge(
               channelWithChildren.children.filter { it.relationType.isThermometer() }
@@ -99,7 +91,6 @@ class DeleteChannelMeasurementsUseCase @Inject constructor(
                   }
                 }
             )
-
           else -> invalidFunctionCompletable(channelWithChildren.function)
         }
       }

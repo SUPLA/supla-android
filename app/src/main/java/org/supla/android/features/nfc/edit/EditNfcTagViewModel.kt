@@ -17,15 +17,12 @@ package org.supla.android.features.nfc.edit
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import org.supla.android.data.source.ChannelGroupRepository
+import org.supla.android.data.source.NfcCallRepository
 import org.supla.android.data.source.NfcTagRepository
 import org.supla.android.data.source.RoomSceneRepository
 import org.supla.android.features.nfc.shared.edit.BaseEditNfcTagViewModel
-import org.supla.android.features.nfc.shared.edit.EditNfcTagViewEvent
-import org.supla.android.features.nfc.shared.edit.Mode
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ReadAllChannelsWithChildrenUseCase
@@ -42,6 +39,7 @@ class EditNfcTagViewModel @Inject constructor(
   readAllProfilesUseCase: ReadAllProfilesUseCase,
   channelGroupRepository: ChannelGroupRepository,
   sceneRepository: RoomSceneRepository,
+  nfcCallRepository: NfcCallRepository,
   nfcTagRepository: NfcTagRepository,
   schedulers: SuplaSchedulers,
   override val getChannelIconUseCase: GetChannelIconUseCase,
@@ -53,6 +51,7 @@ class EditNfcTagViewModel @Inject constructor(
   readAllProfilesUseCase,
   channelGroupRepository,
   sceneRepository,
+  nfcCallRepository,
   nfcTagRepository,
   schedulers,
   getChannelIconUseCase,

@@ -72,6 +72,7 @@ import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.usecase.channel.issues.ThermostatIssuesProvider
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
@@ -164,7 +165,8 @@ class ThermostatGeneralViewModelTest :
         configMinTemperatureString = "10,0",
         configMaxTemperatureString = "40,0",
         manualModeActive = true,
-        loadingState = LoadingTimeoutManager.LoadingState(initialLoading = false, loading = false)
+        loadingState = LoadingTimeoutManager.LoadingState(initialLoading = false, loading = false),
+        thermometerValueFormatter = valueFormatter
       )
     )
   }
@@ -202,6 +204,7 @@ class ThermostatGeneralViewModelTest :
     every { createTemperaturesListUseCase.invoke(channelWithChildren) } returns emptyList()
     every { valueFormatter.format(10f) } returns "10,0"
     every { valueFormatter.format(40f) } returns "40,0"
+    every { valueFormatter.format(20.8f, ValueFormat.WithoutUnit) } returns "20.8"
     every { checkIsSlaveThermostatUseCase(remoteId) } returns Single.just(false)
     val shareable = channelWithChildren.shareable
     every { thermostatIssuesProvider.provide(shareable) } returns emptyList()
@@ -231,7 +234,8 @@ class ThermostatGeneralViewModelTest :
         configMinTemperatureString = "10,0",
         configMaxTemperatureString = "40,0",
         manualModeActive = true,
-        loadingState = LoadingTimeoutManager.LoadingState(initialLoading = false, loading = false)
+        loadingState = LoadingTimeoutManager.LoadingState(initialLoading = false, loading = false),
+        thermometerValueFormatter = valueFormatter
       )
     )
   }
@@ -249,6 +253,7 @@ class ThermostatGeneralViewModelTest :
     every { dateProvider.currentDate() } returns currentDate
     every { checkIsSlaveThermostatUseCase(remoteId) } returns Single.just(false)
     every { delayedThermostatActionSubject.emit(any()) } answers {}
+    every { valueFormatter.format(25.0f, ValueFormat.WithoutUnit) } returns "25.0"
 
     // when
     viewModel.observeData(remoteId, deviceId)
@@ -286,6 +291,7 @@ class ThermostatGeneralViewModelTest :
     every { dateProvider.currentDate() } returns date
     every { checkIsSlaveThermostatUseCase(remoteId) } returns Single.just(false)
     every { delayedThermostatActionSubject.emit(any()) } answers {}
+    every { valueFormatter.format(25.0f, ValueFormat.WithoutUnit) } returns "25.0"
 
     // when
     viewModel.observeData(remoteId, deviceId)
@@ -322,6 +328,7 @@ class ThermostatGeneralViewModelTest :
     every { dateProvider.currentDate() } returns date
     every { checkIsSlaveThermostatUseCase(remoteId) } returns Single.just(false)
     every { delayedThermostatActionSubject.emit(any()) } answers {}
+    every { valueFormatter.format(25.0f, ValueFormat.WithoutUnit) } returns "25.0"
 
     // when
     viewModel.observeData(remoteId, deviceId)
@@ -365,6 +372,7 @@ class ThermostatGeneralViewModelTest :
     every { dateProvider.currentDate() } returns date
     every { checkIsSlaveThermostatUseCase(remoteId) } returns Single.just(false)
     every { delayedThermostatActionSubject.emit(any()) } answers {}
+    every { valueFormatter.format(25.0f, ValueFormat.WithoutUnit) } returns "25.0"
 
     // when
     viewModel.observeData(remoteId, deviceId)
@@ -409,6 +417,7 @@ class ThermostatGeneralViewModelTest :
     every { dateProvider.currentDate() } returns date
     every { checkIsSlaveThermostatUseCase(remoteId) } returns Single.just(false)
     every { delayedThermostatActionSubject.emit(any()) } answers {}
+    every { valueFormatter.format(22.5f, ValueFormat.WithoutUnit) } returns "22.5"
 
     // when
     viewModel.observeData(remoteId, deviceId)
@@ -439,6 +448,7 @@ class ThermostatGeneralViewModelTest :
     // given
     val remoteId = 321
     val deviceId = 321
+    mockCoolThermostat(remoteId, deviceId, 22.4f, weeklyScheduleActive = true)
     val state = thermostatDefaultState(
       remoteId,
       setpointTemperatureCool = 22.4f,
@@ -448,12 +458,12 @@ class ThermostatGeneralViewModelTest :
       subfunction = ThermostatSubfunction.COOL,
       relatedRemoteIds = listOf(999, 998)
     )
-    mockCoolThermostat(remoteId, deviceId, 22.4f, weeklyScheduleActive = true)
     val date = date(2025, 9, 8, 11, 39)
     every { dateProvider.currentTimestamp() } returns date.time
     every { dateProvider.currentDate() } returns date
     every { checkIsSlaveThermostatUseCase(remoteId) } returns Single.just(false)
     every { delayedThermostatActionSubject.emit(any()) } answers {}
+    every { valueFormatter.format(22.3f, ValueFormat.WithoutUnit) } returns "22.3"
 
     // when
     viewModel.observeData(remoteId, deviceId)
@@ -616,6 +626,7 @@ class ThermostatGeneralViewModelTest :
     mockHeatThermostat(remoteId, deviceId, 23.4f, timerEndDate = currentDate.shift(-5))
     every { dateProvider.currentDate() } returns currentDate
     every { checkIsSlaveThermostatUseCase(remoteId) } returns Single.just(false)
+    every { valueFormatter.format(23.4f, ValueFormat.WithoutUnit) } returns "23.4"
 
     // when
     viewModel.observeData(remoteId, deviceId)
@@ -641,7 +652,8 @@ class ThermostatGeneralViewModelTest :
         configMinTemperatureString = "10,0",
         configMaxTemperatureString = "40,0",
         manualModeActive = true,
-        loadingState = LoadingTimeoutManager.LoadingState(initialLoading = false, loading = false)
+        loadingState = LoadingTimeoutManager.LoadingState(initialLoading = false, loading = false),
+        thermometerValueFormatter = valueFormatter
       )
     )
   }
@@ -682,7 +694,8 @@ class ThermostatGeneralViewModelTest :
         configMinTemperatureString = "10,0",
         configMaxTemperatureString = "40,0",
         manualModeActive = true,
-        loadingState = LoadingTimeoutManager.LoadingState(initialLoading = false, loading = false)
+        loadingState = LoadingTimeoutManager.LoadingState(initialLoading = false, loading = false),
+        thermometerValueFormatter = valueFormatter
       )
     )
   }
@@ -717,7 +730,8 @@ class ThermostatGeneralViewModelTest :
       configMinTemperatureString = "10,0",
       configMaxTemperatureString = "40,0",
       showCoolingIndicator = currentlyCooling,
-      loadingState = LoadingTimeoutManager.LoadingState(initialLoading = false, loading = false)
+      loadingState = LoadingTimeoutManager.LoadingState(initialLoading = false, loading = false),
+      thermometerValueFormatter = valueFormatter
     )
 
   private fun mockHeatThermostat(
@@ -760,6 +774,7 @@ class ThermostatGeneralViewModelTest :
     every { createTemperaturesListUseCase.invoke(channelWithChildren) } returns emptyList()
     every { valueFormatter.format(10f) } returns "10,0"
     every { valueFormatter.format(40f) } returns "40,0"
+    every { valueFormatter.format(setpointTemperatureHeat, ValueFormat.WithoutUnit) } returns "$setpointTemperatureHeat"
 
     val shareable = channelWithChildren.shareable
     every { thermostatIssuesProvider.provide(shareable) } returns emptyList()
@@ -796,6 +811,7 @@ class ThermostatGeneralViewModelTest :
     every { createTemperaturesListUseCase.invoke(channelWithChildren) } returns emptyList()
     every { valueFormatter.format(10f) } returns "10,0"
     every { valueFormatter.format(40f) } returns "40,0"
+    every { valueFormatter.format(setpointTemperature, ValueFormat.WithoutUnit) } returns "$setpointTemperature"
 
     val shareable = channelWithChildren.shareable
     every { thermostatIssuesProvider.provide(shareable) } returns emptyList()

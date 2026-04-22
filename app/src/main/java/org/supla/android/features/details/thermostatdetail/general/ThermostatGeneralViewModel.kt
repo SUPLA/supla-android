@@ -95,7 +95,10 @@ class ThermostatGeneralViewModel @Inject constructor(
   private val schedulers: SuplaSchedulers,
   private val dateProvider: DateProvider,
   @param:Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter
-) : BaseViewModel<ThermostatGeneralViewState, ThermostatGeneralViewEvent>(ThermostatGeneralViewState(), schedulers),
+) : BaseViewModel<ThermostatGeneralViewState, ThermostatGeneralViewEvent>(
+  ThermostatGeneralViewState(thermometerValueFormatter),
+  schedulers
+),
   ThermostatGeneralViewProxy {
 
   private val updateSubject: BehaviorSubject<Int> = BehaviorSubject.createDefault(0)
@@ -152,8 +155,9 @@ class ThermostatGeneralViewModel @Inject constructor(
     currentState().viewModelState?.let { viewModelState ->
       val newMode = when (val mode = viewModelState.mode) {
         SuplaHvacMode.HEAT_COOL -> SuplaHvacMode.COOL
-        SuplaHvacMode.COOL -> SuplaHvacMode.HEAT
-        SuplaHvacMode.HEAT -> SuplaHvacMode.COOL
+        SuplaHvacMode.COOL -> SuplaHvacMode.HEAT_COOL
+        SuplaHvacMode.HEAT -> SuplaHvacMode.OFF
+        SuplaHvacMode.OFF -> SuplaHvacMode.HEAT
         else -> mode
       }
 
@@ -167,8 +171,9 @@ class ThermostatGeneralViewModel @Inject constructor(
     currentState().viewModelState?.let { viewModelState ->
       val newMode = when (val mode = viewModelState.mode) {
         SuplaHvacMode.HEAT_COOL -> SuplaHvacMode.HEAT
-        SuplaHvacMode.COOL -> SuplaHvacMode.HEAT
-        SuplaHvacMode.HEAT -> SuplaHvacMode.COOL
+        SuplaHvacMode.COOL -> SuplaHvacMode.OFF
+        SuplaHvacMode.HEAT -> SuplaHvacMode.HEAT_COOL
+        SuplaHvacMode.OFF -> SuplaHvacMode.COOL
         else -> mode
       }
 
@@ -485,7 +490,6 @@ class ThermostatGeneralViewModel @Inject constructor(
     return when {
       setPointMinTemperatureString != null && setPointMaxTemperatureString != null ->
         LocalizedString.Constant("$setPointMinTemperatureString - $setPointMaxTemperatureString")
-
       setPointMinTemperatureString != null -> LocalizedString.Constant(setPointMinTemperatureString)
       setPointMaxTemperatureString != null -> LocalizedString.Constant(setPointMaxTemperatureString)
       else -> LocalizedString.Empty
@@ -657,6 +661,7 @@ class ThermostatGeneralViewModel @Inject constructor(
 sealed class ThermostatGeneralViewEvent : ViewEvent
 
 data class ThermostatGeneralViewState(
+  val thermometerValueFormatter: ValueFormatter,
   val viewModelState: ThermostatGeneralViewModelState? = null,
 
   val temperatures: List<MeasurementValue> = emptyList(),
@@ -701,13 +706,9 @@ data class ThermostatGeneralViewState(
         viewModelState?.configMinTemperature,
         viewModelState?.configMaxTemperature
       ) { (heat, min, max) ->
-        return when {
-          viewModelState?.mode == SuplaHvacMode.HEAT || viewModelState?.mode == SuplaHvacMode.HEAT_COOL ->
-            heat.minus(min).div(max - min)
-
-          viewModelState?.mode == SuplaHvacMode.OFF && programmedModeActive ->
-            heat.minus(min).div(max - min)
-
+        return when (viewModelState?.mode) {
+          SuplaHvacMode.HEAT, SuplaHvacMode.HEAT_COOL -> heat.minus(min).div(max - min)
+          SuplaHvacMode.OFF if programmedModeActive -> heat.minus(min).div(max - min)
           else -> null
         }
       }
@@ -721,13 +722,9 @@ data class ThermostatGeneralViewState(
         viewModelState?.configMinTemperature,
         viewModelState?.configMaxTemperature
       ) { (cool, min, max) ->
-        return when {
-          viewModelState?.mode == SuplaHvacMode.COOL || viewModelState?.mode == SuplaHvacMode.HEAT_COOL ->
-            cool.minus(min).div(max - min)
-
-          viewModelState?.mode == SuplaHvacMode.OFF && programmedModeActive ->
-            cool.minus(min).div(max - min)
-
+        return when (viewModelState?.mode) {
+          SuplaHvacMode.COOL, SuplaHvacMode.HEAT_COOL -> cool.minus(min).div(max - min)
+          SuplaHvacMode.OFF if programmedModeActive -> cool.minus(min).div(max - min)
           else -> null
         }
       }
@@ -769,12 +766,12 @@ data class ThermostatGeneralViewState(
   override val currentStateIconColor: Int
     get() = TimerHeaderState.currentStateIconColor(viewModelState?.mode)
 
-  override fun currentStateValue(thermometerValuesFormatter: ValueFormatter): LocalizedString =
+  override val currentStateValue: LocalizedString =
     TimerHeaderState.currentStateValue(
       viewModelState?.mode,
       viewModelState?.setpointHeatTemperature,
       viewModelState?.setpointCoolTemperature,
-      thermometerValuesFormatter
+      thermometerValueFormatter
     )
 }
 

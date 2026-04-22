@@ -92,14 +92,12 @@ fun ProjectorScreenView(
                 )
               }
             }
-
             MotionEvent.ACTION_MOVE -> {
               moveState.value = moveState.value.copy(lastPoint = Offset(event.x, event.y))
               windowDimens
                 .getPositionFromState(moveState.value)
                 ?.let { position -> onPositionChanging?.let { it(position) } }
             }
-
             MotionEvent.ACTION_UP -> {
               onPositionChanged?.let { it(windowState.position.value) }
               moveState.value = moveState.value.copy(initialPoint = null)
@@ -122,7 +120,7 @@ fun ProjectorScreenView(
     // screen
     drawRect(colors.screen, topLeft = windowDimens.screenTopLeft, size = Size(windowDimens.screenWidth, screenHeight))
     // Top part
-    ProjectorScreenDrawer.drawTopRectWithShadow(windowDimens, colors)
+    ProjectorScreenDrawer.drawTopRectWithShadow(this@Canvas, windowDimens, colors)
     // Logo
     drawLogo(logoPainter, logoColor, windowDimens, screenHeight, bottomRect)
     // Bottom part
@@ -147,8 +145,7 @@ fun ProjectorScreenView(
   }
 }
 
-context(DrawScope)
-private fun drawHandle(color: Color, bottomRect: Rect) {
+private fun DrawScope.drawHandle(color: Color, bottomRect: Rect) {
   drawLine(
     color = color,
     start = bottomRect.bottomCenter,
@@ -163,8 +160,13 @@ private fun drawHandle(color: Color, bottomRect: Rect) {
   )
 }
 
-context(DrawScope)
-private fun drawLogo(logoPainter: Painter, logoColor: Color?, windowDimens: RuntimeDimens, screenHeight: Float, bottomRect: Rect) {
+private fun DrawScope.drawLogo(
+  logoPainter: Painter,
+  logoColor: Color?,
+  windowDimens: RuntimeDimens,
+  screenHeight: Float,
+  bottomRect: Rect
+) {
   with(logoPainter) {
     val verticalCorrection = windowDimens.maxScreenHeight.minus(screenHeight)
     clipRect(
@@ -183,16 +185,17 @@ private fun drawLogo(logoPainter: Painter, logoColor: Color?, windowDimens: Runt
 private object ProjectorScreenDrawer {
   private val paint = Paint().asFrameworkPaint()
 
-  context(DrawScope)
-  fun drawTopRectWithShadow(windowDimens: RuntimeDimens, colors: ProjectorScreenColors) {
-    paint.applyForWindow(colors.topRect, colors.shadow)
-    drawContext.canvas.nativeCanvas.drawRect(
-      windowDimens.topRect.left,
-      windowDimens.topRect.top,
-      windowDimens.topRect.right,
-      windowDimens.topRect.bottom,
-      paint
-    )
+  fun drawTopRectWithShadow(scope: DrawScope, windowDimens: RuntimeDimens, colors: ProjectorScreenColors) {
+    with(scope) {
+      paint.applyForWindow(colors.topRect, colors.shadow, scope)
+      drawContext.canvas.nativeCanvas.drawRect(
+        windowDimens.topRect.left,
+        windowDimens.topRect.top,
+        windowDimens.topRect.right,
+        windowDimens.topRect.bottom,
+        paint
+      )
+    }
   }
 }
 

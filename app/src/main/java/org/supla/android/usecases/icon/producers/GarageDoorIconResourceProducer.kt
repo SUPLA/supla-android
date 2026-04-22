@@ -28,7 +28,6 @@ class GarageDoorIconResourceProducer : IconResourceProducer {
     when (function) {
       SuplaFunction.OPEN_SENSOR_GARAGE_DOOR,
       SuplaFunction.CONTROLLING_THE_GARAGE_DOOR -> true
-
       else -> false
     }
 

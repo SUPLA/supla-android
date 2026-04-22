@@ -1,4 +1,4 @@
-package org.supla.android.features.details.thermostatdetail.schedule.data
+package org.supla.android.ui.views.schedule
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,8 +17,13 @@ package org.supla.android.features.details.thermostatdetail.schedule.data
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import org.supla.android.data.source.local.calendar.DayOfWeek
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
+import org.supla.android.ui.ResourceCache
 
 @JvmInline
 value class ScheduleDetailEntryBoxKey private constructor(private val packed: Int) {
@@ -33,31 +38,14 @@ value class ScheduleDetailEntryBoxKey private constructor(private val packed: In
   fun copy(): ScheduleDetailEntryBoxKey = ScheduleDetailEntryBoxKey(packed)
 }
 
-data class ScheduleDetailEntryBoxValue(
-  val firstQuarterProgram: SuplaScheduleProgram,
-  val secondQuarterProgram: SuplaScheduleProgram,
-  val thirdQuarterProgram: SuplaScheduleProgram,
-  val fourthQuarterProgram: SuplaScheduleProgram
-) {
+interface ScheduleDetailEntryBoxValue {
+  val program: SuplaScheduleProgram?
 
-  constructor(singleProgram: SuplaScheduleProgram) : this(singleProgram, singleProgram, singleProgram, singleProgram)
-
-  fun singleProgram(): SuplaScheduleProgram? =
-    if (hasSingleProgram()) {
-      firstQuarterProgram
-    } else {
-      null
-    }
-
-  fun copy(singleProgram: SuplaScheduleProgram): ScheduleDetailEntryBoxValue = copy(
-    firstQuarterProgram = singleProgram,
-    secondQuarterProgram = singleProgram,
-    thirdQuarterProgram = singleProgram,
-    fourthQuarterProgram = singleProgram
+  fun drawBox(
+    drawScope: DrawScope,
+    topLeft: Offset,
+    size: Size,
+    cornerRadius: CornerRadius,
+    resourceCache: ResourceCache
   )
-
-  private fun hasSingleProgram(): Boolean =
-    firstQuarterProgram == secondQuarterProgram &&
-      secondQuarterProgram == thirdQuarterProgram &&
-      thirdQuarterProgram == fourthQuarterProgram
 }

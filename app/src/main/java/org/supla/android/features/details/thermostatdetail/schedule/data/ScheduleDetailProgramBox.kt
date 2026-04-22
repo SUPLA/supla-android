@@ -21,98 +21,80 @@ import androidx.annotation.DrawableRes
 import org.supla.android.R
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
-import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
-import org.supla.android.features.details.thermostatdetail.ui.OFF
-import org.supla.android.features.details.thermostatdetail.ui.description
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
-import org.supla.core.shared.extensions.fromSuplaTemperature
 import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
+import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
 
 data class ScheduleDetailProgramBox(
   val channelFunction: Int,
   val thermostatFunction: ThermostatSubfunction,
-  val scheduleProgram: SuplaWeeklyScheduleProgram,
+  val program: SuplaScheduleProgram,
+  val mode: SuplaHvacMode,
+  val setpointTemperatureHeat: Float?,
+  val setpointTemperatureCool: Float?,
+  val label: LocalizedString,
   @param:DrawableRes val iconRes: Int? = null
 ) {
 
-  val setpointTemperatureHeat: Float?
-    get() = scheduleProgram.setpointTemperatureHeat?.fromSuplaTemperature()
-
-  val setpointTemperatureCool: Float?
-    get() = scheduleProgram.setpointTemperatureCool?.fromSuplaTemperature()
-
-  fun textProvider(thermometerValuesFormatter: ValueFormatter): LocalizedString =
-    scheduleProgram.description(thermometerValuesFormatter)
-
   val modeForModify: SuplaHvacMode
-    get() = if (scheduleProgram.mode == SuplaHvacMode.NOT_SET) {
+    get() = if (mode == SuplaHvacMode.NOT_SET) {
       when (channelFunction) {
         SUPLA_CHANNELFNC_HVAC_THERMOSTAT if thermostatFunction == ThermostatSubfunction.HEAT -> SuplaHvacMode.HEAT
         SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER -> SuplaHvacMode.HEAT
         SUPLA_CHANNELFNC_HVAC_THERMOSTAT if thermostatFunction == ThermostatSubfunction.COOL -> SuplaHvacMode.COOL
         SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL -> SuplaHvacMode.HEAT_COOL
-        else -> scheduleProgram.mode
+        else -> mode
       }
     } else {
-      scheduleProgram.mode
+      mode
     }
 
   companion object {
-    fun default() = listOf(
+    operator fun invoke(
+      channelFunction: Int,
+      thermostatFunction: ThermostatSubfunction,
+      program: SuplaScheduleProgram,
+      mode: SuplaHvacMode,
+      setpointTemperatureHeat: Float?,
+      setpointTemperatureCool: Float?,
+      valueFormatter: ValueFormatter,
+      @DrawableRes iconRes: Int? = null
+    ): ScheduleDetailProgramBox =
       ScheduleDetailProgramBox(
-        SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
-        ThermostatSubfunction.HEAT,
-        SuplaWeeklyScheduleProgram(
-          SuplaScheduleProgram.PROGRAM_1,
-          SuplaHvacMode.HEAT,
-          2000,
-          null
-        ),
-        R.drawable.ic_heat
-      ),
-      ScheduleDetailProgramBox(
-        SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
-        ThermostatSubfunction.HEAT,
-        SuplaWeeklyScheduleProgram(
-          SuplaScheduleProgram.PROGRAM_2,
-          SuplaHvacMode.COOL,
-          null,
-          2250
-        ),
-        R.drawable.ic_cool
-      ),
-      ScheduleDetailProgramBox(
-        SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
-        ThermostatSubfunction.HEAT,
-        SuplaWeeklyScheduleProgram(
-          SuplaScheduleProgram.PROGRAM_3,
-          SuplaHvacMode.HEAT_COOL,
-          2100,
-          2250
-        ),
-        R.drawable.ic_heat
-      ),
-      ScheduleDetailProgramBox(
-        SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
-        ThermostatSubfunction.HEAT,
-        SuplaWeeklyScheduleProgram(
-          SuplaScheduleProgram.PROGRAM_4,
-          SuplaHvacMode.HEAT,
-          2300,
-          null
-        ),
-        R.drawable.ic_cool
-      ),
-      ScheduleDetailProgramBox(
-        SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
-        ThermostatSubfunction.HEAT,
-        SuplaWeeklyScheduleProgram.OFF,
-        R.drawable.ic_power_button
+        channelFunction = channelFunction,
+        thermostatFunction = thermostatFunction,
+        program = program,
+        mode = mode,
+        setpointTemperatureHeat = setpointTemperatureHeat,
+        setpointTemperatureCool = setpointTemperatureCool,
+        label = createLabel(program, mode, setpointTemperatureHeat, setpointTemperatureCool, valueFormatter),
+        iconRes = iconRes
       )
-    )
+
+    private fun createLabel(
+      program: SuplaScheduleProgram,
+      mode: SuplaHvacMode,
+      temperatureHeat: Float?,
+      temperatureCool: Float?,
+      valueFormatter: ValueFormatter
+    ): LocalizedString {
+      return when {
+        program == SuplaScheduleProgram.OFF -> localizedString(R.string.turn_off)
+        mode == SuplaHvacMode.HEAT -> LocalizedString.Constant(valueFormatter.format(temperatureHeat, ValueFormat.TemperatureWithDegree))
+        mode == SuplaHvacMode.COOL -> LocalizedString.Constant(valueFormatter.format(temperatureCool, ValueFormat.TemperatureWithDegree))
+        mode == SuplaHvacMode.HEAT_COOL -> {
+          val minTemperature = valueFormatter.format(temperatureHeat, ValueFormat.TemperatureWithDegree)
+          val maxTemperature = valueFormatter.format(temperatureCool, ValueFormat.TemperatureWithDegree)
+          LocalizedString.Constant("$minTemperature - $maxTemperature")
+        }
+        else -> LocalizedString.Constant(NO_VALUE_TEXT)
+      }
+    }
   }
 }

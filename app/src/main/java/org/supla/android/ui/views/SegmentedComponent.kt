@@ -26,15 +26,17 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -43,10 +45,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.AbstractComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
+import org.supla.android.core.shared.invoke
+import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.features.details.switchdetail.timer.TimerTargetAction
+import org.supla.android.tools.SuplaPreview
+import org.supla.core.shared.infrastructure.LocalizedString
+
+interface SegmentedComponentItem {
+  val label: LocalizedString
+}
+
+enum class BoxSize {
+  Custom, Identical
+}
 
 class SegmentedComponent @JvmOverloads constructor(
   context: Context,
@@ -54,10 +68,10 @@ class SegmentedComponent @JvmOverloads constructor(
   defStyleAttr: Int = 0
 ) : AbstractComposeView(context, attrs, defStyleAttr) {
 
-  var selectedItemListener: (Int) -> Unit = { }
+  var selectedItemListener: (TimerTargetAction) -> Unit = { }
 
-  var items by mutableStateOf(listOf<String>())
-  var activeItem by mutableIntStateOf(0)
+  var items by mutableStateOf(listOf<TimerTargetAction>())
+  var activeItem by mutableStateOf<TimerTargetAction?>(null)
   var disabled by mutableStateOf(false)
 
   @Composable
@@ -74,12 +88,13 @@ class SegmentedComponent @JvmOverloads constructor(
 }
 
 @Composable
-fun SegmentedComponent(
-  items: List<String>,
+fun <T : SegmentedComponentItem> SegmentedComponent(
+  items: List<T>,
   modifier: Modifier = Modifier,
-  activeItem: Int = 0,
+  activeItem: T? = null,
   enabled: Boolean = true,
-  onClick: (Int) -> Unit = {}
+  boxSize: BoxSize = BoxSize.Identical,
+  onClick: (T) -> Unit = {}
 ) {
   Row(
     verticalAlignment = Alignment.CenterVertically,
@@ -87,43 +102,50 @@ fun SegmentedComponent(
       .background(color = colorResource(id = R.color.segmented_field_background), shape = RoundedCornerShape(6.dp))
       .height(IntrinsicSize.Max)
       .padding(2.dp),
-    horizontalArrangement = Arrangement.spacedBy(10.dp)
+    horizontalArrangement = if (boxSize == BoxSize.Custom) Arrangement.SpaceEvenly else Arrangement.Start
   ) {
-    for ((i, item) in items.withIndex()) {
-      val textModifier = if (activeItem == i) {
-        Modifier.background(colorResource(id = R.color.field_background), shape = RoundedCornerShape(6.dp))
+    items.forEachIndexed { index, item ->
+      val textModifier = if (activeItem == item) {
+        Modifier
+          .background(colorResource(id = R.color.field_background), shape = RoundedCornerShape(6.dp))
       } else {
         Modifier
       }
 
       Text(
-        text = item,
+        text = item.label(),
         style = MaterialTheme.typography.bodyMedium.copy(
           color = if (enabled) MaterialTheme.colorScheme.onBackground else colorResource(id = R.color.item_unselected),
           textAlign = TextAlign.Center
         ),
         modifier = textModifier
+          .clickable(enabled = activeItem != item && enabled) { onClick(item) }
           .padding(horizontal = 8.dp, vertical = 8.dp)
+          .let { if (boxSize == BoxSize.Identical) it.weight(1f) else it }
           .fillMaxHeight()
-          .weight(1f)
-          .clickable {
-            if (activeItem != i && enabled) {
-              onClick(i)
-            }
-          }
       )
+
+      if (index < items.size - 1) {
+        Spacer(modifier = Modifier.width(Distance.tiny))
+      }
     }
   }
 }
 
-@Preview
+@SuplaPreview
 @Composable
 private fun Preview() {
   Box(modifier = Modifier.background(Color.White)) {
     SuplaTheme {
       Column {
-        SegmentedComponent(listOf("Turn on", "Turn off"), activeItem = 1, enabled = true)
-        SegmentedComponent(listOf("Turn on", "Turn off"), activeItem = 0, enabled = false)
+        SegmentedComponent(TimerTargetAction.entries, activeItem = TimerTargetAction.TURN_OFF, enabled = true)
+        SegmentedComponent(TimerTargetAction.entries, activeItem = TimerTargetAction.TURN_ON, enabled = false)
+        SegmentedComponent(
+          TimerTargetAction.entries,
+          activeItem = TimerTargetAction.TURN_ON,
+          boxSize = BoxSize.Custom,
+          modifier = Modifier.fillMaxWidth()
+        )
       }
     }
   }
