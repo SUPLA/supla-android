@@ -551,6 +551,7 @@
   <string name="details_timer_info_thermostat_off">Termostatul va fi oprit prin\n%1$s</string>
   <string name="details_timer_info_thermostat_heating">Termostatul va fi în modul de încălzire pentru\n%1$s</string>
   <string name="details_timer_info_thermostat_cooling">Termostatul va fi în modul de răcire pentru\n%1$s</string>
+  <string name="details_timer_info_thermostat_auto">Termostatul va fi în modul automat timp de\\n%1$s</string>
   <string name="details_timer_select_time">Specificați ora</string>
   <string name="details_timer_counter">Contor</string>
   <string name="details_timer_calendar">Calendar</string>
@@ -827,4 +828,5 @@
   <string name="general_search">Căutare</string>
   <string name="toolbar_search_hint">Introduceți cel puțin 2 caractere…</string>
   <string name="details_timer_select_program">Selectați un program</string>
+  <string name="settings_show_unavailable_channels">Ascunde canalele care nu sunt disponibile din cauza configurației dispozitivului</string>
 </resources>

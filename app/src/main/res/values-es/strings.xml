@@ -537,6 +537,7 @@
   <string name="details_timer_info_thermostat_off">El termostato estará apagado durante \n%1$s</string>
   <string name="details_timer_info_thermostat_heating">El termostato estará en modo calor durante \n%1$s</string>
   <string name="details_timer_info_thermostat_cooling">El termostato estará en modo frío durante \n%1$s</string>
+  <string name="details_timer_info_thermostat_auto">El termostato estará en modo automático durante\\n%1$s</string>
   <string name="details_timer_select_time">Especificar hora</string>
   <string name="details_timer_counter">Contador</string>
   <string name="details_timer_calendar">Calendario</string>
@@ -810,4 +811,5 @@
   <string name="general_search">Buscar</string>
   <string name="toolbar_search_hint">Introduce al menos 2 caracteres…</string>
   <string name="details_timer_select_program">Selecciona un programa</string>
+  <string name="settings_show_unavailable_channels">Ocultar los canales que no están disponibles debido a la configuración del dispositivo</string>
 </resources>

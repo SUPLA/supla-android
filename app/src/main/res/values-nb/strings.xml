@@ -549,6 +549,7 @@
   <string name="details_timer_info_thermostat_off">Termostaten vil bli slått av ved\n%1$s</string>
   <string name="details_timer_info_thermostat_heating">Termostaten vil være i oppvarmingsmodus i\n%1$s</string>
   <string name="details_timer_info_thermostat_cooling">Termostaten vil være i kjølemodus i\n%1$s</string>
+  <string name="details_timer_info_thermostat_auto">Termostaten vil være i automatisk modus i\\n%1$s</string>
   <string name="details_timer_select_time">Angi klokkeslett</string>
   <string name="details_timer_counter">Teller</string>
   <string name="details_timer_calendar">Kalender</string>
@@ -822,4 +823,5 @@
   <string name="general_search">Søk</string>
   <string name="toolbar_search_hint">Skriv inn minst 2 tegn…</string>
   <string name="details_timer_select_program">Velg program</string>
+  <string name="settings_show_unavailable_channels">Skjul kanaler som ikke er tilgjengelige på grunn av enhetskonfigurasjonen</string>
 </resources>

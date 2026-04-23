@@ -527,6 +527,7 @@
   <string name="details_timer_info_thermostat_off">Termostatas bus išjungtas \n%1$s</string>
   <string name="details_timer_info_thermostat_heating">Termostatas bus šildymo režime \n%1$s</string>
   <string name="details_timer_info_thermostat_cooling">Termostatas bus vėsinimo režime \n%1$s</string>
+  <string name="details_timer_info_thermostat_auto">Termostatas veiks automatiniu režimu\\n%1$s</string>
   <string name="details_timer_select_time">Nustatykite laiką</string>
   <string name="details_timer_counter">Skaitiklis</string>
   <string name="details_timer_calendar">Kalendorius</string>
@@ -804,4 +805,5 @@
   <string name="general_search">Ieškoti</string>
   <string name="toolbar_search_hint">Įveskite bent 2 simbolius…</string>
   <string name="details_timer_select_program">Pasirinkite programą</string>
+  <string name="settings_show_unavailable_channels">Slėpti kanalus, kurie nepasiekiami dėl įrenginio konfigūracijos</string>
 </resources>

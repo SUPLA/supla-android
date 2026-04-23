@@ -152,6 +152,25 @@ data class ChannelEntity(
       $COLUMN_FLAGS, $COLUMN_PROTOCOL_VERSION, $COLUMN_POSITION, $COLUMN_PROFILE_ID
     """
 
+    const val JOIN_COLUMNS =
+      """
+        channel.$COLUMN_ID channel_$COLUMN_ID, 
+        channel.$COLUMN_CHANNEL_REMOTE_ID channel_$COLUMN_CHANNEL_REMOTE_ID, 
+        channel.${COLUMN_DEVICE_ID} channel_$COLUMN_DEVICE_ID, 
+        channel.$COLUMN_CAPTION channel_$COLUMN_CAPTION,
+        channel.$COLUMN_TYPE channel_$COLUMN_TYPE, 
+        channel.$COLUMN_FUNCTION channel_$COLUMN_FUNCTION, 
+        channel.$COLUMN_VISIBLE channel_$COLUMN_VISIBLE, 
+        channel.$COLUMN_LOCATION_ID channel_$COLUMN_LOCATION_ID,
+        channel.$COLUMN_ALT_ICON channel_$COLUMN_ALT_ICON, 
+        channel.$COLUMN_USER_ICON channel_$COLUMN_USER_ICON, 
+        channel.$COLUMN_MANUFACTURER_ID channel_$COLUMN_MANUFACTURER_ID, 
+        channel.$COLUMN_PRODUCT_ID channel_$COLUMN_PRODUCT_ID,
+        channel.$COLUMN_FLAGS channel_$COLUMN_FLAGS, 
+        channel.$COLUMN_PROTOCOL_VERSION channel_$COLUMN_PROTOCOL_VERSION, 
+        channel.$COLUMN_POSITION channel_$COLUMN_POSITION, 
+        channel.$COLUMN_PROFILE_ID channel_$COLUMN_PROFILE_ID"""
+
     fun from(suplaChannel: SuplaChannel, profileId: Long): ChannelEntity =
       ChannelEntity(
         id = null,

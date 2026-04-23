@@ -39,6 +39,8 @@ class RoomChannelRepository @Inject constructor(
 
   fun findList() = channelDao.findList().firstOrError()
 
+  fun findListWithoutUnavailable() = channelDao.findListWithoutUnavailable().firstOrError()
+
   fun findObservableList() = channelDao.findList()
 
   fun findObservableList(profileId: Long) = channelDao.findList(profileId)
@@ -52,8 +54,6 @@ class RoomChannelRepository @Inject constructor(
   fun findMaxPositionInLocation(locationRemoteId: Int) = channelDao.findMaxPositionInLocation(locationRemoteId)
 
   fun findChannelsCount(profileId: Long) = channelDao.findChannelsCount(profileId)
-
-  fun findProfileChannels(profileId: Long) = channelDao.findProfileChannels(profileId)
 
   suspend fun findHiddenChannels() = channelDao.findHiddenChannels()
 

@@ -84,5 +84,16 @@ data class LocationEntity(
 
     const val ALL_COLUMNS = "$COLUMN_ID, $COLUMN_REMOTE_ID, $COLUMN_CAPTION, " +
       "$COLUMN_VISIBLE, $COLUMN_COLLAPSED, $COLUMN_SORTING, $COLUMN_SORT_ORDER, $COLUMN_PROFILE_ID"
+
+    const val JOIN_COLUMNS =
+      """
+        location.$COLUMN_ID location_$COLUMN_ID,
+        location.$COLUMN_REMOTE_ID location_$COLUMN_REMOTE_ID,
+        location.$COLUMN_CAPTION location_$COLUMN_CAPTION,
+        location.$COLUMN_VISIBLE location_$COLUMN_VISIBLE,
+        location.$COLUMN_COLLAPSED location_$COLUMN_COLLAPSED,
+        location.$COLUMN_SORTING location_$COLUMN_SORTING,
+        location.$COLUMN_SORT_ORDER location_$COLUMN_SORT_ORDER,
+        location.$COLUMN_PROFILE_ID location_$COLUMN_PROFILE_ID"""
   }
 }

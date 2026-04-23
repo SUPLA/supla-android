@@ -178,6 +178,19 @@ sealed class SettingItem(val viewResource: Int) {
     }
   }
 
+  data class UnavailableChannelsVisibility(
+    val hidden: Boolean,
+    val callback: (Boolean) -> Unit = {}
+  ) : SettingItem(R.layout.li_settings_switch) {
+    override fun bind(holder: SettingItemViewHolder<*>) {
+      (holder.binding as LiSettingsSwitchBinding).apply {
+        settingsSwitchLabel.setText(R.string.settings_show_unavailable_channels)
+        settingsSwitch.isChecked = hidden
+        settingsSwitch.setOnCheckedChangeListener { _, allowed -> callback(allowed) }
+      }
+    }
+  }
+
   data class RollerShutterOpenClose(
     val showOpeningPercentage: Boolean,
     val callback: (Boolean) -> Unit = {}

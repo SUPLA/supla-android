@@ -523,6 +523,7 @@
   <string name="details_timer_info_thermostat_off">Терморегулятор вимкнеться за допомогою\n%1$s</string>
   <string name="details_timer_info_thermostat_heating">Термостат працюватиме в режимі нагрівання протягом\n%1$s</string>
   <string name="details_timer_info_thermostat_cooling">Термостат працюватиме в режимі охолодження протягом\n%1$s</string>
+  <string name="details_timer_info_thermostat_auto">Термостат буде в автоматичному режимі протягом\\n%1$s</string>
   <string name="details_timer_select_time">Вкажіть час</string>
   <string name="details_timer_counter">Лічильник</string>
   <string name="details_timer_calendar">Календар</string>
@@ -802,4 +803,5 @@
   <string name="general_search">Пошук</string>
   <string name="toolbar_search_hint">Введіть щонайменше 2 символи…</string>
   <string name="details_timer_select_program">Виберіть програму</string>
+  <string name="settings_show_unavailable_channels">Приховати канали, які недоступні через конфігурацію пристрою</string>
 </resources>

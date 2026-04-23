@@ -480,13 +480,21 @@ data class TimerDetailViewState(
       val minutesString = LocalizedString.Quantity(R.plurals.minute_pattern, minutes)
       val timeString = localizedString("%s %s %s", daysString, hoursString, minutesString)
 
-      return when {
-        selectedMode == DeviceMode.OFF ->
+      return when (selectedMode) {
+        DeviceMode.OFF ->
           localizedString(R.string.details_timer_info_thermostat_off, timeString)
-        channelFunction == SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER ||
-          subfunction == ThermostatSubfunction.HEAT ->
+        DeviceMode.MANUAL ->
+          if (subfunction == ThermostatSubfunction.HEAT) {
+            localizedString(R.string.details_timer_info_thermostat_heating, timeString)
+          } else {
+            localizedString(R.string.details_timer_info_thermostat_cooling, timeString)
+          }
+        DeviceMode.HEATING ->
+          localizedString(R.string.details_timer_info_thermostat_cooling, timeString)
+        DeviceMode.COOLING ->
           localizedString(R.string.details_timer_info_thermostat_heating, timeString)
-        else -> localizedString(R.string.details_timer_info_thermostat_cooling, timeString)
+        DeviceMode.AUTO ->
+          localizedString(R.string.details_timer_info_thermostat_auto, timeString)
       }
     }
 

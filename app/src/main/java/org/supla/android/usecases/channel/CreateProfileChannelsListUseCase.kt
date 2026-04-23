@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import com.google.gson.Gson
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
+import org.supla.android.Preferences
 import org.supla.android.core.shared.shareable
 import org.supla.android.data.model.general.IconType
 import org.supla.android.data.source.ChannelRelationRepository
@@ -60,14 +61,23 @@ class CreateProfileChannelsListUseCase @Inject constructor(
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val channelRepository: RoomChannelRepository,
   private val getCaptionUseCase: GetCaptionUseCase,
+  private val preferences: Preferences,
   @param:Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter,
   @param:Named(GSON_FOR_REPO) private val gson: Gson,
 ) {
 
+  private val channelListSource: Single<List<ChannelDataEntity>>
+    get() =
+      if (preferences.hideUnavailableChannels) {
+        channelRepository.findListWithoutUnavailable()
+      } else {
+        channelRepository.findList()
+      }
+
   operator fun invoke(): Observable<List<ListItem>> =
     Single.zip(
       channelRelationRepository.findChildrenToParentsRelations().firstOrError(),
-      channelRepository.findList()
+      channelListSource
     ) { relationMap, entities -> Pair(relationMap, entities) }
       .map { (relationMap, entities) ->
         val channels = mutableListOf<ListItem>()

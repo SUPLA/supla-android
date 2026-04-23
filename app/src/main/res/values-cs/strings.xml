@@ -529,6 +529,7 @@
   <string name="details_timer_info_thermostat_off">Termostat se vypne pomocí \n%1$s</string>
   <string name="details_timer_info_thermostat_heating">Termostat bude v režimu vytápění po dobu. \n%1$s</string>
   <string name="details_timer_info_thermostat_cooling">Termostat bude v režimu chlazení po dobu. \n%1$s</string>
+  <string name="details_timer_info_thermostat_auto">Termostat bude v automatickém režimu po dobu\\n%1$s</string>
   <string name="details_timer_select_time">Zadejte čas</string>
   <string name="details_timer_counter">Počítadlo</string>
   <string name="details_timer_calendar">Kalendář</string>
@@ -807,4 +808,5 @@
   <string name="general_search">Hledat</string>
   <string name="toolbar_search_hint">Zadejte alespoň 2 znaky…</string>
   <string name="details_timer_select_program">Vyberte program</string>
+  <string name="settings_show_unavailable_channels">Skrýt kanály, které nejsou dostupné kvůli konfiguraci zařízení</string>
 </resources>

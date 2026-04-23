@@ -545,6 +545,7 @@
   <string name="details_timer_info_thermostat_off">Ο θερμοστάτης θα είναι απενεργοποιημένος για \n%1$s</string>
   <string name="details_timer_info_thermostat_heating">Ο θερμοστάτης θα βρίσκεται σε λειτουργία θέρμανσης για \n%1$s</string>
   <string name="details_timer_info_thermostat_cooling">Ο θερμοστάτης θα βρίσκεται σε λειτουργία ψύξης για \n%1$s</string>
+  <string name="details_timer_info_thermostat_auto">Ο θερμοστάτης θα είναι σε αυτόματη λειτουργία για\\n%1$s</string>
   <string name="details_timer_select_time">Καθορίστε την ώρα</string>
   <string name="details_timer_counter">Μετρητής</string>
   <string name="details_timer_calendar">Ημερολόγιο</string>
@@ -819,4 +820,5 @@
   <string name="general_search">Αναζήτηση</string>
   <string name="toolbar_search_hint">Πληκτρολογήστε τουλάχιστον 2 χαρακτήρες…</string>
   <string name="details_timer_select_program">Επιλέξτε πρόγραμμα</string>
+  <string name="settings_show_unavailable_channels">Απόκρυψη καναλιών που δεν είναι διαθέσιμα λόγω της διαμόρφωσης της συσκευής</string>
 </resources>

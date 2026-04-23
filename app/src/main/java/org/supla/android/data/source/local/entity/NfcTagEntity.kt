@@ -75,5 +75,16 @@ data class NfcTagEntity(
 
     const val ALL_COLUMNS = "$COLUMN_ID, $COLUMN_UUID, $COLUMN_NAME, " +
       "$COLUMN_PROFILE_ID, $COLUMN_SUBJECT_TYPE, $COLUMN_SUBJECT_ID, $COLUMN_ACTION_ID, $COLUMN_READ_ONLY"
+
+    const val JOIN_COLUMNS =
+      """
+        tag.$COLUMN_ID tag_$COLUMN_ID,
+        tag.$COLUMN_UUID tag_$COLUMN_UUID,
+        tag.$COLUMN_NAME tag_$COLUMN_NAME,
+        tag.$COLUMN_PROFILE_ID tag_$COLUMN_PROFILE_ID,
+        tag.$COLUMN_SUBJECT_TYPE tag_$COLUMN_SUBJECT_TYPE,
+        tag.$COLUMN_SUBJECT_ID tag_$COLUMN_SUBJECT_ID,
+        tag.$COLUMN_ACTION_ID tag_$COLUMN_ACTION_ID,
+        tag.$COLUMN_READ_ONLY tag_$COLUMN_READ_ONLY"""
   }
 }
