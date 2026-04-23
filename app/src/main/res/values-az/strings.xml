@@ -544,6 +544,7 @@
   <string name="details_timer_info_thermostat_off">Termostat %1$s müddətində söndürülmüş qalacaq</string>
   <string name="details_timer_info_thermostat_heating">Termostat %1$s müddətində isitmə rejimində qalacaq</string>
   <string name="details_timer_info_thermostat_cooling">Termostat %1$s müddətində soyutma rejimində qalacaq</string>
+  <string name="details_timer_info_thermostat_auto">Termostat %1$s müddətində avtomatik rejimdə olacaq</string>
   <string name="details_timer_select_time">Vaxtı göstərin</string>
   <string name="details_timer_counter">Sayğac</string>
   <string name="details_timer_calendar">Təqvim</string>
@@ -907,4 +908,5 @@
   <string name="general_search">Axtar</string>
   <string name="toolbar_search_hint">Ən azı 2 simvol daxil edin…</string>
   <string name="details_timer_select_program">Proqram seçin</string>
+  <string name="settings_show_unavailable_channels">Cihaz konfiqurasiyasına görə əlçatan olmayan kanalları gizlət</string>
 </resources>

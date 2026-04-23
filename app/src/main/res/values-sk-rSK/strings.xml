@@ -550,6 +550,7 @@
   <string name="details_timer_info_thermostat_off">Termostat bude vypnutý na\n%1$s</string>
   <string name="details_timer_info_thermostat_heating">Termostat bude v režime ohrievania na\n%1$s</string>
   <string name="details_timer_info_thermostat_cooling">Termostat bude v režime chladenia na\n%1$s</string>
+  <string name="details_timer_info_thermostat_auto">Termostat bude v automatickom režime\\n%1$s</string>
   <string name="details_timer_select_time">Zadať čas</string>
   <string name="details_timer_counter">Počítadlo</string>
   <string name="details_timer_calendar">Kalendár</string>
@@ -827,4 +828,5 @@
   <string name="general_search">Hľadať</string>
   <string name="toolbar_search_hint">Zadajte aspoň 2 znaky…</string>
   <string name="details_timer_select_program">Vyberte program</string>
+  <string name="settings_show_unavailable_channels">Skryť kanály, ktoré nie sú dostupné z dôvodu konfigurácie zariadenia</string>
 </resources>

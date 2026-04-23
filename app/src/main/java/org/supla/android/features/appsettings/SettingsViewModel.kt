@@ -63,7 +63,6 @@ class SettingsViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  @Suppress("KotlinConstantConditions")
   private fun configObservable() = Observable.fromCallable {
     return@fromCallable if (Configuration.ANDROID_AUTO_SUPPORT) {
       listOf(
@@ -75,6 +74,7 @@ class SettingsViewModel @Inject constructor(
         SettingItem.InfoButton(visible = preferences.isShowChannelInfo, this::updateInfoButton),
         SettingItem.BottomMenu(visible = preferences.isShowBottomMenu, this::updateBottomMenu),
         SettingItem.BottomLabels(visible = preferences.isShowBottomLabel, enabled = true, this::updateBottomLabel),
+        SettingItem.UnavailableChannelsVisibility(hidden = preferences.hideUnavailableChannels, this::updateUnavailableChannels),
         SettingItem.RollerShutterOpenClose(showOpeningPercentage = preferences.isShowOpeningPercent, this::updateShowingOpeningPercentage),
         SettingItem.NightMode(nightModeSetting = applicationPreferences.nightMode, this::updateNightMode),
         SettingItem.LockScreen(lockScreenScope = encryptedPreferences.lockScreenSettings.scope, this::updateLockScreen),
@@ -146,6 +146,10 @@ class SettingsViewModel @Inject constructor(
 
   private fun updateBottomMenu(value: Boolean) {
     preferences.isShowBottomMenu = value
+  }
+
+  private fun updateUnavailableChannels(value: Boolean) {
+    preferences.hideUnavailableChannels = value
   }
 
   private fun updateShowingOpeningPercentage(value: Boolean) {

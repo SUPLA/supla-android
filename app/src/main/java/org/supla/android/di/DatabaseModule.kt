@@ -49,6 +49,7 @@ import org.supla.android.db.room.app.migrations.MIGRATION_41_42
 import org.supla.android.db.room.app.migrations.MIGRATION_42_43
 import org.supla.android.db.room.app.migrations.MIGRATION_43_44
 import org.supla.android.db.room.app.migrations.MIGRATION_44_45
+import org.supla.android.db.room.app.migrations.MIGRATION_45_46
 import org.supla.android.db.room.app.migrations.Migration25to26
 import org.supla.android.db.room.app.migrations.Migration26to27
 import org.supla.android.db.room.app.migrations.Migration27to28
@@ -78,7 +79,7 @@ class DatabaseModule {
     Room.databaseBuilder(context, AppDatabase::class.java, DbHelper.DATABASE_NAME)
       .let {
         if (!BuildConfig.DEBUG) {
-          // Destructive migration should be activated only in production. For development we need to know about all migration failures
+          // Destructive migration should be activated only in production. For development, we need to know about all migration failures
           it.fallbackToDestructiveMigration(true)
         } else {
           it
@@ -106,7 +107,8 @@ class DatabaseModule {
         MIGRATION_41_42,
         MIGRATION_42_43,
         MIGRATION_43_44,
-        MIGRATION_44_45
+        MIGRATION_44_45,
+        MIGRATION_45_46
       )
       .build()
 

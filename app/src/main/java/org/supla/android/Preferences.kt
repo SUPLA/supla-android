@@ -33,6 +33,7 @@ private const val PREF_SHON_CHANNEL_INFO = "pref_show_channel_info"
 private const val PREF_SHOW_BOTTOM_LABEL = "pref_show_bottom_label"
 private const val PREF_SHOW_BOTTOM_MENU = "pref_show_bottom_menu"
 private const val PREF_SHOW_OPENING_PERCENT = "pref_show_opening_percent"
+private const val PREF_HIDE_UNAVAILABLE_CHANNELS = "pref_show_unavailable_channels"
 
 private const val PREF_NEW_GESTURE_INFO = "pref_new_gesture_info"
 private const val PREF_THERMOSTAT_SCHEDULE_INFO = "pref_thermostat_schedule_info"
@@ -71,6 +72,10 @@ class Preferences(context: Context) {
   var isShowOpeningPercent: Boolean
     get() = sharedPreferences.getBoolean(PREF_SHOW_OPENING_PERCENT, false)
     set(value) = sharedPreferences.edit { putBoolean(PREF_SHOW_OPENING_PERCENT, value) }
+
+  var hideUnavailableChannels: Boolean
+    get() = sharedPreferences.getBoolean(PREF_HIDE_UNAVAILABLE_CHANNELS, false)
+    set(value) = sharedPreferences.edit { putBoolean(PREF_HIDE_UNAVAILABLE_CHANNELS, value) }
 
   var isNewGestureInfoPresented: Boolean
     get() = sharedPreferences.getBoolean(PREF_NEW_GESTURE_INFO, false)

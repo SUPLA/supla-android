@@ -17,6 +17,10 @@ package org.supla.android.data.source.remote.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+// This const is used in DAO queries.
+// Update it when changed in status
+const val ONLINE_BUT_NOT_AVAILABLE = 2
+
 enum class SuplaChannelAvailabilityStatus(val rawValue: Int) {
   ONLINE(1),
   OFFLINE(0),

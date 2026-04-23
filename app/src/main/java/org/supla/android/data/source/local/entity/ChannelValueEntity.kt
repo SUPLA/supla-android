@@ -37,6 +37,7 @@ import org.supla.core.shared.data.model.function.rollershutter.RollerShutterValu
 import org.supla.core.shared.data.model.function.thermostat.HomePlusThermostatValue
 import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
 import org.supla.core.shared.data.model.valve.ValveValue
+import org.supla.core.shared.extensions.ifTrue
 
 @Entity(
   tableName = TABLE_NAME,
@@ -55,6 +56,7 @@ data class ChannelValueEntity(
   @ColumnInfo(name = COLUMN_ID) @PrimaryKey val id: Long?,
   @ColumnInfo(name = COLUMN_CHANNEL_REMOTE_ID) val channelRemoteId: Int,
   @ColumnInfo(name = COLUMN_ONLINE) val status: SuplaChannelAvailabilityStatus,
+  @ColumnInfo(name = COLUMN_LAST_ONLINE_STATE) val lastOnlineState: SuplaChannelAvailabilityStatus?,
   @ColumnInfo(name = COLUMN_SUB_VALUE) val subValue: String?,
   @ColumnInfo(name = COLUMN_SUB_VALUE_TYPE) val subValueType: Short,
   @ColumnInfo(name = COLUMN_VALUE) val value: String?,
@@ -125,6 +127,7 @@ data class ChannelValueEntity(
       id = id,
       channelRemoteId = channelRemoteId,
       status = status,
+      lastOnlineState = if (status != SuplaChannelAvailabilityStatus.OFFLINE) status else lastOnlineState,
       subValue = if (status.online) toString(suplaChannelValue.SubValue) else subValue,
       subValueType = if (status.online) suplaChannelValue.SubValueType else subValueType,
       value = if (status.online) toString(suplaChannelValue.Value) else value,
@@ -136,6 +139,7 @@ data class ChannelValueEntity(
     const val COLUMN_ID = "_channel_value_id"
     const val COLUMN_CHANNEL_REMOTE_ID = "channelid"
     const val COLUMN_ONLINE = "online"
+    const val COLUMN_LAST_ONLINE_STATE = "last_online_state"
     const val COLUMN_SUB_VALUE = "subvalue"
     const val COLUMN_SUB_VALUE_TYPE = "subvaluetype"
     const val COLUMN_VALUE = "value"
@@ -161,6 +165,17 @@ data class ChannelValueEntity(
     const val ALL_COLUMNS =
       "$COLUMN_ID, $COLUMN_CHANNEL_REMOTE_ID, $COLUMN_ONLINE, $COLUMN_SUB_VALUE_TYPE, $COLUMN_SUB_VALUE, $COLUMN_VALUE, $COLUMN_PROFILE_ID"
 
+    const val JOIN_COLUMNS =
+      """
+        value.$COLUMN_ID value_$COLUMN_ID,
+        value.$COLUMN_CHANNEL_REMOTE_ID value_$COLUMN_CHANNEL_REMOTE_ID,
+        value.$COLUMN_ONLINE value_$COLUMN_ONLINE,
+        value.$COLUMN_LAST_ONLINE_STATE value_$COLUMN_LAST_ONLINE_STATE,
+        value.$COLUMN_SUB_VALUE_TYPE value_$COLUMN_SUB_VALUE_TYPE,
+        value.$COLUMN_SUB_VALUE value_$COLUMN_SUB_VALUE,
+        value.$COLUMN_VALUE value_$COLUMN_VALUE,
+        value.$COLUMN_PROFILE_ID value_$COLUMN_PROFILE_ID"""
+
     fun from(
       suplaChannelValue: SuplaChannelValue,
       channelRemoteId: Int,
@@ -171,6 +186,7 @@ data class ChannelValueEntity(
         id = null,
         channelRemoteId = channelRemoteId,
         status = status,
+        lastOnlineState = (status != SuplaChannelAvailabilityStatus.OFFLINE).ifTrue { status },
         subValue = getValue(suplaChannelValue.SubValue),
         subValueType = suplaChannelValue.SubValueType,
         value = getValue(suplaChannelValue.Value),

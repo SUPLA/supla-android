@@ -571,6 +571,7 @@
   <string name="details_timer_info_thermostat_off">Thermostat will stay turned off for\n%1$s</string>
   <string name="details_timer_info_thermostat_heating">Thermostat will stay in heating mode for\n%1$s</string>
   <string name="details_timer_info_thermostat_cooling">Thermostat will stay in cooling mode for\n%1$s</string>
+  <string name="details_timer_info_thermostat_auto">Thermostat will stay in auto mode for\n%1$s</string>
   <string name="details_timer_select_time">Specify time</string>
   <string name="details_timer_counter">Counter</string>
   <string name="details_timer_calendar">Calendar</string>
@@ -939,4 +940,5 @@
   <string name="general_search">Search</string>
   <string name="toolbar_search_hint">Type 2 characters for search…</string>
   <string name="details_timer_select_program">Select program</string>
+  <string name="settings_show_unavailable_channels">Hide channels that are unavailable due to the device configuration.</string>
 </resources>

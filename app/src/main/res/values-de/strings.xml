@@ -502,6 +502,7 @@
   <string name="details_timer_info_thermostat_off">Thermostat bleibt %1$s ausgeschaltet</string>
   <string name="details_timer_info_thermostat_heating">Thermostat bleibt %1$s im Heizmodus</string>
   <string name="details_timer_info_thermostat_cooling">Thermostat bleibt %1$s im Kühlmodus</string>
+  <string name="details_timer_info_thermostat_auto">Der Thermostat bleibt für %1$s im Automatikmodus</string>
   <string name="details_timer_select_time">Zeitauswahl</string>
   <string name="details_timer_counter">Zähler</string>
   <string name="details_timer_calendar">Kalender</string>
@@ -883,4 +884,5 @@
   <string name="general_search">Suchen</string>
   <string name="toolbar_search_hint">Geben Sie mindestens 2 Zeichen ein…</string>
   <string name="details_timer_select_program">Programm auswählen</string>
+  <string name="settings_show_unavailable_channels">Kanäle ausblenden, die aufgrund der Gerätekonfiguration nicht verfügbar sind</string>
 </resources>

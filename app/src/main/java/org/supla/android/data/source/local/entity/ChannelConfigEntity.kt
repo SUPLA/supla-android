@@ -82,5 +82,13 @@ data class ChannelConfigEntity(
     """
 
     const val ALL_COLUMNS = "$COLUMN_CHANNEL_ID, $COLUMN_PROFILE_ID, $COLUMN_CONFIG, $COLUMN_CONFIG_TYPE, $COLUMN_CONFIG_CRC32"
+
+    const val JOIN_COLUMNS =
+      """
+        config.${COLUMN_CHANNEL_ID} config_${COLUMN_CHANNEL_ID},
+        config.${COLUMN_CONFIG_TYPE} config_${COLUMN_CONFIG_TYPE},
+        config.${COLUMN_CONFIG} config_${COLUMN_CONFIG},
+        config.${COLUMN_CONFIG_CRC32} config_${COLUMN_CONFIG_CRC32},
+        config.${COLUMN_PROFILE_ID} config_${COLUMN_PROFILE_ID}"""
   }
 }

@@ -551,6 +551,7 @@
   <string name="details_timer_info_thermostat_off">Termostat będzie wyłączony przez\n%1$s</string>
   <string name="details_timer_info_thermostat_heating">Termostat będzie w trybie grzania przez\n%1$s</string>
   <string name="details_timer_info_thermostat_cooling">Termostat będzie w trybie chłodzenia przez\n%1$s</string>
+  <string name="details_timer_info_thermostat_auto">Termostat będzie w trybie automatycznym przez\\n%1$s</string>
   <string name="details_timer_select_time">Określ czas</string>
   <string name="details_timer_counter">Licznik</string>
   <string name="details_timer_calendar">Kaledarz</string>
@@ -915,4 +916,5 @@
   <string name="general_search">Szukaj</string>
   <string name="toolbar_search_hint">Wpisz 2 znaki, aby wyszukać…</string>
   <string name="details_timer_select_program">Wybierz program</string>
+  <string name="settings_show_unavailable_channels">Ukryj kanały, które są niedostępne ze względu na konfigurację urządzenia</string>
 </resources>

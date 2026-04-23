@@ -12,7 +12,8 @@
     android:layout_height="wrap_content"
     android:layout_alignParentStart="true"
     android:layout_centerVertical="true"
-    android:text="@string/cfg_button_autohide"
+    android:layout_marginEnd="58dp"
+    android:text="@string/settings_show_unavailable_channels"
     android:textAppearance="@style/AppTheme.TextAppearance.Body2" />
 
   <androidx.appcompat.widget.SwitchCompat

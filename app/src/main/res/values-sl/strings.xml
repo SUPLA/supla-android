@@ -547,6 +547,7 @@
   <string name="details_timer_info_thermostat_off">Termostat se izklopi z\n%1$s</string>
   <string name="details_timer_info_thermostat_heating">Termostat bo v načinu ogrevanja\n%1$s</string>
   <string name="details_timer_info_thermostat_cooling">Termostat bo v načinu hlajenja\n%1$s</string>
+  <string name="details_timer_info_thermostat_auto">Termostat bo v samodejnem načinu\\n%1$s</string>
   <string name="details_timer_select_time">Določite čas</string>
   <string name="details_timer_counter">Števec</string>
   <string name="details_timer_calendar">Koledar</string>
@@ -826,4 +827,5 @@
   <string name="general_search">Iskanje</string>
   <string name="toolbar_search_hint">Vnesite vsaj 2 znaka…</string>
   <string name="details_timer_select_program">Izberite program</string>
+  <string name="settings_show_unavailable_channels">Skrij kanale, ki niso na voljo zaradi konfiguracije naprave</string>
 </resources>
