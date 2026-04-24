@@ -84,13 +84,17 @@ fun SlatTiltSlider(
   onValueChangeFinished: (Float) -> Unit = {}
 ) {
   val interactionSource = remember { MutableInteractionSource() }
+  var lastValue = value
   Slider(
     value = value,
     valueRange = valueRange,
     steps = steps,
     enabled = enabled,
-    onValueChange = onValueChange,
-    onValueChangeFinished = { onValueChangeFinished(value) },
+    onValueChange = {
+      lastValue = it
+      onValueChange(it)
+    },
+    onValueChangeFinished = { onValueChangeFinished(lastValue) },
     interactionSource = interactionSource,
     thumb = { Thumb(interactionSource = interactionSource, degrees = slatsTiltDegrees, enabled = enabled) },
     track = { Track(steps, enabled = enabled) },
