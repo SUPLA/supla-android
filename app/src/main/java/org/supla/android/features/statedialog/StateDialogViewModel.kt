@@ -64,7 +64,7 @@ class StateDialogViewModel @Inject constructor(
   roomProfileRepository: RoomProfileRepository,
   authorizeUseCase: AuthorizeUseCase,
   loginUseCase: LoginUseCase,
-  val schedulers: SuplaSchedulers
+  schedulers: SuplaSchedulers
 ) : BaseAuthorizationViewModel<StateDialogViewModelState, StateDialogViewEvent>(
   suplaClientProvider,
   roomProfileRepository,

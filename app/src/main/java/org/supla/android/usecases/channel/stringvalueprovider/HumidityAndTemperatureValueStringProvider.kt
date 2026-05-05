@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.di.FORMATTER_THERMOMETER
 import org.supla.android.usecases.channel.ChannelValueStringProvider
+import org.supla.android.usecases.channel.ValuePosition
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueprovider.HumidityAndTemperatureValueProvider
 import org.supla.core.shared.data.model.general.SuplaFunction
@@ -43,12 +44,12 @@ class HumidityAndTemperatureValueStringProvider @Inject constructor(
 
   override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType, withUnit: Boolean): String {
     val value = humidityAndTemperatureValueProvider.value(channelWithChildren, valueType)
-    return when (valueType) {
-      ValueType.FIRST -> thermometerFormatter.format(
+    return when (valueType.position) {
+      ValuePosition.FIRST -> thermometerFormatter.format(
         value = value,
         format = withUnit.ifTrue { ValueFormat.WithUnit } ?: ValueFormat.TemperatureWithDegree
       )
-      ValueType.SECOND -> HumidityValueFormatter.format(value, withUnit(withUnit))
+      ValuePosition.SECOND -> HumidityValueFormatter.format(value, withUnit(withUnit))
     }
   }
 }

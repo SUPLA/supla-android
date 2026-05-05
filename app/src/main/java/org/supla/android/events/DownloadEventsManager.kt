@@ -20,19 +20,29 @@ package org.supla.android.events
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
+import org.supla.android.events.DownloadEventsManager.State
+import org.supla.android.events.DownloadEventsManager.State.Failed
+import org.supla.android.events.DownloadEventsManager.State.Finished
+import org.supla.android.events.DownloadEventsManager.State.Idle
+import org.supla.android.events.DownloadEventsManager.State.InProgress
+import org.supla.android.events.DownloadEventsManager.State.Refresh
+import org.supla.android.events.DownloadEventsManager.State.Started
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.collections.set
 
 @Singleton
 class DownloadEventsManager @Inject constructor() {
 
   private val subjects: MutableMap<Id, Subject<State>> = mutableMapOf()
+  private val lastEventMap: MutableMap<Id, State> = mutableMapOf()
 
   fun emitProgressState(remoteId: Int, state: State) {
     emitProgressState(remoteId, DataType.DEFAULT_TYPE, state)
   }
 
   fun emitProgressState(remoteId: Int, dataType: DataType, state: State) {
+    lastEventMap[Id(IdType.CHANNEL, remoteId, dataType)] = state
     getSubjectForChannel(remoteId, dataType).onNext(state)
   }
 
@@ -42,6 +52,9 @@ class DownloadEventsManager @Inject constructor() {
   fun observeProgress(remoteId: Int, dataType: DataType): Observable<State> {
     return getSubjectForChannel(remoteId, dataType).hide()
   }
+
+  fun getLastChannelDownloadState(remoteId: Int, dataType: DataType = DataType.DEFAULT_TYPE): State? =
+    lastEventMap[Id(IdType.CHANNEL, remoteId, dataType)]
 
   private fun getSubjectForChannel(remoteId: Int, dataType: DataType): Subject<State> {
     return getSubject(remoteId, dataType, IdType.CHANNEL) {
@@ -85,3 +98,9 @@ class DownloadEventsManager @Inject constructor() {
   private enum class IdType { CHANNEL }
   private data class Id(val subjectType: IdType, val id: Int, val dataType: DataType)
 }
+
+val State?.inProgress: Boolean
+  get() = when (this) {
+    Failed, Finished, Idle, Refresh, null -> false
+    Started, is InProgress -> true
+  }

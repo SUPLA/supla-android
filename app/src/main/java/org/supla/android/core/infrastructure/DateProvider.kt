@@ -19,6 +19,8 @@ package org.supla.android.core.infrastructure
 
 import androidx.compose.runtime.compositionLocalOf
 import org.supla.android.data.source.local.calendar.DayOfWeek
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
@@ -26,6 +28,9 @@ import javax.inject.Singleton
 
 @Singleton
 class DateProvider @Inject constructor() {
+
+  val currentDateTime: ZonedDateTime
+    get() = ZonedDateTime.now(ZoneId.systemDefault())
 
   fun currentDate() = Date()
 

@@ -37,6 +37,8 @@ import org.supla.android.data.source.remote.thermostat.getIndicatorIcon
 import org.supla.android.data.source.remote.thermostat.getSetpointText
 import org.supla.android.di.FORMATTER_THERMOMETER
 import org.supla.android.di.GSON_FOR_REPO
+import org.supla.android.events.DownloadEventsManager
+import org.supla.android.events.inProgress
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.lists.onlineState
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -59,6 +61,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
   private val channelRelationRepository: ChannelRelationRepository,
   private val getChannelIconUseCase: GetChannelIconUseCase,
+  private val downloadEventsManager: DownloadEventsManager,
   private val channelRepository: RoomChannelRepository,
   private val getCaptionUseCase: GetCaptionUseCase,
   private val preferences: Preferences,
@@ -199,12 +202,13 @@ class CreateProfileChannelsListUseCase @Inject constructor(
     channelWithChildren(channelData, childrenMap).let {
       ListItem.IconValueItem(
         channelData,
-        channelData.locationEntity.caption,
-        it.onlineState,
-        getCaptionUseCase(channelData.shareable),
-        getChannelIconUseCase(channelData),
-        getChannelValueStringUseCase.valueOrNull(it),
-        getChannelIssuesForListUseCase(it.shareable)
+        locationCaption = channelData.locationEntity.caption,
+        online = it.onlineState,
+        captionProvider = getCaptionUseCase(channelData.shareable),
+        icon = getChannelIconUseCase(channelData),
+        value = getChannelValueStringUseCase.valueOrNull(it, ListFirstValue),
+        issues = getChannelIssuesForListUseCase(it.shareable),
+        processing = downloadEventsManager.getLastChannelDownloadState(channelData.remoteId).inProgress
       )
     }
 
@@ -225,7 +229,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       onlineState,
       getCaptionUseCase(channelData.shareable),
       getChannelIconUseCase(channelData),
-      thermometerChild?.let { getChannelValueStringUseCase(it.withChildren) } ?: NO_VALUE_TEXT,
+      thermometerChild?.let { getChannelValueStringUseCase(it.withChildren, ListFirstValue) } ?: NO_VALUE_TEXT,
       getChannelIssuesForListUseCase(channelWithChildren(channelData, childrenMap).shareable),
       channelData.channelExtendedValueEntity?.getSuplaValue()?.TimerStateValue?.countdownEndsAt,
       thermostatValue.getSetpointText(thermometerValueFormatter),
@@ -246,7 +250,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
         channelData.channelValueEntity.status.onlineState,
         getCaptionUseCase(channelData.shareable),
         getChannelIconUseCase(channelData),
-        getChannelValueStringUseCase(channelWithChildren),
+        getChannelValueStringUseCase(channelWithChildren, ListFirstValue),
         getChannelIssuesForListUseCase(channelWithChildren(channelData, childrenMap).shareable),
         thermometerValueFormatter.format(value.presetTemperature, ValueFormat.WithUnit),
       )
@@ -264,7 +268,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
         it.onlineState,
         getCaptionUseCase(channelData.shareable),
         getChannelIconUseCase(channelData),
-        value = getChannelValueStringUseCase.valueOrNull(it),
+        value = getChannelValueStringUseCase.valueOrNull(it, ListFirstValue),
         channelData.channelExtendedValueEntity?.getSuplaValue()?.TimerStateValue?.countdownEndsAt,
         getChannelIssuesForListUseCase(it.shareable)
       )
@@ -282,7 +286,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
         it.onlineState,
         getCaptionUseCase(channelData.shareable),
         getChannelIconUseCase(channelData),
-        value = getChannelValueStringUseCase.valueOrNull(it),
+        value = getChannelValueStringUseCase.valueOrNull(it, ListFirstValue),
         channelData.channelExtendedValueEntity?.getSuplaValue()?.TimerStateValue?.countdownEndsAt,
         getChannelIssuesForListUseCase(it.shareable)
       )
@@ -300,10 +304,10 @@ class CreateProfileChannelsListUseCase @Inject constructor(
         it.onlineState,
         getCaptionUseCase(channelData.shareable),
         getChannelIconUseCase(channelData),
-        value = getChannelValueStringUseCase.valueOrNull(it),
+        value = getChannelValueStringUseCase.valueOrNull(channel = it, valueType = ListFirstValue),
         getChannelIssuesForListUseCase(it.shareable),
         secondIcon = getChannelIconUseCase(channelData, IconType.SECOND),
-        secondValue = getChannelValueStringUseCase.valueOrNull(it, ValueType.SECOND, withUnit = false)
+        secondValue = getChannelValueStringUseCase.valueOrNull(it, ListSecondValue, withUnit = false)
       )
     }
 

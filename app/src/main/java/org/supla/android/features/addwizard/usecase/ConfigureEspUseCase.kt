@@ -59,7 +59,7 @@ class ConfigureEspUseCase @Inject constructor(
     } ?: Result.Timeout
 
   private suspend fun perform(inputData: InputData): Result {
-    val profile = profileRepository.findActiveProfileKtx()
+    val profile = profileRepository.findActiveProfileKtx() ?: return Result.Failed
 
     val fieldMap = mutableMapOf<String, String>()
     val getResult = performRequest(GET_RETRIES) { getRequest(fieldMap) }

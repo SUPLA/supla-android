@@ -44,6 +44,7 @@ import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.remote.channel.ONLINE_BUT_NOT_AVAILABLE
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @Dao
 interface ChannelDao {
@@ -114,6 +115,44 @@ interface ChannelDao {
   """
   )
   fun findList(): Observable<List<ChannelDataEntity>>
+
+  @Query(
+    """
+    SELECT 
+      ${ChannelEntity.JOIN_COLUMNS},
+      ${ChannelValueEntity.JOIN_COLUMNS},
+      ${ChannelExtendedValueEntity.JOIN_COLUMNS},
+      ${LocationEntity.JOIN_COLUMNS},
+      ${ChannelConfigEntity.JOIN_COLUMNS},
+      ${ChannelStateEntity.JOIN_COLUMNS}
+    FROM $TABLE_NAME channel
+    JOIN ${ChannelValueEntity.TABLE_NAME} value
+      ON channel.$COLUMN_CHANNEL_REMOTE_ID = value.${ChannelValueEntity.COLUMN_CHANNEL_REMOTE_ID}
+        AND channel.$COLUMN_PROFILE_ID = value.${ChannelValueEntity.COLUMN_PROFILE_ID}
+    JOIN ${LocationEntity.TABLE_NAME} location
+      ON channel.$COLUMN_LOCATION_ID = location.${LocationEntity.COLUMN_REMOTE_ID}
+        AND channel.$COLUMN_PROFILE_ID = location.${LocationEntity.COLUMN_PROFILE_ID}
+    LEFT JOIN ${ChannelConfigEntity.TABLE_NAME} config
+      ON channel.$COLUMN_CHANNEL_REMOTE_ID = config.${ChannelConfigEntity.COLUMN_CHANNEL_ID}
+        AND channel.$COLUMN_PROFILE_ID = config.${LocationEntity.COLUMN_PROFILE_ID}
+    LEFT JOIN ${ChannelExtendedValueEntity.TABLE_NAME} extended_value
+      ON channel.$COLUMN_CHANNEL_REMOTE_ID = extended_value.${ChannelExtendedValueEntity.COLUMN_CHANNEL_ID}
+        AND channel.$COLUMN_PROFILE_ID = extended_value.${ChannelExtendedValueEntity.COLUMN_PROFILE_ID}
+    LEFT JOIN ${ChannelStateEntity.TABLE_NAME} state
+      ON channel.$COLUMN_CHANNEL_REMOTE_ID = state.${ChannelStateEntity.COLUMN_CHANNEL_ID}
+        AND channel.$COLUMN_PROFILE_ID = state.${ChannelStateEntity.COLUMN_PROFILE_ID}
+    WHERE channel.${ChannelEntity.COLUMN_FUNCTION} = :function
+      AND channel.$COLUMN_PROFILE_ID = :profileId
+      AND channel.$COLUMN_VISIBLE > 0
+    ORDER BY
+      location.${LocationEntity.COLUMN_SORT_ORDER},
+      location.${LocationEntity.COLUMN_CAPTION} COLLATE UNICODE,
+      channel.${COLUMN_POSITION},
+      channel.${ChannelEntity.COLUMN_FUNCTION} DESC,
+      channel.$COLUMN_CAPTION COLLATE LOCALIZED
+  """
+  )
+  suspend fun findChannelsBy(profileId: Long, function: SuplaFunction): List<ChannelDataEntity>
 
   @Query(
     """

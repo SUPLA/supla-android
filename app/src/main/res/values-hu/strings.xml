@@ -637,7 +637,7 @@
   <string name="details_em_reversed_energy">Visszatérő</string>
   <string name="details_em_cost">Költség</string>
   <string name="details_em_settings_list_item">A csatornalistában megjelenő érték</string>
-  <string name="details_em_settings_title">Beállítások - %1$s</string>
+  <string name="details_settings_title">Beállítások - %1$s</string>
   <string name="details_em_total_suffix">(mérőóra állapota)</string>
   <string name="details_em_current_month_suffix">(folyó hó)</string>
   <string name="details_em_last_month_balancing">Az aktuális hónap mérlege</string>

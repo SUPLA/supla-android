@@ -19,13 +19,15 @@ package org.supla.android.features.measurementsdownload.workers
 
 import android.content.Context
 import androidx.work.Constraints
+import androidx.work.CoroutineWorker
 import androidx.work.NetworkType
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import kotlinx.coroutines.rx3.awaitLast
 import org.supla.android.data.source.local.entity.measurements.BaseLogEntity
 import org.supla.android.data.source.remote.rest.channel.Measurement
 import org.supla.android.events.DownloadEventsManager
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.blockingSubscribeBy
 import org.supla.android.features.measurementsdownload.BaseDownloadLogUseCase
 import org.supla.core.shared.extensions.guardLet
@@ -34,9 +36,10 @@ import timber.log.Timber
 abstract class BaseDownloadLogWorker<T : Measurement, U : BaseLogEntity>(
   appContext: Context,
   workerParameters: WorkerParameters,
+  private val updateEventsManager: UpdateEventsManager,
   private val downloadEventsManager: DownloadEventsManager,
   private val baseDownloadLogUseCase: BaseDownloadLogUseCase<T, U>
-) : Worker(appContext, workerParameters) {
+) : CoroutineWorker(appContext, workerParameters) {
 
   protected val remoteId: Int?
     get() = inputData.getInt(REMOTE_ID_URI, -1).let {
@@ -51,7 +54,7 @@ abstract class BaseDownloadLogWorker<T : Measurement, U : BaseLogEntity>(
       it?.let { DownloadEventsManager.DataType.valueOf(it) } ?: DownloadEventsManager.DataType.DEFAULT_TYPE
     }
 
-  override fun doWork(): Result {
+  override suspend fun doWork(): Result {
     Timber.d("Worker started with ${baseDownloadLogUseCase.javaClass.simpleName}")
 
     val (remoteId) = guardLet(remoteId) {
@@ -65,9 +68,12 @@ abstract class BaseDownloadLogWorker<T : Measurement, U : BaseLogEntity>(
     Timber.d("Worker parameters - remoteId: $remoteId, profileId: $profileId")
 
     var result = Result.failure()
+    var downloaded = false
+    var success = false
     baseDownloadLogUseCase.loadMeasurements(remoteId, profileId)
       .doOnSubscribe {
         downloadEventsManager.emitProgressState(remoteId, dataType, DownloadEventsManager.State.Started)
+        updateEventsManager.emitChannelUpdate(remoteId)
       }
       .doOnNext {
         downloadEventsManager.emitProgressState(
@@ -75,11 +81,13 @@ abstract class BaseDownloadLogWorker<T : Measurement, U : BaseLogEntity>(
           dataType = dataType,
           state = DownloadEventsManager.State.InProgress(it)
         )
+        downloaded = true
       }
       .blockingSubscribeBy(
         onComplete = {
           downloadEventsManager.emitProgressState(remoteId, dataType, DownloadEventsManager.State.Finished)
           result = Result.success()
+          success = true
         },
         onError = {
           Timber.e(it)
@@ -87,8 +95,16 @@ abstract class BaseDownloadLogWorker<T : Measurement, U : BaseLogEntity>(
         }
       )
 
+    if (success && downloaded) {
+      onDownloadFinished()
+    }
+
+    updateEventsManager.emitChannelUpdate(remoteId)
+
     return result
   }
+
+  protected open suspend fun onDownloadFinished() {}
 
   companion object {
     const val ITEMS_LIMIT_PER_REQUEST = 5000

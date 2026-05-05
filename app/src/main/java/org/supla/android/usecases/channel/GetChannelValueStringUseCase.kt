@@ -102,11 +102,11 @@ class GetChannelValueStringUseCase @Inject constructor(
     NoValueStringProvider(SuplaFunction.HOTEL_CARD_SENSOR)
   )
 
-  operator fun invoke(channel: ChannelWithChildren, valueType: ValueType = ValueType.FIRST, withUnit: Boolean = true): String {
+  operator fun invoke(channel: ChannelWithChildren, valueType: ValueType = DefaultFirstValue, withUnit: Boolean = true): String {
     return valueOrNull(channel, valueType, withUnit) ?: NO_VALUE_TEXT
   }
 
-  fun valueOrNull(channel: ChannelWithChildren, valueType: ValueType = ValueType.FIRST, withUnit: Boolean = true): String? {
+  fun valueOrNull(channel: ChannelWithChildren, valueType: ValueType = DefaultFirstValue, withUnit: Boolean = true): String? {
     providers.firstOrNull { it.handle(channel) }?.let {
       if (channel.channel.channelValueEntity.status.offline && it !is NoValueStringProvider) {
         return NO_VALUE_TEXT
@@ -118,10 +118,6 @@ class GetChannelValueStringUseCase @Inject constructor(
     Timber.e("No value formatter for channel function `${channel.channel.function}`")
     return null
   }
-}
-
-enum class ValueType {
-  FIRST, SECOND
 }
 
 interface ChannelValueStringProvider {

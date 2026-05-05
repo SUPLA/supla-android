@@ -28,7 +28,7 @@ import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.images.ImageId
 import org.supla.android.lib.SuplaConst
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
-import org.supla.android.usecases.channel.ValueType
+import org.supla.android.usecases.channel.ListSecondValue
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.model.lists.IssueIcon
 import org.supla.core.shared.usecase.channel.GetChannelBatteryIconUseCase
@@ -88,7 +88,7 @@ class CreateTemperaturesListUseCase @Inject constructor(
     MeasurementValue(
       remoteId = channelData.remoteId,
       imageId = getChannelIconUseCase(channelData, IconType.SECOND),
-      value = getChannelValueStringUseCase(ChannelWithChildren(channelData), ValueType.SECOND, withUnit = false),
+      value = getChannelValueStringUseCase(ChannelWithChildren(channelData), ListSecondValue, withUnit = false),
       batteryIcon = getChannelBatteryIconUseCase(channelData.shareable)
     )
 }

@@ -627,7 +627,7 @@
   <string name="details_em_reversed_energy">Devolvida</string>
   <string name="details_em_cost">Custo</string>
   <string name="details_em_settings_list_item">Valor exibido na lista de canais</string>
-  <string name="details_em_settings_title">Configurações - %1$s</string>
+  <string name="details_settings_title">Configurações - %1$s</string>
   <string name="details_em_total_suffix">(estado do contador)</string>
   <string name="details_em_current_month_suffix">(mês atual)</string>
   <string name="details_em_last_month_balancing">Balanço do mês atual</string>

@@ -633,7 +633,7 @@
   <string name="details_em_reversed_energy">Επιστράφηκε</string>
   <string name="details_em_cost">Κόστος</string>
   <string name="details_em_settings_list_item">Τιμή που εμφανίζεται στη λίστα καναλιών</string>
-  <string name="details_em_settings_title">Ρυθμίσεις - %1$s</string>
+  <string name="details_settings_title">Ρυθμίσεις - %1$s</string>
   <string name="details_em_total_suffix">(κατάσταση μετρητή)</string>
   <string name="details_em_current_month_suffix">(τρέχων μήνας)</string>
   <string name="details_em_last_month_balancing">Εξισορρόπηση του τρέχοντος μήνα</string>

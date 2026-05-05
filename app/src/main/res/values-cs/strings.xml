@@ -617,7 +617,7 @@
   <string name="details_em_reversed_energy">Vrácena</string>
   <string name="details_em_cost">Náklady</string>
   <string name="details_em_settings_list_item">Hodnota zobrazená v seznamu kanálů</string>
-  <string name="details_em_settings_title">Nastavení - %1$s</string>
+  <string name="details_settings_title">Nastavení - %1$s</string>
   <string name="details_em_total_suffix">(stav počítadla)</string>
   <string name="details_em_current_month_suffix">(aktuální měsíc)</string>
   <string name="details_em_last_month_balancing">Bilancování aktuálního měsíce</string>

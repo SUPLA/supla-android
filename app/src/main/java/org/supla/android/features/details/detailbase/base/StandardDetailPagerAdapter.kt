@@ -33,6 +33,7 @@ import org.supla.android.features.details.humiditydetail.history.HumidityHistory
 import org.supla.android.features.details.impulsecounter.counterphoto.CounterPhotoFragment
 import org.supla.android.features.details.impulsecounter.general.ImpulseCounterGeneralFragment
 import org.supla.android.features.details.impulsecounter.history.ImpulseCounterHistoryDetailFragment
+import org.supla.android.features.details.impulsecounter.settings.ImpulseCounterSettingsFragment
 import org.supla.android.features.details.legacydetail.LegacyDetailFragment
 import org.supla.android.features.details.rgbanddimmer.dimmer.DimmerDetailFragment
 import org.supla.android.features.details.rgbanddimmer.dimmercct.DimmerCctDetailFragment
@@ -92,6 +93,7 @@ class StandardDetailPagerAdapter(
     DetailPage.IC_GENERAL -> ImpulseCounterGeneralFragment().apply { arguments = bundle(itemBundle) }
     DetailPage.IC_HISTORY -> ImpulseCounterHistoryDetailFragment().apply { arguments = bundle(itemBundle) }
     DetailPage.IC_OCR -> CounterPhotoFragment().apply { arguments = bundle(itemBundle) }
+    DetailPage.IC_SETTINGS -> ImpulseCounterSettingsFragment().apply { arguments = bundle(itemBundle) }
     DetailPage.VALVE_GENERAL -> ValveGeneralDetailFragment().apply { arguments = bundle(itemBundle) }
     DetailPage.GATE_GENERAL -> GateGeneralFragment().apply { arguments = bundle(itemBundle) }
     DetailPage.RGB -> RgbDetailFragment().apply { arguments = bundle(itemBundle) }
@@ -151,6 +153,7 @@ enum class DetailPage(val item: DetailBottomItem) {
   IC_GENERAL(DetailBottomItem.GENERAL),
   IC_HISTORY(DetailBottomItem.HISTORY),
   IC_OCR(DetailBottomItem.OCR),
+  IC_SETTINGS(DetailBottomItem.SETTINGS),
 
   // Valve
   VALVE_GENERAL(DetailBottomItem.GENERAL),

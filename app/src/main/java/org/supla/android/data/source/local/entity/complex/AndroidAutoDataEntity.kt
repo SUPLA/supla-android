@@ -35,7 +35,7 @@ import org.supla.core.shared.extensions.ifTrue
 data class AndroidAutoDataEntity(
   @Embedded(prefix = "channel_") val channelEntity: ChannelEntity?,
   @Embedded(prefix = "value_") val channelValueEntity: ChannelValueEntity?,
-  @Embedded(prefix = "channel_group_") val groupEntity: ChannelGroupEntity?,
+  @Embedded(prefix = "group_") val groupEntity: ChannelGroupEntity?,
   @Embedded(prefix = "scene_") val sceneEntity: SceneEntity?,
 
   @Embedded(prefix = "profile_") val profileEntity: ProfileEntity,

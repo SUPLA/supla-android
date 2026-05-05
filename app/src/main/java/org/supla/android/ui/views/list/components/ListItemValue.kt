@@ -20,18 +20,20 @@ package org.supla.android.ui.views.list.components
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import org.supla.android.core.ui.theme.listItemValue
 import org.supla.android.extensions.max
 
 @Composable
-fun ListItemValue(value: String, scale: Float) {
+fun ListItemValue(value: String, scale: Float, color: Color = MaterialTheme.colorScheme.onSurface) {
   val valueSize = MaterialTheme.typography.listItemValue().fontSize.let { max(it, it.times(scale)) }
 
   Text(
     text = value,
     style = MaterialTheme.typography.listItemValue().copy(fontSize = valueSize),
     maxLines = 1,
-    overflow = TextOverflow.Ellipsis
+    overflow = TextOverflow.Ellipsis,
+    color = color
   )
 }

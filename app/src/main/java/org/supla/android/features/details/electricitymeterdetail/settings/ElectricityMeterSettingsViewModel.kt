@@ -24,9 +24,9 @@ import org.supla.android.core.storage.UserStateHolder
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
-import org.supla.android.data.model.electricitymeter.ElectricityMeterBalanceType
-import org.supla.android.data.model.electricitymeter.ElectricityMeterSettings
 import org.supla.android.data.model.general.SingleSelectionList
+import org.supla.android.data.model.settings.ElectricityMeterBalanceType
+import org.supla.android.data.model.settings.ElectricityMeterSettings
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.Electricity
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType

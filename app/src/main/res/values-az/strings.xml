@@ -650,7 +650,7 @@
   <string name="details_em_reversed_energy">Geri</string>
   <string name="details_em_cost">Xərc</string>
   <string name="details_em_settings_list_item">Kanal siyahısında göstərilən göstərici</string>
-  <string name="details_em_settings_title">Parametrlər - %1$s</string>
+  <string name="details_settings_title">Parametrlər - %1$s</string>
   <string name="details_em_total_suffix">(ölçü sayğacı oxunuşu)</string>
   <string name="details_em_current_month_suffix">(mövcud ay)</string>
   <string name="details_em_last_month_balancing">Mövcud ay üçün balans növü</string>

@@ -60,7 +60,8 @@ data class ChannelValueEntity(
   @ColumnInfo(name = COLUMN_SUB_VALUE) val subValue: String?,
   @ColumnInfo(name = COLUMN_SUB_VALUE_TYPE) val subValueType: Short,
   @ColumnInfo(name = COLUMN_VALUE) val value: String?,
-  @ColumnInfo(name = COLUMN_PROFILE_ID) val profileId: Long,
+  @ColumnInfo(name = COLUMN_AGGREGATED_VALUE) val aggregatedValue: String?,
+  @ColumnInfo(name = COLUMN_PROFILE_ID) val profileId: Long
 ) {
 
   fun asThermostatValue() = ThermostatValue.from(status, getValueAsByteArray())
@@ -131,6 +132,7 @@ data class ChannelValueEntity(
       subValue = if (status.online) toString(suplaChannelValue.SubValue) else subValue,
       subValueType = if (status.online) suplaChannelValue.SubValueType else subValueType,
       value = if (status.online) toString(suplaChannelValue.Value) else value,
+      aggregatedValue = aggregatedValue,
       profileId = profileId
     )
 
@@ -143,27 +145,12 @@ data class ChannelValueEntity(
     const val COLUMN_SUB_VALUE = "subvalue"
     const val COLUMN_SUB_VALUE_TYPE = "subvaluetype"
     const val COLUMN_VALUE = "value"
+    const val COLUMN_AGGREGATED_VALUE = "aggregated_value"
     const val COLUMN_PROFILE_ID = "profileid"
 
-    val SQL = arrayOf(
-      """
-        CREATE TABLE $TABLE_NAME
-        (
-          $COLUMN_ID INTEGER PRIMARY KEY,
-          $COLUMN_CHANNEL_REMOTE_ID INTEGER NOT NULL,
-          $COLUMN_ONLINE INTEGER NOT NULL,
-          $COLUMN_SUB_VALUE_TYPE INTEGER NOT NULL,
-          $COLUMN_SUB_VALUE TEXT,
-          $COLUMN_VALUE TEXT,
-          $COLUMN_PROFILE_ID INTEGER NOT NULL
-        )
-      """.trimIndent(),
-      "CREATE INDEX ${TABLE_NAME}_${COLUMN_CHANNEL_REMOTE_ID}_index ON $TABLE_NAME ($COLUMN_CHANNEL_REMOTE_ID)",
-      "CREATE INDEX ${TABLE_NAME}_${COLUMN_PROFILE_ID}_index ON $TABLE_NAME ($COLUMN_PROFILE_ID)"
-    )
-
     const val ALL_COLUMNS =
-      "$COLUMN_ID, $COLUMN_CHANNEL_REMOTE_ID, $COLUMN_ONLINE, $COLUMN_SUB_VALUE_TYPE, $COLUMN_SUB_VALUE, $COLUMN_VALUE, $COLUMN_PROFILE_ID"
+      "$COLUMN_ID, $COLUMN_CHANNEL_REMOTE_ID, $COLUMN_ONLINE, $COLUMN_LAST_ONLINE_STATE, $COLUMN_SUB_VALUE_TYPE, " +
+        "$COLUMN_SUB_VALUE, $COLUMN_VALUE, $COLUMN_AGGREGATED_VALUE, $COLUMN_PROFILE_ID"
 
     const val JOIN_COLUMNS =
       """
@@ -174,6 +161,7 @@ data class ChannelValueEntity(
         value.$COLUMN_SUB_VALUE_TYPE value_$COLUMN_SUB_VALUE_TYPE,
         value.$COLUMN_SUB_VALUE value_$COLUMN_SUB_VALUE,
         value.$COLUMN_VALUE value_$COLUMN_VALUE,
+        value.$COLUMN_AGGREGATED_VALUE value_$COLUMN_AGGREGATED_VALUE,
         value.$COLUMN_PROFILE_ID value_$COLUMN_PROFILE_ID"""
 
     fun from(
@@ -190,6 +178,7 @@ data class ChannelValueEntity(
         subValue = getValue(suplaChannelValue.SubValue),
         subValueType = suplaChannelValue.SubValueType,
         value = getValue(suplaChannelValue.Value),
+        aggregatedValue = null,
         profileId = profileId
       )
     }

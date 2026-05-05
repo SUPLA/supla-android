@@ -16,7 +16,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
   private val profileRepository: RoomProfileRepository,
   private val preferences: Preferences,
-  private val schedulers: SuplaSchedulers
+  schedulers: SuplaSchedulers
 ) : BaseViewModel<MainViewState, MainViewEvent>(MainViewState(), schedulers) {
 
   fun getLabelVisibility() =

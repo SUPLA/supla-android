@@ -36,7 +36,7 @@ import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStat
 import org.supla.android.data.source.remote.hvac.SuplaTemperatureControlType
 import org.supla.android.images.ImageId
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
-import org.supla.android.usecases.channel.ValueType
+import org.supla.android.usecases.channel.ListSecondValue
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.data.model.general.Channel
@@ -198,7 +198,7 @@ class CreateTemperaturesListUseCaseTest {
 
     every { getChannelValueStringUseCase.invoke(ChannelWithChildren(channel), withUnit = false) } returns text
     secondValue?.let {
-      every { getChannelValueStringUseCase.invoke(ChannelWithChildren(channel), ValueType.SECOND, withUnit = false) } returns secondValue
+      every { getChannelValueStringUseCase.invoke(ChannelWithChildren(channel), ListSecondValue, withUnit = false) } returns secondValue
     }
     every { getChannelIconUseCase.invoke(channel) } returns imageId
     every { getChannelIconUseCase.invoke(channel, IconType.SECOND) } returns imageId

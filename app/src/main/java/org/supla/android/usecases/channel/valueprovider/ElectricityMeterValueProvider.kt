@@ -18,6 +18,7 @@ package org.supla.android.usecases.channel.valueprovider
  */
 
 import org.supla.android.core.storage.UserStateHolder
+import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.Electricity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.custom.Phase
@@ -39,6 +40,12 @@ class ElectricityMeterValueProvider @Inject constructor(
     channelWithChildren.function == SuplaFunction.ELECTRICITY_METER
 
   override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType): Any =
+    when (valueType) {
+      is ValueType.List -> valueForList(channelWithChildren)
+      is ValueType.Default -> defaultValue(channelWithChildren.channel.channelValueEntity)
+    }
+
+  private fun valueForList(channelWithChildren: ChannelWithChildren) =
     when (userStateHolder.getElectricityMeterSettings(channelWithChildren.profileId, channelWithChildren.remoteId).showOnListSafe) {
       SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY ->
         channelWithChildren.channel.Electricity.value?.summary?.totalReverseActiveEnergy ?: UNKNOWN_VALUE
@@ -63,8 +70,11 @@ class ElectricityMeterValueProvider @Inject constructor(
             .mapNotNull { value.getMeasurement(it.value, 0)?.voltage }
             .average()
         } ?: UNKNOWN_VALUE
-      else -> asIntValue(channelWithChildren.channel.channelValueEntity, startPos = 1, endPos = 4)?.div(100.0) ?: UNKNOWN_VALUE
+      else -> defaultValue(channelWithChildren.channel.channelValueEntity)
     }
+
+  private fun defaultValue(channelValue: ChannelValueEntity) =
+    asIntValue(channelValue, startPos = 1, endPos = 4)?.div(100.0) ?: UNKNOWN_VALUE
 
   companion object {
     const val UNKNOWN_VALUE = 0.0

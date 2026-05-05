@@ -25,9 +25,9 @@ class ImpulseCounterValueFormatter(
   override val defaultFormatSpecification: ValueFormatSpecification
 ) : ValueFormatter() {
 
-  constructor() : this(defaultFormatSpecification = ValueFormatSpecification.Companion.ImpulseCounter)
+  constructor() : this(defaultFormatSpecification = ValueFormatSpecification.ImpulseCounter)
 
-  override val invalidValue: InvalidValue = InvalidValue.Companion.ImpulseCounter
+  override val invalidValue: InvalidValue = InvalidValue.ImpulseCounter
 
   companion object
 }

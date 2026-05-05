@@ -98,7 +98,7 @@ class ProvideChannelDetailTypeUseCaseTest {
   fun `should provide detail for light switch with impulse counter`() {
     testDetailType(
       SuplaFunction.LIGHTSWITCH,
-      StandardDetailType(listOf(DetailPage.SWITCH, DetailPage.IC_HISTORY))
+      StandardDetailType(listOf(DetailPage.SWITCH, DetailPage.IC_HISTORY, DetailPage.IC_SETTINGS))
     ) { channel ->
       val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_IC_MEASUREMENTS.toShort()
@@ -111,7 +111,7 @@ class ProvideChannelDetailTypeUseCaseTest {
   fun `should provide detail for power switch with impulse counter`() {
     testDetailType(
       SuplaFunction.POWER_SWITCH,
-      StandardDetailType(listOf(DetailPage.SWITCH, DetailPage.IC_HISTORY))
+      StandardDetailType(listOf(DetailPage.SWITCH, DetailPage.IC_HISTORY, DetailPage.IC_SETTINGS))
     ) { channel ->
       val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_IC_MEASUREMENTS.toShort()
@@ -124,7 +124,7 @@ class ProvideChannelDetailTypeUseCaseTest {
   fun `should provide detail for stair case timer with impulse counter`() {
     testDetailType(
       SuplaFunction.STAIRCASE_TIMER,
-      StandardDetailType(listOf(DetailPage.SWITCH, DetailPage.IC_HISTORY))
+      StandardDetailType(listOf(DetailPage.SWITCH, DetailPage.IC_HISTORY, DetailPage.IC_SETTINGS))
     ) { channel ->
       val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_IC_MEASUREMENTS.toShort()
@@ -253,7 +253,7 @@ class ProvideChannelDetailTypeUseCaseTest {
   fun `should provide detail for electricity IC`() {
     testDetailType(
       SuplaFunction.IC_ELECTRICITY_METER,
-      IcDetailType(listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY))
+      IcDetailType(listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY, DetailPage.IC_SETTINGS))
     ) { channel ->
       every { channel.flags } returns 0
     }
@@ -263,7 +263,7 @@ class ProvideChannelDetailTypeUseCaseTest {
   fun `should provide detail for gas IC`() {
     testDetailType(
       SuplaFunction.IC_GAS_METER,
-      IcDetailType(listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY, DetailPage.IC_OCR))
+      IcDetailType(listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY, DetailPage.IC_OCR, DetailPage.IC_SETTINGS))
     ) { channel ->
       every { channel.flags } returns SuplaChannelFlag.OCR.rawValue
     }
@@ -273,7 +273,7 @@ class ProvideChannelDetailTypeUseCaseTest {
   fun `should provide detail for water IC`() {
     testDetailType(
       SuplaFunction.IC_WATER_METER,
-      IcDetailType(listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY))
+      IcDetailType(listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY, DetailPage.IC_SETTINGS))
     ) { channel ->
       every { channel.flags } returns 0
     }
@@ -283,7 +283,7 @@ class ProvideChannelDetailTypeUseCaseTest {
   fun `should provide detail for heat IC`() {
     testDetailType(
       SuplaFunction.IC_HEAT_METER,
-      IcDetailType(listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY))
+      IcDetailType(listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY, DetailPage.IC_SETTINGS))
     ) { channel ->
       every { channel.flags } returns 0
     }

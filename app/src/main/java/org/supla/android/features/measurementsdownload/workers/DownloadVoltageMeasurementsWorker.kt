@@ -27,17 +27,20 @@ import dagger.assisted.AssistedInject
 import org.supla.android.data.source.local.entity.measurements.VoltageHistoryLogEntity
 import org.supla.android.data.source.remote.rest.channel.HistoryMeasurement
 import org.supla.android.events.DownloadEventsManager
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.measurementsdownload.DownloadVoltageLogUseCase
 
 @HiltWorker
 class DownloadVoltageMeasurementsWorker @AssistedInject constructor(
   @Assisted appContext: Context,
   @Assisted workerParameters: WorkerParameters,
+  updateEventsManager: UpdateEventsManager,
   downloadEventsManager: DownloadEventsManager,
   downloadVoltageLogUseCase: DownloadVoltageLogUseCase
 ) : BaseDownloadLogWorker<HistoryMeasurement, VoltageHistoryLogEntity>(
   appContext,
   workerParameters,
+  updateEventsManager,
   downloadEventsManager,
   downloadVoltageLogUseCase
 ) {
