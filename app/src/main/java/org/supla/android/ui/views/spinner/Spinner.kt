@@ -56,6 +56,7 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.model.chart.ChartRange
 import org.supla.android.data.model.general.SingleOptionalSelectionList
 import org.supla.android.data.model.general.SingleSelectionList
+import org.supla.android.ui.views.texts.Label
 import org.supla.core.shared.extensions.ifTrue
 import org.supla.core.shared.infrastructure.LocalizedString
 
@@ -150,7 +151,7 @@ fun <T : SpinnerItem> TextSpinner(
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
   active: Boolean = true,
-  labelTextColor: Color = colorResource(id = R.color.on_surface_variant),
+  labelTextColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
   labelAlignment: Alignment.Horizontal = Alignment.Start,
   labelPadding: PaddingValues = PaddingValues(0.dp),
   onOptionSelected: (selectedId: T) -> Unit
@@ -160,14 +161,12 @@ fun <T : SpinnerItem> TextSpinner(
 
   Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
     options.label?.let {
-      Text(
-        text = stringResource(id = it).uppercase(),
-        style = MaterialTheme.typography.bodySmall,
+      Label(
+        text = stringResource(id = it),
         color = labelTextColor,
         modifier = Modifier
           .align(labelAlignment)
           .padding(labelPadding),
-        maxLines = 1
       )
     }
     ExposedDropdownMenuBox(

@@ -625,7 +625,7 @@
   <string name="details_em_reversed_energy">Restituita</string>
   <string name="details_em_cost">Costo</string>
   <string name="details_em_settings_list_item">Valore visualizzato nell\'elenco dei canali</string>
-  <string name="details_em_settings_title">Impostazioni - %1$s</string>
+  <string name="details_settings_title">Impostazioni - %1$s</string>
   <string name="details_em_total_suffix">(stato del contatore)</string>
   <string name="details_em_current_month_suffix">(mese corrente)</string>
   <string name="details_em_last_month_balancing">Bilanciamento del mese corrente</string>

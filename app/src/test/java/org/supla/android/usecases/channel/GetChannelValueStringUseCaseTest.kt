@@ -194,7 +194,7 @@ class GetChannelValueStringUseCaseTest {
     }
 
     every { humidityAndTemperatureValueProvider.handle(channelWithChildren) } returns true
-    every { humidityAndTemperatureValueProvider.value(channelWithChildren, ValueType.FIRST) } returns value
+    every { humidityAndTemperatureValueProvider.value(channelWithChildren, DefaultFirstValue) } returns value
 
     // when
     val valueText = useCase(channelWithChildren)
@@ -204,7 +204,7 @@ class GetChannelValueStringUseCaseTest {
     verify {
       thermometerValueProvider.handle(channelWithChildren)
       humidityAndTemperatureValueProvider.handle(channelWithChildren)
-      humidityAndTemperatureValueProvider.value(channelWithChildren, ValueType.FIRST)
+      humidityAndTemperatureValueProvider.value(channelWithChildren, DefaultFirstValue)
     }
     confirmVerified(
       thermometerValueProvider,

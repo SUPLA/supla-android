@@ -22,7 +22,7 @@ import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.usecases.channel.ValueType
+import org.supla.android.usecases.channel.ListFirstValue
 
 abstract class BaseDoubleWidgetValueProviderTest<T : DefaultDoubleValueProvider> {
 
@@ -42,7 +42,7 @@ abstract class BaseDoubleWidgetValueProviderTest<T : DefaultDoubleValueProvider>
     }
 
     // when
-    val value = valueProvider.value(channelData, ValueType.FIRST)
+    val value = valueProvider.value(channelData, ListFirstValue)
 
     // then
     if (unknownValue.isNaN()) {
@@ -74,7 +74,7 @@ abstract class BaseDoubleWidgetValueProviderTest<T : DefaultDoubleValueProvider>
     }
 
     // when
-    val value = valueProvider.value(channelData, ValueType.FIRST)
+    val value = valueProvider.value(channelData, ListFirstValue)
 
     // then
     assertThat(value).isEqualTo(0.21)
@@ -101,7 +101,7 @@ abstract class BaseDoubleWidgetValueProviderTest<T : DefaultDoubleValueProvider>
     }
 
     // when
-    val value = valueProvider.value(channelData, ValueType.FIRST)
+    val value = valueProvider.value(channelData, ListFirstValue)
 
     // then
     if (unknownValue.isNaN()) {

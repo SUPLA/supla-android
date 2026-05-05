@@ -635,7 +635,7 @@
   <string name="details_em_reversed_energy">Vrnjena</string>
   <string name="details_em_cost">Strošek</string>
   <string name="details_em_settings_list_item">Vrednost, prikazana na seznamu kanalov</string>
-  <string name="details_em_settings_title">Nastavitve - %1$s</string>
+  <string name="details_settings_title">Nastavitve - %1$s</string>
   <string name="details_em_total_suffix">(stanje števca)</string>
   <string name="details_em_current_month_suffix">(tekoči mesec)</string>
   <string name="details_em_last_month_balancing">Poravnava tekočega meseca</string>

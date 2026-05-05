@@ -304,8 +304,10 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     val remoteId = 123
     val function = SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER
     val groupData: ChannelGroupDataEntity = mockk()
+    val profileId = 1L
     every { groupData.remoteId } returns remoteId
     every { groupData.function } returns function
+    every { groupData.profileId } returns profileId
     every { groupData.status } returns SuplaChannelAvailabilityStatus.OFFLINE
 
     val detailType = StandardDetailType(listOf(DetailPage.ROLLER_SHUTTER))
@@ -320,7 +322,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     // then
     Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).containsExactly(
-      GroupListViewEvent.OpenStandardDetail(ItemBundle(remoteId, 0, ItemType.GROUP, function), detailType.pages)
+      GroupListViewEvent.OpenStandardDetail(ItemBundle(remoteId, 0, profileId, ItemType.GROUP, function), detailType.pages)
     )
     verifyNoInteractionsExcept(provideGroupDetailTypeUseCase)
   }

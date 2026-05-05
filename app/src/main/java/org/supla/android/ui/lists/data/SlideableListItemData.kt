@@ -67,7 +67,8 @@ sealed class SlideableListItemData {
     override val issues: ListItemIssues,
     override val estimatedTimerEndDate: Date? = null,
     override val infoSupported: Boolean,
-    val value: String?
+    val value: String?,
+    val processing: Boolean
   ) : SlideableListItemData() {
     companion object
   }
@@ -107,5 +108,6 @@ fun SlideableListItemData.Default.Companion.default(): SlideableListItemData.Def
     value = "",
     issues = ListItemIssues(),
     estimatedTimerEndDate = null,
-    infoSupported = false
+    infoSupported = false,
+    processing = false
   )

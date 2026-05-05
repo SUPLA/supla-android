@@ -61,7 +61,8 @@ sealed interface ListItem {
     val captionProvider: LocalizedString,
     val icon: ImageId,
     val value: String?,
-    val issues: ListItemIssues
+    val issues: ListItemIssues,
+    val processing: Boolean = false
   ) : ChannelBasedItem(channel) {
     open fun toSlideableListItemData(): SlideableListItemData {
       return SlideableListItemData.Default(
@@ -71,7 +72,8 @@ sealed interface ListItem {
         value = value,
         issues = issues,
         estimatedTimerEndDate = null,
-        infoSupported = channel.showInfo
+        infoSupported = channel.showInfo,
+        processing = processing
       )
     }
   }
@@ -168,8 +170,9 @@ sealed interface ListItem {
     captionProvider: LocalizedString,
     icon: ImageId,
     value: String? = null,
-    issues: ListItemIssues
-  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, issues)
+    issues: ListItemIssues,
+    processing: Boolean = false
+  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, issues, processing)
 
   class IconWithButtonsItem(
     channel: ChannelDataEntity,
@@ -189,7 +192,8 @@ sealed interface ListItem {
         value = value,
         issues = issues,
         estimatedTimerEndDate = estimatedTimerEndDate,
-        infoSupported = channel.showInfo
+        infoSupported = channel.showInfo,
+        processing = false
       )
     }
   }
@@ -212,7 +216,8 @@ sealed interface ListItem {
         value = value,
         issues = issues,
         estimatedTimerEndDate = estimatedTimerEndDate,
-        infoSupported = channel.showInfo
+        infoSupported = channel.showInfo,
+        processing = false
       )
     }
   }

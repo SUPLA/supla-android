@@ -22,7 +22,8 @@ import org.supla.android.data.model.general.IconType
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
-import org.supla.android.usecases.channel.ValueType
+import org.supla.android.usecases.channel.ListFirstValue
+import org.supla.android.usecases.channel.ListSecondValue
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
@@ -58,12 +59,12 @@ class ChannelWithChildrenToTemperatureHumidityUpdateEventMapper @Inject construc
       onlineState = channelWithChildren.onlineState,
       title = getCaptionUseCase(channelData.shareable),
       icon = getChannelIconUseCase.invoke(channelData),
-      value = getChannelValueStringUseCase(channelWithChildren),
+      value = getChannelValueStringUseCase(channelWithChildren, valueType = ListFirstValue),
       issues = getChannelIssuesForListUseCase(channelWithChildren.shareable),
       estimatedTimerEndDate = channelData.channelExtendedValueEntity?.getSuplaValue()?.TimerStateValue?.countdownEndsAt,
       infoSupported = channelWithChildren.showInfo,
       secondIcon = getChannelIconUseCase.invoke(channelData, IconType.SECOND),
-      secondValue = getChannelValueStringUseCase(channelWithChildren, ValueType.SECOND, withUnit = false)
+      secondValue = getChannelValueStringUseCase(channelWithChildren, ListSecondValue, withUnit = false)
     )
   }
 }

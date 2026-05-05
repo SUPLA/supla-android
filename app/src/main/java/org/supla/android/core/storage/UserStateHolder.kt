@@ -24,7 +24,8 @@ import kotlinx.serialization.json.Json
 import org.supla.android.data.model.chart.ChartState
 import org.supla.android.data.model.chart.DefaultChartState
 import org.supla.android.data.model.chart.ElectricityChartState
-import org.supla.android.data.model.electricitymeter.ElectricityMeterSettings
+import org.supla.android.data.model.settings.ElectricityMeterSettings
+import org.supla.android.data.model.settings.ImpulseCounterSettings
 import org.supla.android.features.details.rgbanddimmer.common.dimmer.DimmerSelectorType
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -32,6 +33,7 @@ import javax.inject.Singleton
 private const val USER_STATE_PREFERENCES = "user_state_preferences"
 private const val TEMPERATURE_CHART_STATE = "temperature_chart_state_%PROFILE_ID%_%CHANNEL_ID%"
 private const val ELECTRICITY_METER_SETTINGS = "electricity_meter_settings_%PROFILE_ID%_%CHANNEL_ID%"
+private const val IMPULSE_COUNTER_SETTINGS = "impulse_counter_settings_%PROFILE_ID%_%CHANNEL_ID%"
 private const val DIMMER_SELECTOR_TYPE = "dimmer_selector_type_%PROFILE_ID%_%CHANNEL_ID%"
 
 @Singleton
@@ -60,6 +62,16 @@ class UserStateHolder @Inject constructor(@ApplicationContext context: Context) 
   fun setElectricityMeterSettings(settings: ElectricityMeterSettings, profileId: Long, remoteId: Int) {
     preferences.edit {
       putString(getKey(ELECTRICITY_METER_SETTINGS, profileId, remoteId), Json.encodeToString(settings))
+    }
+  }
+
+  fun getImpulseCounterSettings(profileId: Long, remoteId: Int): ImpulseCounterSettings =
+    preferences.getString(getKey(IMPULSE_COUNTER_SETTINGS, profileId, remoteId), null)
+      ?.let { ImpulseCounterSettings.from(it) } ?: ImpulseCounterSettings.default()
+
+  fun setImpulseCounterSettings(settings: ImpulseCounterSettings, profileId: Long, remoteId: Int) {
+    preferences.edit {
+      putString(getKey(IMPULSE_COUNTER_SETTINGS, profileId, remoteId), Json.encodeToString(settings))
     }
   }
 

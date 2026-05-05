@@ -34,4 +34,5 @@ fun Label(
     style = MaterialTheme.typography.bodySmall,
     color = color,
     modifier = modifier,
+    maxLines = 1
   )

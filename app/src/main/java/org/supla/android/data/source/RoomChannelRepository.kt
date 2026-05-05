@@ -25,6 +25,7 @@ import org.supla.android.usecases.captionchange.CaptionChangeUseCase
 import org.supla.android.usecases.channel.RemoveHiddenChannelsUseCase
 import org.supla.android.usecases.developerinfo.CountProvider
 import org.supla.android.usecases.profile.DeleteProfileUseCase
+import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -38,6 +39,8 @@ class RoomChannelRepository @Inject constructor(
   fun findByRemoteId(profileId: Long, remoteId: Int) = channelDao.findByRemoteId(profileId, remoteId)
 
   fun findList() = channelDao.findList().firstOrError()
+
+  suspend fun findChannelsBy(profileId: Long, function: SuplaFunction) = channelDao.findChannelsBy(profileId, function)
 
   fun findListWithoutUnavailable() = channelDao.findListWithoutUnavailable().firstOrError()
 

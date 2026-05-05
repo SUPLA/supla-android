@@ -639,7 +639,7 @@
   <string name="details_em_reversed_energy">Returnat</string>
   <string name="details_em_cost">Cost</string>
   <string name="details_em_settings_list_item">Valoarea afișată în lista de canale</string>
-  <string name="details_em_settings_title">Setări - %1$s</string>
+  <string name="details_settings_title">Setări - %1$s</string>
   <string name="details_em_total_suffix">(starea contorului)</string>
   <string name="details_em_current_month_suffix">(luna curentă)</string>
   <string name="details_em_last_month_balancing">Echilibrarea lunii curente</string>

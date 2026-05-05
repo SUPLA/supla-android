@@ -50,7 +50,7 @@ class CallActionViewModel @Inject constructor(
   private val nfcTagRepository: NfcTagRepository,
   private val dateProvider: DateProvider,
   private val uriProxy: UriProxy,
-  private val schedulers: SuplaSchedulers,
+  schedulers: SuplaSchedulers,
 ) : BaseViewModel<CallActionViewModelState, CallActionViewEvent>(CallActionViewModelState(), schedulers), CallActionScreenScope {
 
   override fun close() {

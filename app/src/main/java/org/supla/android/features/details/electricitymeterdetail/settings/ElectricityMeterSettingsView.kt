@@ -38,8 +38,8 @@ import org.supla.android.R
 import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.data.model.electricitymeter.ElectricityMeterBalanceType
 import org.supla.android.data.model.general.SingleSelectionList
+import org.supla.android.data.model.settings.ElectricityMeterBalanceType
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 import org.supla.android.ui.views.spinner.SpinnerItem
 import org.supla.android.ui.views.spinner.TextSpinner
@@ -64,7 +64,7 @@ fun ElectricityMeterSettingsView(
       .fillMaxWidth()
   ) {
     Text(
-      text = stringResource(id = R.string.details_em_settings_title, state.channelName(LocalContext.current)).uppercase(),
+      text = stringResource(id = R.string.details_settings_title, state.channelName(LocalContext.current)).uppercase(),
       style = MaterialTheme.typography.bodyMedium,
       modifier = Modifier.padding(start = Distance.small, bottom = Distance.tiny, end = Distance.small)
     )

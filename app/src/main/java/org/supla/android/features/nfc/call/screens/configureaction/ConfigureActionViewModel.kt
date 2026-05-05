@@ -54,10 +54,10 @@ class ConfigureActionViewModel @Inject constructor(
   sceneRepository,
   nfcCallRepository,
   nfcTagRepository,
-  schedulers,
   getChannelIconUseCase,
   getSceneIconUseCase,
-  getCaptionUseCase
+  getCaptionUseCase,
+  schedulers
 ),
   ConfigureActionScreenScope {
   override fun onClose() {

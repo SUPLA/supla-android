@@ -637,7 +637,7 @@
   <string name="details_em_reversed_energy">Returnert</string>
   <string name="details_em_cost">Kostnad</string>
   <string name="details_em_settings_list_item">Verdien som vises i kanallisten</string>
-  <string name="details_em_settings_title">Innstillinger %1$s</string>
+  <string name="details_settings_title">Innstillinger %1$s</string>
   <string name="details_em_total_suffix">(tellerstatus)</string>
   <string name="details_em_current_month_suffix">(inneværende måned)</string>
   <string name="details_em_last_month_balancing">Balansering av inneværende måned</string>

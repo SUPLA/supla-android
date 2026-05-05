@@ -283,7 +283,8 @@ class CreateListItemUpdateEventDataUseCaseTest {
         icon = imageId,
         issues = ListItemIssues.empty,
         infoSupported = false,
-        value = value
+        value = value,
+        processing = false
       )
     )
 
@@ -340,7 +341,8 @@ class CreateListItemUpdateEventDataUseCaseTest {
         icon = imageId,
         issues = ListItemIssues.empty,
         infoSupported = false,
-        value = null
+        value = null,
+        processing = false
       )
     )
 

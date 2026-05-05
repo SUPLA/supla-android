@@ -638,7 +638,7 @@
   <string name="details_em_reversed_energy">Geretourneerd</string>
   <string name="details_em_cost">Prijs</string>
   <string name="details_em_settings_list_item">Waarde die wordt weergegeven in de kanaallijst</string>
-  <string name="details_em_settings_title">Instellingen - %1$s</string>
+  <string name="details_settings_title">Instellingen - %1$s</string>
   <string name="details_em_total_suffix">(tellerstatus)</string>
   <string name="details_em_current_month_suffix">(lopende maand)</string>
   <string name="details_em_last_month_balancing">Balanceren van de huidige maand</string>

@@ -98,7 +98,8 @@ class CreateListItemUpdateEventDataUseCase @Inject constructor(
         icon = getChannelIconUseCase(it.channel),
         issues = getChannelIssuesForListUseCase(item.shareable),
         infoSupported = it.showInfo,
-        value = getChannelValueStringUseCase.valueOrNull(it)
+        value = getChannelValueStringUseCase.valueOrNull(it),
+        processing = false
       )
     }
     (item as? ChannelGroupDataEntity)?.let {
@@ -108,7 +109,8 @@ class CreateListItemUpdateEventDataUseCase @Inject constructor(
         icon = getChannelIconUseCase(it),
         issues = ListItemIssues.empty,
         infoSupported = false,
-        value = null
+        value = null,
+        processing = false
       )
     }
 

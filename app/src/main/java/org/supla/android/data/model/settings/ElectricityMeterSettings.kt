@@ -1,4 +1,4 @@
-package org.supla.android.data.model.electricitymeter
+package org.supla.android.data.model.settings
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -47,7 +47,7 @@ data class ElectricityMeterSettings(
       try {
         Json.decodeFromString<ElectricityMeterSettings>(text)
       } catch (ex: SerializationException) {
-        Timber.w(ex, "Could not restore chart state!")
+        Timber.w(ex, "Could not restore electricity meter settings!")
         null
       }
 

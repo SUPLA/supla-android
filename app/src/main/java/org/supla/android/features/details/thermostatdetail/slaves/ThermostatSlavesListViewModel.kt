@@ -28,7 +28,6 @@ import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.extensions.onlineState
-import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.remote.thermostat.getIndicatorIcon
 import org.supla.android.data.source.remote.thermostat.getSetpointText
 import org.supla.android.data.source.runtime.ItemType
@@ -91,7 +90,7 @@ class ThermostatSlavesListViewModel @Inject constructor(
   override fun onSlaveClick(slave: ThermostatData) {
     sendEvent(
       ThermostatSlavesListViewEvent.OpenDetails(
-        bundle = ItemBundle(slave.channelId, slave.deviceId, ItemType.CHANNEL, slave.function),
+        bundle = ItemBundle(slave.channelId, slave.deviceId, slave.profileId, ItemType.CHANNEL, slave.function),
         pages = listOf(DetailPage.THERMOSTAT, DetailPage.THERMOSTAT_HISTORY)
       )
     )

@@ -54,6 +54,7 @@ class ChannelWithChildrenToGpmUpdateEventMapper @Inject constructor(
       value = getChannelValueStringUseCase(channelWithChildren),
       issues = getChannelIssuesForListUseCase(channelWithChildren.shareable),
       estimatedTimerEndDate = null,
-      infoSupported = channelWithChildren.showInfo
+      infoSupported = channelWithChildren.showInfo,
+      processing = false
     )
 }

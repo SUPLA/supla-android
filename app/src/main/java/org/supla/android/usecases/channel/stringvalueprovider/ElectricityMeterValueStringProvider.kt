@@ -41,21 +41,27 @@ class ElectricityMeterValueStringProvider @Inject constructor(
     electricityMeterValueProvider.handle(channelWithChildren)
 
   override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType, withUnit: Boolean): String {
-    val channelData = channelWithChildren.channel
     val value = electricityMeterValueProvider.value(channelWithChildren, valueType)
-    val type = userStateHolder.getElectricityMeterSettings(channelData.profileId, channelData.remoteId).showOnListSafe
 
-    return if (type == SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY) {
-      formatter.format(value, withUnit(withUnit))
-    } else {
-      formatter.format(
-        value = value,
-        format = ValueFormat(
-          withUnit = withUnit,
-          customUnit = " ${type.unit}",
-          showNoValueText = false
-        )
-      )
+    return when (valueType) {
+      is ValueType.List -> {
+        val channelData = channelWithChildren.channel
+        val type = userStateHolder.getElectricityMeterSettings(channelData.profileId, channelData.remoteId).showOnListSafe
+
+        if (type == SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY) {
+          formatter.format(value, withUnit(withUnit))
+        } else {
+          formatter.format(
+            value = value,
+            format = ValueFormat(
+              withUnit = withUnit,
+              customUnit = " ${type.unit}",
+              showNoValueText = false
+            )
+          )
+        }
+      }
+      is ValueType.Default -> formatter.format(value, withUnit(withUnit))
     }
   }
 }

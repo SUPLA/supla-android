@@ -77,7 +77,7 @@ class GetChannelValueUseCase @Inject constructor(
   )
 
   @Suppress("UNCHECKED_CAST")
-  operator fun <T> invoke(channelWithChildren: ChannelWithChildren, valueType: ValueType = ValueType.FIRST): T {
+  operator fun <T> invoke(channelWithChildren: ChannelWithChildren, valueType: ValueType = DefaultFirstValue): T {
     providers.forEach {
       if (it.handle(channelWithChildren)) {
         return it.value(channelWithChildren, valueType) as T
@@ -91,5 +91,27 @@ class GetChannelValueUseCase @Inject constructor(
 interface ChannelValueProvider {
   fun handle(channelWithChildren: ChannelWithChildren): Boolean
 
-  fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType): Any
+  fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType = DefaultFirstValue): Any
+}
+
+val ListFirstValue = ValueType.List()
+val ListSecondValue = ValueType.List(ValuePosition.SECOND)
+val DefaultFirstValue = ValueType.Default()
+val DefaultSecondValue = ValueType.Default(ValuePosition.SECOND)
+
+sealed interface ValueType {
+  val position: ValuePosition
+
+  data class List(override val position: ValuePosition = ValuePosition.FIRST) : ValueType
+  data class Default(override val position: ValuePosition = ValuePosition.FIRST) : ValueType
+}
+
+enum class ValuePosition {
+  FIRST, SECOND;
+
+  val isFirst: Boolean
+    get() = this == FIRST
+
+  val isSecond: Boolean
+    get() = this == SECOND
 }

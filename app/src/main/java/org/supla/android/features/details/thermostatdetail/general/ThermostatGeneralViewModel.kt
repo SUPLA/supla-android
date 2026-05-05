@@ -92,9 +92,9 @@ class ThermostatGeneralViewModel @Inject constructor(
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val loadingTimeoutManager: LoadingTimeoutManager,
   private val suplaClientProvider: SuplaClientProvider,
-  private val schedulers: SuplaSchedulers,
   private val dateProvider: DateProvider,
-  @param:Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter
+  @param:Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter,
+  schedulers: SuplaSchedulers
 ) : BaseViewModel<ThermostatGeneralViewState, ThermostatGeneralViewEvent>(
   ThermostatGeneralViewState(thermometerValueFormatter),
   schedulers

@@ -27,17 +27,20 @@ import dagger.assisted.AssistedInject
 import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity
 import org.supla.android.data.source.remote.rest.channel.ElectricityMeasurement
 import org.supla.android.events.DownloadEventsManager
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.measurementsdownload.DownloadElectricityMeterLogUseCase
 
 @HiltWorker
 class DownloadElectricityMeasurementsWorker @AssistedInject constructor(
   @Assisted appContext: Context,
   @Assisted workerParameters: WorkerParameters,
+  updateEventsManager: UpdateEventsManager,
   downloadEventsManager: DownloadEventsManager,
   downloadElectricityMeterLogUseCase: DownloadElectricityMeterLogUseCase
 ) : BaseDownloadLogWorker<ElectricityMeasurement, ElectricityMeterLogEntity>(
   appContext,
   workerParameters,
+  updateEventsManager,
   downloadEventsManager,
   downloadElectricityMeterLogUseCase
 ) {

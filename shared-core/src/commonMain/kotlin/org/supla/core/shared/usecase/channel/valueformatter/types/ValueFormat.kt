@@ -51,6 +51,13 @@ fun customUnit(unit: String) = ValueFormat(withUnit = true, customUnit = unit)
 
 fun withUnit(withUnit: Boolean) = if (withUnit) ValueFormat.WithUnit else ValueFormat.WithoutUnit
 
+fun withUnit(unit: String?, leadingSpace: Boolean = true, showNoValueText: Boolean? = null) =
+  ValueFormat(
+    withUnit = unit != null,
+    customUnit = unit?.let { leadingSpace.ifTrue { " $unit" } ?: unit },
+    showNoValueText = showNoValueText
+  )
+
 fun withUnit(withUnit: Boolean, unit: String?, leadingSpace: Boolean = true) =
   ValueFormat(
     withUnit = withUnit && unit != null,

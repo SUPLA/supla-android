@@ -58,7 +58,8 @@ class ChannelWithChildrenToSwitchUpdateEventMapper @Inject constructor(
       value = getChannelValueStringUseCase.valueOrNull(channelWithChildren),
       issues = getChannelIssuesForListUseCase(channelWithChildren.shareable),
       estimatedTimerEndDate = channelData.channelExtendedValueEntity?.getSuplaValue()?.TimerStateValue?.countdownEndsAt,
-      infoSupported = channelWithChildren.showInfo
+      infoSupported = channelWithChildren.showInfo,
+      processing = false
     )
   }
 }

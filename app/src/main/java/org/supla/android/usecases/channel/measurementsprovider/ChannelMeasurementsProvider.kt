@@ -30,8 +30,8 @@ import org.supla.android.data.model.chart.singleLabel
 import org.supla.android.data.model.general.IconType
 import org.supla.android.data.source.local.entity.complex.isImpulseCounter
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.usecases.channel.DefaultSecondValue
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
-import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.measurementsprovider.ChannelMeasurementsProvider.Companion.AGGREGATING_MINUTES_DISTANCE_SEC
 import org.supla.android.usecases.channel.measurementsprovider.ChannelMeasurementsProvider.Companion.MAX_ALLOWED_DISTANCE_MULTIPLIER
 import org.supla.android.usecases.channel.valueformatter.staticFormatter
@@ -78,7 +78,7 @@ abstract class ChannelMeasurementsProvider(
           else -> getChannelIconUseCase(channelWithChildren.channel)
         },
         value = when (type) {
-          ChartEntryType.HUMIDITY -> getChannelValueStringUseCase(channelWithChildren, ValueType.SECOND)
+          ChartEntryType.HUMIDITY -> getChannelValueStringUseCase(channelWithChildren, DefaultSecondValue)
           else -> getChannelValueStringUseCase(channelWithChildren)
         },
         color = color,

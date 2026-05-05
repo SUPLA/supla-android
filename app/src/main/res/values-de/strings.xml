@@ -606,7 +606,7 @@
   <string name="details_em_reversed_energy">Zurückgegeben</string>
   <string name="details_em_cost">Kosten</string>
   <string name="details_em_settings_list_item">In der Kanalliste angezeigte Metrik</string>
-  <string name="details_em_settings_title">Einstellungen - %1$s</string>
+  <string name="details_settings_title">Einstellungen - %1$s</string>
   <string name="details_em_total_suffix">(Zählerstand)</string>
   <string name="details_em_current_month_suffix">(aktueller Monat)</string>
   <string name="details_em_last_month_balancing">Art des Saldos für den aktuellen Monat</string>

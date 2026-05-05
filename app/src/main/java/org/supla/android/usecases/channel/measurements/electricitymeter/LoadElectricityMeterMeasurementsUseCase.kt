@@ -20,7 +20,7 @@ package org.supla.android.usecases.channel.measurements.electricitymeter
 import io.reactivex.rxjava3.core.Maybe
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.storage.UserStateHolder
-import org.supla.android.data.model.electricitymeter.ElectricityMeterBalanceType
+import org.supla.android.data.model.settings.ElectricityMeterBalanceType
 import org.supla.android.data.source.ElectricityMeterLogRepository
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity

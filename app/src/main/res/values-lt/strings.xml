@@ -615,7 +615,7 @@
   <string name="details_em_reversed_energy">Grąžinta</string>
   <string name="details_em_cost">Kaina</string>
   <string name="details_em_settings_list_item">Kanalų sąraše rodoma vertė</string>
-  <string name="details_em_settings_title">Nustatymai - %1$s</string>
+  <string name="details_settings_title">Nustatymai - %1$s</string>
   <string name="details_em_total_suffix">(skaitiklio būsena)</string>
   <string name="details_em_current_month_suffix">(einamasis mėnuo)</string>
   <string name="details_em_last_month_balancing">Einamojo mėnesio balansavimas</string>

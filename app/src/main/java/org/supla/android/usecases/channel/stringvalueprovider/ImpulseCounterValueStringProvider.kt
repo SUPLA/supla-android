@@ -17,12 +17,15 @@ package org.supla.android.usecases.channel.stringvalueprovider
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.core.storage.UserStateHolder
+import org.supla.android.data.model.settings.ListValue
 import org.supla.android.data.source.local.entity.complex.ImpulseCounter
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.usecases.channel.ChannelValueStringProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueprovider.ImpulseCounterValueProvider
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
 import org.supla.core.shared.usecase.channel.valueformatter.formatters.ElectricityMeterValueFormatter
 import org.supla.core.shared.usecase.channel.valueformatter.formatters.ImpulseCounterValueFormatter
 import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
@@ -32,7 +35,8 @@ import javax.inject.Singleton
 
 @Singleton
 class ImpulseCounterValueStringProvider @Inject constructor(
-  private val impulseCounterValueProvider: ImpulseCounterValueProvider
+  private val impulseCounterValueProvider: ImpulseCounterValueProvider,
+  private val userStateHolder: UserStateHolder
 ) : ChannelValueStringProvider {
 
   private val impulseCounterFormatter = ImpulseCounterValueFormatter()
@@ -45,13 +49,20 @@ class ImpulseCounterValueStringProvider @Inject constructor(
     val channelData = channelWithChildren.channel
     val value = impulseCounterValueProvider.value(channelWithChildren, valueType)
 
-    return if (channelWithChildren.function == SuplaFunction.IC_ELECTRICITY_METER) {
-      electricityMeterFormatter.format(value, ValueFormat(withUnit))
-    } else {
-      impulseCounterFormatter.format(
-        value = value,
-        format = withUnit(withUnit = withUnit, unit = channelData.ImpulseCounter.value?.unit)
-      )
+    val settings = userStateHolder.getImpulseCounterSettings(channelWithChildren.profileId, channelWithChildren.remoteId)
+    return when (settings.showOnList) {
+      ListValue.COUNTER_STATE ->
+        if (channelWithChildren.function == SuplaFunction.IC_ELECTRICITY_METER) {
+          electricityMeterFormatter.format(value, ValueFormat(withUnit))
+        } else {
+          impulseCounterFormatter.format(
+            value = value,
+            format = withUnit(withUnit = withUnit, unit = channelData.ImpulseCounter.value?.unit)
+          )
+        }
+      else -> {
+        channelWithChildren.channel.channelValueEntity.aggregatedValue ?: NO_VALUE_TEXT
+      }
     }
   }
 }

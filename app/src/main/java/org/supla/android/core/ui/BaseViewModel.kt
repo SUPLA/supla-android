@@ -44,7 +44,7 @@ interface BaseViewProxy<S : ViewState> {
 
 abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
   defaultState: S,
-  private val schedulers: SuplaSchedulers
+  protected open val schedulers: SuplaSchedulers
 ) : ViewModel() {
 
   private val loadingState: MutableStateFlow<Boolean> = MutableStateFlow(false)

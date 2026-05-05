@@ -1,5 +1,6 @@
 package org.supla.android.tools
 
+import android.content.res.Configuration
 import androidx.compose.ui.tooling.preview.Preview
 
 const val BACKGROUND_COLOR = 0x00F5F6F7L
@@ -12,6 +13,7 @@ annotation class SuplaSmallPreview
 @Retention(AnnotationRetention.BINARY)
 @Target(AnnotationTarget.ANNOTATION_CLASS, AnnotationTarget.FUNCTION)
 @Preview(showBackground = true, backgroundColor = BACKGROUND_COLOR, showSystemUi = true)
+@Preview(showBackground = true, backgroundColor = BACKGROUND_COLOR, showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 annotation class SuplaPreview
 
 @Retention(AnnotationRetention.BINARY)

@@ -17,10 +17,11 @@ package org.supla.android.data.model.electricitymeter
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
+import org.supla.android.data.model.settings.ElectricityMeterBalanceType
+import org.supla.android.data.model.settings.ElectricityMeterSettings
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 
 class ElectricityMeterSettingsTest {

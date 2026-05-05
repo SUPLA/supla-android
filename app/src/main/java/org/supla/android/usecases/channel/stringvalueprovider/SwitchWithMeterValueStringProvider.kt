@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import org.supla.android.core.storage.UserStateHolder
+import org.supla.android.data.model.settings.ListValue
 import org.supla.android.data.source.local.entity.complex.ImpulseCounter
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.isImpulseCounter
@@ -29,6 +30,7 @@ import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueprovider.SwitchWithElectricityMeterValueProvider
 import org.supla.android.usecases.channel.valueprovider.SwitchWithImpulseCounterValueProvider
 import org.supla.core.shared.data.model.channel.ChannelRelationType
+import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
 import org.supla.core.shared.usecase.channel.valueformatter.formatters.ElectricityMeterValueFormatter
 import org.supla.core.shared.usecase.channel.valueformatter.formatters.ImpulseCounterValueFormatter
 import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
@@ -56,6 +58,7 @@ class SwitchWithMeterValueStringProvider @Inject constructor(
     val channelData = channelWithChildren.channel
     val meterChild = channelWithChildren.children.firstOrNull { it.relationType == ChannelRelationType.METER }
 
+    // trying handle electricity meter
     if (channelWithChildren.isOrHasElectricityMeter) {
       val value = switchWithElectricityMeterValueProvider.value(channelWithChildren, valueType)
       val type = userStateHolder.getElectricityMeterSettings(channelData.profileId, channelData.remoteId).showOnListSafe
@@ -74,6 +77,13 @@ class SwitchWithMeterValueStringProvider @Inject constructor(
       }
     }
 
+    // trying handle aggregated value of impulse counter
+    val settings = userStateHolder.getImpulseCounterSettings(channelData.profileId, channelData.remoteId)
+    if (settings.showOnList != ListValue.COUNTER_STATE) {
+      return channelData.channelValueEntity.aggregatedValue ?: NO_VALUE_TEXT
+    }
+
+    // trying handle impulse counter
     if (meterChild?.channel?.isImpulseCounter() == true) {
       return impulseCounterValueStringProvider.value(meterChild.withChildren, valueType, withUnit)
     }

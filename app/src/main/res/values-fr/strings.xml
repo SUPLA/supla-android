@@ -624,7 +624,7 @@
   <string name="details_em_reversed_energy">Retournée</string>
   <string name="details_em_cost">Coût</string>
   <string name="details_em_settings_list_item">Valeur affichée dans la liste des chaînes</string>
-  <string name="details_em_settings_title">Réglages - %1$s</string>
+  <string name="details_settings_title">Réglages - %1$s</string>
   <string name="details_em_total_suffix">(état du compteur)</string>
   <string name="details_em_current_month_suffix">(mois en cours)</string>
   <string name="details_em_last_month_balancing">Solde du mois en cours</string>

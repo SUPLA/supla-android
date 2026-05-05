@@ -22,8 +22,15 @@ import android.view.View
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.supla.android.R
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.BaseViewModel
@@ -31,7 +38,6 @@ import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.databinding.FragmentChannelListBinding
-import org.supla.android.extensions.toPx
 import org.supla.android.extensions.visibleIf
 import org.supla.android.features.captionchangedialog.CaptionChangeViewModel
 import org.supla.android.features.captionchangedialog.View
@@ -41,9 +47,11 @@ import org.supla.android.features.statedialog.handleStateDialogViewEvent
 import org.supla.android.navigator.MainNavigator
 import org.supla.android.ui.lists.message
 import org.supla.android.usecases.channel.ButtonType
+import org.supla.android.usecases.list.TriggerLogHistoryDownloadUseCase
 import org.supla.core.shared.extensions.ifTrue
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 @AndroidEntryPoint
 class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEvent>(R.layout.fragment_channel_list) {
@@ -62,6 +70,9 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
 
   @Inject
   lateinit var navigator: MainNavigator
+
+  @Inject
+  lateinit var triggerLogHistoryDownloadUseCase: TriggerLogHistoryDownloadUseCase
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -86,6 +97,17 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
           onPositiveClick = { remoteId, actionId -> viewModel.forceAction(remoteId, actionId) },
           onNegativeClick = viewModel::dismissActionDialog
         )
+      }
+    }
+
+    viewLifecycleOwner.lifecycleScope.launch {
+      viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+        withContext(Dispatchers.IO) {
+          while (true) {
+            triggerLogHistoryDownloadUseCase()
+            delay(15.seconds)
+          }
+        }
       }
     }
   }
