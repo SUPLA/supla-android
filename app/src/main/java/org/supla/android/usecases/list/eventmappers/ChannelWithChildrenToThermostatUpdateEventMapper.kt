@@ -29,6 +29,7 @@ import org.supla.android.di.FORMATTER_THERMOMETER
 import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
+import org.supla.android.usecases.channel.ListFirstValue
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
 import org.supla.core.shared.extensions.guardLet
@@ -76,7 +77,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapper @Inject constructor(
       onlineState = channelWithChildren.onlineState,
       title = getCaptionUseCase(channelData.shareable),
       icon = getChannelIconUseCase.invoke(channelData),
-      value = thermometerChild?.let { getChannelValueStringUseCase(it) } ?: NO_VALUE_TEXT,
+      value = thermometerChild?.let { getChannelValueStringUseCase(it, ListFirstValue) } ?: NO_VALUE_TEXT,
       subValue = thermostatValue.getSetpointText(thermometerValueFormatter),
       indicatorIcon = indicatorIcon.resource,
       issues = getChannelIssuesForListUseCase(channelWithChildren.shareable),

@@ -58,7 +58,7 @@ import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.model.function.relay.SuplaRelayFlag
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.GetCaptionUseCase
@@ -137,11 +137,15 @@ class SwitchGeneralViewModel @Inject constructor(
   private fun loadChannel(remoteId: Int, cleanupDownloading: Boolean) {
     readChannelWithChildrenUseCase(remoteId)
       .flatMap { channelWithChildren ->
-        channelWithChildren.isOrHasElectricityMeter.ifTrue {
-          loadElectricityMeterMeasurementsUseCase(remoteId, dateProvider.currentDate().monthStart())
+        channelWithChildren.isOrHasElectricityMeter.forTrue {
+          loadElectricityMeterMeasurementsUseCase(
+            profileId = channelWithChildren.profileId,
+            remoteId = remoteId,
+            startTimestamp = dateProvider.currentDate().monthStart().time
+          )
             .map { Pair(channelWithChildren, it) }
         }
-          ?: channelWithChildren.isOrHasImpulseCounter.ifTrue {
+          ?: channelWithChildren.isOrHasImpulseCounter.forTrue {
             loadImpulseCounterMeasurementsUseCase(remoteId, dateProvider.currentDate().monthStart())
               .map { Pair(channelWithChildren, it) }
           }
@@ -184,14 +188,14 @@ class SwitchGeneralViewModel @Inject constructor(
           value = getDeviceStateValue(data)
         ),
         channelIssues = getAllChannelIssuesUseCase(data.shareable),
-        leftButtonState = showButtons.ifTrue {
+        leftButtonState = showButtons.forTrue {
           SwitchButtonState(
             icon = getChannelIconUseCase(data, channelStateValue = ChannelState.Value.OFF),
             textRes = R.string.channel_btn_off,
             pressed = channelState.value == ChannelState.Value.OFF
           )
         },
-        rightButtonState = showButtons.ifTrue {
+        rightButtonState = showButtons.forTrue {
           SwitchButtonState(
             icon = getChannelIconUseCase(data, channelStateValue = ChannelState.Value.ON),
             textRes = R.string.channel_btn_on,

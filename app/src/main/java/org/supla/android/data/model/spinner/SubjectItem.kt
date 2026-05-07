@@ -38,7 +38,7 @@ import org.supla.android.usecases.extensions.invoke
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.usecase.GetCaptionUseCase
 
@@ -68,7 +68,7 @@ data class SubjectItem(
     }
 
   fun details(selected: SubjectDetail? = null): SingleOptionalSelectionList<SubjectDetail>? =
-    actions.isNotEmpty().ifTrue {
+    actions.isNotEmpty().forTrue {
       with(actions.map { ActionDetail(it) }) {
         SingleOptionalSelectionList(
           selected = this.firstOrNull { it == selected },

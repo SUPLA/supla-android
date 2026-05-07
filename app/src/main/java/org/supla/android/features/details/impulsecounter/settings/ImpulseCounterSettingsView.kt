@@ -21,8 +21,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -31,15 +29,16 @@ import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.model.general.SingleSelectionList
-import org.supla.android.data.model.settings.ListValue
+import org.supla.android.data.model.settings.ListValueAggregation
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.views.settings.SettingRow
+import org.supla.android.ui.views.settings.SettingsHeader
 import org.supla.android.ui.views.settings.SettingsList
 import org.supla.android.ui.views.spinner.TextSpinner
 import org.supla.core.shared.infrastructure.LocalizedString
 
 interface ImpulseCounterSettingsViewScope {
-  fun onListValueChanged(type: ListValue)
+  fun onListValueChanged(type: ListValueAggregation)
 }
 
 @Composable
@@ -52,21 +51,17 @@ fun ImpulseCounterSettingsViewScope.View(
       .padding(top = Distance.default, bottom = Distance.default)
       .fillMaxWidth()
   ) {
-    Text(
-      text = state.title().uppercase(),
-      style = MaterialTheme.typography.bodyMedium,
-      modifier = Modifier.padding(start = Distance.small, bottom = Distance.tiny, end = Distance.small)
-    )
+    SettingsHeader(state.title())
     SettingsList {
       SettingRow {
-        TextSpinner(options = state.listValueOptions, onOptionSelected = { onListValueChanged(it) })
+        TextSpinner(options = state.listValueAggregationOptions, onOptionSelected = { onListValueChanged(it) })
       }
     }
   }
 }
 
 private val previewScope = object : ImpulseCounterSettingsViewScope {
-  override fun onListValueChanged(type: ListValue) {}
+  override fun onListValueChanged(type: ListValueAggregation) {}
 }
 
 @SuplaPreview
@@ -76,10 +71,10 @@ private fun Preview() {
     previewScope.View(
       state = ImpulseCounterSettingsViewState(
         title = LocalizedString.Constant("Settings - Impulse counter"),
-        listValueOptions = SingleSelectionList(
-          selected = ListValue.CURRENT_MONTH,
-          items = ListValue.entries,
-          label = R.string.details_em_settings_list_item
+        listValueAggregationOptions = SingleSelectionList(
+          selected = ListValueAggregation.CURRENT_MONTH,
+          items = ListValueAggregation.entries,
+          label = R.string.details_ic_settings_list_item
         )
       )
     )

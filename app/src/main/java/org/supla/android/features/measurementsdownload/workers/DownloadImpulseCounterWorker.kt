@@ -25,7 +25,7 @@ import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import org.supla.android.core.storage.UserStateHolder
-import org.supla.android.data.model.settings.ListValue
+import org.supla.android.data.model.settings.ListValueAggregation
 import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity
 import org.supla.android.data.source.remote.rest.channel.ImpulseCounterMeasurement
 import org.supla.android.events.DownloadEventsManager
@@ -61,7 +61,7 @@ class DownloadImpulseCounterWorker @AssistedInject constructor(
     }
 
     val settings = userStateHolder.getImpulseCounterSettings(profileId, remoteId)
-    if (settings.showOnList == ListValue.COUNTER_STATE) {
+    if (settings.showOnList == ListValueAggregation.NO_AGGREGATION) {
       Timber.d("No aggregated value to update")
       return
     }

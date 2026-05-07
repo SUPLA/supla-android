@@ -34,7 +34,7 @@ import org.supla.core.shared.data.model.channel.ChannelState
 import org.supla.core.shared.data.model.general.BaseData
 import org.supla.core.shared.data.model.general.Channel
 import org.supla.core.shared.data.model.general.Group
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 
 val ChannelDataBase.shareable: BaseData
   get() = when (this) {
@@ -84,7 +84,7 @@ val ChannelStateEntity.shareable: ChannelState
     lightSourceOperatingTime
       ?.let { lightSourceOperatingTime ->
         lightSourceLifespan?.let { lightSourceLifespan ->
-          (lightSourceLifespan > 0).ifTrue { lightSourceOperatingTime / 36f / lightSourceLifespan }
+          (lightSourceLifespan > 0).forTrue { lightSourceOperatingTime / 36f / lightSourceLifespan }
         }
       }
       ?.let { 100 - it }

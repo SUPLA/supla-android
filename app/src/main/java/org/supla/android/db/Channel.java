@@ -176,18 +176,6 @@ public class Channel extends ChannelBase {
     return values;
   }
 
-  public byte getColorBrightness() {
-    return Value != null ? Value.getColorBrightness() : 0;
-  }
-
-  public byte getBrightness() {
-    return Value != null ? Value.getBrightness() : 0;
-  }
-
-  public int getColor() {
-    return Value != null ? Value.getColor() : 0;
-  }
-
   @NonNull
   @Override
   public String toString() {

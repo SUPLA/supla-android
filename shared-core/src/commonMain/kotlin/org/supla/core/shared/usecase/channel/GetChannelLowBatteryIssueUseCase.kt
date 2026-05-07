@@ -21,7 +21,7 @@ import org.supla.core.shared.data.model.battery.BatteryInfo
 import org.supla.core.shared.data.model.channel.ChannelChild
 import org.supla.core.shared.data.model.channel.ChannelWithChildren
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.LocalizedStringId
 import org.supla.core.shared.infrastructure.localizedString
@@ -46,7 +46,7 @@ class GetChannelLowBatteryIssueUseCase(
     val messages = mutableListOf<LocalizedString>()
     // collectedChannelIds is used to eliminate duplications
     val collectedChannelIds = mutableListOf(channelWithChildren.channel.remoteId)
-    mainBatteryIssue.ifTrue {
+    mainBatteryIssue.forTrue {
       val id = channelWithChildren.channel.remoteId
       val name = getCaptionUseCase(channelWithChildren.channel)
       val level = mainBatteryInfo?.level ?: 0
@@ -94,7 +94,7 @@ class GetChannelLowBatteryIssueUseCase(
           )
         }
       }
-      child.children.isNotEmpty().ifTrue {
+      child.children.isNotEmpty().forTrue {
         childrenIds.add(child.channel.remoteId)
         list.addAll(getChildrenIssues(childrenIds, child.children))
         childrenIds.remove(child.channel.remoteId)

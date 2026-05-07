@@ -30,13 +30,12 @@ import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.databinding.FragmentGroupListBinding
-import org.supla.android.extensions.toPx
 import org.supla.android.extensions.visibleIf
 import org.supla.android.features.captionchangedialog.CaptionChangeViewModel
 import org.supla.android.features.captionchangedialog.View
 import org.supla.android.navigator.MainNavigator
 import org.supla.android.usecases.channel.ButtonType
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 import javax.inject.Inject
 
@@ -63,7 +62,7 @@ class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R
     binding.groupsList.adapter = adapter
     binding.groupsList.itemAnimator = null
     setupAdapter()
-    captionChangeViewModel.finishedCallback = { it.isLocation.ifTrue { viewModel.loadGroups() } }
+    captionChangeViewModel.finishedCallback = { it.isLocation.forTrue { viewModel.loadGroups() } }
     binding.groupsEmptyListButton.setOnClickListener { viewModel.onAddGroupClick() }
     binding.composeView.setContent {
       val modelState by viewModel.getViewState().collectAsState()

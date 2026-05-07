@@ -23,7 +23,7 @@ import org.supla.core.shared.data.model.channel.valveValue
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
 import org.supla.core.shared.data.model.valve.SuplaValveFlag
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.infrastructure.LocalizedStringId
 
 class ValveIssuesProvider : ChannelIssuesProvider {
@@ -49,13 +49,13 @@ class ValveIssuesProvider : ChannelIssuesProvider {
     }
 
     val value = channelWithChildren.channel.valveValue
-    value?.flags?.contains(SuplaValveFlag.FLOODING)?.ifTrue {
+    value?.flags?.contains(SuplaValveFlag.FLOODING)?.forTrue {
       issues.add(ChannelIssueItem.Error(LocalizedStringId.VALVE_FLOODING))
     }
-    value?.flags?.contains(SuplaValveFlag.MANUALLY_CLOSED)?.ifTrue {
+    value?.flags?.contains(SuplaValveFlag.MANUALLY_CLOSED)?.forTrue {
       issues.add(ChannelIssueItem.Error(LocalizedStringId.VALVE_MANUALLY_CLOSED))
     }
-    value?.flags?.contains(SuplaValveFlag.MOTOR_PROBLEM)?.ifTrue {
+    value?.flags?.contains(SuplaValveFlag.MOTOR_PROBLEM)?.forTrue {
       issues.add(ChannelIssueItem.Error(LocalizedStringId.VALVE_MOTOR_PROBLEM))
     }
 

@@ -34,7 +34,7 @@ import org.junit.Test
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.storage.UserStateHolder
 import org.supla.android.data.model.settings.ImpulseCounterSettings
-import org.supla.android.data.model.settings.ListValue
+import org.supla.android.data.model.settings.ListValueAggregation
 import org.supla.android.data.source.ChannelExtendedValueRepository
 import org.supla.android.data.source.ChannelValueRepository
 import org.supla.android.data.source.ImpulseCounterLogRepository
@@ -81,7 +81,7 @@ class RefreshImpulseCounterAggregatedValueUseCaseTest {
   @Test
   fun `should return early when showOnList is COUNTER_STATE`() = runTest {
     // given
-    val settings = ImpulseCounterSettings(showOnList = ListValue.COUNTER_STATE)
+    val settings = ImpulseCounterSettings(showOnList = ListValueAggregation.NO_AGGREGATION)
     every { userStateHolder.getImpulseCounterSettings(profileId, remoteId) } returns settings
 
     // when
@@ -96,10 +96,10 @@ class RefreshImpulseCounterAggregatedValueUseCaseTest {
   @Test
   fun `should return early when no logs are found in database`() = runTest {
     // given
-    val settings = ImpulseCounterSettings(showOnList = ListValue.CURRENT_HOUR)
+    val settings = ImpulseCounterSettings(showOnList = ListValueAggregation.CURRENT_HOUR)
     every { userStateHolder.getImpulseCounterSettings(profileId, remoteId) } returns settings
-    every { dateProvider.currentDate() } returns Date()
     every { impulseCounterLogRepository.findOldestEntity(remoteId, profileId) } returns Maybe.empty()
+    coEvery { channelValueRepository.updateAggregatedValue(profileId, remoteId, NO_VALUE_TEXT) } returns Unit
 
     // when
     useCase.invoke(profileId, remoteId)
@@ -107,8 +107,10 @@ class RefreshImpulseCounterAggregatedValueUseCaseTest {
     // then
     verify {
       userStateHolder.getImpulseCounterSettings(profileId, remoteId)
-      dateProvider.currentDate()
       impulseCounterLogRepository.findOldestEntity(remoteId, profileId)
+    }
+    coVerify {
+      channelValueRepository.updateAggregatedValue(profileId, remoteId, NO_VALUE_TEXT)
     }
     confirmVerified(userStateHolder, dateProvider, impulseCounterLogRepository, channelValueRepository, channelExtendedValueRepository)
   }
@@ -117,7 +119,7 @@ class RefreshImpulseCounterAggregatedValueUseCaseTest {
   fun `should update with NO_VALUE_TEXT when filtered entries are empty`() = runTest {
     // given
     val now = ZonedDateTime.parse("2023-10-10T10:00:00Z")
-    val settings = ImpulseCounterSettings(showOnList = ListValue.CURRENT_HOUR)
+    val settings = ImpulseCounterSettings(showOnList = ListValueAggregation.CURRENT_HOUR)
     every { updateEventsManager.emitChannelUpdate(remoteId) } answers {}
     every { userStateHolder.getImpulseCounterSettings(profileId, remoteId) } returns settings
     every { dateProvider.currentDate() } returns Date(now.toInstant().toEpochMilli())
@@ -139,7 +141,7 @@ class RefreshImpulseCounterAggregatedValueUseCaseTest {
   fun `should update with formatted aggregated value when entries are present`() = runTest {
     // given
     val now = ZonedDateTime.parse("2023-10-10T10:30:00Z")
-    val settings = ImpulseCounterSettings(showOnList = ListValue.CURRENT_HOUR)
+    val settings = ImpulseCounterSettings(showOnList = ListValueAggregation.CURRENT_HOUR)
     val entries = listOf(
       mockk<ImpulseCounterLogEntity> { every { calculatedValue } returns 10f },
       mockk<ImpulseCounterLogEntity> { every { calculatedValue } returns 20.5f }
@@ -177,7 +179,7 @@ class RefreshImpulseCounterAggregatedValueUseCaseTest {
   fun `should use correct start date for CURRENT_DAY`() = runTest {
     // given
     val now = ZonedDateTime.parse("2023-10-10T10:30:00Z")
-    val settings = ImpulseCounterSettings(showOnList = ListValue.CURRENT_DAY)
+    val settings = ImpulseCounterSettings(showOnList = ListValueAggregation.CURRENT_DAY)
     val expectedStartDate = now.withHour(0).withMinute(0).withSecond(0).withNano(0)
 
     every { updateEventsManager.emitChannelUpdate(remoteId) } answers {}
@@ -204,7 +206,7 @@ class RefreshImpulseCounterAggregatedValueUseCaseTest {
   fun `should use correct start date for CURRENT_WEEK`() = runTest {
     // given
     val now = ZonedDateTime.parse("2023-10-12T10:30:00Z") // Thursday
-    val settings = ImpulseCounterSettings(showOnList = ListValue.CURRENT_WEEK)
+    val settings = ImpulseCounterSettings(showOnList = ListValueAggregation.CURRENT_WEEK)
     // 2023-10-12 is Thursday, so Monday same week is 2023-10-09
     val expectedStartDate = ZonedDateTime.parse("2023-10-09T00:00:00Z")
 
@@ -232,7 +234,7 @@ class RefreshImpulseCounterAggregatedValueUseCaseTest {
   fun `should use correct start date for CURRENT_MONTH`() = runTest {
     // given
     val now = ZonedDateTime.parse("2023-10-12T10:30:00Z")
-    val settings = ImpulseCounterSettings(showOnList = ListValue.CURRENT_MONTH)
+    val settings = ImpulseCounterSettings(showOnList = ListValueAggregation.CURRENT_MONTH)
     val expectedStartDate = ZonedDateTime.parse("2023-10-01T00:00:00Z")
 
     every { updateEventsManager.emitChannelUpdate(remoteId) } answers {}

@@ -624,7 +624,7 @@
   <string name="details_em_forwarded_energy">Assorbita</string>
   <string name="details_em_reversed_energy">Restituita</string>
   <string name="details_em_cost">Costo</string>
-  <string name="details_em_settings_list_item">Valore visualizzato nell\'elenco dei canali</string>
+  <string name="details_ic_settings_list_item">Valore visualizzato nell\'elenco dei canali</string>
   <string name="details_settings_title">Impostazioni - %1$s</string>
   <string name="details_em_total_suffix">(stato del contatore)</string>
   <string name="details_em_current_month_suffix">(mese corrente)</string>
@@ -837,4 +837,15 @@
   <string name="toolbar_search_hint">Inserisci almeno 2 caratteri…</string>
   <string name="details_timer_select_program">Seleziona un programma</string>
   <string name="settings_show_unavailable_channels">Nascondi i canali non disponibili a causa della configurazione del dispositivo</string>
+  <string name="details_em_active_energy_balance">Bilancio dell’energia attiva</string>
+  <string name="details_em_settings_list_metric">Valore selezionato</string>
+  <string name="general_current_hour">Ora corrente</string>
+  <string name="general_current_day">Giorno corrente</string>
+  <string name="general_current_month">Mese corrente</string>
+  <string name="general_current_week">Settimana corrente</string>
+  <string name="impulse_counter_settings_counter_status">Lettura attuale del contatore</string>
+  <string name="general_current_year">Anno corrente</string>
+  <string name="details_em_on_list_balance">Metodo di bilanciamento energetico</string>
+  <string name="details_em_on_list_value">Intervallo dati</string>
+  <string name="details_em_on_list">Visualizzazione nell’elenco dei canali</string>
 </resources>

@@ -17,7 +17,7 @@ package org.supla.android.lib
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.extensions.localizedString
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.LocalizedStringId
@@ -83,7 +83,7 @@ val SuplaChannelStatePrintable.switchCycleCountString: LocalizedString?
 val SuplaChannelStatePrintable.lightSourceOperatingTimePercent: Float?
   get() = lightSourceOperatingTimeForPrintable?.let { lightSourceOperatingTime ->
     lightSourceLifespanForPrintable?.let { lightSourceLifespan ->
-      (lightSourceLifespan > 0).ifTrue { lightSourceOperatingTime / 36f / lightSourceLifespan }
+      (lightSourceLifespan > 0).forTrue { lightSourceOperatingTime / 36f / lightSourceLifespan }
     }
   }
 

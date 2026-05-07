@@ -44,6 +44,7 @@ import org.supla.android.testhelpers.extensions.mockShareable
 import org.supla.android.ui.lists.ListOnlineState
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
+import org.supla.android.usecases.channel.ListFirstValue
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
@@ -178,7 +179,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     val channelShareable = channel.shareable
     every { getCaptionUseCase.invoke(channelShareable) } returns caption
     every { getChannelIconUseCase.invoke(channel) } returns icon
-    every { getChannelValueStringUseCase(thermometerChannelWithChildren) } returns value
+    every { getChannelValueStringUseCase(thermometerChannelWithChildren, ListFirstValue) } returns value
     val channelWithChildrenShareable = channelWithChildren.shareable
     every { getChannelIssuesForListUseCase(channelWithChildrenShareable) } returns channelIssues
     every { valueFormatter.format(12.5f, ValueFormat.WithoutUnit) } returns subValue

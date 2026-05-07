@@ -33,18 +33,26 @@ import org.junit.Test
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.storage.UserStateHolder
 import org.supla.android.data.model.settings.ImpulseCounterSettings
-import org.supla.android.data.model.settings.ListValue
+import org.supla.android.data.model.settings.ListValueAggregation
+import org.supla.android.data.model.settings.eletricitymeter.ElectricityMeterBalanceType
+import org.supla.android.data.model.settings.eletricitymeter.ElectricityMeterMeasurementType
+import org.supla.android.data.model.settings.eletricitymeter.ElectricityMeterSettings
+import org.supla.android.data.source.ElectricityMeterLogRepository
 import org.supla.android.data.source.ImpulseCounterLogRepository
 import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity
 import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
 import java.util.Date
 
 class TriggerLogHistoryDownloadUseCaseTest {
+
+  @MockK
+  private lateinit var electricityMeterLogRepository: ElectricityMeterLogRepository
 
   @MockK
   private lateinit var impulseCounterLogRepository: ImpulseCounterLogRepository
@@ -91,14 +99,15 @@ class TriggerLogHistoryDownloadUseCaseTest {
   }
 
   @Test
-  fun `should trigger download for channel without logs`() = runTest {
+  fun `should trigger download for channel without logs IC`() = runTest {
     // given
     val remoteId = 10
     val channel = createChannel(remoteId = remoteId)
     setupChannels(listOf(channel))
-    setupSettings(remoteId, ListValue.CURRENT_HOUR)
+    setupSettingsIC(remoteId, ListValueAggregation.CURRENT_HOUR)
 
     val now = Date(1000000)
+    every { userStateHolder.impulseCounterSettingExists(profileId, remoteId) } returns true
     every { dateProvider.currentDate() } returns now
     every { impulseCounterLogRepository.findOldestEntity(remoteId, profileId) } returns Maybe.empty()
     coEvery { downloadChannelMeasurementsUseCase.invoke(any()) } returns Unit
@@ -111,16 +120,39 @@ class TriggerLogHistoryDownloadUseCaseTest {
   }
 
   @Test
-  fun `should not trigger download twice for channel without logs within interval`() = runTest {
+  fun `should trigger download for channel without logs EM`() = runTest {
+    // given
+    val remoteId = 10
+    val channel = createChannel(remoteId = remoteId, function = SuplaFunction.ELECTRICITY_METER)
+    setupChannels(listOf(channel))
+    setupSettingsEM(remoteId, ElectricityMeterMeasurementType.ACTIVE_ENERGY_BALANCE)
+
+    val now = Date(1000000)
+    every { userStateHolder.impulseCounterSettingExists(profileId, remoteId) } returns false
+    every { userStateHolder.electricityMeterSettingsExists(profileId, remoteId) } returns true
+    every { dateProvider.currentDate() } returns now
+    every { electricityMeterLogRepository.findOldestEntity(remoteId, profileId) } returns Maybe.empty()
+    coEvery { downloadChannelMeasurementsUseCase.invoke(any()) } returns Unit
+
+    // when
+    useCase.invoke()
+
+    // then
+    coVerify { downloadChannelMeasurementsUseCase.invoke(match { it.channel == channel }) }
+  }
+
+  @Test
+  fun `should not trigger download twice for channel without logs within interval IC`() = runTest {
     // given
     val remoteId = 10
     val channel = createChannel(remoteId = remoteId)
     setupChannels(listOf(channel))
-    setupSettings(remoteId, ListValue.CURRENT_HOUR)
+    setupSettingsIC(remoteId, ListValueAggregation.CURRENT_HOUR)
 
     val t1 = Date(1000000)
     val t2 = Date(1000000 + 5 * 60 * 1000) // 5 minutes later, interval is 10 min
 
+    every { userStateHolder.impulseCounterSettingExists(profileId, remoteId) } returns true
     every { dateProvider.currentDate() } returns t1
     every { impulseCounterLogRepository.findOldestEntity(remoteId, profileId) } returns Maybe.empty()
     coEvery { downloadChannelMeasurementsUseCase.invoke(any()) } returns Unit
@@ -136,16 +168,44 @@ class TriggerLogHistoryDownloadUseCaseTest {
   }
 
   @Test
-  fun `should trigger download twice for channel without logs after interval`() = runTest {
+  fun `should not trigger download twice for channel without logs within interval EM`() = runTest {
+    // given
+    val remoteId = 11
+    val channel = createChannel(remoteId = remoteId, function = SuplaFunction.ELECTRICITY_METER)
+    setupChannels(listOf(channel))
+    setupSettingsEM(remoteId, ElectricityMeterMeasurementType.FORWARD_ACTIVE_ENERGY)
+
+    val t1 = Date(1000000)
+    val t2 = Date(1000000 + 5 * 60 * 1000) // 5 minutes later, interval is 10 min
+
+    every { userStateHolder.impulseCounterSettingExists(profileId, remoteId) } returns false
+    every { userStateHolder.electricityMeterSettingsExists(profileId, remoteId) } returns true
+    every { dateProvider.currentDate() } returns t1
+    every { electricityMeterLogRepository.findOldestEntity(remoteId, profileId) } returns Maybe.empty()
+    coEvery { downloadChannelMeasurementsUseCase.invoke(any()) } returns Unit
+
+    // when
+    useCase.invoke() // first call
+
+    every { dateProvider.currentDate() } returns t2
+    useCase.invoke() // second call
+
+    // then
+    coVerify(exactly = 1) { downloadChannelMeasurementsUseCase.invoke(any()) }
+  }
+
+  @Test
+  fun `should trigger download twice for channel without logs after interval IC`() = runTest {
     // given
     val remoteId = 10
     val channel = createChannel(remoteId = remoteId)
     setupChannels(listOf(channel))
-    setupSettings(remoteId, ListValue.CURRENT_HOUR)
+    setupSettingsIC(remoteId, ListValueAggregation.CURRENT_HOUR)
 
     val t1 = Date(1000000)
     val t2 = Date(1000000 + 11 * 60 * 1000) // 11 minutes later, interval is 10 min
 
+    every { userStateHolder.impulseCounterSettingExists(profileId, remoteId) } returns true
     every { dateProvider.currentDate() } returns t1
     every { impulseCounterLogRepository.findOldestEntity(remoteId, profileId) } returns Maybe.empty()
     coEvery { downloadChannelMeasurementsUseCase.invoke(any()) } returns Unit
@@ -161,12 +221,39 @@ class TriggerLogHistoryDownloadUseCaseTest {
   }
 
   @Test
-  fun `should trigger download for channel with old logs`() = runTest {
+  fun `should trigger download twice for channel without logs after interval EM`() = runTest {
+    // given
+    val remoteId = 10
+    val channel = createChannel(remoteId = remoteId, function = SuplaFunction.ELECTRICITY_METER)
+    setupChannels(listOf(channel))
+    setupSettingsEM(remoteId, ElectricityMeterMeasurementType.FORWARD_ACTIVE_ENERGY)
+
+    val t1 = Date(1000000)
+    val t2 = Date(1000000 + 11 * 60 * 1000) // 11 minutes later, interval is 10 min
+
+    every { userStateHolder.impulseCounterSettingExists(profileId, remoteId) } returns false
+    every { userStateHolder.electricityMeterSettingsExists(profileId, remoteId) } returns true
+    every { dateProvider.currentDate() } returns t1
+    every { electricityMeterLogRepository.findOldestEntity(remoteId, profileId) } returns Maybe.empty()
+    coEvery { downloadChannelMeasurementsUseCase.invoke(any()) } returns Unit
+
+    // when
+    useCase.invoke() // first call
+
+    every { dateProvider.currentDate() } returns t2
+    useCase.invoke() // second call
+
+    // then
+    coVerify(exactly = 2) { downloadChannelMeasurementsUseCase.invoke(any()) }
+  }
+
+  @Test
+  fun `should trigger download for channel with old logs IC`() = runTest {
     // given
     val remoteId = 10
     val channel = createChannel(remoteId = remoteId)
     setupChannels(listOf(channel))
-    setupSettings(remoteId, ListValue.CURRENT_HOUR)
+    setupSettingsIC(remoteId, ListValueAggregation.CURRENT_HOUR)
 
     val lastEntryDate = Date(1000000)
     val now = Date(1000000 + 11 * 60 * 1000) // 11 minutes later, interval is 10 min
@@ -175,6 +262,7 @@ class TriggerLogHistoryDownloadUseCaseTest {
       every { date } returns lastEntryDate
     }
 
+    every { userStateHolder.impulseCounterSettingExists(profileId, remoteId) } returns true
     every { dateProvider.currentDate() } returns now
     every { impulseCounterLogRepository.findOldestEntity(remoteId, profileId) } returns Maybe.just(lastEntry)
     coEvery { downloadChannelMeasurementsUseCase.invoke(any()) } returns Unit
@@ -187,12 +275,40 @@ class TriggerLogHistoryDownloadUseCaseTest {
   }
 
   @Test
-  fun `should not trigger download for channel with fresh logs`() = runTest {
+  fun `should trigger download for channel with old logs EM`() = runTest {
+    // given
+    val remoteId = 10
+    val channel = createChannel(remoteId = remoteId, function = SuplaFunction.ELECTRICITY_METER)
+    setupChannels(listOf(channel))
+    setupSettingsEM(remoteId, ElectricityMeterMeasurementType.FORWARD_ACTIVE_ENERGY)
+
+    val lastEntryDate = Date(1000000)
+    val now = Date(1000000 + 11 * 60 * 1000) // 11 minutes later, interval is 10 min
+
+    val lastEntry = mockk<ElectricityMeterLogEntity> {
+      every { date } returns lastEntryDate
+    }
+
+    every { userStateHolder.impulseCounterSettingExists(profileId, remoteId) } returns false
+    every { userStateHolder.electricityMeterSettingsExists(profileId, remoteId) } returns true
+    every { dateProvider.currentDate() } returns now
+    every { electricityMeterLogRepository.findOldestEntity(remoteId, profileId) } returns Maybe.just(lastEntry)
+    coEvery { downloadChannelMeasurementsUseCase.invoke(any()) } returns Unit
+
+    // when
+    useCase.invoke()
+
+    // then
+    coVerify { downloadChannelMeasurementsUseCase.invoke(any()) }
+  }
+
+  @Test
+  fun `should not trigger download for channel with fresh logs IC`() = runTest {
     // given
     val remoteId = 10
     val channel = createChannel(remoteId = remoteId)
     setupChannels(listOf(channel))
-    setupSettings(remoteId, ListValue.CURRENT_HOUR)
+    setupSettingsIC(remoteId, ListValueAggregation.CURRENT_HOUR)
 
     val lastEntryDate = Date(1000000)
     val now = Date(1000000 + 5 * 60 * 1000) // 5 minutes later, interval is 10 min
@@ -201,6 +317,7 @@ class TriggerLogHistoryDownloadUseCaseTest {
       every { date } returns lastEntryDate
     }
 
+    every { userStateHolder.impulseCounterSettingExists(profileId, remoteId) } returns true
     every { dateProvider.currentDate() } returns now
     every { impulseCounterLogRepository.findOldestEntity(remoteId, profileId) } returns Maybe.just(lastEntry)
 
@@ -212,12 +329,39 @@ class TriggerLogHistoryDownloadUseCaseTest {
   }
 
   @Test
-  fun `should use longer interval for OCR channel`() = runTest {
+  fun `should not trigger download for channel with fresh logs EM`() = runTest {
+    // given
+    val remoteId = 10
+    val channel = createChannel(remoteId = remoteId, function = SuplaFunction.ELECTRICITY_METER)
+    setupChannels(listOf(channel))
+    setupSettingsEM(remoteId, ElectricityMeterMeasurementType.FORWARD_ACTIVE_ENERGY)
+
+    val lastEntryDate = Date(1000000)
+    val now = Date(1000000 + 5 * 60 * 1000) // 5 minutes later, interval is 10 min
+
+    val lastEntry = mockk<ElectricityMeterLogEntity> {
+      every { date } returns lastEntryDate
+    }
+
+    every { userStateHolder.impulseCounterSettingExists(profileId, remoteId) } returns false
+    every { userStateHolder.electricityMeterSettingsExists(profileId, remoteId) } returns true
+    every { dateProvider.currentDate() } returns now
+    every { electricityMeterLogRepository.findOldestEntity(remoteId, profileId) } returns Maybe.just(lastEntry)
+
+    // when
+    useCase.invoke()
+
+    // then
+    coVerify(exactly = 0) { downloadChannelMeasurementsUseCase.invoke(any()) }
+  }
+
+  @Test
+  fun `should use longer interval for OCR channel IC only`() = runTest {
     // given
     val remoteId = 10
     val channel = createChannel(remoteId = remoteId, flags = 0x8) // OCR flag rawValue = 0x8
     setupChannels(listOf(channel))
-    setupSettings(remoteId, ListValue.CURRENT_HOUR)
+    setupSettingsIC(remoteId, ListValueAggregation.CURRENT_HOUR)
 
     val lastEntryDate = Date(1000000)
     val now1 = Date(1000000 + 30 * 60 * 1000) // 30 minutes later. Normal (10) would trigger, OCR (60) should not.
@@ -226,6 +370,7 @@ class TriggerLogHistoryDownloadUseCaseTest {
       every { date } returns lastEntryDate
     }
 
+    every { userStateHolder.impulseCounterSettingExists(profileId, remoteId) } returns true
     every { dateProvider.currentDate() } returns now1
     every { impulseCounterLogRepository.findOldestEntity(remoteId, profileId) } returns Maybe.just(lastEntry)
 
@@ -246,12 +391,14 @@ class TriggerLogHistoryDownloadUseCaseTest {
   }
 
   @Test
-  fun `should skip channel when showOnList is COUNTER_STATE`() = runTest {
+  fun `should skip channel when showOnList is NO_AGGREGATION`() = runTest {
     // given
     val remoteId = 11
     val channel = createChannel(remoteId = remoteId)
     setupChannels(listOf(channel))
-    setupSettings(remoteId, ListValue.COUNTER_STATE)
+    setupSettingsIC(remoteId, ListValueAggregation.NO_AGGREGATION)
+
+    every { userStateHolder.impulseCounterSettingExists(profileId, remoteId) } returns true
 
     // when
     useCase.invoke()
@@ -260,11 +407,31 @@ class TriggerLogHistoryDownloadUseCaseTest {
     verify(exactly = 0) { impulseCounterLogRepository.findOldestEntity(any(), any()) }
   }
 
-  private fun createChannel(remoteId: Int, flags: Long = 0L) = mockk<ChannelDataEntity> {
-    every { this@mockk.remoteId } returns remoteId
-    every { this@mockk.profileId } returns this@TriggerLogHistoryDownloadUseCaseTest.profileId
-    every { this@mockk.flags } returns flags
+  @Test
+  fun `should skip channel when metricOnList is CURRENT`() = runTest {
+    // given
+    val remoteId = 11
+    val channel = createChannel(remoteId = remoteId, function = SuplaFunction.ELECTRICITY_METER)
+    setupChannels(listOf(channel))
+    setupSettingsEM(remoteId, ElectricityMeterMeasurementType.CURRENT)
+
+    every { userStateHolder.impulseCounterSettingExists(profileId, remoteId) } returns false
+    every { userStateHolder.electricityMeterSettingsExists(profileId, remoteId) } returns true
+
+    // when
+    useCase.invoke()
+
+    // then
+    verify(exactly = 0) { electricityMeterLogRepository.findOldestEntity(any(), any()) }
   }
+
+  private fun createChannel(remoteId: Int, flags: Long = 0L, function: SuplaFunction = SuplaFunction.IC_GAS_METER) =
+    mockk<ChannelDataEntity> {
+      every { this@mockk.remoteId } returns remoteId
+      every { this@mockk.profileId } returns this@TriggerLogHistoryDownloadUseCaseTest.profileId
+      every { this@mockk.flags } returns flags
+      every { this@mockk.function } returns function
+    }
 
   private fun setupChannels(channels: List<ChannelDataEntity>) {
     coEvery { channelRepository.findChannelsBy(profileId, SuplaFunction.IC_GAS_METER) } returns channels
@@ -274,11 +441,21 @@ class TriggerLogHistoryDownloadUseCaseTest {
     coEvery { channelRepository.findChannelsBy(profileId, SuplaFunction.STAIRCASE_TIMER) } returns emptyList()
     coEvery { channelRepository.findChannelsBy(profileId, SuplaFunction.LIGHTSWITCH) } returns emptyList()
     coEvery { channelRepository.findChannelsBy(profileId, SuplaFunction.POWER_SWITCH) } returns emptyList()
+    coEvery { channelRepository.findChannelsBy(profileId, SuplaFunction.ELECTRICITY_METER) } returns emptyList()
   }
 
-  private fun setupSettings(remoteId: Int, showOnList: ListValue) {
+  private fun setupSettingsIC(remoteId: Int, showOnList: ListValueAggregation) {
     every { userStateHolder.getImpulseCounterSettings(profileId, remoteId) } returns ImpulseCounterSettings(
       showOnList = showOnList
+    )
+  }
+
+  private fun setupSettingsEM(remoteId: Int, metricOnList: ElectricityMeterMeasurementType) {
+    every { userStateHolder.getElectricityMeterSettings(profileId, remoteId) } returns ElectricityMeterSettings(
+      currentMonthBalancing = ElectricityMeterBalanceType.DEFAULT,
+      metricOnList = metricOnList,
+      metricOnListAggregation = ListValueAggregation.CURRENT_HOUR,
+      metricOnListBalancing = ElectricityMeterBalanceType.DEFAULT
     )
   }
 }

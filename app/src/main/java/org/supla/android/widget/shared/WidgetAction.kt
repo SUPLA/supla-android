@@ -28,7 +28,7 @@ import org.supla.android.widget.shared.WidgetAction.MANUAL_UPDATE
 import org.supla.android.widget.shared.WidgetAction.REDRAW
 import org.supla.android.widget.shared.WidgetAction.RIGHT_BUTTON_PRESSED
 import org.supla.core.shared.data.model.general.SuplaFunction
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 
 enum class WidgetAction(val string: String) {
   /**
@@ -51,7 +51,7 @@ enum class WidgetAction(val string: String) {
     }
 
     fun getSingleButtonAction(subjectType: SubjectType?, function: SuplaFunction?): WidgetAction =
-      subjectType?.isScene?.ifTrue { BUTTON_PRESSED } ?: hasAction(function).ifTrue { BUTTON_PRESSED } ?: MANUAL_UPDATE
+      subjectType?.isScene?.forTrue { BUTTON_PRESSED } ?: hasAction(function).forTrue { BUTTON_PRESSED } ?: MANUAL_UPDATE
   }
 }
 

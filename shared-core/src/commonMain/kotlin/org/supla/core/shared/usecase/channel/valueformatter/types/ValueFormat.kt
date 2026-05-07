@@ -17,7 +17,7 @@ package org.supla.core.shared.usecase.channel.valueformatter.types
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 
 data class ValueFormat(
   val withUnit: Boolean? = null,
@@ -54,14 +54,14 @@ fun withUnit(withUnit: Boolean) = if (withUnit) ValueFormat.WithUnit else ValueF
 fun withUnit(unit: String?, leadingSpace: Boolean = true, showNoValueText: Boolean? = null) =
   ValueFormat(
     withUnit = unit != null,
-    customUnit = unit?.let { leadingSpace.ifTrue { " $unit" } ?: unit },
+    customUnit = unit?.let { leadingSpace.forTrue { " $unit" } ?: unit },
     showNoValueText = showNoValueText
   )
 
 fun withUnit(withUnit: Boolean, unit: String?, leadingSpace: Boolean = true) =
   ValueFormat(
     withUnit = withUnit && unit != null,
-    customUnit = unit?.let { leadingSpace.ifTrue { " $unit" } ?: unit }
+    customUnit = unit?.let { leadingSpace.forTrue { " $unit" } ?: unit }
   )
 
 fun forChartMarker(unit: String? = null) =

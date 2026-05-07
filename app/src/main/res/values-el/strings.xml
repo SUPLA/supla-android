@@ -632,7 +632,7 @@
   <string name="details_em_forwarded_energy">Έχει γίνει λήψη</string>
   <string name="details_em_reversed_energy">Επιστράφηκε</string>
   <string name="details_em_cost">Κόστος</string>
-  <string name="details_em_settings_list_item">Τιμή που εμφανίζεται στη λίστα καναλιών</string>
+  <string name="details_ic_settings_list_item">Τιμή που εμφανίζεται στη λίστα καναλιών</string>
   <string name="details_settings_title">Ρυθμίσεις - %1$s</string>
   <string name="details_em_total_suffix">(κατάσταση μετρητή)</string>
   <string name="details_em_current_month_suffix">(τρέχων μήνας)</string>
@@ -821,4 +821,15 @@
   <string name="toolbar_search_hint">Πληκτρολογήστε τουλάχιστον 2 χαρακτήρες…</string>
   <string name="details_timer_select_program">Επιλέξτε πρόγραμμα</string>
   <string name="settings_show_unavailable_channels">Απόκρυψη καναλιών που δεν είναι διαθέσιμα λόγω της διαμόρφωσης της συσκευής</string>
+  <string name="details_em_active_energy_balance">Ισοζύγιο ενεργού ενέργειας</string>
+  <string name="details_em_settings_list_metric">Επιλεγμένη τιμή</string>
+  <string name="general_current_hour">Τρέχουσα ώρα</string>
+  <string name="general_current_day">Τρέχουσα ημέρα</string>
+  <string name="general_current_month">Τρέχων μήνας</string>
+  <string name="general_current_week">Τρέχουσα εβδομάδα</string>
+  <string name="impulse_counter_settings_counter_status">Τρέχουσα ένδειξη μετρητή</string>
+  <string name="general_current_year">Τρέχον έτος</string>
+  <string name="details_em_on_list_balance">Μέθοδος εξισορρόπησης ενέργειας</string>
+  <string name="details_em_on_list_value">Εύρος δεδομένων</string>
+  <string name="details_em_on_list">Εμφάνιση στη λίστα καναλιών</string>
 </resources>

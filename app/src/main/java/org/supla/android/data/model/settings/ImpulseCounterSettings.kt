@@ -20,20 +20,16 @@ package org.supla.android.data.model.settings
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
-import org.supla.android.R
-import org.supla.android.ui.views.spinner.SpinnerItem
-import org.supla.core.shared.infrastructure.LocalizedString
-import org.supla.core.shared.infrastructure.localizedString
 import timber.log.Timber
 
 @Serializable
 data class ImpulseCounterSettings(
-  val showOnList: ListValue
+  val showOnList: ListValueAggregation
 ) {
   companion object {
     fun default(): ImpulseCounterSettings =
       ImpulseCounterSettings(
-        showOnList = ListValue.COUNTER_STATE
+        showOnList = ListValueAggregation.NO_AGGREGATION
       )
 
     fun from(text: String): ImpulseCounterSettings? =
@@ -44,18 +40,4 @@ data class ImpulseCounterSettings(
         null
       }
   }
-}
-
-enum class ListValue(override val label: LocalizedString) : SpinnerItem {
-  COUNTER_STATE(localizedString(R.string.impulse_counter_settings_counter_status)),
-  LAST_24_HOURS(localizedString(R.string.history_range_last_day)),
-  LAST_7_DAYS(localizedString(R.string.history_range_last_week)),
-  LAST_30_DAYS(localizedString(R.string.history_range_last_30_days)),
-  LAST_90_DAYS(localizedString(R.string.history_range_last_90_days)),
-  LAST_365_DAYS(localizedString(R.string.history_range_last_365_days)),
-  CURRENT_HOUR(localizedString(R.string.general_current_hour)),
-  CURRENT_DAY(localizedString(R.string.general_current_day)),
-  CURRENT_WEEK(localizedString(R.string.general_current_week)),
-  CURRENT_MONTH(localizedString(R.string.general_current_month)),
-  CURRENT_YEAR(localizedString(R.string.general_current_year))
 }

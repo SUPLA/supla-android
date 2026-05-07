@@ -616,7 +616,7 @@
   <string name="details_em_forwarded_energy">Staženo</string>
   <string name="details_em_reversed_energy">Vrácena</string>
   <string name="details_em_cost">Náklady</string>
-  <string name="details_em_settings_list_item">Hodnota zobrazená v seznamu kanálů</string>
+  <string name="details_ic_settings_list_item">Hodnota zobrazená v seznamu kanálů</string>
   <string name="details_settings_title">Nastavení - %1$s</string>
   <string name="details_em_total_suffix">(stav počítadla)</string>
   <string name="details_em_current_month_suffix">(aktuální měsíc)</string>
@@ -809,4 +809,15 @@
   <string name="toolbar_search_hint">Zadejte alespoň 2 znaky…</string>
   <string name="details_timer_select_program">Vyberte program</string>
   <string name="settings_show_unavailable_channels">Skrýt kanály, které nejsou dostupné kvůli konfiguraci zařízení</string>
+  <string name="details_em_active_energy_balance">Bilance činné energie</string>
+  <string name="details_em_settings_list_metric">Vybraná hodnota</string>
+  <string name="general_current_hour">Aktuální hodina</string>
+  <string name="general_current_day">Aktuální den</string>
+  <string name="general_current_month">Aktuální měsíc</string>
+  <string name="general_current_week">Aktuální týden</string>
+  <string name="impulse_counter_settings_counter_status">Aktuální stav měřidla</string>
+  <string name="general_current_year">Aktuální rok</string>
+  <string name="details_em_on_list_balance">Metoda bilancování energie</string>
+  <string name="details_em_on_list_value">Rozsah dat</string>
+  <string name="details_em_on_list">Zobrazení v seznamu kanálů</string>
 </resources>

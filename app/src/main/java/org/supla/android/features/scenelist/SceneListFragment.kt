@@ -28,12 +28,11 @@ import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.databinding.FragmentSceneListBinding
-import org.supla.android.extensions.toPx
 import org.supla.android.extensions.visibleIf
 import org.supla.android.features.captionchangedialog.CaptionChangeViewModel
 import org.supla.android.features.captionchangedialog.View
 import org.supla.android.navigator.MainNavigator
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -59,7 +58,7 @@ class SceneListFragment : BaseFragment<SceneListViewState, SceneListViewEvent>(R
     binding.scenesList.adapter = adapter
     binding.scenesList.itemAnimator = null
     setupAdapter()
-    captionChangeViewModel.finishedCallback = { it.isLocation.ifTrue { viewModel.loadScenes() } }
+    captionChangeViewModel.finishedCallback = { it.isLocation.forTrue { viewModel.loadScenes() } }
     binding.scenesEmptyListButton.setOnClickListener { viewModel.onAddGroupClick() }
 
     binding.composeView.setContent {

@@ -82,6 +82,17 @@ fun SettingRow(modifier: Modifier = Modifier, content: @Composable RowScope.() -
     content = content
   )
 
+@Composable
+fun SettingsHeader(
+  text: String,
+  modifier: Modifier = Modifier
+) =
+  Text(
+    text = text.uppercase(),
+    style = MaterialTheme.typography.bodyMedium,
+    modifier = modifier.padding(start = Distance.small, bottom = Distance.tiny, end = Distance.small)
+  )
+
 @Preview
 @PreviewScreenSizes
 @PreviewFontScale

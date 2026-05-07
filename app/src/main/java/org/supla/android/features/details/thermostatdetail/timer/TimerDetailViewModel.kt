@@ -56,15 +56,14 @@ import org.supla.android.extensions.subscribeBy
 import org.supla.android.extensions.yearNo
 import org.supla.android.features.details.thermostatdetail.timer.ui.ThermostatTimerViewScope
 import org.supla.android.features.details.thermostatdetail.ui.TimerHeaderState
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.client.ExecuteThermostatActionUseCase
 import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.extensions.guardLet
-import org.supla.core.shared.extensions.ifTrue
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
@@ -266,8 +265,8 @@ class TimerDetailViewModel @Inject constructor(
       type = SubjectType.CHANNEL,
       remoteId = remoteId,
       mode = mode,
-      setpointTemperatureHeat = sendTemperature.ifTrue(state.temperature?.setpointHeat),
-      setpointTemperatureCool = sendTemperature.ifTrue(state.temperature?.setpointCool),
+      setpointTemperatureHeat = sendTemperature.forTrue(state.temperature?.setpointHeat),
+      setpointTemperatureCool = sendTemperature.forTrue(state.temperature?.setpointCool),
       durationInSec = duration.toLong()
     ).attachSilent()
       .subscribe()

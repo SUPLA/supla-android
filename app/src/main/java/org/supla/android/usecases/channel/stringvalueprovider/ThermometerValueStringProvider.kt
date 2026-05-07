@@ -22,7 +22,7 @@ import org.supla.android.di.FORMATTER_THERMOMETER
 import org.supla.android.usecases.channel.ChannelValueStringProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueprovider.ThermometerValueProvider
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
 import javax.inject.Inject
@@ -41,6 +41,6 @@ class ThermometerValueStringProvider @Inject constructor(
   override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType, withUnit: Boolean): String =
     thermometerValueFormatter.format(
       value = thermometerValueProvider.value(channelWithChildren, valueType),
-      format = withUnit.ifTrue { ValueFormat.WithUnit } ?: ValueFormat.TemperatureWithDegree
+      format = withUnit.forTrue { ValueFormat.WithUnit } ?: ValueFormat.TemperatureWithDegree
     )
 }

@@ -636,7 +636,7 @@
   <string name="details_em_forwarded_energy">Lastet ned</string>
   <string name="details_em_reversed_energy">Returnert</string>
   <string name="details_em_cost">Kostnad</string>
-  <string name="details_em_settings_list_item">Verdien som vises i kanallisten</string>
+  <string name="details_ic_settings_list_item">Verdien som vises i kanallisten</string>
   <string name="details_settings_title">Innstillinger %1$s</string>
   <string name="details_em_total_suffix">(tellerstatus)</string>
   <string name="details_em_current_month_suffix">(inneværende måned)</string>
@@ -824,4 +824,15 @@
   <string name="toolbar_search_hint">Skriv inn minst 2 tegn…</string>
   <string name="details_timer_select_program">Velg program</string>
   <string name="settings_show_unavailable_channels">Skjul kanaler som ikke er tilgjengelige på grunn av enhetskonfigurasjonen</string>
+  <string name="details_em_active_energy_balance">Balanse for aktiv energi</string>
+  <string name="details_em_settings_list_metric">Valgt verdi</string>
+  <string name="general_current_hour">Nåværende time</string>
+  <string name="general_current_day">Nåværende dag</string>
+  <string name="general_current_month">Nåværende måned</string>
+  <string name="general_current_week">Nåværende uke</string>
+  <string name="impulse_counter_settings_counter_status">Nåværende målerstand</string>
+  <string name="general_current_year">Nåværende år</string>
+  <string name="details_em_on_list_balance">Metode for energibalansering</string>
+  <string name="details_em_on_list_value">Dataområde</string>
+  <string name="details_em_on_list">Visning i kanallisten</string>
 </resources>

@@ -18,7 +18,7 @@ package org.supla.android.lib
  */
 
 import kotlinx.serialization.Serializable
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.extensions.ipV4String
 import org.supla.core.shared.extensions.toHex
 
@@ -44,46 +44,46 @@ data class SuplaChannelState(
 ) : SuplaChannelStatePrintable {
 
   override val ipV4: String?
-    get() = hasField(FIELD_IPV4).ifTrue { rawIpv4.ipV4String }
+    get() = hasField(FIELD_IPV4).forTrue { rawIpv4.ipV4String }
 
   override val macAddress: String?
-    get() = hasField(FIELD_MAC).ifTrue { rawMacAddress.toHex(":") }
+    get() = hasField(FIELD_MAC).forTrue { rawMacAddress.toHex(":") }
 
   val batteryLevel: Int?
-    get() = hasField(FIELD_BATTERYLEVEL).ifTrue { rawBatteryLevel.toInt() }
+    get() = hasField(FIELD_BATTERYLEVEL).forTrue { rawBatteryLevel.toInt() }
 
   val batteryPowered: Boolean?
-    get() = hasField(FIELD_BATTERYPOWERED).ifTrue { rawBatteryPowered > 0 }
+    get() = hasField(FIELD_BATTERYPOWERED).forTrue { rawBatteryPowered > 0 }
 
   val wifiRssi: Int?
-    get() = hasField(FIELD_WIFIRSSI).ifTrue { rawWifiRssi.toInt() }
+    get() = hasField(FIELD_WIFIRSSI).forTrue { rawWifiRssi.toInt() }
 
   val wifiSignalStrength: Int?
-    get() = hasField(FIELD_WIFISIGNALSTRENGTH).ifTrue { rawWifiSignalStrength.toInt() }
+    get() = hasField(FIELD_WIFISIGNALSTRENGTH).forTrue { rawWifiSignalStrength.toInt() }
 
   val bridgeNodeOnline: Boolean?
-    get() = hasField(FIELD_BRIDGENODEONLINE).ifTrue { rawBridgeNodeOnline > 0 }
+    get() = hasField(FIELD_BRIDGENODEONLINE).forTrue { rawBridgeNodeOnline > 0 }
 
   val bridgeNodeSignalStrength: Int?
-    get() = hasField(FIELD_BRIDGENODESIGNALSTRENGTH).ifTrue { rawBridgeNodeSignalStrength.toInt() }
+    get() = hasField(FIELD_BRIDGENODESIGNALSTRENGTH).forTrue { rawBridgeNodeSignalStrength.toInt() }
 
   val uptime: Int?
-    get() = hasField(FIELD_UPTIME).ifTrue { rawUptime }
+    get() = hasField(FIELD_UPTIME).forTrue { rawUptime }
 
   val connectionUptime: Int?
-    get() = hasField(FIELD_CONNECTIONUPTIME).ifTrue { rawConnectionUptime }
+    get() = hasField(FIELD_CONNECTIONUPTIME).forTrue { rawConnectionUptime }
 
   val batteryHealth: Int?
-    get() = hasField(FIELD_BATTERYHEALTH).ifTrue { rawBatteryHealth.toInt() }
+    get() = hasField(FIELD_BATTERYHEALTH).forTrue { rawBatteryHealth.toInt() }
 
   val lastConnectionResetCause: Int?
-    get() = hasField(FIELD_LASTCONNECTIONRESETCAUSE).ifTrue { rawLastConnectionResetCause.toInt() }
+    get() = hasField(FIELD_LASTCONNECTIONRESETCAUSE).forTrue { rawLastConnectionResetCause.toInt() }
 
   val switchCycleCount: Int?
-    get() = hasField(FIELD_SWITCH_CYCLE_COUNT).ifTrue { rawDefaultIconField }
+    get() = hasField(FIELD_SWITCH_CYCLE_COUNT).forTrue { rawDefaultIconField }
 
   val lightSourceLifespan: Int?
-    get() = hasField(FIELD_LIGHTSOURCELIFESPAN).ifTrue { rawLightSourceLifespan }
+    get() = hasField(FIELD_LIGHTSOURCELIFESPAN).forTrue { rawLightSourceLifespan }
 
   val lightSourceLifespanLeft: Float?
     get() = if (hasField(FIELD_LIGHTSOURCELIFESPAN) && !hasField(FIELD_LIGHTSOURCELIFEOPERATINGTIME)) {
@@ -93,7 +93,7 @@ data class SuplaChannelState(
     }
 
   val lightSourceOperatingTime: Int?
-    get() = hasField(FIELD_LIGHTSOURCELIFEOPERATINGTIME).ifTrue { rawLightSourceLifespanLeft }
+    get() = hasField(FIELD_LIGHTSOURCELIFEOPERATINGTIME).forTrue { rawLightSourceLifespanLeft }
 
   override val batteryLevelForPrintable: Int?
     get() = batteryLevel

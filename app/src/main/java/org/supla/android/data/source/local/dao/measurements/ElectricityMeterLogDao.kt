@@ -95,12 +95,17 @@ interface ElectricityMeterLogDao : GroupingStringMigratorDao {
       SELECT $ALL_COLUMNS FROM $TABLE_NAME
       WHERE $COLUMN_CHANNEL_ID = :channelId 
         AND $COLUMN_PROFILE_ID = :profileId 
-        AND $COLUMN_TIMESTAMP >= :startDate 
-        AND $COLUMN_TIMESTAMP <= :endDate
+        AND $COLUMN_TIMESTAMP >= :startTimestamp 
+        AND $COLUMN_TIMESTAMP <= :endTimestamp
       ORDER BY $COLUMN_TIMESTAMP ASC
     """
   )
-  fun findMeasurements(channelId: Int, profileId: Long, startDate: Long, endDate: Long): Observable<List<ElectricityMeterLogEntity>>
+  fun findMeasurements(
+    channelId: Int,
+    profileId: Long,
+    startTimestamp: Long,
+    endTimestamp: Long
+  ): Observable<List<ElectricityMeterLogEntity>>
 
   @Query(
     """

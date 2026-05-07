@@ -91,7 +91,7 @@ import org.supla.android.ui.ToolbarItemsClickHandler
 import org.supla.android.ui.ToolbarItemsController
 import org.supla.android.ui.ToolbarTitleController
 import org.supla.android.ui.ToolbarVisibilityController
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -599,7 +599,7 @@ class MainActivity :
   override fun setToolbarVisible(visibility: ToolbarVisibilityController.ToolbarVisibility) {
     appBarLayout.visibleIf(visibility.visible)
     appBarLayoutSpacer.visibleIf(visibility.visible)
-    appBarLayout.elevation = visibility.shadowVisible.ifTrue { resources.getDimension(R.dimen.segmented_button_elevation) } ?: 0f
+    appBarLayout.elevation = visibility.shadowVisible.forTrue { resources.getDimension(R.dimen.segmented_button_elevation) } ?: 0f
     setStatusBarColor(visibility.toolbarColorRes, visibility.navigationBarColorRes, visibility.isLight)
   }
 

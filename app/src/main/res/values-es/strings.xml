@@ -624,7 +624,7 @@
   <string name="details_em_forwarded_energy">Tomada</string>
   <string name="details_em_reversed_energy">Devuelta</string>
   <string name="details_em_cost">Costo</string>
-  <string name="details_em_settings_list_item">Valor mostrado en la lista de canales</string>
+  <string name="details_ic_settings_list_item">Valor mostrado en la lista de canales</string>
   <string name="details_settings_title">Ajustes - %1$s</string>
   <string name="details_em_total_suffix">(estado del contador)</string>
   <string name="details_em_current_month_suffix">(mes en curso)</string>
@@ -812,4 +812,15 @@
   <string name="toolbar_search_hint">Introduce al menos 2 caracteres…</string>
   <string name="details_timer_select_program">Selecciona un programa</string>
   <string name="settings_show_unavailable_channels">Ocultar los canales que no están disponibles debido a la configuración del dispositivo</string>
+  <string name="details_em_active_energy_balance">Balance de energía activa</string>
+  <string name="details_em_settings_list_metric">Valor seleccionado</string>
+  <string name="general_current_hour">Hora actual</string>
+  <string name="general_current_day">Día actual</string>
+  <string name="general_current_month">Mes actual</string>
+  <string name="general_current_week">Semana actual</string>
+  <string name="impulse_counter_settings_counter_status">Lectura actual del contador</string>
+  <string name="general_current_year">Año actual</string>
+  <string name="details_em_on_list_balance">Método de balance energético</string>
+  <string name="details_em_on_list_value">Rango de datos</string>
+  <string name="details_em_on_list">Mostrar en la lista de canales</string>
 </resources>

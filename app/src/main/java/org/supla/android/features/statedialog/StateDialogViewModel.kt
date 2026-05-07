@@ -41,8 +41,8 @@ import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModel
 import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.LoginUseCase
+import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.extensions.guardLet
-import org.supla.core.shared.extensions.ifTrue
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.GetCaptionUseCase
@@ -192,7 +192,7 @@ class StateDialogViewModel @Inject constructor(
         viewState = StateDialogViewState(
           title = channels[0].caption,
           online = channels[0].online,
-          subtitle = (channels.size > 1).ifTrue { localizedString(R.string.state_dialog_index, 1, channels.size) },
+          subtitle = (channels.size > 1).forTrue { localizedString(R.string.state_dialog_index, 1, channels.size) },
           loading = channels[0].online && channels[0].infoSupported,
           showArrows = channels.size > 1,
           showChangeLifespanButton = channels[0].showLifespanSettingsButton,

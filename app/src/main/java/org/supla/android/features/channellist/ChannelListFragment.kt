@@ -48,7 +48,7 @@ import org.supla.android.navigator.MainNavigator
 import org.supla.android.ui.lists.message
 import org.supla.android.usecases.channel.ButtonType
 import org.supla.android.usecases.list.TriggerLogHistoryDownloadUseCase
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
@@ -80,7 +80,7 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
     binding.channelsList.adapter = adapter
     binding.channelsList.itemAnimator = null
     setupAdapter()
-    captionChangeViewModel.finishedCallback = { it.isLocation.ifTrue { viewModel.loadChannels() } }
+    captionChangeViewModel.finishedCallback = { it.isLocation.forTrue { viewModel.loadChannels() } }
     binding.channelsEmptyListButton.setOnClickListener {
       navigator.navigateToAddWizard()
     }

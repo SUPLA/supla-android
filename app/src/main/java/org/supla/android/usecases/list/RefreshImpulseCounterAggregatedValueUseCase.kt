@@ -21,8 +21,7 @@ import kotlinx.coroutines.rx3.awaitFirstOrNull
 import kotlinx.coroutines.rx3.awaitSingleOrNull
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.storage.UserStateHolder
-import org.supla.android.data.model.settings.ImpulseCounterSettings
-import org.supla.android.data.model.settings.ListValue
+import org.supla.android.data.model.settings.ListValueAggregation
 import org.supla.android.data.source.ChannelExtendedValueRepository
 import org.supla.android.data.source.ChannelValueRepository
 import org.supla.android.data.source.ImpulseCounterLogRepository
@@ -31,9 +30,6 @@ import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
 import org.supla.core.shared.usecase.channel.valueformatter.formatters.ImpulseCounterValueFormatter
 import org.supla.core.shared.usecase.channel.valueformatter.types.withUnit
 import timber.log.Timber
-import java.time.DayOfWeek
-import java.time.ZonedDateTime
-import java.time.temporal.TemporalAdjusters
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -51,24 +47,26 @@ class RefreshImpulseCounterAggregatedValueUseCase @Inject constructor(
 
   suspend operator fun invoke(profileId: Long, remoteId: Int) {
     val settings = userStateHolder.getImpulseCounterSettings(profileId, remoteId)
-    if (settings.showOnList == ListValue.COUNTER_STATE) {
+    if (settings.showOnList == ListValueAggregation.NO_AGGREGATION) {
       Timber.w("Refresh impulse counter aggregated value started for counter state!")
       return
     }
 
-    val currentDate = dateProvider.currentDate()
     val lastEntry = impulseCounterLogRepository.findOldestEntity(remoteId, profileId).awaitSingleOrNull()
     if (lastEntry == null) {
       Timber.i("Data up to date - no update needed.")
+      channelValueRepository.updateAggregatedValue(profileId, remoteId, NO_VALUE_TEXT)
       return
     }
 
-    val entriesStartDate = settings.aggregationStartDate?.toEpochSecond()
+    val entriesStartDate = settings.showOnList.aggregationStartDate(dateProvider.currentDateTime)?.toEpochSecond()
     if (entriesStartDate == null) {
       Timber.e("Got NULL as entries start date")
+      channelValueRepository.updateAggregatedValue(profileId, remoteId, NO_VALUE_TEXT)
       return
     }
 
+    val currentDate = dateProvider.currentDate()
     val entries: List<ImpulseCounterLogEntity>? = impulseCounterLogRepository
       .findMeasurements(remoteId, profileId, Date(entriesStartDate * 1000), currentDate)
       .awaitFirstOrNull()
@@ -86,47 +84,4 @@ class RefreshImpulseCounterAggregatedValueUseCase @Inject constructor(
     Timber.d("Aggregated value set to $formatted")
     channelValueRepository.updateAggregatedValue(profileId, remoteId, formatted)
   }
-
-  val ImpulseCounterSettings.aggregationStartDate: ZonedDateTime?
-    get() = when (showOnList) {
-      ListValue.LAST_24_HOURS -> dateProvider.currentDateTime.minusHours(24)
-      ListValue.LAST_7_DAYS -> dateProvider.currentDateTime.minusDays(7)
-      ListValue.LAST_30_DAYS -> dateProvider.currentDateTime.minusDays(30)
-      ListValue.LAST_90_DAYS -> dateProvider.currentDateTime.minusDays(90)
-      ListValue.LAST_365_DAYS -> dateProvider.currentDateTime.minusDays(365)
-      ListValue.CURRENT_HOUR ->
-        dateProvider.currentDateTime
-          .withMinute(0)
-          .withSecond(0)
-          .withNano(0)
-      ListValue.CURRENT_DAY ->
-        dateProvider.currentDateTime
-          .withHour(0)
-          .withMinute(0)
-          .withSecond(0)
-          .withNano(0)
-      ListValue.CURRENT_WEEK ->
-        dateProvider.currentDateTime
-          .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
-          .withHour(0)
-          .withMinute(0)
-          .withSecond(0)
-          .withNano(0)
-      ListValue.CURRENT_MONTH ->
-        dateProvider.currentDateTime
-          .withDayOfMonth(1)
-          .withHour(0)
-          .withMinute(0)
-          .withSecond(0)
-          .withNano(0)
-      ListValue.CURRENT_YEAR ->
-        dateProvider.currentDateTime
-          .withMonth(1)
-          .withDayOfMonth(1)
-          .withHour(0)
-          .withMinute(0)
-          .withSecond(0)
-          .withNano(0)
-      ListValue.COUNTER_STATE -> null
-    }
 }

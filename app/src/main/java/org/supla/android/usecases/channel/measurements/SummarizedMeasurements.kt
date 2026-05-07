@@ -22,7 +22,7 @@ import org.supla.android.data.source.remote.electricitymeter.hasReverseEnergy
 import org.supla.android.lib.SuplaChannelElectricityMeterValue
 import org.supla.android.lib.SuplaChannelImpulseCounterValue
 import org.supla.android.ui.views.card.SummaryCardData
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 
 sealed interface SummarizedMeasurements
@@ -31,13 +31,17 @@ data class ElectricityMeasurements(
   val forwardActiveEnergy: Float,
   val reversedActiveEnergy: Float
 ) : SummarizedMeasurements {
+
+  val summarized: Float
+    get() = forwardActiveEnergy - reversedActiveEnergy
+
   fun toForwardEnergy(
     formatter: ValueFormatter,
     electricityMeterValue: SuplaChannelElectricityMeterValue? = null
   ): SummaryCardData? =
     if (electricityMeterValue != null) {
       with(electricityMeterValue) {
-        hasForwardEnergy.ifTrue { SummaryCardData(formatter, forwardActiveEnergy.toDouble(), pricePerUnit, currency) }
+        hasForwardEnergy.forTrue { SummaryCardData(formatter, forwardActiveEnergy.toDouble(), pricePerUnit, currency) }
       }
     } else {
       SummaryCardData(value = formatter.format(forwardActiveEnergy))
@@ -48,7 +52,7 @@ data class ElectricityMeasurements(
     electricityMeterValue: SuplaChannelElectricityMeterValue? = null
   ): SummaryCardData? =
     if (electricityMeterValue != null) {
-      electricityMeterValue.hasReverseEnergy.ifTrue { SummaryCardData(value = formatter.format(reversedActiveEnergy)) }
+      electricityMeterValue.hasReverseEnergy.forTrue { SummaryCardData(value = formatter.format(reversedActiveEnergy)) }
     } else {
       SummaryCardData(value = formatter.format(reversedActiveEnergy))
     }
