@@ -20,15 +20,15 @@ package org.supla.android.features.details.impulsecounter.settings
 import org.supla.android.R
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.SingleSelectionList
-import org.supla.android.data.model.settings.ListValue
+import org.supla.android.data.model.settings.ListValueAggregation
 import org.supla.core.shared.infrastructure.LocalizedString
 
 data class ImpulseCounterSettingsViewState(
   val title: LocalizedString = LocalizedString.Empty,
-  val listValueOptions: SingleSelectionList<ListValue> =
+  val listValueAggregationOptions: SingleSelectionList<ListValueAggregation> =
     SingleSelectionList(
-      selected = ListValue.CURRENT_HOUR,
-      items = ListValue.entries,
-      label = R.string.details_em_settings_list_item
+      selected = ListValueAggregation.CURRENT_HOUR,
+      items = ListValueAggregation.entries,
+      label = R.string.details_ic_settings_list_item
     ),
 ) : ViewState()

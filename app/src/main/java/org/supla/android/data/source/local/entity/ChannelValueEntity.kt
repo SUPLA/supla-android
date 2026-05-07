@@ -37,7 +37,7 @@ import org.supla.core.shared.data.model.function.rollershutter.RollerShutterValu
 import org.supla.core.shared.data.model.function.thermostat.HomePlusThermostatValue
 import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
 import org.supla.core.shared.data.model.valve.ValveValue
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 
 @Entity(
   tableName = TABLE_NAME,
@@ -174,7 +174,7 @@ data class ChannelValueEntity(
         id = null,
         channelRemoteId = channelRemoteId,
         status = status,
-        lastOnlineState = (status != SuplaChannelAvailabilityStatus.OFFLINE).ifTrue { status },
+        lastOnlineState = (status != SuplaChannelAvailabilityStatus.OFFLINE).forTrue { status },
         subValue = getValue(suplaChannelValue.SubValue),
         subValueType = suplaChannelValue.SubValueType,
         value = getValue(suplaChannelValue.Value),

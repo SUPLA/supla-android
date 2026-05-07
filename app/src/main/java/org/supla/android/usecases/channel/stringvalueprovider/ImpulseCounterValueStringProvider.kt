@@ -18,7 +18,7 @@ package org.supla.android.usecases.channel.stringvalueprovider
  */
 
 import org.supla.android.core.storage.UserStateHolder
-import org.supla.android.data.model.settings.ListValue
+import org.supla.android.data.model.settings.ListValueAggregation
 import org.supla.android.data.source.local.entity.complex.ImpulseCounter
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.usecases.channel.ChannelValueStringProvider
@@ -51,7 +51,7 @@ class ImpulseCounterValueStringProvider @Inject constructor(
 
     val settings = userStateHolder.getImpulseCounterSettings(channelWithChildren.profileId, channelWithChildren.remoteId)
     return when (settings.showOnList) {
-      ListValue.COUNTER_STATE ->
+      ListValueAggregation.NO_AGGREGATION ->
         if (channelWithChildren.function == SuplaFunction.IC_ELECTRICITY_METER) {
           electricityMeterFormatter.format(value, ValueFormat(withUnit))
         } else {

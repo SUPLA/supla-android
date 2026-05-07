@@ -64,7 +64,6 @@ import timber.log.Timber;
 public class ChannelLayout extends LinearLayout implements SlideableItem, SwapableListItem {
 
   @Inject UpdateEventsManager eventsManager;
-  @Inject DurationTimerHelper durationTimerHelper;
   @Inject GetGroupActivePercentageUseCase getGroupActivePercentageUseCase;
   @Inject GetChannelActionStringUseCase getChannelActionStringUseCase;
   @Inject Preferences preferences;

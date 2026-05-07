@@ -27,26 +27,27 @@ val Boolean.localizedString: LocalizedString
     LocalizedString.WithId(LocalizedStringId.GENERAL_NO)
   }
 
-fun <T> Boolean.ifTrue(value: T): T? = if (this) {
+fun <T> Boolean.forTrue(value: T): T? = if (this) {
   value
 } else {
   null
 }
 
-fun <T> Boolean.ifTrue(valueProvider: () -> T): T? = if (this) {
+fun <T> Boolean.forTrue(valueProvider: () -> T): T? = if (this) {
   valueProvider()
 } else {
   null
 }
 
-fun <T> Boolean.ifFalse(value: T): T? = if (this.not()) {
+fun <T> Boolean.forFalse(value: T): T? = if (this.not()) {
   value
 } else {
   null
 }
 
-fun ifTrue(value: Boolean, callback: () -> Unit) {
+fun <T> ifTrue(value: Boolean, callback: () -> T): T? =
   if (value) {
     callback()
+  } else {
+    null
   }
-}

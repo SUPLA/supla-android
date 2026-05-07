@@ -63,9 +63,9 @@ import org.supla.core.shared.data.model.function.thermostat.SuplaThermostatFlag
 import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
+import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.extensions.ifLet
-import org.supla.core.shared.extensions.ifTrue
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.channel.issues.ThermostatIssuesProvider
@@ -373,8 +373,8 @@ class ThermostatGeneralViewModel @Inject constructor(
 
         showHeatingIndicator = isFlagActive(data.channelWithChildren, SuplaThermostatFlag.HEATING),
         showCoolingIndicator = isFlagActive(data.channelWithChildren, SuplaThermostatFlag.COOLING),
-        pumpSwitchIcon = online.ifTrue { pumpSwitchIcon(data.channelWithChildren) },
-        heatOrColdSourceSwitchIcon = online.ifTrue { heatOrColdSourceSwitchIcon(data.channelWithChildren) },
+        pumpSwitchIcon = online.forTrue { pumpSwitchIcon(data.channelWithChildren) },
+        heatOrColdSourceSwitchIcon = online.forTrue { heatOrColdSourceSwitchIcon(data.channelWithChildren) },
 
         configMinTemperatureString = thermometerValueFormatter.format(configMinTemperature),
         configMaxTemperatureString = thermometerValueFormatter.format(configMaxTemperature),

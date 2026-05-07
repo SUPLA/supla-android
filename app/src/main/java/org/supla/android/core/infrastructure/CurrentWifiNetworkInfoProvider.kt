@@ -28,7 +28,7 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.supla.android.extensions.skipQuotation
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -81,7 +81,7 @@ class CurrentWifiNetworkInfoProvider @Inject constructor(
 
   @Suppress("DEPRECATION")
   private fun legacyNetworkInfo(): NetworkInfo? =
-    wifiManager.isWifiEnabled.ifTrue {
+    wifiManager.isWifiEnabled.forTrue {
       wifiManager.connectionInfo?.let {
         NetworkInfo(
           ssid = it.ssid?.skipQuotation()?.skipUnknownSsid(),

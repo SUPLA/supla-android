@@ -649,7 +649,7 @@
   <string name="details_em_forwarded_energy">İrəli</string>
   <string name="details_em_reversed_energy">Geri</string>
   <string name="details_em_cost">Xərc</string>
-  <string name="details_em_settings_list_item">Kanal siyahısında göstərilən göstərici</string>
+  <string name="details_ic_settings_list_item">Kanal siyahısında göstərilən göstərici</string>
   <string name="details_settings_title">Parametrlər - %1$s</string>
   <string name="details_em_total_suffix">(ölçü sayğacı oxunuşu)</string>
   <string name="details_em_current_month_suffix">(mövcud ay)</string>
@@ -909,4 +909,15 @@
   <string name="toolbar_search_hint">Ən azı 2 simvol daxil edin…</string>
   <string name="details_timer_select_program">Proqram seçin</string>
   <string name="settings_show_unavailable_channels">Cihaz konfiqurasiyasına görə əlçatan olmayan kanalları gizlət</string>
+  <string name="details_em_active_energy_balance">Aktiv enerji balansı</string>
+  <string name="details_em_settings_list_metric">Seçilmiş dəyər</string>
+  <string name="general_current_hour">Cari saat</string>
+  <string name="general_current_day">Cari gün</string>
+  <string name="general_current_month">Cari ay</string>
+  <string name="general_current_week">Cari həftə</string>
+  <string name="impulse_counter_settings_counter_status">Cari sayğac göstəricisi</string>
+  <string name="general_current_year">Cari il</string>
+  <string name="details_em_on_list_balance">Enerji balanslama üsulu</string>
+  <string name="details_em_on_list_value">Məlumat aralığı</string>
+  <string name="details_em_on_list">Kanallar siyahısında göstərmə</string>
 </resources>

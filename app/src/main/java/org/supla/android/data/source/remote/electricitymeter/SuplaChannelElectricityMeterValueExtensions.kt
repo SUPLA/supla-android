@@ -20,7 +20,7 @@ package org.supla.android.data.source.remote.electricitymeter
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 import org.supla.android.lib.SuplaChannelElectricityMeterValue
 import org.supla.android.ui.views.card.SummaryCardData
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 
 val SuplaChannelElectricityMeterValue.hasForwardEnergy: Boolean
@@ -30,7 +30,7 @@ val SuplaChannelElectricityMeterValue.hasReverseEnergy: Boolean
   get() = measuredValues and SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY.rawValue > 0
 
 fun SuplaChannelElectricityMeterValue.getForwardEnergy(formatter: ValueFormatter): SummaryCardData? =
-  hasForwardEnergy.ifTrue { SummaryCardData(formatter, summary.totalForwardActiveEnergy, pricePerUnit, currency) }
+  hasForwardEnergy.forTrue { SummaryCardData(formatter, summary.totalForwardActiveEnergy, pricePerUnit, currency) }
 
 fun SuplaChannelElectricityMeterValue.getReverseEnergy(formatter: ValueFormatter): SummaryCardData? =
-  hasReverseEnergy.ifTrue { SummaryCardData(value = formatter.format(summary.totalReverseActiveEnergy)) }
+  hasReverseEnergy.forTrue { SummaryCardData(value = formatter.format(summary.totalReverseActiveEnergy)) }

@@ -24,6 +24,7 @@ import org.supla.android.events.DownloadEventsManager
 import org.supla.android.events.inProgress
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
+import org.supla.android.usecases.channel.ListFirstValue
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
 import org.supla.core.shared.extensions.guardLet
@@ -57,7 +58,7 @@ class ChannelWithChildrenToIconValueItemUpdateEventMapper @Inject constructor(
       onlineState = channelWithChildren.onlineState,
       title = getCaptionUseCase(channelWithChildren.channel.shareable),
       icon = getChannelIconUseCase.invoke(channelWithChildren.channel),
-      value = getChannelValueStringUseCase.valueOrNull(channelWithChildren),
+      value = getChannelValueStringUseCase.valueOrNull(channelWithChildren, ListFirstValue),
       issues = getChannelIssuesForListUseCase(channelWithChildren.shareable),
       estimatedTimerEndDate = null,
       infoSupported = channelWithChildren.showInfo,

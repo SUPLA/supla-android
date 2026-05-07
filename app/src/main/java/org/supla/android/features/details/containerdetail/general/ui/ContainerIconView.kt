@@ -49,7 +49,7 @@ import androidx.compose.ui.unit.dp
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.extensions.fontDpSize
 import org.supla.android.extensions.toPx
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 import kotlin.math.abs
 
 private const val CONTAINER_WIDTH = 150f
@@ -108,7 +108,7 @@ fun ContainerIconView(
   Canvas(modifier = modifier) {
     context.drawFluidContainer(fillLevel, controlLevels, textLayoutResults, this@Canvas) {
       targetRect.width.div(CONTAINER_WIDTH).let {
-        (it != scale).ifTrue { scale = it }
+        (it != scale).forTrue { scale = it }
       }
     }
   }

@@ -24,11 +24,14 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import org.supla.android.core.storage.UserStateHolder
 import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity
 import org.supla.android.data.source.remote.rest.channel.ElectricityMeasurement
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.measurementsdownload.DownloadElectricityMeterLogUseCase
+import org.supla.android.usecases.list.RefreshElectricityMeterAggregatedValueUseCase
+import timber.log.Timber
 
 @HiltWorker
 class DownloadElectricityMeasurementsWorker @AssistedInject constructor(
@@ -36,7 +39,9 @@ class DownloadElectricityMeasurementsWorker @AssistedInject constructor(
   @Assisted workerParameters: WorkerParameters,
   updateEventsManager: UpdateEventsManager,
   downloadEventsManager: DownloadEventsManager,
-  downloadElectricityMeterLogUseCase: DownloadElectricityMeterLogUseCase
+  downloadElectricityMeterLogUseCase: DownloadElectricityMeterLogUseCase,
+  private val userStateHolder: UserStateHolder,
+  private val refreshElectricityMeterAggregatedValueUseCase: RefreshElectricityMeterAggregatedValueUseCase
 ) : BaseDownloadLogWorker<ElectricityMeasurement, ElectricityMeterLogEntity>(
   appContext,
   workerParameters,
@@ -44,6 +49,24 @@ class DownloadElectricityMeasurementsWorker @AssistedInject constructor(
   downloadEventsManager,
   downloadElectricityMeterLogUseCase
 ) {
+
+  override suspend fun onDownloadFinished() {
+    val profileId = profileId
+    val remoteId = remoteId
+
+    if (profileId == null || remoteId == null) {
+      Timber.e("Trying to update aggregated value, but preconditions failed")
+      return
+    }
+
+    val settings = userStateHolder.getElectricityMeterSettings(profileId, remoteId)
+    if (!settings.usingAggregatedValue) {
+      Timber.d("No aggregated value to update")
+      return
+    }
+
+    refreshElectricityMeterAggregatedValueUseCase(profileId, remoteId)
+  }
 
   companion object {
     val WORK_ID: String = DownloadElectricityMeasurementsWorker::class.java.simpleName

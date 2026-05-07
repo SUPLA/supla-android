@@ -42,7 +42,7 @@ import org.supla.android.usecases.group.GroupWithChannels
 import org.supla.android.usecases.group.ReadGroupWithChannelsUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.GetCaptionUseCase
@@ -109,14 +109,14 @@ class GateGeneralViewModel @Inject constructor(
             value = getDeviceStateValue(channel.status, channelState),
           ),
           mainButtonLabel = mainButtonLabel(channel.function),
-          openButtonState = showOpenAndClose.ifTrue {
+          openButtonState = showOpenAndClose.forTrue {
             SwitchButtonState(
               icon = getChannelIconUseCase(channel, channelStateValue = ChannelState.Value.OPEN),
               textRes = R.string.channel_btn_open,
               pressed = channelState.value == ChannelState.Value.OPEN
             )
           },
-          closeButtonState = showOpenAndClose.ifTrue {
+          closeButtonState = showOpenAndClose.forTrue {
             SwitchButtonState(
               icon = getChannelIconUseCase(channel, channelStateValue = ChannelState.Value.CLOSED),
               textRes = R.string.channel_btn_close,
@@ -165,14 +165,14 @@ class GateGeneralViewModel @Inject constructor(
           offline = false,
           mainButtonLabel = mainButtonLabel(groupWithChannels.group.function),
           relatedChannelsData = groupWithChannels.relatedChannelData,
-          openButtonState = showOpenAndClose.ifTrue {
+          openButtonState = showOpenAndClose.forTrue {
             SwitchButtonState(
               icon = getChannelIconUseCase(groupWithChannels.group, channelStateValue = ChannelState.Value.OPEN),
               textRes = R.string.channel_btn_open,
               pressed = groupState == ChannelState.Value.OPEN
             )
           },
-          closeButtonState = showOpenAndClose.ifTrue {
+          closeButtonState = showOpenAndClose.forTrue {
             SwitchButtonState(
               icon = getChannelIconUseCase(groupWithChannels.group, channelStateValue = ChannelState.Value.CLOSED),
               textRes = R.string.channel_btn_close,

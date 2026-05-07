@@ -44,7 +44,7 @@ import org.supla.android.tools.VibrationHelper
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.WidgetPreferences
 import org.supla.core.shared.data.model.general.SuplaFunction
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
 import timber.log.Timber
 
@@ -119,8 +119,8 @@ abstract class WidgetCommandWorkerBase(
 
       updateResult.whenFailure { cleanConfiguration, errorResult ->
         Timber.w("Widget refresh failed with error: $updateResult")
-        isManualUpdate.ifTrue { handleUpdateResult(errorResult.result, configuration) }
-        cleanConfiguration.ifTrue {
+        isManualUpdate.forTrue { handleUpdateResult(errorResult.result, configuration) }
+        cleanConfiguration.forTrue {
           Timber.w("Cleaning widget configuration")
           updateWidgetConfiguration(widgetId, configuration.copy(value = NO_VALUE_TEXT))
         }

@@ -18,8 +18,8 @@ package org.supla.android.usecases.channel.valueprovider
  */
 
 import org.supla.android.core.storage.UserStateHolder
+import org.supla.android.data.model.settings.eletricitymeter.ElectricityMeterMeasurementType
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 import org.supla.android.usecases.channel.ChannelValueProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueprovider.parser.IntValueParser
@@ -42,11 +42,11 @@ class SwitchWithElectricityMeterValueProvider @Inject constructor(
     }
 
   override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType): Any =
-    when (userStateHolder.getElectricityMeterSettings(channelWithChildren.profileId, channelWithChildren.remoteId).showOnListSafe) {
-      SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY,
-      SuplaElectricityMeasurementType.POWER_ACTIVE,
-      SuplaElectricityMeasurementType.POWER_ACTIVE_KW,
-      SuplaElectricityMeasurementType.VOLTAGE ->
+    when (userStateHolder.getElectricityMeterSettings(channelWithChildren.profileId, channelWithChildren.remoteId).metricOnList) {
+      ElectricityMeterMeasurementType.REVERSE_ACTIVE_ENERGY,
+      ElectricityMeterMeasurementType.POWER_ACTIVE,
+      ElectricityMeterMeasurementType.VOLTAGE,
+      ElectricityMeterMeasurementType.CURRENT ->
         electricityMeterValueProvider.value(channelWithChildren, valueType)
       else -> asIntValue(
         channelWithChildren.channel.channelValueEntity.getSubValueAsByteArray(),

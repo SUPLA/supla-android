@@ -24,7 +24,7 @@ import org.supla.android.R
 import org.supla.android.core.storage.UserStateHolder
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
-import org.supla.android.data.model.settings.ListValue
+import org.supla.android.data.model.settings.ListValueAggregation
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.extensions.subscribeBy
@@ -65,29 +65,29 @@ class ImpulseCounterSettingsViewModel @Inject constructor(
     updateState {
       it.copy(
         title = localizedString(R.string.details_settings_title, getCaptionUseCase.invoke(channelData.shareable)),
-        listValueOptions = it.listValueOptions.copy(selected = settings.showOnList),
+        listValueAggregationOptions = it.listValueAggregationOptions.copy(selected = settings.showOnList),
       )
     }
   }
 
-  override fun onListValueChanged(type: ListValue) {
-    updateSettings(listValue = type)
+  override fun onListValueChanged(type: ListValueAggregation) {
+    updateSettings(listValueAggregation = type)
 
     updateState {
       it.copy(
-        listValueOptions = it.listValueOptions.copy(selected = type)
+        listValueAggregationOptions = it.listValueAggregationOptions.copy(selected = type)
       )
     }
   }
 
-  private fun updateSettings(listValue: ListValue? = null) {
+  private fun updateSettings(listValueAggregation: ListValueAggregation? = null) {
     viewModelScope.launch {
       schedulers.io {
         val settings = userStateHolder.getImpulseCounterSettings(item.profileId, item.remoteId)
 
         userStateHolder.setImpulseCounterSettings(
           settings = settings.copy(
-            showOnList = listValue ?: settings.showOnList,
+            showOnList = listValueAggregation ?: settings.showOnList,
           ),
           profileId = item.profileId,
           remoteId = item.remoteId

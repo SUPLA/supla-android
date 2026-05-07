@@ -20,7 +20,7 @@ package org.supla.core.shared.usecase.addwizard
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.withTimeoutOrNull
 import org.supla.core.shared.data.model.suplaclient.SuplaResultCode
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessageHandler
 import org.supla.core.shared.networking.SuplaClientSharedProvider
@@ -57,7 +57,7 @@ class EnableRegistrationUseCase(
     override fun onReceived(message: SuplaClientMessage) {
       (message as? SuplaClientMessage.SetRegistrationEnabledResult)?.let {
         if (result.isNull()) {
-          result = (it.resultCode == SuplaResultCode.TRUE).ifTrue { Result.SUCCESS } ?: Result.FAILURE
+          result = (it.resultCode == SuplaResultCode.TRUE).forTrue { Result.SUCCESS } ?: Result.FAILURE
         }
         semaphore.release()
       }

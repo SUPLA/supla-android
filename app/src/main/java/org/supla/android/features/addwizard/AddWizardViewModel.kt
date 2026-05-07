@@ -94,7 +94,7 @@ import org.supla.core.shared.data.model.addwizard.EspConfigurationEvent.Registra
 import org.supla.core.shared.data.model.addwizard.EspConfigurationEvent.RegistrationUnknown
 import org.supla.core.shared.data.model.addwizard.EspConfigurationEvent.SetupNeeded
 import org.supla.core.shared.data.model.addwizard.EspConfigurationEvent.Start
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.addwizard.CheckRegistrationEnabledUseCase
@@ -596,7 +596,7 @@ class AddWizardViewModel @Inject constructor(
           .copy(
             networkSelectionState = it.networkSelectionState ?: AddWizardNetworkSelectionState(
               networkName = networkName ?: currentNetwork?.ssid ?: "",
-              networkPassword = networkName.isNotNull.ifTrue { encryptedPreferences.wizardWifiPassword } ?: "",
+              networkPassword = networkName.isNotNull.forTrue { encryptedPreferences.wizardWifiPassword } ?: "",
               rememberPassword = networkName.isNotNull && networkPassword.isNotNull,
               error = false,
             ),

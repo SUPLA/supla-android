@@ -24,7 +24,7 @@ import org.supla.android.usecases.channel.ValuePosition
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueprovider.HumidityAndTemperatureValueProvider
 import org.supla.core.shared.data.model.general.SuplaFunction
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import org.supla.core.shared.usecase.channel.valueformatter.formatters.HumidityValueFormatter
 import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
@@ -47,7 +47,7 @@ class HumidityAndTemperatureValueStringProvider @Inject constructor(
     return when (valueType.position) {
       ValuePosition.FIRST -> thermometerFormatter.format(
         value = value,
-        format = withUnit.ifTrue { ValueFormat.WithUnit } ?: ValueFormat.TemperatureWithDegree
+        format = withUnit.forTrue { ValueFormat.WithUnit } ?: ValueFormat.TemperatureWithDegree
       )
       ValuePosition.SECOND -> HumidityValueFormatter.format(value, withUnit(withUnit))
     }

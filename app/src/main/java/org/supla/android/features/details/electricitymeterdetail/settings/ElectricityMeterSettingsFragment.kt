@@ -25,18 +25,14 @@ import org.supla.android.core.ui.theme.SuplaTheme
 
 @AndroidEntryPoint
 class ElectricityMeterSettingsFragment :
-  BaseComposeFragment<ElectricityMeterSettingsViewModelState, ElectricityMeterSettingsViewEvent>() {
+  BaseComposeFragment<ElectricityMeterSettingsViewState, ElectricityMeterSettingsViewEvent>() {
 
   override val viewModel: ElectricityMeterSettingsViewModel by viewModels()
 
   @Composable
-  override fun ComposableContent(viewState: ElectricityMeterSettingsViewModelState) {
+  override fun ComposableContent(viewState: ElectricityMeterSettingsViewState) {
     SuplaTheme {
-      ElectricityMeterSettingsView(
-        state = viewState.viewState,
-        onListValueChanged = viewModel::onListValueChange,
-        onBalancingChanged = viewModel::onBalanceValueChange
-      )
+      viewModel.View(state = viewState)
     }
   }
 

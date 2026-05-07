@@ -679,7 +679,7 @@
   <string name="details_em_forwarded_energy">Forward</string>
   <string name="details_em_reversed_energy">Reverse</string>
   <string name="details_em_cost">Cost</string>
-  <string name="details_em_settings_list_item">Metric shown on the channel list</string>
+  <string name="details_ic_settings_list_item">Metric shown on the channel list</string>
   <string name="details_settings_title">Settings - %1$s</string>
   <string name="details_em_total_suffix">(meter reading)</string>
   <string name="details_em_current_month_suffix">(current month)</string>
@@ -945,10 +945,11 @@
   <string name="general_current_day">Current day</string>
   <string name="general_current_month">Current month</string>
   <string name="general_current_week">Current week</string>
-  <string name="presented_option_daily_interval">Daily interval</string>
-  <string name="presented_option_monthly_interval">Monthly interval</string>
   <string name="impulse_counter_settings_counter_status">Counter status</string>
-  <string name="impulse_counter_settings_reset_hour">Reset hour</string>
-  <string name="impulse_counter_settings_reset_day">Reset Day</string>
   <string name="general_current_year">Current year</string>
+  <string name="details_em_on_list_balance">Energy balancing method</string>
+  <string name="details_em_on_list_value">Data range</string>
+  <string name="details_em_on_list">Display in the channel list</string>
+  <string name="details_em_active_energy_balance">Active energy balance</string>
+  <string name="details_em_settings_list_metric">Selected value</string>
 </resources>

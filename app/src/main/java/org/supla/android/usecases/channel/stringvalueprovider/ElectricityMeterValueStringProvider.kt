@@ -18,11 +18,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import org.supla.android.core.storage.UserStateHolder
+import org.supla.android.data.model.settings.eletricitymeter.ElectricityMeterMeasurementType
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 import org.supla.android.usecases.channel.ChannelValueStringProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueprovider.ElectricityMeterValueProvider
+import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
 import org.supla.core.shared.usecase.channel.valueformatter.formatters.ElectricityMeterValueFormatter
 import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
 import org.supla.core.shared.usecase.channel.valueformatter.types.withUnit
@@ -41,27 +42,28 @@ class ElectricityMeterValueStringProvider @Inject constructor(
     electricityMeterValueProvider.handle(channelWithChildren)
 
   override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType, withUnit: Boolean): String {
-    val value = electricityMeterValueProvider.value(channelWithChildren, valueType)
-
     return when (valueType) {
       is ValueType.List -> {
-        val channelData = channelWithChildren.channel
-        val type = userStateHolder.getElectricityMeterSettings(channelData.profileId, channelData.remoteId).showOnListSafe
+        val settings = userStateHolder.getElectricityMeterSettings(channelWithChildren.profileId, channelWithChildren.remoteId)
+        val type = settings.metricOnList
 
-        if (type == SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY) {
-          formatter.format(value, withUnit(withUnit))
+        if (settings.usingAggregatedValue) {
+          channelWithChildren.channel.channelValueEntity.aggregatedValue ?: NO_VALUE_TEXT
         } else {
           formatter.format(
-            value = value,
+            value = electricityMeterValueProvider.value(channelWithChildren, valueType),
             format = ValueFormat(
               withUnit = withUnit,
-              customUnit = " ${type.unit}",
-              showNoValueText = false
+              customUnit = " ${type.suplaType.unit}",
+              showNoValueText = type == ElectricityMeterMeasurementType.FORWARD_ACTIVE_ENERGY
             )
           )
         }
       }
-      is ValueType.Default -> formatter.format(value, withUnit(withUnit))
+      is ValueType.Default -> formatter.format(
+        value = electricityMeterValueProvider.value(channelWithChildren, valueType),
+        format = withUnit(withUnit)
+      )
     }
   }
 }

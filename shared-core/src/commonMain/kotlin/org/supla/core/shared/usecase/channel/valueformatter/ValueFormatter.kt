@@ -17,7 +17,7 @@ package org.supla.core.shared.usecase.channel.valueformatter
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.infrastructure.logging.Logger
 import org.supla.core.shared.usecase.channel.valueformatter.types.InvalidValue
 import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
@@ -38,7 +38,7 @@ abstract class ValueFormatter {
     format(
       value = value.toDouble(),
       precision = defaultFormatSpecification.precision,
-      unit = defaultFormatSpecification.withUnit.ifTrue { defaultFormatSpecification.unit },
+      unit = defaultFormatSpecification.withUnit.forTrue { defaultFormatSpecification.unit },
       predecessor = defaultFormatSpecification.predecessor,
       showNoValueText = defaultFormatSpecification.showNoValueText
     )
@@ -79,8 +79,8 @@ abstract class ValueFormatter {
   protected open fun preprocessValue(value: Double): Double = value
 
   protected fun extractUnit(format: ValueFormat): String? =
-    format.withUnit?.let { it.ifTrue { format.customUnit ?: defaultFormatSpecification.unit } }
-      ?: defaultFormatSpecification.withUnit.ifTrue { defaultFormatSpecification.unit }
+    format.withUnit?.let { it.forTrue { format.customUnit ?: defaultFormatSpecification.unit } }
+      ?: defaultFormatSpecification.withUnit.forTrue { defaultFormatSpecification.unit }
 
   protected fun ValueFormat.precision(default: ValuePrecision): ValuePrecision =
     when (this.precision) {

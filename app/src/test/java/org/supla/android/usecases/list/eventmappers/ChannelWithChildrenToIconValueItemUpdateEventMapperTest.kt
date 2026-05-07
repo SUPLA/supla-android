@@ -36,6 +36,7 @@ import org.supla.android.testhelpers.extensions.mockShareable
 import org.supla.android.ui.lists.ListOnlineState
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
+import org.supla.android.usecases.channel.ListFirstValue
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.data.model.lists.ListItemIssues
@@ -117,7 +118,7 @@ class ChannelWithChildrenToIconValueItemUpdateEventMapperTest {
     val imageId = ImageId(123)
     val channelWithChildren = ChannelWithChildren(channel, emptyList())
     val shareableChannelWithChildren = channelWithChildren.shareable
-    every { getChannelValueStringUseCase.valueOrNull(channelWithChildren) } returns value
+    every { getChannelValueStringUseCase.valueOrNull(channelWithChildren, ListFirstValue) } returns value
     val shareableChannel = channel.shareable
     every { getCaptionUseCase.invoke(shareableChannel) } returns caption
     every { getChannelIconUseCase.invoke(channel) } returns imageId

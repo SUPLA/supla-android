@@ -18,7 +18,6 @@ package org.supla.android.features.details.electricitymeterdetail.general
  */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Maybe
 import org.supla.android.Preferences
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.ui.BaseViewModel
@@ -57,10 +56,15 @@ class ElectricityMeterGeneralViewModel @Inject constructor(
   }
 
   fun loadData(remoteId: Int, cleanupDownloading: Boolean = false) {
-    Maybe.zip(
-      readChannelWithChildrenUseCase(remoteId),
-      loadElectricityMeterMeasurementsUseCase(remoteId, dateProvider.currentDate().monthStart())
-    ) { channel, measurements -> Pair(channel, measurements) }
+    readChannelWithChildrenUseCase(remoteId)
+      .flatMap { channelWithChildren ->
+        loadElectricityMeterMeasurementsUseCase(
+          profileId = channelWithChildren.profileId,
+          remoteId = remoteId,
+          startTimestamp = dateProvider.currentDate().monthStart().time
+        )
+          .map { Pair(channelWithChildren, it) }
+      }
       .attach()
       .subscribeBy(
         onSuccess = { (channel, measurements) -> handleChannel(channel, measurements, cleanupDownloading) },
