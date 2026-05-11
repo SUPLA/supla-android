@@ -159,6 +159,19 @@ class EspTest {
   }
 
   @Test
+  fun checkVarilightPrefix() {
+    performTest(
+      shortSsid = "VARILIGHT-AB12",
+      longSsid = "VARILIGHT-123456789EFC",
+      invalidSsids = arrayOf(
+        "VARILIGHT-ZYCD",
+        "VARILIGHT-ABCDEF",
+        "VARILIGHT-123456789EFX"
+      )
+    )
+  }
+
+  @Test
   fun checkProblematicSsids() {
     assertThat(Esp.isKnownNetworkName("zamel-dom")).isFalse
     assertThat(Esp.isKnownNetworkName("ZAMEL-dom")).isFalse
