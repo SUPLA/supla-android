@@ -18,8 +18,10 @@ package org.supla.android.features.addwizard.usecase
  */
 
 import kotlinx.coroutines.delay
+import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.data.source.remote.esp.EspService
 import org.supla.android.extensions.locationHeader
+import org.supla.android.features.addwizard.model.EspHtmlParser
 import retrofit2.HttpException
 import timber.log.Timber
 import javax.inject.Inject
@@ -31,17 +33,30 @@ private const val FIELD_PASSWORD_REPEAT = "confirm_cfg_pwd"
 
 @Singleton
 class CreateEspPasswordUseCase @Inject constructor(
-  private var espService: EspService
+  private val espHtmlParser: EspHtmlParser,
+  private val dateProvider: DateProvider,
+  private val espService: EspService
 ) {
   suspend operator fun invoke(password: String): Result {
-    val fieldMap = mutableMapOf(
-      FIELD_PASSWORD to password,
-      FIELD_PASSWORD_REPEAT to password
-    )
+    val fieldMap = mutableMapOf<String, String>()
 
     return try {
+      val startTime = dateProvider.currentTimestamp()
+
+      // Get page with all inputs
+      val document = espService.setup()
+      fieldMap.putAll(espHtmlParser.findInputs(document))
+      // Update needed inputs
+      fieldMap[FIELD_PASSWORD] = password
+      fieldMap[FIELD_PASSWORD_REPEAT] = password
+
       // Delay added to show a loading indicator on view for a moment, so the user see, that something is happening
-      delay(500.milliseconds)
+      val operationTime = dateProvider.currentTimestamp() - startTime
+      if (operationTime < 500) {
+        delay(500 - operationTime)
+      }
+
+      // Send inputs to device
       espService.setup(fieldMap)
       Timber.e("Setup request failed - no redirect")
       Result.FAILURE
