@@ -18,9 +18,11 @@ package org.supla.android.features.addwizard.usecase
  */
 
 import kotlinx.coroutines.delay
+import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.data.source.remote.esp.EspConfigurationSession
 import org.supla.android.data.source.remote.esp.EspService
 import org.supla.android.extensions.locationHeader
+import org.supla.android.features.addwizard.model.EspHtmlParser
 import retrofit2.HttpException
 import timber.log.Timber
 import javax.inject.Inject
@@ -31,15 +33,29 @@ private const val FIELD_PASSWORD = "cfg_pwd"
 
 @Singleton
 class AuthorizeEspUseCase @Inject constructor(
+  private var session: EspConfigurationSession,
+  private val espHtmlParser: EspHtmlParser,
+  private val dateProvider: DateProvider,
   private var espService: EspService,
-  private var session: EspConfigurationSession
 ) {
   suspend operator fun invoke(password: String): Result {
-    val fieldMap = mutableMapOf(FIELD_PASSWORD to password)
+    val fieldMap = mutableMapOf<String, String>()
 
     return try {
+      val startTime = dateProvider.currentTimestamp()
+
+      // Get page with all inputs
+      val document = espService.login()
+      fieldMap.putAll(espHtmlParser.findInputs(document))
+      // Update needed inputs
+      fieldMap[FIELD_PASSWORD] = password
+
       // Delay added to show a loading indicator on view for a moment, so the user see, that something is happening
-      delay(500.milliseconds)
+      val operationTime = dateProvider.currentTimestamp() - startTime
+      if (operationTime < 500) {
+        delay(500 - operationTime)
+      }
+
       espService.login(fieldMap)
 
       if (session.lastAuthStatus == EspConfigurationSession.AuthStatus.Failed) {
