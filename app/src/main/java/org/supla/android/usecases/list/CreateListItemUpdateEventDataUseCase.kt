@@ -38,7 +38,6 @@ import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToShading
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToSwitchUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToTemperatureHumidityUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToThermostatUpdateEventMapper
-import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.data.model.lists.ListItemIssues
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetChannelIssuesForListUseCase
@@ -118,24 +117,8 @@ class CreateListItemUpdateEventDataUseCase @Inject constructor(
   }
 
   private fun observeChannel(remoteId: Int): Observable<ChannelWithChildren> {
-    return readChannelWithChildrenTreeUseCase.invoke(remoteId).firstElement().toObservable()
-      .flatMap { channelWithChildren ->
-        // For channel we observe the channel itself but also all children
-        val ids = mutableListOf<Int>().also { list ->
-          list.add(channelWithChildren.channel.remoteId)
-          channelWithChildren.children.firstOrNull { it.relationType == ChannelRelationType.MAIN_THERMOMETER }?.let {
-            list.add(it.channelDataEntity.remoteId)
-          }
-        }
-
-        return@flatMap Observable.merge(
-          ids.map { id ->
-            eventsManager.observeChannelEvents(id).flatMap {
-              readChannelWithChildrenTreeUseCase.invoke(remoteId).firstElement().toObservable()
-            }
-          }
-        )
-      }
+    return eventsManager.observeChannelEvents(remoteId)
+      .flatMap { readChannelWithChildrenTreeUseCase.invoke(remoteId).firstElement().toObservable() }
   }
 
   interface Mapper {

@@ -30,8 +30,6 @@ import io.reactivex.rxjava3.core.Observable
 import org.junit.Before
 import org.junit.Test
 import org.supla.android.core.shared.shareable
-import org.supla.android.data.source.local.entity.ChannelRelationEntity
-import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.complex.shareable
@@ -56,7 +54,6 @@ import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToShading
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToSwitchUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToTemperatureHumidityUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToThermostatUpdateEventMapper
-import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.data.model.lists.ListItemIssues
 import org.supla.core.shared.infrastructure.LocalizedString
@@ -152,53 +149,7 @@ class CreateListItemUpdateEventDataUseCaseTest {
       channelWithChildrenToThermostatUpdateEventMapper.handle(channelWithChildren)
       channelWithChildrenToThermostatUpdateEventMapper.map(channelWithChildren)
     }
-    verify(exactly = 2) { readChannelWithChildrenTreeUseCase.invoke(remoteId) }
-    confirmVerified(
-      eventsManager,
-      readChannelGroupByRemoteIdUseCase,
-      readChannelWithChildrenTreeUseCase,
-      channelWithChildrenToThermostatUpdateEventMapper
-    )
-  }
-
-  @Test
-  fun `should map channel with main temperature children`() {
-    // given
-    val remoteId = 123
-    val childId = 234
-    val itemType = ItemType.CHANNEL
-
-    val child: ChannelDataEntity = mockk()
-    every { child.remoteId } returns childId
-    val channel: ChannelDataEntity = mockk()
-    every { channel.remoteId } returns remoteId
-    val channelWithChildren: ChannelWithChildren = mockk()
-    every { channelWithChildren.channel } returns channel
-    val relation: ChannelRelationEntity = mockk { every { relationType } returns ChannelRelationType.MAIN_THERMOMETER }
-    every { channelWithChildren.children } returns listOf(ChannelChildEntity(relation, child))
-
-    val data: SlideableListItemData = mockk()
-
-    every { eventsManager.observeChannelEvents(remoteId) } returns Observable.empty()
-    every { eventsManager.observeChannelEvents(childId) } returns Observable.just(mockk())
-    every { readChannelWithChildrenTreeUseCase(remoteId) } returns Observable.just(channelWithChildren)
-    every { channelWithChildrenToThermostatUpdateEventMapper.handle(channelWithChildren) } returns true
-    every { channelWithChildrenToThermostatUpdateEventMapper.map(channelWithChildren) } returns data
-
-    // when
-    val observer = useCase(itemType, remoteId).test()
-
-    // then
-    observer.assertComplete()
-    observer.assertResult(data)
-
-    verify {
-      eventsManager.observeChannelEvents(remoteId)
-      eventsManager.observeChannelEvents(childId)
-      channelWithChildrenToThermostatUpdateEventMapper.handle(channelWithChildren)
-      channelWithChildrenToThermostatUpdateEventMapper.map(channelWithChildren)
-    }
-    verify(exactly = 2) { readChannelWithChildrenTreeUseCase.invoke(remoteId) }
+    verify(exactly = 1) { readChannelWithChildrenTreeUseCase.invoke(remoteId) }
     confirmVerified(
       eventsManager,
       readChannelGroupByRemoteIdUseCase,
@@ -295,7 +246,7 @@ class CreateListItemUpdateEventDataUseCaseTest {
       getChannelIconUseCase.invoke(channel)
       getChannelValueStringUseCase.valueOrNull(channelWithChildren)
     }
-    verify(exactly = 2) { readChannelWithChildrenTreeUseCase.invoke(remoteId) }
+    verify(exactly = 1) { readChannelWithChildrenTreeUseCase.invoke(remoteId) }
     confirmVerified(
       eventsManager,
       readChannelGroupByRemoteIdUseCase,

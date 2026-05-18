@@ -88,11 +88,6 @@ class UpdateEventsManager @Inject constructor(
       .flatMap { sceneRepository.findByRemoteId(sceneId).toObservable() }
   }
 
-  fun observeChannel(channelId: Int): Observable<Channel> {
-    return getSubjectForChannel(channelId).hide()
-      .map { channelRepository.getChannel(channelId) }
-  }
-
   fun observeChannelWithChildren(channelId: Int): Observable<ChannelWithChildren> {
     return getSubjectForChannel(channelId).hide()
       .flatMap { readChannelWithChildrenUseCase(channelId).toObservable() }
