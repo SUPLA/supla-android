@@ -32,6 +32,9 @@ import java.util.Date
 sealed interface ListItem {
 
   fun isDifferentFrom(another: ListItem): Boolean {
+    if (this::class != another::class) {
+      return true
+    }
     if (this is SceneItem && another is SceneItem) {
       return sceneData.remoteId != another.sceneData.remoteId ||
         sceneData.sceneEntity.caption != another.sceneData.sceneEntity.caption
@@ -41,6 +44,9 @@ sealed interface ListItem {
     }
 
     if (this is ChannelBasedItem && another is ChannelBasedItem) {
+      if (this is DefaultItem && another is DefaultItem) {
+        return toSlideableListItemData() != another.toSlideableListItemData()
+      }
       return channelBase.remoteId != another.channelBase.remoteId ||
         channelBase.function != another.channelBase.function ||
         channelBase.status != another.channelBase.status ||

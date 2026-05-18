@@ -49,7 +49,7 @@ class RefreshElectricityMeterAggregatedValueUseCase @Inject constructor(
   suspend operator fun invoke(profileId: Long, remoteId: Int) {
     val settings = userStateHolder.getElectricityMeterSettings(profileId, remoteId)
     if (!settings.usingAggregatedValue) {
-      Timber.w("Refresh impulse counter aggregated value started for counter state!")
+      Timber.w("Refresh electricity meter aggregated value started for counter state!")
       return
     }
 
@@ -67,7 +67,6 @@ class RefreshElectricityMeterAggregatedValueUseCase @Inject constructor(
       return
     }
 
-    val unit = settings.metricOnList.suplaType.unit
     val aggregatedValue: Float? = loadAggregatedValue(profileId, remoteId, settings, startTimestamp)
     if (aggregatedValue == null) {
       Timber.i("Aggregated value null - setting no value text into DB.")
@@ -75,6 +74,7 @@ class RefreshElectricityMeterAggregatedValueUseCase @Inject constructor(
       return
     }
 
+    val unit = settings.metricOnList.suplaType.unit
     val formatted = formatter.format(aggregatedValue, withUnit(unit, showNoValueText = false))
     channelValueRepository.updateAggregatedValue(profileId, remoteId, formatted)
   }
