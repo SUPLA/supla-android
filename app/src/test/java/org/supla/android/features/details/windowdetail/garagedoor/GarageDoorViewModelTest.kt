@@ -49,7 +49,6 @@ import org.supla.android.features.details.windowdetail.base.data.GarageDoorState
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemPositionPresentation
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
-import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.usecases.channel.ObserveChannelWithChildrenUseCase
@@ -228,7 +227,7 @@ class GarageDoorViewModelTest :
     val group: ChannelGroupEntity = mockk {
       every {
         this@mockk.groupTotalValues
-      } returns GroupTotalValue.parse(SuplaConst.SUPLA_CHANNELFNC_ROLLER_GARAGE_DOOR, totalValue)
+      } returns GroupTotalValue.parse(SuplaFunction.ROLLER_GARAGE_DOOR, totalValue)
     }
     val groupData: ChannelGroupDataEntity = mockk {
       every { id } returns groupId

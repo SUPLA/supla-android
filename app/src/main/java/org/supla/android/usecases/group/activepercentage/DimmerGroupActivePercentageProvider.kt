@@ -1,13 +1,13 @@
 package org.supla.android.usecases.group.activepercentage
 
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIMMER
 import org.supla.android.usecases.group.GroupActivePercentageProvider
 import org.supla.android.usecases.group.totalvalue.DimmerGroupValue
 import org.supla.android.usecases.group.totalvalue.GroupValue
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 object DimmerGroupActivePercentageProvider : GroupActivePercentageProvider {
-  override fun handleFunction(function: Int) =
-    function == SUPLA_CHANNELFNC_DIMMER
+  override fun handleFunction(function: SuplaFunction) =
+    function == SuplaFunction.DIMMER
 
   override fun getActivePercentage(valueIndex: Int, values: List<GroupValue>) =
     values.map { (it as DimmerGroupValue).brightness }

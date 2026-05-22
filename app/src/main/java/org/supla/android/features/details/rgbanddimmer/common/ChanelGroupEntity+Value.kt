@@ -59,6 +59,7 @@ val ChannelGroupEntity.rgbValues: List<HsvColor>
       when (it) {
         is RgbGroupValue -> Color(it.color).toHsv(it.brightness)
         is DimmerAndRgbGroupValue -> Color(it.color).toHsv(it.brightnessColor)
+        is DimmerCctAndRgbGroupValue -> Color(it.color).toHsv(it.brightnessColor)
         else -> null
       }
     }

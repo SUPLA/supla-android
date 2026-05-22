@@ -64,7 +64,7 @@ data class ChannelGroupEntity(
 ) : ChannelBase {
 
   val groupTotalValues: List<GroupValue>
-    get() = GroupTotalValue.parse(function.value, totalValue)
+    get() = GroupTotalValue.parse(function, totalValue)
 
   companion object {
     const val TABLE_NAME = "channelgroup"

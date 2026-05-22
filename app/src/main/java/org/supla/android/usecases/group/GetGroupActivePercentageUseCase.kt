@@ -21,6 +21,8 @@ import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.db.ChannelGroup
 import org.supla.android.usecases.group.activepercentage.BlindsGroupActivePercentageProvider
 import org.supla.android.usecases.group.activepercentage.DimmerAndRgbGroupActivePercentage
+import org.supla.android.usecases.group.activepercentage.DimmerCctAndRgbGroupActivePercentageProvider
+import org.supla.android.usecases.group.activepercentage.DimmerCctGroupActivePercentageProvider
 import org.supla.android.usecases.group.activepercentage.DimmerGroupActivePercentageProvider
 import org.supla.android.usecases.group.activepercentage.HeatpolThermostatGroupActivePercentageProvider
 import org.supla.android.usecases.group.activepercentage.OpenedClosedGroupActivePercentageProvider
@@ -29,6 +31,7 @@ import org.supla.android.usecases.group.activepercentage.RgbGroupActivePercentag
 import org.supla.android.usecases.group.activepercentage.ShadingSystemGroupActivePercentageProvider
 import org.supla.android.usecases.group.totalvalue.GroupTotalValue.Companion.parse
 import org.supla.android.usecases.group.totalvalue.GroupValue
+import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -43,16 +46,18 @@ class GetGroupActivePercentageUseCase @Inject constructor() {
     DimmerGroupActivePercentageProvider,
     RgbGroupActivePercentageProvider,
     DimmerAndRgbGroupActivePercentage,
-    HeatpolThermostatGroupActivePercentageProvider
+    HeatpolThermostatGroupActivePercentageProvider,
+    DimmerCctGroupActivePercentageProvider,
+    DimmerCctAndRgbGroupActivePercentageProvider
   )
 
   operator fun invoke(channelGroupEntity: ChannelGroupEntity, valueIndex: Int = 0): Int =
-    getActivePercentage(channelGroupEntity.function.value, channelGroupEntity.totalValue, valueIndex)
+    getActivePercentage(channelGroupEntity.function, channelGroupEntity.totalValue, valueIndex)
 
   operator fun invoke(channelGroup: ChannelGroup, valueIndex: Int = 0) =
-    getActivePercentage(channelGroup.func, channelGroup.totalValue, valueIndex)
+    getActivePercentage(SuplaFunction.from(channelGroup.func), channelGroup.totalValue, valueIndex)
 
-  private fun getActivePercentage(function: Int, totalValue: String?, valueIndex: Int): Int {
+  private fun getActivePercentage(function: SuplaFunction, totalValue: String?, valueIndex: Int): Int {
     val values = parse(function, totalValue)
     if (values.isEmpty()) {
       return 0
@@ -69,7 +74,7 @@ class GetGroupActivePercentageUseCase @Inject constructor() {
 }
 
 interface GroupActivePercentageProvider {
-  fun handleFunction(function: Int): Boolean
+  fun handleFunction(function: SuplaFunction): Boolean
 
   fun getActivePercentage(valueIndex: Int, values: List<GroupValue>): Int
 }

@@ -18,22 +18,26 @@ package org.supla.android.usecases.group.activepercentage
  */
 
 import org.supla.android.usecases.group.GroupActivePercentageProvider
+import org.supla.android.usecases.group.totalvalue.DimmerCctAndRgbGroupValue
 import org.supla.android.usecases.group.totalvalue.GroupValue
-import org.supla.android.usecases.group.totalvalue.ShadingSystemGroupValue
 import org.supla.core.shared.data.model.general.SuplaFunction
 
-object ShadingSystemGroupActivePercentageProvider : GroupActivePercentageProvider {
-  override fun handleFunction(function: SuplaFunction) = when (function) {
-    SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER,
-    SuplaFunction.CONTROLLING_THE_ROOF_WINDOW,
-    SuplaFunction.TERRACE_AWNING,
-    SuplaFunction.CURTAIN,
-    SuplaFunction.ROLLER_GARAGE_DOOR -> true
-    else -> false
-  }
+object DimmerCctAndRgbGroupActivePercentageProvider : GroupActivePercentageProvider {
+
+  override fun handleFunction(function: SuplaFunction) =
+    function == SuplaFunction.DIMMER_CCT_AND_RGB
 
   override fun getActivePercentage(valueIndex: Int, values: List<GroupValue>) =
-    values.map { (it as ShadingSystemGroupValue) }
-      .fold(0) { acc, value -> if (value.position >= 100 || value.closeSensorActive) acc + 1 else acc }
-      .times(100).div(values.count())
+    values.map { (it as DimmerCctAndRgbGroupValue) }
+      .fold(0) { acc, value ->
+        var sum = acc
+        if ((valueIndex == 0 || valueIndex == 1) && value.brightness > 0) {
+          sum += 1
+        }
+        if ((valueIndex == 0 || valueIndex == 2) && value.brightnessColor > 0) {
+          sum += 1
+        }
+        sum
+      }
+      .times(100).div(if (valueIndex == 0) values.count() * 2 else values.count())
 }

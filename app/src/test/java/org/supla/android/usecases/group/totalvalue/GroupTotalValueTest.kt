@@ -21,7 +21,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
-import org.supla.android.lib.SuplaConst
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class GroupTotalValueTest {
@@ -38,7 +38,7 @@ class GroupTotalValueTest {
 
     // when
     val totalValueString = totalValue.asString()
-    val values = GroupTotalValue.parse(SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER, totalValueString)
+    val values = GroupTotalValue.parse(SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER, totalValueString)
 
     // then
     assertThat(totalValue.online).isEqualTo(50)
@@ -61,7 +61,7 @@ class GroupTotalValueTest {
 
     // when
     val totalValueString = totalValue.asString()
-    val values = GroupTotalValue.parse(SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW, totalValueString)
+    val values = GroupTotalValue.parse(SuplaFunction.CONTROLLING_THE_ROOF_WINDOW, totalValueString)
 
     // then
     assertThat(totalValue.online).isEqualTo(50)
@@ -84,7 +84,7 @@ class GroupTotalValueTest {
 
     // when
     val totalValueString = totalValue.asString()
-    val values = GroupTotalValue.parse(SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND, totalValueString)
+    val values = GroupTotalValue.parse(SuplaFunction.CONTROLLING_THE_FACADE_BLIND, totalValueString)
 
     // then
     assertThat(totalValue.online).isEqualTo(50)
@@ -107,7 +107,7 @@ class GroupTotalValueTest {
 
     // when
     val totalValueString = totalValue.asString()
-    val values = GroupTotalValue.parse(SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING, totalValueString)
+    val values = GroupTotalValue.parse(SuplaFunction.TERRACE_AWNING, totalValueString)
 
     // then
     assertThat(totalValue.online).isEqualTo(50)
@@ -130,7 +130,7 @@ class GroupTotalValueTest {
 
     // when
     val totalValueString = totalValue.asString()
-    val values = GroupTotalValue.parse(SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN, totalValueString)
+    val values = GroupTotalValue.parse(SuplaFunction.PROJECTOR_SCREEN, totalValueString)
 
     // then
     assertThat(totalValue.online).isEqualTo(50)
@@ -139,6 +139,28 @@ class GroupTotalValueTest {
       ProjectorScreenGroupValue(position = 80),
       ProjectorScreenGroupValue(position = 50)
     )
+  }
+
+  @Test
+  fun `should convert to string and back - dimmer cct group value`() {
+    // when
+    val value = DimmerCctGroupValue(brightness = 80, cct = 2400)
+    val parsed = DimmerCctGroupValue("80:2400")
+
+    // then
+    assertThat(value.asString()).isEqualTo("80:2400")
+    assertThat(parsed).isEqualTo(value)
+  }
+
+  @Test
+  fun `should convert to string and back - dimmer cct and rgb group value`() {
+    // when
+    val value = DimmerCctAndRgbGroupValue(color = 20, brightnessColor = 100, brightness = 40, cct = 2400)
+    val parsed = DimmerCctAndRgbGroupValue("20:100:40:2400")
+
+    // then
+    assertThat(value.asString()).isEqualTo("20:100:40:2400")
+    assertThat(parsed).isEqualTo(value)
   }
 
   @Test
@@ -153,7 +175,7 @@ class GroupTotalValueTest {
 
     // when
     val totalValueString = totalValue.asString()
-    val values = GroupTotalValue.parse(SuplaConst.SUPLA_CHANNELFNC_CURTAIN, totalValueString)
+    val values = GroupTotalValue.parse(SuplaFunction.CURTAIN, totalValueString)
 
     // then
     assertThat(totalValue.online).isEqualTo(50)
@@ -176,7 +198,7 @@ class GroupTotalValueTest {
 
     // when
     val totalValueString = totalValue.asString()
-    val values = GroupTotalValue.parse(SuplaConst.SUPLA_CHANNELFNC_VERTICAL_BLIND, totalValueString)
+    val values = GroupTotalValue.parse(SuplaFunction.VERTICAL_BLIND, totalValueString)
 
     // then
     assertThat(totalValue.online).isEqualTo(50)
@@ -195,7 +217,7 @@ class GroupTotalValueTest {
 
     // when
     val totalValueString = totalValue.asString()
-    val values = GroupTotalValue.parse(SuplaConst.SUPLA_CHANNELFNC_ALARM, totalValueString)
+    val values = GroupTotalValue.parse(SuplaFunction.ALARM, totalValueString)
 
     // then
     assertThat(totalValue.online).isEqualTo(100)

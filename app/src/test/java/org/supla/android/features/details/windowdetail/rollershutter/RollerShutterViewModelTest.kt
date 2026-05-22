@@ -53,7 +53,6 @@ import org.supla.android.features.details.windowdetail.base.data.WindowGroupedVa
 import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemAction
 import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemPositionPresentation
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
@@ -677,7 +676,7 @@ class RollerShutterViewModelTest :
   ) {
     val groupId = 123L
     val group: ChannelGroupEntity = mockk {
-      every { this@mockk.groupTotalValues } returns GroupTotalValue.parse(SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER, totalValue)
+      every { this@mockk.groupTotalValues } returns GroupTotalValue.parse(SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER, totalValue)
     }
     val groupData: ChannelGroupDataEntity = mockk {
       every { id } returns groupId

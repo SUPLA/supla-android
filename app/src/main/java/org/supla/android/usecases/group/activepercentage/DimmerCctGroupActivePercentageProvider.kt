@@ -18,22 +18,16 @@ package org.supla.android.usecases.group.activepercentage
  */
 
 import org.supla.android.usecases.group.GroupActivePercentageProvider
+import org.supla.android.usecases.group.totalvalue.DimmerCctGroupValue
 import org.supla.android.usecases.group.totalvalue.GroupValue
-import org.supla.android.usecases.group.totalvalue.ShadingSystemGroupValue
 import org.supla.core.shared.data.model.general.SuplaFunction
 
-object ShadingSystemGroupActivePercentageProvider : GroupActivePercentageProvider {
-  override fun handleFunction(function: SuplaFunction) = when (function) {
-    SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER,
-    SuplaFunction.CONTROLLING_THE_ROOF_WINDOW,
-    SuplaFunction.TERRACE_AWNING,
-    SuplaFunction.CURTAIN,
-    SuplaFunction.ROLLER_GARAGE_DOOR -> true
-    else -> false
-  }
+object DimmerCctGroupActivePercentageProvider : GroupActivePercentageProvider {
+  override fun handleFunction(function: SuplaFunction) =
+    function == SuplaFunction.DIMMER_CCT
 
   override fun getActivePercentage(valueIndex: Int, values: List<GroupValue>) =
-    values.map { (it as ShadingSystemGroupValue) }
-      .fold(0) { acc, value -> if (value.position >= 100 || value.closeSensorActive) acc + 1 else acc }
+    values.map { (it as DimmerCctGroupValue).brightness }
+      .fold(0) { acc, brightness -> if (brightness > 0) acc + 1 else acc }
       .times(100).div(values.count())
 }

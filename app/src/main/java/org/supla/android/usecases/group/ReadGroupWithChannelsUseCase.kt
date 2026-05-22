@@ -33,6 +33,8 @@ import org.supla.android.ui.lists.sensordata.RelatedChannelData
 import org.supla.android.usecases.channel.GetChannelChildrenTreeUseCase
 import org.supla.android.usecases.channel.GetChannelStateUseCase
 import org.supla.android.usecases.group.totalvalue.DimmerAndRgbGroupValue
+import org.supla.android.usecases.group.totalvalue.DimmerCctAndRgbGroupValue
+import org.supla.android.usecases.group.totalvalue.DimmerCctGroupValue
 import org.supla.android.usecases.group.totalvalue.DimmerGroupValue
 import org.supla.android.usecases.group.totalvalue.GroupValue
 import org.supla.android.usecases.group.totalvalue.OpenedClosedGroupValue
@@ -114,6 +116,8 @@ data class GroupWithChannels(
         when (value) {
           is DimmerGroupValue -> if (value.brightness == 0) ChannelState.Value.OFF else ChannelState.Value.ON
           is DimmerAndRgbGroupValue -> if (value.brightness == 0) ChannelState.Value.OFF else ChannelState.Value.ON
+          is DimmerCctGroupValue -> if (value.brightness == 0) ChannelState.Value.OFF else ChannelState.Value.ON
+          is DimmerCctAndRgbGroupValue -> if (value.brightness == 0) ChannelState.Value.OFF else ChannelState.Value.ON
           else -> ChannelState.Value.OFF
         }
     }
@@ -123,6 +127,7 @@ data class GroupWithChannels(
         when (value) {
           is RgbGroupValue -> if (value.brightness == 0) ChannelState.Value.OFF else ChannelState.Value.ON
           is DimmerAndRgbGroupValue -> if (value.brightnessColor == 0) ChannelState.Value.OFF else ChannelState.Value.ON
+          is DimmerCctAndRgbGroupValue -> if (value.brightnessColor == 0) ChannelState.Value.OFF else ChannelState.Value.ON
           else -> ChannelState.Value.OFF
         }
     }

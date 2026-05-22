@@ -139,6 +139,36 @@ class GetGroupActivePercentageUseCaseTest {
   }
 
   @Test
+  fun `should get active percentage for dimmer cct`() {
+    // given
+    val group: ChannelGroupEntity = mockk {
+      every { function } returns SuplaFunction.DIMMER_CCT
+      every { totalValue } returns "100:2400|0:3000|100:2500|100:2700"
+    }
+
+    // when
+    val activePercentage = useCase.invoke(group)
+
+    // then
+    assertThat(activePercentage).isEqualTo(75)
+  }
+
+  @Test
+  fun `should get active percentage for dimmer cct and rgb`() {
+    // given
+    val group: ChannelGroupEntity = mockk {
+      every { function } returns SuplaFunction.DIMMER_CCT_AND_RGB
+      every { totalValue } returns "20:100:40:2400|20:0:0:3000|40:100:20:2600|10:100:10:2800"
+    }
+
+    // when
+    val activePercentage = useCase.invoke(group)
+
+    // then
+    assertThat(activePercentage).isEqualTo(75)
+  }
+
+  @Test
   fun `should get active percentage for heatpol thermostat`() {
     // given
     val group: ChannelGroupEntity = mockk {

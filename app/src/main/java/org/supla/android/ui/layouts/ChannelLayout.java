@@ -50,7 +50,6 @@ import org.supla.android.events.UpdateEventsManager;
 import org.supla.android.extensions.ContextExtensionsKt;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
-import org.supla.android.lib.SuplaConst;
 import org.supla.android.ui.lists.OnClick;
 import org.supla.android.ui.lists.SlideableItem;
 import org.supla.android.ui.lists.SwapableListItem;
@@ -69,7 +68,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
   @Inject Preferences preferences;
 
   private int remoteId;
-  private int mFunc;
+  private SuplaFunction function;
 
   public String locationCaption;
 
@@ -299,7 +298,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     int size = getResources().getDimensionPixelSize(R.dimen.channel_state_image_size);
     int margin = getResources().getDimensionPixelSize(R.dimen.list_horizontal_spacing);
 
-    if (mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
+    if (function == SuplaFunction.HUMIDITY_AND_TEMPERATURE) {
       margin = 0;
     }
 
@@ -539,7 +538,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
   }
 
   private void configureBasedOnData(ChannelGroup channelGroup) {
-    mFunc = channelGroup.getFunc();
+    function = SuplaFunction.Companion.from(channelGroup.getFunc());
     remoteId = channelGroup.getRemoteId();
 
     imgl.setImage(
@@ -567,17 +566,15 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
       right_ActiveStatus.setPercent(activePercent);
     }
 
-    LocalizedStringId left =
-        getChannelActionStringUseCase.leftButton(SuplaFunction.Companion.from(mFunc));
+    LocalizedStringId left = getChannelActionStringUseCase.leftButton(function);
     int lidx = left != null ? LocalizedStringIdExtensionsKt.getResourceId(left) : -1;
-    LocalizedStringId right =
-        getChannelActionStringUseCase.rightButton(SuplaFunction.Companion.from(mFunc));
+    LocalizedStringId right = getChannelActionStringUseCase.rightButton(function);
     int ridx = right != null ? LocalizedStringIdExtensionsKt.getResourceId(right) : -1;
 
     setRightBtnText(ridx == -1 ? "" : getResources().getString(ridx));
     setLeftBtnText(lidx == -1 ? "" : getResources().getString(lidx));
 
-    setupStatus(mFunc, channelGroup.getOnLine());
+    setupStatus(function, channelGroup.getOnLine());
     caption_text.setText(channelGroup.getCaption(getContext()));
 
     caption_text.setOnLongClickListener(
@@ -590,29 +587,31 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     caption_text.setLongClickable(true);
   }
 
-  private void setupStatus(int function, boolean online) {
+  private void setupStatus(SuplaFunction function, boolean online) {
     boolean lenabled = false;
     boolean renabled = false;
 
     switch (function) {
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK:
+      case SuplaFunction.CONTROLLING_THE_GATE:
+      case SuplaFunction.CONTROLLING_THE_GARAGE_DOOR:
+      case SuplaFunction.CONTROLLING_THE_DOOR_LOCK:
+      case SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK:
         left_onlineStatus.setVisibility(View.INVISIBLE);
         right_onlineStatus.setVisibility(View.VISIBLE);
 
         renabled = true;
 
         break;
-      case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
-      case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
-      case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
-      case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
-      case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
-      case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
-      case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
-      case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
+      case SuplaFunction.POWER_SWITCH:
+      case SuplaFunction.LIGHTSWITCH:
+      case SuplaFunction.STAIRCASE_TIMER:
+      case SuplaFunction.VALVE_OPEN_CLOSE:
+      case SuplaFunction.RGB_LIGHTING:
+      case SuplaFunction.DIMMER:
+      case SuplaFunction.DIMMER_AND_RGB_LIGHTING:
+      case SuplaFunction.DIMMER_CCT:
+      case SuplaFunction.DIMMER_CCT_AND_RGB:
+      case SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS:
         left_onlineStatus.setVisibility(View.VISIBLE);
         right_onlineStatus.setVisibility(View.VISIBLE);
 
@@ -621,18 +620,18 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
         break;
 
-      case SuplaConst.SUPLA_CHANNELFNC_NOLIQUIDSENSOR:
-      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_DOOR:
-      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR:
-      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE:
-      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY:
-      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER:
-      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW:
-      case SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW:
-      case SuplaConst.SUPLA_CHANNELFNC_HOTELCARDSENSOR:
-      case SuplaConst.SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR:
-      case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
-      case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
+      case SuplaFunction.NO_LIQUID_SENSOR:
+      case SuplaFunction.OPEN_SENSOR_DOOR:
+      case SuplaFunction.OPEN_SENSOR_GARAGE_DOOR:
+      case SuplaFunction.OPEN_SENSOR_GATE:
+      case SuplaFunction.OPEN_SENSOR_GATEWAY:
+      case SuplaFunction.OPEN_SENSOR_ROLLER_SHUTTER:
+      case SuplaFunction.OPEN_SENSOR_ROOF_WINDOW:
+      case SuplaFunction.OPENING_SENSOR_WINDOW:
+      case SuplaFunction.HOTEL_CARD_SENSOR:
+      case SuplaFunction.ALARM_ARMAMENT_SENSOR:
+      case SuplaFunction.MAIL_SENSOR:
+      case SuplaFunction.THERMOMETER:
         left_onlineStatus.setVisibility(View.VISIBLE);
         left_onlineStatus.setShapeType(SuplaChannelStatus.ShapeType.Ring);
         right_onlineStatus.setVisibility(View.VISIBLE);
@@ -640,21 +639,21 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
         break;
 
-      case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
-      case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
-      case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
-      case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
-      case SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER:
-      case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
-      case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
-      case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
+      case SuplaFunction.ELECTRICITY_METER:
+      case SuplaFunction.IC_ELECTRICITY_METER:
+      case SuplaFunction.IC_GAS_METER:
+      case SuplaFunction.IC_WATER_METER:
+      case SuplaFunction.IC_HEAT_METER:
+      case SuplaFunction.HUMIDITY_AND_TEMPERATURE:
+      case SuplaFunction.DIGIGLASS_VERTICAL:
+      case SuplaFunction.DIGIGLASS_HORIZONTAL:
         left_onlineStatus.setVisibility(View.INVISIBLE);
         right_onlineStatus.setVisibility(View.VISIBLE);
         break;
 
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND:
+      case SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER:
+      case SuplaFunction.CONTROLLING_THE_ROOF_WINDOW:
+      case SuplaFunction.CONTROLLING_THE_FACADE_BLIND:
         lenabled = true;
         renabled = true;
 
@@ -723,7 +722,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
       this.heightScaleFactor = heightScaleFactor;
 
       setId(View.generateViewId());
-      mFunc = 0;
+      function = SuplaFunction.NONE;
       mOldFunc = 0;
       Img1 = newImageView(context);
       Text1 = newTextView(context);
@@ -737,7 +736,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
     private void configureSubviews() {
       removeAllViews();
-      if (mFunc == SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR) {
+      if (function == SuplaFunction.DISTANCE_SENSOR) {
         setOrientation(LinearLayout.VERTICAL);
         addView(Text1);
         addView(Img1);
@@ -824,8 +823,8 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     }
 
     private void SetDimensions() {
-      if (mOldFunc != mFunc) {
-        mOldFunc = mFunc;
+      if (mOldFunc != function.getValue()) {
+        mOldFunc = function.getValue();
         configureSubviews();
       }
       setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
@@ -841,7 +840,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
       setLayoutParams(lp);
 
-      if (mFunc == SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR) {
+      if (function == SuplaFunction.DISTANCE_SENSOR) {
 
         int sdw, sdh, dh, dw;
 
@@ -868,7 +867,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
         SetTextDimensions(Text1, true);
         SetImgDimensions(Img1);
         SetImgDimensions(Img2);
-        SetTextDimensions(Text2, mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE);
+        SetTextDimensions(Text2, function == SuplaFunction.HUMIDITY_AND_TEMPERATURE);
       }
     }
 
