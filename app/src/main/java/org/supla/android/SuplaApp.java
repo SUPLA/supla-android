@@ -24,7 +24,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
-import android.net.wifi.WifiManager;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import androidx.annotation.NonNull;
@@ -37,7 +36,6 @@ import androidx.work.ExistingWorkPolicy;
 import androidx.work.WorkManager;
 import com.github.mikephil.charting.utils.Utils;
 import dagger.hilt.android.HiltAndroidApp;
-import java.util.ArrayList;
 import javax.inject.Inject;
 import org.supla.android.core.SuplaAppApi;
 import org.supla.android.core.infrastructure.storage.DebugFileLoggingTree;
@@ -47,7 +45,6 @@ import org.supla.android.core.networking.suplaclient.SuplaClientNetworkCallback;
 import org.supla.android.core.networking.suplaclient.workers.InitializationWorker;
 import org.supla.android.core.notifications.NotificationsHelper;
 import org.supla.android.core.observers.AppLifecycleObserver;
-import org.supla.android.core.shared.SuplaClientMessageExtensionsKt;
 import org.supla.android.core.storage.ApplicationPreferences;
 import org.supla.android.core.storage.EncryptedPreferences;
 import org.supla.android.data.ValuesFormatter;
@@ -56,9 +53,6 @@ import org.supla.android.db.DbHelper;
 import org.supla.android.db.room.app.AppDatabase;
 import org.supla.android.lib.AndroidSuplaClientMessageHandler;
 import org.supla.android.lib.SuplaClient;
-import org.supla.android.lib.SuplaOAuthToken;
-import org.supla.android.profile.ProfileManager;
-import org.supla.android.restapi.SuplaRestApiClientTask;
 import org.supla.android.widget.extended.ExtendedValueWidgetWorker;
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage;
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessageHandler;
@@ -70,21 +64,15 @@ public class SuplaApp extends Application
     implements SuplaClientMessageHandler.Listener, ValuesFormatterProvider, SuplaAppApi {
 
   private static final Object _lck1 = new Object();
-  private static final Object _lck3 = new Object();
   private static SuplaClient _SuplaClient = null;
   private static SuplaApp _SuplaApp = null;
-  private SuplaOAuthToken _OAuthToken;
-  private final ArrayList<SuplaRestApiClientTask> _RestApiClientTasks = new ArrayList<>();
-  private static long lastWifiScanTime;
 
-  @Inject ProfileManager profileManager;
   @Inject ValuesFormatter valuesFormatter;
   @Inject NotificationsHelper notificationsHelper;
   @Inject AppLifecycleObserver appLifecycleObserver;
   @Inject SuplaClientBuilder suplaClientBuilder;
   @Inject HiltWorkerFactory workerFactory;
   @Inject AppDatabase appDatabase;
-  @Inject Preferences preferences;
   @Inject UiModeManager modeManager;
   @Inject SuplaClientNetworkCallback suplaClientNetworkCallback;
   @Inject ApplicationPreferences applicationPreferences;
@@ -164,66 +152,12 @@ public class SuplaApp extends Application
     return result;
   }
 
-  public SuplaOAuthToken RegisterRestApiClientTask(SuplaRestApiClientTask task) {
-    SuplaOAuthToken result = null;
-    synchronized (_lck3) {
-      if (_OAuthToken != null && _OAuthToken.isAlive()) {
-        result = new SuplaOAuthToken(_OAuthToken);
-      }
-      _RestApiClientTasks.add(task);
-    }
-
-    return result;
-  }
-
-  public void UnregisterRestApiClientTask(SuplaRestApiClientTask task) {
-    synchronized (_lck3) {
-      _RestApiClientTasks.remove(task);
-    }
-  }
-
-  public void CancelAllRestApiClientTasks(boolean mayInterruptIfRunning) {
-    synchronized (_lck3) {
-      for (int a = 0; a < _RestApiClientTasks.size(); a++) {
-        _RestApiClientTasks.get(a).cancel(mayInterruptIfRunning);
-      }
-    }
-  }
-
-  public static boolean wifiStartScan(WifiManager manager) {
-    if (manager.startScan()) {
-      lastWifiScanTime = System.currentTimeMillis();
-      return true;
-    }
-
-    return false;
-  }
-
-  public static long getSecondsSinceLastWiFiScan() {
-    long result = System.currentTimeMillis() - lastWifiScanTime;
-    result /= 1000;
-    return result;
-  }
-
   @Override
-  public void onReceived(@NonNull SuplaClientMessage message) {
-    if (message instanceof SuplaClientMessage.OAuthToken authToken) {
-      synchronized (_lck3) {
-        _OAuthToken = SuplaClientMessageExtensionsKt.getSuplaToken(authToken);
-        for (int a = 0; a < _RestApiClientTasks.size(); a++) {
-          _RestApiClientTasks.get(a).setToken(_OAuthToken);
-        }
-      }
-    }
-  }
+  public void onReceived(@NonNull SuplaClientMessage message) {}
 
   @NonNull
   public ValuesFormatter getValuesFormatter() {
     return valuesFormatter;
-  }
-
-  public void cleanupToken() {
-    _OAuthToken = null;
   }
 
   private void setupTimber() {

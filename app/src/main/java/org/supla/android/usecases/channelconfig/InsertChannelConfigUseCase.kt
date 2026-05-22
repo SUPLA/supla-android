@@ -21,7 +21,7 @@ import androidx.room.rxjava3.EmptyResultSetException
 import io.reactivex.rxjava3.core.Completable
 import org.supla.android.data.source.ChannelConfigRepository
 import org.supla.android.data.source.GeneralPurposeMeterLogRepository
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.ConfigResult
 import org.supla.android.data.source.remote.SuplaChannelConfig
@@ -40,7 +40,7 @@ import javax.inject.Singleton
 @Singleton
 class InsertChannelConfigUseCase @Inject constructor(
   private val channelConfigRepository: ChannelConfigRepository,
-  private val profileRepository: RoomProfileRepository,
+  private val profileRepository: ProfileRepository,
   private val generalPurposeMeterLogRepository: GeneralPurposeMeterLogRepository,
   private val downloadEventsManager: DownloadEventsManager
 ) {

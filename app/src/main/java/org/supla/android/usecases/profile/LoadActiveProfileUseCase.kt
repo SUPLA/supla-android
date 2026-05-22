@@ -18,12 +18,12 @@ package org.supla.android.usecases.profile
  */
 
 import io.reactivex.rxjava3.core.Single
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class LoadActiveProfileUseCase @Inject constructor(private val profileRepository: RoomProfileRepository) {
+class LoadActiveProfileUseCase @Inject constructor(private val profileRepository: ProfileRepository) {
   operator fun invoke(): Single<ProfileEntity> = profileRepository.findActiveProfile()
 }

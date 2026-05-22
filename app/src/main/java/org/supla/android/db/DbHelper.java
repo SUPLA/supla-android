@@ -23,22 +23,15 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import androidx.annotation.NonNull;
 import dagger.hilt.android.EntryPointAccessors;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import org.supla.android.data.source.ChannelRepository;
 import org.supla.android.data.source.DefaultChannelRepository;
 import org.supla.android.data.source.DefaultSceneRepository;
-import org.supla.android.data.source.DefaultUserIconRepository;
 import org.supla.android.data.source.SceneRepository;
-import org.supla.android.data.source.UserIconRepository;
 import org.supla.android.data.source.local.ChannelDao;
 import org.supla.android.data.source.local.LocationDao;
 import org.supla.android.data.source.local.SceneDao;
-import org.supla.android.data.source.local.UserIconDao;
 import org.supla.android.di.entrypoints.ProfileIdHolderEntryPoint;
-import org.supla.android.images.ImageCacheProxy;
 import org.supla.android.lib.SuplaChannelGroup;
 import org.supla.android.lib.SuplaChannelGroupRelation;
 import org.supla.android.lib.SuplaLocation;
@@ -53,16 +46,12 @@ public class DbHelper extends BaseDbHelper {
   private static DbHelper instance;
 
   private final ChannelRepository channelRepository;
-  private final UserIconRepository userIconRepository;
   private final SceneRepository sceneRepository;
 
   private DbHelper(Context context, ProfileIdProvider profileIdProvider) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION, profileIdProvider);
     this.channelRepository =
         new DefaultChannelRepository(new ChannelDao(this), new LocationDao(this));
-    this.userIconRepository =
-        new DefaultUserIconRepository(
-            new UserIconDao(this), new ImageCacheProxy(), profileIdProvider);
     this.sceneRepository = new DefaultSceneRepository(new SceneDao(this));
   }
 
@@ -152,27 +141,6 @@ public class DbHelper extends BaseDbHelper {
 
   public Cursor getChannelListCursorForGroup(int groupId) {
     return channelRepository.getChannelListCursorForGroup(groupId);
-  }
-
-  public List<Integer> iconsToDownload() {
-    Set<Integer> result = new LinkedHashSet<>();
-    result.addAll(channelRepository.getChannelUserIconIdsToDownload());
-    result.addAll(sceneRepository.getSceneUserIconIdsToDownload());
-    return new ArrayList<>(result);
-  }
-
-  public boolean addUserIcons(
-      int id,
-      byte[] img1,
-      byte[] img2,
-      byte[] img3,
-      byte[] img4,
-      byte[] img1dark,
-      byte[] img2dark,
-      byte[] img3dark,
-      byte[] img4dark) {
-    return userIconRepository.addUserIcons(
-        id, img1, img2, img3, img4, img1dark, img2dark, img3dark, img4dark);
   }
 
   public boolean isZWaveBridgeChannelAvailable() {

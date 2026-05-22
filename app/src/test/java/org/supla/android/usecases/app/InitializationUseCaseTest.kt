@@ -36,7 +36,7 @@ import org.supla.android.core.infrastructure.ThreadHandler
 import org.supla.android.core.networking.suplaclient.SuplaClientEvent
 import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
 import org.supla.android.core.storage.EncryptedPreferences
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.db.DbHelper
 import org.supla.android.db.room.app.AppDatabase
 import org.supla.android.db.room.measurements.MeasurementsDatabase
@@ -53,7 +53,7 @@ class InitializationUseCaseTest {
   private lateinit var measurementsDatabase: MeasurementsDatabase
 
   @MockK
-  private lateinit var profileRepository: RoomProfileRepository
+  private lateinit var profileRepository: ProfileRepository
 
   @MockK
   private lateinit var encryptedPreferences: EncryptedPreferences

@@ -44,6 +44,7 @@ import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.ProfileEntity
+import org.supla.android.data.source.local.entity.UserIconEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.custom.GroupOnlineSummary
 
@@ -213,4 +214,20 @@ interface ChannelGroupDao {
 
   @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_PROFILE_ID = :profileId")
   fun deleteByProfile(profileId: Long): Completable
+
+  @Query(
+    """
+      SELECT
+        channel_group.${COLUMN_USER_ICON}
+      FROM $TABLE_NAME channel_group
+      LEFT JOIN ${UserIconEntity.TABLE_NAME} icon
+        ON channel_group.${COLUMN_USER_ICON} = icon.${UserIconEntity.COLUMN_REMOTE_ID}
+          AND channel_group.${COLUMN_PROFILE_ID} = icon.${UserIconEntity.COLUMN_PROFILE_ID}
+      WHERE channel_group.${COLUMN_VISIBLE} > 0 
+        AND channel_group.${COLUMN_USER_ICON} > 0
+        AND channel_group.$COLUMN_PROFILE_ID = :profileId
+        AND icon.${UserIconEntity.COLUMN_REMOTE_ID} IS NULL 
+    """
+  )
+  suspend fun findIconIdsToDownload(profileId: Long): List<Int>
 }

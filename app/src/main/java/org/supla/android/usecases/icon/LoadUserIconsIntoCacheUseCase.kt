@@ -9,49 +9,48 @@ package org.supla.android.usecases.icon
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-syays GNU General Public License for more details.
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.core.Completable
 import org.supla.android.data.source.RoomUserIconRepository
 import org.supla.android.data.source.local.entity.UserIconEntity
 import org.supla.android.images.ImageCacheProxy
 import org.supla.android.images.ImageId
+import org.supla.android.widget.WidgetManager
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
-data class IconsCacheStatistics(
-  val iconsCount: Int,
-  val changed: Boolean
-)
-
 @Singleton
 class LoadUserIconsIntoCacheUseCase @Inject constructor(
   private val userIconRepository: RoomUserIconRepository,
-  private val imageCacheProxy: ImageCacheProxy
+  private val imageCacheProxy: ImageCacheProxy,
+  private val widgetManager: WidgetManager
 ) {
 
-  operator fun invoke(): Single<IconsCacheStatistics> =
+  operator fun invoke(): Completable =
     userIconRepository.loadAllIcons()
       .firstOrError()
-      .map { icons ->
-        Timber.d("Icons loading started")
-        val initialSum = imageCacheProxy.sum()
-        icons.forEach { icon ->
-          ImageType.entries.forEach { addImage(icon, it) }
-        }
-        Timber.d("Icons loading finished")
+      .flatMapCompletable { icons ->
+        Completable.fromRunnable {
+          Timber.d("Icons loading started")
 
-        IconsCacheStatistics(
-          iconsCount = imageCacheProxy.size(),
-          changed = initialSum != imageCacheProxy.sum()
-        )
+          val initialSum = imageCacheProxy.sum()
+          icons.forEach { icon ->
+            ImageType.entries.forEach { addImage(icon, it) }
+          }
+
+          if (imageCacheProxy.size() > 0 && initialSum != imageCacheProxy.sum()) {
+            widgetManager.updateAllWidgets()
+          }
+          Timber.d("Icons loading finished")
+        }
       }
 
   private fun addImage(icon: UserIconEntity, type: ImageType) {

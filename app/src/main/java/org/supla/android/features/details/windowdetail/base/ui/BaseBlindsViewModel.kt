@@ -20,7 +20,7 @@ package org.supla.android.features.details.windowdetail.base.ui
 import org.supla.android.Preferences
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.rollershutter.SuplaChannelFacadeBlindConfig
 import org.supla.android.data.source.remote.rollershutter.SuplaTiltControlType
@@ -64,7 +64,7 @@ abstract class BaseBlindsViewModel<S : BaseBlindsViewModelState>(
   getGroupOnlineSummaryUseCase: GetGroupOnlineSummaryUseCase,
   preferences: Preferences,
   dateProvider: DateProvider,
-  profileRepository: RoomProfileRepository,
+  profileRepository: ProfileRepository,
   loginUseCase: LoginUseCase,
   authorizeUseCase: AuthorizeUseCase,
   defaultState: S,

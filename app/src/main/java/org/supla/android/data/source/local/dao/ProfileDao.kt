@@ -20,9 +20,9 @@ package org.supla.android.data.source.local.dao
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -36,8 +36,11 @@ import org.supla.android.data.source.local.entity.ProfileEntity.Companion.TABLE_
 @Dao
 abstract class ProfileDao {
 
-  @Insert(onConflict = OnConflictStrategy.REPLACE)
-  abstract fun save(profileEntity: ProfileEntity): Completable
+  @Insert
+  abstract fun insert(profileEntity: ProfileEntity): Single<Long>
+
+  @Update
+  abstract fun update(profileEntity: ProfileEntity): Completable
 
   @Query(
     """

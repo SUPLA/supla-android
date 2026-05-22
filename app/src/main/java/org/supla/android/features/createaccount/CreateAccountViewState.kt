@@ -1,8 +1,7 @@
 package org.supla.android.features.createaccount
 
 import org.supla.android.core.ui.ViewState
-import org.supla.android.db.AuthProfileItem
-import org.supla.android.profile.AuthInfo
+import org.supla.android.data.source.local.entity.ProfileEntity
 
 data class CreateAccountViewState(
   val advancedMode: Boolean = false,
@@ -27,35 +26,36 @@ data class CreateAccountViewState(
   val loading: Boolean = false
 ) : ViewState() {
 
-  fun toProfileItem() = AuthProfileItem(
+  fun toProfileItem() = ProfileEntity(
+    id = null,
     name = accountName.trim(),
-    authInfo = AuthInfo(
+    advancedMode = advancedMode,
+    emailAuth = authorizeByEmail,
+    serverForEmail = emailAddressServer,
+    serverForAccessId = accessIdentifierServer,
+    serverAutoDetect = autoServerAddress,
+    email = emailAddress,
+    accessId = accessIdentifierAsInt,
+    accessIdPassword = accessIdentifierPassword,
+    preferredProtocolVersion = 0,
+    active = false,
+    position = 0,
+    guid = byteArrayOf(),
+    authKey = byteArrayOf()
+  )
+
+  fun updateProfile(profile: ProfileEntity) =
+    profile.copy(
+      name = accountName,
+      advancedMode = advancedMode,
       emailAuth = authorizeByEmail,
       serverAutoDetect = autoServerAddress,
       serverForEmail = emailAddressServer,
-      serverForAccessID = accessIdentifierServer,
-      emailAddress = emailAddress,
-      accessID = accessIdentifierAsInt,
-      accessIDpwd = accessIdentifierPassword
-    ),
-    advancedAuthSetup = advancedMode,
-    isActive = false,
-    position = 0
-  )
-
-  fun updateProfile(profile: AuthProfileItem): AuthProfileItem {
-    profile.name = accountName
-    profile.advancedAuthSetup = advancedMode
-    profile.authInfo.emailAuth = authorizeByEmail
-    profile.authInfo.serverAutoDetect = autoServerAddress
-    profile.authInfo.serverForEmail = emailAddressServer
-    profile.authInfo.serverForAccessID = accessIdentifierServer
-    profile.authInfo.emailAddress = emailAddress
-    profile.authInfo.accessID = accessIdentifierAsInt
-    profile.authInfo.accessIDpwd = accessIdentifierPassword
-
-    return profile
-  }
+      serverForAccessId = accessIdentifierServer,
+      email = emailAddress,
+      accessId = accessIdentifierAsInt,
+      accessIdPassword = accessIdentifierPassword
+    )
 
   private val accessIdentifierAsInt: Int
     get() = accessIdentifier.run {

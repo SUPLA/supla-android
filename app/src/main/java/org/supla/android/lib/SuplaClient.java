@@ -56,13 +56,14 @@ import org.supla.android.core.notifications.NotificationsHelper;
 import org.supla.android.core.shared.SuplaClientMessageExtensionsKt;
 import org.supla.android.core.storage.EncryptedPreferences;
 import org.supla.android.data.model.general.EntityUpdateResult;
+import org.supla.android.data.source.ProfileRepository;
 import org.supla.android.data.source.SceneRepository;
+import org.supla.android.data.source.local.entity.ProfileEntity;
 import org.supla.android.data.source.remote.ChannelConfigType;
 import org.supla.android.data.source.remote.ConfigResult;
 import org.supla.android.data.source.remote.FieldType;
 import org.supla.android.data.source.remote.SuplaChannelConfig;
 import org.supla.android.data.source.remote.SuplaDeviceConfig;
-import org.supla.android.db.AuthProfileItem;
 import org.supla.android.db.DbHelper;
 import org.supla.android.db.room.app.AppDatabase;
 import org.supla.android.db.room.measurements.MeasurementsDatabase;
@@ -71,13 +72,12 @@ import org.supla.android.events.DeviceConfigEventsManager;
 import org.supla.android.events.OnlineEventsManager;
 import org.supla.android.events.UpdateEventsManager;
 import org.supla.android.features.channelscleanup.RemoveHiddenChannelsManager;
+import org.supla.android.features.icons.DownloadUserIconsWorker;
 import org.supla.android.features.scenescleanup.RemoveHiddenScenesManager;
 import org.supla.android.lib.actions.ActionId;
 import org.supla.android.lib.actions.ActionParameters;
 import org.supla.android.lib.actions.SubjectType;
-import org.supla.android.profile.AuthInfo;
 import org.supla.android.profile.ProfileIdHolder;
-import org.supla.android.profile.ProfileManager;
 import org.supla.android.usecases.channel.ChannelToRootRelationHolderUseCase;
 import org.supla.android.usecases.channel.UpdateChannelExtendedValueUseCase;
 import org.supla.android.usecases.channel.UpdateChannelUseCase;
@@ -119,7 +119,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private String oneTimePassword;
   private final Context _context;
   private final ConnectivityManager connectivityManager;
-  private final ProfileManager profileManager;
+  private final ProfileRepository profileRepository;
   private final UpdateEventsManager updateEventsManager;
   private final ChannelConfigEventsManager channelConfigEventsManager;
   private final DeviceConfigEventsManager deviceConfigEventsManager;
@@ -150,7 +150,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     this.connectivityManager =
         (ConnectivityManager) _context.getSystemService(Context.CONNECTIVITY_SERVICE);
     this.oneTimePassword = oneTimePassword;
-    this.profileManager = dependencies.getProfileManager();
+    this.profileRepository = dependencies.getProfileRepository();
     this.updateEventsManager = dependencies.getUpdateEventsManager();
     this.channelConfigEventsManager = dependencies.getChannelConfigEventsManager();
     this.deviceConfigEventsManager = dependencies.getDeviceConfigEventsManager();
@@ -879,15 +879,18 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
     regTryCounter = 0;
 
-    AuthProfileItem profile = profileManager.getCurrentProfile().blockingGet();
+    ProfileEntity profile = getActiveProfile();
 
     if (versionError.RemoteVersion >= 7
         && versionError.Version > versionError.RemoteVersion
-        && profile.getAuthInfo().getPreferredProtocolVersion() != versionError.RemoteVersion) {
+        && profile != null
+        && profile.getPreferredProtocolVersion() != null
+        && profile.getPreferredProtocolVersion() != versionError.RemoteVersion) {
 
-      // set prefered to lower
-      profile.getAuthInfo().setPreferredProtocolVersion(versionError.RemoteVersion);
-      profileManager.update(profile).blockingSubscribe();
+      // set preferred to lower
+      profileRepository
+          .updatePreferredProtocolVersion(profile, versionError.RemoteVersion)
+          .blockingSubscribe();
 
       reconnect();
       return;
@@ -931,11 +934,17 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     Timber.d("registered");
 
     regTryCounter = 0;
-    AuthProfileItem profile = profileManager.getCurrentProfile().blockingGet();
+    ProfileEntity profile = getActiveProfile();
+    if (profile == null) {
+      return;
+    }
 
     int maxVersionSupportedByLibrary = getMaxProtoVersion();
-    int storedVersion = profile.getAuthInfo().getPreferredProtocolVersion();
     int serverVersion = registerResult.Version;
+    Integer storedVersion = profile.getPreferredProtocolVersion();
+    if (storedVersion == null) {
+      return;
+    }
     if (maxVersionSupportedByLibrary > 0
         && storedVersion < maxVersionSupportedByLibrary
         && serverVersion > storedVersion) {
@@ -944,8 +953,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
         newVersion = maxVersionSupportedByLibrary;
       }
 
-      profile.getAuthInfo().setPreferredProtocolVersion(newVersion);
-      profileManager.update(profile).blockingSubscribe();
+      profileRepository.updatePreferredProtocolVersion(profile, newVersion).blockingSubscribe();
 
       reconnect();
       return;
@@ -1051,6 +1059,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
       _DataChanged = DbH.setChannelsVisible(0, 2);
       removeHiddenChannelsManager.start();
       updateEventsManager.emitChannelsUpdate();
+      DownloadUserIconsWorker.Companion.start(_context);
     }
 
     if (_DataChanged) {
@@ -1222,9 +1231,9 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     Timber.d("OAuthToken %s", (token == null ? " is null" : ""));
 
     if (token != null && token.getUrl() == null) {
-      AuthInfo info = profileManager.getCurrentProfile().blockingGet().getAuthInfo();
+      ProfileEntity profileEntity = profileRepository.findActiveProfile().blockingGet();
       try {
-        token.setUrl(new URL(info.getServerUrlString()));
+        token.setUrl(new URL(profileEntity.getServerUrlString()));
       } catch (MalformedURLException ignored) {
       }
     }
@@ -1464,7 +1473,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     measurementsDatabase.getOpenHelper().getReadableDatabase();
 
     // After database is ready - set current profile id
-    AuthProfileItem currentProfile = profileManager.getCurrentProfile().blockingGet();
+    ProfileEntity currentProfile = profileRepository.findActiveProfile().blockingGet();
     profileIdHolder.setProfileId(currentProfile.getId());
 
     DbH = DbHelper.getInstance(_context);
@@ -1487,36 +1496,38 @@ public class SuplaClient extends Thread implements SuplaClientApi {
           SuplaCfg cfg = new SuplaCfg();
           cfgInit(cfg);
 
-          AuthProfileItem profile = profileManager.getCurrentProfile().blockingGet();
+          ProfileEntity profile = getActiveProfile();
           if (profile != null) {
-            AuthInfo info = profile.getAuthInfo();
-
-            cfg.Host = info.getServerForCurrentAuthMethod();
-            cfg.clientGUID = info.getDecryptedGuid(_context);
-            cfg.AuthKey = info.getDecryptedAuthKey(_context);
+            cfg.Host = profile.getServerForCurrentAuthMethod();
+            cfg.clientGUID = profile.getDecryptedGuid(_context);
+            cfg.AuthKey = profile.getDecryptedAuthKey(_context);
             cfg.Name = Build.MANUFACTURER + " " + Build.MODEL;
             cfg.SoftVer = "Android" + Build.VERSION.RELEASE + "/" + BuildConfig.VERSION_NAME;
 
-            if (isAccessIDAuthentication()) {
-              cfg.AccessID = info.getAccessID();
-              cfg.AccessIDpwd = info.getAccessIDpwd();
+            if (isAccessIDAuthentication(profile)) {
+              Integer accessId = profile.getAccessId();
+              if (accessId != null) {
+                cfg.AccessID = accessId;
+              }
+              cfg.AccessIDpwd = profile.getAccessIdPassword();
 
               if (regTryCounter >= 2) {
                 // supla-server v1.0 for Raspberry Compatibility fix
-                info.setPreferredProtocolVersion(4);
-                profileManager.update(profile).blockingSubscribe();
+                profileRepository.updatePreferredProtocolVersion(profile, 4).blockingSubscribe();
               }
 
             } else {
-              cfg.Email = info.getEmailAddress();
-              if (!cfg.Email.isEmpty() && cfg.Host.isEmpty() && shouldAutodiscoverHost()) {
+              cfg.Email = profile.getEmail();
+              if (cfg.Email != null
+                  && !cfg.Email.isEmpty()
+                  && cfg.Host.isEmpty()
+                  && shouldAutodiscoverHost()) {
                 cfg.Host = autodiscoverGetHost(cfg.Email);
 
                 if (hasNetworkConnection() && cfg.Host.isEmpty()) {
                   onConnError(new SuplaConnError(SuplaConst.SUPLA_RESULT_HOST_NOT_FOUND));
                 } else {
-                  info.setServerForEmail(cfg.Host);
-                  profileManager.update(profile).blockingSubscribe();
+                  profileRepository.updateServerForEmail(profile, cfg.Host).blockingSubscribe();
                 }
               }
 
@@ -1524,7 +1535,10 @@ public class SuplaClient extends Thread implements SuplaClientApi {
             }
 
             oneTimePassword = "";
-            cfg.protocol_version = info.getPreferredProtocolVersion();
+            Integer protocolVersion = profile.getPreferredProtocolVersion();
+            if (protocolVersion != null) {
+              cfg.protocol_version = protocolVersion;
+            }
             init(cfg);
           }
         }
@@ -1556,12 +1570,19 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     Timber.d("SuplaClient Finished");
   }
 
-  private boolean isAccessIDAuthentication() {
-    return !profileManager.getCurrentProfile().blockingGet().getAuthInfo().getEmailAuth();
+  private boolean isAccessIDAuthentication(ProfileEntity profile) {
+    if (profile == null) {
+      return false;
+    }
+    return !profile.getEmailAuth();
   }
 
   private boolean shouldAutodiscoverHost() {
-    return profileManager.getCurrentProfile().blockingGet().getAuthInfo().getServerAutoDetect();
+    ProfileEntity profile = getActiveProfile();
+    if (profile == null) {
+      return false;
+    }
+    return profile.getServerAutoDetect();
   }
 
   public void startScene(int sceneId) {
@@ -1581,6 +1602,16 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   public void renameScene(int sceneId, String newName) {
     if (!setSceneCaption(sceneId, newName)) {
       Timber.w("Failed to rename scene %d", sceneId);
+    }
+  }
+
+  @Nullable
+  private ProfileEntity getActiveProfile() {
+    try {
+      return profileRepository.findActiveProfile().blockingGet();
+    } catch (Exception ex) {
+      Timber.e(ex, "Could not load active profile");
+      return null;
     }
   }
 }

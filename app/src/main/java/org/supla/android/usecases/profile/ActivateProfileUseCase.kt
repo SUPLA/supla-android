@@ -20,7 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import androidx.room.rxjava3.EmptyResultSetException
 import io.reactivex.rxjava3.core.Completable
 import org.supla.android.core.networking.suplacloud.SuplaCloudConfigHolder
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.profile.ProfileIdHolder
 import org.supla.android.usecases.client.ReconnectUseCase
 import org.supla.android.usecases.icon.LoadUserIconsIntoCacheUseCase
@@ -29,7 +29,7 @@ import javax.inject.Singleton
 
 @Singleton
 class ActivateProfileUseCase @Inject constructor(
-  private val profileRepository: RoomProfileRepository,
+  private val profileRepository: ProfileRepository,
   private val profileIdHolder: ProfileIdHolder,
   private val suplaCloudConfigHolder: SuplaCloudConfigHolder,
   private val loadUserIconsIntoCacheUseCase: LoadUserIconsIntoCacheUseCase,
@@ -63,5 +63,5 @@ class ActivateProfileUseCase @Inject constructor(
         }
       )
       .andThen(reconnectUseCase())
-      .andThen(loadUserIconsIntoCacheUseCase().ignoreElement())
+      .andThen(loadUserIconsIntoCacheUseCase())
 }

@@ -28,7 +28,5 @@ interface SuplaAppProvider {
 interface SuplaAppApi {
   fun SuplaClientInitIfNeed(context: Context): SuplaClientApi?
   fun SuplaClientInitIfNeed(context: Context, oneTimePassword: String): SuplaClientApi?
-  fun CancelAllRestApiClientTasks(mayInterruptIfRunning: Boolean)
-  fun cleanupToken()
   fun getSuplaClient(): SuplaClientApi?
 }

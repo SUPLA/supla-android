@@ -22,7 +22,7 @@ import org.supla.android.Preferences
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.ViewEvent
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.custom.GroupOnlineSummary
@@ -67,7 +67,7 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
   private val preferences: Preferences,
   private val dateProvider: DateProvider,
   suplaClientProvider: SuplaClientProvider,
-  profileRepository: RoomProfileRepository,
+  profileRepository: ProfileRepository,
   loginUseCase: LoginUseCase,
   authorizeUseCase: AuthorizeUseCase,
   defaultState: S,

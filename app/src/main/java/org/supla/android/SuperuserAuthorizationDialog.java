@@ -33,23 +33,25 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import dagger.hilt.android.EntryPointAccessors;
 import dagger.hilt.android.internal.managers.ViewComponentManager;
 import java.util.Timer;
 import java.util.TimerTask;
 import org.supla.android.core.shared.LocalizedStringExtensionsKt;
-import org.supla.android.di.entrypoints.ProfileManagerEntryPoint;
+import org.supla.android.data.source.ProfileRepository;
+import org.supla.android.data.source.local.entity.ProfileEntity;
+import org.supla.android.di.entrypoints.ProfileRepositoryEntryPoint;
 import org.supla.android.lib.AndroidSuplaClientMessageHandler;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
-import org.supla.android.profile.AuthInfo;
-import org.supla.android.profile.ProfileManager;
 import org.supla.core.shared.data.model.suplaclient.SuplaResultCode;
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage;
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage.AuthorizationResult;
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage.ClientRegistered;
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage.ClientRegistrationError;
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessageHandler;
+import timber.log.Timber;
 
 public class SuperuserAuthorizationDialog
     implements View.OnClickListener,
@@ -57,6 +59,7 @@ public class SuperuserAuthorizationDialog
         View.OnTouchListener,
         SuplaClientMessageHandler.Listener,
         TextWatcher {
+
   private final Context context;
   private AlertDialog dialog;
   private final Button btnCancel;
@@ -93,12 +96,8 @@ public class SuperuserAuthorizationDialog
     edPassword = v.findViewById(R.id.dialogPwd);
     edPassword.addTextChangedListener(this);
 
-    ProfileManager profileManager =
-        EntryPointAccessors.fromApplication(
-                context.getApplicationContext(), ProfileManagerEntryPoint.class)
-            .provideProfileManager();
-    AuthInfo ainfo = profileManager.getCurrentProfile().blockingGet().getAuthInfo();
-    edEmail.setText(ainfo.getEmailAddress(), EditText.BufferType.EDITABLE);
+    ProfileEntity profile = getProfile(context);
+    edEmail.setText(getEmail(profile), EditText.BufferType.EDITABLE);
 
     tvErrorMessage = v.findViewById(R.id.dialogError);
     tvErrorMessage.setVisibility(View.INVISIBLE);
@@ -108,11 +107,47 @@ public class SuperuserAuthorizationDialog
         context
             .getResources()
             .getString(
-                ainfo.getServerForEmail().contains(".supla.org")
+                getServerForEmail(profile).contains(".supla.org")
                     ? R.string.enter_suplaorg_credentails
                     : R.string.enter_superuser_credentials));
 
     builder.setView(v);
+  }
+
+  @Nullable
+  private ProfileEntity getProfile(Context context) {
+    ProfileRepository profileRepository =
+        EntryPointAccessors.fromApplication(
+                context.getApplicationContext(), ProfileRepositoryEntryPoint.class)
+            .provideProfileRepository();
+    try {
+      return profileRepository.findActiveProfile().blockingGet();
+    } catch (Exception ex) {
+      Timber.d(ex, "Could not retrieve server for email");
+      return null;
+    }
+  }
+
+  private String getServerForEmail(@Nullable ProfileEntity profile) {
+    if (profile == null) {
+      return "";
+    }
+    String server = profile.getServerForEmail();
+    if (server == null) {
+      return "";
+    }
+    return server;
+  }
+
+  private String getEmail(@Nullable ProfileEntity profile) {
+    if (profile == null) {
+      return "";
+    }
+    String email = profile.getEmail();
+    if (email == null) {
+      return "";
+    }
+    return email;
   }
 
   boolean isClientRegistered() {
@@ -327,6 +362,7 @@ public class SuperuserAuthorizationDialog
   }
 
   public interface OnAuthorizarionResultListener {
+
     void onSuperuserOnAuthorizarionResult(
         SuperuserAuthorizationDialog dialog, boolean Success, int Code);
 

@@ -26,9 +26,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import org.supla.android.BuildConfig
 import org.supla.android.data.source.ChannelRepository
-import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.SceneRepository
-import org.supla.android.data.source.local.LocalProfileRepository
 import org.supla.android.db.DbHelper
 import org.supla.android.db.room.EmptyMigration
 import org.supla.android.db.room.app.AppDatabase
@@ -295,11 +293,6 @@ class DatabaseModule {
   @Singleton
   fun provideDbHelper(@ApplicationContext context: Context) =
     DbHelper.getInstance(context)
-
-  @Provides
-  @Singleton
-  fun provideProfileRepository(dbHelper: DbHelper): ProfileRepository =
-    LocalProfileRepository(dbHelper)
 
   @Provides
   @Singleton

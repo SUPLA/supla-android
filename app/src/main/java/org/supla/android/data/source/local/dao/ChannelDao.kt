@@ -35,6 +35,7 @@ import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_LOCATION_ID
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_POSITION
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_PROFILE_ID
+import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_USER_ICON
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_VISIBLE
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.TABLE_NAME
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
@@ -42,6 +43,7 @@ import org.supla.android.data.source.local.entity.ChannelStateEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.ProfileEntity
+import org.supla.android.data.source.local.entity.UserIconEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.remote.channel.ONLINE_BUT_NOT_AVAILABLE
 import org.supla.core.shared.data.model.general.SuplaFunction
@@ -309,12 +311,12 @@ interface ChannelDao {
         $COLUMN_VISIBLE, 
         $COLUMN_LOCATION_ID,
         ${ChannelEntity.COLUMN_ALT_ICON}, 
-        ${ChannelEntity.COLUMN_USER_ICON}, 
+        ${COLUMN_USER_ICON}, 
         ${ChannelEntity.COLUMN_MANUFACTURER_ID}, 
         ${ChannelEntity.COLUMN_PRODUCT_ID},
         ${ChannelEntity.COLUMN_FLAGS}, 
         ${ChannelEntity.COLUMN_PROTOCOL_VERSION}, 
-        ${ChannelEntity.COLUMN_POSITION}, 
+        ${COLUMN_POSITION}, 
         $COLUMN_PROFILE_ID
       FROM $TABLE_NAME
       WHERE
@@ -322,4 +324,20 @@ interface ChannelDao {
     """
   )
   suspend fun findHiddenChannels(): List<ChannelEntity>
+
+  @Query(
+    """
+      SELECT
+        channel.$COLUMN_USER_ICON
+      FROM $TABLE_NAME channel
+      LEFT JOIN ${UserIconEntity.TABLE_NAME} icon
+        ON channel.${COLUMN_USER_ICON} = icon.${UserIconEntity.COLUMN_REMOTE_ID}
+          AND channel.${COLUMN_PROFILE_ID} = icon.${UserIconEntity.COLUMN_PROFILE_ID}
+      WHERE channel.${COLUMN_VISIBLE} > 0 
+        AND channel.${COLUMN_USER_ICON} > 0
+        AND channel.$COLUMN_PROFILE_ID = :profileId
+        AND icon.${UserIconEntity.COLUMN_REMOTE_ID} IS NULL 
+    """
+  )
+  suspend fun findIconIdsToDownload(profileId: Long): List<Int>
 }

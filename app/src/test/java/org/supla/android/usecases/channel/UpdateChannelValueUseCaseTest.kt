@@ -37,7 +37,7 @@ import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.data.model.general.EntityUpdateResult
 import org.supla.android.data.source.ChannelValueRepository
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
@@ -48,7 +48,7 @@ import org.supla.android.testhelpers.suplaChannelValue
 class UpdateChannelValueUseCaseTest {
 
   @Mock
-  private lateinit var profileRepository: RoomProfileRepository
+  private lateinit var profileRepository: ProfileRepository
 
   @Mock
   private lateinit var channelValueRepository: ChannelValueRepository

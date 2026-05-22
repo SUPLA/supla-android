@@ -34,8 +34,8 @@ import org.supla.android.data.source.ImpulseCounterLogRepository
 import org.supla.android.data.source.LocationRepository
 import org.supla.android.data.source.NotificationRepository
 import org.supla.android.data.source.PowerActiveLogRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.RoomChannelRepository
-import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.RoomSceneRepository
 import org.supla.android.data.source.RoomUserIconRepository
 import org.supla.android.data.source.VoltageLogRepository
@@ -95,7 +95,7 @@ class LoadDatabaseDetailsUseCase @Inject constructor(
   notificationRepository: NotificationRepository,
   powerActiveLogRepository: PowerActiveLogRepository,
   channelRepository: RoomChannelRepository,
-  profileRepository: RoomProfileRepository,
+  profileRepository: ProfileRepository,
   sceneRepository: RoomSceneRepository,
   userIconRepository: RoomUserIconRepository,
   voltageLogRepository: VoltageLogRepository,

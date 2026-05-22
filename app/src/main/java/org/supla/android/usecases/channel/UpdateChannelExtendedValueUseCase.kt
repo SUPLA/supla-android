@@ -23,7 +23,7 @@ import kotlinx.serialization.json.Json
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.data.model.general.EntityUpdateResult
 import org.supla.android.data.source.ChannelExtendedValueRepository
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
 import org.supla.android.lib.SuplaChannelExtendedValue
 import org.supla.android.usecases.channelstate.UpdateChannelStateUseCase
@@ -36,7 +36,7 @@ import kotlin.math.abs
 
 @Singleton
 class UpdateChannelExtendedValueUseCase @Inject constructor(
-  private val profileRepository: RoomProfileRepository,
+  private val profileRepository: ProfileRepository,
   private val channelExtendedValueRepository: ChannelExtendedValueRepository,
   private val updateChannelStateUseCase: UpdateChannelStateUseCase,
   private val dateProvider: DateProvider

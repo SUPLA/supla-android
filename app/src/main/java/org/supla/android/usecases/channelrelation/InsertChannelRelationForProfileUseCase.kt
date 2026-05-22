@@ -19,21 +19,21 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import io.reactivex.rxjava3.core.Completable
 import org.supla.android.data.source.ChannelRelationRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
 import org.supla.android.lib.SuplaChannelRelation
-import org.supla.android.profile.ProfileManager
 import org.supla.core.shared.data.model.channel.ChannelRelationType
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class InsertChannelRelationForProfileUseCase @Inject constructor(
-  private val profileManager: ProfileManager,
+  private val profileRepository: ProfileRepository,
   private val channelRelationRepository: ChannelRelationRepository
 ) {
   operator fun invoke(suplaRelation: SuplaChannelRelation): Completable =
-    profileManager.getCurrentProfile()
-      .flatMapCompletable { channelRelationRepository.insertOrUpdate(ChannelRelationEntity.from(suplaRelation, it.id)) }
+    profileRepository.findActiveProfile()
+      .flatMapCompletable { channelRelationRepository.insertOrUpdate(ChannelRelationEntity.from(suplaRelation, it.id!!)) }
 }
 
 fun ChannelRelationEntity.Companion.from(suplaRelation: SuplaChannelRelation, profileId: Long): ChannelRelationEntity =

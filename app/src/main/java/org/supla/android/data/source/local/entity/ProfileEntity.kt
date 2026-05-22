@@ -18,12 +18,14 @@ package org.supla.android.data.source.local.entity
  */
 
 import android.content.ContentValues
+import android.content.Context
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import org.supla.android.data.source.local.entity.ProfileEntity.Companion.TABLE_NAME
-import org.supla.android.profile.AuthInfo
+import org.supla.android.lib.dto.AuthDataDto
+import org.supla.android.lib.dto.AuthDataDto.Companion.decrypt
 
 @Entity(
   tableName = TABLE_NAME,
@@ -46,19 +48,40 @@ data class ProfileEntity(
   @ColumnInfo(name = COLUMN_AUTH_KEY, typeAffinity = ColumnInfo.BLOB) val authKey: ByteArray?,
 ) {
 
-  val authInfo: AuthInfo
-    get() = AuthInfo(
-      emailAuth = this.emailAuth,
-      serverAutoDetect = this.serverAutoDetect,
-      serverForEmail = this.serverForEmail ?: "",
-      serverForAccessID = this.serverForAccessId ?: "",
-      emailAddress = this.email ?: "",
-      accessID = this.accessId ?: 0,
-      accessIDpwd = this.accessIdPassword ?: "",
-      preferredProtocolVersion = this.preferredProtocolVersion ?: 0,
-      guid = this.guid ?: byteArrayOf(),
-      authKey = this.authKey ?: byteArrayOf()
-    )
+  val authDataDto: AuthDataDto
+    get() =
+      AuthDataDto(
+        emailAuth = emailAuth,
+        emailAddress = email ?: "",
+        serverForEmail = serverForEmail ?: "",
+        accessId = accessId ?: 0,
+        accessIdPassword = accessIdPassword ?: "",
+        serverForAccessId = serverForAccessId ?: "",
+        preferredProtocolVersion = preferredProtocolVersion ?: 0,
+        guid = guid ?: byteArrayOf(),
+        authKey = authKey ?: byteArrayOf()
+      )
+
+  /**
+   Returns server used for current authentication method
+   */
+  val serverForCurrentAuthMethod: String
+    get() = if (emailAuth) serverForEmail ?: "" else serverForAccessId ?: ""
+
+  val serverUrlString: String
+    get() = "https://$serverForCurrentAuthMethod"
+
+  val isAuthDataComplete: Boolean
+    get() {
+      return if (emailAuth) {
+        email?.isNotEmpty() == true &&
+          (serverAutoDetect || serverForEmail?.isNotEmpty() == true)
+      } else {
+        serverForAccessId?.isNotEmpty() == true &&
+          (accessId ?: 0) > 0 &&
+          accessIdPassword?.isNotEmpty() == true
+      }
+    }
 
   val contentValues: ContentValues
     get() = ContentValues().apply {
@@ -78,9 +101,37 @@ data class ProfileEntity(
       put(COLUMN_AUTH_KEY, authKey)
     }
 
+  fun authDataChanged(other: ProfileEntity): Boolean {
+    if (emailAuth != other.emailAuth) {
+      // Authorization method changed so we're not able to compare if same account will be used.
+      return true
+    }
+
+    return if (emailAuth) {
+      (
+        email != other.email ||
+          serverForEmail != other.serverForEmail ||
+          serverAutoDetect != other.serverAutoDetect
+        )
+    } else {
+      (
+        accessId != other.accessId ||
+          serverForAccessId != other.serverForAccessId
+        )
+    }
+  }
+
   @Ignore
   val isCloudAccount =
     serverForEmail?.contains(".supla.org") == true
+
+  fun getDecryptedGuid(context: Context): ByteArray? {
+    return guid?.let { decrypt(it, context) }
+  }
+
+  fun getDecryptedAuthKey(context: Context): ByteArray? {
+    return authKey?.let { decrypt(it, context) }
+  }
 
   companion object {
     const val TABLE_NAME = "auth_profile"

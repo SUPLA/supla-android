@@ -20,10 +20,10 @@ package org.supla.android.di.entrypoints
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import org.supla.android.profile.ProfileManager
+import org.supla.android.data.source.ProfileRepository
 
 @EntryPoint
 @InstallIn(SingletonComponent::class)
-interface ProfileManagerEntryPoint {
-  fun provideProfileManager(): ProfileManager
+interface ProfileRepositoryEntryPoint {
+  fun provideProfileRepository(): ProfileRepository
 }

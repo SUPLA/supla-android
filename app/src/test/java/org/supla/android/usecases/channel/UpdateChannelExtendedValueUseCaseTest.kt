@@ -33,7 +33,7 @@ import org.junit.Test
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.data.model.general.EntityUpdateResult
 import org.supla.android.data.source.ChannelExtendedValueRepository
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.extensions.date
@@ -43,7 +43,7 @@ import java.util.Date
 
 class UpdateChannelExtendedValueUseCaseTest {
   @MockK
-  private lateinit var profileRepository: RoomProfileRepository
+  private lateinit var profileRepository: ProfileRepository
 
   @MockK
   private lateinit var channelExtendedValueRepository: ChannelExtendedValueRepository

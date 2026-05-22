@@ -25,7 +25,7 @@ import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.NfcTagRepository
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.complex.NfcTagDataEntity
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
@@ -39,7 +39,7 @@ import javax.inject.Inject
 class NfcTagListViewModel @Inject constructor(
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val getSceneIconUseCase: GetSceneIconUseCase,
-  private val profileRepository: RoomProfileRepository,
+  private val profileRepository: ProfileRepository,
   private val getCaptionUseCase: GetCaptionUseCase,
   private val nfcTagRepository: NfcTagRepository,
   schedulers: SuplaSchedulers

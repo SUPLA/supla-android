@@ -32,7 +32,7 @@ import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.core.networking.suplacloud.SuplaCloudConfigHolder
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.profile.ProfileIdHolder
 import org.supla.android.usecases.client.ReconnectUseCase
@@ -42,7 +42,7 @@ import org.supla.android.usecases.icon.LoadUserIconsIntoCacheUseCase
 class ActivateProfileUseCaseTest {
 
   @Mock
-  private lateinit var profileRepository: RoomProfileRepository
+  private lateinit var profileRepository: ProfileRepository
 
   @Mock
   private lateinit var profileIdHolder: ProfileIdHolder
@@ -93,7 +93,7 @@ class ActivateProfileUseCaseTest {
     whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(activeProfile))
     whenever(profileRepository.activateProfile(newActiveProfileId)).thenReturn(Completable.complete())
 
-    whenever(loadUserIconsIntoCacheUseCase.invoke()).thenReturn(Single.just(mockk()))
+    whenever(loadUserIconsIntoCacheUseCase.invoke()).thenReturn(Completable.complete())
     whenever(reconnectUseCase.invoke()).thenReturn(Completable.complete())
 
     // when
@@ -121,7 +121,7 @@ class ActivateProfileUseCaseTest {
     whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(activeProfile))
     whenever(profileRepository.activateProfile(activeProfileId)).thenReturn(Completable.complete())
 
-    whenever(loadUserIconsIntoCacheUseCase.invoke()).thenReturn(Single.just(mockk()))
+    whenever(loadUserIconsIntoCacheUseCase.invoke()).thenReturn(Completable.complete())
     whenever(reconnectUseCase.invoke()).thenReturn(Completable.complete())
 
     // when
@@ -145,7 +145,7 @@ class ActivateProfileUseCaseTest {
     whenever(profileRepository.findActiveProfile()).thenReturn(Single.error(EmptyResultSetException("")))
     whenever(profileRepository.activateProfile(activeProfileId)).thenReturn(Completable.complete())
 
-    whenever(loadUserIconsIntoCacheUseCase.invoke()).thenReturn(Single.just(mockk()))
+    whenever(loadUserIconsIntoCacheUseCase.invoke()).thenReturn(Completable.complete())
     whenever(reconnectUseCase.invoke()).thenReturn(Completable.complete())
 
     // when

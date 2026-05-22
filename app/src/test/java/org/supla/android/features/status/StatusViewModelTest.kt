@@ -37,7 +37,7 @@ import org.supla.android.core.networking.suplaclient.SuplaClientEvent
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientState
 import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_BAD_CREDENTIALS
 import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_REGISTRATION_DISABLED
@@ -62,7 +62,7 @@ class StatusViewModelTest : BaseViewModelTest<StatusViewModelState, StatusViewEv
   private lateinit var suplaClientProvider: SuplaClientProvider
 
   @MockK
-  private lateinit var profileRepository: RoomProfileRepository
+  private lateinit var profileRepository: ProfileRepository
 
   @MockK
   private lateinit var loginUseCase: LoginUseCase

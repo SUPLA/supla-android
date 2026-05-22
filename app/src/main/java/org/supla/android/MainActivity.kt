@@ -83,7 +83,6 @@ import org.supla.android.images.ImageId
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.SuplaEvent
 import org.supla.android.navigator.MainNavigator
-import org.supla.android.restapi.DownloadUserIcons
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.AppBar
 import org.supla.android.ui.LoadableContent
@@ -111,7 +110,6 @@ class MainActivity :
 
   private val nfcAdapter: NfcAdapter? by lazy { NfcAdapter.getDefaultAdapter(this) }
 
-  private var downloadUserIcons: DownloadUserIcons? = null
   private var notificationView: RelativeLayout? = null
   private var notificationHandler: Handler? = null
   private var notificationnrunnable: Runnable? = null
@@ -395,7 +393,6 @@ class MainActivity :
     if (SuperuserAuthorizationDialog.lastOneIsStillShowing()) {
       return
     }
-    runDownloadTask()
 
     if (Configuration.ASK_FOR_RATE) {
       RateApp(this).showDialog {
@@ -407,22 +404,6 @@ class MainActivity :
   override fun onPause() {
     super.onPause()
     handler.removeCallbacksAndMessages(null)
-  }
-
-  private fun runDownloadTask() {
-    Timber.d("RunDownloadTask")
-    if (downloadUserIcons != null && !downloadUserIcons!!.isAlive(90)) {
-      downloadUserIcons!!.cancel(true)
-      downloadUserIcons = null
-    }
-    if (downloadUserIcons == null) {
-      downloadUserIcons = DownloadUserIcons(this)
-      downloadUserIcons!!.execute()
-    }
-  }
-
-  override fun onRegisteredMsg() {
-    runDownloadTask()
   }
 
   override fun onEventMsg(event: SuplaEvent) {
@@ -557,7 +538,6 @@ class MainActivity :
 
   override fun onProfileChanged() {
     super.onProfileChanged()
-    runDownloadTask()
     setMenuVisible(false)
   }
 

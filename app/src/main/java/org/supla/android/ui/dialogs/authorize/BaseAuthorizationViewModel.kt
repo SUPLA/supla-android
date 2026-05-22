@@ -22,7 +22,7 @@ import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.AuthorizationDialogScope
@@ -37,7 +37,7 @@ import org.supla.core.shared.infrastructure.localizedString
 
 abstract class BaseAuthorizationViewModel<S : AuthorizationModelState, E : ViewEvent>(
   private val suplaClientProvider: SuplaClientProvider,
-  private val profileRepository: RoomProfileRepository,
+  private val profileRepository: ProfileRepository,
   private val loginUseCase: LoginUseCase,
   private val authorizeUseCase: AuthorizeUseCase,
   defaultState: S,

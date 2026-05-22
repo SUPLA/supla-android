@@ -21,7 +21,7 @@ import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.networking.suplaclient.SuplaClientApi
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.ViewEvent
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.AuthorizationDialogState
@@ -40,7 +40,7 @@ class BaseAuthorizationViewModelTest :
   private lateinit var suplaClientProvider: SuplaClientProvider
 
   @Mock
-  private lateinit var profileRepository: RoomProfileRepository
+  private lateinit var profileRepository: ProfileRepository
 
   @Mock
   private lateinit var loginUseCase: LoginUseCase
@@ -355,7 +355,7 @@ class BaseAuthorizationViewModelTest :
 
 class TestAuthorizationViewModel(
   suplaClientProvider: SuplaClientProvider,
-  profileRepository: RoomProfileRepository,
+  profileRepository: ProfileRepository,
   loginUseCase: LoginUseCase,
   authorizeUseCase: AuthorizeUseCase,
   schedulers: SuplaSchedulers

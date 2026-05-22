@@ -35,6 +35,7 @@ import org.supla.android.data.source.remote.rest.channel.TemperatureMeasurement
 import org.supla.android.data.source.remote.rest.channel.ThermostatMeasurement
 import org.supla.android.di.GSON_FOR_API
 import org.supla.core.shared.data.model.rest.ImpulseCounterPhotoDto
+import org.supla.core.shared.data.model.rest.UserIconDto
 import org.supla.core.shared.data.model.rest.channel.DefaultChannelDto
 import org.supla.core.shared.data.model.rest.channel.ElectricityChannelDto
 import retrofit2.Call
@@ -248,6 +249,12 @@ interface SuplaCloudService {
     @Path("remoteId") remoteId: Int
   ): Observable<ElectricityChannelDto>
 
+  @GET("/api/$API_VERSION/user-icons")
+  suspend fun getUserIcons(
+    @Query("ids") ids: String,
+    @Query("include") include: String = "images"
+  ): List<UserIconDto>
+
   @Singleton
   class Provider @Inject constructor(
     private val configHolder: SuplaCloudConfigHolder,
@@ -286,7 +293,7 @@ interface SuplaCloudService {
     private fun requireUrl(): String {
       suplaClientProvider.provide()?.oAuthTokenRequest()
 
-      for (i in 0..50) {
+      (0..50).forEach { _ ->
         configHolder.url?.let {
           return it
         }

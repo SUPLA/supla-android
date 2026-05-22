@@ -34,8 +34,8 @@ import dagger.assisted.AssistedInject
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.notifications.NotificationsHelper.Companion.areNotificationsEnabled
 import org.supla.android.core.storage.EncryptedPreferences
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.RoomChannelRepository
-import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.lib.SuplaClient
 import org.supla.android.lib.singlecall.SingleCall
@@ -48,7 +48,7 @@ private const val ONE_DAY_MILLIS = 24 * 60 * 60 * 1000
 @HiltWorker
 class UpdateTokenWorker @AssistedInject constructor(
   private val singleCallProvider: SingleCall.Provider,
-  private val profileRepository: RoomProfileRepository,
+  private val profileRepository: ProfileRepository,
   private val encryptedPreferences: EncryptedPreferences,
   private val channelRepository: RoomChannelRepository,
   private val dateProvider: DateProvider,
@@ -94,11 +94,11 @@ class UpdateTokenWorker @AssistedInject constructor(
         Timber.d("Profile `${profile.name}` has active token set - skipping")
         return@forEach
       }
-      if (profile.authInfo.emailAuth && profile.authInfo.serverForEmail.isEmpty()) {
+      if (profile.emailAuth && profile.serverForEmail.isNullOrEmpty()) {
         Timber.w("Profile `${profile.name}` has server address not set - skipping")
         return@forEach
       }
-      if (!profile.authInfo.emailAuth && profile.authInfo.serverForAccessID.isEmpty()) {
+      if (!profile.emailAuth && profile.serverForAccessId.isNullOrEmpty()) {
         Timber.w("Profile `${profile.name}` has server address not set - skipping")
         return@forEach
       }

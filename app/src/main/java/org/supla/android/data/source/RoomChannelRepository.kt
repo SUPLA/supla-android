@@ -60,6 +60,8 @@ class RoomChannelRepository @Inject constructor(
 
   suspend fun findHiddenChannels() = channelDao.findHiddenChannels()
 
+  suspend fun findIconIdsToDownload(profileId: Long) = channelDao.findIconIdsToDownload(profileId)
+
   override fun count(): Observable<Int> = channelDao.count()
 
   override fun updateCaption(caption: String, remoteId: Int, profileId: Long): Completable =

@@ -34,6 +34,10 @@ import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.lib.SuplaChannelElectricityMeterValue
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.usecase.GetCaptionUseCase
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.PowerActiveValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
+import org.supla.core.shared.usecase.channel.valueformatter.types.ValuePrecision
+import org.supla.core.shared.usecase.channel.valueformatter.types.custom
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -51,22 +55,19 @@ class PowerActiveMeasurementsProvider @Inject constructor(
   preferences: ApplicationPreferences
 ) : ElectricityMeasurementsProvider<PowerActiveHistoryLogEntity>(gson, preferences) {
 
-  override val labelValueExtractor: (SuplaChannelElectricityMeterValue.Measurement?) -> Double
-    get() = { it?.powerActive ?: 0.0 }
-
   operator fun invoke(
     channelWithChildren: ChannelWithChildren,
     spec: ChartDataSpec
   ): Single<ChannelChartSets> {
     val observables: MutableList<Observable<Pair<Phase, HistoryDataSet>>> = mutableListOf()
     spec.customFilters?.ifPhase1 {
-      observables.add(findMeasurementsForPhase(channelWithChildren, spec, observables.isEmpty(), Phase.PHASE_1))
+      observables.add(findMeasurementsForPhase(channelWithChildren, spec, Phase.PHASE_1))
     }
     spec.customFilters?.ifPhase2 {
-      observables.add(findMeasurementsForPhase(channelWithChildren, spec, observables.isEmpty(), Phase.PHASE_2))
+      observables.add(findMeasurementsForPhase(channelWithChildren, spec, Phase.PHASE_2))
     }
     spec.customFilters?.ifPhase3 {
-      observables.add(findMeasurementsForPhase(channelWithChildren, spec, observables.isEmpty(), Phase.PHASE_3))
+      observables.add(findMeasurementsForPhase(channelWithChildren, spec, Phase.PHASE_3))
     }
 
     val channel = channelWithChildren.channel
@@ -87,10 +88,15 @@ class PowerActiveMeasurementsProvider @Inject constructor(
       .firstOrError()
   }
 
+  override fun formattedLabelValue(meterValue: SuplaChannelElectricityMeterValue, phase: Phase): String =
+    PowerActiveValueFormatter.format(
+      value = meterValue.getMeasurement(phase.value, 0)?.powerActive,
+      format = ValueFormat(precision = custom(ValuePrecision.exact(1)), withUnit = false),
+    )
+
   private fun findMeasurementsForPhase(
     channelWithChildren: ChannelWithChildren,
     spec: ChartDataSpec,
-    isFirst: Boolean,
     phase: Phase
   ): Observable<Pair<Phase, HistoryDataSet>> =
     powerActiveLogRepository.findMeasurements(

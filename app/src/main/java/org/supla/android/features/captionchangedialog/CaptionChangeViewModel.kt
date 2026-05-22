@@ -21,7 +21,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.R
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.ViewEvent
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.tools.VibrationHelper
@@ -41,14 +41,14 @@ import javax.inject.Inject
 class CaptionChangeViewModel @Inject constructor(
   private val captionChangeUseCase: CaptionChangeUseCase,
   private val vibrationHelper: VibrationHelper,
-  roomProfileRepository: RoomProfileRepository,
+  profileRepository: ProfileRepository,
   suplaClientProvider: SuplaClientProvider,
   authorizeUseCase: AuthorizeUseCase,
   loginUseCase: LoginUseCase,
   schedulers: SuplaSchedulers
 ) : BaseAuthorizationViewModel<CaptionChangeViewModelState, CaptionChangeViewEvent>(
   suplaClientProvider,
-  roomProfileRepository,
+  profileRepository,
   loginUseCase,
   authorizeUseCase,
   CaptionChangeViewModelState(),

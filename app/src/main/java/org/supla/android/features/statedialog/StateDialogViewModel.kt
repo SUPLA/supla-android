@@ -24,7 +24,7 @@ import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.ViewEvent
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
@@ -61,13 +61,13 @@ class StateDialogViewModel @Inject constructor(
   private val suplaClientProvider: SuplaClientProvider,
   private val getCaptionUseCase: GetCaptionUseCase,
   private val dateProvider: DateProvider,
-  roomProfileRepository: RoomProfileRepository,
+  profileRepository: ProfileRepository,
   authorizeUseCase: AuthorizeUseCase,
   loginUseCase: LoginUseCase,
   schedulers: SuplaSchedulers
 ) : BaseAuthorizationViewModel<StateDialogViewModelState, StateDialogViewEvent>(
   suplaClientProvider,
-  roomProfileRepository,
+  profileRepository,
   loginUseCase,
   authorizeUseCase,
   StateDialogViewModelState(),

@@ -20,15 +20,10 @@ package org.supla.android.testhelpers
 import io.mockk.every
 import io.mockk.mockk
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
-import org.supla.android.db.AuthProfileItem
 import org.supla.android.lib.SuplaChannel
 import org.supla.android.lib.SuplaChannelRelation
 import org.supla.android.lib.SuplaChannelValue
 import org.supla.core.shared.data.model.channel.ChannelRelationType
-
-fun profileMock(profileId: Long) = mockk<AuthProfileItem>().also {
-  every { it.id } returns profileId
-}
 
 fun relationMock(channelId: Int, parentId: Int, relationType: ChannelRelationType) = mockk<SuplaChannelRelation>().also {
   every { it.channelId } returns channelId

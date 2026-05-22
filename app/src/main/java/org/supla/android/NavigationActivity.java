@@ -30,7 +30,6 @@ import androidx.core.content.res.ResourcesCompat;
 import dagger.hilt.android.AndroidEntryPoint;
 import javax.inject.Inject;
 import org.supla.android.profile.ProfileChooser;
-import org.supla.android.profile.ProfileManager;
 import org.supla.android.usecases.profile.ActivateProfileUseCase;
 import org.supla.android.usecases.profile.ReadAllProfilesUseCase;
 
@@ -44,7 +43,6 @@ public class NavigationActivity extends BaseActivity
   public static final String INTENT_SENDER = "sender";
   public static final String INTENT_SENDER_MAIN = "main";
 
-  @Inject ProfileManager profileManager;
   @Inject ActivateProfileUseCase activateProfileUseCase;
   @Inject ReadAllProfilesUseCase readAllProfilesUseCase;
   private RelativeLayout RootLayout;

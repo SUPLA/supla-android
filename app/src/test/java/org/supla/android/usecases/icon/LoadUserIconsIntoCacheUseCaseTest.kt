@@ -17,35 +17,44 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import io.mockk.MockKAnnotations
+import io.mockk.Runs
+import io.mockk.confirmVerified
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.just
+import io.mockk.verify
 import io.reactivex.rxjava3.core.Observable
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.times
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.data.source.RoomUserIconRepository
 import org.supla.android.data.source.local.entity.UserIconEntity
 import org.supla.android.images.ImageCacheProxy
 import org.supla.android.images.ImageId
+import org.supla.android.widget.WidgetManager
 
-@RunWith(MockitoJUnitRunner::class)
 class LoadUserIconsIntoCacheUseCaseTest {
 
-  @Mock
+  @MockK
   private lateinit var userIconRepository: RoomUserIconRepository
 
-  @Mock
+  @MockK
   private lateinit var imageCacheProxy: ImageCacheProxy
 
-  @InjectMocks
+  @MockK
+  private lateinit var widgetManager: WidgetManager
+
+  @InjectMockKs
   private lateinit var useCase: LoadUserIconsIntoCacheUseCase
 
+  @Before
+  fun setUp() {
+    MockKAnnotations.init(this)
+  }
+
   @Test
-  fun `should add image when available`() {
+  fun `should add image when available and update all widges`() {
     // given
     val iconRemoteId = 234
     val profileId = 345L
@@ -65,22 +74,52 @@ class LoadUserIconsIntoCacheUseCaseTest {
       null,
       profileId
     )
-    whenever(imageCacheProxy.sum()).thenReturn(0, 3)
-    whenever(imageCacheProxy.size()).thenReturn(3)
-    whenever(userIconRepository.loadAllIcons()).thenReturn(Observable.just(listOf(entity)))
+    every { imageCacheProxy.addImage(ImageId(iconRemoteId, 1, profileId), firstImage) } just Runs
+    every { imageCacheProxy.addImage(ImageId(iconRemoteId, 3, profileId), thirdImage) } just Runs
+    every { imageCacheProxy.addImage(ImageId(iconRemoteId, 1, profileId).setNightMode(true), nightImage) } just Runs
+    every { imageCacheProxy.sum() } returnsMany listOf(0, 3)
+    every { imageCacheProxy.size() } returns 3
+    every { userIconRepository.loadAllIcons() } returns Observable.just(listOf(entity))
+    every { widgetManager.updateAllWidgets() } just Runs
 
     // when
     val testObserver = useCase.invoke().test()
 
     // then
     testObserver.assertComplete()
-    testObserver.assertResult(IconsCacheStatistics(3, true))
-    verify(imageCacheProxy).addImage(ImageId(iconRemoteId, 1, profileId), firstImage)
-    verify(imageCacheProxy).addImage(ImageId(iconRemoteId, 3, profileId), thirdImage)
-    verify(imageCacheProxy).addImage(ImageId(iconRemoteId, 1, profileId).setNightMode(true), nightImage)
-    verify(imageCacheProxy, times(2)).sum()
-    verify(imageCacheProxy).size()
-    verify(userIconRepository).loadAllIcons()
-    verifyNoMoreInteractions(imageCacheProxy, userIconRepository)
+    verify {
+      imageCacheProxy.addImage(ImageId(iconRemoteId, 1, profileId), firstImage)
+      imageCacheProxy.addImage(ImageId(iconRemoteId, 3, profileId), thirdImage)
+      imageCacheProxy.addImage(ImageId(iconRemoteId, 1, profileId).setNightMode(true), nightImage)
+      imageCacheProxy.size()
+      userIconRepository.loadAllIcons()
+      widgetManager.updateAllWidgets()
+    }
+    verify(exactly = 2) {
+      imageCacheProxy.sum()
+    }
+    confirmVerified(imageCacheProxy, userIconRepository, widgetManager)
+  }
+
+  @Test
+  fun `should not update widgets if no icon loaded`() {
+    // given
+    every { imageCacheProxy.sum() } returnsMany listOf(2, 2)
+    every { imageCacheProxy.size() } returns 3
+    every { userIconRepository.loadAllIcons() } returns Observable.just(emptyList())
+
+    // when
+    val testObserver = useCase.invoke().test()
+
+    // then
+    testObserver.assertComplete()
+    verify {
+      imageCacheProxy.size()
+      userIconRepository.loadAllIcons()
+    }
+    verify(exactly = 2) {
+      imageCacheProxy.sum()
+    }
+    confirmVerified(imageCacheProxy, userIconRepository, widgetManager)
   }
 }

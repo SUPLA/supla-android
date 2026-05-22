@@ -36,7 +36,7 @@ import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientApi
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
@@ -114,7 +114,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
   private lateinit var dateProvider: DateProvider
 
   @RelaxedMockK
-  private lateinit var profileRepository: RoomProfileRepository
+  private lateinit var profileRepository: ProfileRepository
 
   @RelaxedMockK
   private lateinit var loginUseCase: LoginUseCase

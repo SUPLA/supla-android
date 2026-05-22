@@ -25,7 +25,7 @@ import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.shared.shareable
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.ValuesFormatter
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
@@ -78,7 +78,7 @@ class ContainerGeneralDetailViewModel @Inject constructor(
   override val updateEventsManager: UpdateEventsManager,
   override val schedulers: SuplaSchedulers,
   suplaClientProvider: SuplaClientProvider,
-  profileRepository: RoomProfileRepository,
+  profileRepository: ProfileRepository,
   authorizeUseCase: AuthorizeUseCase,
   loginUseCase: LoginUseCase
 ) : BaseAuthorizationViewModel<ContainerGeneralDetailViewModeState, ContainerGeneralDetailViewEvent>(

@@ -24,7 +24,7 @@ import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.source.NfcCallRepository
 import org.supla.android.data.source.NfcTagRepository
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.NfcCallEntity
 import org.supla.android.extensions.toLocalDateTime
 import org.supla.android.tools.SuplaSchedulers
@@ -33,7 +33,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NfcTagDetailViewModel @Inject constructor(
-  private val profileRepository: RoomProfileRepository,
+  private val profileRepository: ProfileRepository,
   private val getCaptionUseCase: GetCaptionUseCase,
   private val nfcCallRepository: NfcCallRepository,
   private val nfcTagRepository: NfcTagRepository,

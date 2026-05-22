@@ -29,7 +29,6 @@ import javax.inject.Singleton
 @Singleton
 class DisconnectUseCase @Inject constructor(
   private val suplaClientProvider: SuplaClientProvider,
-  private val suplaAppProvider: SuplaAppProvider,
   private val updateEventsManager: UpdateEventsManager,
 ) {
 
@@ -51,10 +50,6 @@ class DisconnectUseCase @Inject constructor(
       // If it will be marked as canceled, supla app will initialize it again.
       suplaClient?.cancel()
     }
-
-    val suplaApp = suplaAppProvider.provide()
-    suplaApp.CancelAllRestApiClientTasks(true)
-    suplaApp.cleanupToken()
 
     updateEventsManager.cleanup()
     updateEventsManager.emitChannelsUpdate()

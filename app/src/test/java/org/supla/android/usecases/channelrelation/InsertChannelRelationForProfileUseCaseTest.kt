@@ -17,41 +17,43 @@ package org.supla.android.usecases.channelrelation
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import io.mockk.MockKAnnotations
+import io.mockk.confirmVerified
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.mockk
+import io.mockk.slot
+import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Single
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.ArgumentCaptor
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.any
-import org.mockito.kotlin.capture
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.data.source.ChannelRelationRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
-import org.supla.android.db.AuthProfileItem
+import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.lib.SuplaChannelRelation
-import org.supla.android.profile.ProfileManager
-import org.supla.android.testhelpers.profileMock
 import org.supla.android.testhelpers.relationMock
 import org.supla.core.shared.data.model.channel.ChannelRelationType
 
 @Suppress("SameParameterValue")
-@RunWith(MockitoJUnitRunner::class)
 class InsertChannelRelationForProfileUseCaseTest {
 
-  @Mock
-  lateinit var profileManager: ProfileManager
+  @MockK
+  private lateinit var profileRepository: ProfileRepository
 
-  @Mock
+  @MockK
   lateinit var channelRelationRepository: ChannelRelationRepository
 
-  @InjectMocks
+  @InjectMockKs
   lateinit var useCase: InsertChannelRelationForProfileUseCase
+
+  @Before
+  fun setUp() {
+    MockKAnnotations.init(this)
+  }
 
   @Test
   fun `should insert relation`() {
@@ -62,27 +64,29 @@ class InsertChannelRelationForProfileUseCaseTest {
     val relationType = ChannelRelationType.MAIN_THERMOMETER
 
     val relation: SuplaChannelRelation = relationMock(channelId, parentId, relationType)
-    val profile: AuthProfileItem = profileMock(profileId)
+    val profile: ProfileEntity = mockk { every { id } returns profileId }
 
-    whenever(profileManager.getCurrentProfile()).thenReturn(Maybe.just(profile))
-    whenever(channelRelationRepository.insertOrUpdate(any())).thenReturn(Completable.complete())
+    val relationSlot = slot<ChannelRelationEntity>()
+    every { channelRelationRepository.insertOrUpdate(capture(relationSlot)) } returns Completable.complete()
+    every { profileRepository.findActiveProfile() } returns Single.just(profile)
 
     // when
     val observer = useCase(relation).test()
 
     // then
     observer.assertComplete()
-    val entityCaptor: ArgumentCaptor<ChannelRelationEntity> = ArgumentCaptor.forClass(ChannelRelationEntity::class.java)
-    verify(channelRelationRepository).insertOrUpdate(capture(entityCaptor))
 
-    val entity = entityCaptor.value
+    val entity = relationSlot.captured
     assertThat(entity.channelId).isEqualTo(channelId)
     assertThat(entity.parentId).isEqualTo(parentId)
     assertThat(entity.relationType).isEqualTo(relationType)
     assertThat(entity.profileId).isEqualTo(profileId)
     assertThat(entity.deleteFlag).isFalse
 
-    verify(profileManager).getCurrentProfile()
-    verifyNoMoreInteractions(profileManager, channelRelationRepository)
+    verify {
+      profileRepository.findActiveProfile()
+      channelRelationRepository.insertOrUpdate(any())
+    }
+    confirmVerified(profileRepository, channelRelationRepository)
   }
 }

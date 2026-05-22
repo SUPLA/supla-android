@@ -17,48 +17,56 @@ package org.supla.android.usecases.channelrelation
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import io.mockk.MockKAnnotations
+import io.mockk.confirmVerified
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.mockk
+import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Single
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.data.source.ChannelRelationRepository
-import org.supla.android.profile.ProfileManager
-import org.supla.android.testhelpers.profileMock
+import org.supla.android.data.source.ProfileRepository
+import org.supla.android.data.source.local.entity.ProfileEntity
 
-@RunWith(MockitoJUnitRunner::class)
 class MarkChannelRelationsAsRemovableUseCaseTest {
 
-  @Mock
-  lateinit var profileManager: ProfileManager
+  @MockK
+  private lateinit var profileRepository: ProfileRepository
 
-  @Mock
-  lateinit var channelRelationRepository: ChannelRelationRepository
+  @MockK
+  private lateinit var channelRelationRepository: ChannelRelationRepository
 
-  @InjectMocks
-  lateinit var useCase: MarkChannelRelationsAsRemovableUseCase
+  @InjectMockKs
+  private lateinit var useCase: MarkChannelRelationsAsRemovableUseCase
+
+  @Before
+  fun setUp() {
+    MockKAnnotations.init(this)
+  }
 
   @Test
   fun `should mark as removable`() {
     // given
     val profileId = 123L
-    val profile = profileMock(profileId)
+    val profile: ProfileEntity = mockk { every { id } returns profileId }
 
-    whenever(profileManager.getCurrentProfile()).thenReturn(Maybe.just(profile))
-    whenever(channelRelationRepository.markAsRemovable(profileId)).thenReturn(Completable.complete())
+    every { profileRepository.findActiveProfile() } returns Single.just(profile)
+    every { channelRelationRepository.markAsRemovable(profileId) } returns Completable.complete()
 
     // when
     val observer = useCase().test()
 
     // then
     observer.assertComplete()
-    verify(profileManager).getCurrentProfile()
-    verify(channelRelationRepository).markAsRemovable(profileId)
-    verifyNoMoreInteractions(profileManager, channelRelationRepository)
+
+    verify {
+      profileRepository.findActiveProfile()
+      channelRelationRepository.markAsRemovable(profileId)
+    }
+    confirmVerified(profileRepository, channelRelationRepository)
   }
 }

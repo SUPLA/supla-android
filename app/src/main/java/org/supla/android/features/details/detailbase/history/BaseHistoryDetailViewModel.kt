@@ -49,6 +49,7 @@ import org.supla.android.data.model.chart.style.TemperatureChartStyle
 import org.supla.android.data.model.general.HideableValue
 import org.supla.android.data.model.general.RangeValueType
 import org.supla.android.data.model.general.SingleSelectionList
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.calendar.Hour
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.events.DownloadEventsManager
@@ -74,7 +75,6 @@ import org.supla.android.features.details.detailbase.history.ui.ChartDataSelecti
 import org.supla.android.features.details.detailbase.history.ui.CheckboxItem
 import org.supla.android.features.details.detailbase.history.ui.HistoryDetailScope
 import org.supla.android.features.details.electricitymeterdetail.history.IntroductionPage
-import org.supla.android.profile.ProfileManager
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.views.spinner.SpinnerItem
 import org.supla.android.usecases.channel.DeleteChannelMeasurementsUseCase
@@ -94,8 +94,8 @@ abstract class BaseHistoryDetailViewModel(
   private val deleteChannelMeasurementsUseCase: DeleteChannelMeasurementsUseCase,
   private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   private val groupingStringMigrationUseCase: GroupingStringMigrationUseCase,
+  private val profileRepository: ProfileRepository,
   private val userStateHolder: UserStateHolder,
-  private val profileManager: ProfileManager,
   private val dateProvider: DateProvider,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<HistoryDetailViewState, HistoryDetailViewEvent>(HistoryDetailViewState(), schedulers), HistoryDetailScope {
@@ -408,7 +408,7 @@ abstract class BaseHistoryDetailViewModel(
     Maybe.zip(
       readChannelWithChildrenUseCase(remoteId)
         .flatMap { groupingStringMigrationUseCase(it).andThen(Maybe.just(it)) },
-      profileManager.getCurrentProfile().map { loadChartState(it.id, remoteId) },
+      profileRepository.findActiveProfile().toMaybe().map { loadChartState(it.id!!, remoteId) },
     ) { first, second -> Pair(first, second) }
       .flatMap { pair ->
         try {
