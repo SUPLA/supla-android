@@ -29,7 +29,6 @@ import org.supla.android.data.source.local.entity.ChannelGroupEntity;
 import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity;
 import org.supla.android.data.source.local.view.ChannelView;
 import org.supla.android.db.Channel;
-import org.supla.android.db.ChannelGroup;
 import org.supla.android.db.Location;
 
 public class DefaultChannelRepository implements ChannelRepository {
@@ -40,16 +39,6 @@ public class DefaultChannelRepository implements ChannelRepository {
   public DefaultChannelRepository(ChannelDao channelDao, LocationDao locationDao) {
     this.channelDao = channelDao;
     this.locationDao = locationDao;
-  }
-
-  @Override
-  public Channel getChannel(int channelId, long profileId) {
-    return channelDao.getChannel(channelId, profileId);
-  }
-
-  @Override
-  public ChannelGroup getChannelGroup(int groupId, long profileId) {
-    return channelDao.getChannelGroup(groupId, profileId);
   }
 
   @Override

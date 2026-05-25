@@ -26,8 +26,8 @@ import android.view.View;
 import android.widget.FrameLayout;
 import javax.inject.Inject;
 import org.supla.android.SuplaApp;
-import org.supla.android.data.source.ProfileRepository;
-import org.supla.android.data.source.local.entity.ProfileEntity;
+import org.supla.android.data.source.ChannelGroupRepository;
+import org.supla.android.data.source.RoomChannelRepository;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.db.DbHelper;
@@ -41,7 +41,8 @@ public abstract class DetailLayout extends FrameLayout {
   private int mRemoteId;
   private boolean Group;
 
-  @Inject ProfileRepository profileRepository;
+  @Inject protected RoomChannelRepository channelRepository;
+  @Inject protected ChannelGroupRepository channelGroupRepository;
 
   public DetailLayout(Context context) {
     super(context);
@@ -106,12 +107,9 @@ public abstract class DetailLayout extends FrameLayout {
   public ChannelBase getChannelFromDatabase() {
 
     if (getRemoteId() != 0) {
-      ProfileEntity profile = profileRepository.findActiveProfile().blockingGet();
-      if (profile.getId() != null) {
-        return isGroup()
-            ? DBH.getChannelGroup(mRemoteId, profile.getId())
-            : DBH.getChannel(getRemoteId(), profile.getId());
-      }
+      return isGroup()
+          ? channelGroupRepository.findGroupDataEntity(mRemoteId).blockingFirst().getLegacyGroup()
+          : channelRepository.findChannelDataEntity(mRemoteId).blockingFirst().getLegacyChannel();
     }
 
     return null;

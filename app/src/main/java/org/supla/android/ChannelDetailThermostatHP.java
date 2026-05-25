@@ -33,9 +33,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import javax.inject.Inject;
-import org.supla.android.data.source.ProfileRepository;
-import org.supla.android.data.source.local.entity.ProfileEntity;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.lib.SuplaChannelThermostatValue;
@@ -81,8 +78,6 @@ public class ChannelDetailThermostatHP extends DetailLayout
   private Handler uiHandler;
   private ListView lvChannelList;
   private TextView tvErrorMessage;
-
-  @Inject ProfileRepository profileRepository;
 
   public ChannelDetailThermostatHP(Context context) {
     super(context);
@@ -321,8 +316,8 @@ public class ChannelDetailThermostatHP extends DetailLayout
   }
 
   private void OnChannelGroupDataChanged() {
-    ProfileEntity profile = profileRepository.findActiveProfile().blockingGet();
-    ChannelGroup channelGroup = DBH.getChannelGroup(getRemoteId(), profile.getId());
+    ChannelGroup channelGroup =
+        channelGroupRepository.findGroupDataEntity(getRemoteId()).blockingFirst().getLegacyGroup();
 
     Double t = channelGroup.getMinimumPresetTemperature();
     presetTemperatureMin = t == null ? 0 : t.intValue();
@@ -352,11 +347,8 @@ public class ChannelDetailThermostatHP extends DetailLayout
       return;
     }
 
-    ProfileEntity profile = profileRepository.findActiveProfile().blockingGet();
-    if (profile.getId() == null) {
-      return;
-    }
-    Channel channel = DBH.getChannel(getRemoteId(), profile.getId());
+    Channel channel =
+        channelRepository.findChannelDataEntity(getRemoteId()).blockingFirst().getLegacyChannel();
 
     tvErrorMessage.setVisibility(GONE);
     tvErrorMessage.setText("");

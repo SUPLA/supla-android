@@ -80,14 +80,6 @@ public class DbHelper extends BaseDbHelper {
     // Moved to Room (see DatabaseModule)
   }
 
-  public Channel getChannel(int channelId, long profileId) {
-    return channelRepository.getChannel(channelId, profileId);
-  }
-
-  public ChannelGroup getChannelGroup(int groupId, long profileId) {
-    return channelRepository.getChannelGroup(groupId, profileId);
-  }
-
   public Cursor getChannelListCursorForGroup(int groupId) {
     return channelRepository.getChannelListCursorForGroup(groupId);
   }

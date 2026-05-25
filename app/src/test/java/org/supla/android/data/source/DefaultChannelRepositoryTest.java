@@ -13,7 +13,6 @@ import static org.mockito.Mockito.when;
 import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -23,7 +22,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.supla.android.data.source.local.ChannelDao;
 import org.supla.android.data.source.local.LocationDao;
 import org.supla.android.db.Channel;
-import org.supla.android.db.ChannelGroup;
 import org.supla.android.db.Location;
 
 @SuppressWarnings("unchecked")
@@ -34,42 +32,6 @@ public class DefaultChannelRepositoryTest {
   @Mock private LocationDao locationDao;
 
   @InjectMocks private DefaultChannelRepository defaultChannelRepository;
-
-  @Test
-  public void shouldProvideChannelFromDao() {
-    // given
-    int channelId = 123;
-    long profileId = 1;
-    Channel channel = mock(Channel.class);
-    when(channelDao.getChannel(channelId, profileId)).thenReturn(channel);
-
-    // when
-    Channel result = defaultChannelRepository.getChannel(channelId, profileId);
-
-    // then
-    Assert.assertSame(channel, result);
-    verify(channelDao).getChannel(channelId, profileId);
-    verifyNoMoreInteractions(channelDao);
-    verifyNoInteractions(locationDao);
-  }
-
-  @Test
-  public void shouldProvideChannelGroupFromDao() {
-    // given
-    int channelGroupId = 123;
-    long profileId = 1;
-    ChannelGroup channelValue = mock(ChannelGroup.class);
-    when(channelDao.getChannelGroup(channelGroupId, profileId)).thenReturn(channelValue);
-
-    // when
-    ChannelGroup result = defaultChannelRepository.getChannelGroup(channelGroupId, profileId);
-
-    // then
-    Assert.assertSame(channelValue, result);
-    verify(channelDao).getChannelGroup(channelGroupId, profileId);
-    verifyNoMoreInteractions(channelDao);
-    verifyNoInteractions(locationDao);
-  }
 
   @Test
   public void shouldReorderChannels() {

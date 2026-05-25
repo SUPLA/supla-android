@@ -22,13 +22,8 @@ import android.database.Cursor;
 import io.reactivex.rxjava3.core.Completable;
 import java.util.List;
 import org.supla.android.db.Channel;
-import org.supla.android.db.ChannelGroup;
 
 public interface ChannelRepository {
-  Channel getChannel(int channelId, long profileId);
-
-  ChannelGroup getChannelGroup(int groupId, long profileId);
-
   Cursor getChannelListCursorForGroup(int groupId);
 
   boolean isZWaveBridgeChannelAvailable();

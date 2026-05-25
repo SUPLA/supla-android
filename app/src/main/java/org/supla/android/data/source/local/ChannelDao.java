@@ -26,13 +26,11 @@ import java.util.ArrayList;
 import java.util.List;
 import org.supla.android.data.source.local.entity.ChannelEntity;
 import org.supla.android.data.source.local.entity.ChannelGroupEntity;
-import org.supla.android.data.source.local.entity.ChannelValueEntity;
 import org.supla.android.data.source.local.entity.LocationEntity;
 import org.supla.android.data.source.local.entity.ProfileEntity;
 import org.supla.android.data.source.local.entity.UserIconEntity;
 import org.supla.android.data.source.local.view.ChannelView;
 import org.supla.android.db.Channel;
-import org.supla.android.db.ChannelGroup;
 import org.supla.android.db.Location;
 import org.supla.android.lib.SuplaConst;
 
@@ -40,40 +38,6 @@ public class ChannelDao extends BaseDao {
 
   public ChannelDao(@NonNull DatabaseAccessProvider databaseAccessProvider) {
     super(databaseAccessProvider);
-  }
-
-  public Channel getChannel(int channelId, long profileId) {
-    return getItem(
-        Channel::new,
-        ChannelView.INSTANCE.getALL_COLUMNS(),
-        ChannelView.NAME,
-        key(ChannelView.COLUMN_CHANNEL_REMOTE_ID, channelId),
-        key(ChannelValueEntity.COLUMN_PROFILE_ID, profileId));
-  }
-
-  public ChannelGroup getChannelGroup(int groupId, long profileId) {
-    String[] projection = {
-      ChannelGroupEntity.COLUMN_ID,
-      ChannelGroupEntity.COLUMN_REMOTE_ID,
-      ChannelGroupEntity.COLUMN_CAPTION,
-      ChannelGroupEntity.COLUMN_ONLINE,
-      ChannelGroupEntity.COLUMN_FUNCTION,
-      ChannelGroupEntity.COLUMN_VISIBLE,
-      ChannelGroupEntity.COLUMN_LOCATION_ID,
-      ChannelGroupEntity.COLUMN_ALT_ICON,
-      ChannelGroupEntity.COLUMN_USER_ICON,
-      ChannelGroupEntity.COLUMN_FLAGS,
-      ChannelGroupEntity.COLUMN_TOTAL_VALUE,
-      ChannelGroupEntity.COLUMN_POSITION,
-      ChannelGroupEntity.COLUMN_PROFILE_ID
-    };
-
-    return getItem(
-        ChannelGroup::new,
-        projection,
-        ChannelGroupEntity.TABLE_NAME,
-        key(ChannelGroupEntity.COLUMN_REMOTE_ID, groupId),
-        key(ChannelValueEntity.COLUMN_PROFILE_ID, profileId));
   }
 
   public Cursor getChannelListCursorWithDefaultOrder(String where) {
