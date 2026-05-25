@@ -26,7 +26,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import org.supla.android.BuildConfig
 import org.supla.android.data.source.ChannelRepository
-import org.supla.android.data.source.SceneRepository
 import org.supla.android.db.DbHelper
 import org.supla.android.db.room.EmptyMigration
 import org.supla.android.db.room.app.AppDatabase
@@ -298,9 +297,4 @@ class DatabaseModule {
   @Singleton
   fun provideChannelRepository(dbHelper: DbHelper): ChannelRepository =
     dbHelper.channelRepository
-
-  @Provides
-  @Singleton
-  fun provideScenesRepository(dbHelper: DbHelper): SceneRepository =
-    dbHelper.sceneRepository
 }

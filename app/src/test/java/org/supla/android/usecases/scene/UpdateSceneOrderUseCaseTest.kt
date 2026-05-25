@@ -34,7 +34,7 @@ class UpdateSceneOrderUseCaseTest {
     val secondScene = createSceneEntity(2L)
     val thirdScene = createSceneEntity(3L)
 
-    whenever(sceneRepository.update(any())).thenReturn(Completable.complete())
+    whenever(sceneRepository.update(any<List<SceneEntity>>())).thenReturn(Completable.complete())
 
     // when
     val testObserver = useCase.invoke(listOf(firstScene, secondScene, thirdScene)).test()

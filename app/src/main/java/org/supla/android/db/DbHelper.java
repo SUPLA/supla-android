@@ -26,11 +26,8 @@ import dagger.hilt.android.EntryPointAccessors;
 import java.util.List;
 import org.supla.android.data.source.ChannelRepository;
 import org.supla.android.data.source.DefaultChannelRepository;
-import org.supla.android.data.source.DefaultSceneRepository;
-import org.supla.android.data.source.SceneRepository;
 import org.supla.android.data.source.local.ChannelDao;
 import org.supla.android.data.source.local.LocationDao;
-import org.supla.android.data.source.local.SceneDao;
 import org.supla.android.di.entrypoints.ProfileIdHolderEntryPoint;
 import org.supla.android.profile.ProfileIdHolder;
 
@@ -43,13 +40,11 @@ public class DbHelper extends BaseDbHelper {
   private static DbHelper instance;
 
   private final ChannelRepository channelRepository;
-  private final SceneRepository sceneRepository;
 
   private DbHelper(Context context, ProfileIdProvider profileIdProvider) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION, profileIdProvider);
     this.channelRepository =
         new DefaultChannelRepository(new ChannelDao(this), new LocationDao(this));
-    this.sceneRepository = new DefaultSceneRepository(new SceneDao(this));
   }
 
   /**
@@ -74,10 +69,6 @@ public class DbHelper extends BaseDbHelper {
       }
     }
     return result;
-  }
-
-  public SceneRepository getSceneRepository() {
-    return sceneRepository;
   }
 
   @NonNull

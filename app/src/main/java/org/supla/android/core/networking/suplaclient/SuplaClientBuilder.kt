@@ -48,6 +48,8 @@ import org.supla.android.usecases.group.UpdateChannelGroupTotalValueUseCase
 import org.supla.android.usecases.group.UpdateChannelGroupUseCase
 import org.supla.android.usecases.location.UpdateLocationUseCase
 import org.supla.android.usecases.scene.SetScenesVisibleUseCase
+import org.supla.android.usecases.scene.UpdateSceneStateUseCase
+import org.supla.android.usecases.scene.UpdateSceneUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -84,6 +86,8 @@ data class SuplaClientDependencies @Inject constructor(
   val setChannelsVisibleUseCase: SetChannelsVisibleUseCase,
   val setChannelGroupsVisibleUseCase: SetChannelGroupsVisibleUseCase,
   val setScenesVisibleUseCase: SetScenesVisibleUseCase,
+  val updateSceneUseCase: UpdateSceneUseCase,
+  val updateSceneStateUseCase: UpdateSceneStateUseCase,
 
   val appDatabase: AppDatabase,
   val measurementsDatabase: MeasurementsDatabase,

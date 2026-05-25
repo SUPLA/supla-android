@@ -57,7 +57,6 @@ import org.supla.android.core.shared.SuplaClientMessageExtensionsKt;
 import org.supla.android.core.storage.EncryptedPreferences;
 import org.supla.android.data.model.general.EntityUpdateResult;
 import org.supla.android.data.source.ProfileRepository;
-import org.supla.android.data.source.SceneRepository;
 import org.supla.android.data.source.local.entity.ProfileEntity;
 import org.supla.android.data.source.remote.ChannelConfigType;
 import org.supla.android.data.source.remote.ConfigResult;
@@ -97,6 +96,8 @@ import org.supla.android.usecases.group.UpdateChannelGroupTotalValueUseCase;
 import org.supla.android.usecases.group.UpdateChannelGroupUseCase;
 import org.supla.android.usecases.location.UpdateLocationUseCase;
 import org.supla.android.usecases.scene.SetScenesVisibleUseCase;
+import org.supla.android.usecases.scene.UpdateSceneStateUseCase;
+import org.supla.android.usecases.scene.UpdateSceneUseCase;
 import org.supla.core.shared.data.model.suplaclient.SuplaResultCode;
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage;
 import timber.log.Timber;
@@ -148,6 +149,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private final SetChannelsVisibleUseCase setChannelsVisibleUseCase;
   private final SetChannelGroupsVisibleUseCase setChannelGroupsVisibleUseCase;
   private final SetScenesVisibleUseCase setScenesVisibleUseCase;
+  private final UpdateSceneUseCase updateSceneUseCase;
+  private final UpdateSceneStateUseCase updateSceneStateUseCase;
   private final AppDatabase appDatabase;
   private final MeasurementsDatabase measurementsDatabase;
   private final ProfileIdHolder profileIdHolder;
@@ -190,6 +193,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     this.setChannelsVisibleUseCase = dependencies.getSetChannelsVisibleUseCase();
     this.setChannelGroupsVisibleUseCase = dependencies.getSetChannelGroupsVisibleUseCase();
     this.setScenesVisibleUseCase = dependencies.getSetScenesVisibleUseCase();
+    this.updateSceneUseCase = dependencies.getUpdateSceneUseCase();
+    this.updateSceneStateUseCase = dependencies.getUpdateSceneStateUseCase();
     this.appDatabase = dependencies.getAppDatabase();
     this.measurementsDatabase = dependencies.getMeasurementsDatabase();
     this.profileIdHolder = dependencies.getProfileIdHolder();
@@ -1190,8 +1195,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
         scene.getCaption(),
         scene.isEol());
 
-    SceneRepository sr = DbH.getSceneRepository();
-    if (sr.updateSuplaScene(scene)) {
+    if (updateSceneUseCase.invoke(scene)) {
       updateEventsManager.emitSceneUpdate(scene.getId());
     }
 
@@ -1203,8 +1207,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   }
 
   private void sceneStateUpdate(SuplaSceneState state) {
-    SceneRepository sr = DbH.getSceneRepository();
-    if (sr.updateSuplaSceneState(state)) {
+    if (updateSceneStateUseCase.invoke(state)) {
       Timber.d(
           "Scene State sceneId: %d isDuringExecution: %b initiatorId: %d initiatorName: %s EOL: %b",
           state.getSceneId(),

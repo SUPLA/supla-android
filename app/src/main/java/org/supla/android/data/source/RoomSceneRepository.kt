@@ -36,6 +36,12 @@ class RoomSceneRepository @Inject constructor(
 
   fun findByRemoteId(remoteId: Int) = sceneDao.findByRemoteId(remoteId)
 
+  suspend fun findByRemoteIdKtx(remoteId: Int) = sceneDao.findByRemoteIdKtx(remoteId)
+
+  suspend fun insert(scene: SceneEntity) = sceneDao.insert(scene)
+
+  suspend fun update(scene: SceneEntity) = sceneDao.update(scene)
+
   suspend fun findHiddenScenes() = sceneDao.findHiddenScenes()
 
   fun findList() = sceneDao.findList()
