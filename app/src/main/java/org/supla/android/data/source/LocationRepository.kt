@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
+import kotlinx.coroutines.rx3.awaitSingleOrNull
 import org.supla.android.data.source.local.dao.LocationDao
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.usecases.captionchange.CaptionChangeUseCase
@@ -33,6 +34,8 @@ class LocationRepository @Inject constructor(
 ) : CountProvider, CaptionChangeUseCase.Updater, DeleteProfileUseCase.ProfileRemover {
 
   fun findByRemoteId(remoteId: Int) = locationDao.findByRemoteId(remoteId)
+
+  suspend fun insert(locationEntity: LocationEntity) = locationDao.insert(locationEntity)
 
   fun updateLocation(locationEntity: LocationEntity) = locationDao.updateLocation(locationEntity)
 

@@ -34,10 +34,6 @@ public interface ChannelRepository {
 
   ChannelGroup getChannelGroup(int groupId);
 
-  boolean updateChannelGroup(SuplaChannelGroup suplaChannelGroup);
-
-  boolean updateChannelGroupRelation(SuplaChannelGroupRelation suplaChannelGroupRelation);
-
   int getChannelCount();
 
   boolean setChannelsVisible(int visible, int whereVisible);
@@ -63,8 +59,6 @@ public interface ChannelRepository {
   // Location looks rather as a channel location, that's why here
 
   Location getLocation(int locationId);
-
-  boolean updateLocation(SuplaLocation suplaLocation);
 
   void updateLocation(Location location);
 

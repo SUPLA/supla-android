@@ -53,11 +53,6 @@ public class LocationDao extends BaseDao {
         key(LocationEntity.COLUMN_PROFILE_ID, getCachedProfileId()));
   }
 
-  public void insert(Location location) {
-    location.setProfileId(getCachedProfileId());
-    insert(location, LocationEntity.TABLE_NAME);
-  }
-
   public void update(Location location) {
     update(location, LocationEntity.TABLE_NAME, key(LocationEntity.COLUMN_ID, location.getId()));
   }
