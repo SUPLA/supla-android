@@ -18,7 +18,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -110,6 +113,28 @@ interface ChannelGroupRelationDao {
     """
   )
   fun findGroupRelations(remoteId: Int): Observable<List<ChannelGroupRelationEntity>>
+
+  @Query(
+    """
+      SELECT
+        $COLUMN_ID,
+        $COLUMN_GROUP_ID,
+        $COLUMN_CHANNEL_ID,
+        $COLUMN_VISIBLE,
+        $COLUMN_PROFILE_ID
+      FROM $TABLE_NAME
+      WHERE $COLUMN_GROUP_ID = :groupId
+        AND $COLUMN_CHANNEL_ID = :channelId
+        AND $COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
+    """
+  )
+  suspend fun findByGroupAndChannel(groupId: Int, channelId: Int): ChannelGroupRelationEntity?
+
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  suspend fun insert(entity: ChannelGroupRelationEntity)
+
+  @Update
+  suspend fun update(entity: ChannelGroupRelationEntity)
 
   @Query("SELECT COUNT($COLUMN_ID) FROM $TABLE_NAME")
   fun count(): Observable<Int>

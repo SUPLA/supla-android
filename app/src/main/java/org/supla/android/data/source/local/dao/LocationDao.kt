@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import androidx.room.Dao
+import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import io.reactivex.rxjava3.core.Completable
@@ -43,6 +44,9 @@ interface LocationDao {
   """
   )
   fun findByRemoteId(remoteId: Int): Maybe<LocationEntity>
+
+  @Insert
+  suspend fun insert(locationEntity: LocationEntity)
 
   @Update
   fun updateLocation(locationEntity: LocationEntity): Completable

@@ -18,6 +18,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import io.reactivex.rxjava3.core.Completable
@@ -60,6 +62,12 @@ interface ChannelGroupDao {
     """
   )
   fun findByRemoteId(remoteId: Int): Maybe<ChannelGroupEntity>
+
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  suspend fun insert(entity: ChannelGroupEntity)
+
+  @Update
+  suspend fun update(entity: ChannelGroupEntity)
 
   @Query(
     """
@@ -205,6 +213,17 @@ interface ChannelGroupDao {
 
   @Update
   fun update(groups: List<ChannelGroupEntity>): Completable
+
+  @Query(
+    """
+    SELECT MAX($COLUMN_POSITION)
+    FROM $TABLE_NAME
+    WHERE $COLUMN_LOCATION_ID = :locationRemoteId
+      AND $COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
+    GROUP BY $COLUMN_LOCATION_ID
+  """
+  )
+  suspend fun findMaxPositionInLocation(locationRemoteId: Int): Int?
 
   @Query("SELECT COUNT($COLUMN_ID) FROM $TABLE_NAME")
   fun count(): Observable<Int>

@@ -20,6 +20,7 @@ package org.supla.android.data.source
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.rx3.awaitSingleOrNull
 import org.supla.android.data.source.local.dao.ChannelGroupDao
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
@@ -45,6 +46,12 @@ class ChannelGroupRepository @Inject constructor(
   fun findProfileGroups(profileId: Long): Single<List<ChannelGroupDataEntity>> = channelGroupDao.findProfileGroups(profileId)
 
   fun update(groups: List<ChannelGroupEntity>) = channelGroupDao.update(groups)
+
+  suspend fun insert(entity: ChannelGroupEntity) = channelGroupDao.insert(entity)
+
+  suspend fun updateEntity(entity: ChannelGroupEntity) = channelGroupDao.update(entity)
+
+  suspend fun findMaxPositionInLocation(locationRemoteId: Int) = channelGroupDao.findMaxPositionInLocation(locationRemoteId)
 
   suspend fun findIconIdsToDownload(profileId: Long) = channelGroupDao.findIconIdsToDownload(profileId)
 

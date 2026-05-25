@@ -99,24 +99,12 @@ public class DbHelper extends BaseDbHelper {
     // Moved to Room (see DatabaseModule)
   }
 
-  public boolean updateLocation(SuplaLocation suplaLocation) {
-    return channelRepository.updateLocation(suplaLocation);
-  }
-
   public Channel getChannel(int channelId) {
     return channelRepository.getChannel(channelId);
   }
 
   public ChannelGroup getChannelGroup(int groupId) {
     return channelRepository.getChannelGroup(groupId);
-  }
-
-  public boolean updateChannelGroup(SuplaChannelGroup suplaChannelGroup) {
-    return channelRepository.updateChannelGroup(suplaChannelGroup);
-  }
-
-  public boolean updateChannelGroupRelation(SuplaChannelGroupRelation suplaChannelGroupRelation) {
-    return channelRepository.updateChannelGroupRelation(suplaChannelGroupRelation);
   }
 
   public boolean setChannelsVisible(int visible, int whereVisible) {

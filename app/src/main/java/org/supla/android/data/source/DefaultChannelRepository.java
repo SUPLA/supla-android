@@ -62,64 +62,6 @@ public class DefaultChannelRepository implements ChannelRepository {
   }
 
   @Override
-  public boolean updateChannelGroup(SuplaChannelGroup suplaChannelGroup) {
-    Location location = getLocation(suplaChannelGroup.LocationID);
-    if (location == null) {
-      return false;
-    }
-
-    ChannelGroup channelGroup = getChannelGroup(suplaChannelGroup.Id);
-    if (channelGroup == null) {
-      channelGroup = new ChannelGroup();
-      channelGroup.Assign(suplaChannelGroup, channelDao.getCachedProfileId().intValue());
-      channelGroup.setVisible(1);
-      channelGroup.setProfileId(channelDao.getCachedProfileId());
-      updateChannelGroupPosition(location, channelGroup);
-
-      channelDao.insert(channelGroup);
-      return true;
-    } else if (channelGroup.Diff(suplaChannelGroup)
-        || channelGroup.getLocationId() != suplaChannelGroup.LocationID
-        || channelGroup.getVisible() != 1) {
-
-      if (channelGroup.getLocationId() != suplaChannelGroup.LocationID) {
-        // channel changed location - position update needed.
-        updateChannelGroupPosition(location, channelGroup);
-      }
-
-      channelGroup.Assign(suplaChannelGroup, channelDao.getCachedProfileId().intValue());
-      channelGroup.setVisible(1);
-
-      channelDao.update(channelGroup);
-      return true;
-    }
-    return false;
-  }
-
-  @Override
-  public boolean updateChannelGroupRelation(SuplaChannelGroupRelation suplaChannelGroupRelation) {
-    ChannelGroupRelation channelGroupRelation =
-        channelDao.getChannelGroupRelation(
-            suplaChannelGroupRelation.ChannelID, suplaChannelGroupRelation.ChannelGroupID);
-
-    if (channelGroupRelation == null) {
-      channelGroupRelation = new ChannelGroupRelation();
-      channelGroupRelation.Assign(suplaChannelGroupRelation);
-      channelGroupRelation.setVisible(1);
-
-      channelDao.insert(channelGroupRelation);
-      return true;
-    } else if (channelGroupRelation.getVisible() != 1) {
-      channelGroupRelation.Assign(suplaChannelGroupRelation);
-      channelGroupRelation.setVisible(1);
-
-      channelDao.update(channelGroupRelation);
-      return true;
-    }
-    return false;
-  }
-
-  @Override
   public int getChannelCount() {
     return channelDao.getChannelCount();
   }
@@ -198,28 +140,6 @@ public class DefaultChannelRepository implements ChannelRepository {
   @Override
   public Location getLocation(int locationId) {
     return locationDao.getLocation(locationId);
-  }
-
-  @Override
-  public boolean updateLocation(SuplaLocation suplaLocation) {
-    Location location = getLocation(suplaLocation.Id);
-    if (location == null) {
-      location = new Location();
-      location.AssignSuplaLocation(suplaLocation);
-      location.setVisible(1);
-      location.setSorting(Location.SortingType.DEFAULT);
-
-      locationDao.insert(location);
-      return true;
-    } else if (location.Diff(suplaLocation)) {
-
-      location.AssignSuplaLocation(suplaLocation);
-      location.setVisible(1);
-
-      locationDao.update(location);
-      return true;
-    }
-    return false;
   }
 
   @Override

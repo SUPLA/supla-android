@@ -87,8 +87,11 @@ import org.supla.android.usecases.channelconfig.InsertChannelConfigUseCase;
 import org.supla.android.usecases.channelrelation.DeleteRemovableChannelRelationsUseCase;
 import org.supla.android.usecases.channelrelation.InsertChannelRelationForProfileUseCase;
 import org.supla.android.usecases.channelrelation.MarkChannelRelationsAsRemovableUseCase;
+import org.supla.android.usecases.channelrelation.UpdateChannelGroupRelationUseCase;
 import org.supla.android.usecases.channelstate.UpdateChannelStateUseCase;
+import org.supla.android.usecases.group.UpdateChannelGroupUseCase;
 import org.supla.android.usecases.group.UpdateChannelGroupTotalValueUseCase;
+import org.supla.android.usecases.location.UpdateLocationUseCase;
 import org.supla.core.shared.data.model.suplaclient.SuplaResultCode;
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage;
 import timber.log.Timber;
@@ -127,12 +130,15 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private final MarkChannelRelationsAsRemovableUseCase markChannelRelationsAsRemovableUseCase;
   private final InsertChannelRelationForProfileUseCase insertChannelRelationForProfileUseCase;
   private final DeleteRemovableChannelRelationsUseCase deleteRemovableChannelRelationsUseCase;
+  private final UpdateChannelGroupRelationUseCase updateChannelGroupRelationUseCase;
   private final SuplaCloudConfigHolder suplaCloudConfigHolder;
   private final InsertChannelConfigUseCase insertChannelConfigUseCase;
+  private final UpdateLocationUseCase updateLocationUseCase;
   private final UpdateChannelUseCase updateChannelUseCase;
   private final UpdateChannelValueUseCase updateChannelValueUseCase;
   private final UpdateChannelExtendedValueUseCase updateChannelExtendedValueUseCase;
   private final UpdateChannelStateUseCase updateChannelStateUseCase;
+  private final UpdateChannelGroupUseCase updateChannelGroupUseCase;
   private final AppDatabase appDatabase;
   private final MeasurementsDatabase measurementsDatabase;
   private final ProfileIdHolder profileIdHolder;
@@ -161,12 +167,16 @@ public class SuplaClient extends Thread implements SuplaClientApi {
         dependencies.getInsertChannelRelationForProfileUseCase();
     this.deleteRemovableChannelRelationsUseCase =
         dependencies.getDeleteRemovableChannelRelationsUseCase();
+    this.updateChannelGroupRelationUseCase =
+        dependencies.getUpdateChannelGroupRelationUseCase();
     this.suplaCloudConfigHolder = dependencies.getSuplaCloudConfigHolder();
     this.insertChannelConfigUseCase = dependencies.getInsertChannelConfigUseCase();
     this.updateChannelUseCase = dependencies.getUpdateChannelUseCase();
+    this.updateLocationUseCase = dependencies.getUpdateLocationUseCase();
     this.updateChannelValueUseCase = dependencies.getUpdateChannelValueUseCase();
     this.updateChannelExtendedValueUseCase = dependencies.getUpdateChannelExtendedValueUseCase();
     this.updateChannelStateUseCase = dependencies.getUpdateChannelStateUseCase();
+    this.updateChannelGroupUseCase = dependencies.getUpdateChannelGroupUseCase();
     this.appDatabase = dependencies.getAppDatabase();
     this.measurementsDatabase = dependencies.getMeasurementsDatabase();
     this.profileIdHolder = dependencies.getProfileIdHolder();
@@ -1021,7 +1031,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private void locationUpdate(SuplaLocation location) {
     Timber.d("Location %d %s", location.Id, location.Caption);
 
-    if (DbH.updateLocation(location)) {
+    if (updateLocationUseCase.invoke(location)) {
       Timber.d("Location updated");
     }
   }
@@ -1089,7 +1099,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
         channel_group.AltIcon,
         channel_group.UserIcon);
 
-    if (DbH.updateChannelGroup(channel_group)) {
+    if (updateChannelGroupUseCase.invoke(channel_group)) {
       _DataChanged = true;
     }
 
@@ -1133,7 +1143,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
         "Channel Group Relation group ID: %d channel ID: %d",
         channelgroup_relation.ChannelGroupID, channelgroup_relation.ChannelID);
 
-    if (DbH.updateChannelGroupRelation(channelgroup_relation)) {
+    if (updateChannelGroupRelationUseCase.invoke(channelgroup_relation)) {
       _DataChanged = true;
     }
 
