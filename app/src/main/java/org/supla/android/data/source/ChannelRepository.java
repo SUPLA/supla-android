@@ -21,10 +21,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.database.Cursor;
 import io.reactivex.rxjava3.core.Completable;
 import java.util.List;
-import org.jetbrains.annotations.NotNull;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelGroup;
-import org.supla.android.db.Location;
 
 public interface ChannelRepository {
   Channel getChannel(int channelId, long profileId);
@@ -42,11 +40,4 @@ public interface ChannelRepository {
 
   Completable reorderChannelGroups(
       Long firstItemId, int firstItemLocationId, Long secondItemId, long profileId);
-
-  // Location looks rather as a channel location, that's why here
-
-  void updateLocation(Location location);
-
-  @NotNull
-  List<Location> getAllLocations();
 }

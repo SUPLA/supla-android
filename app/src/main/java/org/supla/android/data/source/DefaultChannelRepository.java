@@ -20,8 +20,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import android.annotation.SuppressLint;
 import android.database.Cursor;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import io.reactivex.rxjava3.core.Completable;
 import java.util.ArrayList;
 import java.util.List;
@@ -96,21 +94,6 @@ public class DefaultChannelRepository implements ChannelRepository {
       Long firstItemId, int firstItemLocationId, Long secondItemId, long profilId) {
     return Completable.fromRunnable(
         () -> doReorderChannelGroups(firstItemId, firstItemLocationId, secondItemId, profilId));
-  }
-
-  @Override
-  public void updateLocation(@Nullable Location location) {
-    if (location == null) {
-      return;
-    }
-
-    locationDao.update(location);
-  }
-
-  @NonNull
-  @Override
-  public List<Location> getAllLocations() {
-    return locationDao.getLocations();
   }
 
   private void doReorderChannels(

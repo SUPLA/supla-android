@@ -49,7 +49,7 @@
 
   <fragment
     android:id="@+id/location_ordering_fragment"
-    android:name="org.supla.android.cfg.LocationOrderingFragment"
+    android:name="org.supla.android.features.locationreorder.LocationReorderFragment"
     android:label="@string/location_ordering" />
 
   <fragment

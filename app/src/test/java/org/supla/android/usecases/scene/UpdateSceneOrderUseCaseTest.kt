@@ -12,7 +12,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import org.supla.android.data.source.RoomSceneRepository
+import org.supla.android.data.source.SceneRepository
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.SceneEntity
 import org.supla.android.data.source.local.entity.complex.SceneDataEntity
@@ -22,7 +22,7 @@ import org.supla.android.db.Location
 class UpdateSceneOrderUseCaseTest {
 
   @Mock
-  private lateinit var sceneRepository: RoomSceneRepository
+  private lateinit var sceneRepository: SceneRepository
 
   @InjectMocks
   private lateinit var useCase: UpdateSceneOrderUseCase

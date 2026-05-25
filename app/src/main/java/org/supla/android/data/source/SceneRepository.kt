@@ -30,7 +30,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class RoomSceneRepository @Inject constructor(
+class SceneRepository @Inject constructor(
   private val sceneDao: SceneDao
 ) : CountProvider, CaptionChangeUseCase.Updater, RemoveHiddenScenesUseCase.ScenesDeletable, DeleteProfileUseCase.ProfileRemover {
 

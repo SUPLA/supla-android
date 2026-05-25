@@ -18,7 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import io.reactivex.rxjava3.core.Observable
-import org.supla.android.data.source.RoomSceneRepository
+import org.supla.android.data.source.SceneRepository
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.location.CollapsedFlag
@@ -27,10 +27,10 @@ import javax.inject.Singleton
 
 @Singleton
 class CreateProfileScenesListUseCase @Inject constructor(
-  private val roomSceneRepository: RoomSceneRepository
+  private val sceneRepository: SceneRepository
 ) {
   operator fun invoke(): Observable<List<ListItem>> =
-    roomSceneRepository.findList().map { entities ->
+    sceneRepository.findList().map { entities ->
       val result = mutableListOf<ListItem>()
 
       var location: LocationEntity? = null
