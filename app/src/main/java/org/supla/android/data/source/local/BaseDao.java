@@ -95,27 +95,6 @@ public abstract class BaseDao {
         });
   }
 
-  void update(DbItem item, String tableName, Key<?>... keys) {
-    final StringBuilder selectionBuilder = new StringBuilder();
-    final String[] selectionArgs = new String[keys.length];
-    for (int i = 0; i < keys.length; i++) {
-      Key<?> key = keys[i];
-
-      if (selectionBuilder.length() > 0) {
-        selectionBuilder.append(" AND ").append(key.asSelection());
-      } else {
-        selectionBuilder.append(key.asSelection());
-      }
-      selectionArgs[i] = String.valueOf(key.value);
-    }
-
-    write(
-        sqLiteDatabase -> {
-          sqLiteDatabase.update(
-              tableName, item.getContentValues(), selectionBuilder.toString(), selectionArgs);
-        });
-  }
-
   <T> Key<T> key(String column, T id) {
     return new Key<>(column, id);
   }

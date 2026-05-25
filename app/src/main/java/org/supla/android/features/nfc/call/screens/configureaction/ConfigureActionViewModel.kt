@@ -21,7 +21,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.NfcCallRepository
 import org.supla.android.data.source.NfcTagRepository
-import org.supla.android.data.source.RoomSceneRepository
+import org.supla.android.data.source.SceneRepository
 import org.supla.android.features.nfc.shared.edit.BaseEditNfcTagViewModel
 import org.supla.android.features.nfc.shared.edit.EditNfcTagViewEvent
 import org.supla.android.tools.SuplaSchedulers
@@ -39,7 +39,7 @@ class ConfigureActionViewModel @Inject constructor(
   getChannelValueStringUseCase: GetChannelValueStringUseCase,
   readAllProfilesUseCase: ReadAllProfilesUseCase,
   channelGroupRepository: ChannelGroupRepository,
-  sceneRepository: RoomSceneRepository,
+  sceneRepository: SceneRepository,
   nfcCallRepository: NfcCallRepository,
   nfcTagRepository: NfcTagRepository,
   schedulers: SuplaSchedulers,

@@ -39,6 +39,8 @@ class LocationRepository @Inject constructor(
 
   fun updateLocation(locationEntity: LocationEntity) = locationDao.updateLocation(locationEntity)
 
+  suspend fun getAllLocations(): List<LocationEntity> = locationDao.getLocations()
+
   override fun count(): Observable<Int> = locationDao.count()
 
   override fun updateCaption(caption: String, remoteId: Int, profileId: Long): Completable =

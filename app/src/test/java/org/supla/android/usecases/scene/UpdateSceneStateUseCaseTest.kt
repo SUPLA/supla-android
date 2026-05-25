@@ -5,16 +5,14 @@ import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.confirmVerified
-import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.just
 import io.mockk.slot
-import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.supla.android.data.source.RoomSceneRepository
+import org.supla.android.data.source.SceneRepository
 import org.supla.android.data.source.local.entity.SceneEntity
 import org.supla.android.lib.SuplaSceneState
 import java.util.Date
@@ -22,7 +20,7 @@ import java.util.Date
 class UpdateSceneStateUseCaseTest {
 
   @MockK
-  private lateinit var sceneRepository: RoomSceneRepository
+  private lateinit var sceneRepository: SceneRepository
 
   @InjectMockKs
   private lateinit var useCase: UpdateSceneStateUseCase

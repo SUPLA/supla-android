@@ -22,7 +22,7 @@ import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.LocationRepository
 import org.supla.android.data.source.RoomChannelRepository
-import org.supla.android.data.source.RoomSceneRepository
+import org.supla.android.data.source.SceneRepository
 import org.supla.android.events.UpdateEventsManager
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -32,7 +32,7 @@ class CaptionChangeUseCase @Inject constructor(
   private val locationRepository: LocationRepository,
   private val roomChannelRepository: RoomChannelRepository,
   private val groupRepository: ChannelGroupRepository,
-  private val sceneRepository: RoomSceneRepository,
+  private val sceneRepository: SceneRepository,
   private val suplaClientProvider: SuplaClientProvider,
   private val updateEventsManager: UpdateEventsManager
 ) {

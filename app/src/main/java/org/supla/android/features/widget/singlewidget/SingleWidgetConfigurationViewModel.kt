@@ -26,7 +26,7 @@ import org.supla.android.data.model.spinner.ProfileItem
 import org.supla.android.data.model.spinner.SubjectItem
 import org.supla.android.data.model.spinner.SubjectItemConversionScope
 import org.supla.android.data.source.ChannelGroupRepository
-import org.supla.android.data.source.RoomSceneRepository
+import org.supla.android.data.source.SceneRepository
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.widget.shared.BaseWidgetViewModel
 import org.supla.android.features.widget.shared.WidgetConfigurationScope
@@ -59,7 +59,7 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
   readAllChannelsWithChildrenUseCase: ReadAllChannelsWithChildrenUseCase,
   getChannelValueStringUseCase: GetChannelValueStringUseCase,
   channelGroupRepository: ChannelGroupRepository,
-  sceneRepository: RoomSceneRepository,
+  sceneRepository: SceneRepository,
   powerManager: PowerManager,
   schedulers: SuplaSchedulers
 ) : BaseWidgetViewModel(

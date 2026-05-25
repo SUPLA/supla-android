@@ -18,14 +18,14 @@ package org.supla.android.usecases.scene
  */
 
 import io.reactivex.rxjava3.core.Completable
-import org.supla.android.data.source.RoomSceneRepository
+import org.supla.android.data.source.SceneRepository
 import org.supla.android.data.source.local.entity.complex.SceneDataEntity
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class UpdateSceneOrderUseCase @Inject constructor(
-  private val sceneRepository: RoomSceneRepository
+  private val sceneRepository: SceneRepository
 ) {
 
   operator fun invoke(scenes: List<SceneDataEntity>): Completable {

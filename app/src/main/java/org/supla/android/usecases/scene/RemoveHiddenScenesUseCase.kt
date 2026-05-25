@@ -22,14 +22,14 @@ import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.supla.android.data.source.AndroidAutoItemRepository
-import org.supla.android.data.source.RoomSceneRepository
+import org.supla.android.data.source.SceneRepository
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class RemoveHiddenScenesUseCase @Inject constructor(
-  private val sceneRepository: RoomSceneRepository,
+  private val sceneRepository: SceneRepository,
   androidAutoItemRepository: AndroidAutoItemRepository
 ) {
   private val relatedRepositories: List<ScenesDeletable> = listOf(

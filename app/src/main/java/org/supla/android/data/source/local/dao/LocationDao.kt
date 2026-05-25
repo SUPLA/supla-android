@@ -24,11 +24,14 @@ import androidx.room.Update
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
+import org.supla.android.data.source.local.entity.ChannelEntity
+import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.LocationEntity.Companion.ALL_COLUMNS
 import org.supla.android.data.source.local.entity.LocationEntity.Companion.COLUMN_CAPTION
 import org.supla.android.data.source.local.entity.LocationEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.LocationEntity.Companion.COLUMN_REMOTE_ID
+import org.supla.android.data.source.local.entity.LocationEntity.Companion.COLUMN_SORT_ORDER
 import org.supla.android.data.source.local.entity.LocationEntity.Companion.TABLE_NAME
 import org.supla.android.data.source.local.entity.ProfileEntity
 
@@ -50,6 +53,27 @@ interface LocationDao {
 
   @Update
   fun updateLocation(locationEntity: LocationEntity): Completable
+
+  @Query(
+    """
+    SELECT DISTINCT $ALL_COLUMNS
+    FROM $TABLE_NAME AS L
+    WHERE $COLUMN_REMOTE_ID IN (
+      SELECT ${ChannelEntity.COLUMN_LOCATION_ID}
+      FROM ${ChannelEntity.TABLE_NAME}
+      WHERE ${ChannelEntity.COLUMN_VISIBLE} > 0
+        AND ${ChannelEntity.COLUMN_PROFILE_ID} = ${ProfileEntity.SUBQUERY_ACTIVE}
+      UNION
+      SELECT ${ChannelGroupEntity.COLUMN_LOCATION_ID}
+      FROM ${ChannelGroupEntity.TABLE_NAME}
+      WHERE ${ChannelGroupEntity.COLUMN_VISIBLE} > 0
+        AND ${ChannelGroupEntity.COLUMN_PROFILE_ID} = ${ProfileEntity.SUBQUERY_ACTIVE}
+    )
+      AND $COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
+    ORDER BY $COLUMN_SORT_ORDER, $COLUMN_CAPTION COLLATE LOCALIZED
+  """
+  )
+  suspend fun getLocations(): List<LocationEntity>
 
   @Query("SELECT COUNT($COLUMN_PROFILE_ID) FROM $TABLE_NAME")
   fun count(): Observable<Int>

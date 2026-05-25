@@ -36,8 +36,8 @@ import org.supla.android.data.source.NotificationRepository
 import org.supla.android.data.source.PowerActiveLogRepository
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.RoomChannelRepository
-import org.supla.android.data.source.RoomSceneRepository
 import org.supla.android.data.source.RoomUserIconRepository
+import org.supla.android.data.source.SceneRepository
 import org.supla.android.data.source.VoltageLogRepository
 import org.supla.android.data.source.local.entity.ChannelConfigEntity
 import org.supla.android.data.source.local.entity.ChannelEntity
@@ -96,7 +96,7 @@ class LoadDatabaseDetailsUseCase @Inject constructor(
   powerActiveLogRepository: PowerActiveLogRepository,
   channelRepository: RoomChannelRepository,
   profileRepository: ProfileRepository,
-  sceneRepository: RoomSceneRepository,
+  sceneRepository: SceneRepository,
   userIconRepository: RoomUserIconRepository,
   voltageLogRepository: VoltageLogRepository,
 ) {

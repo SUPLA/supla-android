@@ -8,13 +8,13 @@ import io.mockk.impl.annotations.MockK
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.supla.android.data.source.RoomSceneRepository
+import org.supla.android.data.source.SceneRepository
 import org.supla.android.usecases.channel.VisibilityChange
 
 class SetScenesVisibleUseCaseTest {
 
   @MockK
-  private lateinit var sceneRepository: RoomSceneRepository
+  private lateinit var sceneRepository: SceneRepository
 
   @InjectMockKs
   private lateinit var useCase: SetScenesVisibleUseCase

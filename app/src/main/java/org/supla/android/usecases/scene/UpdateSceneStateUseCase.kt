@@ -20,14 +20,14 @@ package org.supla.android.usecases.scene
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import org.supla.android.data.source.RoomSceneRepository
+import org.supla.android.data.source.SceneRepository
 import org.supla.android.lib.SuplaSceneState
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class UpdateSceneStateUseCase @Inject constructor(
-  private val sceneRepository: RoomSceneRepository
+  private val sceneRepository: SceneRepository
 ) {
 
   operator fun invoke(suplaSceneState: SuplaSceneState): Boolean =

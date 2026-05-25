@@ -27,7 +27,7 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
-import org.supla.android.data.source.RoomSceneRepository
+import org.supla.android.data.source.SceneRepository
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.SceneDataEntity
 import org.supla.android.ui.lists.ListItem
@@ -37,7 +37,7 @@ import org.supla.android.usecases.location.CollapsedFlag
 class CreateProfileScenesListUseCaseTest {
 
   @Mock
-  private lateinit var sceneRepository: RoomSceneRepository
+  private lateinit var sceneRepository: SceneRepository
 
   @InjectMocks
   private lateinit var useCase: CreateProfileScenesListUseCase
