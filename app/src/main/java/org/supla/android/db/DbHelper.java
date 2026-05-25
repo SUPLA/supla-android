@@ -32,9 +32,6 @@ import org.supla.android.data.source.local.ChannelDao;
 import org.supla.android.data.source.local.LocationDao;
 import org.supla.android.data.source.local.SceneDao;
 import org.supla.android.di.entrypoints.ProfileIdHolderEntryPoint;
-import org.supla.android.lib.SuplaChannelGroup;
-import org.supla.android.lib.SuplaChannelGroupRelation;
-import org.supla.android.lib.SuplaLocation;
 import org.supla.android.profile.ProfileIdHolder;
 
 public class DbHelper extends BaseDbHelper {
@@ -105,18 +102,6 @@ public class DbHelper extends BaseDbHelper {
 
   public ChannelGroup getChannelGroup(int groupId) {
     return channelRepository.getChannelGroup(groupId);
-  }
-
-  public boolean setChannelsVisible(int visible, int whereVisible) {
-    return channelRepository.setChannelsVisible(visible, whereVisible);
-  }
-
-  public boolean setChannelGroupsVisible(int visible, int whereVisible) {
-    return channelRepository.setChannelGroupsVisible(visible, whereVisible);
-  }
-
-  public boolean setChannelGroupRelationsVisible(int visible, int whereVisible) {
-    return channelRepository.setChannelGroupRelationsVisible(visible, whereVisible);
   }
 
   public boolean setChannelsOffline() {

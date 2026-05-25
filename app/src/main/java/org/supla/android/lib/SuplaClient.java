@@ -79,19 +79,24 @@ import org.supla.android.lib.actions.ActionParameters;
 import org.supla.android.lib.actions.SubjectType;
 import org.supla.android.profile.ProfileIdHolder;
 import org.supla.android.usecases.channel.ChannelToRootRelationHolderUseCase;
+import org.supla.android.usecases.channel.SetChannelsVisibleUseCase;
 import org.supla.android.usecases.channel.UpdateChannelExtendedValueUseCase;
 import org.supla.android.usecases.channel.UpdateChannelUseCase;
 import org.supla.android.usecases.channel.UpdateChannelValueUseCase;
 import org.supla.android.usecases.channel.UpdateExtendedValueResult;
+import org.supla.android.usecases.channel.VisibilityChange;
 import org.supla.android.usecases.channelconfig.InsertChannelConfigUseCase;
 import org.supla.android.usecases.channelrelation.DeleteRemovableChannelRelationsUseCase;
 import org.supla.android.usecases.channelrelation.InsertChannelRelationForProfileUseCase;
 import org.supla.android.usecases.channelrelation.MarkChannelRelationsAsRemovableUseCase;
+import org.supla.android.usecases.channelrelation.SetChannelGroupRelationsVisibleUseCase;
 import org.supla.android.usecases.channelrelation.UpdateChannelGroupRelationUseCase;
 import org.supla.android.usecases.channelstate.UpdateChannelStateUseCase;
-import org.supla.android.usecases.group.UpdateChannelGroupUseCase;
+import org.supla.android.usecases.group.SetChannelGroupsVisibleUseCase;
 import org.supla.android.usecases.group.UpdateChannelGroupTotalValueUseCase;
+import org.supla.android.usecases.group.UpdateChannelGroupUseCase;
 import org.supla.android.usecases.location.UpdateLocationUseCase;
+import org.supla.android.usecases.scene.SetScenesVisibleUseCase;
 import org.supla.core.shared.data.model.suplaclient.SuplaResultCode;
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage;
 import timber.log.Timber;
@@ -131,6 +136,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private final InsertChannelRelationForProfileUseCase insertChannelRelationForProfileUseCase;
   private final DeleteRemovableChannelRelationsUseCase deleteRemovableChannelRelationsUseCase;
   private final UpdateChannelGroupRelationUseCase updateChannelGroupRelationUseCase;
+  private final SetChannelGroupRelationsVisibleUseCase setChannelGroupRelationsVisibleUseCase;
   private final SuplaCloudConfigHolder suplaCloudConfigHolder;
   private final InsertChannelConfigUseCase insertChannelConfigUseCase;
   private final UpdateLocationUseCase updateLocationUseCase;
@@ -139,6 +145,9 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private final UpdateChannelExtendedValueUseCase updateChannelExtendedValueUseCase;
   private final UpdateChannelStateUseCase updateChannelStateUseCase;
   private final UpdateChannelGroupUseCase updateChannelGroupUseCase;
+  private final SetChannelsVisibleUseCase setChannelsVisibleUseCase;
+  private final SetChannelGroupsVisibleUseCase setChannelGroupsVisibleUseCase;
+  private final SetScenesVisibleUseCase setScenesVisibleUseCase;
   private final AppDatabase appDatabase;
   private final MeasurementsDatabase measurementsDatabase;
   private final ProfileIdHolder profileIdHolder;
@@ -167,8 +176,9 @@ public class SuplaClient extends Thread implements SuplaClientApi {
         dependencies.getInsertChannelRelationForProfileUseCase();
     this.deleteRemovableChannelRelationsUseCase =
         dependencies.getDeleteRemovableChannelRelationsUseCase();
-    this.updateChannelGroupRelationUseCase =
-        dependencies.getUpdateChannelGroupRelationUseCase();
+    this.updateChannelGroupRelationUseCase = dependencies.getUpdateChannelGroupRelationUseCase();
+    this.setChannelGroupRelationsVisibleUseCase =
+        dependencies.getSetChannelGroupRelationsVisibleUseCase();
     this.suplaCloudConfigHolder = dependencies.getSuplaCloudConfigHolder();
     this.insertChannelConfigUseCase = dependencies.getInsertChannelConfigUseCase();
     this.updateChannelUseCase = dependencies.getUpdateChannelUseCase();
@@ -177,6 +187,9 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     this.updateChannelExtendedValueUseCase = dependencies.getUpdateChannelExtendedValueUseCase();
     this.updateChannelStateUseCase = dependencies.getUpdateChannelStateUseCase();
     this.updateChannelGroupUseCase = dependencies.getUpdateChannelGroupUseCase();
+    this.setChannelsVisibleUseCase = dependencies.getSetChannelsVisibleUseCase();
+    this.setChannelGroupsVisibleUseCase = dependencies.getSetChannelGroupsVisibleUseCase();
+    this.setScenesVisibleUseCase = dependencies.getSetScenesVisibleUseCase();
     this.appDatabase = dependencies.getAppDatabase();
     this.measurementsDatabase = dependencies.getMeasurementsDatabase();
     this.profileIdHolder = dependencies.getProfileIdHolder();
@@ -975,13 +988,16 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     Timber.d("registerResult.ChannelCount=%d", registerResult.ChannelCount);
     Timber.d("registerResult.ChannelGroupCount=%d", registerResult.ChannelGroupCount);
 
-    if (registerResult.ChannelCount == 0 && DbH.setChannelsVisible(0, 2)) {
+    if (registerResult.ChannelCount == 0
+        && setChannelsVisibleUseCase.invoke(VisibilityChange.PROCESSING_TO_HIDE)) {
       updateEventsManager.emitChannelsUpdate();
     }
-    if (registerResult.ChannelGroupCount == 0 && DbH.setChannelGroupsVisible(0, 2)) {
+    if (registerResult.ChannelGroupCount == 0
+        && setChannelGroupsVisibleUseCase.invoke(VisibilityChange.PROCESSING_TO_HIDE)) {
       updateEventsManager.emitGroupsUpdate();
     }
-    if (registerResult.SceneCount == 0 && DbH.getSceneRepository().setScenesVisible(0, 2)) {
+    if (registerResult.SceneCount == 0
+        && setScenesVisibleUseCase.invoke(VisibilityChange.PROCESSING_TO_HIDE)) {
       updateEventsManager.emitScenesUpdate();
     }
 
@@ -1066,7 +1082,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     }
 
     if (channel.EOL) {
-      _DataChanged = DbH.setChannelsVisible(0, 2);
+      _DataChanged = setChannelsVisibleUseCase.invoke(VisibilityChange.PROCESSING_TO_HIDE);
       removeHiddenChannelsManager.start();
       updateEventsManager.emitChannelsUpdate();
       DownloadUserIconsWorker.Companion.start(_context);
@@ -1105,7 +1121,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
     if (channel_group.EOL) {
       updateEventsManager.emitGroupsUpdate();
-      _DataChanged = DbH.setChannelGroupsVisible(0, 2);
+      _DataChanged = setChannelGroupsVisibleUseCase.invoke(VisibilityChange.PROCESSING_TO_HIDE);
     }
 
     if (channel_group.EOL) {
@@ -1147,7 +1163,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
       _DataChanged = true;
     }
 
-    if (channelgroup_relation.EOL && DbH.setChannelGroupRelationsVisible(0, 2)) {
+    if (channelgroup_relation.EOL
+        && setChannelGroupRelationsVisibleUseCase.invoke(VisibilityChange.PROCESSING_TO_HIDE)) {
       _DataChanged = true;
     }
 
@@ -1180,7 +1197,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
     if (scene.isEol()) {
       updateEventsManager.emitScenesUpdate();
-      sr.setScenesVisible(0, 2);
+      setScenesVisibleUseCase.invoke(VisibilityChange.PROCESSING_TO_HIDE);
       removeHiddenScenesManager.start();
     }
   }
@@ -1448,19 +1465,19 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     boolean emitChannelsUpdate = false;
     boolean emitGroupsUpdate = false;
 
-    if (DbH.setChannelsVisible(2, 1)) {
+    if (setChannelsVisibleUseCase.invoke(VisibilityChange.VISIBLE_TO_PROCESSING)) {
       emitChannelsUpdate = true;
     }
 
-    if (DbH.setChannelGroupsVisible(2, 1)) {
+    if (setChannelGroupsVisibleUseCase.invoke(VisibilityChange.VISIBLE_TO_PROCESSING)) {
       emitGroupsUpdate = true;
     }
 
-    if (DbH.setChannelGroupRelationsVisible(2, 1)) {
+    if (setChannelGroupRelationsVisibleUseCase.invoke(VisibilityChange.VISIBLE_TO_PROCESSING)) {
       emitGroupsUpdate = true;
     }
 
-    if (DbH.getSceneRepository().setScenesVisible(2, 1)) {
+    if (setScenesVisibleUseCase.invoke(VisibilityChange.VISIBLE_TO_PROCESSING)) {
       updateEventsManager.emitScenesUpdate();
     }
 

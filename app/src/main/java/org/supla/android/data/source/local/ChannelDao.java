@@ -80,24 +80,6 @@ public class ChannelDao extends BaseDao {
         key(ChannelValueEntity.COLUMN_PROFILE_ID, getCachedProfileId()));
   }
 
-  public ChannelGroupRelation getChannelGroupRelation(int channelId, int groupId) {
-    String[] projection = {
-      ChannelGroupRelationEntity.COLUMN_ID,
-      ChannelGroupRelationEntity.COLUMN_GROUP_ID,
-      ChannelGroupRelationEntity.COLUMN_CHANNEL_ID,
-      ChannelGroupRelationEntity.COLUMN_VISIBLE,
-      ChannelGroupRelationEntity.COLUMN_PROFILE_ID
-    };
-
-    return getItem(
-        ChannelGroupRelation::new,
-        projection,
-        ChannelGroupRelationEntity.TABLE_NAME,
-        key(ChannelGroupRelationEntity.COLUMN_GROUP_ID, groupId),
-        key(ChannelGroupRelationEntity.COLUMN_CHANNEL_ID, channelId),
-        key(ChannelGroupRelationEntity.COLUMN_PROFILE_ID, getCachedProfileId()));
-  }
-
   public void insert(ChannelGroup channelGroup) {
     channelGroup.setProfileId(getCachedProfileId());
     insert(channelGroup, ChannelGroupEntity.TABLE_NAME);
@@ -127,25 +109,6 @@ public class ChannelDao extends BaseDao {
   public int getChannelCount() {
     return getCount(
         ChannelEntity.TABLE_NAME, null, key(ChannelEntity.COLUMN_PROFILE_ID, getCachedProfileId()));
-  }
-
-  public boolean setChannelsVisible(int visible, int whereVisible) {
-    return setVisible(
-        ChannelEntity.TABLE_NAME, visible, key(ChannelEntity.COLUMN_VISIBLE, whereVisible));
-  }
-
-  public boolean setChannelGroupsVisible(int visible, int whereVisible) {
-    return setVisible(
-        ChannelGroupEntity.TABLE_NAME,
-        visible,
-        key(ChannelGroupEntity.COLUMN_VISIBLE, whereVisible));
-  }
-
-  public boolean setChannelGroupRelationsVisible(int visible, int whereVisible) {
-    return setVisible(
-        ChannelGroupRelationEntity.TABLE_NAME,
-        visible,
-        key(ChannelGroupRelationEntity.COLUMN_VISIBLE, whereVisible));
   }
 
   public boolean setChannelsOffline() {
@@ -756,19 +719,5 @@ public class ChannelDao extends BaseDao {
 
           return sqLiteDatabase.rawQuery(sql, null);
         });
-  }
-
-  private boolean setVisible(String table, int visible, Key<Integer> key) {
-    String selection = key.asSelection() + " AND " + ChannelEntity.COLUMN_PROFILE_ID + " = ?";
-    String[] selectionArgs = {String.valueOf(key.value), String.valueOf(getCachedProfileId())};
-
-    ContentValues values = new ContentValues();
-    values.put(key.column, visible);
-
-    return write(
-            sqLiteDatabase -> {
-              return sqLiteDatabase.update(table, values, selection, selectionArgs);
-            })
-        > 0;
   }
 }

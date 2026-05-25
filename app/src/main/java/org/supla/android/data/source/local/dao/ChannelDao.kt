@@ -296,6 +296,16 @@ interface ChannelDao {
   )
   fun updateCaption(caption: String, remoteId: Int, profileId: Long): Completable
 
+  @Query(
+    """
+      UPDATE $TABLE_NAME
+      SET $COLUMN_VISIBLE = :visible
+      WHERE $COLUMN_VISIBLE = :whereVisible
+        AND $COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
+    """
+  )
+  suspend fun setChannelsVisible(visible: Int, whereVisible: Int): Int
+
   @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_PROFILE_ID = :profileId")
   fun deleteByProfile(profileId: Long): Completable
 

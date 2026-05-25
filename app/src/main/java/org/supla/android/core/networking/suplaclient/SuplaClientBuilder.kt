@@ -32,6 +32,7 @@ import org.supla.android.features.scenescleanup.RemoveHiddenScenesManager
 import org.supla.android.lib.SuplaClient
 import org.supla.android.profile.ProfileIdHolder
 import org.supla.android.usecases.channel.ChannelToRootRelationHolderUseCase
+import org.supla.android.usecases.channel.SetChannelsVisibleUseCase
 import org.supla.android.usecases.channel.UpdateChannelExtendedValueUseCase
 import org.supla.android.usecases.channel.UpdateChannelUseCase
 import org.supla.android.usecases.channel.UpdateChannelValueUseCase
@@ -39,11 +40,14 @@ import org.supla.android.usecases.channelconfig.InsertChannelConfigUseCase
 import org.supla.android.usecases.channelrelation.DeleteRemovableChannelRelationsUseCase
 import org.supla.android.usecases.channelrelation.InsertChannelRelationForProfileUseCase
 import org.supla.android.usecases.channelrelation.MarkChannelRelationsAsRemovableUseCase
+import org.supla.android.usecases.channelrelation.SetChannelGroupRelationsVisibleUseCase
 import org.supla.android.usecases.channelrelation.UpdateChannelGroupRelationUseCase
 import org.supla.android.usecases.channelstate.UpdateChannelStateUseCase
-import org.supla.android.usecases.group.UpdateChannelGroupUseCase
+import org.supla.android.usecases.group.SetChannelGroupsVisibleUseCase
 import org.supla.android.usecases.group.UpdateChannelGroupTotalValueUseCase
+import org.supla.android.usecases.group.UpdateChannelGroupUseCase
 import org.supla.android.usecases.location.UpdateLocationUseCase
+import org.supla.android.usecases.scene.SetScenesVisibleUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -67,6 +71,7 @@ data class SuplaClientDependencies @Inject constructor(
   val insertChannelRelationForProfileUseCase: InsertChannelRelationForProfileUseCase,
   val deleteRemovableChannelRelationsUseCase: DeleteRemovableChannelRelationsUseCase,
   val updateChannelGroupRelationUseCase: UpdateChannelGroupRelationUseCase,
+  val setChannelGroupRelationsVisibleUseCase: SetChannelGroupRelationsVisibleUseCase,
 
   val insertChannelConfigUseCase: InsertChannelConfigUseCase,
 
@@ -76,6 +81,9 @@ data class SuplaClientDependencies @Inject constructor(
   val updateChannelExtendedValueUseCase: UpdateChannelExtendedValueUseCase,
   val updateChannelStateUseCase: UpdateChannelStateUseCase,
   val updateChannelGroupUseCase: UpdateChannelGroupUseCase,
+  val setChannelsVisibleUseCase: SetChannelsVisibleUseCase,
+  val setChannelGroupsVisibleUseCase: SetChannelGroupsVisibleUseCase,
+  val setScenesVisibleUseCase: SetScenesVisibleUseCase,
 
   val appDatabase: AppDatabase,
   val measurementsDatabase: MeasurementsDatabase,

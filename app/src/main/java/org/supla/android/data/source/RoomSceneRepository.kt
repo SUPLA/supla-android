@@ -22,6 +22,7 @@ import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.dao.SceneDao
 import org.supla.android.data.source.local.entity.SceneEntity
 import org.supla.android.usecases.captionchange.CaptionChangeUseCase
+import org.supla.android.usecases.channel.VisibilityChange
 import org.supla.android.usecases.developerinfo.CountProvider
 import org.supla.android.usecases.profile.DeleteProfileUseCase
 import org.supla.android.usecases.scene.RemoveHiddenScenesUseCase
@@ -40,6 +41,9 @@ class RoomSceneRepository @Inject constructor(
   fun findList() = sceneDao.findList()
 
   fun update(scenes: List<SceneEntity>) = sceneDao.update(scenes)
+
+  suspend fun setScenesVisible(change: VisibilityChange): Boolean =
+    sceneDao.setScenesVisible(change.newVisibility, change.applyForVisibility) > 0
 
   fun findProfileScenes(profileId: Long) = sceneDao.findProfileScenes(profileId)
 

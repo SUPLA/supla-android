@@ -21,6 +21,7 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.dao.ChannelGroupRelationDao
 import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity
+import org.supla.android.usecases.channel.VisibilityChange
 import org.supla.android.usecases.developerinfo.CountProvider
 import org.supla.android.usecases.profile.DeleteProfileUseCase
 import javax.inject.Inject
@@ -43,6 +44,9 @@ class ChannelGroupRelationRepository @Inject constructor(
 
   suspend fun updateEntity(entity: ChannelGroupRelationEntity) =
     channelGroupRelationDao.update(entity)
+
+  suspend fun setChannelGroupRelationsVisible(change: VisibilityChange): Boolean =
+    channelGroupRelationDao.setChannelGroupRelationsVisible(change.newVisibility, change.applyForVisibility) > 0
 
   override fun count(): Observable<Int> = channelGroupRelationDao.count()
 

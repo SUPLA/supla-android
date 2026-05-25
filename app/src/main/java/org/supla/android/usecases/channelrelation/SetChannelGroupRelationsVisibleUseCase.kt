@@ -1,5 +1,4 @@
-package org.supla.android.data.source
-
+package org.supla.android.usecases.channelrelation
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -18,10 +17,23 @@ package org.supla.android.data.source
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.lib.SuplaScene
-import org.supla.android.lib.SuplaSceneState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
+import org.supla.android.data.source.ChannelGroupRelationRepository
+import org.supla.android.usecases.channel.VisibilityChange
+import javax.inject.Inject
+import javax.inject.Singleton
 
-interface SceneRepository {
-  fun updateSuplaScene(suplaScene: SuplaScene): Boolean
-  fun updateSuplaSceneState(suplaSceneState: SuplaSceneState): Boolean
+@Singleton
+class SetChannelGroupRelationsVisibleUseCase @Inject constructor(
+  private val channelGroupRelationRepository: ChannelGroupRelationRepository
+) {
+
+  operator fun invoke(change: VisibilityChange): Boolean =
+    runBlocking {
+      withContext(Dispatchers.IO) {
+        channelGroupRelationRepository.setChannelGroupRelationsVisible(change)
+      }
+    }
 }

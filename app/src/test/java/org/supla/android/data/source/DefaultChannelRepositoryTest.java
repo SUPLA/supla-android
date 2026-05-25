@@ -1,13 +1,10 @@
 package org.supla.android.data.source;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -17,7 +14,6 @@ import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.NoSuchElementException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,10 +26,8 @@ import org.supla.android.data.source.local.ChannelDao;
 import org.supla.android.data.source.local.LocationDao;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelGroup;
-import org.supla.android.db.ChannelGroupRelation;
 import org.supla.android.db.Location;
 import org.supla.android.lib.SuplaChannelGroup;
-import org.supla.android.lib.SuplaChannelGroupRelation;
 import org.supla.android.lib.SuplaLocation;
 
 @SuppressWarnings("unchecked")
@@ -123,62 +117,6 @@ public class DefaultChannelRepositoryTest {
     // then
     assertEquals(channelCount, result);
     verify(channelDao).getChannelCount();
-    verifyNoMoreInteractions(channelDao);
-    verifyNoInteractions(locationDao);
-  }
-
-  @Test
-  public void shouldSetChannelsVisible() {
-    // given
-    int visible = 1;
-    int whereVisible = 2;
-    final boolean expectedResult = true;
-    when(channelDao.setChannelsVisible(visible, whereVisible)).thenReturn(expectedResult);
-
-    // when
-    boolean result = defaultChannelRepository.setChannelsVisible(visible, whereVisible);
-
-    // then
-    assertEquals(expectedResult, result);
-    verify(channelDao).setChannelsVisible(visible, whereVisible);
-    verifyNoMoreInteractions(channelDao);
-    verifyNoInteractions(locationDao);
-  }
-
-  @Test
-  public void shouldSetChannelGroupsVisible() {
-    // given
-    int visible = 1;
-    int whereVisible = 2;
-    final boolean expectedResult = true;
-    when(channelDao.setChannelGroupsVisible(visible, whereVisible)).thenReturn(expectedResult);
-
-    // when
-    boolean result = defaultChannelRepository.setChannelGroupsVisible(visible, whereVisible);
-
-    // then
-    assertEquals(expectedResult, result);
-    verify(channelDao).setChannelGroupsVisible(visible, whereVisible);
-    verifyNoMoreInteractions(channelDao);
-    verifyNoInteractions(locationDao);
-  }
-
-  @Test
-  public void shouldSetChannelGroupRelationsVisible() {
-    // given
-    int visible = 1;
-    int whereVisible = 2;
-    final boolean expectedResult = true;
-    when(channelDao.setChannelGroupRelationsVisible(visible, whereVisible))
-        .thenReturn(expectedResult);
-
-    // when
-    boolean result =
-        defaultChannelRepository.setChannelGroupRelationsVisible(visible, whereVisible);
-
-    // then
-    assertEquals(expectedResult, result);
-    verify(channelDao).setChannelGroupRelationsVisible(visible, whereVisible);
     verifyNoMoreInteractions(channelDao);
     verifyNoInteractions(locationDao);
   }
