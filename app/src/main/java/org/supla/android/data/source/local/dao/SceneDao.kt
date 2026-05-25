@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import androidx.room.Dao
+import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import io.reactivex.rxjava3.core.Completable
@@ -139,6 +140,22 @@ interface SceneDao {
     """
   )
   fun findProfileScenes(profileId: Long): Single<List<SceneDataEntity>>
+
+  @Query(
+    """
+    SELECT $ALL_COLUMNS FROM $TABLE_NAME
+    WHERE
+      $COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
+      AND $COLUMN_REMOTE_ID = :remoteId
+    """
+  )
+  suspend fun findByRemoteIdKtx(remoteId: Int): SceneEntity?
+
+  @Insert
+  suspend fun insert(scene: SceneEntity)
+
+  @Update
+  suspend fun update(scene: SceneEntity)
 
   @Update
   fun update(scenes: List<SceneEntity>): Completable
