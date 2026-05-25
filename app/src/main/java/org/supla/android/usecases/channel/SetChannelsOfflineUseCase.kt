@@ -1,5 +1,4 @@
-package org.supla.android.profile
-
+package org.supla.android.usecases.channel
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -18,8 +17,22 @@ package org.supla.android.profile
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-/**
- * Additional holder class is needed because of circular dependency between
- * MultiAccountProfileManager and DbHelper
- */
-data class ProfileIdHolder(var profileId: Long?)
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
+import org.supla.android.data.source.ChannelValueRepository
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class SetChannelsOfflineUseCase @Inject constructor(
+  private val channelValueRepository: ChannelValueRepository
+) {
+
+  operator fun invoke(): Boolean =
+    runBlocking {
+      withContext(Dispatchers.IO) {
+        channelValueRepository.setChannelsOffline()
+      }
+    }
+}

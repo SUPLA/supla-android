@@ -1,21 +1,21 @@
 package org.supla.android.usecases.profile
 /*
-Copyright (C) AC SOFTWARE SP. Z O.O.
+ Copyright (C) AC SOFTWARE SP. Z O.O.
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-*/
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
 import androidx.room.rxjava3.EmptyResultSetException
 import io.mockk.every
@@ -34,7 +34,6 @@ import org.mockito.kotlin.whenever
 import org.supla.android.core.networking.suplacloud.SuplaCloudConfigHolder
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
-import org.supla.android.profile.ProfileIdHolder
 import org.supla.android.usecases.client.ReconnectUseCase
 import org.supla.android.usecases.icon.LoadUserIconsIntoCacheUseCase
 
@@ -43,9 +42,6 @@ class ActivateProfileUseCaseTest {
 
   @Mock
   private lateinit var profileRepository: ProfileRepository
-
-  @Mock
-  private lateinit var profileIdHolder: ProfileIdHolder
 
   @Mock
   private lateinit var suplaCloudConfigHolder: SuplaCloudConfigHolder
@@ -77,7 +73,7 @@ class ActivateProfileUseCaseTest {
 
     verify(profileRepository).findActiveProfile()
     verifyNoMoreInteractions(profileRepository)
-    verifyNoInteractions(profileIdHolder, suplaCloudConfigHolder)
+    verifyNoInteractions(suplaCloudConfigHolder)
   }
 
   @Test
@@ -104,10 +100,9 @@ class ActivateProfileUseCaseTest {
 
     verify(profileRepository).findActiveProfile()
     verify(profileRepository).activateProfile(newActiveProfileId)
-    verify(profileIdHolder).profileId = newActiveProfileId
     verify(suplaCloudConfigHolder).clean()
     verify(reconnectUseCase).invoke()
-    verifyNoMoreInteractions(profileRepository, profileIdHolder, suplaCloudConfigHolder, reconnectUseCase)
+    verifyNoMoreInteractions(profileRepository, suplaCloudConfigHolder, reconnectUseCase)
   }
 
   @Test
@@ -132,10 +127,9 @@ class ActivateProfileUseCaseTest {
 
     verify(profileRepository).findActiveProfile()
     verify(profileRepository).activateProfile(activeProfileId)
-    verify(profileIdHolder).profileId = activeProfileId
     verify(suplaCloudConfigHolder).clean()
     verify(reconnectUseCase).invoke()
-    verifyNoMoreInteractions(profileRepository, profileIdHolder, suplaCloudConfigHolder, reconnectUseCase)
+    verifyNoMoreInteractions(profileRepository, suplaCloudConfigHolder, reconnectUseCase)
   }
 
   @Test
@@ -156,10 +150,9 @@ class ActivateProfileUseCaseTest {
 
     verify(profileRepository).findActiveProfile()
     verify(profileRepository).activateProfile(activeProfileId)
-    verify(profileIdHolder).profileId = activeProfileId
     verify(suplaCloudConfigHolder).clean()
     verify(reconnectUseCase).invoke()
-    verifyNoMoreInteractions(profileRepository, profileIdHolder, suplaCloudConfigHolder, reconnectUseCase)
+    verifyNoMoreInteractions(profileRepository, suplaCloudConfigHolder, reconnectUseCase)
   }
 
   @Test
@@ -176,6 +169,6 @@ class ActivateProfileUseCaseTest {
     testObserver.assertError(error)
 
     verify(profileRepository).findActiveProfile()
-    verifyNoMoreInteractions(profileRepository, profileIdHolder, suplaCloudConfigHolder)
+    verifyNoMoreInteractions(profileRepository, suplaCloudConfigHolder)
   }
 }

@@ -17,16 +17,11 @@ package org.supla.android.images
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.data.source.local.UserIconDao
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ImageCacheProxy @Inject constructor() {
-  fun addUserImage(id: Int, image: UserIconDao.Image) {
-    ImageCache.addImage(ImageId(id, image.subId, image.profileId), image.value)
-  }
-
   fun addImage(imageId: ImageId, image: ByteArray) {
     ImageCache.addImage(imageId, image)
   }

@@ -27,13 +27,9 @@ import org.supla.android.db.ChannelGroup;
 import org.supla.android.db.Location;
 
 public interface ChannelRepository {
-  Channel getChannel(int channelId);
+  Channel getChannel(int channelId, long profileId);
 
-  ChannelGroup getChannelGroup(int groupId);
-
-  int getChannelCount();
-
-  boolean setChannelsOffline();
+  ChannelGroup getChannelGroup(int groupId, long profileId);
 
   Cursor getChannelListCursorForGroup(int groupId);
 
@@ -41,15 +37,13 @@ public interface ChannelRepository {
 
   List<Channel> getZWaveBridgeChannels();
 
-  List<Integer> getChannelUserIconIdsToDownload();
+  Completable reorderChannels(
+      Long firstItemId, int firstItemLocationId, Long secondItemId, long profileId);
 
-  Completable reorderChannels(Long firstItemId, int firstItemLocationId, Long secondItemId);
-
-  Completable reorderChannelGroups(Long firstItemId, int firstItemLocationId, Long secondItemId);
+  Completable reorderChannelGroups(
+      Long firstItemId, int firstItemLocationId, Long secondItemId, long profileId);
 
   // Location looks rather as a channel location, that's why here
-
-  Location getLocation(int locationId);
 
   void updateLocation(Location location);
 

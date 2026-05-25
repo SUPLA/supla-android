@@ -1,8 +1,12 @@
 package org.supla.android.features.grouplist
 
 import android.net.Uri
+import io.mockk.MockKAnnotations
+import io.mockk.confirmVerified
 import io.mockk.every
+import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
+import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
@@ -12,20 +16,15 @@ import io.reactivex.rxjava3.subjects.Subject
 import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.ChannelRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.LocationEntity
+import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.runtime.ItemType
@@ -40,6 +39,7 @@ import org.supla.android.usecases.channel.ActionException
 import org.supla.android.usecases.channel.ButtonType
 import org.supla.android.usecases.channel.GroupActionUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
+import org.supla.android.usecases.details.HumidityDetailType
 import org.supla.android.usecases.details.ProvideGroupDetailTypeUseCase
 import org.supla.android.usecases.details.StandardDetailType
 import org.supla.android.usecases.details.ThermometerDetailType
@@ -51,43 +51,45 @@ import org.supla.android.usecases.profile.CloudUrl
 import org.supla.android.usecases.profile.LoadActiveProfileUrlUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
 
-@RunWith(MockitoJUnitRunner::class)
-class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListViewEvent, GroupListViewModel>() {
+class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListViewEvent, GroupListViewModel>(MockSchedulers.MOCKK) {
 
-  @Mock
+  @MockK
   private lateinit var channelRepository: ChannelRepository
 
-  @Mock
+  @MockK
   private lateinit var createProfileGroupsListUseCase: CreateProfileGroupsListUseCase
 
-  @Mock
+  @MockK
   private lateinit var groupActionUseCase: GroupActionUseCase
 
-  @Mock
+  @MockK
   private lateinit var toggleLocationUseCase: ToggleLocationUseCase
 
-  @Mock
+  @MockK
   private lateinit var provideGroupDetailTypeUseCase: ProvideGroupDetailTypeUseCase
 
-  @Mock
+  @MockK
   private lateinit var findGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase
 
-  @Mock
+  @MockK
   private lateinit var updateEventsManager: UpdateEventsManager
 
-  @Mock
+  @MockK
   private lateinit var loadActiveProfileUrlUseCase: LoadActiveProfileUrlUseCase
 
-  @Mock
+  @MockK
   private lateinit var executeSimpleActionUseCase: ExecuteSimpleActionUseCase
 
-  @Mock
+  @MockK(relaxed = true)
   private lateinit var preferences: Preferences
 
-  @Mock
+  @MockK
   private lateinit var dateProvider: DateProvider
 
-  @Mock
+  @MockK
+  private lateinit var profileRepository: ProfileRepository
+
+  @MockK(relaxed = true)
   override lateinit var schedulers: SuplaSchedulers
 
   override val viewModel: GroupListViewModel by lazy {
@@ -99,6 +101,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       toggleLocationUseCase,
       groupActionUseCase,
       channelRepository,
+      profileRepository,
       loadActiveProfileUrlUseCase,
       updateEventsManager,
       dateProvider,
@@ -111,7 +114,9 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
 
   @Before
   override fun setUp() {
-    whenever(updateEventsManager.observeGroupsUpdate()).thenReturn(listsEventsSubject)
+    MockKAnnotations.init(this)
+    every { updateEventsManager.observeGroupsUpdate() } returns listsEventsSubject
+
     super.setUp()
   }
 
@@ -119,7 +124,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   fun `should load groups`() {
     // given
     val list = listOf(mockk<ListItem.ChannelItem>())
-    whenever(createProfileGroupsListUseCase()).thenReturn(Observable.just(list))
+    every { createProfileGroupsListUseCase.invoke() } returns Observable.just(list)
 
     // when
     viewModel.loadGroups()
@@ -130,16 +135,30 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       state.copy(groups = list)
     )
     Assertions.assertThat(events).isEmpty()
-    verifyNoInteractionsExcept(createProfileGroupsListUseCase)
+
+    verify {
+      createProfileGroupsListUseCase.invoke()
+    }
+    confirmVerified(
+      createProfileGroupsListUseCase,
+      provideGroupDetailTypeUseCase,
+      loadActiveProfileUrlUseCase,
+      findGroupByRemoteIdUseCase,
+      toggleLocationUseCase,
+      groupActionUseCase,
+      profileRepository,
+      channelRepository,
+      dateProvider
+    )
   }
 
   @Test
   fun `should toggle location collapsed and reload groups`() {
     // given
     val location = mockk<LocationEntity>()
-    whenever(toggleLocationUseCase(location, CollapsedFlag.GROUP)).thenReturn(Completable.complete())
+    every { toggleLocationUseCase(location, CollapsedFlag.GROUP) } returns Completable.complete()
     val list = listOf(mockk<ListItem.ChannelItem>())
-    whenever(createProfileGroupsListUseCase()).thenReturn(Observable.just(list))
+    every { createProfileGroupsListUseCase() } returns Observable.just(list)
 
     // when
     viewModel.toggleLocationCollapsed(location)
@@ -150,7 +169,22 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       state.copy(groups = list)
     )
     Assertions.assertThat(events).isEmpty()
-    verifyNoInteractionsExcept(createProfileGroupsListUseCase, toggleLocationUseCase)
+
+    verify {
+      createProfileGroupsListUseCase.invoke()
+      toggleLocationUseCase.invoke(location, CollapsedFlag.GROUP)
+    }
+    confirmVerified(
+      createProfileGroupsListUseCase,
+      provideGroupDetailTypeUseCase,
+      loadActiveProfileUrlUseCase,
+      findGroupByRemoteIdUseCase,
+      toggleLocationUseCase,
+      groupActionUseCase,
+      profileRepository,
+      channelRepository,
+      dateProvider
+    )
   }
 
   @Test
@@ -159,6 +193,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     val firstItemId = 123L
     val firstItemLocationId = 234
     val firstItem = mockk<ChannelDataBase>()
+    val profileId = 1L
     every { firstItem.id } returns firstItemId
     every { firstItem.locationId } returns firstItemLocationId
 
@@ -166,7 +201,13 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     val secondItem = mockk<ChannelDataBase>()
     every { secondItem.id } returns secondItemId
 
-    whenever(channelRepository.reorderChannelGroups(firstItemId, firstItemLocationId, secondItemId)).thenReturn(Completable.complete())
+    val profile: ProfileEntity = mockk {
+      every { id } returns profileId
+    }
+
+    every { profileRepository.findActiveProfile() } returns Single.just(profile)
+    every { channelRepository.reorderChannelGroups(firstItemId, firstItemLocationId, secondItemId, profileId) } returns
+      Completable.complete()
 
     // when
     viewModel.swapItems(firstItem, secondItem)
@@ -175,9 +216,21 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).isEmpty()
 
-    verify(channelRepository).reorderChannelGroups(firstItemId, firstItemLocationId, secondItemId)
-    verifyNoMoreInteractions(channelRepository)
-    verifyNoInteractionsExcept(channelRepository)
+    verify {
+      profileRepository.findActiveProfile()
+      channelRepository.reorderChannelGroups(firstItemId, firstItemLocationId, secondItemId, profileId)
+    }
+    confirmVerified(
+      createProfileGroupsListUseCase,
+      provideGroupDetailTypeUseCase,
+      loadActiveProfileUrlUseCase,
+      findGroupByRemoteIdUseCase,
+      toggleLocationUseCase,
+      groupActionUseCase,
+      profileRepository,
+      channelRepository,
+      dateProvider
+    )
   }
 
   @Test
@@ -185,7 +238,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     // given
     val groupId = 123
     val buttonType = ButtonType.LEFT
-    whenever(groupActionUseCase(groupId, buttonType)).thenReturn(Completable.error(ActionException.ValveClosedManually(groupId)))
+    every { groupActionUseCase(groupId, buttonType) } returns Completable.error(ActionException.ValveClosedManually(groupId))
 
     // when
     viewModel.performAction(groupId, buttonType)
@@ -203,7 +256,21 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       )
     )
     Assertions.assertThat(events).isEmpty()
-    verifyNoInteractionsExcept(groupActionUseCase)
+
+    verify {
+      groupActionUseCase(groupId, buttonType)
+    }
+    confirmVerified(
+      createProfileGroupsListUseCase,
+      provideGroupDetailTypeUseCase,
+      loadActiveProfileUrlUseCase,
+      findGroupByRemoteIdUseCase,
+      toggleLocationUseCase,
+      groupActionUseCase,
+      profileRepository,
+      channelRepository,
+      dateProvider
+    )
   }
 
   @Test
@@ -211,7 +278,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     // given
     val groupId = 123
     val buttonType = ButtonType.RIGHT
-    whenever(groupActionUseCase(groupId, buttonType)).thenReturn(Completable.error(ActionException.ChannelExceedAmperage(groupId)))
+    every { groupActionUseCase(groupId, buttonType) } returns Completable.error(ActionException.ChannelExceedAmperage(groupId))
 
     // when
     viewModel.performAction(groupId, buttonType)
@@ -229,7 +296,21 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       )
     )
     Assertions.assertThat(events).isEmpty()
-    verifyNoInteractionsExcept(groupActionUseCase)
+
+    verify {
+      groupActionUseCase(groupId, buttonType)
+    }
+    confirmVerified(
+      createProfileGroupsListUseCase,
+      provideGroupDetailTypeUseCase,
+      loadActiveProfileUrlUseCase,
+      findGroupByRemoteIdUseCase,
+      toggleLocationUseCase,
+      groupActionUseCase,
+      profileRepository,
+      channelRepository,
+      dateProvider
+    )
   }
 
   @Test
@@ -239,8 +320,8 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     val groupData: ChannelGroupDataEntity = mockk()
     every { groupData.status } returns SuplaChannelAvailabilityStatus.OFFLINE
 
-    whenever(findGroupByRemoteIdUseCase(remoteId)).thenReturn(Maybe.just(groupData))
-    whenever(dateProvider.currentTimestamp()).thenReturn(500)
+    every { findGroupByRemoteIdUseCase(remoteId) } returns Maybe.just(groupData)
+    every { dateProvider.currentTimestamp() } returns 500
 
     // when
     viewModel.onListItemClick(remoteId)
@@ -248,7 +329,22 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     // then
     Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).isEmpty()
-    verifyNoInteractionsExcept()
+
+    verify {
+      findGroupByRemoteIdUseCase.invoke(remoteId)
+      dateProvider.currentTimestamp()
+    }
+    confirmVerified(
+      createProfileGroupsListUseCase,
+      provideGroupDetailTypeUseCase,
+      loadActiveProfileUrlUseCase,
+      findGroupByRemoteIdUseCase,
+      toggleLocationUseCase,
+      groupActionUseCase,
+      profileRepository,
+      channelRepository,
+      dateProvider
+    )
   }
 
   @Test
@@ -262,10 +358,10 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     every { groupData.function } returns groupFunction
 
     val detailType = ThermometerDetailType(listOf(DetailPage.THERMOMETER_HISTORY))
-    whenever(provideGroupDetailTypeUseCase(groupData)).thenReturn(detailType)
+    every { provideGroupDetailTypeUseCase(groupData) } returns detailType
 
-    whenever(findGroupByRemoteIdUseCase(remoteId)).thenReturn(Maybe.just(groupData))
-    whenever(dateProvider.currentTimestamp()).thenReturn(500)
+    every { findGroupByRemoteIdUseCase(remoteId) } returns Maybe.just(groupData)
+    every { dateProvider.currentTimestamp() } returns 500
 
     // when
     viewModel.onListItemClick(remoteId)
@@ -273,7 +369,23 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     // then
     Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).isEmpty()
-    verifyNoInteractionsExcept(provideGroupDetailTypeUseCase)
+
+    verify {
+      provideGroupDetailTypeUseCase.invoke(groupData)
+      findGroupByRemoteIdUseCase.invoke(remoteId)
+      dateProvider.currentTimestamp()
+    }
+    confirmVerified(
+      createProfileGroupsListUseCase,
+      provideGroupDetailTypeUseCase,
+      loadActiveProfileUrlUseCase,
+      findGroupByRemoteIdUseCase,
+      toggleLocationUseCase,
+      groupActionUseCase,
+      profileRepository,
+      channelRepository,
+      dateProvider
+    )
   }
 
   @Test
@@ -286,8 +398,9 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     every { groupData.status } returns SuplaChannelAvailabilityStatus.ONLINE
     every { groupData.function } returns groupFunction
 
-    whenever(findGroupByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(groupData))
-    whenever(dateProvider.currentTimestamp()).thenReturn(500)
+    every { provideGroupDetailTypeUseCase.invoke(groupData) } returns HumidityDetailType(emptyList())
+    every { findGroupByRemoteIdUseCase.invoke(remoteId) } returns Maybe.just(groupData)
+    every { dateProvider.currentTimestamp() } returns 500
 
     // when
     viewModel.onListItemClick(remoteId)
@@ -295,7 +408,23 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     // then
     Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).isEmpty()
-    verifyNoInteractionsExcept(provideGroupDetailTypeUseCase)
+
+    verify {
+      provideGroupDetailTypeUseCase.invoke(groupData)
+      findGroupByRemoteIdUseCase.invoke(remoteId)
+      dateProvider.currentTimestamp()
+    }
+    confirmVerified(
+      createProfileGroupsListUseCase,
+      provideGroupDetailTypeUseCase,
+      loadActiveProfileUrlUseCase,
+      findGroupByRemoteIdUseCase,
+      toggleLocationUseCase,
+      groupActionUseCase,
+      profileRepository,
+      channelRepository,
+      dateProvider
+    )
   }
 
   @Test
@@ -311,10 +440,10 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     every { groupData.status } returns SuplaChannelAvailabilityStatus.OFFLINE
 
     val detailType = StandardDetailType(listOf(DetailPage.ROLLER_SHUTTER))
-    whenever(provideGroupDetailTypeUseCase(groupData)).thenReturn(detailType)
+    every { provideGroupDetailTypeUseCase(groupData) } returns detailType
 
-    whenever(findGroupByRemoteIdUseCase(remoteId)).thenReturn(Maybe.just(groupData))
-    whenever(dateProvider.currentTimestamp()).thenReturn(500)
+    every { findGroupByRemoteIdUseCase(remoteId) } returns Maybe.just(groupData)
+    every { dateProvider.currentTimestamp() } returns 500
 
     // when
     viewModel.onListItemClick(remoteId)
@@ -324,14 +453,30 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     Assertions.assertThat(events).containsExactly(
       GroupListViewEvent.OpenStandardDetail(ItemBundle(remoteId, 0, profileId, ItemType.GROUP, function), detailType.pages)
     )
-    verifyNoInteractionsExcept(provideGroupDetailTypeUseCase)
+
+    verify {
+      provideGroupDetailTypeUseCase.invoke(groupData)
+      findGroupByRemoteIdUseCase.invoke(remoteId)
+      dateProvider.currentTimestamp()
+    }
+    confirmVerified(
+      createProfileGroupsListUseCase,
+      provideGroupDetailTypeUseCase,
+      loadActiveProfileUrlUseCase,
+      findGroupByRemoteIdUseCase,
+      toggleLocationUseCase,
+      groupActionUseCase,
+      profileRepository,
+      channelRepository,
+      dateProvider
+    )
   }
 
   @Test
   fun `should reload list on update`() {
     // given
     val list = listOf(mockk<ListItem.ChannelItem>())
-    whenever(createProfileGroupsListUseCase()).thenReturn(Observable.just(list))
+    every { createProfileGroupsListUseCase.invoke() } returns Observable.just(list)
 
     // when
     listsEventsSubject.onNext(Any())
@@ -342,7 +487,21 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       state.copy(groups = list)
     )
     Assertions.assertThat(events).isEmpty()
-    verifyNoInteractionsExcept(createProfileGroupsListUseCase)
+
+    verify {
+      createProfileGroupsListUseCase.invoke()
+    }
+    confirmVerified(
+      createProfileGroupsListUseCase,
+      provideGroupDetailTypeUseCase,
+      loadActiveProfileUrlUseCase,
+      findGroupByRemoteIdUseCase,
+      toggleLocationUseCase,
+      groupActionUseCase,
+      profileRepository,
+      channelRepository,
+      dateProvider
+    )
   }
 
   @Test
@@ -351,12 +510,12 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     val groupId = 223
     val group: ChannelGroupDataEntity = mockk()
     every { group.remoteId } returns groupId
-    whenever(findGroupByRemoteIdUseCase(groupId)).thenReturn(Maybe.just(group))
+    every { findGroupByRemoteIdUseCase(groupId) } returns Maybe.just(group)
 
     val list = listOf(mockk<ListItem.ChannelItem>())
     every { list[0].channelBase } returns group
     every { list[0].channelBase = group } answers { }
-    whenever(createProfileGroupsListUseCase()).thenReturn(Observable.just(list))
+    every { createProfileGroupsListUseCase() } returns Observable.just(list)
 
     // when
     viewModel.loadGroups()
@@ -365,14 +524,29 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     // then
     Assertions.assertThat(states).containsExactly(GroupListViewState(groups = list))
     Assertions.assertThat(events).isEmpty()
-    verifyNoInteractionsExcept(findGroupByRemoteIdUseCase, createProfileGroupsListUseCase)
-    io.mockk.verify { list[0].channelBase = group }
+
+    verify {
+      list[0].channelBase = group
+      findGroupByRemoteIdUseCase.invoke(groupId)
+      createProfileGroupsListUseCase.invoke()
+    }
+    confirmVerified(
+      createProfileGroupsListUseCase,
+      provideGroupDetailTypeUseCase,
+      loadActiveProfileUrlUseCase,
+      findGroupByRemoteIdUseCase,
+      toggleLocationUseCase,
+      groupActionUseCase,
+      profileRepository,
+      channelRepository,
+      dateProvider
+    )
   }
 
   @Test
   fun `on add group click should open supla cloud`() {
     // given
-    whenever(loadActiveProfileUrlUseCase.invoke()).thenReturn(Single.just(CloudUrl.DefaultCloud))
+    every { loadActiveProfileUrlUseCase.invoke() } returns Single.just(CloudUrl.DefaultCloud)
 
     // when
     viewModel.onAddGroupClick()
@@ -380,16 +554,28 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     // then
     Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).containsExactly(GroupListViewEvent.NavigateToSuplaCloud)
-    verify(loadActiveProfileUrlUseCase).invoke()
-    verifyNoMoreInteractions(loadActiveProfileUrlUseCase)
-    verifyNoInteractionsExcept(loadActiveProfileUrlUseCase)
+
+    verify {
+      loadActiveProfileUrlUseCase.invoke()
+    }
+    confirmVerified(
+      createProfileGroupsListUseCase,
+      provideGroupDetailTypeUseCase,
+      loadActiveProfileUrlUseCase,
+      findGroupByRemoteIdUseCase,
+      toggleLocationUseCase,
+      groupActionUseCase,
+      profileRepository,
+      channelRepository,
+      dateProvider
+    )
   }
 
   @Test
   fun `on add group click should open private cloud`() {
     // given
     val url: Uri = mockk()
-    whenever(loadActiveProfileUrlUseCase.invoke()).thenReturn(Single.just(CloudUrl.ServerUri(url)))
+    every { loadActiveProfileUrlUseCase.invoke() } returns Single.just(CloudUrl.ServerUri(url))
 
     // when
     viewModel.onAddGroupClick()
@@ -397,36 +583,44 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     // then
     Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).containsExactly(GroupListViewEvent.NavigateToPrivateCloud(url))
-    verify(loadActiveProfileUrlUseCase).invoke()
-    verifyNoMoreInteractions(loadActiveProfileUrlUseCase)
-    verifyNoInteractionsExcept(loadActiveProfileUrlUseCase)
+    verify {
+      loadActiveProfileUrlUseCase.invoke()
+    }
+    confirmVerified(
+      createProfileGroupsListUseCase,
+      provideGroupDetailTypeUseCase,
+      loadActiveProfileUrlUseCase,
+      findGroupByRemoteIdUseCase,
+      toggleLocationUseCase,
+      groupActionUseCase,
+      profileRepository,
+      channelRepository,
+      dateProvider
+    )
   }
 
   @Test
   fun `should not allow to process event to fast`() {
     // given
-    whenever(dateProvider.currentTimestamp()).thenReturn(10)
+    every { dateProvider.currentTimestamp() } returns 10
 
     // when
     viewModel.onListItemClick(1)
 
     // then
-    verifyNoInteractions(findGroupByRemoteIdUseCase)
-  }
-
-  private fun verifyNoInteractionsExcept(vararg except: Any) {
-    val allDependencies = listOf(
-      channelRepository,
-      createProfileGroupsListUseCase,
-      groupActionUseCase,
-      toggleLocationUseCase,
-      provideGroupDetailTypeUseCase,
-      loadActiveProfileUrlUseCase
-    )
-    for (dependency in allDependencies) {
-      if (!except.contains(dependency)) {
-        verifyNoInteractions(dependency)
-      }
+    verify {
+      dateProvider.currentTimestamp()
     }
+    confirmVerified(
+      createProfileGroupsListUseCase,
+      provideGroupDetailTypeUseCase,
+      loadActiveProfileUrlUseCase,
+      findGroupByRemoteIdUseCase,
+      toggleLocationUseCase,
+      groupActionUseCase,
+      profileRepository,
+      channelRepository,
+      dateProvider
+    )
   }
 }

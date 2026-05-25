@@ -30,8 +30,8 @@ import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.channelscleanup.RemoveHiddenChannelsManager
 import org.supla.android.features.scenescleanup.RemoveHiddenScenesManager
 import org.supla.android.lib.SuplaClient
-import org.supla.android.profile.ProfileIdHolder
 import org.supla.android.usecases.channel.ChannelToRootRelationHolderUseCase
+import org.supla.android.usecases.channel.SetChannelsOfflineUseCase
 import org.supla.android.usecases.channel.SetChannelsVisibleUseCase
 import org.supla.android.usecases.channel.UpdateChannelExtendedValueUseCase
 import org.supla.android.usecases.channel.UpdateChannelUseCase
@@ -84,6 +84,7 @@ data class SuplaClientDependencies @Inject constructor(
   val updateChannelStateUseCase: UpdateChannelStateUseCase,
   val updateChannelGroupUseCase: UpdateChannelGroupUseCase,
   val setChannelsVisibleUseCase: SetChannelsVisibleUseCase,
+  val setChannelsOfflineUseCase: SetChannelsOfflineUseCase,
   val setChannelGroupsVisibleUseCase: SetChannelGroupsVisibleUseCase,
   val setScenesVisibleUseCase: SetScenesVisibleUseCase,
   val updateSceneUseCase: UpdateSceneUseCase,
@@ -91,7 +92,6 @@ data class SuplaClientDependencies @Inject constructor(
 
   val appDatabase: AppDatabase,
   val measurementsDatabase: MeasurementsDatabase,
-  val profileIdHolder: ProfileIdHolder,
 
   val updateChannelGroupTotalValueUseCase: UpdateChannelGroupTotalValueUseCase,
   val channelToRootRelationHolderUseCase: ChannelToRootRelationHolderUseCase,

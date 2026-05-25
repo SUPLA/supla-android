@@ -24,7 +24,10 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import javax.inject.Inject;
 import org.supla.android.SuplaApp;
+import org.supla.android.data.source.ProfileRepository;
+import org.supla.android.data.source.local.entity.ProfileEntity;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.db.DbHelper;
@@ -37,6 +40,8 @@ public abstract class DetailLayout extends FrameLayout {
   private View mContentView;
   private int mRemoteId;
   private boolean Group;
+
+  @Inject ProfileRepository profileRepository;
 
   public DetailLayout(Context context) {
     super(context);
@@ -101,7 +106,12 @@ public abstract class DetailLayout extends FrameLayout {
   public ChannelBase getChannelFromDatabase() {
 
     if (getRemoteId() != 0) {
-      return isGroup() ? DBH.getChannelGroup(mRemoteId) : DBH.getChannel(getRemoteId());
+      ProfileEntity profile = profileRepository.findActiveProfile().blockingGet();
+      if (profile.getId() != null) {
+        return isGroup()
+            ? DBH.getChannelGroup(mRemoteId, profile.getId())
+            : DBH.getChannel(getRemoteId(), profile.getId());
+      }
     }
 
     return null;

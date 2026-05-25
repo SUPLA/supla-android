@@ -29,7 +29,6 @@ import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.di.RANDOM_GENERATOR
 import org.supla.android.lib.SuplaConst
-import org.supla.android.profile.ProfileIdHolder
 import org.supla.core.shared.extensions.forTrue
 import javax.inject.Inject
 import javax.inject.Named
@@ -40,7 +39,6 @@ import kotlin.random.Random
 class SaveProfileUseCase @Inject constructor(
   private val deleteProfileRelatedDataUseCase: DeleteProfileRelatedDataUseCase,
   private val profileRepository: ProfileRepository,
-  private val profileIdHolder: ProfileIdHolder,
   @param:Named(RANDOM_GENERATOR) private val randomGenerator: Random,
   @param:ApplicationContext private val context: Context
 ) {
@@ -51,11 +49,6 @@ class SaveProfileUseCase @Inject constructor(
       .flatMap {
         validation(profile, it)
           .andThen(save(profile, it))
-      }
-      .doOnSuccess { result ->
-        if (result.reconnectNeeded) {
-          profileIdHolder.profileId = result.profileId
-        }
       }
 
   private fun save(profileEntity: ProfileEntity, profiles: List<ProfileEntity>): Single<Result> {

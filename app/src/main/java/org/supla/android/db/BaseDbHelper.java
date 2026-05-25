@@ -28,19 +28,11 @@ import org.supla.android.db.room.SqlExecutor;
 public abstract class BaseDbHelper extends SQLiteOpenHelper
     implements BaseDao.DatabaseAccessProvider, SqlExecutor {
 
-  private final ProfileIdProvider profileIdProvider;
-
   BaseDbHelper(
       @Nullable Context context,
       @Nullable String name,
       @Nullable SQLiteDatabase.CursorFactory factory,
-      int version,
-      ProfileIdProvider profileIdProvider) {
+      int version) {
     super(context, name, factory, version);
-    this.profileIdProvider = profileIdProvider;
-  }
-
-  public Long getCachedProfileId() {
-    return profileIdProvider.getCachedProfileId();
   }
 }

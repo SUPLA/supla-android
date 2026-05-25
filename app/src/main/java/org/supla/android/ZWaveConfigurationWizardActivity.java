@@ -40,8 +40,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import javax.inject.Inject;
 import org.supla.android.core.shared.SuplaChannelBasicCfgExtensionsKt;
 import org.supla.android.core.shared.ZWaveNodeExtensionsKt;
+import org.supla.android.data.source.ProfileRepository;
+import org.supla.android.data.source.local.entity.ProfileEntity;
 import org.supla.android.db.Channel;
 import org.supla.android.lib.SuplaChannelBasicCfg;
 import org.supla.android.lib.SuplaClient;
@@ -118,6 +121,8 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
   private ZWaveWakeupSettingsDialog wakeupSettingsDialog;
   private TextView mTvWakeUpInfo;
   private Button mBtnWakeUpSettings;
+
+  @Inject ProfileRepository profileRepository;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -486,7 +491,11 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
 
   private void updateSelectedChannel() {
     if (mSelectedCahnnel != null) {
-      mSelectedCahnnel = getDbHelper().getChannel(mSelectedCahnnel.getChannelId());
+      ProfileEntity profile = profileRepository.findActiveProfile().blockingGet();
+      if (profile.getId() != null) {
+        mSelectedCahnnel =
+            getDbHelper().getChannel(mSelectedCahnnel.getChannelId(), profile.getId());
+      }
     }
   }
 

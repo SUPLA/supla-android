@@ -18,25 +18,21 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import org.supla.android.data.source.local.entity.ChannelEntity;
 import org.supla.android.data.source.local.entity.ChannelGroupEntity;
-import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity;
 import org.supla.android.data.source.local.entity.ChannelValueEntity;
 import org.supla.android.data.source.local.entity.LocationEntity;
+import org.supla.android.data.source.local.entity.ProfileEntity;
 import org.supla.android.data.source.local.entity.UserIconEntity;
 import org.supla.android.data.source.local.view.ChannelView;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelGroup;
-import org.supla.android.db.ChannelGroupRelation;
 import org.supla.android.db.Location;
 import org.supla.android.lib.SuplaConst;
 
@@ -46,16 +42,16 @@ public class ChannelDao extends BaseDao {
     super(databaseAccessProvider);
   }
 
-  public Channel getChannel(int channelId) {
+  public Channel getChannel(int channelId, long profileId) {
     return getItem(
         Channel::new,
         ChannelView.INSTANCE.getALL_COLUMNS(),
         ChannelView.NAME,
         key(ChannelView.COLUMN_CHANNEL_REMOTE_ID, channelId),
-        key(ChannelValueEntity.COLUMN_PROFILE_ID, getCachedProfileId()));
+        key(ChannelValueEntity.COLUMN_PROFILE_ID, profileId));
   }
 
-  public ChannelGroup getChannelGroup(int groupId) {
+  public ChannelGroup getChannelGroup(int groupId, long profileId) {
     String[] projection = {
       ChannelGroupEntity.COLUMN_ID,
       ChannelGroupEntity.COLUMN_REMOTE_ID,
@@ -77,58 +73,16 @@ public class ChannelDao extends BaseDao {
         projection,
         ChannelGroupEntity.TABLE_NAME,
         key(ChannelGroupEntity.COLUMN_REMOTE_ID, groupId),
-        key(ChannelValueEntity.COLUMN_PROFILE_ID, getCachedProfileId()));
-  }
-
-  public void insert(ChannelGroup channelGroup) {
-    channelGroup.setProfileId(getCachedProfileId());
-    insert(channelGroup, ChannelGroupEntity.TABLE_NAME);
-  }
-
-  public void update(ChannelGroup channelGroup) {
-    update(
-        channelGroup,
-        ChannelGroupEntity.TABLE_NAME,
-        key(ChannelGroupEntity.COLUMN_ID, channelGroup.getId()),
-        key(ChannelGroupEntity.COLUMN_PROFILE_ID, channelGroup.getProfileId()));
-  }
-
-  public void insert(ChannelGroupRelation channelGroupRelation) {
-    channelGroupRelation.setProfileId(getCachedProfileId());
-    insert(channelGroupRelation, ChannelGroupRelationEntity.TABLE_NAME);
-  }
-
-  public void update(ChannelGroupRelation channelGroupRelation) {
-    update(
-        channelGroupRelation,
-        ChannelGroupRelationEntity.TABLE_NAME,
-        key(ChannelGroupRelationEntity.COLUMN_ID, channelGroupRelation.getId()),
-        key(ChannelValueEntity.COLUMN_PROFILE_ID, channelGroupRelation.getProfileId()));
-  }
-
-  public int getChannelCount() {
-    return getCount(
-        ChannelEntity.TABLE_NAME, null, key(ChannelEntity.COLUMN_PROFILE_ID, getCachedProfileId()));
-  }
-
-  public boolean setChannelsOffline() {
-    String selection = ChannelValueEntity.COLUMN_ONLINE + " = ?";
-    String[] selectionArgs = {String.valueOf(1)};
-
-    ContentValues values = new ContentValues();
-    values.put(ChannelValueEntity.COLUMN_ONLINE, 0);
-
-    return write(
-            sqLiteDatabase -> {
-              return sqLiteDatabase.update(
-                  ChannelValueEntity.TABLE_NAME, values, selection, selectionArgs);
-            })
-        > 0;
+        key(ChannelValueEntity.COLUMN_PROFILE_ID, profileId));
   }
 
   public Cursor getChannelListCursorWithDefaultOrder(String where) {
     where +=
-        " AND (C." + ChannelView.COLUMN_CHANNEL_PROFILE_ID + " = " + getCachedProfileId() + ") ";
+        " AND (C."
+            + ChannelView.COLUMN_CHANNEL_PROFILE_ID
+            + " = "
+            + ProfileEntity.SUBQUERY_ACTIVE
+            + ") ";
 
     String orderBY =
         "L."
@@ -155,7 +109,8 @@ public class ChannelDao extends BaseDao {
 
     String selection =
         ChannelView.COLUMN_CHANNEL_PROFILE_ID
-            + " = ? "
+            + " = "
+            + ProfileEntity.SUBQUERY_ACTIVE
             + " AND "
             + ChannelView.COLUMN_CHANNEL_TYPE
             + " = ?"
@@ -167,7 +122,6 @@ public class ChannelDao extends BaseDao {
             + " & ?) > 0";
 
     String[] selectionArgs = {
-      String.valueOf(getCachedProfileId()),
       String.valueOf(SuplaConst.SUPLA_CHANNELTYPE_BRIDGE),
       String.valueOf(SuplaConst.SUPLA_CHANNEL_FLAG_ZWAVE_BRIDGE)
     };
@@ -195,7 +149,7 @@ public class ChannelDao extends BaseDao {
             + " AND (C."
             + ChannelView.COLUMN_CHANNEL_PROFILE_ID
             + " = "
-            + getCachedProfileId()
+            + ProfileEntity.SUBQUERY_ACTIVE
             + ")";
 
     String orderBy =
@@ -228,7 +182,7 @@ public class ChannelDao extends BaseDao {
         "G."
             + ChannelGroupEntity.COLUMN_PROFILE_ID
             + " = "
-            + getCachedProfileId()
+            + ProfileEntity.SUBQUERY_ACTIVE
             + " AND L."
             + LocationEntity.COLUMN_CAPTION
             + " = "
@@ -300,131 +254,6 @@ public class ChannelDao extends BaseDao {
             sqLiteDatabase.endTransaction();
           }
         });
-  }
-
-  @SuppressLint("Range")
-  public List<Integer> getChannelUserIconIdsToDownload() {
-    String sql =
-        "SELECT C."
-            + ChannelEntity.COLUMN_USER_ICON
-            + " "
-            + ChannelEntity.COLUMN_USER_ICON
-            + " FROM "
-            + ChannelEntity.TABLE_NAME
-            + " AS C"
-            + " LEFT JOIN "
-            + UserIconEntity.TABLE_NAME
-            + " AS U ON (C."
-            + ChannelEntity.COLUMN_USER_ICON
-            + " = "
-            + "U."
-            + UserIconEntity.COLUMN_REMOTE_ID
-            + " AND "
-            + "C."
-            + ChannelEntity.COLUMN_PROFILE_ID
-            + " = "
-            + "U."
-            + UserIconEntity.COLUMN_PROFILE_ID
-            + ")"
-            + " WHERE "
-            + ChannelEntity.COLUMN_VISIBLE
-            + " > 0 AND "
-            + ChannelEntity.COLUMN_USER_ICON
-            + " > 0 AND U."
-            + UserIconEntity.COLUMN_REMOTE_ID
-            + " IS NULL"
-            + " AND (C."
-            + ChannelEntity.COLUMN_PROFILE_ID
-            + " = "
-            + getCachedProfileId()
-            + ")";
-
-    ArrayList<Integer> ids = new ArrayList<>();
-    try (Cursor cursor = read(sqLiteDatabase -> sqLiteDatabase.rawQuery(sql, null))) {
-      if (cursor.moveToFirst()) {
-        do {
-          Integer id = cursor.getInt(cursor.getColumnIndex(ChannelEntity.COLUMN_USER_ICON));
-          if (!ids.contains(id)) {
-            ids.add(id);
-          }
-        } while (cursor.moveToNext());
-      }
-    }
-
-    return ids;
-  }
-
-  @SuppressLint("Range")
-  public List<Integer> getChannelGroupUserIconIdsToDownload() {
-    String sql =
-        "SELECT C."
-            + ChannelGroupEntity.COLUMN_USER_ICON
-            + " "
-            + ChannelGroupEntity.COLUMN_USER_ICON
-            + " FROM "
-            + ChannelGroupEntity.TABLE_NAME
-            + " AS C"
-            + " LEFT JOIN "
-            + UserIconEntity.TABLE_NAME
-            + " AS U ON (C."
-            + ChannelGroupEntity.COLUMN_USER_ICON
-            + " = "
-            + "U."
-            + UserIconEntity.COLUMN_REMOTE_ID
-            + " AND "
-            + "C."
-            + ChannelGroupEntity.COLUMN_PROFILE_ID
-            + " = "
-            + "U."
-            + UserIconEntity.COLUMN_PROFILE_ID
-            + ")"
-            + " WHERE "
-            + ChannelGroupEntity.COLUMN_VISIBLE
-            + " > 0 AND "
-            + ChannelGroupEntity.COLUMN_USER_ICON
-            + " > 0 AND U."
-            + UserIconEntity.COLUMN_REMOTE_ID
-            + " IS NULL"
-            + " AND (C."
-            + ChannelGroupEntity.COLUMN_PROFILE_ID
-            + " = "
-            + getCachedProfileId()
-            + ")";
-
-    ArrayList<Integer> ids = new ArrayList<>();
-    try (Cursor cursor = read(sqLiteDatabase -> sqLiteDatabase.rawQuery(sql, null))) {
-      if (cursor.moveToFirst()) {
-        do {
-          Integer id = cursor.getInt(cursor.getColumnIndex(ChannelEntity.COLUMN_USER_ICON));
-          if (!ids.contains(id)) {
-            ids.add(id);
-          }
-        } while (cursor.moveToNext());
-      }
-    }
-
-    return ids;
-  }
-
-  @SuppressLint("Range")
-  public int getChannelGroupLastPositionInLocation(int locationId) {
-    String where =
-        "G."
-            + ChannelGroupEntity.COLUMN_PROFILE_ID
-            + " = "
-            + getCachedProfileId()
-            + " AND G."
-            + ChannelGroupEntity.COLUMN_LOCATION_ID
-            + " = "
-            + locationId;
-    Cursor cursor = getChannelGroupListCursor(where);
-    if (!cursor.moveToFirst()) {
-      throw new NoSuchElementException();
-    }
-    if (cursor.moveToLast()) {
-      return cursor.getInt(cursor.getColumnIndex(ChannelGroupEntity.COLUMN_POSITION));
-    }
-    return 0;
   }
 
   private Cursor getChannelListCursor(@NonNull String orderBy, @Nullable String where) {

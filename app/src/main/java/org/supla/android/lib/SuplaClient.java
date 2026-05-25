@@ -63,7 +63,6 @@ import org.supla.android.data.source.remote.ConfigResult;
 import org.supla.android.data.source.remote.FieldType;
 import org.supla.android.data.source.remote.SuplaChannelConfig;
 import org.supla.android.data.source.remote.SuplaDeviceConfig;
-import org.supla.android.db.DbHelper;
 import org.supla.android.db.room.app.AppDatabase;
 import org.supla.android.db.room.measurements.MeasurementsDatabase;
 import org.supla.android.events.ChannelConfigEventsManager;
@@ -76,8 +75,8 @@ import org.supla.android.features.scenescleanup.RemoveHiddenScenesManager;
 import org.supla.android.lib.actions.ActionId;
 import org.supla.android.lib.actions.ActionParameters;
 import org.supla.android.lib.actions.SubjectType;
-import org.supla.android.profile.ProfileIdHolder;
 import org.supla.android.usecases.channel.ChannelToRootRelationHolderUseCase;
+import org.supla.android.usecases.channel.SetChannelsOfflineUseCase;
 import org.supla.android.usecases.channel.SetChannelsVisibleUseCase;
 import org.supla.android.usecases.channel.UpdateChannelExtendedValueUseCase;
 import org.supla.android.usecases.channel.UpdateChannelUseCase;
@@ -121,7 +120,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private long _supla_client_ptr = 0;
   private long _supla_client_ptr_counter = 0;
   private boolean _canceled = false;
-  private DbHelper DbH = null;
   private int regTryCounter = 0; // supla-server v1.0 for Raspberry Compatibility fix
   private long lastTokenRequest = 0;
   private boolean superUserAuthorized = false;
@@ -147,13 +145,13 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private final UpdateChannelStateUseCase updateChannelStateUseCase;
   private final UpdateChannelGroupUseCase updateChannelGroupUseCase;
   private final SetChannelsVisibleUseCase setChannelsVisibleUseCase;
+  private final SetChannelsOfflineUseCase setChannelsOfflineUseCase;
   private final SetChannelGroupsVisibleUseCase setChannelGroupsVisibleUseCase;
   private final SetScenesVisibleUseCase setScenesVisibleUseCase;
   private final UpdateSceneUseCase updateSceneUseCase;
   private final UpdateSceneStateUseCase updateSceneStateUseCase;
   private final AppDatabase appDatabase;
   private final MeasurementsDatabase measurementsDatabase;
-  private final ProfileIdHolder profileIdHolder;
   private final UpdateChannelGroupTotalValueUseCase updateChannelGroupTotalValueUseCase;
   private final SuplaClientStateHolder suplaClientStateHolder;
   private final ChannelToRootRelationHolderUseCase channelToRootRelationHolderUseCase;
@@ -191,13 +189,13 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     this.updateChannelStateUseCase = dependencies.getUpdateChannelStateUseCase();
     this.updateChannelGroupUseCase = dependencies.getUpdateChannelGroupUseCase();
     this.setChannelsVisibleUseCase = dependencies.getSetChannelsVisibleUseCase();
+    this.setChannelsOfflineUseCase = dependencies.getSetChannelsOfflineUseCase();
     this.setChannelGroupsVisibleUseCase = dependencies.getSetChannelGroupsVisibleUseCase();
     this.setScenesVisibleUseCase = dependencies.getSetScenesVisibleUseCase();
     this.updateSceneUseCase = dependencies.getUpdateSceneUseCase();
     this.updateSceneStateUseCase = dependencies.getUpdateSceneStateUseCase();
     this.appDatabase = dependencies.getAppDatabase();
     this.measurementsDatabase = dependencies.getMeasurementsDatabase();
-    this.profileIdHolder = dependencies.getProfileIdHolder();
     this.updateChannelGroupTotalValueUseCase =
         dependencies.getUpdateChannelGroupTotalValueUseCase();
     this.channelToRootRelationHolderUseCase = dependencies.getChannelToRootRelationHolderUseCase();
@@ -945,7 +943,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
   private void onConnected() {
     Timber.d("connected");
-    DbH = DbHelper.getInstance(_context);
   }
 
   private void onDisconnected() {
@@ -1484,7 +1481,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
       updateEventsManager.emitScenesUpdate();
     }
 
-    if (DbH.setChannelsOffline()) {
+    if (setChannelsOfflineUseCase.invoke()) {
       emitChannelsUpdate = true;
     }
 
@@ -1501,12 +1498,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     // Needed to trigger database migration through Room.
     appDatabase.getOpenHelper().getReadableDatabase();
     measurementsDatabase.getOpenHelper().getReadableDatabase();
-
-    // After database is ready - set current profile id
-    ProfileEntity currentProfile = profileRepository.findActiveProfile().blockingGet();
-    profileIdHolder.setProfileId(currentProfile.getId());
-
-    DbH = DbHelper.getInstance(_context);
 
     while (!canceled()) {
 
