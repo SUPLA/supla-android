@@ -143,6 +143,16 @@ interface SceneDao {
   @Update
   fun update(scenes: List<SceneEntity>): Completable
 
+  @Query(
+    """
+      UPDATE $TABLE_NAME
+      SET $COLUMN_VISIBLE = :visible
+      WHERE $COLUMN_VISIBLE = :whereVisible
+        AND $COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
+    """
+  )
+  suspend fun setScenesVisible(visible: Int, whereVisible: Int): Int
+
   @Query("SELECT COUNT($COLUMN_ID) FROM $TABLE_NAME")
   fun count(): Observable<Int>
 

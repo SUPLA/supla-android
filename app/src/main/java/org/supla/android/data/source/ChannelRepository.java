@@ -25,9 +25,6 @@ import org.jetbrains.annotations.NotNull;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.db.Location;
-import org.supla.android.lib.SuplaChannelGroup;
-import org.supla.android.lib.SuplaChannelGroupRelation;
-import org.supla.android.lib.SuplaLocation;
 
 public interface ChannelRepository {
   Channel getChannel(int channelId);
@@ -35,12 +32,6 @@ public interface ChannelRepository {
   ChannelGroup getChannelGroup(int groupId);
 
   int getChannelCount();
-
-  boolean setChannelsVisible(int visible, int whereVisible);
-
-  boolean setChannelGroupsVisible(int visible, int whereVisible);
-
-  boolean setChannelGroupRelationsVisible(int visible, int whereVisible);
 
   boolean setChannelsOffline();
 

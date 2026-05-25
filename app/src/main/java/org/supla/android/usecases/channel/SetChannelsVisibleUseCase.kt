@@ -1,5 +1,4 @@
-package org.supla.android.data.source
-
+package org.supla.android.usecases.channel
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -18,10 +17,22 @@ package org.supla.android.data.source
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.lib.SuplaScene
-import org.supla.android.lib.SuplaSceneState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
+import org.supla.android.data.source.RoomChannelRepository
+import javax.inject.Inject
+import javax.inject.Singleton
 
-interface SceneRepository {
-  fun updateSuplaScene(suplaScene: SuplaScene): Boolean
-  fun updateSuplaSceneState(suplaSceneState: SuplaSceneState): Boolean
+@Singleton
+class SetChannelsVisibleUseCase @Inject constructor(
+  private val channelRepository: RoomChannelRepository
+) {
+
+  operator fun invoke(change: VisibilityChange): Boolean =
+    runBlocking {
+      withContext(Dispatchers.IO) {
+        channelRepository.setChannelsVisible(change)
+      }
+    }
 }

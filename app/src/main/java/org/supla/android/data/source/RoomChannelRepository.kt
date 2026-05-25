@@ -23,6 +23,7 @@ import org.supla.android.data.source.local.dao.ChannelDao
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.usecases.captionchange.CaptionChangeUseCase
 import org.supla.android.usecases.channel.RemoveHiddenChannelsUseCase
+import org.supla.android.usecases.channel.VisibilityChange
 import org.supla.android.usecases.developerinfo.CountProvider
 import org.supla.android.usecases.profile.DeleteProfileUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
@@ -53,6 +54,9 @@ class RoomChannelRepository @Inject constructor(
   fun update(entity: ChannelEntity) = channelDao.update(entity)
 
   fun insert(entity: ChannelEntity) = channelDao.insert(entity)
+
+  suspend fun setChannelsVisible(change: VisibilityChange): Boolean =
+    channelDao.setChannelsVisible(change.newVisibility, change.applyForVisibility) > 0
 
   fun findMaxPositionInLocation(locationRemoteId: Int) = channelDao.findMaxPositionInLocation(locationRemoteId)
 

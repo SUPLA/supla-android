@@ -20,11 +20,11 @@ package org.supla.android.data.source
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
-import kotlinx.coroutines.rx3.awaitSingleOrNull
 import org.supla.android.data.source.local.dao.ChannelGroupDao
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.usecases.captionchange.CaptionChangeUseCase
+import org.supla.android.usecases.channel.VisibilityChange
 import org.supla.android.usecases.developerinfo.CountProvider
 import org.supla.android.usecases.profile.DeleteProfileUseCase
 import javax.inject.Inject
@@ -46,6 +46,9 @@ class ChannelGroupRepository @Inject constructor(
   fun findProfileGroups(profileId: Long): Single<List<ChannelGroupDataEntity>> = channelGroupDao.findProfileGroups(profileId)
 
   fun update(groups: List<ChannelGroupEntity>) = channelGroupDao.update(groups)
+
+  suspend fun setChannelGroupsVisible(change: VisibilityChange): Boolean =
+    channelGroupDao.setChannelGroupsVisible(change.newVisibility, change.applyForVisibility) > 0
 
   suspend fun insert(entity: ChannelGroupEntity) = channelGroupDao.insert(entity)
 

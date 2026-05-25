@@ -18,28 +18,12 @@ package org.supla.android.data.source
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.database.Cursor
 import org.supla.android.data.source.local.SceneDao
 import org.supla.android.data.source.local.entity.Scene
-import org.supla.android.data.source.local.entity.SceneEntity
-import org.supla.android.data.source.local.view.SceneView
-import org.supla.android.db.Location
 import org.supla.android.lib.SuplaScene
 import org.supla.android.lib.SuplaSceneState
 
 class DefaultSceneRepository(private val dao: SceneDao) : SceneRepository {
-
-  override fun getAllScenesForProfile(profileId: Long): List<Pair<Scene, Location>> {
-    return parseScenesCursor(dao.sceneCursor(profileId))
-  }
-
-  override fun getScene(id: Int): Scene? {
-    return dao.getSceneByRemoteId(id)
-  }
-
-  override fun updateScene(scene: Scene): Boolean {
-    return dao.updateScene(scene)
-  }
 
   override fun updateSuplaScene(suplaScene: SuplaScene): Boolean {
     val scene = dao.getSceneByRemoteId(suplaScene.id)
@@ -76,38 +60,5 @@ class DefaultSceneRepository(private val dao: SceneDao) : SceneRepository {
     } else {
       dao.updateScene(cloned)
     }
-  }
-
-  override fun setScenesVisible(visible: Int, whereVisible: Int): Boolean {
-    return dao.setScenesVisible(visible, whereVisible)
-  }
-
-  override fun getSceneUserIconIdsToDownload(): List<Int> {
-    return dao.getSceneUserIconIdsToDownload()
-  }
-
-  private fun parseScenesCursor(cursor: Cursor): List<Pair<Scene, Location>> {
-    val rv = mutableListOf<Pair<Scene, Location>>()
-    cursor.moveToFirst()
-    while (!cursor.isAfterLast) {
-      val itm = Scene()
-      itm.AssignCursorData(cursor)
-      rv.add(Pair(itm, readLocationFromCursor(cursor)))
-      cursor.moveToNext()
-    }
-    cursor.close()
-
-    return rv
-  }
-
-  private fun readLocationFromCursor(cursor: Cursor): Location {
-    val location = Location()
-
-    var index = cursor.getColumnIndex(SceneEntity.COLUMN_LOCATION_ID)
-    location.locationId = cursor.getInt(index)
-    index = cursor.getColumnIndex(SceneView.COLUMN_LOCATION_NAME)
-    location.caption = cursor.getString(index)
-
-    return location
   }
 }

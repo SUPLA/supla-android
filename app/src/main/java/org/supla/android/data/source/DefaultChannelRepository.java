@@ -35,11 +35,7 @@ import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity;
 import org.supla.android.data.source.local.view.ChannelView;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelGroup;
-import org.supla.android.db.ChannelGroupRelation;
 import org.supla.android.db.Location;
-import org.supla.android.lib.SuplaChannelGroup;
-import org.supla.android.lib.SuplaChannelGroupRelation;
-import org.supla.android.lib.SuplaLocation;
 
 public class DefaultChannelRepository implements ChannelRepository {
 
@@ -64,21 +60,6 @@ public class DefaultChannelRepository implements ChannelRepository {
   @Override
   public int getChannelCount() {
     return channelDao.getChannelCount();
-  }
-
-  @Override
-  public boolean setChannelsVisible(int visible, int whereVisible) {
-    return channelDao.setChannelsVisible(visible, whereVisible);
-  }
-
-  @Override
-  public boolean setChannelGroupsVisible(int visible, int whereVisible) {
-    return channelDao.setChannelGroupsVisible(visible, whereVisible);
-  }
-
-  @Override
-  public boolean setChannelGroupRelationsVisible(int visible, int whereVisible) {
-    return channelDao.setChannelGroupRelationsVisible(visible, whereVisible);
   }
 
   @Override

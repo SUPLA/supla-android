@@ -71,6 +71,16 @@ interface ChannelGroupDao {
 
   @Query(
     """
+      UPDATE $TABLE_NAME
+      SET $COLUMN_VISIBLE = :visible
+      WHERE $COLUMN_VISIBLE = :whereVisible
+        AND $COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
+    """
+  )
+  suspend fun setChannelGroupsVisible(visible: Int, whereVisible: Int): Int
+
+  @Query(
+    """
       SELECT
         channel_group.$COLUMN_ID group_$COLUMN_ID,
         channel_group.$COLUMN_REMOTE_ID group_$COLUMN_REMOTE_ID,

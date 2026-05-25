@@ -169,7 +169,8 @@ class UpdateChannelGroupUseCaseTest {
   fun `should update channel group and change position when moved to another location`() {
     val suplaChannelGroup = suplaChannelGroup(234, 123, "caption", 1, 2, 3, 4)
     val location = locationEntity(remoteId = 123)
-    val existing = channelGroupEntity(remoteId = 234, locationId = 456, caption = "caption", function = 1, flags = 2, altIcon = 3, userIcon = 4)
+    val existing =
+      channelGroupEntity(remoteId = 234, locationId = 456, caption = "caption", function = 1, flags = 2, altIcon = 3, userIcon = 4)
 
     coEvery { locationRepository.findByRemoteId(123) } returns Maybe.just(location)
     coEvery { channelGroupRepository.findByRemoteId(234) } returns Maybe.just(existing)
@@ -193,7 +194,8 @@ class UpdateChannelGroupUseCaseTest {
   fun `should not change channel group when nothing changed`() {
     val suplaChannelGroup = suplaChannelGroup(234, 123, "caption", 1, 2, 3, 4)
     val location = locationEntity(remoteId = 123)
-    val existing = channelGroupEntity(remoteId = 234, locationId = 123, caption = "caption", function = 1, flags = 2, altIcon = 3, userIcon = 4)
+    val existing =
+      channelGroupEntity(remoteId = 234, locationId = 123, caption = "caption", function = 1, flags = 2, altIcon = 3, userIcon = 4)
 
     coEvery { locationRepository.findByRemoteId(123) } returns Maybe.just(location)
     coEvery { channelGroupRepository.findByRemoteId(234) } returns Maybe.just(existing)
