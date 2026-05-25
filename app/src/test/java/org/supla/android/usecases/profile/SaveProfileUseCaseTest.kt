@@ -1,21 +1,21 @@
 package org.supla.android.usecases.profile
 /*
-Copyright (C) AC SOFTWARE SP. Z O.O.
+ Copyright (C) AC SOFTWARE SP. Z O.O.
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-*/
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
 import android.content.Context
 import io.mockk.MockKAnnotations
@@ -39,7 +39,6 @@ import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
-import org.supla.android.profile.ProfileIdHolder
 import org.supla.android.testhelpers.extensions.mock
 import org.supla.android.testhelpers.extensions.mockWithEmail
 import kotlin.random.Random
@@ -50,9 +49,6 @@ class SaveProfileUseCaseTest {
 
   @MockK
   private lateinit var profileRepository: ProfileRepository
-
-  @MockK
-  private lateinit var profileIdHolder: ProfileIdHolder
 
   @MockK
   private lateinit var randomGenerator: Random
@@ -80,7 +76,6 @@ class SaveProfileUseCaseTest {
 
     every { profileRepository.findAllProfiles() } returns Observable.just(emptyList())
     every { profileRepository.insert(insertedProfile) } returns Single.just(profileId)
-    every { profileIdHolder.profileId = profileId } answers {}
     every { context.getString(R.string.profile_default_name) } returns defaultName
 
     // when
@@ -93,13 +88,12 @@ class SaveProfileUseCaseTest {
     verify {
       profileRepository.findAllProfiles()
       profileRepository.insert(insertedProfile)
-      profileIdHolder.profileId = profileId
       context.getString(R.string.profile_default_name)
     }
     verify(exactly = 2) {
       randomGenerator.nextBytes(16)
     }
-    confirmVerified(profileRepository, profileIdHolder, deleteProfileRelatedDataUseCase, randomGenerator, context)
+    confirmVerified(profileRepository, deleteProfileRelatedDataUseCase, randomGenerator, context)
   }
 
   @Test
@@ -128,7 +122,7 @@ class SaveProfileUseCaseTest {
     verify(exactly = 2) {
       randomGenerator.nextBytes(16)
     }
-    confirmVerified(profileRepository, profileIdHolder, deleteProfileRelatedDataUseCase, randomGenerator, context)
+    confirmVerified(profileRepository, deleteProfileRelatedDataUseCase, randomGenerator, context)
   }
 
   @Test
@@ -153,7 +147,7 @@ class SaveProfileUseCaseTest {
       profileRepository.findAllProfiles()
       profileRepository.update(updatedProfile)
     }
-    confirmVerified(profileRepository, profileIdHolder, deleteProfileRelatedDataUseCase, randomGenerator, context)
+    confirmVerified(profileRepository, deleteProfileRelatedDataUseCase, randomGenerator, context)
   }
 
   @Test
@@ -166,7 +160,6 @@ class SaveProfileUseCaseTest {
 
     every { profileRepository.findAllProfiles() } returns Observable.just(listOf(inputProfile))
     every { profileRepository.update(updatedProfile) } returns Completable.complete()
-    every { profileIdHolder.profileId = profileId } answers {}
     every { deleteProfileRelatedDataUseCase.invoke(profileId) } returns Completable.complete()
 
     // when
@@ -179,10 +172,9 @@ class SaveProfileUseCaseTest {
     verify {
       profileRepository.findAllProfiles()
       profileRepository.update(updatedProfile)
-      profileIdHolder.profileId = profileId
       deleteProfileRelatedDataUseCase.invoke(profileId)
     }
-    confirmVerified(profileRepository, profileIdHolder, deleteProfileRelatedDataUseCase, randomGenerator, context)
+    confirmVerified(profileRepository, deleteProfileRelatedDataUseCase, randomGenerator, context)
   }
 
   @Test
@@ -217,7 +209,7 @@ class SaveProfileUseCaseTest {
       profileRepository.update(readyToSaveProfile)
       deleteProfileRelatedDataUseCase.invoke(profileId)
     }
-    confirmVerified(profileRepository, profileIdHolder, deleteProfileRelatedDataUseCase, randomGenerator, context)
+    confirmVerified(profileRepository, deleteProfileRelatedDataUseCase, randomGenerator, context)
   }
 
   @Test
@@ -247,7 +239,7 @@ class SaveProfileUseCaseTest {
       profileRepository.findAllProfiles()
       profileRepository.insert(insertedProfile)
     }
-    confirmVerified(profileRepository, profileIdHolder)
+    confirmVerified(profileRepository)
   }
 
   @Test
@@ -277,7 +269,7 @@ class SaveProfileUseCaseTest {
       profileRepository.findAllProfiles()
       profileRepository.insert(insertedProfile)
     }
-    confirmVerified(profileRepository, profileIdHolder)
+    confirmVerified(profileRepository)
   }
 
   @Test
@@ -308,7 +300,7 @@ class SaveProfileUseCaseTest {
       profileRepository.findAllProfiles()
       profileRepository.insert(insertedProfile)
     }
-    confirmVerified(profileRepository, profileIdHolder)
+    confirmVerified(profileRepository)
   }
 
   @Test
@@ -339,7 +331,7 @@ class SaveProfileUseCaseTest {
       profileRepository.findAllProfiles()
       profileRepository.insert(insertedProfile)
     }
-    confirmVerified(profileRepository, profileIdHolder)
+    confirmVerified(profileRepository)
   }
 
   private fun mockAuthorizationData(): Pair<ByteArray, ByteArray> {

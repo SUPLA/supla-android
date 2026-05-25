@@ -27,15 +27,16 @@ import android.preference.PreferenceManager;
 import android.view.Window;
 import java.util.Calendar;
 import java.util.Date;
-import org.supla.android.db.DbHelper;
 
 public class RateApp {
 
   private final String PN_RATE_TIME = "rate_time";
   private final Context context;
+  private final int channelsCount;
 
-  RateApp(Context context) {
+  RateApp(Context context, int channelsCount) {
     this.context = context;
+    this.channelsCount = channelsCount;
   }
 
   private void moreTime(int days) {
@@ -95,9 +96,7 @@ public class RateApp {
       moreTime(1);
 
     } else if (now.getTime() >= rt) {
-
-      DbHelper DbH = DbHelper.getInstance(context);
-      if (DbH.getChannelCount() > 0) {
+      if (channelsCount > 0) {
 
         moreTime(1);
 

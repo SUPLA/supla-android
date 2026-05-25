@@ -21,7 +21,6 @@ import androidx.room.rxjava3.EmptyResultSetException
 import io.reactivex.rxjava3.core.Completable
 import org.supla.android.core.networking.suplacloud.SuplaCloudConfigHolder
 import org.supla.android.data.source.ProfileRepository
-import org.supla.android.profile.ProfileIdHolder
 import org.supla.android.usecases.client.ReconnectUseCase
 import org.supla.android.usecases.icon.LoadUserIconsIntoCacheUseCase
 import javax.inject.Inject
@@ -30,7 +29,6 @@ import javax.inject.Singleton
 @Singleton
 class ActivateProfileUseCase @Inject constructor(
   private val profileRepository: ProfileRepository,
-  private val profileIdHolder: ProfileIdHolder,
   private val suplaCloudConfigHolder: SuplaCloudConfigHolder,
   private val loadUserIconsIntoCacheUseCase: LoadUserIconsIntoCacheUseCase,
   private val reconnectUseCase: ReconnectUseCase
@@ -56,12 +54,7 @@ class ActivateProfileUseCase @Inject constructor(
 
   private fun activate(id: Long) =
     profileRepository.activateProfile(id)
-      .andThen(
-        Completable.fromRunnable {
-          profileIdHolder.profileId = id
-          suplaCloudConfigHolder.clean()
-        }
-      )
+      .andThen(Completable.fromRunnable { suplaCloudConfigHolder.clean() })
       .andThen(reconnectUseCase())
       .andThen(loadUserIconsIntoCacheUseCase())
 }

@@ -26,6 +26,7 @@ import java.util.List;
 import org.supla.android.data.source.local.entity.ChannelEntity;
 import org.supla.android.data.source.local.entity.ChannelGroupEntity;
 import org.supla.android.data.source.local.entity.LocationEntity;
+import org.supla.android.data.source.local.entity.ProfileEntity;
 import org.supla.android.db.Location;
 
 public class LocationDao extends BaseDao {
@@ -33,7 +34,7 @@ public class LocationDao extends BaseDao {
     super(databaseAccessProvider);
   }
 
-  public Location getLocation(int locationId) {
+  public Location getLocation(int locationId, long profileId) {
     String[] projection = {
       LocationEntity.COLUMN_ID,
       LocationEntity.COLUMN_REMOTE_ID,
@@ -50,7 +51,7 @@ public class LocationDao extends BaseDao {
         projection,
         LocationEntity.TABLE_NAME,
         key(LocationEntity.COLUMN_REMOTE_ID, locationId),
-        key(LocationEntity.COLUMN_PROFILE_ID, getCachedProfileId()));
+        key(LocationEntity.COLUMN_PROFILE_ID, profileId));
   }
 
   public void update(Location location) {
@@ -115,7 +116,7 @@ public class LocationDao extends BaseDao {
             + " AND "
             + ChannelEntity.COLUMN_PROFILE_ID
             + " = "
-            + getCachedProfileId()
+            + ProfileEntity.SUBQUERY_ACTIVE
             + " UNION "
             + "SELECT "
             + ChannelGroupEntity.COLUMN_LOCATION_ID
@@ -127,13 +128,13 @@ public class LocationDao extends BaseDao {
             + " AND "
             + ChannelGroupEntity.COLUMN_PROFILE_ID
             + " = "
-            + getCachedProfileId()
+            + ProfileEntity.SUBQUERY_ACTIVE
             + ")"
             + " AND "
             + "L."
             + LocationEntity.COLUMN_PROFILE_ID
             + " = "
-            + getCachedProfileId()
+            + ProfileEntity.SUBQUERY_ACTIVE
             + " ORDER BY "
             + "L."
             + LocationEntity.COLUMN_SORT_ORDER

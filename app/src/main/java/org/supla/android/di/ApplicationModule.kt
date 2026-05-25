@@ -39,7 +39,6 @@ import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.data.formatting.DateFormatter
 import org.supla.android.lib.AndroidSuplaClientMessageHandler
 import org.supla.android.lib.SuplaClient
-import org.supla.android.profile.ProfileIdHolder
 import org.supla.android.widget.WidgetPreferences
 import javax.inject.Named
 import javax.inject.Singleton
@@ -50,10 +49,6 @@ const val RANDOM_GENERATOR = "ApplicationModule.RANDOM_GENERATOR"
 @Module
 @InstallIn(SingletonComponent::class)
 class ApplicationModule {
-
-  @Provides
-  @Singleton
-  fun provideProfileIdHolder() = ProfileIdHolder(null)
 
   @Provides
   @Singleton

@@ -35,6 +35,7 @@ class ChannelValueRepository @Inject constructor(
   fun findByRemoteId(remoteId: Int) = channelValueDao.findByRemoteId(remoteId)
   fun update(entity: ChannelValueEntity) = channelValueDao.update(entity)
   fun insert(entity: ChannelValueEntity) = channelValueDao.insert(entity)
+  suspend fun setChannelsOffline(): Boolean = channelValueDao.setChannelsOffline() > 0
   override fun count(): Observable<Int> = channelValueDao.count()
   override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = channelValueDao.deleteKtx(remoteId, profileId)
   override fun deleteByProfile(profileId: Long): Completable = channelValueDao.deleteByProfile(profileId)

@@ -21,7 +21,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import org.supla.android.db.DbItem;
 
 public abstract class BaseDao {
@@ -35,11 +34,6 @@ public abstract class BaseDao {
   <T> T read(DatabaseCallable<T> runnable) {
     // SQLiteOpenHelper manages DB, there is no need to close SQLiteDatase.
     return runnable.call(databaseAccessProvider.getReadableDatabase());
-  }
-
-  <T> T write(DatabaseCallable<T> runnable) {
-    // SQLiteOpenHelper manages DB, there is no need to close SQLiteDatase.
-    return runnable.call(databaseAccessProvider.getWritableDatabase());
   }
 
   void write(DatabaseRunnable runnable) {
@@ -122,74 +116,8 @@ public abstract class BaseDao {
         });
   }
 
-  long insert(DbItem item, String tableName) {
-    return write(
-        sqLiteDatabase -> {
-          return sqLiteDatabase.insertOrThrow(tableName, null, item.getContentValues());
-        });
-  }
-
-  public void insert(DbItem item, String tableName, int conflictAlgorithm) {
-    write(
-        sqLiteDatabase -> {
-          sqLiteDatabase.insertWithOnConflict(
-              tableName, null, item.getContentValues(), conflictAlgorithm);
-        });
-  }
-
-  void delete(String tableName, Key<?>... keys) {
-    StringBuilder whereBuilder = new StringBuilder();
-    String[] args = new String[keys.length];
-
-    if (keys.length > 0) {
-      whereBuilder.append(keys[0].asSelection());
-      args[0] = String.valueOf(keys[0].value);
-      for (int i = 1; i < keys.length; i++) {
-        whereBuilder.append(" AND ").append(keys[i].asSelection());
-        args[i] = String.valueOf(keys[i].value);
-      }
-    }
-
-    write(
-        sqLiteDatabase -> {
-          sqLiteDatabase.delete(tableName, whereBuilder.toString(), args);
-        });
-  }
-
-  int getCount(String tableName, @Nullable Key<?>... keys) {
-    final StringBuilder selection =
-        new StringBuilder().append("SELECT count(*) FROM ").append(tableName);
-    if (keys != null && keys.length > 0 && keys[0] != null) {
-      selection.append(" WHERE ");
-      boolean and = false;
-      for (Key<?> key : keys) {
-        if (and) {
-          selection.append(" AND ");
-        }
-        selection.append(key.asWhere());
-        and = true;
-      }
-    }
-
-    return read(
-        sqLiteDatabase -> {
-          int count;
-
-          Cursor c = sqLiteDatabase.rawQuery(selection.toString(), null);
-          c.moveToFirst();
-          count = c.getInt(0);
-          c.close();
-
-          return count;
-        });
-  }
-
   <T> Key<T> key(String column, T id) {
     return new Key<>(column, id);
-  }
-
-  public Long getCachedProfileId() {
-    return databaseAccessProvider.getCachedProfileId();
   }
 
   public interface DatabaseAccessProvider {
@@ -198,8 +126,6 @@ public abstract class BaseDao {
 
     @NonNull
     SQLiteDatabase getWritableDatabase();
-
-    Long getCachedProfileId();
   }
 
   @FunctionalInterface
@@ -228,10 +154,6 @@ public abstract class BaseDao {
 
     String asSelection() {
       return column + " = ?";
-    }
-
-    public String asWhere() {
-      return this.column + " = " + value;
     }
   }
 }

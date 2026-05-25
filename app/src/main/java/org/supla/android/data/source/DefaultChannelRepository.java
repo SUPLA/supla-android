@@ -24,10 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.reactivex.rxjava3.core.Completable;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Set;
 import org.supla.android.data.source.local.ChannelDao;
 import org.supla.android.data.source.local.LocationDao;
 import org.supla.android.data.source.local.entity.ChannelGroupEntity;
@@ -48,23 +45,13 @@ public class DefaultChannelRepository implements ChannelRepository {
   }
 
   @Override
-  public Channel getChannel(int channelId) {
-    return channelDao.getChannel(channelId);
+  public Channel getChannel(int channelId, long profileId) {
+    return channelDao.getChannel(channelId, profileId);
   }
 
   @Override
-  public ChannelGroup getChannelGroup(int groupId) {
-    return channelDao.getChannelGroup(groupId);
-  }
-
-  @Override
-  public int getChannelCount() {
-    return channelDao.getChannelCount();
-  }
-
-  @Override
-  public boolean setChannelsOffline() {
-    return channelDao.setChannelsOffline();
+  public ChannelGroup getChannelGroup(int groupId, long profileId) {
+    return channelDao.getChannelGroup(groupId, profileId);
   }
 
   @Override
@@ -98,29 +85,17 @@ public class DefaultChannelRepository implements ChannelRepository {
   }
 
   @Override
-  public List<Integer> getChannelUserIconIdsToDownload() {
-    Set<Integer> result = new LinkedHashSet<>();
-    result.addAll(channelDao.getChannelUserIconIdsToDownload());
-    result.addAll(channelDao.getChannelGroupUserIconIdsToDownload());
-    return new ArrayList<>(result);
-  }
-
-  @Override
-  public Completable reorderChannels(Long firstItemId, int firstItemLocationId, Long secondItemId) {
+  public Completable reorderChannels(
+      Long firstItemId, int firstItemLocationId, Long secondItemId, long profileId) {
     return Completable.fromRunnable(
-        () -> doReorderChannels(firstItemId, firstItemLocationId, secondItemId));
+        () -> doReorderChannels(firstItemId, firstItemLocationId, secondItemId, profileId));
   }
 
   @Override
   public Completable reorderChannelGroups(
-      Long firstItemId, int firstItemLocationId, Long secondItemId) {
+      Long firstItemId, int firstItemLocationId, Long secondItemId, long profilId) {
     return Completable.fromRunnable(
-        () -> doReorderChannelGroups(firstItemId, firstItemLocationId, secondItemId));
-  }
-
-  @Override
-  public Location getLocation(int locationId) {
-    return locationDao.getLocation(locationId);
+        () -> doReorderChannelGroups(firstItemId, firstItemLocationId, secondItemId, profilId));
   }
 
   @Override
@@ -138,8 +113,9 @@ public class DefaultChannelRepository implements ChannelRepository {
     return locationDao.getLocations();
   }
 
-  private void doReorderChannels(Long firstItemId, int firstItemLocationId, Long secondItemId) {
-    List<Long> orderedItems = getSortedChannelIdsForLocation(firstItemLocationId);
+  private void doReorderChannels(
+      Long firstItemId, int firstItemLocationId, Long secondItemId, long profileId) {
+    List<Long> orderedItems = getSortedChannelIdsForLocation(firstItemLocationId, profileId);
 
     reorderList(orderedItems, firstItemId, secondItemId);
 
@@ -147,10 +123,10 @@ public class DefaultChannelRepository implements ChannelRepository {
   }
 
   @SuppressLint("Range")
-  private List<Long> getSortedChannelIdsForLocation(int locationId) {
+  private List<Long> getSortedChannelIdsForLocation(int locationId, long profileId) {
     ArrayList<Long> orderedItems = new ArrayList<>();
 
-    Location location = locationDao.getLocation(locationId);
+    Location location = locationDao.getLocation(locationId, profileId);
     try (Cursor channelListCursor =
         channelDao.getSortedChannelIdsForLocationCursor(location.getCaption())) {
       if (channelListCursor.moveToFirst()) {
@@ -166,8 +142,8 @@ public class DefaultChannelRepository implements ChannelRepository {
   }
 
   private void doReorderChannelGroups(
-      Long firstItemId, int firstItemLocationId, Long secondItemId) {
-    List<Long> orderedItems = getSortedChannelGroupIdsForLocation(firstItemLocationId);
+      Long firstItemId, int firstItemLocationId, Long secondItemId, long profileId) {
+    List<Long> orderedItems = getSortedChannelGroupIdsForLocation(firstItemLocationId, profileId);
 
     reorderList(orderedItems, firstItemId, secondItemId);
 
@@ -175,10 +151,10 @@ public class DefaultChannelRepository implements ChannelRepository {
   }
 
   @SuppressLint("Range")
-  private List<Long> getSortedChannelGroupIdsForLocation(int locationId) {
+  private List<Long> getSortedChannelGroupIdsForLocation(int locationId, long profileId) {
     ArrayList<Long> orderedItems = new ArrayList<>();
 
-    Location location = locationDao.getLocation(locationId);
+    Location location = locationDao.getLocation(locationId, profileId);
     try (Cursor channelListCursor =
         channelDao.getSortedChannelGroupIdsForLocationCursor(location.getCaption())) {
       if (channelListCursor.moveToFirst()) {
@@ -211,18 +187,5 @@ public class DefaultChannelRepository implements ChannelRepository {
     // Shift items in the table
     Long removedId = orderedItems.remove(initialPosition);
     orderedItems.add(finalPosition, removedId);
-  }
-
-  private void updateChannelGroupPosition(Location location, ChannelGroup channelGroup) {
-    try {
-      int lastPosition = channelDao.getChannelGroupLastPositionInLocation(location.getLocationId());
-      if (lastPosition == 0) {
-        channelGroup.setPosition(0);
-      } else {
-        channelGroup.setPosition(lastPosition + 1);
-      }
-    } catch (NoSuchElementException ex) {
-      channelGroup.setPosition(0);
-    }
   }
 }

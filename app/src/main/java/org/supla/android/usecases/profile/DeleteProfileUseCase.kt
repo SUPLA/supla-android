@@ -27,7 +27,6 @@ import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.lib.SuplaClient
 import org.supla.android.lib.singlecall.SingleCall
-import org.supla.android.profile.ProfileIdHolder
 import org.supla.android.usecases.client.DisconnectUseCase
 import org.supla.android.widget.WidgetManager
 import timber.log.Timber
@@ -44,7 +43,6 @@ class DeleteProfileUseCase @Inject constructor(
   private val singleCallProvider: SingleCall.Provider,
   private val disconnectUseCase: DisconnectUseCase,
   private val suplaAppProvider: SuplaAppProvider,
-  private val profileIdHolder: ProfileIdHolder,
   private val widgetManager: WidgetManager
 ) {
 
@@ -72,12 +70,7 @@ class DeleteProfileUseCase @Inject constructor(
 
   private fun removeLastProfile(profile: ProfileEntity): Completable =
     deleteProfile(profile)
-      .andThen(
-        Completable.fromRunnable {
-          profileIdHolder.profileId = null
-          suplaClientStateHolder.handleEvent(SuplaClientEvent.NoAccount)
-        }
-      )
+      .andThen(Completable.fromRunnable { suplaClientStateHolder.handleEvent(SuplaClientEvent.NoAccount) })
 
   private fun removeAndActivate(toRemove: ProfileEntity, toActivate: ProfileEntity): Completable =
     activateProfileUseCase(toActivate.id!!, true)

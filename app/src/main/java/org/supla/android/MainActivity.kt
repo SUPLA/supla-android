@@ -67,6 +67,7 @@ import org.supla.android.core.notifications.NotificationsHelper
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.core.ui.BackHandleOwner
+import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.extensions.MenuItemsAnimationType
 import org.supla.android.extensions.getChannelIconUseCase
 import org.supla.android.extensions.hide
@@ -167,6 +168,9 @@ class MainActivity :
 
   @Inject
   lateinit var encryptedPreferences: EncryptedPreferences
+
+  @Inject
+  lateinit var channelRepository: RoomChannelRepository
 
   @RequiresApi(Build.VERSION_CODES.O)
   val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
@@ -395,9 +399,21 @@ class MainActivity :
     }
 
     if (Configuration.ASK_FOR_RATE) {
-      RateApp(this).showDialog {
-        handler.postDelayed({ it.run() }, 1000)
-      }
+      disposables.add(
+        channelRepository.count()
+          .subscribeOn(suplaSchedulers.io)
+          .observeOn(suplaSchedulers.ui)
+          .subscribeBy(
+            onNext = { channelsCount ->
+              RateApp(this, channelsCount).showDialog {
+                handler.postDelayed({ it.run() }, 1000)
+              }
+            },
+            onError = {
+              Timber.e(it, "Could not load channels count")
+            }
+          )
+      )
     }
   }
 
@@ -409,40 +425,50 @@ class MainActivity :
   override fun onEventMsg(event: SuplaEvent) {
     super.onEventMsg(event)
     if ((event.Owner && event.Event != SuplaConst.SUPLA_EVENT_SET_BRIDGE_VALUE_FAILED) || event.ChannelID == 0) return
-    val channel = getDbHelper().getChannel(event.ChannelID) ?: return
-    var imgResId = 0
-    var imgId: ImageId? = null
-    var msg: String
-    if (event.Event == SuplaConst.SUPLA_EVENT_SET_BRIDGE_VALUE_FAILED) {
-      if (channel.flags and SuplaConst.SUPLA_CHANNEL_FLAG_ZWAVE_BRIDGE > 0) {
-        msg = resources.getString(R.string.zwave_device_communication_error)
-        imgResId = R.drawable.zwave_device_error
-      } else {
-        return
-      }
-    } else {
-      val msgId: Int = when (event.Event) {
-        SuplaConst.SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK -> R.string.event_openedthegateway
-        SuplaConst.SUPLA_EVENT_CONTROLLINGTHEGATE -> R.string.event_openedclosedthegate
-        SuplaConst.SUPLA_EVENT_CONTROLLINGTHEGARAGEDOOR -> R.string.event_openedclosedthegatedoors
-        SuplaConst.SUPLA_EVENT_CONTROLLINGTHEDOORLOCK -> R.string.event_openedthedoor
-        SuplaConst.SUPLA_EVENT_CONTROLLINGTHEROLLERSHUTTER -> R.string.event_openedcloserollershutter
-        SuplaConst.SUPLA_EVENT_CONTROLLINGTHEROOFWINDOW -> R.string.event_openedclosedtheroofwindow
-        SuplaConst.SUPLA_EVENT_POWERONOFF -> R.string.event_poweronoff
-        SuplaConst.SUPLA_EVENT_LIGHTONOFF -> R.string.event_turnedthelightonoff
-        SuplaConst.SUPLA_EVENT_VALVEOPENCLOSE -> R.string.event_openedclosedthevalve
-        else -> return
-      }
-      imgId = getChannelIconUseCase.invoke(channel)
-      msg = resources.getString(msgId)
-      @SuppressLint("SimpleDateFormat")
-      val sdf = SimpleDateFormat("HH:mm:ss")
-      msg = sdf.format(Date()) + " " + event.SenderName + " " + msg
-    }
-    if (channel.hasCustomCaption()) {
-      msg = msg + " (" + channel.getCaption(this) + ")"
-    }
-    showNotificationMessage(msg, imgId, imgResId)
+
+    disposables.add(
+      channelRepository.findChannelDataEntity(event.ChannelID)
+        .subscribeOn(suplaSchedulers.io)
+        .observeOn(suplaSchedulers.ui)
+        .firstElement()
+        .subscribeBy(
+          onSuccess = { channel ->
+            var imgResId = 0
+            var imgId: ImageId? = null
+            var msg: String
+            if (event.Event == SuplaConst.SUPLA_EVENT_SET_BRIDGE_VALUE_FAILED) {
+              if (channel.flags and SuplaConst.SUPLA_CHANNEL_FLAG_ZWAVE_BRIDGE > 0) {
+                msg = resources.getString(R.string.zwave_device_communication_error)
+                imgResId = R.drawable.zwave_device_error
+              } else {
+                return@subscribeBy
+              }
+            } else {
+              val msgId: Int = when (event.Event) {
+                SuplaConst.SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK -> R.string.event_openedthegateway
+                SuplaConst.SUPLA_EVENT_CONTROLLINGTHEGATE -> R.string.event_openedclosedthegate
+                SuplaConst.SUPLA_EVENT_CONTROLLINGTHEGARAGEDOOR -> R.string.event_openedclosedthegatedoors
+                SuplaConst.SUPLA_EVENT_CONTROLLINGTHEDOORLOCK -> R.string.event_openedthedoor
+                SuplaConst.SUPLA_EVENT_CONTROLLINGTHEROLLERSHUTTER -> R.string.event_openedcloserollershutter
+                SuplaConst.SUPLA_EVENT_CONTROLLINGTHEROOFWINDOW -> R.string.event_openedclosedtheroofwindow
+                SuplaConst.SUPLA_EVENT_POWERONOFF -> R.string.event_poweronoff
+                SuplaConst.SUPLA_EVENT_LIGHTONOFF -> R.string.event_turnedthelightonoff
+                SuplaConst.SUPLA_EVENT_VALVEOPENCLOSE -> R.string.event_openedclosedthevalve
+                else -> return@subscribeBy
+              }
+              imgId = getChannelIconUseCase.invoke(channel)
+              msg = resources.getString(msgId)
+              @SuppressLint("SimpleDateFormat")
+              val sdf = SimpleDateFormat("HH:mm:ss")
+              msg = sdf.format(Date()) + " " + event.SenderName + " " + msg
+            }
+            if (channel.channelEntity.caption.trim().isNotEmpty()) {
+              msg = msg + " (" + channel.caption + ")"
+            }
+            showNotificationMessage(msg, imgId, imgResId)
+          }
+        )
+    )
   }
 
   private fun showHideNotificationView(show: Boolean) {

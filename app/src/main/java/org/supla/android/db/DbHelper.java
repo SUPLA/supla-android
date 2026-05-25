@@ -22,14 +22,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import androidx.annotation.NonNull;
-import dagger.hilt.android.EntryPointAccessors;
 import java.util.List;
 import org.supla.android.data.source.ChannelRepository;
 import org.supla.android.data.source.DefaultChannelRepository;
 import org.supla.android.data.source.local.ChannelDao;
 import org.supla.android.data.source.local.LocationDao;
-import org.supla.android.di.entrypoints.ProfileIdHolderEntryPoint;
-import org.supla.android.profile.ProfileIdHolder;
 
 public class DbHelper extends BaseDbHelper {
 
@@ -41,8 +38,8 @@ public class DbHelper extends BaseDbHelper {
 
   private final ChannelRepository channelRepository;
 
-  private DbHelper(Context context, ProfileIdProvider profileIdProvider) {
-    super(context, DATABASE_NAME, null, DATABASE_VERSION, profileIdProvider);
+  private DbHelper(Context context) {
+    super(context, DATABASE_NAME, null, DATABASE_VERSION);
     this.channelRepository =
         new DefaultChannelRepository(new ChannelDao(this), new LocationDao(this));
   }
@@ -60,11 +57,7 @@ public class DbHelper extends BaseDbHelper {
       synchronized (mutex) {
         result = instance;
         if (result == null) {
-          ProfileIdHolder profileIdHolder =
-              EntryPointAccessors.fromApplication(
-                      context.getApplicationContext(), ProfileIdHolderEntryPoint.class)
-                  .provideProfileIdHolder();
-          instance = result = new DbHelper(context, profileIdHolder::getProfileId);
+          instance = result = new DbHelper(context);
         }
       }
     }
@@ -87,20 +80,12 @@ public class DbHelper extends BaseDbHelper {
     // Moved to Room (see DatabaseModule)
   }
 
-  public Channel getChannel(int channelId) {
-    return channelRepository.getChannel(channelId);
+  public Channel getChannel(int channelId, long profileId) {
+    return channelRepository.getChannel(channelId, profileId);
   }
 
-  public ChannelGroup getChannelGroup(int groupId) {
-    return channelRepository.getChannelGroup(groupId);
-  }
-
-  public boolean setChannelsOffline() {
-    return channelRepository.setChannelsOffline();
-  }
-
-  public int getChannelCount() {
-    return channelRepository.getChannelCount();
+  public ChannelGroup getChannelGroup(int groupId, long profileId) {
+    return channelRepository.getChannelGroup(groupId, profileId);
   }
 
   public Cursor getChannelListCursorForGroup(int groupId) {

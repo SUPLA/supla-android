@@ -28,6 +28,7 @@ import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.ChannelRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.events.UpdateEventsManager
@@ -69,6 +70,7 @@ class GroupListViewModel @Inject constructor(
   private val toggleLocationUseCase: ToggleLocationUseCase,
   private val groupActionUseCase: GroupActionUseCase,
   private val channelRepository: ChannelRepository,
+  private val profileRepository: ProfileRepository,
   loadActiveProfileUrlUseCase: LoadActiveProfileUrlUseCase,
   updateEventsManager: UpdateEventsManager,
   dateProvider: DateProvider,
@@ -116,7 +118,10 @@ class GroupListViewModel @Inject constructor(
       return // nothing to swap
     }
 
-    channelRepository.reorderChannelGroups(firstItem.id, firstItem.locationId, secondItem.id)
+    profileRepository.findActiveProfile()
+      .flatMapCompletable {
+        channelRepository.reorderChannelGroups(firstItem.id, firstItem.locationId, secondItem.id, it.id!!)
+      }
       .attach()
       .subscribeBy(
         onError = defaultErrorHandler("swapItems(..., ...)")
