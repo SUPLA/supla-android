@@ -26,7 +26,6 @@ import java.util.List;
 import org.supla.android.data.source.local.ChannelDao;
 import org.supla.android.data.source.local.LocationDao;
 import org.supla.android.data.source.local.entity.ChannelGroupEntity;
-import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity;
 import org.supla.android.data.source.local.view.ChannelView;
 import org.supla.android.db.Channel;
 import org.supla.android.db.Location;
@@ -39,26 +38,6 @@ public class DefaultChannelRepository implements ChannelRepository {
   public DefaultChannelRepository(ChannelDao channelDao, LocationDao locationDao) {
     this.channelDao = channelDao;
     this.locationDao = locationDao;
-  }
-
-  @Override
-  public Cursor getChannelListCursorForGroup(int groupId) {
-    String where =
-        "C."
-            + ChannelView.COLUMN_CHANNEL_REMOTE_ID
-            + " IN ( SELECT "
-            + ChannelGroupRelationEntity.COLUMN_CHANNEL_ID
-            + " FROM "
-            + ChannelGroupRelationEntity.TABLE_NAME
-            + " WHERE "
-            + ChannelGroupRelationEntity.COLUMN_GROUP_ID
-            + " = "
-            + groupId
-            + " AND "
-            + ChannelGroupRelationEntity.COLUMN_VISIBLE
-            + " > 0 ) ";
-
-    return channelDao.getChannelListCursorWithDefaultOrder(where);
   }
 
   @Override

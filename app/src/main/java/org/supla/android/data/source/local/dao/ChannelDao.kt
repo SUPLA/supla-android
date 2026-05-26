@@ -39,6 +39,7 @@ import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_VISIBLE
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.TABLE_NAME
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
+import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity
 import org.supla.android.data.source.local.entity.ChannelStateEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.LocationEntity
@@ -194,6 +195,49 @@ interface ChannelDao {
   """
   )
   fun findListWithoutUnavailable(): Observable<List<ChannelDataEntity>>
+
+  @Query(
+    """
+    SELECT 
+      ${ChannelEntity.JOIN_COLUMNS},
+      ${ChannelValueEntity.JOIN_COLUMNS},
+      ${ChannelExtendedValueEntity.JOIN_COLUMNS},
+      ${LocationEntity.JOIN_COLUMNS},
+      ${ChannelConfigEntity.JOIN_COLUMNS},
+      ${ChannelStateEntity.JOIN_COLUMNS}
+    FROM $TABLE_NAME channel
+    JOIN ${ChannelValueEntity.TABLE_NAME} value
+      ON channel.$COLUMN_CHANNEL_REMOTE_ID = value.${ChannelValueEntity.COLUMN_CHANNEL_REMOTE_ID}
+        AND channel.$COLUMN_PROFILE_ID = value.${ChannelValueEntity.COLUMN_PROFILE_ID}
+    JOIN ${LocationEntity.TABLE_NAME} location
+      ON channel.$COLUMN_LOCATION_ID = location.${LocationEntity.COLUMN_REMOTE_ID}
+        AND channel.$COLUMN_PROFILE_ID = location.${LocationEntity.COLUMN_PROFILE_ID}
+    LEFT JOIN ${ChannelConfigEntity.TABLE_NAME} config
+      ON channel.$COLUMN_CHANNEL_REMOTE_ID = config.${ChannelConfigEntity.COLUMN_CHANNEL_ID}
+        AND channel.$COLUMN_PROFILE_ID = config.${ChannelConfigEntity.COLUMN_PROFILE_ID}
+    LEFT JOIN ${ChannelExtendedValueEntity.TABLE_NAME} extended_value
+      ON channel.$COLUMN_CHANNEL_REMOTE_ID = extended_value.${ChannelExtendedValueEntity.COLUMN_CHANNEL_ID}
+        AND channel.$COLUMN_PROFILE_ID = extended_value.${ChannelExtendedValueEntity.COLUMN_PROFILE_ID}
+    LEFT JOIN ${ChannelStateEntity.TABLE_NAME} state
+      ON channel.$COLUMN_CHANNEL_REMOTE_ID = state.${ChannelStateEntity.COLUMN_CHANNEL_ID}
+        AND channel.$COLUMN_PROFILE_ID = state.${ChannelStateEntity.COLUMN_PROFILE_ID}
+    JOIN ${ChannelGroupRelationEntity.TABLE_NAME} relation
+      ON channel.$COLUMN_CHANNEL_REMOTE_ID = relation.${ChannelGroupRelationEntity.COLUMN_CHANNEL_ID}
+        AND channel.$COLUMN_PROFILE_ID = relation.${ChannelGroupRelationEntity.COLUMN_PROFILE_ID}
+    WHERE channel.${ChannelEntity.COLUMN_FUNCTION} <> 0
+      AND channel.$COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
+      AND channel.$COLUMN_VISIBLE > 0
+      AND relation.${ChannelGroupRelationEntity.COLUMN_GROUP_ID} = :groupId
+      AND relation.${ChannelGroupRelationEntity.COLUMN_VISIBLE} > 0
+    ORDER BY
+      location.${LocationEntity.COLUMN_SORT_ORDER},
+      location.${LocationEntity.COLUMN_CAPTION} COLLATE LOCALIZED,
+      channel.${COLUMN_POSITION},
+      channel.${ChannelEntity.COLUMN_FUNCTION} DESC,
+      channel.$COLUMN_CAPTION COLLATE LOCALIZED
+  """
+  )
+  fun findListForGroup(groupId: Int): Single<List<ChannelDataEntity>>
 
   @Query(
     """

@@ -19,27 +19,27 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import android.content.Context;
-import android.database.Cursor;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ResourceCursorAdapter;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import java.util.List;
 import org.supla.android.R;
 import org.supla.android.SuplaChannelStatus;
 import org.supla.android.ThermostatHP;
+import org.supla.android.data.source.local.entity.complex.ChannelDataEntity;
 import org.supla.android.db.Channel;
 
-public class ThermostatHPListViewCursorAdapter extends ResourceCursorAdapter {
-  public ThermostatHPListViewCursorAdapter(Context context, int layout, Cursor c) {
-    super(context, layout, c);
-  }
+public class ThermostatHPArrayAdapter extends ArrayAdapter<ChannelDataEntity> {
 
-  public ThermostatHPListViewCursorAdapter(
-      Context context, int layout, Cursor c, boolean autoRequery) {
-    super(context, layout, c, autoRequery);
-  }
+  private final LayoutInflater inflater;
 
-  public ThermostatHPListViewCursorAdapter(Context context, int layout, Cursor c, int flags) {
-    super(context, layout, c, flags);
+  public ThermostatHPArrayAdapter(Context context, int layout, List<ChannelDataEntity> entries) {
+    super(context, layout, entries);
+    inflater = LayoutInflater.from(context);
   }
 
   private void setOn(TextView tv, boolean on) {
@@ -54,8 +54,15 @@ public class ThermostatHPListViewCursorAdapter extends ResourceCursorAdapter {
     }
   }
 
+  @NonNull
   @Override
-  public void bindView(View view, Context context, Cursor cursor) {
+  public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    View view;
+    if (convertView == null) {
+      view = inflater.inflate(R.layout.homeplus_channel_row, parent, false);
+    } else {
+      view = convertView;
+    }
 
     TextView caption = view.findViewById(R.id.hprCaption);
     SuplaChannelStatus status = view.findViewById(R.id.hprStatus);
@@ -71,19 +78,18 @@ public class ThermostatHPListViewCursorAdapter extends ResourceCursorAdapter {
     setOn(auto, false);
     setOn(turbo, false);
 
-    status.setOnlineColor(context.getResources().getColor(R.color.primary));
-    status.setOfflineColor(context.getResources().getColor(R.color.red));
+    status.setOnlineColor(getContext().getResources().getColor(R.color.primary));
+    status.setOfflineColor(getContext().getResources().getColor(R.color.red));
     status.setShapeType(SuplaChannelStatus.ShapeType.Dot);
 
-    Channel channel = new Channel();
-    channel.AssignCursorData(cursor);
+    Channel channel = getItem(position).getLegacyChannel();
 
-    caption.setText(channel.getCaption(context));
+    caption.setText(channel.getCaption(getContext()));
     status.setPercent(channel.getOnLinePercent());
 
     ThermostatHP thermostat = new ThermostatHP();
     if (!thermostat.assign(channel)) {
-      return;
+      return view;
     }
 
     String tempTxt =
@@ -91,7 +97,7 @@ public class ThermostatHPListViewCursorAdapter extends ResourceCursorAdapter {
             channel.getHumanReadableThermostatTemperature(
                 thermostat.getMeasuredTemperatureMin(),
                 null,
-                Double.valueOf(thermostat.getPresetTemperatureMin()),
+                (double) thermostat.getPresetTemperatureMin(),
                 null,
                 1f,
                 1f));
@@ -105,5 +111,7 @@ public class ThermostatHPListViewCursorAdapter extends ResourceCursorAdapter {
     setOn(auto, thermostat.isAutoOn());
     setOn(turbo, thermostat.isTurboOn());
     setOn(normal, thermostat.isNormalOn());
+
+    return view;
   }
 }
