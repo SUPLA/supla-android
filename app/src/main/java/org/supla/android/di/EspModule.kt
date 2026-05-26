@@ -23,6 +23,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.supla.android.BuildConfig
 import org.supla.android.data.source.remote.esp.EspCommonNameValidationInterceptor
 import org.supla.android.data.source.remote.esp.EspCookiesInterceptor
 import org.supla.android.data.source.remote.esp.EspCustomRootCaProvider
@@ -54,7 +55,11 @@ class EspModule {
       .followRedirects(false)
       .addInterceptor(
         HttpLoggingInterceptor().also {
-          it.level = HttpLoggingInterceptor.Level.BODY
+          if (BuildConfig.DEBUG) {
+            it.level = HttpLoggingInterceptor.Level.BODY
+          } else {
+            it.level = HttpLoggingInterceptor.Level.BASIC
+          }
         }
       )
       .addInterceptor(espSchemeInterceptor)
