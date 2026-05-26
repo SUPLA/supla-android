@@ -31,10 +31,13 @@ import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.ALL_COLUMNS
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_CAPTION
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_CHANNEL_REMOTE_ID
+import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_DEVICE_ID
+import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_FLAGS
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_ID
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_LOCATION_ID
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_POSITION
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_PROFILE_ID
+import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_TYPE
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_USER_ICON
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_VISIBLE
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.TABLE_NAME
@@ -47,6 +50,7 @@ import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.data.source.local.entity.UserIconEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.remote.channel.ONLINE_BUT_NOT_AVAILABLE
+import org.supla.android.lib.SuplaConst
 import org.supla.core.shared.data.model.general.SuplaFunction
 
 @Dao
@@ -80,6 +84,56 @@ interface ChannelDao {
     """
   )
   fun findByRemoteId(profileId: Long, remoteId: Int): Maybe<ChannelEntity>
+
+  @Query(
+    """
+    SELECT EXISTS(
+      SELECT 1
+      FROM $TABLE_NAME channel
+      WHERE channel.${COLUMN_PROFILE_ID} = ${ProfileEntity.SUBQUERY_ACTIVE}
+        AND channel.${COLUMN_TYPE} = ${SuplaConst.SUPLA_CHANNELTYPE_BRIDGE}
+        AND channel.${COLUMN_VISIBLE} > 0
+        AND (channel.${COLUMN_FLAGS} & ${SuplaConst.SUPLA_CHANNEL_FLAG_ZWAVE_BRIDGE}) > 0
+    )
+  """
+  )
+  fun isZWaveBridgeChannelAvailable(): Single<Boolean>
+
+  @Query(
+    """
+    SELECT 
+      ${ChannelEntity.JOIN_COLUMNS},
+      ${ChannelValueEntity.JOIN_COLUMNS},
+      ${ChannelExtendedValueEntity.JOIN_COLUMNS},
+      ${LocationEntity.JOIN_COLUMNS},
+      ${ChannelConfigEntity.JOIN_COLUMNS},
+      ${ChannelStateEntity.JOIN_COLUMNS}
+    FROM $TABLE_NAME channel
+    JOIN ${ChannelValueEntity.TABLE_NAME} value
+      ON channel.$COLUMN_CHANNEL_REMOTE_ID = value.${ChannelValueEntity.COLUMN_CHANNEL_REMOTE_ID}
+        AND channel.$COLUMN_PROFILE_ID = value.${ChannelValueEntity.COLUMN_PROFILE_ID}
+    JOIN ${LocationEntity.TABLE_NAME} location
+      ON channel.$COLUMN_LOCATION_ID = location.${LocationEntity.COLUMN_REMOTE_ID}
+        AND channel.$COLUMN_PROFILE_ID = location.${LocationEntity.COLUMN_PROFILE_ID}
+    LEFT JOIN ${ChannelConfigEntity.TABLE_NAME} config
+      ON channel.$COLUMN_CHANNEL_REMOTE_ID = config.${ChannelConfigEntity.COLUMN_CHANNEL_ID}
+        AND channel.$COLUMN_PROFILE_ID = config.${ChannelConfigEntity.COLUMN_PROFILE_ID}
+    LEFT JOIN ${ChannelExtendedValueEntity.TABLE_NAME} extended_value
+      ON channel.$COLUMN_CHANNEL_REMOTE_ID = extended_value.${ChannelExtendedValueEntity.COLUMN_CHANNEL_ID}
+        AND channel.$COLUMN_PROFILE_ID = extended_value.${ChannelExtendedValueEntity.COLUMN_PROFILE_ID}
+    LEFT JOIN ${ChannelStateEntity.TABLE_NAME} state
+      ON channel.$COLUMN_CHANNEL_REMOTE_ID = state.${ChannelStateEntity.COLUMN_CHANNEL_ID}
+        AND channel.$COLUMN_PROFILE_ID = state.${ChannelStateEntity.COLUMN_PROFILE_ID}
+    WHERE channel.${COLUMN_PROFILE_ID} = ${ProfileEntity.SUBQUERY_ACTIVE}
+      AND channel.${COLUMN_TYPE} = ${SuplaConst.SUPLA_CHANNELTYPE_BRIDGE}
+      AND channel.${COLUMN_VISIBLE} > 0
+      AND (channel.${COLUMN_FLAGS} & ${SuplaConst.SUPLA_CHANNEL_FLAG_ZWAVE_BRIDGE}) > 0
+    ORDER BY
+      channel.${COLUMN_DEVICE_ID},
+      channel.${COLUMN_ID}
+  """
+  )
+  fun findZWaveBridgeChannels(): Single<List<ChannelDataEntity>>
 
   @Query(
     """

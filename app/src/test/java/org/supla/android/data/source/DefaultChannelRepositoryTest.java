@@ -66,22 +66,6 @@ public class DefaultChannelRepositoryTest {
   }
 
   @Test
-  public void shouldGetIfZWaveBridgeChannelIsAvailable() {
-    // given
-    final boolean expectedResult = true;
-    when(channelDao.isZWaveBridgeChannelAvailable()).thenReturn(expectedResult);
-
-    // when
-    boolean result = defaultChannelRepository.isZWaveBridgeChannelAvailable();
-
-    // then
-    assertSame(expectedResult, result);
-    verify(channelDao).isZWaveBridgeChannelAvailable();
-    verifyNoMoreInteractions(channelDao);
-    verifyNoInteractions(locationDao);
-  }
-
-  @Test
   public void shouldGetZWaveBridgeChannels() {
     // given
     List<Channel> expectedResult = new ArrayList<>();

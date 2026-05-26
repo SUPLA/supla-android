@@ -19,13 +19,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import io.reactivex.rxjava3.core.Completable;
-import java.util.List;
-import org.supla.android.db.Channel;
 
 public interface ChannelRepository {
-  boolean isZWaveBridgeChannelAvailable();
-
-  List<Channel> getZWaveBridgeChannels();
 
   Completable reorderChannels(
       Long firstItemId, int firstItemLocationId, Long secondItemId, long profileId);
