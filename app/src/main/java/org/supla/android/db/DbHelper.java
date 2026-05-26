@@ -79,14 +79,6 @@ public class DbHelper extends BaseDbHelper {
     // Moved to Room (see DatabaseModule)
   }
 
-  public boolean isZWaveBridgeChannelAvailable() {
-    return channelRepository.isZWaveBridgeChannelAvailable();
-  }
-
-  public List<Channel> getZWaveBridgeChannels() {
-    return channelRepository.getZWaveBridgeChannels();
-  }
-
   public ChannelRepository getChannelRepository() {
     return channelRepository;
   }

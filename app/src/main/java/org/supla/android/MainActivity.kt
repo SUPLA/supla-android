@@ -529,7 +529,7 @@ class MainActivity :
     if (visible) {
       if (animatingMenu) return
       val buttons =
-        if (getDbHelper().isZWaveBridgeChannelAvailable) {
+        if (isZWaveBridgeChannelAvailable()) {
           MenuItemsLayout.BTN_ALL
         } else {
           MenuItemsLayout.BTN_ALL xor MenuItemsLayout.BTN_Z_WAVE
@@ -554,6 +554,9 @@ class MainActivity :
         }
     }
   }
+
+  private fun isZWaveBridgeChannelAvailable(): Boolean =
+    runCatching { channelRepository.isZWaveBridgeChannelAvailable().blockingGet() }.getOrElse { false }
 
   override fun onClick(v: View) {
     super.onClick(v)

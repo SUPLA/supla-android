@@ -245,7 +245,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
     setBtnNextEnabled(false);
 
     mDeviceList.clear();
-    mChannelList = getDbHelper().getZWaveBridgeChannels();
+    mChannelList = getZWaveBridgeChannels();
 
     for (Channel channel : mChannelList) {
       boolean exists = false;
@@ -262,6 +262,15 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
     }
 
     fetchChannelBasicCfg(null);
+  }
+
+  private List<Channel> getZWaveBridgeChannels() {
+    try {
+      return channelRepository.getZWaveBridgeChannels().blockingGet();
+    } catch (Exception ex) {
+      Timber.e(ex, "Could not load ZWave channels");
+      return new ArrayList<>();
+    }
   }
 
   private void loadDeviceListSpinner() {

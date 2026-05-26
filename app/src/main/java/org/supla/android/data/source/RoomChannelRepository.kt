@@ -19,9 +19,11 @@ package org.supla.android.data.source
 
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import org.supla.android.data.source.local.dao.ChannelDao
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.db.Channel
 import org.supla.android.usecases.captionchange.CaptionChangeUseCase
 import org.supla.android.usecases.channel.RemoveHiddenChannelsUseCase
 import org.supla.android.usecases.channel.VisibilityChange
@@ -51,6 +53,11 @@ class RoomChannelRepository @Inject constructor(
   fun findObservableList(profileId: Long) = channelDao.findList(profileId)
 
   fun findChannelDataEntity(remoteId: Int) = channelDao.findChannelDataEntity(remoteId)
+
+  fun isZWaveBridgeChannelAvailable() = channelDao.isZWaveBridgeChannelAvailable()
+
+  fun getZWaveBridgeChannels(): Single<List<Channel>> =
+    channelDao.findZWaveBridgeChannels().map { list -> list.map { it.getLegacyChannel() } }
 
   fun findChannelListForGroup(groupId: Int): List<ChannelDataEntity> = channelDao.findListForGroup(groupId).blockingGet()
 

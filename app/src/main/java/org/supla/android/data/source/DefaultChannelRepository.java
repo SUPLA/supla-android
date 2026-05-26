@@ -41,16 +41,6 @@ public class DefaultChannelRepository implements ChannelRepository {
   }
 
   @Override
-  public boolean isZWaveBridgeChannelAvailable() {
-    return channelDao.isZWaveBridgeChannelAvailable();
-  }
-
-  @Override
-  public List<Channel> getZWaveBridgeChannels() {
-    return channelDao.getZWaveBridgeChannels();
-  }
-
-  @Override
   public Completable reorderChannels(
       Long firstItemId, int firstItemLocationId, Long secondItemId, long profileId) {
     return Completable.fromRunnable(
