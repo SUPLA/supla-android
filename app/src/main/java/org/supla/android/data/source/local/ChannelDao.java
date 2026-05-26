@@ -22,58 +22,16 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
-import org.supla.android.data.source.local.entity.ChannelEntity;
 import org.supla.android.data.source.local.entity.ChannelGroupEntity;
 import org.supla.android.data.source.local.entity.LocationEntity;
 import org.supla.android.data.source.local.entity.ProfileEntity;
 import org.supla.android.data.source.local.entity.UserIconEntity;
-import org.supla.android.data.source.local.view.ChannelView;
-import org.supla.android.db.Channel;
-import org.supla.android.db.Location;
-import org.supla.android.lib.SuplaConst;
 
 public class ChannelDao extends BaseDao {
 
   public ChannelDao(@NonNull DatabaseAccessProvider databaseAccessProvider) {
     super(databaseAccessProvider);
-  }
-
-  public Cursor getChannelListCursorWithDefaultOrder(String where) {
-    where +=
-        " AND (C."
-            + ChannelView.COLUMN_CHANNEL_PROFILE_ID
-            + " = "
-            + ProfileEntity.SUBQUERY_ACTIVE
-            + ") ";
-
-    String orderBY =
-        "L."
-            + LocationEntity.COLUMN_SORT_ORDER
-            + ", "
-            + "L."
-            + LocationEntity.COLUMN_CAPTION
-            + " COLLATE LOCALIZED, "
-            + "C."
-            + ChannelEntity.COLUMN_POSITION
-            + ", "
-            + "C."
-            + ChannelView.COLUMN_CHANNEL_FUNCTION
-            + " DESC, "
-            + "C."
-            + ChannelView.COLUMN_CHANNEL_CAPTION
-            + " COLLATE LOCALIZED";
-
-    return getChannelListCursor(orderBY, where);
-  }
-
-  public Cursor getSortedChannelIdsForLocationCursor(String locationCaption) {
-    return getChannelListCursorWithDefaultOrder(
-        "L."
-            + LocationEntity.COLUMN_CAPTION
-            + " = "
-            + DatabaseUtils.sqlEscapeString(locationCaption));
   }
 
   public Cursor getSortedChannelGroupIdsForLocationCursor(String locationCaption) {
@@ -87,45 +45,6 @@ public class ChannelDao extends BaseDao {
             + " = "
             + DatabaseUtils.sqlEscapeString(locationCaption);
     return getChannelGroupListCursor(where);
-  }
-
-  public void updateChannelsOrder(List<Long> reorderedIds, int locationId) {
-    write(
-        sqLiteDatabase -> {
-          sqLiteDatabase.beginTransaction();
-          try {
-            sqLiteDatabase.execSQL(
-                "UPDATE "
-                    + LocationEntity.TABLE_NAME
-                    + " SET "
-                    + LocationEntity.COLUMN_SORTING
-                    + " = '"
-                    + Location.SortingType.USER_DEFINED.name()
-                    + "' WHERE "
-                    + LocationEntity.COLUMN_REMOTE_ID
-                    + " = "
-                    + locationId);
-
-            int position = 1;
-            for (Long id : reorderedIds) {
-              sqLiteDatabase.execSQL(
-                  "UPDATE "
-                      + ChannelEntity.TABLE_NAME
-                      + " SET "
-                      + ChannelEntity.COLUMN_POSITION
-                      + " = "
-                      + position
-                      + " WHERE "
-                      + ChannelEntity.COLUMN_ID
-                      + " = "
-                      + id);
-              position++;
-            }
-            sqLiteDatabase.setTransactionSuccessful();
-          } finally {
-            sqLiteDatabase.endTransaction();
-          }
-        });
   }
 
   public void updateChannelGroupsOrder(List<Long> reorderedIds) {
@@ -152,163 +71,6 @@ public class ChannelDao extends BaseDao {
           } finally {
             sqLiteDatabase.endTransaction();
           }
-        });
-  }
-
-  private Cursor getChannelListCursor(@NonNull String orderBy, @Nullable String where) {
-    return read(
-        sqLiteDatabase -> {
-          String localWhere = "";
-          if (where != null) {
-            localWhere = " AND (" + where + ")";
-          }
-
-          String sql =
-              "SELECT "
-                  + "C."
-                  + ChannelView.COLUMN_CHANNEL_ID
-                  + " "
-                  + ChannelView.COLUMN_CHANNEL_ID
-                  + ", L."
-                  + LocationEntity.COLUMN_CAPTION
-                  + " AS section"
-                  + ", L."
-                  + LocationEntity.COLUMN_COLLAPSED
-                  + " "
-                  + LocationEntity.COLUMN_COLLAPSED
-                  + ", C."
-                  + ChannelView.COLUMN_CHANNEL_DEVICE_ID
-                  + " "
-                  + ChannelView.COLUMN_CHANNEL_DEVICE_ID
-                  + ", C."
-                  + ChannelView.COLUMN_CHANNEL_REMOTE_ID
-                  + " "
-                  + ChannelView.COLUMN_CHANNEL_REMOTE_ID
-                  + ", C."
-                  + ChannelView.COLUMN_CHANNEL_CAPTION
-                  + " "
-                  + ChannelView.COLUMN_CHANNEL_CAPTION
-                  + ", C."
-                  + ChannelView.COLUMN_CHANNEL_TYPE
-                  + " "
-                  + ChannelView.COLUMN_CHANNEL_TYPE
-                  + ", C."
-                  + ChannelView.COLUMN_CHANNEL_FUNCTION
-                  + " "
-                  + ChannelView.COLUMN_CHANNEL_FUNCTION
-                  + ", C."
-                  + ChannelView.COLUMN_VALUE_ID
-                  + " "
-                  + ChannelView.COLUMN_VALUE_ID
-                  + ", C."
-                  + ChannelView.COLUMN_EXTENDED_VALUE_ID
-                  + " "
-                  + ChannelView.COLUMN_EXTENDED_VALUE_ID
-                  + ", C."
-                  + ChannelView.COLUMN_VALUE_ONLINE
-                  + " "
-                  + ChannelView.COLUMN_VALUE_ONLINE
-                  + ", C."
-                  + ChannelView.COLUMN_VALUE_SUB_VALUE
-                  + " "
-                  + ChannelView.COLUMN_VALUE_SUB_VALUE
-                  + ", C."
-                  + ChannelView.COLUMN_VALUE_SUB_VALUE_TYPE
-                  + " "
-                  + ChannelView.COLUMN_VALUE_SUB_VALUE_TYPE
-                  + ", C."
-                  + ChannelView.COLUMN_VALUE_VALUE
-                  + " "
-                  + ChannelView.COLUMN_VALUE_VALUE
-                  + ", C."
-                  + ChannelView.COLUMN_EXTENDED_VALUE_VALUE
-                  + " "
-                  + ChannelView.COLUMN_EXTENDED_VALUE_VALUE
-                  + ", C."
-                  + ChannelView.COLUMN_EXTENDED_VALUE_TIMER_START_TIME
-                  + " "
-                  + ChannelView.COLUMN_EXTENDED_VALUE_TIMER_START_TIME
-                  + ", C."
-                  + ChannelView.COLUMN_CHANNEL_VISIBLE
-                  + " "
-                  + ChannelView.COLUMN_CHANNEL_VISIBLE
-                  + ", C."
-                  + ChannelView.COLUMN_CHANNEL_LOCATION_ID
-                  + " "
-                  + ChannelView.COLUMN_CHANNEL_LOCATION_ID
-                  + ", C."
-                  + ChannelView.COLUMN_CHANNEL_ALT_ICON
-                  + " "
-                  + ChannelView.COLUMN_CHANNEL_ALT_ICON
-                  + ", C."
-                  + ChannelView.COLUMN_CHANNEL_USER_ICON
-                  + " "
-                  + ChannelView.COLUMN_CHANNEL_USER_ICON
-                  + ", C."
-                  + ChannelView.COLUMN_CHANNEL_MANUFACTURER_ID
-                  + " "
-                  + ChannelView.COLUMN_CHANNEL_MANUFACTURER_ID
-                  + ", C."
-                  + ChannelView.COLUMN_CHANNEL_PRODUCT_ID
-                  + " "
-                  + ChannelView.COLUMN_CHANNEL_PRODUCT_ID
-                  + ", C."
-                  + ChannelView.COLUMN_CHANNEL_FLAGS
-                  + " "
-                  + ChannelView.COLUMN_CHANNEL_FLAGS
-                  + ", C."
-                  + ChannelView.COLUMN_CHANNEL_PROTOCOL_VERSION
-                  + " "
-                  + ChannelView.COLUMN_CHANNEL_PROTOCOL_VERSION
-                  + ", C."
-                  + ChannelView.COLUMN_CHANNEL_POSITION
-                  + " "
-                  + ChannelView.COLUMN_CHANNEL_POSITION
-                  + ", C."
-                  + ChannelView.COLUMN_USER_ICON_IMAGE_1
-                  + " "
-                  + ChannelView.COLUMN_USER_ICON_IMAGE_1
-                  + ", C."
-                  + ChannelView.COLUMN_USER_ICON_IMAGE_2
-                  + " "
-                  + ChannelView.COLUMN_USER_ICON_IMAGE_2
-                  + ", C."
-                  + ChannelView.COLUMN_USER_ICON_IMAGE_3
-                  + " "
-                  + ChannelView.COLUMN_USER_ICON_IMAGE_3
-                  + ", C."
-                  + ChannelView.COLUMN_USER_ICON_IMAGE_4
-                  + " "
-                  + ChannelView.COLUMN_USER_ICON_IMAGE_4
-                  + " "
-                  + ", C."
-                  + ChannelView.COLUMN_CHANNEL_PROFILE_ID
-                  + " "
-                  + ChannelView.COLUMN_CHANNEL_PROFILE_ID
-                  + " FROM "
-                  + ChannelView.NAME
-                  + " C"
-                  + " JOIN "
-                  + LocationEntity.TABLE_NAME
-                  + " L"
-                  + " ON (C."
-                  + ChannelView.COLUMN_CHANNEL_LOCATION_ID
-                  + " = L."
-                  + LocationEntity.COLUMN_REMOTE_ID
-                  + " AND C."
-                  + ChannelView.COLUMN_CHANNEL_PROFILE_ID
-                  + " = L."
-                  + LocationEntity.COLUMN_PROFILE_ID
-                  + ")"
-                  + " WHERE C."
-                  + ChannelView.COLUMN_CHANNEL_VISIBLE
-                  + " > 0 "
-                  + localWhere
-                  + " ORDER BY "
-                  + orderBy
-                  + " COLLATE LOCALIZED ASC"; // For proper ordering of language special characters
-          // like ą, ł, ü, ö
-          return sqLiteDatabase.rawQuery(sql, null);
         });
   }
 

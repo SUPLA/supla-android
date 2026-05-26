@@ -27,7 +27,6 @@ import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
 import org.assertj.core.api.Assertions.assertThat
@@ -38,13 +37,10 @@ import org.supla.android.R
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.data.model.general.ChannelDataBase
-import org.supla.android.data.source.ChannelRepository
-import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ChannelConfigEntity
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.LocationEntity
-import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
@@ -62,6 +58,7 @@ import org.supla.android.usecases.channel.ButtonType
 import org.supla.android.usecases.channel.ChannelActionUseCase
 import org.supla.android.usecases.channel.CreateProfileChannelsListUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
+import org.supla.android.usecases.channel.ReorderChannelsUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.details.GpmDetailType
 import org.supla.android.usecases.details.ProvideChannelDetailTypeUseCase
@@ -73,15 +70,14 @@ import org.supla.android.usecases.location.ToggleLocationUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
 
 class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, ChannelListViewEvent, ChannelListViewModel>(MockSchedulers.MOCKK) {
-
-  @MockK
-  private lateinit var channelRepository: ChannelRepository
-
   @MockK
   private lateinit var createProfileChannelsListUseCase: CreateProfileChannelsListUseCase
 
   @MockK
   private lateinit var channelActionUseCase: ChannelActionUseCase
+
+  @MockK
+  private lateinit var reorderChannelsUseCase: ReorderChannelsUseCase
 
   @MockK
   private lateinit var toggleLocationUseCase: ToggleLocationUseCase
@@ -110,9 +106,6 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   @MockK
   override lateinit var schedulers: SuplaSchedulers
 
-  @MockK
-  private lateinit var profileRepository: ProfileRepository
-
   override val viewModel: ChannelListViewModel by lazy {
     ChannelListViewModel(
       createProfileChannelsListUseCase,
@@ -121,8 +114,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       executeSimpleActionUseCase,
       toggleLocationUseCase,
       channelActionUseCase,
-      channelRepository,
-      profileRepository,
+      reorderChannelsUseCase,
       updateEventsManager,
       dateProvider,
       preferences,
@@ -199,12 +191,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val secondItem = mockk<ChannelDataBase>()
     every { secondItem.id } returns secondItemId
 
-    val profile: ProfileEntity = mockk {
-      every { id } returns profileId
-    }
-
-    every { profileRepository.findActiveProfile() } returns Single.just(profile)
-    every { channelRepository.reorderChannels(firstItemId, firstItemLocationId, secondItemId, profileId) } returns Completable.complete()
+    every { reorderChannelsUseCase(firstItemId, firstItemLocationId, secondItemId) } returns Completable.complete()
 
     // when
     viewModel.swapItems(firstItem, secondItem)
@@ -214,7 +201,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).isEmpty()
 
     verify {
-      channelRepository.reorderChannels(firstItemId, firstItemLocationId, secondItemId, profileId)
+      reorderChannelsUseCase(firstItemId, firstItemLocationId, secondItemId)
     }
     confirmDependenciesVerified()
   }
@@ -627,9 +614,9 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
 
   private fun confirmDependenciesVerified() {
     val allDependencies = listOf(
-      channelRepository,
       createProfileChannelsListUseCase,
       channelActionUseCase,
+      reorderChannelsUseCase,
       toggleLocationUseCase,
       provideDetailTypeUseCase
     )

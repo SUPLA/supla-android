@@ -22,9 +22,6 @@ import io.reactivex.rxjava3.core.Completable;
 
 public interface ChannelRepository {
 
-  Completable reorderChannels(
-      Long firstItemId, int firstItemLocationId, Long secondItemId, long profileId);
-
   Completable reorderChannelGroups(
       Long firstItemId, int firstItemLocationId, Long secondItemId, long profileId);
 }
