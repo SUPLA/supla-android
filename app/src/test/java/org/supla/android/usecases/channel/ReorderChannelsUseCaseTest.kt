@@ -15,7 +15,7 @@ import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.db.Location
+import org.supla.android.data.source.local.entity.custom.LocationSortingType
 import org.supla.core.shared.data.model.general.SuplaFunction
 
 class ReorderChannelsUseCaseTest {
@@ -45,11 +45,11 @@ class ReorderChannelsUseCaseTest {
       caption = locationCaption,
       visible = 1,
       collapsed = 0,
-      sorting = Location.SortingType.DEFAULT,
+      sorting = LocationSortingType.DEFAULT,
       sortOrder = 1,
       profileId = 7L
     )
-    val expectedLocation = location.copy(sorting = Location.SortingType.USER_DEFINED)
+    val expectedLocation = location.copy(sorting = LocationSortingType.USER_DEFINED)
 
     val first = channelDataEntity(channelEntity(id = 11L, remoteId = 101, position = 1))
     val second = channelDataEntity(channelEntity(id = 12L, remoteId = 102, position = 2))
@@ -64,7 +64,7 @@ class ReorderChannelsUseCaseTest {
     every { channelRepository.findChannelsForLocation(locationCaption) } returns Single.just(
       listOf(first, second, third, fourth)
     )
-    every { locationRepository.updateLocation(match { it.sorting == Location.SortingType.USER_DEFINED }) } returns Completable.complete()
+    every { locationRepository.updateLocation(match { it.sorting == LocationSortingType.USER_DEFINED }) } returns Completable.complete()
     every { channelRepository.update(any()) } returns Completable.complete()
 
     // when

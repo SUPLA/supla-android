@@ -21,8 +21,7 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.LocationRepository
 import org.supla.android.data.source.RoomChannelRepository
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.db.Location
+import org.supla.android.data.source.local.entity.custom.LocationSortingType
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -44,7 +43,7 @@ class ReorderChannelsUseCase @Inject constructor(
             orderedIds to channelsById
           }
           .flatMapCompletable { (orderedIds, channelsById) ->
-            locationRepository.updateLocation(location.copy(sorting = Location.SortingType.USER_DEFINED))
+            locationRepository.updateLocation(location.copy(sorting = LocationSortingType.USER_DEFINED))
               .andThen(
                 Observable.fromIterable(orderedIds.withIndex())
                   .concatMapCompletable { (position, channelId) ->

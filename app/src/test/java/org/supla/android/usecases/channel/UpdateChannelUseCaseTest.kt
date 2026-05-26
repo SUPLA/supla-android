@@ -42,7 +42,7 @@ import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.ProfileEntity
-import org.supla.android.db.Location
+import org.supla.android.data.source.local.entity.custom.LocationSortingType
 import org.supla.android.testhelpers.suplaChannel
 import org.supla.android.usecases.channelconfig.RequestChannelConfigUseCase
 import org.supla.android.widget.WidgetConfiguration
@@ -83,7 +83,7 @@ class UpdateChannelUseCaseTest {
 
     val suplaChannel = suplaChannel(locationRemoteId, channelRemoteId)
     val locationEntity: LocationEntity = mockk {
-      every { sorting } returns Location.SortingType.DEFAULT
+      every { sorting } returns LocationSortingType.DEFAULT
     }
     val profileEntity: ProfileEntity = mockk {
       every { id } returns profileId
@@ -150,7 +150,7 @@ class UpdateChannelUseCaseTest {
 
     val suplaChannel = suplaChannel(locationRemoteId, channelRemoteId)
     val locationEntity: LocationEntity = mockk {
-      every { sorting } returns Location.SortingType.USER_DEFINED
+      every { sorting } returns LocationSortingType.USER_DEFINED
       every { remoteId } returns locationRemoteId
     }
     val profileEntity: ProfileEntity = mockk {
@@ -197,7 +197,7 @@ class UpdateChannelUseCaseTest {
 
     val suplaChannel = suplaChannel(locationRemoteId, channelRemoteId)
     val locationEntity: LocationEntity = mockk {
-      every { sorting } returns Location.SortingType.DEFAULT
+      every { sorting } returns LocationSortingType.DEFAULT
     }
     val channelEntity: ChannelEntity = mockk {
       every { differsFrom(suplaChannel) } returns true
@@ -238,7 +238,7 @@ class UpdateChannelUseCaseTest {
 
     val suplaChannel = suplaChannel(locationRemoteId, channelRemoteId)
     val locationEntity: LocationEntity = mockk {
-      every { sorting } returns Location.SortingType.USER_DEFINED
+      every { sorting } returns LocationSortingType.USER_DEFINED
       every { remoteId } returns locationRemoteId
     }
     val channelEntity: ChannelEntity = mockk {
@@ -295,7 +295,7 @@ class UpdateChannelUseCaseTest {
 
     val suplaChannel = suplaChannel(locationRemoteId, channelRemoteId)
     val locationEntity: LocationEntity = mockk {
-      every { sorting } returns Location.SortingType.DEFAULT
+      every { sorting } returns LocationSortingType.DEFAULT
       every { remoteId } returns locationRemoteId
     }
     val channelEntity: ChannelEntity = mockk {
@@ -350,7 +350,7 @@ class UpdateChannelUseCaseTest {
 
     val suplaChannel = suplaChannel(locationRemoteId, channelRemoteId)
     val locationEntity: LocationEntity = mockk {
-      every { sorting } returns Location.SortingType.USER_DEFINED
+      every { sorting } returns LocationSortingType.USER_DEFINED
       every { remoteId } returns locationRemoteId
     }
     val channelEntity: ChannelEntity = mockk {
@@ -407,7 +407,7 @@ class UpdateChannelUseCaseTest {
 
     val suplaChannel = suplaChannel(locationRemoteId, channelRemoteId)
     val locationEntity: LocationEntity = mockk {
-      every { sorting } returns Location.SortingType.DEFAULT
+      every { sorting } returns LocationSortingType.DEFAULT
     }
     val channelEntity: ChannelEntity = mockk {
       every { differsFrom(suplaChannel) } returns false
@@ -449,7 +449,7 @@ class UpdateChannelUseCaseTest {
 
     val suplaChannel = suplaChannel(locationRemoteId, channelRemoteId)
     val locationEntity: LocationEntity = mockk {
-      every { sorting } returns Location.SortingType.DEFAULT
+      every { sorting } returns LocationSortingType.DEFAULT
     }
     val channelEntity: ChannelEntity = mockk {
       every { differsFrom(suplaChannel) } returns false
@@ -485,7 +485,7 @@ class UpdateChannelUseCaseTest {
 
     val suplaChannel = suplaChannel(locationRemoteId, channelRemoteId, altIcon = altIcon, userIcon = userIcon)
     val locationEntity: LocationEntity = mockk {
-      every { sorting } returns Location.SortingType.DEFAULT
+      every { sorting } returns LocationSortingType.DEFAULT
     }
     val channelEntity: ChannelEntity = mockk {
       every { differsFrom(suplaChannel) } returns true

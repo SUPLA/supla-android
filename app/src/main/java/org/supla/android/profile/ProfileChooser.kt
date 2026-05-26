@@ -13,6 +13,7 @@ import org.supla.android.databinding.LiProfileChooserBinding
 import org.supla.android.databinding.ProfileChooserBinding
 import org.supla.android.usecases.profile.ActivateProfileUseCase
 import org.supla.android.usecases.profile.ReadAllProfilesUseCase
+import timber.log.Timber
 
 class ProfileChooser(
   private val context: Context,
@@ -22,12 +23,6 @@ class ProfileChooser(
 
   private val profiles: List<ProfileEntity> = readAllProfilesUseCase().blockingFirst()
   private var dialog: AlertDialog? = null
-
-  interface Listener {
-    fun onProfileChanged()
-  }
-
-  var listener: Listener? = null
 
   fun show() {
     val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -47,18 +42,14 @@ class ProfileChooser(
   }
 
   fun selectProfile(idx: Int) {
-    val activated = try {
+    try {
       activateProfileUseCase(profiles[idx].id!!, false)
         .subscribeOn(Schedulers.io())
         .blockingAwait()
-      true
     } catch (throwable: Throwable) {
-      false
+      Timber.e(throwable, "Profile activation failed!")
     }
 
-    if (activated) {
-      listener?.onProfileChanged()
-    }
     dialog?.dismiss()
   }
 

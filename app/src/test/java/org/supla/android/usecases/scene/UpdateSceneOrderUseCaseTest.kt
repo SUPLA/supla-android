@@ -16,7 +16,7 @@ import org.supla.android.data.source.SceneRepository
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.SceneEntity
 import org.supla.android.data.source.local.entity.complex.SceneDataEntity
-import org.supla.android.db.Location
+import org.supla.android.data.source.local.entity.custom.LocationSortingType
 
 @RunWith(MockitoJUnitRunner::class)
 class UpdateSceneOrderUseCaseTest {
@@ -77,7 +77,7 @@ class UpdateSceneOrderUseCaseTest {
         caption = "",
         visible = 0,
         collapsed = 0,
-        sorting = Location.SortingType.DEFAULT,
+        sorting = LocationSortingType.DEFAULT,
         sortOrder = 0,
         profileId = 0
       )

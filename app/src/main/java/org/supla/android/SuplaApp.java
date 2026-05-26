@@ -49,7 +49,6 @@ import org.supla.android.core.storage.ApplicationPreferences;
 import org.supla.android.core.storage.EncryptedPreferences;
 import org.supla.android.data.ValuesFormatter;
 import org.supla.android.data.model.general.NightModeSetting;
-import org.supla.android.db.DbHelper;
 import org.supla.android.db.room.app.AppDatabase;
 import org.supla.android.lib.AndroidSuplaClientMessageHandler;
 import org.supla.android.lib.SuplaClient;
@@ -213,7 +212,7 @@ public class SuplaApp extends Application
       }
 
       Timber.e(exception, "Could not migrate database, trying to delete it");
-      boolean result = deleteDatabase(DbHelper.DATABASE_NAME);
+      boolean result = deleteDatabase(AppDatabase.NAME);
       Timber.e("Database deletion finished with %s", (result ? "success" : "failure"));
     }
   }

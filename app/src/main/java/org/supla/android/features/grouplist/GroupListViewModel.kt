@@ -27,8 +27,6 @@ import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.ChannelDataBase
-import org.supla.android.data.source.ChannelRepository
-import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.events.UpdateEventsManager
@@ -55,6 +53,7 @@ import org.supla.android.usecases.details.StandardDetailType
 import org.supla.android.usecases.details.ThermostatDetailType
 import org.supla.android.usecases.group.CreateProfileGroupsListUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
+import org.supla.android.usecases.group.ReorderGroupsUseCase
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 import org.supla.android.usecases.profile.CloudUrl
@@ -69,8 +68,7 @@ class GroupListViewModel @Inject constructor(
   private val executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
   private val toggleLocationUseCase: ToggleLocationUseCase,
   private val groupActionUseCase: GroupActionUseCase,
-  private val channelRepository: ChannelRepository,
-  private val profileRepository: ProfileRepository,
+  private val reorderGroupsUseCase: ReorderGroupsUseCase,
   loadActiveProfileUrlUseCase: LoadActiveProfileUrlUseCase,
   updateEventsManager: UpdateEventsManager,
   dateProvider: DateProvider,
@@ -114,14 +112,13 @@ class GroupListViewModel @Inject constructor(
   }
 
   fun swapItems(firstItem: ChannelDataBase?, secondItem: ChannelDataBase?) {
-    if (firstItem == null || secondItem == null) {
+    val firstId = firstItem?.id
+    val secondId = secondItem?.id
+    if (firstId == null || secondId == null) {
       return // nothing to swap
     }
 
-    profileRepository.findActiveProfile()
-      .flatMapCompletable {
-        channelRepository.reorderChannelGroups(firstItem.id, firstItem.locationId, secondItem.id, it.id!!)
-      }
+    reorderGroupsUseCase(firstId, firstItem.locationId, secondId)
       .attach()
       .subscribeBy(
         onError = defaultErrorHandler("swapItems(..., ...)")

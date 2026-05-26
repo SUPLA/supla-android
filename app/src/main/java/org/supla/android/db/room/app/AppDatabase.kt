@@ -56,7 +56,6 @@ import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.data.source.local.entity.SceneEntity
 import org.supla.android.data.source.local.entity.UserIconEntity
 import org.supla.android.data.source.local.entity.WidgetConfigurationEntity
-import org.supla.android.db.DbHelper
 
 @Database(
   entities = [
@@ -79,7 +78,7 @@ import org.supla.android.db.DbHelper
     NfcTagEntity::class,
     NfcCallEntity::class
   ],
-  version = DbHelper.DATABASE_VERSION,
+  version = AppDatabase.VERSION,
   exportSchema = false
 )
 @TypeConverters(AppDatabaseConverters::class)
@@ -102,4 +101,9 @@ abstract class AppDatabase : RoomDatabase() {
   abstract fun widgetConfigurationDao(): WidgetConfigurationDao
   abstract fun nfcTagDao(): NfcTagDao
   abstract fun nfcCallDao(): NfcCallDao
+
+  companion object {
+    const val NAME = "supla.db"
+    const val VERSION = 47
+  }
 }

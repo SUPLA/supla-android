@@ -25,8 +25,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import org.supla.android.BuildConfig
-import org.supla.android.data.source.ChannelRepository
-import org.supla.android.db.DbHelper
 import org.supla.android.db.room.EmptyMigration
 import org.supla.android.db.room.app.AppDatabase
 import org.supla.android.db.room.app.AppDatabaseCallback
@@ -74,7 +72,7 @@ class DatabaseModule {
     migration26to27: Migration26to27,
     migration27to28: Migration27to28
   ) =
-    Room.databaseBuilder(context, AppDatabase::class.java, DbHelper.DATABASE_NAME)
+    Room.databaseBuilder(context, AppDatabase::class.java, AppDatabase.NAME)
       .let {
         if (!BuildConfig.DEBUG) {
           // Destructive migration should be activated only in production. For development, we need to know about all migration failures
@@ -287,14 +285,4 @@ class DatabaseModule {
   @Singleton
   fun thermostatHeatpolLogDao(measurementsDatabase: MeasurementsDatabase) =
     measurementsDatabase.homePlusThermostatLogDao()
-
-  @Provides
-  @Singleton
-  fun provideDbHelper(@ApplicationContext context: Context) =
-    DbHelper.getInstance(context)
-
-  @Provides
-  @Singleton
-  fun provideChannelRepository(dbHelper: DbHelper): ChannelRepository =
-    dbHelper.channelRepository
 }

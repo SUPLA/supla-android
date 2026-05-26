@@ -565,8 +565,8 @@ class MainActivity :
     }
   }
 
-  override fun onProfileChanged() {
-    super.onProfileChanged()
+  override fun showProfileSelector() {
+    super.showProfileSelector()
     setMenuVisible(false)
   }
 

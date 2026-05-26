@@ -18,15 +18,12 @@ package org.supla.android.features.locationreorder
  */
 
 import io.mockk.MockKAnnotations
-import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
-import io.mockk.impl.annotations.RelaxedMockK
-import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable
@@ -39,7 +36,6 @@ import org.supla.android.core.MainDispatcherRule
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.source.LocationRepository
 import org.supla.android.data.source.local.entity.LocationEntity
-import org.supla.android.db.Location
 import org.supla.android.tools.SuplaSchedulers
 
 class LocationReorderViewModelTest :
