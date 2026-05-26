@@ -21,7 +21,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import androidx.annotation.NonNull;
-import java.util.List;
 import org.supla.android.data.source.ChannelRepository;
 import org.supla.android.data.source.DefaultChannelRepository;
 import org.supla.android.data.source.local.ChannelDao;

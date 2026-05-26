@@ -26,8 +26,6 @@ import java.util.List;
 import org.supla.android.data.source.local.ChannelDao;
 import org.supla.android.data.source.local.LocationDao;
 import org.supla.android.data.source.local.entity.ChannelGroupEntity;
-import org.supla.android.data.source.local.view.ChannelView;
-import org.supla.android.db.Channel;
 import org.supla.android.db.Location;
 
 public class DefaultChannelRepository implements ChannelRepository {
@@ -41,45 +39,10 @@ public class DefaultChannelRepository implements ChannelRepository {
   }
 
   @Override
-  public Completable reorderChannels(
-      Long firstItemId, int firstItemLocationId, Long secondItemId, long profileId) {
-    return Completable.fromRunnable(
-        () -> doReorderChannels(firstItemId, firstItemLocationId, secondItemId, profileId));
-  }
-
-  @Override
   public Completable reorderChannelGroups(
       Long firstItemId, int firstItemLocationId, Long secondItemId, long profilId) {
     return Completable.fromRunnable(
         () -> doReorderChannelGroups(firstItemId, firstItemLocationId, secondItemId, profilId));
-  }
-
-  private void doReorderChannels(
-      Long firstItemId, int firstItemLocationId, Long secondItemId, long profileId) {
-    List<Long> orderedItems = getSortedChannelIdsForLocation(firstItemLocationId, profileId);
-
-    reorderList(orderedItems, firstItemId, secondItemId);
-
-    channelDao.updateChannelsOrder(orderedItems, firstItemLocationId);
-  }
-
-  @SuppressLint("Range")
-  private List<Long> getSortedChannelIdsForLocation(int locationId, long profileId) {
-    ArrayList<Long> orderedItems = new ArrayList<>();
-
-    Location location = locationDao.getLocation(locationId, profileId);
-    try (Cursor channelListCursor =
-        channelDao.getSortedChannelIdsForLocationCursor(location.getCaption())) {
-      if (channelListCursor.moveToFirst()) {
-        do {
-          orderedItems.add(
-              channelListCursor.getLong(
-                  channelListCursor.getColumnIndex(ChannelView.COLUMN_CHANNEL_ID)));
-        } while (channelListCursor.moveToNext());
-      }
-    }
-
-    return orderedItems;
   }
 
   private void doReorderChannelGroups(

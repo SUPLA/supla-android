@@ -59,6 +59,11 @@ class RoomChannelRepository @Inject constructor(
   fun getZWaveBridgeChannels(): Single<List<Channel>> =
     channelDao.findZWaveBridgeChannels().map { list -> list.map { it.getLegacyChannel() } }
 
+  fun findChannelsForLocation(locationCaption: String): Single<List<ChannelDataEntity>> =
+    findObservableList()
+      .firstOrError()
+      .map { channels -> channels.filter { it.locationEntity.caption == locationCaption } }
+
   fun findChannelListForGroup(groupId: Int): List<ChannelDataEntity> = channelDao.findListForGroup(groupId).blockingGet()
 
   fun update(entity: ChannelEntity) = channelDao.update(entity)
