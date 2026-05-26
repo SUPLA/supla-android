@@ -30,12 +30,10 @@ import org.supla.android.data.source.ChannelGroupRepository;
 import org.supla.android.data.source.RoomChannelRepository;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
-import org.supla.android.db.DbHelper;
 import org.supla.android.lib.SuplaClient;
 
 public abstract class DetailLayout extends FrameLayout {
 
-  protected DbHelper DBH;
   private ChannelBase channelBase;
   private View mContentView;
   private int mRemoteId;
@@ -69,7 +67,6 @@ public abstract class DetailLayout extends FrameLayout {
     mRemoteId = 0;
     channelBase = null;
 
-    DBH = DbHelper.getInstance(getContext());
     mContentView = inflateContentView();
 
     if (mContentView != null) {

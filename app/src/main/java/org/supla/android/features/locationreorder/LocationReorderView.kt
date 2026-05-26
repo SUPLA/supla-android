@@ -42,6 +42,7 @@ import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.source.local.entity.LocationEntity
+import org.supla.android.data.source.local.entity.custom.LocationSortingType
 import org.supla.android.tools.BACKGROUND_COLOR
 import org.supla.android.ui.views.Image
 import sh.calvin.reorderable.ReorderableCollectionItemScope
@@ -136,7 +137,7 @@ private fun mockLocation(id: Long, caption: String): LocationEntity =
     caption = caption,
     visible = 1,
     collapsed = 0,
-    sorting = org.supla.android.db.Location.SortingType.DEFAULT,
+    sorting = LocationSortingType.DEFAULT,
     sortOrder = 0,
     profileId = 1L
   )

@@ -25,7 +25,7 @@ import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.LocationEntity
-import org.supla.android.db.Location
+import org.supla.android.data.source.local.entity.custom.LocationSortingType
 import org.supla.android.lib.SuplaChannel
 import org.supla.android.usecases.channelconfig.RequestChannelConfigUseCase
 import org.supla.android.widget.WidgetManager
@@ -84,14 +84,14 @@ class UpdateChannelUseCase @Inject constructor(
       .andThen(Single.just(EntityUpdateResult.UPDATED))
 
   private fun updatePosition(locationEntity: LocationEntity, channelEntity: ChannelEntity, locationChanged: Boolean) =
-    if (locationEntity.sorting == Location.SortingType.USER_DEFINED && (channelEntity.id == null || locationChanged)) {
+    if (locationEntity.sorting == LocationSortingType.USER_DEFINED && (channelEntity.id == null || locationChanged)) {
       channelRepository.findMaxPositionInLocation(locationEntity.remoteId)
         .onErrorReturnItem(0)
         .map { count ->
           Timber.i("Updating channel position to `$count`")
           return@map channelEntity.copy(position = count + 1)
         }
-    } else if (locationEntity.sorting == Location.SortingType.DEFAULT && channelEntity.position != 0) {
+    } else if (locationEntity.sorting == LocationSortingType.DEFAULT && channelEntity.position != 0) {
       Single.just(channelEntity.copy(position = 0))
     } else {
       Single.just(channelEntity)

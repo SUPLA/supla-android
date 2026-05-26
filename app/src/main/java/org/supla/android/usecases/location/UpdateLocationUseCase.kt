@@ -25,7 +25,7 @@ import kotlinx.coroutines.withContext
 import org.supla.android.data.source.LocationRepository
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.LocationEntity
-import org.supla.android.db.Location
+import org.supla.android.data.source.local.entity.custom.LocationSortingType
 import org.supla.android.lib.SuplaLocation
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -71,7 +71,7 @@ class UpdateLocationUseCase @Inject constructor(
         caption = suplaLocation.Caption,
         visible = 1,
         collapsed = 0,
-        sorting = Location.SortingType.DEFAULT,
+        sorting = LocationSortingType.DEFAULT,
         sortOrder = 0,
         profileId = profile.id!!
       )

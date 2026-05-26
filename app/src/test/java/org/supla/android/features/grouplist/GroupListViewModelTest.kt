@@ -21,10 +21,7 @@ import org.supla.android.R
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.data.model.general.ChannelDataBase
-import org.supla.android.data.source.ChannelRepository
-import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.LocationEntity
-import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.runtime.ItemType
@@ -45,6 +42,7 @@ import org.supla.android.usecases.details.StandardDetailType
 import org.supla.android.usecases.details.ThermometerDetailType
 import org.supla.android.usecases.group.CreateProfileGroupsListUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
+import org.supla.android.usecases.group.ReorderGroupsUseCase
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 import org.supla.android.usecases.profile.CloudUrl
@@ -52,9 +50,6 @@ import org.supla.android.usecases.profile.LoadActiveProfileUrlUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
 
 class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListViewEvent, GroupListViewModel>(MockSchedulers.MOCKK) {
-
-  @MockK
-  private lateinit var channelRepository: ChannelRepository
 
   @MockK
   private lateinit var createProfileGroupsListUseCase: CreateProfileGroupsListUseCase
@@ -72,6 +67,9 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   private lateinit var findGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase
 
   @MockK
+  private lateinit var reorderGroupsUseCase: ReorderGroupsUseCase
+
+  @MockK
   private lateinit var updateEventsManager: UpdateEventsManager
 
   @MockK
@@ -86,9 +84,6 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   @MockK
   private lateinit var dateProvider: DateProvider
 
-  @MockK
-  private lateinit var profileRepository: ProfileRepository
-
   @MockK(relaxed = true)
   override lateinit var schedulers: SuplaSchedulers
 
@@ -100,8 +95,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       executeSimpleActionUseCase,
       toggleLocationUseCase,
       groupActionUseCase,
-      channelRepository,
-      profileRepository,
+      reorderGroupsUseCase,
       loadActiveProfileUrlUseCase,
       updateEventsManager,
       dateProvider,
@@ -146,8 +140,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       findGroupByRemoteIdUseCase,
       toggleLocationUseCase,
       groupActionUseCase,
-      profileRepository,
-      channelRepository,
+      reorderGroupsUseCase,
       dateProvider
     )
   }
@@ -181,8 +174,6 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       findGroupByRemoteIdUseCase,
       toggleLocationUseCase,
       groupActionUseCase,
-      profileRepository,
-      channelRepository,
       dateProvider
     )
   }
@@ -193,7 +184,6 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     val firstItemId = 123L
     val firstItemLocationId = 234
     val firstItem = mockk<ChannelDataBase>()
-    val profileId = 1L
     every { firstItem.id } returns firstItemId
     every { firstItem.locationId } returns firstItemLocationId
 
@@ -201,13 +191,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     val secondItem = mockk<ChannelDataBase>()
     every { secondItem.id } returns secondItemId
 
-    val profile: ProfileEntity = mockk {
-      every { id } returns profileId
-    }
-
-    every { profileRepository.findActiveProfile() } returns Single.just(profile)
-    every { channelRepository.reorderChannelGroups(firstItemId, firstItemLocationId, secondItemId, profileId) } returns
-      Completable.complete()
+    every { reorderGroupsUseCase(firstItemId, firstItemLocationId, secondItemId) } returns Completable.complete()
 
     // when
     viewModel.swapItems(firstItem, secondItem)
@@ -217,8 +201,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     Assertions.assertThat(events).isEmpty()
 
     verify {
-      profileRepository.findActiveProfile()
-      channelRepository.reorderChannelGroups(firstItemId, firstItemLocationId, secondItemId, profileId)
+      reorderGroupsUseCase(firstItemId, firstItemLocationId, secondItemId)
     }
     confirmVerified(
       createProfileGroupsListUseCase,
@@ -227,8 +210,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       findGroupByRemoteIdUseCase,
       toggleLocationUseCase,
       groupActionUseCase,
-      profileRepository,
-      channelRepository,
+      reorderGroupsUseCase,
       dateProvider
     )
   }
@@ -267,8 +249,6 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       findGroupByRemoteIdUseCase,
       toggleLocationUseCase,
       groupActionUseCase,
-      profileRepository,
-      channelRepository,
       dateProvider
     )
   }
@@ -307,8 +287,6 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       findGroupByRemoteIdUseCase,
       toggleLocationUseCase,
       groupActionUseCase,
-      profileRepository,
-      channelRepository,
       dateProvider
     )
   }
@@ -341,8 +319,6 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       findGroupByRemoteIdUseCase,
       toggleLocationUseCase,
       groupActionUseCase,
-      profileRepository,
-      channelRepository,
       dateProvider
     )
   }
@@ -382,8 +358,6 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       findGroupByRemoteIdUseCase,
       toggleLocationUseCase,
       groupActionUseCase,
-      profileRepository,
-      channelRepository,
       dateProvider
     )
   }
@@ -421,8 +395,6 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       findGroupByRemoteIdUseCase,
       toggleLocationUseCase,
       groupActionUseCase,
-      profileRepository,
-      channelRepository,
       dateProvider
     )
   }
@@ -466,8 +438,6 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       findGroupByRemoteIdUseCase,
       toggleLocationUseCase,
       groupActionUseCase,
-      profileRepository,
-      channelRepository,
       dateProvider
     )
   }
@@ -498,8 +468,6 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       findGroupByRemoteIdUseCase,
       toggleLocationUseCase,
       groupActionUseCase,
-      profileRepository,
-      channelRepository,
       dateProvider
     )
   }
@@ -537,8 +505,6 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       findGroupByRemoteIdUseCase,
       toggleLocationUseCase,
       groupActionUseCase,
-      profileRepository,
-      channelRepository,
       dateProvider
     )
   }
@@ -565,8 +531,6 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       findGroupByRemoteIdUseCase,
       toggleLocationUseCase,
       groupActionUseCase,
-      profileRepository,
-      channelRepository,
       dateProvider
     )
   }
@@ -593,8 +557,6 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       findGroupByRemoteIdUseCase,
       toggleLocationUseCase,
       groupActionUseCase,
-      profileRepository,
-      channelRepository,
       dateProvider
     )
   }
@@ -618,8 +580,6 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       findGroupByRemoteIdUseCase,
       toggleLocationUseCase,
       groupActionUseCase,
-      profileRepository,
-      channelRepository,
       dateProvider
     )
   }

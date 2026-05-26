@@ -1,4 +1,4 @@
-package org.supla.android.db;
+package org.supla.android.data.source.local.entity.custom;
 
 /*
 Copyright (C) AC SOFTWARE SP. Z O.O.
@@ -18,21 +18,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import androidx.annotation.Nullable;
-import org.supla.android.data.source.local.BaseDao;
-import org.supla.android.db.room.SqlExecutor;
-
-public abstract class BaseDbHelper extends SQLiteOpenHelper
-    implements BaseDao.DatabaseAccessProvider, SqlExecutor {
-
-  BaseDbHelper(
-      @Nullable Context context,
-      @Nullable String name,
-      @Nullable SQLiteDatabase.CursorFactory factory,
-      int version) {
-    super(context, name, factory, version);
-  }
+public enum LocationSortingType {
+  DEFAULT,
+  USER_DEFINED
 }

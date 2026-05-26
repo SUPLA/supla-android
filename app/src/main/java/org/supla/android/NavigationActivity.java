@@ -36,9 +36,7 @@ import org.supla.android.usecases.profile.ReadAllProfilesUseCase;
 @SuppressLint("registered")
 @AndroidEntryPoint
 public class NavigationActivity extends BaseActivity
-    implements View.OnClickListener,
-        SuperuserAuthorizationDialog.OnAuthorizarionResultListener,
-        ProfileChooser.Listener {
+    implements View.OnClickListener, SuperuserAuthorizationDialog.OnAuthorizarionResultListener {
 
   public static final String INTENT_SENDER = "sender";
   public static final String INTENT_SENDER_MAIN = "main";
@@ -160,7 +158,6 @@ public class NavigationActivity extends BaseActivity
   protected void showProfileSelector() {
     ProfileChooser profileChooser =
         new ProfileChooser(this, activateProfileUseCase, readAllProfilesUseCase);
-    profileChooser.setListener(this);
     profileChooser.show();
   }
 
@@ -203,9 +200,4 @@ public class NavigationActivity extends BaseActivity
 
   @Override
   public void authorizationCanceled() {}
-
-  @Override
-  public void onProfileChanged() {
-    invalidateDbHelper();
-  }
 }

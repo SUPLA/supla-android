@@ -38,7 +38,7 @@ import org.supla.android.data.source.LocationRepository
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.ProfileEntity
-import org.supla.android.db.Location
+import org.supla.android.data.source.local.entity.custom.LocationSortingType
 import org.supla.android.lib.SuplaLocation
 
 class UpdateLocationUseCaseTest {
@@ -86,7 +86,7 @@ class UpdateLocationUseCaseTest {
       assertThat(caption).isEqualTo(suplaLocation.Caption)
       assertThat(visible).isEqualTo(1)
       assertThat(collapsed).isEqualTo(0)
-      assertThat(sorting).isEqualTo(Location.SortingType.DEFAULT)
+      assertThat(sorting).isEqualTo(LocationSortingType.DEFAULT)
       assertThat(sortOrder).isEqualTo(0)
       assertThat(profileId).isEqualTo(profile.id)
     }
@@ -179,7 +179,7 @@ class UpdateLocationUseCaseTest {
     caption = caption,
     visible = visible,
     collapsed = 2,
-    sorting = Location.SortingType.USER_DEFINED,
+    sorting = LocationSortingType.USER_DEFINED,
     sortOrder = 7,
     profileId = 456
   )

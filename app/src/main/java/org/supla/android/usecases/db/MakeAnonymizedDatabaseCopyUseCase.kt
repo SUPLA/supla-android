@@ -24,7 +24,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.supla.android.core.infrastructure.storage.FileExporter
 import org.supla.android.data.source.local.entity.ProfileEntity
-import org.supla.android.db.DbHelper
+import org.supla.android.db.room.app.AppDatabase
 import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
@@ -40,7 +40,7 @@ class MakeAnonymizedDatabaseCopyUseCase @Inject constructor(
   var file: File = File(context.filesDir, DATABASE_COPY_FILE_NAME)
 
   operator fun invoke(): Boolean {
-    val dbFile = context.getDatabasePath(DbHelper.DATABASE_NAME)
+    val dbFile = context.getDatabasePath(AppDatabase.NAME)
     if (dbFile == null) {
       Timber.w("Database file not found")
     }
@@ -58,7 +58,7 @@ class MakeAnonymizedDatabaseCopyUseCase @Inject constructor(
     }
 
     try {
-      val dbHelper = CopyDbHelper(context, DATABASE_COPY_FILE_NAME, DbHelper.DATABASE_VERSION)
+      val dbHelper = CopyDbHelper(context, DATABASE_COPY_FILE_NAME, AppDatabase.VERSION)
       val emptyBlob = ByteArray(0)
       val bindArgs = arrayOf<Any>(emptyBlob)
       dbHelper.writableDatabase.execSQL("UPDATE ${ProfileEntity.TABLE_NAME} SET ${ProfileEntity.COLUMN_GUID} = ?", bindArgs)

@@ -25,7 +25,6 @@ import org.supla.android.core.networking.suplaclient.SuplaClientEvent
 import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.data.source.ProfileRepository
-import org.supla.android.db.DbHelper
 import org.supla.android.db.room.app.AppDatabase
 import org.supla.android.db.room.measurements.MeasurementsDatabase
 import org.supla.android.usecases.icon.LoadUserIconsIntoCacheUseCase
@@ -105,7 +104,7 @@ class InitializationUseCase @Inject constructor(
       }
 
       Timber.e(exception, "Could not migrate database, trying to delete it")
-      context.deleteDatabase(DbHelper.DATABASE_NAME)
+      context.deleteDatabase(AppDatabase.NAME)
       context.deleteDatabase(MeasurementsDatabase.NAME)
       Timber.e("Database deletion finished")
     }
