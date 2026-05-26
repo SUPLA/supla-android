@@ -18,14 +18,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import android.database.Cursor;
 import io.reactivex.rxjava3.core.Completable;
 import java.util.List;
 import org.supla.android.db.Channel;
 
 public interface ChannelRepository {
-  Cursor getChannelListCursorForGroup(int groupId);
-
   boolean isZWaveBridgeChannelAvailable();
 
   List<Channel> getZWaveBridgeChannels();

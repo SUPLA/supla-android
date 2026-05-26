@@ -19,7 +19,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import androidx.annotation.NonNull;
 import java.util.List;
@@ -78,10 +77,6 @@ public class DbHelper extends BaseDbHelper {
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     // Moved to Room (see DatabaseModule)
-  }
-
-  public Cursor getChannelListCursorForGroup(int groupId) {
-    return channelRepository.getChannelListCursorForGroup(groupId);
   }
 
   public boolean isZWaveBridgeChannelAvailable() {
