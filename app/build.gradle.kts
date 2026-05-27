@@ -145,6 +145,10 @@ dependencies {
   implementation(libs.androidx.room.rxjava)
   implementation(libs.androidx.room.ktx)
   implementation(libs.androidx.security.crypto)
+  implementation(libs.androidx.datastore.core)
+  implementation(libs.androidx.datastore.preferences.core)
+  implementation(libs.androidx.datastore.tink)
+  implementation(libs.tink.android)
   implementation(libs.androidx.navigation.fragment)
   implementation(libs.androidx.navigation.ui)
   implementation(libs.androidx.compose.ui)
@@ -240,4 +244,3 @@ spotless {
     )
   }
 }
-

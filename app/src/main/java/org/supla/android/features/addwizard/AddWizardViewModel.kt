@@ -631,10 +631,7 @@ class AddWizardViewModel @Inject constructor(
   }
 
   private fun shouldInformAboutWhiteCharsInNetworkName(state: AddWizardViewModelState): Boolean {
-    val stateNetworkName = state.networkSelectionState?.networkName
-    if (stateNetworkName == null) {
-      return false
-    }
+    val stateNetworkName = state.networkSelectionState?.networkName ?: return false
     if (stateNetworkName == encryptedPreferences.wizardWifiName) {
       // Network name is the same as last time, show the user already know about white characters
       return false

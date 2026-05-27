@@ -10,4 +10,10 @@
   <exclude
     domain="sharedpref"
     path="secured_preferences.xml" />
+  <exclude
+    domain="sharedpref"
+    path="secured_preferences_tink_keyset_prefs.xml" />
+  <exclude
+    domain="file"
+    path="datastore/secured_preferences.preferences_pb" />
 </full-backup-content>

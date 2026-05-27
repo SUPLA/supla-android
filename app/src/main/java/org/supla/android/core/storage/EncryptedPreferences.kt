@@ -18,119 +18,195 @@ package org.supla.android.core.storage
  */
 
 import android.content.Context
-import android.content.SharedPreferences
-import androidx.core.content.edit
-import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKey
+import androidx.datastore.core.DataStore
+import androidx.datastore.core.DataStoreFactory
+import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
+import androidx.datastore.preferences.core.MutablePreferences
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.PreferencesFileSerializer
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.longPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.tink.AeadSerializer
+import com.google.crypto.tink.Aead
+import com.google.crypto.tink.KeyTemplate
+import com.google.crypto.tink.RegistryConfiguration
+import com.google.crypto.tink.aead.AeadConfig
+import com.google.crypto.tink.aead.PredefinedAeadParameters
+import com.google.crypto.tink.integration.android.AndroidKeysetManager
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
+import org.supla.android.core.storage.migration.LegacyEncryptedPreferencesMigration
 import org.supla.android.data.model.general.LockScreenSettings
+import java.io.File
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
-private const val FCM_TOKEN_KEY = "FCM_TOKEN_KEY"
-private const val FCM_TOKEN_LAST_UPDATE_KEY = "FCM_TOKEN_LAST_UPDATE_KEY"
-private const val NOTIFICATIONS_LAST_ENABLED = "NOTIFICATIONS_LAST_ENABLED"
-private const val FCM_PROFILE_TOKEN_KEY = "FCM_TOKEN_KEY_"
-private const val LOCK_SCREEN_SETTING_KEY = "LOCK_SCREEN_SETTING_KEY"
-private const val DEV_MODE_KEY = "DEV_MODE_KEY"
-private const val DEV_LOG_KEY = "DEV_LOG_KEY"
-private const val DEV_FILTER_KEY = "DEV_FILTER_KEY"
-private const val WIZARD_WIFI_NAME = "WIZARD_WIFI_NAME"
-private const val WIZARD_WIFI_PASSWORD = "WIZARD_WIFI_PASSWORD"
+private const val DATASTORE_FILE_NAME = "secured_preferences.preferences_pb"
+private const val TINK_KEYSET_SHARED_PREFERENCES_NAME = "secured_preferences_tink_keyset_prefs"
+private const val TINK_KEYSET_NAME = "secured_preferences_tink_keyset"
+private const val MASTER_KEY_URI = "android-keystore://secured_preferences_master_key"
+
+private const val FCM_PROFILE_TOKEN_KEY_PREFIX = "FCM_PROFILE_TOKEN_KEY_"
+
+val FCM_TOKEN_KEY = stringPreferencesKey("FCM_TOKEN_KEY")
+val FCM_TOKEN_LAST_UPDATE_KEY = longPreferencesKey("FCM_TOKEN_LAST_UPDATE_KEY")
+val NOTIFICATIONS_LAST_ENABLED_KEY = booleanPreferencesKey("NOTIFICATIONS_LAST_ENABLED_KEY")
+val LOCK_SCREEN_SETTING_KEY = stringPreferencesKey("LOCK_SCREEN_SETTING_KEY")
+val DEV_MODE_KEY = booleanPreferencesKey("DEV_MODE_KEY")
+val DEV_LOG_KEY = booleanPreferencesKey("DEV_LOG_KEY")
+val DEV_FILTER_KEY = stringPreferencesKey("DEV_FILTER_KEY")
+val WIZARD_WIFI_NAME_KEY = stringPreferencesKey("WIZARD_WIFI_NAME_KEY")
+val WIZARD_WIFI_PASSWORD_KEY = stringPreferencesKey("WIZARD_WIFI_PASSWORD_KEY")
 
 @Singleton
 class EncryptedPreferences @Inject constructor(
   @param:ApplicationContext private val context: Context
 ) {
 
-  private val preferences: SharedPreferences by lazy {
-    EncryptedSharedPreferences.create(
-      context,
-      "secured_preferences",
-      MasterKey.Builder(context).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build(),
-      EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-      EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+  private val dataStoreFile = File(context.filesDir, "datastore/$DATASTORE_FILE_NAME").apply {
+    parentFile?.mkdirs()
+  }
+
+  private val ioScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
+  private val preferences: DataStore<Preferences> by lazy {
+    DataStoreFactory.create(
+      serializer = AeadSerializer(
+        aead = createAead(context),
+        wrappedSerializer = PreferencesFileSerializer,
+        associatedData = DATASTORE_FILE_NAME.encodeToByteArray()
+      ),
+      corruptionHandler = ReplaceFileCorruptionHandler { PreferencesFileSerializer.defaultValue },
+      migrations = listOf(LegacyEncryptedPreferencesMigration(context)),
+      scope = ioScope,
+      produceFile = { dataStoreFile }
     )
   }
 
   var fcmToken: String?
-    get() = preferences.getString(FCM_TOKEN_KEY, null)
-    set(value) = preferences.edit {
-      putString(FCM_TOKEN_KEY, value)
-      apply()
+    get() = readValue { it[FCM_TOKEN_KEY] }
+    set(value) = writeValue {
+      if (value == null) {
+        remove(FCM_TOKEN_KEY)
+      } else {
+        this[FCM_TOKEN_KEY] = value
+      }
     }
 
   var fcmTokenLastUpdate: Date?
-    get() = with(preferences.getLong(FCM_TOKEN_LAST_UPDATE_KEY, -1)) {
-      if (this > 0) {
-        Date(this)
+    get() = readValue { it[FCM_TOKEN_LAST_UPDATE_KEY] }
+      ?.takeIf { it > 0 }
+      ?.let { Date(it) }
+    set(value) = writeValue {
+      if (value == null) {
+        remove(FCM_TOKEN_LAST_UPDATE_KEY)
       } else {
-        null
+        this[FCM_TOKEN_LAST_UPDATE_KEY] = value.time
       }
-    }
-    set(value) = preferences.edit {
-      putLong(FCM_TOKEN_LAST_UPDATE_KEY, value!!.time)
-      apply()
     }
 
   var notificationsLastEnabled: Boolean
-    get() = preferences.getBoolean(NOTIFICATIONS_LAST_ENABLED, false)
-    set(value) = preferences.edit {
-      putBoolean(NOTIFICATIONS_LAST_ENABLED, value)
-      apply()
+    get() = readValue { it[NOTIFICATIONS_LAST_ENABLED_KEY] } ?: false
+    set(value) = writeValue {
+      this[NOTIFICATIONS_LAST_ENABLED_KEY] = value
     }
 
   var lockScreenSettings: LockScreenSettings
-    get() = LockScreenSettings.from(preferences.getString(LOCK_SCREEN_SETTING_KEY, null))
-    set(value) = preferences.edit {
-      putString(LOCK_SCREEN_SETTING_KEY, value.asString())
-      apply()
+    get() = LockScreenSettings.from(readValue { it[LOCK_SCREEN_SETTING_KEY] })
+    set(value) = writeValue {
+      this[LOCK_SCREEN_SETTING_KEY] = value.asString()
     }
 
   var devModeActive: Boolean
-    get() = preferences.getBoolean(DEV_MODE_KEY, false)
-    set(value) = preferences.edit {
-      putBoolean(DEV_MODE_KEY, value)
-      apply()
+    get() = readValue { it[DEV_MODE_KEY] } ?: false
+    set(value) = writeValue {
+      this[DEV_MODE_KEY] = value
     }
 
   var devLogActive: Boolean
-    get() = preferences.getBoolean(DEV_LOG_KEY, false)
-    set(value) = preferences.edit {
-      putBoolean(DEV_LOG_KEY, value)
-      apply()
+    get() = readValue { it[DEV_LOG_KEY] } ?: false
+    set(value) = writeValue {
+      this[DEV_LOG_KEY] = value
     }
 
   var devLogFilteringString: String?
-    get() = preferences.getString(DEV_FILTER_KEY, "")
-    set(value) = preferences.edit {
-      putString(DEV_FILTER_KEY, value)
-      apply()
+    get() = readValue { it[DEV_FILTER_KEY] } ?: ""
+    set(value) = writeValue {
+      if (value == null) {
+        remove(DEV_FILTER_KEY)
+      } else {
+        this[DEV_FILTER_KEY] = value
+      }
     }
 
   var wizardWifiName: String?
-    get() = preferences.getString(WIZARD_WIFI_NAME, null)
-    set(value) = preferences.edit {
-      putString(WIZARD_WIFI_NAME, value)
-      apply()
+    get() = readValue { it[WIZARD_WIFI_NAME_KEY] }
+    set(value) = writeValue {
+      if (value == null) {
+        remove(WIZARD_WIFI_NAME_KEY)
+      } else {
+        this[WIZARD_WIFI_NAME_KEY] = value
+      }
     }
 
   var wizardWifiPassword: String?
-    get() = preferences.getString(WIZARD_WIFI_PASSWORD, null)
-    set(value) = preferences.edit {
-      putString(WIZARD_WIFI_PASSWORD, value)
-      apply()
+    get() = readValue { it[WIZARD_WIFI_PASSWORD_KEY] }
+    set(value) = writeValue {
+      if (value == null) {
+        remove(WIZARD_WIFI_PASSWORD_KEY)
+      } else {
+        this[WIZARD_WIFI_PASSWORD_KEY] = value
+      }
     }
 
   fun getFcmProfileToken(profileId: Long): String? {
-    return preferences.getString(FCM_PROFILE_TOKEN_KEY + profileId, null)
+    return readValue { it[fcmProfileTokenKey(profileId)] }
   }
 
   fun setFcmProfileToken(profileId: Long, token: String) {
-    preferences.edit {
-      putString(FCM_PROFILE_TOKEN_KEY + profileId, token)
-      apply()
+    writeValue {
+      this[fcmProfileTokenKey(profileId)] = token
+    }
+  }
+
+  private fun <T> readValue(block: (Preferences) -> T): T {
+    return runBlocking(Dispatchers.IO) {
+      block(preferences.data.first())
+    }
+  }
+
+  private fun writeValue(block: MutablePreferences.() -> Unit) {
+    runBlocking(Dispatchers.IO) {
+      preferences.edit(block)
     }
   }
 }
+
+private fun createAead(context: Context): Aead {
+  AeadConfig.register()
+
+  val keysetHandle = AndroidKeysetManager.Builder()
+    .withSharedPref(
+      context,
+      TINK_KEYSET_NAME,
+      TINK_KEYSET_SHARED_PREFERENCES_NAME
+    )
+    .withKeyTemplate(KeyTemplate.createFrom(PredefinedAeadParameters.AES256_GCM))
+    .withMasterKeyUri(MASTER_KEY_URI)
+    .build()
+    .keysetHandle
+
+  return keysetHandle.getPrimitive(
+    RegistryConfiguration.get(),
+    Aead::class.java
+  )
+}
+
+private fun fcmProfileTokenKey(profileId: Long) = stringPreferencesKey("$FCM_PROFILE_TOKEN_KEY_PREFIX$profileId")
