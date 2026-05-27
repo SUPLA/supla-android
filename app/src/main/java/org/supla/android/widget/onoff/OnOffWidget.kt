@@ -73,6 +73,10 @@ class OnOffWidget : WidgetProviderBase() {
     appWidgetManager.updateAppWidget(widgetId, views)
   }
 
+  override fun updateWidgets(context: Context, widgetIds: IntArray) {
+    updateOnOffWidgets(context, widgetIds)
+  }
+
   override fun onReceive(context: Context, intent: Intent?) {
     Timber.i("[OnOffWidget] Got intent with action: ${intent?.action}")
     if (intent.mapRedrawToUpdateEvent(context) { super.onReceive(context, it) }) {
@@ -92,7 +96,9 @@ class OnOffWidget : WidgetProviderBase() {
       return
     }
 
-    WidgetAction.from(intent.action)?.let { OnOffWidgetCommandWorker.enqueue(widgetIds, it, workManagerProxy) }
+    provideWidgetAction(context, intent, widgetIds) {
+      OnOffWidgetCommandWorker.enqueue(widgetIds, it, workManagerProxy)
+    }
   }
 
   private fun setChannelIcons(
@@ -139,31 +145,31 @@ class OnOffWidget : WidgetProviderBase() {
       views.setViewVisibility(R.id.on_off_widget_value, View.GONE)
     }
   }
-}
 
-internal fun buildWidget(context: Context, widgetId: Int): RemoteViews {
-  val views = RemoteViews(context.packageName, R.layout.on_off_widget)
-  val turnOnPendingIntent = pendingIntent(context, WidgetAction.RIGHT_BUTTON_PRESSED.string, widgetId)
-  views.setOnClickPendingIntent(R.id.on_off_widget_turn_on_button, turnOnPendingIntent)
-  views.setOnClickPendingIntent(R.id.on_off_widget_turn_on_button_night_mode, turnOnPendingIntent)
-  val turnOffPendingIntent = pendingIntent(context, WidgetAction.LEFT_BUTTON_PRESSED.string, widgetId)
-  views.setOnClickPendingIntent(R.id.on_off_widget_turn_off_button, turnOffPendingIntent)
-  views.setOnClickPendingIntent(R.id.on_off_widget_turn_off_button_night_mode, turnOffPendingIntent)
-  val updatePendingIntent = pendingIntent(context, WidgetAction.MANUAL_UPDATE.string, widgetId)
-  views.setOnClickPendingIntent(R.id.on_off_widget_value_text, updatePendingIntent)
-  views.setOnClickPendingIntent(R.id.on_off_widget_value_icon, updatePendingIntent)
-  views.setOnClickPendingIntent(R.id.on_off_widget_value_icon_night_mode, updatePendingIntent)
+  private fun buildWidget(context: Context, widgetId: Int): RemoteViews {
+    val views = RemoteViews(context.packageName, R.layout.on_off_widget)
+    val turnOnPendingIntent = pendingIntent(context, WidgetAction.RIGHT_BUTTON_PRESSED.string, widgetId)
+    views.setOnClickPendingIntent(R.id.on_off_widget_turn_on_button, turnOnPendingIntent)
+    views.setOnClickPendingIntent(R.id.on_off_widget_turn_on_button_night_mode, turnOnPendingIntent)
+    val turnOffPendingIntent = pendingIntent(context, WidgetAction.LEFT_BUTTON_PRESSED.string, widgetId)
+    views.setOnClickPendingIntent(R.id.on_off_widget_turn_off_button, turnOffPendingIntent)
+    views.setOnClickPendingIntent(R.id.on_off_widget_turn_off_button_night_mode, turnOffPendingIntent)
+    val updatePendingIntent = pendingIntent(context, WidgetAction.MANUAL_UPDATE.string, widgetId)
+    views.setOnClickPendingIntent(R.id.on_off_widget_value_text, updatePendingIntent)
+    views.setOnClickPendingIntent(R.id.on_off_widget_value_icon, updatePendingIntent)
+    views.setOnClickPendingIntent(R.id.on_off_widget_value_icon_night_mode, updatePendingIntent)
 
-  return views
-}
+    return views
+  }
 
-internal fun pendingIntent(context: Context, intentAction: String, widgetId: Int): PendingIntent {
-  return PendingIntent.getBroadcast(
-    context,
-    widgetId,
-    intent(context, intentAction, widgetId),
-    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-  )
+  private fun pendingIntent(context: Context, intentAction: String, widgetId: Int): PendingIntent {
+    return PendingIntent.getBroadcast(
+      context,
+      widgetId,
+      intent(context, intentAction, widgetId).applyActionToken(widgetId),
+      PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+    )
+  }
 }
 
 fun updateOnOffWidget(context: Context, widgetId: Int) =
