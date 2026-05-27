@@ -23,6 +23,7 @@ import androidx.core.content.edit
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.core.shared.data.model.general.SuplaFunction
+import java.util.UUID
 
 private const val SHARED_PREFERENCES = "SwitchPreferences"
 const val INVALID_LONG = -1L
@@ -40,6 +41,8 @@ class WidgetPreferences(context: Context) {
   )
 
   fun setWidgetConfiguration(widgetId: Int, configuration: WidgetConfiguration) {
+    val tokenSet = preferences.contains(getKeyForWidgetActionToken(widgetId))
+
     preferences.edit {
       putInt(getKeyForItemId(widgetId), configuration.itemId)
       putInt(getKeyForSubjectType(widgetId), configuration.subjectType.value)
@@ -51,6 +54,9 @@ class WidgetPreferences(context: Context) {
       putInt(getKeyForActionId(widgetId), configuration.actionId?.value ?: NO_ACTION)
       putInt(getKeyForWidgetAltIcon(widgetId), configuration.altIcon)
       putInt(getKeyForWidgetUserIcon(widgetId), configuration.userIcon)
+      if (!tokenSet) {
+        generateToken(widgetId)
+      }
       apply()
     }
   }
@@ -113,8 +119,17 @@ class WidgetPreferences(context: Context) {
       remove(getKeyForActionId(widgetId))
       remove(getKeyForWidgetAltIcon(widgetId))
       remove(getKeyForWidgetUserIcon(widgetId))
+      remove(getKeyForWidgetActionToken(widgetId))
       apply()
     }
+  }
+
+  fun getWidgetActionToken(widgetId: Int): String? =
+    preferences.getString(getKeyForWidgetActionToken(widgetId), null)
+
+  fun generateToken(widgetId: Int) {
+    val token = UUID.randomUUID().toString()
+    preferences.edit { putString(getKeyForWidgetActionToken(widgetId), token) }
   }
 }
 
@@ -164,6 +179,10 @@ internal fun getKeyForWidgetAltIcon(widgetId: Int): String {
 
 internal fun getKeyForWidgetUserIcon(widgetId: Int): String {
   return "$SHARED_PREFERENCES.USER_ICON.$widgetId"
+}
+
+internal fun getKeyForWidgetActionToken(widgetId: Int): String {
+  return "$SHARED_PREFERENCES.ACTION_TOKEN.$widgetId"
 }
 
 data class WidgetConfiguration(

@@ -20,6 +20,7 @@ package org.supla.android.widget.shared
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
+import android.content.Intent
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
@@ -32,11 +33,18 @@ import org.supla.android.widget.RemoveWidgetsWorker
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.WidgetPreferences
 import timber.log.Timber
+import javax.inject.Inject
+
+private const val EXTRA_WIDGET_ACTION_TOKEN = "org.supla.android.widget.single.EXTRA_WIDGET_ACTION_TOKEN"
 
 /**
  * IMPORTANT: Always when adding new widget, please adapt [getAllWidgetIds].
  */
 abstract class WidgetProviderBase : AppWidgetProvider() {
+
+  @Inject
+  lateinit var widgetPreferences: WidgetPreferences
+
   override fun onUpdate(
     context: Context,
     appWidgetManager: AppWidgetManager,
@@ -78,6 +86,42 @@ abstract class WidgetProviderBase : AppWidgetProvider() {
     widgetId: Int,
     configuration: WidgetConfiguration?
   )
+
+  abstract fun updateWidgets(context: Context, widgetIds: IntArray)
+
+  protected fun provideWidgetAction(context: Context, intent: Intent, widgetIds: IntArray, handler: (WidgetAction) -> Unit) {
+    val action = WidgetAction.from(intent.action) ?: return
+
+    if (action == WidgetAction.AUTOMATIC_UPDATE || action == WidgetAction.MANUAL_UPDATE || action == WidgetAction.REDRAW) {
+      return handler(action)
+    }
+
+    if (widgetIds.size != 1) {
+      return
+    }
+
+    val widgetId = widgetIds.first()
+    val expectedToken = widgetPreferences.getWidgetActionToken(widgetId)
+    val receivedToken = intent.getStringExtra(EXTRA_WIDGET_ACTION_TOKEN)
+
+    if (expectedToken == null && receivedToken == null) {
+      widgetPreferences.generateToken(widgetId)
+      updateWidgets(context, widgetIds)
+      return handler(action)
+    }
+
+    if (expectedToken != null && expectedToken == receivedToken) {
+      handler(action)
+    } else {
+      Timber.w("Widget action call skipped because of missing valid token!")
+    }
+  }
+
+  protected fun Intent.applyActionToken(widgetId: Int): Intent {
+    val actionToken = widgetPreferences.getWidgetActionToken(widgetId)
+    putExtra(EXTRA_WIDGET_ACTION_TOKEN, actionToken)
+    return this
+  }
 }
 
 internal fun isWidgetValid(configuration: WidgetConfiguration) = configuration.visibility &&
