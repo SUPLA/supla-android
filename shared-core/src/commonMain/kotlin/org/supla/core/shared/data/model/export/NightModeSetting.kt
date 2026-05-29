@@ -1,4 +1,4 @@
-package org.supla.core.shared.data.model.thermometer
+package org.supla.core.shared.data.model.export
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -18,34 +18,23 @@ package org.supla.core.shared.data.model.thermometer
  */
 
 import kotlinx.serialization.Serializable
-import org.supla.core.shared.usecase.channel.valueformatter.types.ValueUnit
 
 @Serializable
-enum class TemperatureUnit(val rawValue: String, val valueUnit: ValueUnit) {
-  CELSIUS("C", ValueUnit.TEMPERATURE_CELSIUS),
-  FAHRENHEIT("F", ValueUnit.TEMPERATURE_FAHRENHEIT);
-
-  fun position(): Int = ordinal
+enum class NightModeSetting(val value: Int) {
+  ALWAYS(0),
+  NEVER(1),
+  AUTO(2),
+  UNSET(-1);
 
   companion object {
-    fun forPosition(position: Int): TemperatureUnit {
-      for ((i, unit) in entries.withIndex()) {
-        if (i == position) {
-          return unit
+    fun from(value: Int): NightModeSetting {
+      for (mode in NightModeSetting.entries) {
+        if (mode.value == value) {
+          return mode
         }
       }
 
-      return CELSIUS
-    }
-
-    fun fromValue(value: String?): TemperatureUnit {
-      for (entry in entries) {
-        if (entry.rawValue == value) {
-          return entry
-        }
-      }
-
-      return CELSIUS
+      return UNSET
     }
   }
 }

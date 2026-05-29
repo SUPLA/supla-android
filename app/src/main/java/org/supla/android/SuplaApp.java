@@ -48,11 +48,13 @@ import org.supla.android.core.observers.AppLifecycleObserver;
 import org.supla.android.core.storage.ApplicationPreferences;
 import org.supla.android.core.storage.EncryptedPreferences;
 import org.supla.android.data.ValuesFormatter;
-import org.supla.android.data.model.general.NightModeSetting;
 import org.supla.android.db.room.app.AppDatabase;
 import org.supla.android.lib.AndroidSuplaClientMessageHandler;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.widget.extended.ExtendedValueWidgetWorker;
+import static org.supla.android.model.general.NightModeSettingAndroid.appCompatDelegateValue;
+import static org.supla.android.model.general.NightModeSettingAndroid.modeManagerValue;
+import org.supla.core.shared.data.model.export.NightModeSetting;
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage;
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessageHandler;
 import timber.log.Timber;
@@ -173,13 +175,13 @@ public class SuplaApp extends Application
   private void setupNightMode() {
     NightModeSetting nightModeSetting = applicationPreferences.getNightMode();
     if (VERSION.SDK_INT < VERSION_CODES.S) {
-      AppCompatDelegate.setDefaultNightMode(nightModeSetting.appCompatDelegateValue());
+      AppCompatDelegate.setDefaultNightMode(appCompatDelegateValue(nightModeSetting));
     }
     if (nightModeSetting == NightModeSetting.UNSET) {
       applicationPreferences.setNightMode(NightModeSetting.NEVER);
       if (VERSION.SDK_INT >= VERSION_CODES.S) {
         // If unset, expected is that the app will start without night mode.
-        modeManager.setApplicationNightMode(nightModeSetting.modeManagerValue());
+        modeManager.setApplicationNightMode(modeManagerValue(nightModeSetting));
       }
     }
   }
