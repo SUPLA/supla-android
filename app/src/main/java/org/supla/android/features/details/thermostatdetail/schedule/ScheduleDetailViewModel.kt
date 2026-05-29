@@ -20,7 +20,6 @@ package org.supla.android.features.details.thermostatdetail.schedule
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
-import org.supla.android.Preferences
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.storage.ApplicationPreferences
@@ -73,7 +72,6 @@ class ScheduleDetailViewModel @Inject constructor(
   private val loadingTimeoutManager: LoadingTimeoutManager,
   private val suplaClientProvider: SuplaClientProvider,
   private val dateProvider: DateProvider,
-  private val preferences: Preferences,
   @param:Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<ScheduleDetailViewState, ScheduleDetailViewEvent>(ScheduleDetailViewState(), schedulers), ScheduleDetailViewScope {
@@ -88,7 +86,7 @@ class ScheduleDetailViewModel @Inject constructor(
       }
     }
 
-    updateState { it.copy(showHelp = preferences.showThermostatScheduleInfo) }
+    updateState { it.copy(showHelp = applicationPreferences.showThermostatScheduleInfo) }
   }
 
   fun observeConfig(remoteId: Int, deviceId: Int) {
@@ -304,7 +302,7 @@ class ScheduleDetailViewModel @Inject constructor(
   }
 
   override fun onHelpClosed() {
-    preferences.showThermostatScheduleInfo = false
+    applicationPreferences.showThermostatScheduleInfo = false
     updateState { it.copy(showHelp = false) }
   }
 

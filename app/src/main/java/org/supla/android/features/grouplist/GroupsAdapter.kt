@@ -19,7 +19,7 @@ package org.supla.android.features.grouplist
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ActivityContext
-import org.supla.android.Preferences
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.lists.BaseChannelsAdapter
@@ -28,7 +28,7 @@ import javax.inject.Inject
 class GroupsAdapter @Inject constructor(
   @param:ActivityContext private val context: Context,
   vibrationHelper: VibrationHelper,
-  preferences: Preferences
+  preferences: ApplicationPreferences
 ) : BaseChannelsAdapter(vibrationHelper, context, preferences) {
 
   override fun isLocationCollapsed(location: LocationEntity) = ((location.collapsed and 0x2) > 0)

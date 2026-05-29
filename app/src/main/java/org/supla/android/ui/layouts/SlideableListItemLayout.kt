@@ -23,9 +23,9 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatButton
 import dagger.hilt.android.AndroidEntryPoint
-import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.shared.resourceId
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.ui.lists.SlideableItem
 import org.supla.android.ui.lists.SwapableListItem
 import org.supla.android.ui.lists.data.SlideableListItemData
@@ -56,7 +56,7 @@ class SlideableListItemLayout @JvmOverloads constructor(
   override var locationCaption: String? = null
 
   @Inject
-  lateinit var preferences: Preferences
+  lateinit var preferences: ApplicationPreferences
 
   @Inject
   lateinit var getChannelActionStringUseCase: GetChannelActionStringUseCase

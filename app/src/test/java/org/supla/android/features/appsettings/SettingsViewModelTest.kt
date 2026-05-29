@@ -12,7 +12,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.tuple
 import org.junit.Before
 import org.junit.Test
-import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.permissions.PermissionsHelper
@@ -29,7 +28,7 @@ import org.supla.core.shared.data.model.thermometer.TemperatureUnit
 class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewEvent, SettingsViewModel>(MockSchedulers.MOCKK) {
 
   @MockK
-  private lateinit var preferences: Preferences
+  private lateinit var applicationPreferences: ApplicationPreferences
 
   @MockK
   private lateinit var notificationManager: NotificationManager
@@ -44,19 +43,15 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
   private lateinit var encryptedPreferences: EncryptedPreferences
 
   @MockK
-  private lateinit var applicationPreferences: ApplicationPreferences
-
-  @MockK
   override lateinit var schedulers: SuplaSchedulers
 
   override val viewModel: SettingsViewModel by lazy {
     SettingsViewModel(
-      preferences,
+      applicationPreferences,
       notificationManager,
       permissionsHelper,
       modeManager,
       encryptedPreferences,
-      applicationPreferences,
       schedulers
     )
   }
@@ -125,7 +120,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     // given
     mockPreferences()
     every { permissionsHelper.checkPermissionGranted(ACCESS_FINE_LOCATION) } returns true
-    every { preferences.channelHeight = 150 } answers {}
+    every { applicationPreferences.channelHeight = 150 } answers {}
 
     // when
     viewModel.loadSettings()
@@ -136,8 +131,8 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     assertThat(states.size).isEqualTo(1)
     assertThat(events).isEmpty()
     verifyPreferencesMockedCalls()
-    verify { preferences.channelHeight = 150 }
-    confirmVerified(preferences)
+    verify { applicationPreferences.channelHeight = 150 }
+    confirmVerified(applicationPreferences)
   }
 
   @Test
@@ -157,7 +152,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     assertThat(events).isEmpty()
     verifyPreferencesMockedCalls()
     verify { applicationPreferences.temperatureUnit = TemperatureUnit.CELSIUS }
-    confirmVerified(preferences)
+    confirmVerified(applicationPreferences)
   }
 
   @Test
@@ -177,14 +172,14 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     assertThat(events).isEmpty()
     verifyPreferencesMockedCalls()
     verify { applicationPreferences.temperaturePrecision = 2 }
-    confirmVerified(preferences)
+    confirmVerified(applicationPreferences)
   }
 
   @Test
   fun `check if button auto hide is saved`() {
     // given
     mockPreferences()
-    every { preferences.isButtonAutohide = false } answers {}
+    every { applicationPreferences.isButtonAutohide = false } answers {}
     every { permissionsHelper.checkPermissionGranted(ACCESS_FINE_LOCATION) } returns true
 
     // when
@@ -196,8 +191,8 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     assertThat(states.size).isEqualTo(1)
     assertThat(events).isEmpty()
     verifyPreferencesMockedCalls()
-    verify { preferences.isButtonAutohide = false }
-    confirmVerified(preferences)
+    verify { applicationPreferences.isButtonAutohide = false }
+    confirmVerified(applicationPreferences)
   }
 
   @Test
@@ -205,7 +200,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     // given
     mockPreferences()
     every { permissionsHelper.checkPermissionGranted(ACCESS_FINE_LOCATION) } returns true
-    every { preferences.isShowChannelInfo = true } answers {}
+    every { applicationPreferences.isShowChannelInfo = true } answers {}
 
     // when
     viewModel.loadSettings()
@@ -216,8 +211,8 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     assertThat(states.size).isEqualTo(1)
     assertThat(events).isEmpty()
     verifyPreferencesMockedCalls()
-    verify { preferences.isShowChannelInfo = true }
-    confirmVerified(preferences)
+    verify { applicationPreferences.isShowChannelInfo = true }
+    confirmVerified(applicationPreferences)
   }
 
   @Test
@@ -225,7 +220,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     // given
     mockPreferences()
     every { permissionsHelper.checkPermissionGranted(ACCESS_FINE_LOCATION) } returns false
-    every { preferences.isShowBottomMenu = true } answers {}
+    every { applicationPreferences.isShowBottomMenu = true } answers {}
 
     // when
     viewModel.loadSettings()
@@ -236,15 +231,15 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     assertThat(states.size).isEqualTo(1)
     assertThat(events).isEmpty()
     verifyPreferencesMockedCalls()
-    verify { preferences.isShowBottomMenu = true }
-    confirmVerified(preferences)
+    verify { applicationPreferences.isShowBottomMenu = true }
+    confirmVerified(applicationPreferences)
   }
 
   @Test
   fun `check if show bottom labels is saved`() {
     // given
     mockPreferences()
-    every { preferences.isShowBottomLabel = true } answers {}
+    every { applicationPreferences.isShowBottomLabel = true } answers {}
     every { permissionsHelper.checkPermissionGranted(ACCESS_FINE_LOCATION) } returns true
 
     // when
@@ -256,15 +251,15 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     assertThat(states.size).isEqualTo(1)
     assertThat(events).isEmpty()
     verifyPreferencesMockedCalls()
-    verify { preferences.isShowBottomLabel = true }
-    confirmVerified(preferences)
+    verify { applicationPreferences.isShowBottomLabel = true }
+    confirmVerified(applicationPreferences)
   }
 
   @Test
   fun `check if hide unavailable channels is saved`() {
     // given
     mockPreferences()
-    every { preferences.hideUnavailableChannels = true } answers {}
+    every { applicationPreferences.hideUnavailableChannels = true } answers {}
     every { permissionsHelper.checkPermissionGranted(ACCESS_FINE_LOCATION) } returns true
 
     // when
@@ -276,15 +271,15 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     assertThat(states.size).isEqualTo(1)
     assertThat(events).isEmpty()
     verifyPreferencesMockedCalls()
-    verify { preferences.hideUnavailableChannels = true }
-    confirmVerified(preferences)
+    verify { applicationPreferences.hideUnavailableChannels = true }
+    confirmVerified(applicationPreferences)
   }
 
   @Test
   fun `check if rs showing opening percentage is saved`() {
     // given
     mockPreferences()
-    every { preferences.isShowOpeningPercent = false } answers {}
+    every { applicationPreferences.isShowOpeningPercent = false } answers {}
     every { permissionsHelper.checkPermissionGranted(ACCESS_FINE_LOCATION) } returns true
 
     // when
@@ -296,8 +291,8 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     assertThat(states.size).isEqualTo(1)
     assertThat(events).isEmpty()
     verifyPreferencesMockedCalls()
-    verify { preferences.isShowOpeningPercent = false }
-    confirmVerified(preferences)
+    verify { applicationPreferences.isShowOpeningPercent = false }
+    confirmVerified(applicationPreferences)
   }
 
   @Test
@@ -319,7 +314,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     verify {
       applicationPreferences.nightMode = NightModeSetting.ALWAYS
     }
-    confirmVerified(preferences)
+    confirmVerified(applicationPreferences)
   }
 
   @Test
@@ -341,7 +336,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     verify(exactly = 2) {
       encryptedPreferences.lockScreenSettings
     }
-    confirmVerified(preferences, encryptedPreferences)
+    confirmVerified(applicationPreferences, encryptedPreferences)
   }
 
   @Test
@@ -363,7 +358,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     verify {
       encryptedPreferences.lockScreenSettings
     }
-    confirmVerified(preferences, encryptedPreferences)
+    confirmVerified(applicationPreferences, encryptedPreferences)
   }
 
   @Test
@@ -385,7 +380,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     verify {
       encryptedPreferences.lockScreenSettings
     }
-    confirmVerified(preferences, encryptedPreferences)
+    confirmVerified(applicationPreferences, encryptedPreferences)
   }
 
   @Test
@@ -406,7 +401,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     verify {
       encryptedPreferences.lockScreenSettings
     }
-    confirmVerified(preferences, encryptedPreferences)
+    confirmVerified(applicationPreferences, encryptedPreferences)
   }
 
   @Test
@@ -423,7 +418,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     assertThat(states.size).isEqualTo(1)
     assertThat(events).containsExactly(SettingsViewEvent.NavigateToLocalizationsOrdering)
     verifyPreferencesMockedCalls()
-    confirmVerified(preferences)
+    confirmVerified(applicationPreferences)
   }
 
   @Test
@@ -440,7 +435,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     assertThat(states.size).isEqualTo(1)
     assertThat(events).containsExactly(SettingsViewEvent.NavigateToSettings)
     verifyPreferencesMockedCalls()
-    confirmVerified(preferences)
+    confirmVerified(applicationPreferences)
   }
 
   @Test
@@ -457,19 +452,19 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     assertThat(states.size).isEqualTo(1)
     assertThat(events).containsExactly(SettingsViewEvent.NavigateToSettings)
     verifyPreferencesMockedCalls()
-    confirmVerified(preferences)
+    confirmVerified(applicationPreferences)
   }
 
   private fun mockPreferences() {
-    every { preferences.channelHeight } returns 100
+    every { applicationPreferences.channelHeight } returns 100
     every { applicationPreferences.temperatureUnit } returns TemperatureUnit.FAHRENHEIT
     every { applicationPreferences.temperaturePrecision } returns 2
-    every { preferences.isShowBottomMenu } returns false
-    every { preferences.isButtonAutohide } returns true
-    every { preferences.isShowChannelInfo } returns false
-    every { preferences.isShowOpeningPercent } returns true
-    every { preferences.isShowBottomLabel } returns false
-    every { preferences.hideUnavailableChannels } returns false
+    every { applicationPreferences.isShowBottomMenu } returns false
+    every { applicationPreferences.isButtonAutohide } returns true
+    every { applicationPreferences.isShowChannelInfo } returns false
+    every { applicationPreferences.isShowOpeningPercent } returns true
+    every { applicationPreferences.isShowBottomLabel } returns false
+    every { applicationPreferences.hideUnavailableChannels } returns false
     every { applicationPreferences.batteryWarningLevel } returns 10
     every { applicationPreferences.nightMode } returns NightModeSetting.NEVER
 
@@ -478,18 +473,19 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
   private fun verifyPreferencesMockedCalls() {
     verify(exactly = 2) {
-      preferences.channelHeight
+      applicationPreferences.channelHeight
     }
     verify {
-      preferences.isButtonAutohide
-      preferences.isShowChannelInfo
-      preferences.isShowBottomMenu
-      preferences.isShowBottomLabel
-      preferences.hideUnavailableChannels
-      preferences.isShowOpeningPercent
+      applicationPreferences.isButtonAutohide
+      applicationPreferences.isShowChannelInfo
+      applicationPreferences.isShowBottomMenu
+      applicationPreferences.isShowBottomLabel
+      applicationPreferences.hideUnavailableChannels
+      applicationPreferences.isShowOpeningPercent
       applicationPreferences.temperatureUnit
       applicationPreferences.temperaturePrecision
       applicationPreferences.nightMode
+      applicationPreferences.batteryWarningLevel
     }
   }
 }

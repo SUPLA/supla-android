@@ -18,9 +18,9 @@ package org.supla.android.features.details.valveDetail.general
  */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.shared.shareable
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
@@ -61,7 +61,7 @@ class ValveGeneralDetailViewModel @Inject constructor(
   private val channelActionUseCase: ChannelActionUseCase,
   private val getCaptionUseCase: GetCaptionUseCase,
   private val vibrationHelper: VibrationHelper,
-  private val preferences: Preferences,
+  private val preferences: ApplicationPreferences,
   override val updateEventsManager: UpdateEventsManager,
   override val schedulers: SuplaSchedulers
 ) : BaseViewModel<ValveGeneralDetailViewModeState, ValveGeneralDetailViewEvent>(

@@ -39,10 +39,10 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import java.util.Date;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import org.supla.android.Preferences;
 import org.supla.android.R;
 import org.supla.android.SuplaChannelStatus;
 import org.supla.android.SuplaChannelStatus.ShapeType;
+import org.supla.android.core.storage.ApplicationPreferences;
 import org.supla.android.data.source.local.entity.SceneEntity;
 import org.supla.android.events.UpdateEventsManager;
 import org.supla.android.images.ImageCache;
@@ -95,7 +95,7 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
 
   private void init(Context context) {
     uiThreadHandler = new Handler(Looper.getMainLooper());
-    Preferences prefs = new Preferences(context);
+    ApplicationPreferences prefs = new ApplicationPreferences(context);
     setOrientation(LinearLayout.HORIZONTAL);
 
     setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.surface, null));

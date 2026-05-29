@@ -31,10 +31,10 @@ import io.reactivex.rxjava3.core.Single
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
@@ -103,7 +103,7 @@ class RollerShutterViewModelTest :
   lateinit var vibrationHelper: VibrationHelper
 
   @RelaxedMockK
-  lateinit var preferences: Preferences
+  lateinit var preferences: ApplicationPreferences
 
   @RelaxedMockK
   lateinit var dateProvider: DateProvider

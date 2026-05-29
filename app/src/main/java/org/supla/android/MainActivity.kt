@@ -152,9 +152,6 @@ class MainActivity :
   lateinit var navigator: MainNavigator
 
   @Inject
-  lateinit var preferences: Preferences
-
-  @Inject
   lateinit var applicationPreferences: ApplicationPreferences
 
   @Inject
@@ -195,11 +192,11 @@ class MainActivity :
     toolbarItemVisibilitySetup()
     edgeToEdgeSetup()
 
-    if (preferences.shouldShowNewGestureInfo() && preferences.isNewGestureInfoPresented.not()) {
+    if (applicationPreferences.shouldShowNewGestureInfo() && applicationPreferences.isNewGestureInfoPresented.not()) {
       newGestureInfo.bringToFront()
       newGestureInfo.visibility = View.VISIBLE
       newGestureInfoClose.setOnClickListener { newGestureInfo.visibility = View.GONE }
-      preferences.isNewGestureInfoPresented = true
+      applicationPreferences.isNewGestureInfoPresented = true
     }
 
     menuLayout.setOnClickListener(this::handleMenuClicks)

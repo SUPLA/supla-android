@@ -29,8 +29,8 @@ import io.reactivex.rxjava3.core.Observable
 import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
-import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.runtime.ItemType
@@ -63,7 +63,7 @@ class StandardDetailViewModelTest : BaseViewModelTest<StandardDetailViewState, S
   private lateinit var updateEventsManager: UpdateEventsManager
 
   @MockK
-  private lateinit var preferences: Preferences
+  private lateinit var preferences: ApplicationPreferences
 
   @MockK
   override lateinit var schedulers: SuplaSchedulers

@@ -17,6 +17,7 @@ package org.supla.android.db.room.app.migrations
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.database.Cursor
 import androidx.room.migration.Migration
@@ -24,7 +25,6 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.runBlocking
 import org.supla.android.Encryption
-import org.supla.android.Preferences
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.data.model.settings.ProfileCredentials
 import org.supla.android.db.room.SqlExecutor
@@ -300,6 +300,25 @@ private data class LegacyProfileEntity(
 }
 
 private fun decrypt(payload: ByteArray, context: Context): ByteArray? {
-  val key = Preferences.getDeviceID(context)
+  val key = getDeviceID(context)
   return Encryption.decryptDataWithNullOnException(payload, key)
+}
+
+@SuppressLint("HardwareIds")
+@Suppress("DEPRECATION")
+private fun getDeviceID(ctx: Context): String {
+  var id: String? = null
+  try {
+    id = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+      android.provider.Settings.Secure.getString(ctx.contentResolver, android.provider.Settings.Secure.ANDROID_ID)
+    } else {
+      android.os.Build.SERIAL
+    }
+
+    id += "-" + android.os.Build.BOARD + "-" + android.os.Build.BRAND + "-" + android.os.Build.DEVICE + "-" + android.os.Build.HARDWARE
+  } catch (e: Exception) {
+    Timber.e(e, "getDeviceID error")
+  }
+
+  return id ?: "unknown"
 }

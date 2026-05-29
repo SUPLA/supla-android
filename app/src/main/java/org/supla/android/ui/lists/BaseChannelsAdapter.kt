@@ -21,7 +21,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import org.supla.android.Preferences
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.databinding.LiChannelItemBinding
@@ -38,7 +38,7 @@ import org.supla.core.shared.data.model.lists.ListItemIssues
 abstract class BaseChannelsAdapter(
   private val vibrationHelper: VibrationHelper,
   context: Context,
-  preferences: Preferences
+  preferences: ApplicationPreferences
 ) : BaseListAdapter<ChannelDataBase>(preferences) {
 
   var infoButtonClickCallback: (id: Int) -> Unit = { _ -> }

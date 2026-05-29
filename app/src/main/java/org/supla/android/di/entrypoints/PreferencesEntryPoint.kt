@@ -20,10 +20,10 @@ package org.supla.android.di.entrypoints
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import org.supla.android.Preferences
+import org.supla.android.core.storage.ApplicationPreferences
 
 @EntryPoint
 @InstallIn(SingletonComponent::class)
 interface PreferencesEntryPoint {
-  fun providePreferences(): Preferences
+  fun providePreferences(): ApplicationPreferences
 }

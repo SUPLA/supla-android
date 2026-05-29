@@ -16,10 +16,10 @@ import io.reactivex.rxjava3.subjects.Subject
 import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
-import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
@@ -79,7 +79,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   private lateinit var executeSimpleActionUseCase: ExecuteSimpleActionUseCase
 
   @MockK(relaxed = true)
-  private lateinit var preferences: Preferences
+  private lateinit var preferences: ApplicationPreferences
 
   @MockK
   private lateinit var dateProvider: DateProvider

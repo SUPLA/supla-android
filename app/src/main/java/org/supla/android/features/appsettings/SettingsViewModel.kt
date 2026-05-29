@@ -25,7 +25,6 @@ import android.os.Build.VERSION_CODES
 import androidx.appcompat.app.AppCompatDelegate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
-import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.branding.Configuration
 import org.supla.android.core.permissions.PermissionsHelper
@@ -45,12 +44,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-  private val preferences: Preferences,
+  private val preferences: ApplicationPreferences,
   private val notificationManager: NotificationManager,
   private val permissionsHelper: PermissionsHelper,
   private val modeManager: UiModeManager,
   private val encryptedPreferences: EncryptedPreferences,
-  private val applicationPreferences: ApplicationPreferences,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<SettingsViewState, SettingsViewEvent>(SettingsViewState(), schedulers) {
 
@@ -68,17 +66,17 @@ class SettingsViewModel @Inject constructor(
       listOf(
         SettingItem.HeaderItem(headerResource = R.string.menubar_appsettings),
         SettingItem.ChannelHeightItem(height = getChannelHeight(), this::updateChannelHeight),
-        SettingItem.TemperatureUnitItem(unit = applicationPreferences.temperatureUnit, this::updateTemperatureUnit),
-        SettingItem.TemperaturePrecisionItem(precision = applicationPreferences.temperaturePrecision, this::updateTemperaturePrecision),
+        SettingItem.TemperatureUnitItem(unit = preferences.temperatureUnit, this::updateTemperatureUnit),
+        SettingItem.TemperaturePrecisionItem(precision = preferences.temperaturePrecision, this::updateTemperaturePrecision),
         SettingItem.ButtonAutoHide(active = preferences.isButtonAutohide, this::updateButtonAutoHide),
         SettingItem.InfoButton(visible = preferences.isShowChannelInfo, this::updateInfoButton),
         SettingItem.BottomMenu(visible = preferences.isShowBottomMenu, this::updateBottomMenu),
         SettingItem.BottomLabels(visible = preferences.isShowBottomLabel, enabled = true, this::updateBottomLabel),
         SettingItem.UnavailableChannelsVisibility(hidden = preferences.hideUnavailableChannels, this::updateUnavailableChannels),
         SettingItem.RollerShutterOpenClose(showOpeningPercentage = preferences.isShowOpeningPercent, this::updateShowingOpeningPercentage),
-        SettingItem.NightMode(nightModeSetting = applicationPreferences.nightMode, this::updateNightMode),
+        SettingItem.NightMode(nightModeSetting = preferences.nightMode, this::updateNightMode),
         SettingItem.LockScreen(lockScreenScope = encryptedPreferences.lockScreenSettings.scope, this::updateLockScreen),
-        SettingItem.BatteryWarningLevel(level = applicationPreferences.batteryWarningLevel, this::updateBatteryWarningLevel),
+        SettingItem.BatteryWarningLevel(level = preferences.batteryWarningLevel, this::updateBatteryWarningLevel),
         SettingItem.NavigationItem(R.string.location_ordering) { sendEvent(SettingsViewEvent.NavigateToLocalizationsOrdering) },
         SettingItem.NavigationItem(R.string.settings_android_auto_label) { sendEvent(SettingsViewEvent.NavigateToAndroidAuto) },
         SettingItem.NavigationItem(R.string.settings_nfc_label) { sendEvent(SettingsViewEvent.NavigateToNfc) },
@@ -91,16 +89,19 @@ class SettingsViewModel @Inject constructor(
       listOf(
         SettingItem.HeaderItem(headerResource = R.string.menubar_appsettings),
         SettingItem.ChannelHeightItem(height = getChannelHeight(), this::updateChannelHeight),
-        SettingItem.TemperatureUnitItem(unit = applicationPreferences.temperatureUnit, this::updateTemperatureUnit),
-        SettingItem.TemperaturePrecisionItem(precision = applicationPreferences.temperaturePrecision, this::updateTemperaturePrecision),
+        SettingItem.TemperatureUnitItem(unit = preferences.temperatureUnit, this::updateTemperatureUnit),
+        SettingItem.TemperaturePrecisionItem(precision = preferences.temperaturePrecision, this::updateTemperaturePrecision),
         SettingItem.ButtonAutoHide(active = preferences.isButtonAutohide, this::updateButtonAutoHide),
         SettingItem.InfoButton(visible = preferences.isShowChannelInfo, this::updateInfoButton),
         SettingItem.BottomMenu(visible = preferences.isShowBottomMenu, this::updateBottomMenu),
         SettingItem.BottomLabels(visible = preferences.isShowBottomLabel, enabled = true, this::updateBottomLabel),
-        SettingItem.RollerShutterOpenClose(showOpeningPercentage = preferences.isShowOpeningPercent, this::updateShowingOpeningPercentage),
-        SettingItem.NightMode(nightModeSetting = applicationPreferences.nightMode, this::updateNightMode),
+        SettingItem.RollerShutterOpenClose(
+          showOpeningPercentage = preferences.isShowOpeningPercent,
+          this::updateShowingOpeningPercentage
+        ),
+        SettingItem.NightMode(nightModeSetting = preferences.nightMode, this::updateNightMode),
         SettingItem.LockScreen(lockScreenScope = encryptedPreferences.lockScreenSettings.scope, this::updateLockScreen),
-        SettingItem.BatteryWarningLevel(level = applicationPreferences.batteryWarningLevel, this::updateBatteryWarningLevel),
+        SettingItem.BatteryWarningLevel(level = preferences.batteryWarningLevel, this::updateBatteryWarningLevel),
         SettingItem.NavigationItem(R.string.location_ordering) { sendEvent(SettingsViewEvent.NavigateToLocalizationsOrdering) },
         SettingItem.NavigationItem(R.string.settings_nfc_label) { sendEvent(SettingsViewEvent.NavigateToNfc) },
 
@@ -125,11 +126,11 @@ class SettingsViewModel @Inject constructor(
   }
 
   private fun updateTemperatureUnit(position: Int) {
-    applicationPreferences.temperatureUnit = TemperatureUnit.forPosition(position)
+    preferences.temperatureUnit = TemperatureUnit.forPosition(position)
   }
 
   private fun updateTemperaturePrecision(position: Int) {
-    applicationPreferences.temperaturePrecision = position + 1
+    preferences.temperaturePrecision = position + 1
   }
 
   private fun updateButtonAutoHide(value: Boolean) {
@@ -157,7 +158,7 @@ class SettingsViewModel @Inject constructor(
   }
 
   private fun updateNightMode(setting: NightModeSetting) {
-    applicationPreferences.nightMode = setting
+    preferences.nightMode = setting
     if (VERSION.SDK_INT >= VERSION_CODES.S) {
       modeManager.setApplicationNightMode(setting.modeManagerValue())
     } else {
@@ -180,7 +181,7 @@ class SettingsViewModel @Inject constructor(
   }
 
   private fun updateBatteryWarningLevel(level: Int) {
-    applicationPreferences.batteryWarningLevel = level
+    preferences.batteryWarningLevel = level
   }
 
   private fun goToSettings() {

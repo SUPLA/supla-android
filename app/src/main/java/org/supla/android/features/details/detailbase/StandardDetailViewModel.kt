@@ -18,8 +18,8 @@ package org.supla.android.features.details.detailbase
  */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.supla.android.Preferences
 import org.supla.android.core.shared.shareable
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.base.BaseDetailViewEvent
@@ -38,7 +38,7 @@ class StandardDetailViewModel @Inject constructor(
   readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   updateEventsManager: UpdateEventsManager,
-  preferences: Preferences,
+  preferences: ApplicationPreferences,
   schedulers: SuplaSchedulers
 ) : BaseDetailViewModel<StandardDetailViewState, StandardDetailViewEvent>(
   readChannelByRemoteIdUseCase,

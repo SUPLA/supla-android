@@ -25,8 +25,8 @@ import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.supla.android.Preferences
 import org.supla.android.R
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
@@ -45,7 +45,7 @@ class ElectricityMeterGeneralStateHandlerTest {
   private lateinit var noExtendedValueStateHandler: NoExtendedValueStateHandler
 
   @MockK
-  private lateinit var preferences: Preferences
+  private lateinit var preferences: ApplicationPreferences
 
   @InjectMockKs
   private lateinit var handler: ElectricityMeterGeneralStateHandler

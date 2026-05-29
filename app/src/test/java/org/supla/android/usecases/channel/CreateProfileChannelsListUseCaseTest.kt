@@ -11,7 +11,7 @@ import io.reactivex.rxjava3.core.Single
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.supla.android.Preferences
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.ChannelRelationRepository
 import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
@@ -62,7 +62,7 @@ class CreateProfileChannelsListUseCaseTest {
   private lateinit var getChannelChildrenTreeUseCase: GetChannelChildrenTreeUseCase
 
   @MockK
-  private lateinit var preferences: Preferences
+  private lateinit var preferences: ApplicationPreferences
 
   @MockK
   private lateinit var downloadEventsManager: DownloadEventsManager

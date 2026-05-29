@@ -37,7 +37,6 @@ import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.gray
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
-import org.supla.android.extensions.thermometerValuesFormatter
 import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString

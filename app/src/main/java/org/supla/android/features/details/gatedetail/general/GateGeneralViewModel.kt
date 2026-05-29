@@ -18,8 +18,8 @@ package org.supla.android.features.details.gatedetail.general
  */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.supla.android.Preferences
 import org.supla.android.R
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
@@ -56,7 +56,7 @@ class GateGeneralViewModel @Inject constructor(
   override val getChannelStateUseCase: GetChannelStateUseCase,
   override val getChannelIconUseCase: GetChannelIconUseCase,
   override val getCaptionUseCase: GetCaptionUseCase,
-  private val preferences: Preferences,
+  private val preferences: ApplicationPreferences,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<GateGeneralModelState, GateGeneralViewEvent>(GateGeneralModelState(), schedulers),
   GateGeneralScope,

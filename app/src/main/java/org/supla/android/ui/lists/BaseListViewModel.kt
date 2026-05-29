@@ -20,9 +20,9 @@ package org.supla.android.ui.lists
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import androidx.annotation.CallSuper
 import io.reactivex.rxjava3.core.Observable
-import org.supla.android.PREF_CHANNEL_HEIGHT
-import org.supla.android.Preferences
 import org.supla.android.core.infrastructure.DateProvider
+import org.supla.android.core.storage.ApplicationPreferences
+import org.supla.android.core.storage.PREF_CHANNEL_HEIGHT
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
@@ -36,7 +36,7 @@ import org.supla.core.shared.data.model.general.SuplaFunction
 private const val CLICK_EVENT_DELAY_MS = 250
 
 abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
-  private val preferences: Preferences,
+  private val preferences: ApplicationPreferences,
   private val dateProvider: DateProvider,
   schedulers: SuplaSchedulers,
   defaultState: S,
