@@ -32,13 +32,13 @@ import androidx.work.workDataOf
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import org.supla.android.core.infrastructure.DateProvider
+import org.supla.android.core.infrastructure.suplaclient.SingleCallProvider
 import org.supla.android.core.notifications.NotificationsHelper.Companion.areNotificationsEnabled
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.lib.SuplaClient
-import org.supla.android.lib.singlecall.SingleCall
 import timber.log.Timber
 import java.util.Date
 import java.util.concurrent.TimeUnit
@@ -47,7 +47,7 @@ private const val ONE_DAY_MILLIS = 24 * 60 * 60 * 1000
 
 @HiltWorker
 class UpdateTokenWorker @AssistedInject constructor(
-  private val singleCallProvider: SingleCall.Provider,
+  private val singleCallProvider: SingleCallProvider,
   private val profileRepository: ProfileRepository,
   private val encryptedPreferences: EncryptedPreferences,
   private val channelRepository: RoomChannelRepository,
@@ -88,17 +88,17 @@ class UpdateTokenWorker @AssistedInject constructor(
     allProfiles.forEach { profile ->
 
       val previousEnabled = encryptedPreferences.notificationsLastEnabled
-      val previousToken = encryptedPreferences.getFcmProfileToken(profile.id!!)
+      val previousToken = encryptedPreferences.getFcmProfileToken(profile.id)
 
       if (token == previousToken && tokenUpdateNotNeeded() && notificationsEnabled == previousEnabled) {
         Timber.d("Profile `${profile.name}` has active token set - skipping")
         return@forEach
       }
-      if (profile.emailAuth && profile.serverForEmail.isNullOrEmpty()) {
+      if (profile.emailAuth && profile.serverForEmail.isEmpty()) {
         Timber.w("Profile `${profile.name}` has server address not set - skipping")
         return@forEach
       }
-      if (!profile.emailAuth && profile.serverForAccessId.isNullOrEmpty()) {
+      if (!profile.emailAuth && profile.serverForAccessId.isEmpty()) {
         Timber.w("Profile `${profile.name}` has server address not set - skipping")
         return@forEach
       }

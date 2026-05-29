@@ -93,7 +93,7 @@ class DoubleWidgetConfigurationViewModel @Inject constructor(
   private fun loadForAdd() {
     readAllProfilesUseCase()
       .flatMapSingle { profiles ->
-        profiles.firstOrNull { it.active == true }?.id?.let { profileId ->
+        profiles.firstOrNull { it.active }?.id?.let { profileId ->
           return@flatMapSingle getSubjectsSource(profileId, SubjectType.CHANNEL).map { Pair(profiles, it) }
         }
         Single.just(Pair(profiles, emptyList()))
@@ -101,7 +101,7 @@ class DoubleWidgetConfigurationViewModel @Inject constructor(
       .attach()
       .subscribeBy(
         onNext = { (profiles, subjects) ->
-          val activeProfile = profiles.first { it.active == true }
+          val activeProfile = profiles.first { it.active }
           updateState { state ->
             state.copy(
               viewState = state.viewState.copy(

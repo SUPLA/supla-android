@@ -80,10 +80,9 @@ class LoadActiveProfileUrlUseCaseTest {
   @Test
   fun `should get supla cloud when no url defined`() {
     // given
-    val url = "srv1.supla.org"
     val profile: ProfileEntity = mockk {
       every { emailAuth } returns false
-      every { serverForAccessId } returns null
+      every { serverForAccessId } returns ""
       every { serverAutoDetect } returns false
     }
     whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profile))

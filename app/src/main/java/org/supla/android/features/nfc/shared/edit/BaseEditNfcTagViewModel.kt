@@ -196,7 +196,7 @@ open class BaseEditNfcTagViewModel(
       sendEvent(EditNfcTagViewEvent.Close)
       return
     }
-    val profileId = profileId ?: profiles.firstOrNull { it.active == true }?.id
+    val profileId = profileId ?: profiles.firstOrNull { it.active }?.id
     val subjectType = subjectType ?: SubjectType.CHANNEL
 
     val subjects = schedulers.io {

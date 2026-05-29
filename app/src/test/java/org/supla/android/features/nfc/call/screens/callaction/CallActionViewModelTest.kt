@@ -39,6 +39,7 @@ import org.supla.android.core.MainDispatcherRule
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.infrastructure.NativeLoader
 import org.supla.android.core.infrastructure.UriProxy
+import org.supla.android.core.infrastructure.suplaclient.SingleCallProvider
 import org.supla.android.data.source.NfcCallRepository
 import org.supla.android.data.source.NfcTagRepository
 import org.supla.android.data.source.local.entity.NfcCallResult
@@ -58,7 +59,7 @@ class CallActionViewModelTest :
   override val mainDispatcherRule = MainDispatcherRule()
 
   @MockK
-  private lateinit var singleCallProvider: SingleCall.Provider
+  private lateinit var singleCallProvider: SingleCallProvider
 
   @MockK
   private lateinit var getCaptionUseCase: GetCaptionUseCase

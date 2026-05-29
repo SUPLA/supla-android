@@ -43,7 +43,7 @@ class ProfileChooser(
 
   fun selectProfile(idx: Int) {
     try {
-      activateProfileUseCase(profiles[idx].id!!, false)
+      activateProfileUseCase(profiles[idx].id, false)
         .subscribeOn(Schedulers.io())
         .blockingAwait()
     } catch (throwable: Throwable) {
@@ -77,9 +77,9 @@ class ProfileChooser(
       vh: RecyclerView.ViewHolder,
       pos: Int
     ) {
-      val itm = profiles.get(pos)
+      val itm = profiles.getOrNull(pos)
       if (vh is ItemViewHolder) {
-        vh.binding.viewModel = ItemViewModel(itm.name, itm.active == true)
+        vh.binding.viewModel = ItemViewModel((itm?.name ?: ""), itm?.active == true)
         vh.binding.root.setOnClickListener {
           host.selectProfile(pos)
         }

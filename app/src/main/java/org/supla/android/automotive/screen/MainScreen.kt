@@ -42,6 +42,7 @@ import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.infrastructure.TextToSpeechHelper
+import org.supla.android.core.infrastructure.suplaclient.SingleCallProvider
 import org.supla.android.data.source.AndroidAutoItemRepository
 import org.supla.android.data.source.local.entity.AndroidAutoItemEntity
 import org.supla.android.data.source.local.entity.complex.AndroidAutoDataEntity
@@ -61,7 +62,7 @@ class MainScreen(
   private val androidAutoItemRepository: AndroidAutoItemRepository,
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val getSceneIconUseCase: GetSceneIconUseCase,
-  private val singleCallProvider: SingleCall.Provider,
+  private val singleCallProvider: SingleCallProvider,
   private val schedulers: SuplaSchedulers,
   private val preferences: Preferences,
   updateEventsManager: UpdateEventsManager,

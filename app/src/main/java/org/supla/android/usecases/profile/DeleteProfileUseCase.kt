@@ -20,13 +20,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.core.Completable
+import kotlinx.coroutines.rx3.rxCompletable
 import org.supla.android.core.SuplaAppProvider
+import org.supla.android.core.infrastructure.suplaclient.SingleCallProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientEvent
 import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
+import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
+import org.supla.android.di.CoroutineDispatchers
 import org.supla.android.lib.SuplaClient
-import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.usecases.client.DisconnectUseCase
 import org.supla.android.widget.WidgetManager
 import timber.log.Timber
@@ -39,15 +42,17 @@ class DeleteProfileUseCase @Inject constructor(
   private val deleteProfileRelatedDataUseCase: DeleteProfileRelatedDataUseCase,
   private val activateProfileUseCase: ActivateProfileUseCase,
   private val suplaClientStateHolder: SuplaClientStateHolder,
+  private val encryptedPreferences: EncryptedPreferences,
   private val profileRepository: ProfileRepository,
-  private val singleCallProvider: SingleCall.Provider,
+  private val singleCallProvider: SingleCallProvider,
   private val disconnectUseCase: DisconnectUseCase,
   private val suplaAppProvider: SuplaAppProvider,
+  private val dispatchers: CoroutineDispatchers,
   private val widgetManager: WidgetManager
 ) {
 
   operator fun invoke(profileEntity: ProfileEntity): Completable =
-    if (profileEntity.active != true) {
+    if (!profileEntity.active) {
       deleteProfile(profileEntity)
     } else {
       removeActiveProfile(profileEntity)
@@ -56,7 +61,7 @@ class DeleteProfileUseCase @Inject constructor(
   private fun removeActiveProfile(profile: ProfileEntity): Completable =
     disconnectUseCase()
       .andThen(profileRepository.findAllProfiles().firstOrError())
-      .map { profiles -> profiles.filter { it.active != true } }
+      .map { profiles -> profiles.filter { !it.active } }
       .flatMapCompletable { profiles ->
         return@flatMapCompletable if (profiles.isEmpty()) {
           removeLastProfile(profile)
@@ -73,7 +78,7 @@ class DeleteProfileUseCase @Inject constructor(
       .andThen(Completable.fromRunnable { suplaClientStateHolder.handleEvent(SuplaClientEvent.NoAccount) })
 
   private fun removeAndActivate(toRemove: ProfileEntity, toActivate: ProfileEntity): Completable =
-    activateProfileUseCase(toActivate.id!!, true)
+    activateProfileUseCase(toActivate.id, true)
       .andThen(deleteProfile(toRemove))
 
   private fun startClient() {
@@ -82,18 +87,17 @@ class DeleteProfileUseCase @Inject constructor(
 
   private fun deleteProfile(profileEntity: ProfileEntity): Completable =
     Completable.fromRunnable {
-      profileEntity.id?.let { id ->
-        try {
-          singleCallProvider.provide(id).registerPushNotificationClientToken(SuplaClient.SUPLA_APP_ID, "", profileEntity)
-        } catch (ex: Exception) {
-          Timber.w(ex, "Token cleanup failed while profile removal (profile id: `$id`)")
-        }
-        widgetManager.onProfileRemoved(id)
+      try {
+        singleCallProvider.provide(profileEntity.id).registerPushNotificationClientToken(SuplaClient.SUPLA_APP_ID, "", profileEntity)
+      } catch (ex: Exception) {
+        Timber.w(ex, "Token cleanup failed while profile removal (profile id: `${profileEntity.id}`)")
       }
+      widgetManager.onProfileRemoved(profileEntity.id)
     }
+      .andThen(rxCompletable(dispatchers.io()) { encryptedPreferences.removeProfileCredentials(profileEntity.id) })
       .andThen(profileRepository.deleteProfile(profileEntity))
       .let { completable ->
-        profileEntity.id?.let { deleteProfileRelatedDataUseCase(it).andThen(completable) } ?: completable
+        profileEntity.id.let { deleteProfileRelatedDataUseCase(it).andThen(completable) }
       }
 
   interface ProfileRemover {

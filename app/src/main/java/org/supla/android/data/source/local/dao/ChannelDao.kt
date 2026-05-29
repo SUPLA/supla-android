@@ -412,9 +412,9 @@ interface ChannelDao {
       SELECT
         $COLUMN_ID, 
         $COLUMN_CHANNEL_REMOTE_ID, 
-        ${ChannelEntity.COLUMN_DEVICE_ID}, 
+        ${COLUMN_DEVICE_ID}, 
         $COLUMN_CAPTION,
-        ${ChannelEntity.COLUMN_TYPE}, 
+        ${COLUMN_TYPE}, 
         ${ChannelEntity.COLUMN_FUNCTION}, 
         $COLUMN_VISIBLE, 
         $COLUMN_LOCATION_ID,
@@ -422,7 +422,7 @@ interface ChannelDao {
         ${COLUMN_USER_ICON}, 
         ${ChannelEntity.COLUMN_MANUFACTURER_ID}, 
         ${ChannelEntity.COLUMN_PRODUCT_ID},
-        ${ChannelEntity.COLUMN_FLAGS}, 
+        ${COLUMN_FLAGS}, 
         ${ChannelEntity.COLUMN_PROTOCOL_VERSION}, 
         ${COLUMN_POSITION}, 
         $COLUMN_PROFILE_ID

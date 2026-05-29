@@ -83,13 +83,13 @@ abstract class BaseAuthorizationViewModel<S : AuthorizationModelState, E : ViewE
         onSuccess = { profile ->
           updateAuthorizationDialogState {
             it?.copy(
-              userName = profile.email ?: "",
+              userName = profile.email,
               isCloudAccount = profile.isCloudAccount,
               userNameEnabled = suplaClientProvider.provide()?.registered() == true,
               reason = reason,
               clarification = clarificationMessage
             ) ?: AuthorizationDialogState(
-              userName = profile.email ?: "",
+              userName = profile.email,
               isCloudAccount = profile.isCloudAccount,
               userNameEnabled = suplaClientProvider.provide()?.registered() == true,
               reason = reason,

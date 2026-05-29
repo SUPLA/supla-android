@@ -104,6 +104,6 @@ abstract class AppDatabase : RoomDatabase() {
 
   companion object {
     const val NAME = "supla.db"
-    const val VERSION = 47
+    const val VERSION = 48
   }
 }

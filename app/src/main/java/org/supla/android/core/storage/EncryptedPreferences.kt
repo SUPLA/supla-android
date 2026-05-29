@@ -35,6 +35,7 @@ import com.google.crypto.tink.RegistryConfiguration
 import com.google.crypto.tink.aead.AeadConfig
 import com.google.crypto.tink.aead.PredefinedAeadParameters
 import com.google.crypto.tink.integration.android.AndroidKeysetManager
+import com.google.gson.GsonBuilder
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -43,10 +44,14 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.supla.android.core.storage.migration.LegacyEncryptedPreferencesMigration
 import org.supla.android.data.model.general.LockScreenSettings
+import org.supla.android.data.model.settings.ProfileCredentials
+import org.supla.android.di.RANDOM_GENERATOR
 import java.io.File
 import java.util.Date
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
+import kotlin.random.Random
 
 private const val DATASTORE_FILE_NAME = "secured_preferences.preferences_pb"
 private const val TINK_KEYSET_SHARED_PREFERENCES_NAME = "secured_preferences_tink_keyset_prefs"
@@ -54,6 +59,7 @@ private const val TINK_KEYSET_NAME = "secured_preferences_tink_keyset"
 private const val MASTER_KEY_URI = "android-keystore://secured_preferences_master_key"
 
 private const val FCM_PROFILE_TOKEN_KEY_PREFIX = "FCM_PROFILE_TOKEN_KEY_"
+private const val PROFILE_CREDENTIALS_PREFIX = "PROFILE_AUTHORIZATION_DATA_"
 
 val FCM_TOKEN_KEY = stringPreferencesKey("FCM_TOKEN_KEY")
 val FCM_TOKEN_LAST_UPDATE_KEY = longPreferencesKey("FCM_TOKEN_LAST_UPDATE_KEY")
@@ -67,7 +73,8 @@ val WIZARD_WIFI_PASSWORD_KEY = stringPreferencesKey("WIZARD_WIFI_PASSWORD_KEY")
 
 @Singleton
 class EncryptedPreferences @Inject constructor(
-  @param:ApplicationContext private val context: Context
+  @param:ApplicationContext private val context: Context,
+  @param:Named(RANDOM_GENERATOR) private val randomGenerator: Random
 ) {
 
   private val dataStoreFile = File(context.filesDir, "datastore/$DATASTORE_FILE_NAME").apply {
@@ -75,6 +82,7 @@ class EncryptedPreferences @Inject constructor(
   }
 
   private val ioScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+  private val gson = GsonBuilder().create()
 
   private val preferences: DataStore<Preferences> by lazy {
     DataStoreFactory.create(
@@ -176,6 +184,35 @@ class EncryptedPreferences @Inject constructor(
     }
   }
 
+  fun getProfileCredentialsBlocking(profileId: Long): ProfileCredentials =
+    runBlocking {
+      getProfileCredentials(profileId)
+    }
+
+  suspend fun getProfileCredentials(profileId: Long): ProfileCredentials {
+    val key = profileCredentialsKey(profileId)
+    val data = runCatching { gson.fromJson(preferences.data.first()[key], ProfileCredentials::class.java) }.getOrNull()
+    if (data != null) {
+      return data
+    }
+
+    val createdData = ProfileCredentials.create(randomGenerator)
+    preferences.edit { it[key] = gson.toJson(data) }
+    return createdData
+  }
+
+  suspend fun setProfileCredentials(profileId: Long, data: ProfileCredentials) {
+    preferences.edit {
+      it[profileCredentialsKey(profileId)] = gson.toJson(data)
+    }
+  }
+
+  suspend fun removeProfileCredentials(profileId: Long) {
+    preferences.edit {
+      it.remove(profileCredentialsKey(profileId))
+    }
+  }
+
   private fun <T> readValue(block: (Preferences) -> T): T {
     return runBlocking(Dispatchers.IO) {
       block(preferences.data.first())
@@ -210,3 +247,4 @@ private fun createAead(context: Context): Aead {
 }
 
 private fun fcmProfileTokenKey(profileId: Long) = stringPreferencesKey("$FCM_PROFILE_TOKEN_KEY_PREFIX$profileId")
+private fun profileCredentialsKey(profileId: Long) = stringPreferencesKey("$PROFILE_CREDENTIALS_PREFIX$profileId")

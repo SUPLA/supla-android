@@ -17,124 +17,43 @@ package org.supla.android.data.source.local.entity
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.content.ContentValues
-import android.content.Context
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import org.supla.android.data.source.local.entity.ProfileEntity.Companion.TABLE_NAME
-import org.supla.android.lib.dto.AuthDataDto
-import org.supla.android.lib.dto.AuthDataDto.Companion.decrypt
 
 @Entity(
   tableName = TABLE_NAME,
 )
 data class ProfileEntity(
-  @ColumnInfo(name = COLUMN_ID) @PrimaryKey val id: Long?,
+  @ColumnInfo(name = COLUMN_ID) @PrimaryKey(autoGenerate = true) val id: Long,
   @ColumnInfo(name = COLUMN_NAME) val name: String,
-  @ColumnInfo(name = COLUMN_EMAIL) val email: String?,
-  @ColumnInfo(name = COLUMN_SERVER_FOR_ACCESS_ID) val serverForAccessId: String?,
-  @ColumnInfo(name = COLUMN_SERVER_FOR_EMAIL) val serverForEmail: String?,
+  @ColumnInfo(name = COLUMN_EMAIL) val email: String,
+  @ColumnInfo(name = COLUMN_SERVER_FOR_ACCESS_ID) val serverForAccessId: String,
+  @ColumnInfo(name = COLUMN_SERVER_FOR_EMAIL) val serverForEmail: String,
   @ColumnInfo(name = COLUMN_SERVER_AUTO_DETECT) val serverAutoDetect: Boolean,
   @ColumnInfo(name = COLUMN_EMAIL_AUTH) val emailAuth: Boolean,
-  @ColumnInfo(name = COLUMN_ACCESS_ID) val accessId: Int?,
-  @ColumnInfo(name = COLUMN_ACCESS_ID_PASSWORD) val accessIdPassword: String?,
-  @ColumnInfo(name = COLUMN_PREFERRED_PROTOCOL_VERSION) val preferredProtocolVersion: Int?,
-  @ColumnInfo(name = COLUMN_ACTIVE) val active: Boolean?,
-  @ColumnInfo(name = COLUMN_ADVANCED_MODE) val advancedMode: Boolean?,
-  @ColumnInfo(name = COLUMN_POSITION, defaultValue = "0") val position: Int,
-  @ColumnInfo(name = COLUMN_GUID, typeAffinity = ColumnInfo.BLOB) val guid: ByteArray?,
-  @ColumnInfo(name = COLUMN_AUTH_KEY, typeAffinity = ColumnInfo.BLOB) val authKey: ByteArray?,
+  @ColumnInfo(name = COLUMN_ACCESS_ID) val accessId: Int,
+  @ColumnInfo(name = COLUMN_PREFERRED_PROTOCOL_VERSION) val preferredProtocolVersion: Int,
+  @ColumnInfo(name = COLUMN_ACTIVE) val active: Boolean,
+  @ColumnInfo(name = COLUMN_ADVANCED_MODE) val advancedMode: Boolean,
+  @ColumnInfo(name = COLUMN_POSITION, defaultValue = "0") val position: Int
 ) {
-
-  val authDataDto: AuthDataDto
-    get() =
-      AuthDataDto(
-        emailAuth = emailAuth,
-        emailAddress = email ?: "",
-        serverForEmail = serverForEmail ?: "",
-        accessId = accessId ?: 0,
-        accessIdPassword = accessIdPassword ?: "",
-        serverForAccessId = serverForAccessId ?: "",
-        preferredProtocolVersion = preferredProtocolVersion ?: 0,
-        guid = guid ?: byteArrayOf(),
-        authKey = authKey ?: byteArrayOf()
-      )
-
   /**
    Returns server used for current authentication method
    */
   val serverForCurrentAuthMethod: String
-    get() = if (emailAuth) serverForEmail ?: "" else serverForAccessId ?: ""
+    get() = if (emailAuth) serverForEmail else serverForAccessId
 
   val serverUrlString: String
     get() = "https://$serverForCurrentAuthMethod"
 
-  val isAuthDataComplete: Boolean
-    get() {
-      return if (emailAuth) {
-        email?.isNotEmpty() == true &&
-          (serverAutoDetect || serverForEmail?.isNotEmpty() == true)
-      } else {
-        serverForAccessId?.isNotEmpty() == true &&
-          (accessId ?: 0) > 0 &&
-          accessIdPassword?.isNotEmpty() == true
-      }
-    }
-
-  val contentValues: ContentValues
-    get() = ContentValues().apply {
-      put(COLUMN_NAME, name)
-      put(COLUMN_EMAIL, email)
-      put(COLUMN_SERVER_FOR_ACCESS_ID, serverForAccessId)
-      put(COLUMN_SERVER_FOR_EMAIL, serverForEmail)
-      put(COLUMN_SERVER_AUTO_DETECT, serverAutoDetect)
-      put(COLUMN_EMAIL_AUTH, emailAuth)
-      put(COLUMN_ACCESS_ID, accessId)
-      put(COLUMN_ACCESS_ID_PASSWORD, accessIdPassword)
-      put(COLUMN_PREFERRED_PROTOCOL_VERSION, preferredProtocolVersion)
-      put(COLUMN_ACTIVE, active)
-      put(COLUMN_ADVANCED_MODE, advancedMode)
-      put(COLUMN_POSITION, position)
-      put(COLUMN_GUID, guid)
-      put(COLUMN_AUTH_KEY, authKey)
-    }
-
-  fun authDataChanged(other: ProfileEntity): Boolean {
-    if (emailAuth != other.emailAuth) {
-      // Authorization method changed so we're not able to compare if same account will be used.
-      return true
-    }
-
-    return if (emailAuth) {
-      (
-        email != other.email ||
-          serverForEmail != other.serverForEmail ||
-          serverAutoDetect != other.serverAutoDetect
-        )
-    } else {
-      (
-        accessId != other.accessId ||
-          serverForAccessId != other.serverForAccessId
-        )
-    }
-  }
-
   @Ignore
-  val isCloudAccount =
-    serverForEmail?.contains(".supla.org") == true
-
-  fun getDecryptedGuid(context: Context): ByteArray? {
-    return guid?.let { decrypt(it, context) }
-  }
-
-  fun getDecryptedAuthKey(context: Context): ByteArray? {
-    return authKey?.let { decrypt(it, context) }
-  }
+  val isCloudAccount = serverForEmail.contains(".supla.org")
 
   companion object {
-    const val TABLE_NAME = "auth_profile"
+    const val TABLE_NAME = "profiles"
     const val COLUMN_ID = "_auth_profile_id"
     const val COLUMN_NAME = "profile_name"
     const val COLUMN_EMAIL = "email_addr"
@@ -143,13 +62,10 @@ data class ProfileEntity(
     const val COLUMN_SERVER_AUTO_DETECT = "server_auto_detect"
     const val COLUMN_EMAIL_AUTH = "email_auth"
     const val COLUMN_ACCESS_ID = "access_id"
-    const val COLUMN_ACCESS_ID_PASSWORD = "access_id_pwd"
     const val COLUMN_PREFERRED_PROTOCOL_VERSION = "pref_protcol_ver"
     const val COLUMN_ACTIVE = "is_active"
     const val COLUMN_ADVANCED_MODE = "is_advanced"
     const val COLUMN_POSITION = "position"
-    const val COLUMN_GUID = "guid"
-    const val COLUMN_AUTH_KEY = "auth_key"
 
     val ALL_COLUMNS = arrayOf(
       COLUMN_ID,
@@ -160,13 +76,10 @@ data class ProfileEntity(
       COLUMN_SERVER_AUTO_DETECT,
       COLUMN_EMAIL_AUTH,
       COLUMN_ACCESS_ID,
-      COLUMN_ACCESS_ID_PASSWORD,
       COLUMN_PREFERRED_PROTOCOL_VERSION,
       COLUMN_ACTIVE,
       COLUMN_ADVANCED_MODE,
-      COLUMN_POSITION,
-      COLUMN_GUID,
-      COLUMN_AUTH_KEY
+      COLUMN_POSITION
     )
 
     const val ALL_COLUMNS_STRING = """
@@ -178,13 +91,10 @@ data class ProfileEntity(
       $COLUMN_SERVER_AUTO_DETECT,
       $COLUMN_EMAIL_AUTH,
       $COLUMN_ACCESS_ID,
-      $COLUMN_ACCESS_ID_PASSWORD,
       $COLUMN_PREFERRED_PROTOCOL_VERSION,
       $COLUMN_ACTIVE,
       $COLUMN_ADVANCED_MODE,
-      $COLUMN_POSITION,
-      $COLUMN_GUID,
-      $COLUMN_AUTH_KEY
+      $COLUMN_POSITION
     """
 
     const val SUBQUERY_ACTIVE = "(SELECT $COLUMN_ID FROM $TABLE_NAME WHERE $COLUMN_ACTIVE = 1)"
@@ -199,54 +109,10 @@ data class ProfileEntity(
         profile.$COLUMN_SERVER_AUTO_DETECT profile_$COLUMN_SERVER_AUTO_DETECT,
         profile.$COLUMN_EMAIL_AUTH profile_$COLUMN_EMAIL_AUTH,
         profile.$COLUMN_ACCESS_ID profile_$COLUMN_ACCESS_ID,
-        profile.$COLUMN_ACCESS_ID_PASSWORD profile_$COLUMN_ACCESS_ID_PASSWORD,
         profile.$COLUMN_PREFERRED_PROTOCOL_VERSION profile_$COLUMN_PREFERRED_PROTOCOL_VERSION,
         profile.$COLUMN_ACTIVE profile_$COLUMN_ACTIVE,
         profile.$COLUMN_ADVANCED_MODE profile_$COLUMN_ADVANCED_MODE,
-        profile.$COLUMN_POSITION profile_$COLUMN_POSITION,
-        profile.$COLUMN_GUID profile_$COLUMN_GUID,
-        profile.$COLUMN_AUTH_KEY profile_$COLUMN_AUTH_KEY"""
-  }
-
-  override fun equals(other: Any?): Boolean {
-    if (this === other) return true
-    if (javaClass != other?.javaClass) return false
-
-    other as ProfileEntity
-
-    if (id != other.id) return false
-    if (name != other.name) return false
-    if (email != other.email) return false
-    if (serverForAccessId != other.serverForAccessId) return false
-    if (serverForEmail != other.serverForEmail) return false
-    if (serverAutoDetect != other.serverAutoDetect) return false
-    if (emailAuth != other.emailAuth) return false
-    if (accessId != other.accessId) return false
-    if (accessIdPassword != other.accessIdPassword) return false
-    if (preferredProtocolVersion != other.preferredProtocolVersion) return false
-    if (active != other.active) return false
-    if (advancedMode != other.advancedMode) return false
-    if (position != other.position) return false
-    if (!guid.contentEquals(other.guid)) return false
-    return authKey.contentEquals(other.authKey)
-  }
-
-  override fun hashCode(): Int {
-    var result = id.hashCode()
-    result = 31 * result + name.hashCode()
-    result = 31 * result + (email?.hashCode() ?: 0)
-    result = 31 * result + (serverForAccessId?.hashCode() ?: 0)
-    result = 31 * result + (serverForEmail?.hashCode() ?: 0)
-    result = 31 * result + serverAutoDetect.hashCode()
-    result = 31 * result + emailAuth.hashCode()
-    result = 31 * result + (accessId ?: 0)
-    result = 31 * result + (accessIdPassword?.hashCode() ?: 0)
-    result = 31 * result + (preferredProtocolVersion ?: 0)
-    result = 31 * result + active.hashCode()
-    result = 31 * result + advancedMode.hashCode()
-    result = 31 * result + position.hashCode()
-    result = 31 * result + guid.contentHashCode()
-    result = 31 * result + authKey.contentHashCode()
-    return result
+        profile.$COLUMN_POSITION profile_$COLUMN_POSITION
+      """
   }
 }

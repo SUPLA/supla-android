@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.infrastructure.UriProxy
 import org.supla.android.core.infrastructure.nfc.tagUuid
+import org.supla.android.core.infrastructure.suplaclient.SingleCallProvider
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewModelState
@@ -44,7 +45,7 @@ private const val SUCCESS_DELAY_MS: Long = 2000
 
 @HiltViewModel
 class CallActionViewModel @Inject constructor(
-  private val singleCallProvider: SingleCall.Provider,
+  private val singleCallProvider: SingleCallProvider,
   private val getCaptionUseCase: GetCaptionUseCase,
   private val nfcCallRepository: NfcCallRepository,
   private val nfcTagRepository: NfcTagRepository,

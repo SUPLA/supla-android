@@ -2,6 +2,7 @@ package org.supla.android.features.createaccount
 
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.local.entity.ProfileEntity
+import org.supla.android.usecases.profile.ProfileDto
 
 data class CreateAccountViewState(
   val advancedMode: Boolean = false,
@@ -26,8 +27,8 @@ data class CreateAccountViewState(
   val loading: Boolean = false
 ) : ViewState() {
 
-  fun toProfileItem() = ProfileEntity(
-    id = null,
+  fun toProfileDto() = ProfileDto(
+    id = 0,
     name = accountName.trim(),
     advancedMode = advancedMode,
     emailAuth = authorizeByEmail,
@@ -37,15 +38,13 @@ data class CreateAccountViewState(
     email = emailAddress,
     accessId = accessIdentifierAsInt,
     accessIdPassword = accessIdentifierPassword,
-    preferredProtocolVersion = 0,
     active = false,
-    position = 0,
-    guid = byteArrayOf(),
-    authKey = byteArrayOf()
+    position = 0
   )
 
-  fun updateProfile(profile: ProfileEntity) =
-    profile.copy(
+  fun profileDtoFrom(profile: ProfileEntity) =
+    ProfileDto(
+      id = profile.id,
       name = accountName,
       advancedMode = advancedMode,
       emailAuth = authorizeByEmail,
@@ -54,14 +53,16 @@ data class CreateAccountViewState(
       serverForAccessId = accessIdentifierServer,
       email = emailAddress,
       accessId = accessIdentifierAsInt,
-      accessIdPassword = accessIdentifierPassword
+      accessIdPassword = accessIdentifierPassword,
+      active = profile.active,
+      position = profile.position
     )
 
   private val accessIdentifierAsInt: Int
     get() = accessIdentifier.run {
       try {
         accessIdentifier.toInt()
-      } catch (ex: NumberFormatException) {
+      } catch (_: NumberFormatException) {
         0
       }
     }

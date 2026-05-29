@@ -17,13 +17,13 @@ package org.supla.android.widget.extended.value
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.core.infrastructure.suplaclient.SingleCallProvider
 import org.supla.android.data.source.local.entity.complex.WidgetConfigurationDataEntity
 import org.supla.android.data.source.local.entity.custom.Phase
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.lib.singlecall.ElectricityMeterValue
 import org.supla.android.lib.singlecall.ResultException
-import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.widget.extended.WidgetValue
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.data.model.suplaclient.SuplaResultCode
@@ -35,7 +35,7 @@ import javax.inject.Singleton
 
 @Singleton
 class ExtendedValueWidgetProvider @Inject constructor(
-  singleCallProvider: SingleCall.Provider
+  singleCallProvider: SingleCallProvider
 ) {
 
   private val providers: List<WidgetValueProvider> = listOf(
@@ -54,7 +54,7 @@ interface WidgetValueProvider {
 }
 
 class ElectricityMeterWidgetValueProvider(
-  private val singleCallProvider: SingleCall.Provider
+  private val singleCallProvider: SingleCallProvider
 ) : WidgetValueProvider {
   val formatter = ElectricityMeterValueFormatter()
 

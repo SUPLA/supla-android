@@ -49,6 +49,7 @@ import org.supla.android.db.room.app.migrations.MIGRATION_46_47
 import org.supla.android.db.room.app.migrations.Migration25to26
 import org.supla.android.db.room.app.migrations.Migration26to27
 import org.supla.android.db.room.app.migrations.Migration27to28
+import org.supla.android.db.room.app.migrations.Migration47to48
 import org.supla.android.db.room.measurements.MeasurementsDatabase
 import org.supla.android.db.room.measurements.migrations.MEASUREMENTS_DB_MIGRATION_31_32
 import org.supla.android.db.room.measurements.migrations.MEASUREMENTS_DB_MIGRATION_32_33
@@ -70,7 +71,8 @@ class DatabaseModule {
     callback: AppDatabaseCallback,
     migration25to26: Migration25to26,
     migration26to27: Migration26to27,
-    migration27to28: Migration27to28
+    migration27to28: Migration27to28,
+    migration47to48: Migration47to48
   ) =
     Room.databaseBuilder(context, AppDatabase::class.java, AppDatabase.NAME)
       .let {
@@ -105,7 +107,8 @@ class DatabaseModule {
         MIGRATION_43_44,
         MIGRATION_44_45,
         MIGRATION_45_46,
-        MIGRATION_46_47
+        MIGRATION_46_47,
+        migration47to48
       )
       .build()
 
