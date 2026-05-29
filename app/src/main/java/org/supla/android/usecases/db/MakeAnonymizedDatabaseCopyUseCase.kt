@@ -59,12 +59,7 @@ class MakeAnonymizedDatabaseCopyUseCase @Inject constructor(
 
     try {
       val dbHelper = CopyDbHelper(context, DATABASE_COPY_FILE_NAME, AppDatabase.VERSION)
-      val emptyBlob = ByteArray(0)
-      val bindArgs = arrayOf<Any>(emptyBlob)
-      dbHelper.writableDatabase.execSQL("UPDATE ${ProfileEntity.TABLE_NAME} SET ${ProfileEntity.COLUMN_GUID} = ?", bindArgs)
-      dbHelper.writableDatabase.execSQL("UPDATE ${ProfileEntity.TABLE_NAME} SET ${ProfileEntity.COLUMN_AUTH_KEY} = ?", bindArgs)
       dbHelper.writableDatabase.execSQL("UPDATE ${ProfileEntity.TABLE_NAME} SET ${ProfileEntity.COLUMN_ACCESS_ID} = 0")
-      dbHelper.writableDatabase.execSQL("UPDATE ${ProfileEntity.TABLE_NAME} SET ${ProfileEntity.COLUMN_ACCESS_ID_PASSWORD} = ''")
       dbHelper.writableDatabase.execSQL("UPDATE ${ProfileEntity.TABLE_NAME} SET ${ProfileEntity.COLUMN_EMAIL} = ''")
       dbHelper.close()
     } catch (ex: Exception) {

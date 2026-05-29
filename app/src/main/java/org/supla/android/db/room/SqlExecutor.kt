@@ -45,4 +45,12 @@ interface SqlExecutor {
   fun execSQL(db: SupportSQLiteDatabase, queries: Array<String>) {
     queries.forEach { execSQL(db, it) }
   }
+
+  fun silentSql(db: SupportSQLiteDatabase, sqlString: String) {
+    try {
+      execSQL(db, sqlString)
+    } catch (exception: Exception) {
+      Timber.w(exception, "Failed by `$sqlString` - ${exception.message}")
+    }
+  }
 }

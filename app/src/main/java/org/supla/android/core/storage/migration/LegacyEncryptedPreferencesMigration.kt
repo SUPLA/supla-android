@@ -1,4 +1,5 @@
 @file:Suppress("DEPRECATION")
+
 package org.supla.android.core.storage.migration
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
@@ -45,7 +46,6 @@ private const val DEV_LOG_KEY_NAME = "DEV_LOG_KEY"
 private const val DEV_FILTER_KEY_NAME = "DEV_FILTER_KEY"
 private const val WIZARD_WIFI_NAME_KEY_NAME = "WIZARD_WIFI_NAME"
 private const val WIZARD_WIFI_PASSWORD_KEY_NAME = "WIZARD_WIFI_PASSWORD"
-
 
 private const val LEGACY_SHARED_PREFERENCES_NAME = "secured_preferences"
 

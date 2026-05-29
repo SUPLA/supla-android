@@ -155,7 +155,7 @@ interface SubjectItemConversionScope {
     }
 
   fun List<ProfileEntity>.asSingleSelectionList(selectedId: Long? = null): SingleOptionalSelectionList<ProfileItem>? =
-    map { ProfileItem(it.id!!, LocalizedString.Constant(it.name), it.active ?: false) }
+    map { ProfileItem(it.id, LocalizedString.Constant(it.name), it.active) }
       .asSingleSelectionList(R.string.widget_configure_profile_label)
       ?.let { list ->
         list.copy(selected = list.items.firstOrNull { it.id == selectedId } ?: list.items.first { it.active })

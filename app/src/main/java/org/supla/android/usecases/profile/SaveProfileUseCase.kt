@@ -21,63 +21,90 @@ import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
-import org.supla.android.Encryption
-import org.supla.android.Preferences
+import kotlinx.coroutines.rx3.rxSingle
 import org.supla.android.R
-import org.supla.android.SuplaApp
+import org.supla.android.core.storage.EncryptedPreferences
+import org.supla.android.data.model.settings.ProfileCredentials
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
-import org.supla.android.di.RANDOM_GENERATOR
-import org.supla.android.lib.SuplaConst
+import org.supla.android.di.CoroutineDispatchers
 import org.supla.core.shared.extensions.forTrue
 import javax.inject.Inject
-import javax.inject.Named
 import javax.inject.Singleton
-import kotlin.random.Random
 
 @Singleton
 class SaveProfileUseCase @Inject constructor(
   private val deleteProfileRelatedDataUseCase: DeleteProfileRelatedDataUseCase,
+  private val encryptedPreferences: EncryptedPreferences,
   private val profileRepository: ProfileRepository,
-  @param:Named(RANDOM_GENERATOR) private val randomGenerator: Random,
-  @param:ApplicationContext private val context: Context
+  @param:ApplicationContext private val context: Context,
+  private val dispatchers: CoroutineDispatchers
 ) {
 
-  operator fun invoke(profile: ProfileEntity): Single<Result> =
+  operator fun invoke(profileDto: ProfileDto): Single<Result> =
     profileRepository.findAllProfiles()
       .firstOrError()
-      .flatMap {
-        validation(profile, it)
-          .andThen(save(profile, it))
+      .flatMap { profiles ->
+        validation(profileDto, profiles)
+          .andThen(save(profileDto, profiles))
       }
 
-  private fun save(profileEntity: ProfileEntity, profiles: List<ProfileEntity>): Single<Result> {
-    // No id - insert
-    val originalProfile = profiles.firstOrNull { it.id == profileEntity.id }
-    if (profileEntity.id == null || originalProfile == null) {
-      val toInsert = profileEntity.asNew(profiles)
-      return profileRepository.insert(toInsert)
-        .map { Result(it, reconnectNeeded = toInsert.active == true) }
-    }
+  private fun save(profileDto: ProfileDto, profiles: List<ProfileEntity>): Single<Result> {
+    val originalProfile = profiles.firstOrNull { it.id == profileDto.id }
 
-    // No authorization data change - just update
-    if (!originalProfile.authDataChanged(profileEntity)) {
-      return profileRepository.update(profileEntity)
-        .andThen(Single.just(Result(profileEntity.id, false)))
+    return if (profileDto.id == 0L || originalProfile == null) {
+      insert(profileDto, profiles)
+    } else {
+      update(profileDto, originalProfile)
     }
-
-    return deleteProfileRelatedDataUseCase(profileEntity.id)
-      .andThen(profileRepository.update(profileEntity.asUpdate()))
-      .andThen(Single.just(Result(profileEntity.id, profileEntity.active == true)))
   }
 
-  private fun encrypted(bytes: ByteArray): ByteArray {
-    val key = Preferences.getDeviceID(SuplaApp.getApp())
-    return Encryption.encryptDataWithNullOnException(bytes, key)
+  private fun insert(profileDto: ProfileDto, profiles: List<ProfileEntity>): Single<Result> {
+    val toInsert = profileDto.entity.asNew(profiles)
+    return profileRepository.insert(toInsert)
+      .flatMap { updateAccessIdPassword(it, profileDto.accessIdPassword) }
+      .map { Result(it, reconnectNeeded = toInsert.active) }
+  }
+
+  private fun update(profileDto: ProfileDto, originalProfile: ProfileEntity): Single<Result> =
+    rxSingle(dispatchers.io()) { encryptedPreferences.getProfileCredentials(profileDto.id) }
+      .flatMap { credentials ->
+        val profileEntity = profileDto.entity
+
+        if (!authDataChanged(profileDto, originalProfile, credentials)) {
+          profileRepository.update(profileEntity)
+            .andThen(Single.just(Result(profileEntity.id, false)))
+        } else {
+          deleteProfileRelatedDataUseCase(profileEntity.id)
+            .andThen(profileRepository.update(profileEntity.asUpdate()))
+            .andThen(updateAccessIdPassword(profileEntity.id, profileDto.accessIdPassword, credentials))
+            .map { Result(it, profileEntity.active) }
+        }
+      }
+
+  private fun authDataChanged(profileDto: ProfileDto, profileEntity: ProfileEntity, profileCredentials: ProfileCredentials): Boolean {
+    if (profileDto.emailAuth != profileEntity.emailAuth) {
+      // Authorization method changed so we're not able to compare if same account will be used.
+      return true
+    }
+
+    return if (profileDto.emailAuth) {
+      (
+        profileDto.email != profileEntity.email ||
+          profileDto.serverForEmail != profileEntity.serverForEmail ||
+          profileDto.serverAutoDetect != profileEntity.serverAutoDetect
+        )
+    } else {
+      (
+        profileDto.accessId != profileEntity.accessId ||
+          profileDto.serverForAccessId != profileEntity.serverForAccessId ||
+          profileDto.accessIdPassword != profileCredentials.accessIdPassword
+        )
+    }
   }
 
   private fun validation(
-    profile: ProfileEntity,
+    profile: ProfileDto,
     allProfiles: List<ProfileEntity>
   ): Completable = Completable.fromRunnable {
     if (allProfiles.isNotEmpty() && profile.name.isEmpty()) {
@@ -90,7 +117,7 @@ class SaveProfileUseCase @Inject constructor(
   }
 
   private fun isNameDuplicated(
-    profile: ProfileEntity,
+    profile: ProfileDto,
     allProfiles: List<ProfileEntity>
   ): Boolean =
     allProfiles
@@ -102,12 +129,23 @@ class SaveProfileUseCase @Inject constructor(
     copy(
       name = profiles.isEmpty().forTrue { context.getString(R.string.profile_default_name) } ?: name,
       active = profiles.isEmpty(),
-      guid = guid.isNullOrEmpty.forTrue { encrypted(randomGenerator.nextBytes(SuplaConst.SUPLA_GUID_SIZE)) } ?: guid,
-      authKey = authKey.isNullOrEmpty.forTrue { encrypted(randomGenerator.nextBytes(SuplaConst.SUPLA_AUTHKEY_SIZE)) } ?: authKey
     )
 
   private fun ProfileEntity.asUpdate(): ProfileEntity =
     copy(serverForEmail = if (isEmailWithAutoDetect) "" else serverForEmail)
+
+  private fun updateAccessIdPassword(profileId: Long, accessIdPassword: String, credentials: ProfileCredentials? = null) =
+    rxSingle(dispatchers.io()) {
+      val credentials = credentials ?: encryptedPreferences.getProfileCredentials(profileId)
+      if (accessIdPassword != credentials.accessIdPassword) {
+        encryptedPreferences.setProfileCredentials(
+          profileId = profileId,
+          data = credentials.copy(accessIdPassword = accessIdPassword)
+        )
+      }
+
+      profileId
+    }
 
   sealed class SaveAccountException : RuntimeException(null, null) {
     class EmptyName : SaveAccountException()
@@ -121,8 +159,47 @@ class SaveProfileUseCase @Inject constructor(
   )
 }
 
-private val ByteArray?.isNullOrEmpty: Boolean
-  get() = this == null || this.isEmpty()
+data class ProfileDto(
+  val id: Long,
+  val name: String,
+  val advancedMode: Boolean,
+  val emailAuth: Boolean,
+  val serverForEmail: String,
+  val serverForAccessId: String,
+  val serverAutoDetect: Boolean,
+  val email: String,
+  val accessId: Int,
+  val accessIdPassword: String,
+  val active: Boolean,
+  val position: Int
+) {
+  val isAuthDataComplete: Boolean
+    get() {
+      return if (emailAuth) {
+        email.isNotEmpty() && (serverAutoDetect || serverForEmail.isNotEmpty())
+      } else {
+        serverForAccessId.isNotEmpty() && accessId > 0 && accessIdPassword.isNotEmpty()
+      }
+    }
+
+  val entity: ProfileEntity
+    get() = ProfileEntity(
+      id = id,
+      name = name,
+      advancedMode = advancedMode,
+      emailAuth = emailAuth,
+      serverForEmail = serverForEmail,
+      serverForAccessId = serverForAccessId,
+      serverAutoDetect = serverAutoDetect,
+      email = email,
+      accessId = accessId,
+      active = active,
+      position = position,
+      preferredProtocolVersion = 0
+    )
+
+  companion object
+}
 
 private val ProfileEntity.isEmailWithAutoDetect: Boolean
   get() = emailAuth && serverAutoDetect

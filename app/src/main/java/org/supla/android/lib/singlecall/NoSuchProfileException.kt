@@ -1,4 +1,4 @@
-package org.supla.android.db.room.app.migrations
+package org.supla.android.lib.singlecall
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,21 +17,5 @@ package org.supla.android.db.room.app.migrations
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
-import org.supla.android.Preferences
-import org.supla.android.data.source.local.entity.SceneEntity
-import org.supla.android.db.room.SqlExecutor
-import javax.inject.Inject
-import javax.inject.Singleton
-
-@Singleton
-class Migration25to26 @Inject constructor(
-  private val preferences: Preferences
-) : Migration(25, 26), SqlExecutor {
-
-  override fun migrate(db: SupportSQLiteDatabase) {
-    preferences.setShouldShowNewGestureInfo()
-    execSQL(db, SceneEntity.SQL)
-  }
-}
+class NoSuchProfileException(val profileId: Long) :
+  Exception("There is no profile with the identifier $profileId")

@@ -16,9 +16,11 @@ package org.supla.android.features.createaccount
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.launch
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
@@ -27,14 +29,17 @@ import org.supla.android.features.deleteaccountweb.DeleteAccountWebFragment
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.client.ReconnectUseCase
 import org.supla.android.usecases.profile.DeleteProfileUseCase
+import org.supla.android.usecases.profile.LoadProfileWithCredentialsUseCase
+import org.supla.android.usecases.profile.ProfileDto
+import org.supla.android.usecases.profile.ProfileWithCredentials
 import org.supla.android.usecases.profile.SaveProfileUseCase
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class CreateAccountViewModel @Inject constructor(
-  private val saveProfileUseCase: SaveProfileUseCase,
+  private val loadProfileWithCredentialsUseCase: LoadProfileWithCredentialsUseCase,
   private val deleteProfileUseCase: DeleteProfileUseCase,
+  private val saveProfileUseCase: SaveProfileUseCase,
   private val profileRepository: ProfileRepository,
   private val reconnectUseCase: ReconnectUseCase,
   schedulers: SuplaSchedulers
@@ -56,30 +61,26 @@ class CreateAccountViewModel @Inject constructor(
       .disposeBySelf()
 
     if (profileId != null) {
-      profileRepository.findProfile(profileId)
-        .attach()
-        .subscribeBy(
-          onSuccess = this::onProfileLoaded,
-          onError = { throwable ->
-            Timber.e(throwable, "Could not find profile")
-          }
-        )
-        .disposeBySelf()
+      viewModelScope.launch {
+        schedulers.io { loadProfileWithCredentialsUseCase(profileId) }?.let {
+          schedulers.ui { onProfileLoaded(it) }
+        }
+      }
     }
   }
 
-  private fun onProfileLoaded(profile: ProfileEntity) = profile.apply {
+  private fun onProfileLoaded(profileWithCredentials: ProfileWithCredentials) = profileWithCredentials.profileEntity.apply {
     updateState {
       it.copy(
-        advancedMode = advancedMode == true,
+        advancedMode = advancedMode,
         accountName = name,
-        emailAddress = email ?: "",
+        emailAddress = email,
         authorizeByEmail = emailAuth,
         autoServerAddress = serverAutoDetect,
-        emailAddressServer = serverForEmail ?: "",
-        accessIdentifier = accessId?.toAccessIdentifierString() ?: "0",
-        accessIdentifierPassword = accessIdPassword ?: "",
-        accessIdentifierServer = serverForAccessId ?: ""
+        emailAddressServer = serverForEmail,
+        accessIdentifier = accessId.toAccessIdentifierString(),
+        accessIdentifierPassword = profileWithCredentials.profileCredentials.accessIdPassword,
+        accessIdentifierServer = serverForAccessId
       )
     }
   }
@@ -167,12 +168,12 @@ class CreateAccountViewModel @Inject constructor(
     updateState { it.copy(loading = loading) }
   }
 
-  private fun getSaveSingle(profileId: Long?): Single<ProfileEntity> =
+  private fun getSaveSingle(profileId: Long?): Single<ProfileDto> =
     if (profileId == null) {
-      Single.just(currentState().toProfileItem())
+      Single.just(currentState().toProfileDto())
     } else {
       profileRepository.findProfile(profileId)
-        .map { currentState().updateProfile(it) }
+        .map { currentState().profileDtoFrom(it) }
     }
 
   private fun handleSaveError(error: Throwable) = when (error) {

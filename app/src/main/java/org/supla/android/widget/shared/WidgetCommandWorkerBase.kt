@@ -32,6 +32,7 @@ import androidx.work.ListenableWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import org.supla.android.R
+import org.supla.android.core.infrastructure.suplaclient.SingleCallProvider
 import org.supla.android.core.notifications.NotificationsHelper
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.ActionParameters
@@ -54,7 +55,7 @@ private const val ARG_WIDGET_ACTION = "ARG_WIDGET_ACTION"
 abstract class WidgetCommandWorkerBase(
   private val widgetConfigurationUpdater: WidgetConfigurationUpdater,
   private val notificationsHelper: NotificationsHelper,
-  private val singleCallProvider: SingleCall.Provider,
+  private val singleCallProvider: SingleCallProvider,
   private val widgetPreferences: WidgetPreferences,
   private val vibrationHelper: VibrationHelper,
   appContext: Context,

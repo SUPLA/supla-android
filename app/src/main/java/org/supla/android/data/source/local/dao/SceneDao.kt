@@ -25,7 +25,6 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
-import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.data.source.local.entity.SceneEntity

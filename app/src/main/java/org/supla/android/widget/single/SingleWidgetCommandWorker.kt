@@ -27,9 +27,9 @@ import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import org.supla.android.core.infrastructure.WorkManagerProxy
+import org.supla.android.core.infrastructure.suplaclient.SingleCallProvider
 import org.supla.android.core.notifications.NotificationsHelper
 import org.supla.android.core.notifications.SINGLE_WIDGET_NOTIFICATION_ID
-import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.widget.WidgetPreferences
 import org.supla.android.widget.shared.WidgetAction
@@ -44,7 +44,7 @@ private const val WORK_ID_PREFIX = "SINGLE_WIDGET_"
 class SingleWidgetCommandWorker @AssistedInject constructor(
   widgetConfigurationUpdater: WidgetConfigurationUpdater,
   notificationsHelper: NotificationsHelper,
-  singleCallProvider: SingleCall.Provider,
+  singleCallProvider: SingleCallProvider,
   widgetPreferences: WidgetPreferences,
   vibrationHelper: VibrationHelper,
   @Assisted appContext: Context,

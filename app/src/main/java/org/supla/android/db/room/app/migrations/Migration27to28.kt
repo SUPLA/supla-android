@@ -21,17 +21,17 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity.Companion.COLUMN_TIMER_START_TIME
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity.Companion.TABLE_NAME
-import org.supla.android.data.source.local.view.ChannelView
 import org.supla.android.db.room.SqlExecutor
 import javax.inject.Inject
 import javax.inject.Singleton
+
+private const val CHANNEL_VIEW_NAME = "channel_v1"
 
 @Singleton
 class Migration27to28 @Inject constructor() : Migration(27, 28), SqlExecutor {
   override fun migrate(db: SupportSQLiteDatabase) {
     val sql = "ALTER TABLE $TABLE_NAME ADD COLUMN $COLUMN_TIMER_START_TIME INTEGER"
     execSQL(db, sql)
-    execSQL(db, "DROP VIEW IF EXISTS " + ChannelView.NAME)
-    execSQL(db, ChannelView.SQL)
+    execSQL(db, "DROP VIEW IF EXISTS $CHANNEL_VIEW_NAME")
   }
 }

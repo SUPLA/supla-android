@@ -54,7 +54,7 @@ class InitializationUseCase @Inject constructor(
 
     // Check if there is an active profile
     val profileFound = try {
-      profileRepository.findActiveProfile().blockingGet().active ?: false
+      profileRepository.findActiveProfile().blockingGet().active
     } catch (_: Exception) {
       // No active profile
       false

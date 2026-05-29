@@ -19,12 +19,13 @@ package org.supla.android.db.room.app.migrations
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_AUTH_KEY
-import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_GUID
 import org.supla.android.data.source.local.entity.ProfileEntity.Companion.TABLE_NAME
 import org.supla.android.db.room.SqlExecutor
 
 val MIGRATION_24_25: Migration = object : Migration(24, 25), SqlExecutor {
+  private val COLUMN_GUID = "guid"
+  private val COLUMN_AUTH_KEY = "auth_key"
+
   override fun migrate(db: SupportSQLiteDatabase) {
     // Related to:
     // https://github.com/SUPLA/supla-core/commit/2a2f2cec89e4e20a49d37e4e89306cf178dd1d05

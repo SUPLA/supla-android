@@ -35,13 +35,13 @@ data class AuthDataDto(
   val authKey: ByteArray
 ) {
   @UsedFromNativeCode
-  fun getDecryptedGuid(context: Context): ByteArray? {
-    return decrypt(guid, context)
+  fun getDecryptedGuid(context: Context): ByteArray {
+    return guid
   }
 
   @UsedFromNativeCode
-  fun getDecryptedAuthKey(context: Context): ByteArray? {
-    return decrypt(authKey, context)
+  fun getDecryptedAuthKey(context: Context): ByteArray {
+    return authKey
   }
 
   override fun equals(other: Any?): Boolean {
@@ -74,12 +74,5 @@ data class AuthDataDto(
     result = 31 * result + guid.contentHashCode()
     result = 31 * result + authKey.contentHashCode()
     return result
-  }
-
-  companion object {
-    fun decrypt(payload: ByteArray, context: Context): ByteArray? {
-      val key = Preferences.getDeviceID(context)
-      return Encryption.decryptDataWithNullOnException(payload, key)
-    }
   }
 }

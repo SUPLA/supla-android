@@ -56,6 +56,7 @@ import org.supla.android.core.notifications.NotificationsHelper;
 import org.supla.android.core.shared.SuplaClientMessageExtensionsKt;
 import org.supla.android.core.storage.EncryptedPreferences;
 import org.supla.android.data.model.general.EntityUpdateResult;
+import org.supla.android.data.model.settings.ProfileCredentials;
 import org.supla.android.data.source.ProfileRepository;
 import org.supla.android.data.source.local.entity.ProfileEntity;
 import org.supla.android.data.source.remote.ChannelConfigType;
@@ -910,7 +911,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     if (versionError.RemoteVersion >= 7
         && versionError.Version > versionError.RemoteVersion
         && profile != null
-        && profile.getPreferredProtocolVersion() != null
         && profile.getPreferredProtocolVersion() != versionError.RemoteVersion) {
 
       // set preferred to lower
@@ -966,10 +966,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
     int maxVersionSupportedByLibrary = getMaxProtoVersion();
     int serverVersion = registerResult.Version;
-    Integer storedVersion = profile.getPreferredProtocolVersion();
-    if (storedVersion == null) {
-      return;
-    }
+    int storedVersion = profile.getPreferredProtocolVersion();
     if (maxVersionSupportedByLibrary > 0
         && storedVersion < maxVersionSupportedByLibrary
         && serverVersion > storedVersion) {
@@ -1519,18 +1516,18 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
           ProfileEntity profile = getActiveProfile();
           if (profile != null) {
+            ProfileCredentials profileData =
+                preferences.getProfileCredentialsBlocking(profile.getId());
+
             cfg.Host = profile.getServerForCurrentAuthMethod();
-            cfg.clientGUID = profile.getDecryptedGuid(_context);
-            cfg.AuthKey = profile.getDecryptedAuthKey(_context);
+            cfg.clientGUID = profileData.getGuid();
+            cfg.AuthKey = profileData.getAuthKey();
             cfg.Name = Build.MANUFACTURER + " " + Build.MODEL;
             cfg.SoftVer = "Android" + Build.VERSION.RELEASE + "/" + BuildConfig.VERSION_NAME;
 
             if (isAccessIDAuthentication(profile)) {
-              Integer accessId = profile.getAccessId();
-              if (accessId != null) {
-                cfg.AccessID = accessId;
-              }
-              cfg.AccessIDpwd = profile.getAccessIdPassword();
+              cfg.AccessID = profile.getAccessId();
+              cfg.AccessIDpwd = profileData.getAccessIdPassword();
 
               if (regTryCounter >= 2) {
                 // supla-server v1.0 for Raspberry Compatibility fix
@@ -1539,10 +1536,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
             } else {
               cfg.Email = profile.getEmail();
-              if (cfg.Email != null
-                  && !cfg.Email.isEmpty()
-                  && cfg.Host.isEmpty()
-                  && shouldAutodiscoverHost()) {
+              if (!cfg.Email.isEmpty() && cfg.Host.isEmpty() && shouldAutodiscoverHost()) {
                 cfg.Host = autodiscoverGetHost(cfg.Email);
 
                 if (hasNetworkConnection() && cfg.Host.isEmpty()) {
@@ -1556,10 +1550,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
             }
 
             oneTimePassword = "";
-            Integer protocolVersion = profile.getPreferredProtocolVersion();
-            if (protocolVersion != null) {
-              cfg.protocol_version = protocolVersion;
-            }
+            cfg.protocol_version = profile.getPreferredProtocolVersion();
             init(cfg);
           }
         }
