@@ -23,10 +23,10 @@ import androidx.car.app.Screen
 import androidx.car.app.Session
 import androidx.car.app.validation.HostValidator
 import dagger.hilt.android.AndroidEntryPoint
-import org.supla.android.Preferences
 import org.supla.android.automotive.screen.MainScreen
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.infrastructure.suplaclient.SingleCallProvider
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.AndroidAutoItemRepository
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.tools.SuplaSchedulers
@@ -59,7 +59,7 @@ class SuplaCarAppService : CarAppService() {
   lateinit var dateProvider: DateProvider
 
   @Inject
-  lateinit var preferences: Preferences
+  lateinit var preferences: ApplicationPreferences
 
   override fun createHostValidator(): HostValidator {
     return HostValidator.ALLOW_ALL_HOSTS_VALIDATOR
@@ -87,7 +87,7 @@ class SuplaSession(
   private val singleCallProvider: SingleCallProvider,
   private val schedulers: SuplaSchedulers,
   private val dateProvider: DateProvider,
-  private val preferences: Preferences,
+  private val preferences: ApplicationPreferences,
 ) : Session() {
 
   override fun onCreateScreen(intent: Intent): Screen {

@@ -17,9 +17,9 @@ package org.supla.android.features.details.windowdetail.base.ui
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.Preferences
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.rollershutter.SuplaChannelFacadeBlindConfig
@@ -62,7 +62,7 @@ abstract class BaseBlindsViewModel<S : BaseBlindsViewModelState>(
   observeChannelWithChildrenUseCase: ObserveChannelWithChildrenUseCase,
   observeChannelGroupByRemoteIdUseCase: ObserveChannelGroupByRemoteIdUseCase,
   getGroupOnlineSummaryUseCase: GetGroupOnlineSummaryUseCase,
-  preferences: Preferences,
+  preferences: ApplicationPreferences,
   dateProvider: DateProvider,
   profileRepository: ProfileRepository,
   loginUseCase: LoginUseCase,

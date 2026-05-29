@@ -39,10 +39,10 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import javax.inject.Inject;
-import org.supla.android.Preferences;
 import org.supla.android.R;
 import org.supla.android.SuplaChannelStatus;
 import org.supla.android.core.shared.LocalizedStringIdExtensionsKt;
+import org.supla.android.core.storage.ApplicationPreferences;
 import org.supla.android.data.model.general.IconType;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
@@ -65,7 +65,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
   @Inject UpdateEventsManager eventsManager;
   @Inject GetGroupActivePercentageUseCase getGroupActivePercentageUseCase;
   @Inject GetChannelActionStringUseCase getChannelActionStringUseCase;
-  @Inject Preferences preferences;
+  @Inject ApplicationPreferences preferences;
 
   private int remoteId;
   private SuplaFunction function;

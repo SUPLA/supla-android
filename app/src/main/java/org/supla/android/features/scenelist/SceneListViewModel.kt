@@ -19,8 +19,8 @@ package org.supla.android.features.scenelist
 
 import android.net.Uri
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.supla.android.Preferences
 import org.supla.android.core.infrastructure.DateProvider
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.local.entity.LocationEntity
@@ -47,7 +47,7 @@ class SceneListViewModel @Inject constructor(
   updateEventsManager: UpdateEventsManager,
   schedulers: SuplaSchedulers,
   dateProvider: DateProvider,
-  preferences: Preferences
+  preferences: ApplicationPreferences
 ) : BaseListViewModel<SceneListViewState, SceneListViewEvent>(
   preferences,
   dateProvider,

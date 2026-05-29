@@ -2,14 +2,14 @@ package org.supla.android.ui.layouts
 
 import android.content.res.Resources
 import androidx.constraintlayout.widget.ConstraintLayout
-import org.supla.android.Preferences
 import org.supla.android.R
+import org.supla.android.core.storage.ApplicationPreferences
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class BottomBarHeightHandler @Inject constructor(
-  private val preferences: Preferences
+  private val preferences: ApplicationPreferences
 ) {
 
   fun getLayoutParams(resources: Resources, visible: Boolean = preferences.isShowBottomMenu): ConstraintLayout.LayoutParams {

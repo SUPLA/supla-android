@@ -21,9 +21,9 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.annotation.IdRes
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.ChannelDataBase
@@ -72,7 +72,7 @@ class GroupListViewModel @Inject constructor(
   loadActiveProfileUrlUseCase: LoadActiveProfileUrlUseCase,
   updateEventsManager: UpdateEventsManager,
   dateProvider: DateProvider,
-  preferences: Preferences,
+  preferences: ApplicationPreferences,
   schedulers: SuplaSchedulers
 ) : BaseListViewModel<GroupListViewState, GroupListViewEvent>(
   preferences,

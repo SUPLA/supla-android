@@ -22,13 +22,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import org.supla.android.Preferences
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.databinding.LiLocationItemBinding
 import kotlin.math.max
 
 abstract class BaseListAdapter<D>(
-  private val preferences: Preferences
+  private val preferences: ApplicationPreferences
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
   protected val items: MutableList<ListItem> = mutableListOf()

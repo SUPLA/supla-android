@@ -20,9 +20,9 @@ package org.supla.android.features.channellist
 import android.os.Bundle
 import androidx.annotation.IdRes
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.ChannelDataBase
@@ -74,7 +74,7 @@ class ChannelListViewModel @Inject constructor(
   private val reorderChannelsUseCase: ReorderChannelsUseCase,
   updateEventsManager: UpdateEventsManager,
   dateProvider: DateProvider,
-  preferences: Preferences,
+  preferences: ApplicationPreferences,
   schedulers: SuplaSchedulers
 ) : BaseListViewModel<ChannelListViewState, ChannelListViewEvent>(
   preferences,

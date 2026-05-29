@@ -18,8 +18,8 @@ package org.supla.android.features.details.electricitymeterdetail.general
  */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.supla.android.Preferences
 import org.supla.android.core.infrastructure.DateProvider
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
@@ -44,7 +44,7 @@ class ElectricityMeterGeneralViewModel @Inject constructor(
   private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   private val downloadEventsManager: DownloadEventsManager,
   private val dateProvider: DateProvider,
-  private val preferences: Preferences,
+  private val preferences: ApplicationPreferences,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<ElectricityMeterGeneralViewModelState, ElectricityMeterGeneralViewEvent>(
   ElectricityMeterGeneralViewModelState(),

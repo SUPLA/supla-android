@@ -18,8 +18,6 @@ package org.supla.android.lib.dto
  */
 
 import android.content.Context
-import org.supla.android.Encryption
-import org.supla.android.Preferences
 import org.supla.android.tools.UsedFromNativeCode
 
 @UsedFromNativeCode

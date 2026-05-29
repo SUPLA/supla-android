@@ -35,7 +35,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.supla.android.NavigationActivity.INTENT_SENDER
 import org.supla.android.NavigationActivity.INTENT_SENDER_MAIN
-import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.core.networking.suplaclient.SuplaClientEvent
@@ -71,9 +70,6 @@ class CfgActivity : BaseActivity() {
 
   @Inject
   lateinit var getProfilesCountUseCase: GetProfilesCountUseCase
-
-  @Inject
-  lateinit var preferences: Preferences
 
   @Inject
   lateinit var applicationPreferences: ApplicationPreferences

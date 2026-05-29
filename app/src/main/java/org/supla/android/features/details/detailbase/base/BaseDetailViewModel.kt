@@ -19,7 +19,7 @@ package org.supla.android.features.details.detailbase.base
 
 import androidx.annotation.CallSuper
 import com.google.android.material.navigation.NavigationBarView
-import org.supla.android.Preferences
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
@@ -37,7 +37,7 @@ abstract class BaseDetailViewModel<S : BaseDetailViewState, E : BaseDetailViewEv
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   private val readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   private val updateEventsManager: UpdateEventsManager,
-  private val preferences: Preferences,
+  private val preferences: ApplicationPreferences,
   defaultState: S,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<S, E>(defaultState, schedulers) {

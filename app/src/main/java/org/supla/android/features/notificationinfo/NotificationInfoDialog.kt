@@ -11,14 +11,14 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.MainActivity
-import org.supla.android.Preferences
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.databinding.DialogNotificationInfoBinding
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class NotificationInfoDialog : DialogFragment() {
 
-  @Inject lateinit var preferences: Preferences
+  @Inject lateinit var preferences: ApplicationPreferences
 
   private lateinit var binding: DialogNotificationInfoBinding
 

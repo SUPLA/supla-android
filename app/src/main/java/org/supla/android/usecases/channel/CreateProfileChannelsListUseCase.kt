@@ -20,8 +20,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import com.google.gson.Gson
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
-import org.supla.android.Preferences
 import org.supla.android.core.shared.shareable
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.model.general.IconType
 import org.supla.android.data.source.ChannelRelationRepository
 import org.supla.android.data.source.RoomChannelRepository
@@ -64,7 +64,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
   private val downloadEventsManager: DownloadEventsManager,
   private val channelRepository: RoomChannelRepository,
   private val getCaptionUseCase: GetCaptionUseCase,
-  private val preferences: Preferences,
+  private val preferences: ApplicationPreferences,
   @param:Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter,
   @param:Named(GSON_FOR_REPO) private val gson: Gson,
 ) {

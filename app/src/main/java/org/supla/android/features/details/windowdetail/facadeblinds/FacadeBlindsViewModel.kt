@@ -18,9 +18,9 @@ package org.supla.android.features.details.windowdetail.facadeblinds
  */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.supla.android.Preferences
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
@@ -58,7 +58,7 @@ class FacadeBlindsViewModel @Inject constructor(
   observeChannelWithChildrenUseCase: ObserveChannelWithChildrenUseCase,
   observeChannelGroupByRemoteIdUseCase: ObserveChannelGroupByRemoteIdUseCase,
   getGroupOnlineSummaryUseCase: GetGroupOnlineSummaryUseCase,
-  preferences: Preferences,
+  preferences: ApplicationPreferences,
   dateProvider: DateProvider,
   profileRepository: ProfileRepository,
   loginUseCase: LoginUseCase,

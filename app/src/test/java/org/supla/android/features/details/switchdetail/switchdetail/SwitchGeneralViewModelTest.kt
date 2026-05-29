@@ -30,10 +30,10 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.tuple
 import org.junit.Before
 import org.junit.Test
-import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
@@ -109,7 +109,7 @@ class SwitchGeneralViewModelTest :
   private lateinit var dateProvider: DateProvider
 
   @MockK
-  private lateinit var preferences: Preferences
+  private lateinit var preferences: ApplicationPreferences
 
   @MockK
   private lateinit var getChannelStateUseCase: GetChannelStateUseCase

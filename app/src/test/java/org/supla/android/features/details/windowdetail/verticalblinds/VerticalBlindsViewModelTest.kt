@@ -30,10 +30,10 @@ import io.reactivex.rxjava3.core.Observable
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
@@ -105,7 +105,7 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
   private lateinit var getGroupOnlineSummaryUseCase: GetGroupOnlineSummaryUseCase
 
   @RelaxedMockK
-  private lateinit var preferences: Preferences
+  private lateinit var preferences: ApplicationPreferences
 
   @RelaxedMockK
   private lateinit var dateProvider: DateProvider

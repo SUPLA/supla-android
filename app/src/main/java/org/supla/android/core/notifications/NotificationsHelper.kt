@@ -23,9 +23,9 @@ import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.supla.android.BuildConfig
 import org.supla.android.MainActivity
-import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.infrastructure.WorkManagerProxy
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.data.source.NotificationRepository
 import org.supla.android.features.updatetoken.UpdateTokenWorker
@@ -45,7 +45,7 @@ private const val NOTIFICATION_BACKGROUND_CHANNEL_ID = BuildConfig.APPLICATION_I
 class NotificationsHelper @Inject constructor(
   @param:ApplicationContext private val context: Context,
   private val encryptedPreferences: EncryptedPreferences,
-  private val preferences: Preferences,
+  private val preferences: ApplicationPreferences,
   private val notificationManager: NotificationManager,
   private val workManagerProxy: WorkManagerProxy,
   private val notificationRepository: NotificationRepository

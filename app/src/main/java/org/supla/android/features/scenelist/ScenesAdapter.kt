@@ -22,7 +22,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import dagger.hilt.android.qualifiers.ActivityContext
-import org.supla.android.Preferences
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.SceneDataEntity
 import org.supla.android.databinding.LiSceneItemBinding
@@ -37,7 +37,7 @@ import javax.inject.Inject
 class ScenesAdapter @Inject constructor(
   @param:ActivityContext private val context: Context,
   private val vibrationHelper: VibrationHelper,
-  preferences: Preferences
+  preferences: ApplicationPreferences
 ) : BaseListAdapter<SceneDataEntity>(preferences) {
 
   override val callback = ListCallback(context, this).also {

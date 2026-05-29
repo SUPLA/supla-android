@@ -19,10 +19,10 @@ package org.supla.android.features.details.containerdetail.general
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Maybe
-import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.shared.shareable
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.ProfileRepository
@@ -74,7 +74,7 @@ class ContainerGeneralDetailViewModel @Inject constructor(
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val getCaptionUseCase: GetCaptionUseCase,
   private val vibrationHelper: VibrationHelper,
-  private val preferences: Preferences,
+  private val preferences: ApplicationPreferences,
   override val updateEventsManager: UpdateEventsManager,
   override val schedulers: SuplaSchedulers,
   suplaClientProvider: SuplaClientProvider,

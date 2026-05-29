@@ -18,9 +18,9 @@ package org.supla.android.features.details.windowdetail.base
  */
 
 import io.reactivex.rxjava3.core.Completable
-import org.supla.android.Preferences
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
@@ -64,7 +64,7 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
   private val observeChannelWithChildrenUseCase: ObserveChannelWithChildrenUseCase,
   private val observeChannelGroupByRemoteIdUseCase: ObserveChannelGroupByRemoteIdUseCase,
   private val getGroupOnlineSummaryUseCase: GetGroupOnlineSummaryUseCase,
-  private val preferences: Preferences,
+  private val preferences: ApplicationPreferences,
   private val dateProvider: DateProvider,
   suplaClientProvider: SuplaClientProvider,
   profileRepository: ProfileRepository,

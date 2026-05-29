@@ -31,11 +31,11 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import org.supla.android.Preferences
 import org.supla.android.SuplaApp
 import org.supla.android.core.SuplaAppApi
 import org.supla.android.core.SuplaAppProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.formatting.DateFormatter
 import org.supla.android.lib.AndroidSuplaClientMessageHandler
 import org.supla.android.lib.SuplaClient
@@ -53,7 +53,7 @@ class ApplicationModule {
   @Provides
   @Singleton
   fun providePreferences(@ApplicationContext context: Context) =
-    Preferences(context)
+    ApplicationPreferences(context)
 
   @Provides
   @Singleton

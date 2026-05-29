@@ -21,9 +21,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.Disposable
-import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.storage.UserStateHolder
 import org.supla.android.data.model.Optional
 import org.supla.android.data.model.chart.ChannelChartSets
@@ -83,7 +83,7 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
   private val suplaCloudServiceProvider: SuplaCloudService.Provider,
   private val downloadEventsManager: DownloadEventsManager,
   private val userStateHolder: UserStateHolder,
-  private val preferences: Preferences,
+  private val preferences: ApplicationPreferences,
   deleteChannelMeasurementsUseCase: DeleteChannelMeasurementsUseCase,
   readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   groupingStringMigrationUseCase: GroupingStringMigrationUseCase,

@@ -18,9 +18,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.supla.android.Preferences
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.shared.shareable
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
@@ -55,7 +55,7 @@ class ThermostatSlavesListViewModel @Inject constructor(
   private val getChannelIssuesForSlavesUseCase: GetChannelIssuesForSlavesUseCase,
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
-  private val preferences: Preferences,
+  private val preferences: ApplicationPreferences,
   val getCaptionUseCase: GetCaptionUseCase,
   val dateProvider: DateProvider,
   schedulers: SuplaSchedulers,
