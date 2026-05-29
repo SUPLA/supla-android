@@ -1,4 +1,6 @@
-package org.supla.android.data.model.general
+@file:JvmName("NightModeSettingAndroid")
+
+package org.supla.android.model.general
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -19,36 +21,18 @@ package org.supla.android.data.model.general
 
 import android.app.UiModeManager
 import androidx.appcompat.app.AppCompatDelegate
+import org.supla.core.shared.data.model.export.NightModeSetting
 
-enum class NightModeSetting(val value: Int) {
-  ALWAYS(0),
-  NEVER(1),
-  AUTO(2),
-  UNSET(-1);
-
-  fun modeManagerValue() =
-    when (this) {
-      AUTO -> UiModeManager.MODE_NIGHT_AUTO
-      NEVER, UNSET -> UiModeManager.MODE_NIGHT_NO
-      ALWAYS -> UiModeManager.MODE_NIGHT_YES
-    }
-
-  fun appCompatDelegateValue() =
-    when (this) {
-      AUTO -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-      NEVER, UNSET -> AppCompatDelegate.MODE_NIGHT_NO
-      ALWAYS -> AppCompatDelegate.MODE_NIGHT_YES
-    }
-
-  companion object {
-    fun from(value: Int): NightModeSetting {
-      for (mode in NightModeSetting.values()) {
-        if (mode.value == value) {
-          return mode
-        }
-      }
-
-      return UNSET
-    }
+fun NightModeSetting.appCompatDelegateValue(): Int =
+  when (this) {
+    NightModeSetting.AUTO -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+    NightModeSetting.NEVER, NightModeSetting.UNSET -> AppCompatDelegate.MODE_NIGHT_NO
+    NightModeSetting.ALWAYS -> AppCompatDelegate.MODE_NIGHT_YES
   }
-}
+
+fun NightModeSetting.modeManagerValue(): Int =
+  when (this) {
+    NightModeSetting.AUTO -> UiModeManager.MODE_NIGHT_AUTO
+    NightModeSetting.NEVER, NightModeSetting.UNSET -> UiModeManager.MODE_NIGHT_NO
+    NightModeSetting.ALWAYS -> UiModeManager.MODE_NIGHT_YES
+  }

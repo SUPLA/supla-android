@@ -23,7 +23,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import dagger.hilt.android.qualifiers.ApplicationContext
-import org.supla.android.data.model.general.NightModeSetting
+import org.supla.core.shared.data.model.export.NightModeSetting
 import org.supla.core.shared.data.model.thermometer.TemperatureUnit
 import javax.inject.Inject
 import javax.inject.Singleton

@@ -34,11 +34,13 @@ import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.LockScreenScope
-import org.supla.android.data.model.general.NightModeSetting
 import org.supla.android.data.source.runtime.appsettings.ChannelHeight
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.lockscreen.UnlockAction
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.model.general.appCompatDelegateValue
+import org.supla.android.model.general.modeManagerValue
+import org.supla.core.shared.data.model.export.NightModeSetting
 import org.supla.core.shared.data.model.thermometer.TemperatureUnit
 import javax.inject.Inject
 
