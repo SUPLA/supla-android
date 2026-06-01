@@ -61,11 +61,6 @@ class RefreshElectricityMeterAggregatedValueUseCase @Inject constructor(
     }
 
     val startTimestamp = settings.metricOnListAggregation.aggregationStartDate(dateProvider.currentDateTime)?.toEpochSecond()?.times(1000)
-    if (startTimestamp == null) {
-      Timber.e("Got NULL as entries start date")
-      channelValueRepository.updateAggregatedValue(profileId, remoteId, NO_VALUE_TEXT)
-      return
-    }
 
     val aggregatedValue: Float? = loadAggregatedValue(profileId, remoteId, settings, startTimestamp)
     if (aggregatedValue == null) {
@@ -83,7 +78,7 @@ class RefreshElectricityMeterAggregatedValueUseCase @Inject constructor(
     profileId: Long,
     remoteId: Int,
     settings: ElectricityMeterSettings,
-    startTimestamp: Long
+    startTimestamp: Long?
   ): Float? =
     try {
       when (settings.metricOnList) {
@@ -112,9 +107,9 @@ class RefreshElectricityMeterAggregatedValueUseCase @Inject constructor(
       null
     }
 
-  private suspend fun loadEntries(profileId: Long, remoteId: Int, startTimestamp: Long) =
+  private suspend fun loadEntries(profileId: Long, remoteId: Int, startTimestamp: Long?) =
     electricityMeterLogRepository
-      .findMeasurements(remoteId, profileId, startTimestamp, dateProvider.currentTimestamp())
+      .findMeasurements(remoteId, profileId, startTimestamp ?: 0, dateProvider.currentTimestamp())
       .awaitFirstOrNull()
 
   private val ElectricityMeterLogEntity.phasesFre: Float

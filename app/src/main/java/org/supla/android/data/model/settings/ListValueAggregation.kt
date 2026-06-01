@@ -36,7 +36,8 @@ enum class ListValueAggregation(override val label: LocalizedString) : SpinnerIt
   CURRENT_DAY(localizedString(R.string.general_current_day)),
   CURRENT_WEEK(localizedString(R.string.general_current_week)),
   CURRENT_MONTH(localizedString(R.string.general_current_month)),
-  CURRENT_YEAR(localizedString(R.string.general_current_year));
+  CURRENT_YEAR(localizedString(R.string.general_current_year)),
+  ALL_DATA(localizedString(R.string.all_available_history));
 
   fun aggregationStartDate(currentDateTime: ZonedDateTime): ZonedDateTime? =
     when (this) {
@@ -65,7 +66,7 @@ enum class ListValueAggregation(override val label: LocalizedString) : SpinnerIt
           .withMonth(1)
           .withDayOfMonth(1)
           .startOfDay
-      NO_AGGREGATION -> null
+      NO_AGGREGATION, ALL_DATA -> null
     }
 }
 

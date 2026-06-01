@@ -59,18 +59,16 @@ class RefreshImpulseCounterAggregatedValueUseCase @Inject constructor(
       return
     }
 
-    val entriesStartDate = settings.showOnList.aggregationStartDate(dateProvider.currentDateTime)?.toEpochSecond()
-    if (entriesStartDate == null) {
-      Timber.e("Got NULL as entries start date")
-      channelValueRepository.updateAggregatedValue(profileId, remoteId, NO_VALUE_TEXT)
-      return
-    }
-
     val currentDate = dateProvider.currentDate()
-    val entries: List<ImpulseCounterLogEntity>? = impulseCounterLogRepository
-      .findMeasurements(remoteId, profileId, Date(entriesStartDate * 1000), currentDate)
-      .awaitFirstOrNull()
+    val entriesStartDate = settings.showOnList.aggregationStartDate(dateProvider.currentDateTime)?.toEpochSecond()
+    val entriesProviderQuery =
+      if (entriesStartDate == null) {
+        impulseCounterLogRepository.findMeasurements(remoteId, profileId)
+      } else {
+        impulseCounterLogRepository.findMeasurements(remoteId, profileId, Date(entriesStartDate * 1000), currentDate)
+      }
 
+    val entries: List<ImpulseCounterLogEntity>? = entriesProviderQuery.awaitFirstOrNull()
     if (entries.isNullOrEmpty()) {
       Timber.i("No entries found")
       channelValueRepository.updateAggregatedValue(profileId, remoteId, NO_VALUE_TEXT)

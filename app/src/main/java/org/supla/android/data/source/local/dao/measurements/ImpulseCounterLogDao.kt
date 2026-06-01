@@ -72,6 +72,15 @@ interface ImpulseCounterLogDao : GroupingStringMigratorDao {
   )
   fun findMeasurements(channelId: Int, profileId: Long, startDate: Long, endDate: Long): Observable<List<ImpulseCounterLogEntity>>
 
+  @Query(
+    """
+      SELECT $ALL_COLUMNS FROM $TABLE_NAME
+      WHERE channelid = :channelId AND profileid = :profileId
+      ORDER BY date ASC
+    """
+  )
+  fun findMeasurements(channelId: Int, profileId: Long): Observable<List<ImpulseCounterLogEntity>>
+
   @Query("SELECT COUNT($COLUMN_ID) FROM $TABLE_NAME")
   fun count(): Observable<Int>
 
