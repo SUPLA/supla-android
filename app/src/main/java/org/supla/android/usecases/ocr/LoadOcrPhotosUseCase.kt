@@ -34,7 +34,7 @@ class LoadOcrPhotosUseCase @Inject constructor(
 ) {
 
   operator fun invoke(remoteId: Int): Observable<List<OcrPhoto>> =
-    Observable.fromRunnable<SuplaCloudService> { suplaCloudServiceProvider.provide() }
+    Observable.fromCallable<SuplaCloudService> { suplaCloudServiceProvider.provide() }
       .flatMap { service ->
         service.getImpulseCounterPhotos(remoteId)
           .onErrorResumeNext { Observable.just(emptyList()) }

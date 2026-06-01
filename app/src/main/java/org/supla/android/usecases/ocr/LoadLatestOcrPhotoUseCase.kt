@@ -70,7 +70,7 @@ class LoadLatestOcrPhotoUseCase @Inject constructor(
 
   operator fun invoke(remoteId: Int): Observable<OcrPhoto> =
     try {
-      Observable.fromRunnable<SuplaCloudService> { suplaCloudServiceProvider.provide() }
+      Observable.fromCallable<SuplaCloudService> { suplaCloudServiceProvider.provide() }
         .flatMap { service ->
           service.getLatestImpulseCounterPhotoOld(remoteId)
             .onErrorResumeNext { service.getLatestImpulseCounterPhoto(remoteId) }
