@@ -42,7 +42,7 @@ class RgbwDetailViewModel @Inject constructor(
   readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   updateEventsManager: UpdateEventsManager,
-  preferences: Preferences,
+  preferences: ApplicationPreferences,
   schedulers: SuplaSchedulers
 ) : BaseDetailViewModel<RgbwDetailViewState, RgbwDetailViewEvent>(
   readChannelByRemoteIdUseCase,
