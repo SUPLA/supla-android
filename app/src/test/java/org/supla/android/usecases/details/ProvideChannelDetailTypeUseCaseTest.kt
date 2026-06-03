@@ -45,12 +45,12 @@ class ProvideChannelDetailTypeUseCaseTest {
 
   @Test
   fun `should provide detail for dimmer`() {
-    testDetailType(SuplaFunction.DIMMER, StandardDetailType(listOf(DetailPage.DIMMER)))
+    testDetailType(SuplaFunction.DIMMER, RgbwDetailType(listOf(DetailPage.DIMMER)))
   }
 
   @Test
   fun `should provide detail for dimmer with settings (DIW-01)`() {
-    testDetailType(SuplaFunction.DIMMER, StandardDetailType(listOf(DetailPage.DIMMER, DetailPage.LEGACY_RGBW))) {
+    testDetailType(SuplaFunction.DIMMER, RgbwDetailType(listOf(DetailPage.DIMMER))) {
       val channel = it.channelEntity
       every { channel.manufacturerId } returns SUPLA_MFR_ZAMEL.toShort()
       every { channel.productId } returns ZAM_PRODID_DIW_01.toShort()
@@ -59,7 +59,7 @@ class ProvideChannelDetailTypeUseCaseTest {
 
   @Test
   fun `should provide detail for dimmer with settings (Varilight)`() {
-    testDetailType(SuplaFunction.DIMMER, StandardDetailType(listOf(DetailPage.DIMMER, DetailPage.LEGACY_RGBW))) {
+    testDetailType(SuplaFunction.DIMMER, RgbwDetailType(listOf(DetailPage.DIMMER))) {
       val channel = it.channelEntity
       every { channel.manufacturerId } returns SUPLA_MFR_DOYLETRATT.toShort()
       every { channel.productId } returns 1
@@ -70,13 +70,13 @@ class ProvideChannelDetailTypeUseCaseTest {
   fun `should provide detail for dimmer and RGB`() {
     testDetailType(
       SuplaFunction.DIMMER_AND_RGB_LIGHTING,
-      StandardDetailType(listOf(DetailPage.RGB, DetailPage.DIMMER))
+      RgbwDetailType(listOf(DetailPage.RGB, DetailPage.DIMMER))
     )
   }
 
   @Test
   fun `should provide detail for RGB`() {
-    testDetailType(SuplaFunction.RGB_LIGHTING, StandardDetailType(listOf(DetailPage.RGB)))
+    testDetailType(SuplaFunction.RGB_LIGHTING, RgbwDetailType(listOf(DetailPage.RGB)))
   }
 
   @Test

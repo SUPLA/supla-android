@@ -4,36 +4,10 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:background="@color/background">
-
   <RelativeLayout
     android:id="@+id/rlRgbwMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:visibility="visible">
-
-    <LinearLayout
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:orientation="vertical"
-      android:layout_centerInParent="true"
-      android:gravity="center">
-
-      <TextView
-        style="@style/AppTheme.TextAppearance.Body1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/distance_default"
-        android:text="@string/legacy_rgbw_settings_unauthorized_message"
-        android:textAlignment="center" />
-
-      <Button
-        android:id="@+id/rgbAuthorizeButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/legacy_rgbw_settings_authorize_button"
-        style="@style/AppTheme.Button.Outlined"
-        android:layout_marginTop="64dp"/>
-    </LinearLayout>
-
   </RelativeLayout>
 </RelativeLayout>

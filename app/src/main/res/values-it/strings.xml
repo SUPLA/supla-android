@@ -751,8 +751,6 @@
   <string name="rgb_detail_color">Colore:</string>
   <string name="rgb_detail_brightness">Luminosità:</string>
   <string name="rgb_detail_select_color">Selezionare il colore</string>
-  <string name="legacy_rgbw_settings_unauthorized_message">Autorizzazione necessaria per visualizzare la configurazione!</string>
-  <string name="legacy_rgbw_settings_authorize_button">Autorizzare</string>
   <string name="rgb_detail_colors_limit">Limite raggiunto!</string>
   <string name="channel_caption_invisible">Nascosto</string>
   <string name="dimmer_detail_temperature">Colore:</string>

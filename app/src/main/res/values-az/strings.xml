@@ -822,8 +822,6 @@
   <string name="channel_caption_motion_sensor">Hərəkət sensoru</string>
   <string name="channel_caption_binary_sensor">İkili sensor</string>
   <string name="rgb_detail_select_color">Rəng seçin</string>
-  <string name="legacy_rgbw_settings_unauthorized_message">Konfiqurasiyanı görmək üçün icazə tələb olunur!</string>
-  <string name="legacy_rgbw_settings_authorize_button">İcazə verin</string>
   <string name="rgb_detail_colors_limit">Limitə çatdı!</string>
   <string name="toolbar_dimmer">Qaraldıcı</string>
   <string name="rgb_detail_color">Rəng:</string>

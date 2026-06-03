@@ -22,6 +22,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -64,7 +65,7 @@ public abstract class DimmerCalibrationTool
   private Timer delayTimer2 = null;
   private boolean settingsChanged;
 
-  private final MainNavigator mainNavigator;
+  protected final MainNavigator mainNavigator;
 
   public DimmerCalibrationTool(ChannelDetailRGBW detailRGB, MainNavigator navigator) {
     if (detailRGB == null || !(detailRGB.getContext() instanceof ContextWrapper)) {
@@ -74,8 +75,6 @@ public abstract class DimmerCalibrationTool
     this.detailRGB = detailRGB;
     mainView = (RelativeLayout) detailRGB.inflateLayout(getLayoutResId());
     mainView.setVisibility(View.VISIBLE);
-    getDetailContentView().setVisibility(View.GONE);
-
     detailRGB.addView(mainView);
   }
 
@@ -92,8 +91,7 @@ public abstract class DimmerCalibrationTool
   @Override
   public void authorizationCanceled() {
     mSuperuserAuthorizationStarted = false;
-    mainView.setVisibility(View.GONE);
-    getDetailContentView().setVisibility(View.VISIBLE);
+    mainNavigator.back();
   }
 
   protected void setImgViews(int imgOnResId, int imgOffResId, int imgAlwaysOffResId) {
@@ -130,10 +128,6 @@ public abstract class DimmerCalibrationTool
     return detailRGB;
   }
 
-  protected View getDetailContentView() {
-    return detailRGB == null ? null : detailRGB.getContentView();
-  }
-
   protected Resources getResources() {
     return detailRGB == null ? null : detailRGB.getResources();
   }
@@ -160,8 +154,6 @@ public abstract class DimmerCalibrationTool
     configStartedAtTime = started ? System.currentTimeMillis() : 0;
     authDialogClose();
     displayCfgParameters(true);
-    getDetailContentView().setVisibility(View.GONE);
-    getMainView().setVisibility(View.VISIBLE);
 
     if (started) {
       closePreloaderPopup();
@@ -430,33 +422,35 @@ public abstract class DimmerCalibrationTool
     alert.show();
   }
 
+  private void showSaveConfirmDialog() {
+    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+    builder.setMessage(R.string.do_you_want_to_save);
+
+    builder.setPositiveButton(R.string.yes, (dialog, id) -> onSavePositiveClick(dialog));
+    builder.setNegativeButton(R.string.no, (dialog, id) -> onSaveNegativeClick(dialog));
+    builder.setNeutralButton(android.R.string.cancel, (dialog, id) -> dialog.cancel());
+
+    AlertDialog alert = builder.create();
+    alert.show();
+  }
+
+  protected void onSavePositiveClick(DialogInterface dialog) {
+    setConfigStarted(false);
+    saveChanges();
+    setSettingsChanged(false);
+    dialog.dismiss();
+  }
+
+  protected void onSaveNegativeClick(DialogInterface dialog) {
+    dialog.cancel();
+  }
+
   public void onClick(View v) {
     if (v == btnOK) {
       if (!settingsChanged) {
         return;
       }
-
-      AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-      builder.setMessage(R.string.do_you_want_to_save);
-
-      builder.setPositiveButton(
-          R.string.yes,
-          (dialog, id) -> {
-            setConfigStarted(false);
-            saveChanges();
-            setSettingsChanged(false);
-          });
-
-      builder.setNegativeButton(
-          R.string.no,
-          (dialog, id) -> {
-            dialog.cancel();
-          });
-
-      builder.setNeutralButton(android.R.string.cancel, (dialog, id) -> dialog.cancel());
-
-      AlertDialog alert = builder.create();
-      alert.show();
+      showSaveConfirmDialog();
     } else if (v == btnRestore) {
       showRestoreConfirmDialog();
     } else if (v == btnInfo) {
@@ -471,10 +465,6 @@ public abstract class DimmerCalibrationTool
         onCalCfgResult(result.getCommand(), result.getResult(), result.getData());
       }
     }
-  }
-
-  public boolean isAuthorizationDialogOpened() {
-    return mSuperuserAuthorizationStarted;
   }
 
   private class DisplayDelayedTask extends TimerTask {

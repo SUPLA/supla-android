@@ -99,9 +99,6 @@ class StandardDetailPagerAdapter(
     DetailPage.RGB -> RgbDetailFragment().apply { arguments = bundle(itemBundle) }
     DetailPage.DIMMER -> DimmerDetailFragment().apply { arguments = bundle(itemBundle) }
     DetailPage.DIMMER_CCT -> DimmerCctDetailFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.LEGACY_RGBW -> LegacyDetailFragment().apply {
-      arguments = LegacyDetailFragment.bundle(itemBundle.remoteId, LegacyDetailType.RGBW, itemBundle.itemType)
-    }
     DetailPage.THERMOSTAT_HEATPOL_GENERAL -> LegacyDetailFragment().apply {
       arguments = LegacyDetailFragment.bundle(itemBundle.remoteId, LegacyDetailType.THERMOSTAT_HP, itemBundle.itemType)
     }
@@ -165,7 +162,6 @@ enum class DetailPage(val item: DetailBottomItem) {
   RGB(DetailBottomItem.RGB),
   DIMMER(DetailBottomItem.DIMMER),
   DIMMER_CCT(DetailBottomItem.DIMMER),
-  LEGACY_RGBW(DetailBottomItem.SETTINGS)
 }
 
 enum class DetailBottomItem(val menuId: Int, @param:DrawableRes val iconRes: Int, @param:StringRes val stringRes: Int) {

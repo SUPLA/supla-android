@@ -34,6 +34,10 @@
     android:name="org.supla.android.features.details.impulsecounter.ImpulseCounterDetailFragment" />
 
   <fragment
+    android:id="@+id/rgbw_detail_fragment"
+    android:name="org.supla.android.features.details.rgbanddimmer.RgbwDetailFragment" />
+
+  <fragment
     android:id="@+id/counter_photo_fragment"
     android:name="org.supla.android.features.details.impulsecounter.counterphoto.CounterPhotoFragment" />
 
@@ -115,10 +119,15 @@
   <fragment
     android:id="@+id/nfc_tag_lock_fragment"
     android:name="org.supla.android.features.nfc.lock.LockTagFragment"
-    android:label="@string/nfc_lock_tag_label"/>
+    android:label="@string/nfc_lock_tag_label" />
 
   <!-- Legacy fragment -->
   <fragment
     android:id="@+id/legacy_detail_fragment"
     android:name="org.supla.android.features.details.legacydetail.LegacyDetailFragment" />
+
+  <fragment
+    android:id="@+id/legacy_dimmer_settings_fragment"
+    android:name="org.supla.android.features.details.rgbanddimmer.legacysettings.LegacyDimmerSettingsFragment"
+    android:label="@string/settings" />
 </navigation>

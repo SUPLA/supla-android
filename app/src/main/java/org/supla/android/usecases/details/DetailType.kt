@@ -23,7 +23,6 @@ import java.io.Serializable
 sealed interface DetailType : Serializable
 
 enum class LegacyDetailType : DetailType {
-  RGBW,
   THERMOSTAT_HP,
   DIGIGLASS
 }
@@ -49,5 +48,9 @@ data class GpmDetailType(
 ) : DetailType
 
 data class IcDetailType(
+  val pages: List<DetailPage>
+) : DetailType
+
+data class RgbwDetailType(
   val pages: List<DetailPage>
 ) : DetailType

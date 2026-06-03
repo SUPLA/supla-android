@@ -18,38 +18,16 @@ package org.supla.android.usecases.details
  */
 
 import org.supla.android.features.details.detailbase.base.DetailPage
-import org.supla.android.lib.SuplaConst
 import org.supla.core.shared.data.model.general.SuplaFunction
 
 abstract class BaseDetailTypeProviderUseCase {
 
-  fun provide(function: SuplaFunction, manufacturerId: Int? = null, productId: Int? = null): DetailType? = when (function) {
-    SuplaFunction.DIMMER ->
-      StandardDetailType(
-        pages = if (shouldShowRgbSettings(manufacturerId, productId)) {
-          listOf(DetailPage.DIMMER, DetailPage.LEGACY_RGBW)
-        } else {
-          listOf(DetailPage.DIMMER)
-        }
-      )
-    SuplaFunction.DIMMER_CCT -> StandardDetailType(listOf(DetailPage.DIMMER_CCT))
-    SuplaFunction.DIMMER_AND_RGB_LIGHTING ->
-      StandardDetailType(
-        pages = if (shouldShowRgbSettings(manufacturerId, productId)) {
-          listOf(DetailPage.RGB, DetailPage.DIMMER, DetailPage.LEGACY_RGBW)
-        } else {
-          listOf(DetailPage.RGB, DetailPage.DIMMER)
-        }
-      )
-    SuplaFunction.DIMMER_CCT_AND_RGB -> StandardDetailType(listOf(DetailPage.RGB, DetailPage.DIMMER_CCT))
-    SuplaFunction.RGB_LIGHTING ->
-      StandardDetailType(
-        pages = if (shouldShowRgbSettings(manufacturerId, productId)) {
-          listOf(DetailPage.RGB, DetailPage.LEGACY_RGBW)
-        } else {
-          listOf(DetailPage.RGB)
-        }
-      )
+  fun provide(function: SuplaFunction): DetailType? = when (function) {
+    SuplaFunction.DIMMER -> RgbwDetailType(listOf(DetailPage.DIMMER))
+    SuplaFunction.DIMMER_CCT -> RgbwDetailType(listOf(DetailPage.DIMMER_CCT))
+    SuplaFunction.DIMMER_AND_RGB_LIGHTING -> RgbwDetailType(listOf(DetailPage.RGB, DetailPage.DIMMER))
+    SuplaFunction.DIMMER_CCT_AND_RGB -> RgbwDetailType(listOf(DetailPage.RGB, DetailPage.DIMMER_CCT))
+    SuplaFunction.RGB_LIGHTING -> RgbwDetailType(listOf(DetailPage.RGB))
     SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER ->
       StandardDetailType(listOf(DetailPage.ROLLER_SHUTTER))
     SuplaFunction.CONTROLLING_THE_ROOF_WINDOW ->
@@ -144,9 +122,4 @@ abstract class BaseDetailTypeProviderUseCase {
     SuplaFunction.MOTION_SENSOR,
     SuplaFunction.BINARY_SENSOR -> null
   }
-
-  private fun shouldShowRgbSettings(manufacturerId: Int?, productId: Int?): Boolean =
-    (manufacturerId == SuplaConst.SUPLA_MFR_DOYLETRATT && productId == 1) ||
-      (manufacturerId == SuplaConst.SUPLA_MFR_ZAMEL && productId == SuplaConst.ZAM_PRODID_DIW_01) ||
-      (manufacturerId == SuplaConst.SUPLA_MFR_COMELIT && productId == SuplaConst.COM_PRODID_WDIM100)
 }

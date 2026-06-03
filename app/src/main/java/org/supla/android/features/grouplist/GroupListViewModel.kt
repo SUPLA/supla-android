@@ -35,6 +35,7 @@ import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.details.detailbase.StandardDetailFragment
 import org.supla.android.features.details.detailbase.base.DetailPage
 import org.supla.android.features.details.detailbase.base.ItemBundle
+import org.supla.android.features.details.rgbanddimmer.RgbwDetailFragment
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
@@ -48,6 +49,7 @@ import org.supla.android.usecases.channel.GroupActionUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideGroupDetailTypeUseCase
+import org.supla.android.usecases.details.RgbwDetailType
 import org.supla.android.usecases.details.StandardDetailType
 import org.supla.android.usecases.details.ThermostatDetailType
 import org.supla.android.usecases.group.CreateProfileGroupsListUseCase
@@ -204,6 +206,7 @@ class GroupListViewModel @Inject constructor(
       is LegacyDetailType -> sendEvent(GroupListViewEvent.OpenLegacyDetails(group.remoteId, detailType))
       is ThermostatDetailType -> sendEvent(GroupListViewEvent.OpenStandardDetail(ItemBundle.from(group), detailType.pages))
       is StandardDetailType -> sendEvent(GroupListViewEvent.OpenStandardDetail(ItemBundle.from(group), detailType.pages))
+      is RgbwDetailType -> sendEvent(GroupListViewEvent.OpenRgbwDetail(ItemBundle.from(group), detailType.pages))
       else -> {} // no action
     }
   }
@@ -218,6 +221,9 @@ sealed class GroupListViewEvent : ViewEvent {
 
   data class OpenStandardDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
     BaseDetail(R.id.standard_detail_fragment, StandardDetailFragment.bundle(itemBundle, pages.toTypedArray()))
+
+  data class OpenRgbwDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
+    BaseDetail(R.id.rgbw_detail_fragment, RgbwDetailFragment.bundle(itemBundle, pages.toTypedArray()))
 
   abstract class BaseDetail(
     @param:IdRes val fragmentId: Int,

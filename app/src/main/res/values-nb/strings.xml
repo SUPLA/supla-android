@@ -733,8 +733,6 @@
   <string name="rgb_detail_color">Farge:</string>
   <string name="rgb_detail_brightness">Lysstyrke:</string>
   <string name="rgb_detail_select_color">Velg farge</string>
-  <string name="legacy_rgbw_settings_unauthorized_message">Autorisasjon nødvendig for å se konfigurasjonen!</string>
-  <string name="legacy_rgbw_settings_authorize_button">Autoriser</string>
   <string name="rgb_detail_colors_limit">Grensen er nådd!</string>
   <string name="channel_caption_invisible">Skjult</string>
   <string name="dimmer_detail_temperature">Fargetemp:</string>

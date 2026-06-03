@@ -54,15 +54,6 @@ public class ChannelDetailRGBW extends DetailLayout {
 
   protected void init() {
     super.init();
-
-    findViewById(R.id.rgbAuthorizeButton)
-        .setOnClickListener(
-            v -> {
-              if (dimmerCalibrationTool != null
-                  && !dimmerCalibrationTool.isAuthorizationDialogOpened()) {
-                dimmerCalibrationTool.Show();
-              }
-            });
   }
 
   private void setupDimmerCalibrationTool() {

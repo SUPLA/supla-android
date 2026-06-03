@@ -157,7 +157,6 @@ class LegacyDetailFragment : BaseFragment<LegacyDetailViewState, LegacyDetailVie
   }
 
   private fun getDetailView(): DetailLayout = when (legacyDetailType) {
-    LegacyDetailType.RGBW -> ChannelDetailRGBW(context)
     LegacyDetailType.THERMOSTAT_HP -> ChannelDetailThermostatHP(context)
     LegacyDetailType.DIGIGLASS -> ChannelDetailDigiglass(context)
   }
