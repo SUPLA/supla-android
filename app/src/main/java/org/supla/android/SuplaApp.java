@@ -18,6 +18,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import static org.supla.android.model.general.NightModeSettingAndroid.appCompatDelegateValue;
+import static org.supla.android.model.general.NightModeSettingAndroid.modeManagerValue;
+
 import android.app.Application;
 import android.app.UiModeManager;
 import android.content.Context;
@@ -52,8 +55,6 @@ import org.supla.android.db.room.app.AppDatabase;
 import org.supla.android.lib.AndroidSuplaClientMessageHandler;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.widget.extended.ExtendedValueWidgetWorker;
-import static org.supla.android.model.general.NightModeSettingAndroid.appCompatDelegateValue;
-import static org.supla.android.model.general.NightModeSettingAndroid.modeManagerValue;
 import org.supla.core.shared.data.model.export.NightModeSetting;
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage;
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessageHandler;
