@@ -550,6 +550,7 @@
   <string name="details_timer_info_thermostat_off">De thermostaat wordt uitgeschakeld door\n%1$s</string>
   <string name="details_timer_info_thermostat_heating">De thermostaat staat in de verwarmingsmodus gedurende\n%1$s</string>
   <string name="details_timer_info_thermostat_cooling">De thermostaat staat in de koelmodus gedurende\n%1$s</string>
+  <string name="details_timer_info_thermostat_auto">De thermostaat blijft %1$s in de automatische modus</string>
   <string name="details_timer_select_time">Geef de tijd op</string>
   <string name="details_timer_counter">Tegen</string>
   <string name="details_timer_calendar">Caledarz</string>
@@ -636,8 +637,8 @@
   <string name="details_em_forwarded_energy">Gedownload</string>
   <string name="details_em_reversed_energy">Geretourneerd</string>
   <string name="details_em_cost">Prijs</string>
-  <string name="details_em_settings_list_item">Waarde die wordt weergegeven in de kanaallijst</string>
-  <string name="details_em_settings_title">Instellingen - %1$s</string>
+  <string name="details_ic_settings_list_item">Waarde die wordt weergegeven in de kanaallijst</string>
+  <string name="details_settings_title">Instellingen - %1$s</string>
   <string name="details_em_total_suffix">(tellerstatus)</string>
   <string name="details_em_current_month_suffix">(lopende maand)</string>
   <string name="details_em_last_month_balancing">Balanceren van de huidige maand</string>
@@ -823,4 +824,16 @@
   <string name="general_search">Zoeken</string>
   <string name="toolbar_search_hint">Voer minimaal 2 tekens in…</string>
   <string name="details_timer_select_program">Selecteer een programma</string>
+  <string name="settings_show_unavailable_channels">Verberg kanalen die niet beschikbaar zijn vanwege de apparaatconfiguratie</string>
+  <string name="details_em_active_energy_balance">Balans van actieve energie</string>
+  <string name="details_em_settings_list_metric">Geselecteerde waarde</string>
+  <string name="general_current_hour">Huidig uur</string>
+  <string name="general_current_day">Huidige dag</string>
+  <string name="general_current_month">Huidige maand</string>
+  <string name="general_current_week">Huidige week</string>
+  <string name="impulse_counter_settings_counter_status">Huidige meterstand</string>
+  <string name="general_current_year">Huidig jaar</string>
+  <string name="details_em_on_list_balance">Methode voor energiebalancering</string>
+  <string name="details_em_on_list_value">Gegevensbereik</string>
+  <string name="details_em_on_list">Weergave in de kanalenlijst</string>
 </resources>

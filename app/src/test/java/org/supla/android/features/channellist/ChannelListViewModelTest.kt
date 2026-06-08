@@ -124,6 +124,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   }
 
   private val listsEventsSubject: Subject<Any> = PublishSubject.create()
+  private val profileId: Long = 1
 
   @Before
   override fun setUp() {
@@ -279,7 +280,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenStandardDetail(ItemBundle(remoteId, deviceId, ItemType.CHANNEL, function), detailType.pages)
+      ChannelListViewEvent.OpenStandardDetail(ItemBundle(remoteId, deviceId, profileId, ItemType.CHANNEL, function), detailType.pages)
     )
 
     verify { provideDetailTypeUseCase(channel) }
@@ -307,7 +308,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenStandardDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), detailType.pages)
+      ChannelListViewEvent.OpenStandardDetail(ItemBundle(channelId, deviceId, profileId, ItemType.CHANNEL, function), detailType.pages)
     )
 
     verify { provideDetailTypeUseCase(channel) }
@@ -334,7 +335,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenSingleHistoryDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), detailType.pages)
+      ChannelListViewEvent.OpenSingleHistoryDetail(ItemBundle(channelId, deviceId, profileId, ItemType.CHANNEL, function), detailType.pages)
     )
 
     verify { provideDetailTypeUseCase(channel) }
@@ -362,7 +363,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenThermostatDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
+      ChannelListViewEvent.OpenThermostatDetail(ItemBundle(channelId, deviceId, profileId, ItemType.CHANNEL, function), pages)
     )
 
     verify { provideDetailTypeUseCase(channel) }
@@ -390,7 +391,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenThermostatDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
+      ChannelListViewEvent.OpenThermostatDetail(ItemBundle(channelId, deviceId, profileId, ItemType.CHANNEL, function), pages)
     )
 
     verify { provideDetailTypeUseCase(channel) }
@@ -418,7 +419,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenSingleHistoryDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
+      ChannelListViewEvent.OpenSingleHistoryDetail(ItemBundle(channelId, deviceId, profileId, ItemType.CHANNEL, function), pages)
     )
 
     verify { provideDetailTypeUseCase(channel) }
@@ -446,7 +447,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenSingleHistoryDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
+      ChannelListViewEvent.OpenSingleHistoryDetail(ItemBundle(channelId, deviceId, profileId, ItemType.CHANNEL, function), pages)
     )
 
     verify { provideDetailTypeUseCase(channel) }
@@ -474,7 +475,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenSingleHistoryDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
+      ChannelListViewEvent.OpenSingleHistoryDetail(ItemBundle(channelId, deviceId, profileId, ItemType.CHANNEL, function), pages)
     )
 
     verify { provideDetailTypeUseCase(channel) }
@@ -502,7 +503,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenSingleHistoryDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
+      ChannelListViewEvent.OpenSingleHistoryDetail(ItemBundle(channelId, deviceId, profileId, ItemType.CHANNEL, function), pages)
     )
     verify { provideDetailTypeUseCase(channel) }
     confirmDependenciesVerified()
@@ -529,7 +530,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenStandardDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
+      ChannelListViewEvent.OpenStandardDetail(ItemBundle(channelId, deviceId, profileId, ItemType.CHANNEL, function), pages)
     )
     verify { provideDetailTypeUseCase(channel) }
     confirmDependenciesVerified()
@@ -556,7 +557,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenStandardDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
+      ChannelListViewEvent.OpenStandardDetail(ItemBundle(channelId, deviceId, profileId, ItemType.CHANNEL, function), pages)
     )
     verify { provideDetailTypeUseCase(channel) }
     confirmDependenciesVerified()
@@ -641,6 +642,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val channel = mockk<ChannelDataEntity> {
       every { this@mockk.function } returns function
       every { this@mockk.remoteId } returns remoteId
+      every { this@mockk.profileId } returns this@ChannelListViewModelTest.profileId
       every { this@mockk.channelEntity } returns channelEntity
       every { this@mockk.channelValueEntity } returns channelValueEntity
       every { this@mockk.configEntity } returns configEntity

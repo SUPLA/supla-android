@@ -550,6 +550,7 @@
   <string name="details_timer_info_thermostat_off">Termostat bude vypnutý na\n%1$s</string>
   <string name="details_timer_info_thermostat_heating">Termostat bude v režime ohrievania na\n%1$s</string>
   <string name="details_timer_info_thermostat_cooling">Termostat bude v režime chladenia na\n%1$s</string>
+  <string name="details_timer_info_thermostat_auto">Termostat bude v automatickom režime\\n%1$s</string>
   <string name="details_timer_select_time">Zadať čas</string>
   <string name="details_timer_counter">Počítadlo</string>
   <string name="details_timer_calendar">Kalendár</string>
@@ -636,8 +637,8 @@
   <string name="details_em_forwarded_energy">Prevzatá</string>
   <string name="details_em_reversed_energy">Vrátená</string>
   <string name="details_em_cost">Náklady</string>
-  <string name="details_em_settings_list_item">Hodnota zobrazená v zozname kanálov</string>
-  <string name="details_em_settings_title">Nastavenia - %1$s</string>
+  <string name="details_ic_settings_list_item">Hodnota zobrazená v zozname kanálov</string>
+  <string name="details_settings_title">Nastavenia - %1$s</string>
   <string name="details_em_total_suffix">(stav počítadla)</string>
   <string name="details_em_current_month_suffix">(aktuálny mesiac)</string>
   <string name="details_em_last_month_balancing">Bilancovanie aktuálneho mesiaca</string>
@@ -827,4 +828,16 @@
   <string name="general_search">Hľadať</string>
   <string name="toolbar_search_hint">Zadajte aspoň 2 znaky…</string>
   <string name="details_timer_select_program">Vyberte program</string>
+  <string name="settings_show_unavailable_channels">Skryť kanály, ktoré nie sú dostupné z dôvodu konfigurácie zariadenia</string>
+  <string name="details_em_active_energy_balance">Bilancia činnej energie</string>
+  <string name="details_em_settings_list_metric">Vybraná hodnota</string>
+  <string name="general_current_hour">Aktuálna hodina</string>
+  <string name="general_current_day">Aktuálny deň</string>
+  <string name="general_current_month">Aktuálny mesiac</string>
+  <string name="general_current_week">Aktuálny týždeň</string>
+  <string name="impulse_counter_settings_counter_status">Aktuálny stav merača</string>
+  <string name="general_current_year">Aktuálny rok</string>
+  <string name="details_em_on_list_balance">Metóda bilancovania energie</string>
+  <string name="details_em_on_list_value">Rozsah dát</string>
+  <string name="details_em_on_list">Zobrazenie v zozname kanálov</string>
 </resources>

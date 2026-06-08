@@ -536,6 +536,7 @@
   <string name="details_timer_info_thermostat_off">Le thermostat sera éteint par \n%1$s</string>
   <string name="details_timer_info_thermostat_heating">Le thermostat sera en mode chauffage pendant \n%1$s</string>
   <string name="details_timer_info_thermostat_cooling">Le thermostat sera en mode refroidissement pendant \n%1$s</string>
+  <string name="details_timer_info_thermostat_auto">Le thermostat sera en mode automatique pendant\\n%1$s</string>
   <string name="details_timer_select_time">Spécifier le temps</string>
   <string name="details_timer_counter">Compteur</string>
   <string name="details_timer_calendar">Calendrier</string>
@@ -622,8 +623,8 @@
   <string name="details_em_forwarded_energy">Prélevée</string>
   <string name="details_em_reversed_energy">Retournée</string>
   <string name="details_em_cost">Coût</string>
-  <string name="details_em_settings_list_item">Valeur affichée dans la liste des chaînes</string>
-  <string name="details_em_settings_title">Réglages - %1$s</string>
+  <string name="details_ic_settings_list_item">Valeur affichée dans la liste des chaînes</string>
+  <string name="details_settings_title">Réglages - %1$s</string>
   <string name="details_em_total_suffix">(état du compteur)</string>
   <string name="details_em_current_month_suffix">(mois en cours)</string>
   <string name="details_em_last_month_balancing">Solde du mois en cours</string>
@@ -810,4 +811,16 @@
   <string name="general_search">Rechercher</string>
   <string name="toolbar_search_hint">Saisissez au moins 2 caractères…</string>
   <string name="details_timer_select_program">Sélectionnez un programme</string>
+  <string name="settings_show_unavailable_channels">Masquer les canaux indisponibles en raison de la configuration de l’appareil</string>
+  <string name="details_em_active_energy_balance">Bilan de l’énergie active</string>
+  <string name="details_em_settings_list_metric">Valeur sélectionnée</string>
+  <string name="general_current_hour">Heure actuelle</string>
+  <string name="general_current_day">Jour actuel</string>
+  <string name="general_current_month">Mois actuel</string>
+  <string name="general_current_week">Semaine actuelle</string>
+  <string name="impulse_counter_settings_counter_status">Relevé actuel du compteur</string>
+  <string name="general_current_year">Année actuelle</string>
+  <string name="details_em_on_list_balance">Méthode d’équilibrage énergétique</string>
+  <string name="details_em_on_list_value">Plage de données</string>
+  <string name="details_em_on_list">Affichage dans la liste des canaux</string>
 </resources>

@@ -32,7 +32,7 @@ import org.supla.android.usecases.channel.GetChannelStateUseCase
 import org.supla.android.usecases.extensions.invoke
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.GetCaptionUseCase
@@ -40,7 +40,7 @@ import org.supla.core.shared.usecase.GetCaptionUseCase
 data class NfcTagDataEntity(
   @Embedded(prefix = "channel_") val channelEntity: ChannelEntity?,
   @Embedded(prefix = "value_") val channelValueEntity: ChannelValueEntity?,
-  @Embedded(prefix = "channel_group_") val groupEntity: ChannelGroupEntity?,
+  @Embedded(prefix = "group_") val groupEntity: ChannelGroupEntity?,
   @Embedded(prefix = "scene_") val sceneEntity: SceneEntity?,
   @Embedded(prefix = "profile_") val profileEntity: ProfileEntity?,
 
@@ -69,7 +69,7 @@ data class NfcTagDataEntity(
         return ChannelState.Default(ChannelState.Value.NOT_USED)
       }
 
-      val thermostatSubfunction = function.hasThermostatSubfunction.ifTrue { channelValueEntity?.asThermostatValue()?.subfunction }
+      val thermostatSubfunction = function.hasThermostatSubfunction.forTrue { channelValueEntity?.asThermostatValue()?.subfunction }
       return tagEntity.actionId?.let {
         GetChannelStateUseCase.getState(
           function = function,

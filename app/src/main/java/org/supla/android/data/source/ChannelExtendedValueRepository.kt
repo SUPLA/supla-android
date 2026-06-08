@@ -32,6 +32,7 @@ class ChannelExtendedValueRepository @Inject constructor(
   private val channelExtendedValueDao: ChannelExtendedValueDao
 ) : CountProvider, RemoveHiddenChannelsUseCase.ChannelsDeletable, DeleteProfileUseCase.ProfileRemover {
   fun findByRemoteId(remoteId: Int) = channelExtendedValueDao.findByRemoteId(remoteId)
+  suspend fun findBy(profileId: Long, remoteId: Int) = channelExtendedValueDao.findBy(profileId, remoteId)
   fun update(entity: ChannelExtendedValueEntity) = channelExtendedValueDao.update(entity)
   fun insert(entity: ChannelExtendedValueEntity) = channelExtendedValueDao.insert(entity)
   override fun count(): Observable<Int> = channelExtendedValueDao.count()

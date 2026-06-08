@@ -173,7 +173,7 @@ class GetChannelValueUseCaseTest {
     }
 
     every { humidityAndTemperatureValueProvider.handle(channel) } returns true
-    every { humidityAndTemperatureValueProvider.value(channel, ValueType.FIRST) } returns value
+    every { humidityAndTemperatureValueProvider.value(channel, DefaultFirstValue) } returns value
 
     // when
     val valueText: Double = useCase(channel)
@@ -184,7 +184,7 @@ class GetChannelValueUseCaseTest {
       depthSensorValueProvider.handle(channel)
       gpmValueProvider.handle(channel)
       humidityAndTemperatureValueProvider.handle(channel)
-      humidityAndTemperatureValueProvider.value(channel, ValueType.FIRST)
+      humidityAndTemperatureValueProvider.value(channel, DefaultFirstValue)
     }
     confirmVerified(
       thermometerValueProvider,

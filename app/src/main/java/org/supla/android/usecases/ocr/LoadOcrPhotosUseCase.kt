@@ -34,18 +34,21 @@ class LoadOcrPhotosUseCase @Inject constructor(
 ) {
 
   operator fun invoke(remoteId: Int): Observable<List<OcrPhoto>> =
-    suplaCloudServiceProvider.provide().getImpulseCounterPhotos(remoteId)
-      .onErrorResumeNext { Observable.just(emptyList()) }
-      .map { photos ->
-        photos.mapNotNull { photo ->
-          photo.imageCropped?.let { imageCropped ->
-            val localDateTime = LocalDateTime.parse(photo.createdAt, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
-            Date.from(localDateTime.atZone(ZoneId.of("UTC")).toInstant())?.let { date ->
-              ValuesFormatter.getFullDateString(date)?.let { formattedDate ->
-                OcrPhoto(formattedDate, null, Base64.decode(imageCropped, Base64.DEFAULT), photo.toValue())
+    Observable.fromCallable<SuplaCloudService> { suplaCloudServiceProvider.provide() }
+      .flatMap { service ->
+        service.getImpulseCounterPhotos(remoteId)
+          .onErrorResumeNext { Observable.just(emptyList()) }
+          .map { photos ->
+            photos.mapNotNull { photo ->
+              photo.imageCropped?.let { imageCropped ->
+                val localDateTime = LocalDateTime.parse(photo.createdAt, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+                Date.from(localDateTime.atZone(ZoneId.of("UTC")).toInstant())?.let { date ->
+                  ValuesFormatter.getFullDateString(date)?.let { formattedDate ->
+                    OcrPhoto(formattedDate, null, Base64.decode(imageCropped, Base64.DEFAULT), photo.toValue())
+                  }
+                }
               }
             }
           }
-        }
       }
 }

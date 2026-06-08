@@ -26,10 +26,8 @@ import org.supla.android.data.source.NfcCallRepository
 import org.supla.android.data.source.NfcTagRepository
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.NfcCallEntity
-import org.supla.android.data.source.local.entity.NfcCallResult
 import org.supla.android.extensions.toLocalDateTime
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.usecases.extensions.invoke
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import javax.inject.Inject
 
@@ -39,7 +37,7 @@ class NfcTagDetailViewModel @Inject constructor(
   private val getCaptionUseCase: GetCaptionUseCase,
   private val nfcCallRepository: NfcCallRepository,
   private val nfcTagRepository: NfcTagRepository,
-  private val schedulers: SuplaSchedulers
+  schedulers: SuplaSchedulers
 ) : BaseViewModel<NfcTagDetailViewState, NfcTagDetailViewEvent>(NfcTagDetailViewState(), schedulers), NfcTagDetailViewScope {
 
   private var itemId: Long = 0

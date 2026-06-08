@@ -37,7 +37,7 @@ import org.supla.android.lib.SuplaChannelExtendedValue
 import org.supla.android.usecases.channel.GetChannelStateUseCase
 import org.supla.core.shared.data.model.battery.BatteryInfo
 import org.supla.core.shared.data.model.general.SuplaFunction
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 
 data class ChannelDataEntity(
   @Embedded(prefix = "channel_") val channelEntity: ChannelEntity,
@@ -84,7 +84,7 @@ data class ChannelDataEntity(
   override val offlineState: ChannelState
     get() = GetChannelStateUseCase.getOfflineState(
       function = function,
-      thermostatSubfunction = function.hasThermostatSubfunction.ifTrue { channelValueEntity.asThermostatValue().subfunction }
+      thermostatSubfunction = function.hasThermostatSubfunction.forTrue { channelValueEntity.asThermostatValue().subfunction }
     )
 
   val showInfo: Boolean

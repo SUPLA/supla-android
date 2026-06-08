@@ -25,7 +25,8 @@ import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.usecases.channel.ValueType
+import org.supla.android.usecases.channel.ListFirstValue
+import org.supla.android.usecases.channel.ListSecondValue
 import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
@@ -58,7 +59,7 @@ class HumidityAndTemperatureWidgetValueProviderTest {
     val channelData = mockChannelData(emptyArray)
 
     // when
-    val value = valueProvider.value(channelData, ValueType.FIRST)
+    val value = valueProvider.value(channelData, ListFirstValue)
 
     // then
     assertThat(value).isEqualTo(ThermometerValueProvider.UNKNOWN_VALUE)
@@ -70,7 +71,7 @@ class HumidityAndTemperatureWidgetValueProviderTest {
     val channelData = mockChannelData(emptyArray)
 
     // when
-    val value = valueProvider.value(channelData, ValueType.SECOND)
+    val value = valueProvider.value(channelData, ListSecondValue)
 
     // then
     assertThat(value).isEqualTo(HumidityAndTemperatureValueProvider.UNKNOWN_HUMIDITY_VALUE)
@@ -82,7 +83,7 @@ class HumidityAndTemperatureWidgetValueProviderTest {
     val channelData = mockChannelData(defaultArray)
 
     // when
-    val value = valueProvider.value(channelData, ValueType.FIRST)
+    val value = valueProvider.value(channelData, ListFirstValue)
 
     // then
     assertThat(value).isEqualTo(23.074)
@@ -94,7 +95,7 @@ class HumidityAndTemperatureWidgetValueProviderTest {
     val channelData = mockChannelData(defaultArray)
 
     // when
-    val value = valueProvider.value(channelData, ValueType.SECOND)
+    val value = valueProvider.value(channelData, ListSecondValue)
 
     // then
     assertThat(value).isEqualTo(47.396)
@@ -106,7 +107,7 @@ class HumidityAndTemperatureWidgetValueProviderTest {
     val channelData = mockChannelData(defaultArray.subList(0, 2))
 
     // when
-    val value = valueProvider.value(channelData, ValueType.FIRST)
+    val value = valueProvider.value(channelData, ListFirstValue)
 
     // then
     assertThat(value).isEqualTo(ThermometerValueProvider.UNKNOWN_VALUE)
@@ -118,7 +119,7 @@ class HumidityAndTemperatureWidgetValueProviderTest {
     val channelData = mockChannelData(defaultArray.subList(0, 6))
 
     // when
-    val value = valueProvider.value(channelData, ValueType.SECOND)
+    val value = valueProvider.value(channelData, ListSecondValue)
 
     // then
     assertThat(value).isEqualTo(HumidityAndTemperatureValueProvider.UNKNOWN_HUMIDITY_VALUE)

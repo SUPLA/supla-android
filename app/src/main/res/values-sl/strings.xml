@@ -547,6 +547,7 @@
   <string name="details_timer_info_thermostat_off">Termostat se izklopi z\n%1$s</string>
   <string name="details_timer_info_thermostat_heating">Termostat bo v načinu ogrevanja\n%1$s</string>
   <string name="details_timer_info_thermostat_cooling">Termostat bo v načinu hlajenja\n%1$s</string>
+  <string name="details_timer_info_thermostat_auto">Termostat bo v samodejnem načinu\\n%1$s</string>
   <string name="details_timer_select_time">Določite čas</string>
   <string name="details_timer_counter">Števec</string>
   <string name="details_timer_calendar">Koledar</string>
@@ -633,8 +634,8 @@
   <string name="details_em_forwarded_energy">Prenesena</string>
   <string name="details_em_reversed_energy">Vrnjena</string>
   <string name="details_em_cost">Strošek</string>
-  <string name="details_em_settings_list_item">Vrednost, prikazana na seznamu kanalov</string>
-  <string name="details_em_settings_title">Nastavitve - %1$s</string>
+  <string name="details_ic_settings_list_item">Vrednost, prikazana na seznamu kanalov</string>
+  <string name="details_settings_title">Nastavitve - %1$s</string>
   <string name="details_em_total_suffix">(stanje števca)</string>
   <string name="details_em_current_month_suffix">(tekoči mesec)</string>
   <string name="details_em_last_month_balancing">Poravnava tekočega meseca</string>
@@ -826,4 +827,16 @@
   <string name="general_search">Iskanje</string>
   <string name="toolbar_search_hint">Vnesite vsaj 2 znaka…</string>
   <string name="details_timer_select_program">Izberite program</string>
+  <string name="settings_show_unavailable_channels">Skrij kanale, ki niso na voljo zaradi konfiguracije naprave</string>
+  <string name="details_em_active_energy_balance">Bilanca aktivne energije</string>
+  <string name="details_em_settings_list_metric">Izbrana vrednost</string>
+  <string name="general_current_hour">Trenutna ura</string>
+  <string name="general_current_day">Trenutni dan</string>
+  <string name="general_current_month">Trenutni mesec</string>
+  <string name="general_current_week">Trenutni teden</string>
+  <string name="impulse_counter_settings_counter_status">Trenutno stanje števca</string>
+  <string name="general_current_year">Trenutno leto</string>
+  <string name="details_em_on_list_balance">Metoda uravnoteženja energije</string>
+  <string name="details_em_on_list_value">Obseg podatkov</string>
+  <string name="details_em_on_list">Prikaz na seznamu kanalov</string>
 </resources>

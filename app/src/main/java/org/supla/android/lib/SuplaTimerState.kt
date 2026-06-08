@@ -19,7 +19,7 @@ package org.supla.android.lib
 
 import kotlinx.serialization.Serializable
 import org.supla.android.core.infrastructure.serialization.DateSerializer
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 import java.util.Date
 
 @Serializable
@@ -37,7 +37,7 @@ class SuplaTimerState(
     senderId: Int,
     senderName: String?
   ) : this(
-    countdownEndsAt = (countdownEndsAt > 0).ifTrue { Date(countdownEndsAt * 1000) },
+    countdownEndsAt = (countdownEndsAt > 0).forTrue { Date(countdownEndsAt * 1000) },
     targetValue = targetValue,
     senderId = senderId,
     senderName = senderName

@@ -20,8 +20,11 @@ package org.supla.android.usecases.list.eventmappers
 import org.supla.android.core.shared.shareable
 import org.supla.android.data.source.local.entity.complex.isIconValueItem
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.events.DownloadEventsManager
+import org.supla.android.events.inProgress
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
+import org.supla.android.usecases.channel.ListFirstValue
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
 import org.supla.core.shared.extensions.guardLet
@@ -34,8 +37,9 @@ import javax.inject.Singleton
 class ChannelWithChildrenToIconValueItemUpdateEventMapper @Inject constructor(
   private val getCaptionUseCase: GetCaptionUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
+  private val downloadEventsManager: DownloadEventsManager,
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
-  private val getChannelIssuesForListUseCase: GetChannelIssuesForListUseCase,
+  private val getChannelIssuesForListUseCase: GetChannelIssuesForListUseCase
 ) : CreateListItemUpdateEventDataUseCase.Mapper {
 
   override fun handle(item: Any): Boolean {
@@ -54,9 +58,10 @@ class ChannelWithChildrenToIconValueItemUpdateEventMapper @Inject constructor(
       onlineState = channelWithChildren.onlineState,
       title = getCaptionUseCase(channelWithChildren.channel.shareable),
       icon = getChannelIconUseCase.invoke(channelWithChildren.channel),
-      value = getChannelValueStringUseCase.valueOrNull(channelWithChildren),
+      value = getChannelValueStringUseCase.valueOrNull(channelWithChildren, ListFirstValue),
       issues = getChannelIssuesForListUseCase(channelWithChildren.shareable),
       estimatedTimerEndDate = null,
-      infoSupported = channelWithChildren.showInfo
+      infoSupported = channelWithChildren.showInfo,
+      processing = downloadEventsManager.getLastChannelDownloadState(channelWithChildren.remoteId).inProgress
     )
 }

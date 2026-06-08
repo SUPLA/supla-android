@@ -30,12 +30,12 @@ import org.supla.android.lib.actions.SubjectType
 import org.supla.android.usecases.channel.GetChannelStateUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 
 data class AndroidAutoDataEntity(
   @Embedded(prefix = "channel_") val channelEntity: ChannelEntity?,
   @Embedded(prefix = "value_") val channelValueEntity: ChannelValueEntity?,
-  @Embedded(prefix = "channel_group_") val groupEntity: ChannelGroupEntity?,
+  @Embedded(prefix = "group_") val groupEntity: ChannelGroupEntity?,
   @Embedded(prefix = "scene_") val sceneEntity: SceneEntity?,
 
   @Embedded(prefix = "profile_") val profileEntity: ProfileEntity,
@@ -51,7 +51,7 @@ data class AndroidAutoDataEntity(
   private val state: ChannelState
     get() {
       val function = channelEntity?.function ?: groupEntity?.function
-      val thermostatSubfunction = function?.hasThermostatSubfunction?.ifTrue { channelValueEntity?.asThermostatValue()?.subfunction }
+      val thermostatSubfunction = function?.hasThermostatSubfunction?.forTrue { channelValueEntity?.asThermostatValue()?.subfunction }
 
       return if (function != null) {
         GetChannelStateUseCase.getState(

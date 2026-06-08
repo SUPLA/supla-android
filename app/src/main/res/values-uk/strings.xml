@@ -523,6 +523,7 @@
   <string name="details_timer_info_thermostat_off">Терморегулятор вимкнеться за допомогою\n%1$s</string>
   <string name="details_timer_info_thermostat_heating">Термостат працюватиме в режимі нагрівання протягом\n%1$s</string>
   <string name="details_timer_info_thermostat_cooling">Термостат працюватиме в режимі охолодження протягом\n%1$s</string>
+  <string name="details_timer_info_thermostat_auto">Термостат буде в автоматичному режимі протягом\\n%1$s</string>
   <string name="details_timer_select_time">Вкажіть час</string>
   <string name="details_timer_counter">Лічильник</string>
   <string name="details_timer_calendar">Календар</string>
@@ -609,8 +610,8 @@
   <string name="details_em_forwarded_energy">Використана</string>
   <string name="details_em_reversed_energy">Повернена</string>
   <string name="details_em_cost">Вартість</string>
-  <string name="details_em_settings_list_item">Значення, показане у списку каналів</string>
-  <string name="details_em_settings_title">Налаштування - %1$s</string>
+  <string name="details_ic_settings_list_item">Значення, показане у списку каналів</string>
+  <string name="details_settings_title">Налаштування - %1$s</string>
   <string name="details_em_total_suffix">(стан лічильника)</string>
   <string name="details_em_current_month_suffix">(поточний місяць)</string>
   <string name="details_em_last_month_balancing">Балансування поточного місяця</string>
@@ -802,4 +803,16 @@
   <string name="general_search">Пошук</string>
   <string name="toolbar_search_hint">Введіть щонайменше 2 символи…</string>
   <string name="details_timer_select_program">Виберіть програму</string>
+  <string name="settings_show_unavailable_channels">Приховати канали, які недоступні через конфігурацію пристрою</string>
+  <string name="details_em_active_energy_balance">Баланс активної енергії</string>
+  <string name="details_em_settings_list_metric">Вибране значення</string>
+  <string name="general_current_hour">Поточна година</string>
+  <string name="general_current_day">Поточний день</string>
+  <string name="general_current_month">Поточний місяць</string>
+  <string name="general_current_week">Поточний тиждень</string>
+  <string name="impulse_counter_settings_counter_status">Поточні показники лічильника</string>
+  <string name="general_current_year">Поточний рік</string>
+  <string name="details_em_on_list_balance">Метод балансування енергії</string>
+  <string name="details_em_on_list_value">Діапазон даних</string>
+  <string name="details_em_on_list">Відображення у списку каналів</string>
 </resources>

@@ -17,17 +17,19 @@ package org.supla.android.data.model.electricitymeter
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
+import org.supla.android.data.model.settings.ListValueAggregation
+import org.supla.android.data.model.settings.eletricitymeter.ElectricityMeterBalanceType
+import org.supla.android.data.model.settings.eletricitymeter.ElectricityMeterMeasurementType
+import org.supla.android.data.model.settings.eletricitymeter.ElectricityMeterSettings
 
 class ElectricityMeterSettingsTest {
   @Test
   fun `should convert to JSON and back`() {
     // given
-    val settings = ElectricityMeterSettings(SuplaElectricityMeasurementType.VOLTAGE, ElectricityMeterBalanceType.HOURLY)
+    val settings = ElectricityMeterSettings.default().copy(metricOnList = ElectricityMeterMeasurementType.VOLTAGE)
 
     // when
     val jsonString = Json.encodeToString(settings)
@@ -35,17 +37,36 @@ class ElectricityMeterSettingsTest {
 
     // then
     assertThat(result).isEqualTo(settings)
-    assertThat(settings.showOnListSafe).isEqualTo(SuplaElectricityMeasurementType.VOLTAGE)
+    assertThat(settings.metricOnList).isEqualTo(ElectricityMeterMeasurementType.VOLTAGE)
   }
 
   @Test
-  fun `should get correct on list type`() {
+  fun `should get correct type and balancing`() {
     // when
-    val settings = ElectricityMeterSettings(SuplaElectricityMeasurementType.FREQUENCY, ElectricityMeterBalanceType.VECTOR)
+    val settings = ElectricityMeterSettings.default().copy(
+      metricOnList = ElectricityMeterMeasurementType.VOLTAGE,
+      currentMonthBalancing = ElectricityMeterBalanceType.HOURLY
+    )
 
     // then
-    assertThat(settings.showOnList).isEqualTo(SuplaElectricityMeasurementType.FREQUENCY)
-    assertThat(settings.showOnListSafe).isEqualTo(SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY)
+    assertThat(settings.metricOnList).isEqualTo(ElectricityMeterMeasurementType.VOLTAGE)
+    assertThat(settings.currentMonthBalancing).isEqualTo(ElectricityMeterBalanceType.HOURLY)
+  }
+
+  @Test
+  fun `should get type from legacy JSON string`() {
+    // given
+    val string = """{"showOnList" : "POWER_ACTIVE", "balancing" : "HOURLY"}"""
+
+    // when
+    val result = ElectricityMeterSettings.from(string)
+
+    // then
+    assertThat(result).isNotNull
+    assertThat(result?.metricOnList).isEqualTo(ElectricityMeterMeasurementType.POWER_ACTIVE)
+    assertThat(result?.metricOnListAggregation).isEqualTo(ListValueAggregation.NO_AGGREGATION)
+    assertThat(result?.metricOnListBalancing).isEqualTo(ElectricityMeterBalanceType.ARITHMETIC)
+    assertThat(result?.currentMonthBalancing).isEqualTo(ElectricityMeterBalanceType.HOURLY)
   }
 
   @Test

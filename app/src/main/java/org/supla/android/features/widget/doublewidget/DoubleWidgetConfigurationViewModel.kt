@@ -235,7 +235,7 @@ class DoubleWidgetConfigurationViewModel @Inject constructor(
       subjectType = currentState().viewState.subjectType,
       caption = caption,
       subjectFunction = subject.function ?: SuplaFunction.NONE,
-      value = subject.value ?: NO_VALUE_TEXT,
+      value = NO_VALUE_TEXT, // Widget should reload itself after configuration if not search for a bug, refresh is managed by OS.
       profileId = profileId,
       visibility = true,
       actionId = null,

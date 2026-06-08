@@ -69,8 +69,8 @@ import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.data.model.rest.channel.ChannelDto
 import org.supla.core.shared.data.model.rest.channel.ElectricityChannelDto
 import org.supla.core.shared.data.model.rest.channel.ElectricityMeterConfigDto
+import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.extensions.guardLet
-import org.supla.core.shared.extensions.ifTrue
 import javax.inject.Inject
 
 private val DEFAULT_PHASES = PhaseItem.entries.toSet()
@@ -212,7 +212,7 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
 
     val aggregations = super.aggregations(dateRange, chartRange, selectedAggregation, customFilters)
       .let {
-        filters.type.hideRankings.ifTrue {
+        filters.type.hideRankings.forTrue {
           // In balance charts no ranking is available
           val aggregations = it.items.filter { aggregation -> !aggregation.isRank }
           it.copy(

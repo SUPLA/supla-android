@@ -32,9 +32,15 @@ interface EspService {
   @FormUrlEncoded
   suspend fun store(@FieldMap data: Map<String, String>): Document
 
+  @GET("/setup")
+  suspend fun setup(): Document
+
   @POST("/setup")
   @FormUrlEncoded
   suspend fun setup(@FieldMap data: Map<String, String>): Document
+
+  @GET("/login")
+  suspend fun login(): Document
 
   @POST("/login")
   @FormUrlEncoded

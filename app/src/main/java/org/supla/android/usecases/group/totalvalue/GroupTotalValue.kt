@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import org.supla.android.lib.SuplaConst
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 class GroupTotalValue {
   val online: Int
@@ -47,7 +47,7 @@ class GroupTotalValue {
   companion object {
     const val SEPARATOR = "|"
 
-    fun parse(function: Int, string: String?): List<GroupValue> {
+    fun parse(function: SuplaFunction, string: String?): List<GroupValue> {
       val valueString = string?.split(SEPARATOR)
       if (valueString.isNullOrEmpty()) {
         return emptyList()
@@ -59,35 +59,39 @@ class GroupTotalValue {
 
       return valueString.map {
         when (function) {
-          SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK,
-          SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK,
-          SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
-          SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR,
-          SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH,
-          SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
-          SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER,
-          SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE ->
+          SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
+          SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
+          SuplaFunction.CONTROLLING_THE_GATE,
+          SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
+          SuplaFunction.POWER_SWITCH,
+          SuplaFunction.LIGHTSWITCH,
+          SuplaFunction.STAIRCASE_TIMER,
+          SuplaFunction.VALVE_OPEN_CLOSE ->
             OpenedClosedGroupValue(it)
-          SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
-          SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW,
-          SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING,
-          SuplaConst.SUPLA_CHANNELFNC_CURTAIN,
-          SuplaConst.SUPLA_CHANNELFNC_VERTICAL_BLIND,
-          SuplaConst.SUPLA_CHANNELFNC_ROLLER_GARAGE_DOOR ->
+          SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER,
+          SuplaFunction.CONTROLLING_THE_ROOF_WINDOW,
+          SuplaFunction.TERRACE_AWNING,
+          SuplaFunction.CURTAIN,
+          SuplaFunction.VERTICAL_BLIND,
+          SuplaFunction.ROLLER_GARAGE_DOOR ->
             ShadingSystemGroupValue(it)
-          SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND ->
+          SuplaFunction.CONTROLLING_THE_FACADE_BLIND ->
             ShadowingBlindGroupValue(it)
-          SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN ->
+          SuplaFunction.PROJECTOR_SCREEN ->
             ProjectorScreenGroupValue(it)
-          SuplaConst.SUPLA_CHANNELFNC_DIMMER ->
+          SuplaFunction.DIMMER ->
             DimmerGroupValue(it)
-          SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING ->
+          SuplaFunction.RGB_LIGHTING ->
             RgbGroupValue(it)
-          SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING ->
+          SuplaFunction.DIMMER_AND_RGB_LIGHTING ->
             DimmerAndRgbGroupValue(it)
-          SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS ->
+          SuplaFunction.DIMMER_CCT ->
+            DimmerCctGroupValue(it)
+          SuplaFunction.DIMMER_CCT_AND_RGB ->
+            DimmerCctAndRgbGroupValue(it)
+          SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS ->
             HeatpolThermostatGroupValue(it)
-          else -> throw IllegalStateException("Parse not supported for function `$function`")
+          else -> throw IllegalStateException("Parse not supported for function `${function.value}`")
         }
       }
     }

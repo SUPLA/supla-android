@@ -22,6 +22,7 @@ import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.isSwitch
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
+import org.supla.android.usecases.channel.ListFirstValue
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
 import org.supla.core.shared.extensions.guardLet
@@ -55,10 +56,11 @@ class ChannelWithChildrenToSwitchUpdateEventMapper @Inject constructor(
       onlineState = channelWithChildren.onlineState,
       title = getCaptionUseCase(channelData.shareable),
       icon = getChannelIconUseCase.invoke(channelData),
-      value = getChannelValueStringUseCase.valueOrNull(channelWithChildren),
+      value = getChannelValueStringUseCase.valueOrNull(channelWithChildren, ListFirstValue),
       issues = getChannelIssuesForListUseCase(channelWithChildren.shareable),
       estimatedTimerEndDate = channelData.channelExtendedValueEntity?.getSuplaValue()?.TimerStateValue?.countdownEndsAt,
-      infoSupported = channelWithChildren.showInfo
+      infoSupported = channelWithChildren.showInfo,
+      processing = false
     )
   }
 }

@@ -17,7 +17,7 @@ package org.supla.core.shared.usecase.channel.valueformatter.formatters
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatSpecification
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import org.supla.core.shared.usecase.channel.valueformatter.types.InvalidValue
@@ -37,7 +37,7 @@ class ElectricityMeterValueFormatter(
     format(
       value = value.toDouble(),
       precision = getPrecision(value),
-      unit = defaultFormatSpecification.withUnit.ifTrue { defaultFormatSpecification.unit },
+      unit = defaultFormatSpecification.withUnit.forTrue { defaultFormatSpecification.unit },
       predecessor = defaultFormatSpecification.predecessor,
       showNoValueText = defaultFormatSpecification.showNoValueText
     )

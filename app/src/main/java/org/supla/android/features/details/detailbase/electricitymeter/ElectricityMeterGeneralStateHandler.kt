@@ -38,8 +38,8 @@ import org.supla.android.lib.SuplaChannelElectricityMeterValue
 import org.supla.android.lib.SuplaChannelElectricityMeterValue.Measurement
 import org.supla.android.lib.SuplaChannelElectricityMeterValue.Summary
 import org.supla.android.usecases.channel.measurements.ElectricityMeasurements
+import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.extensions.guardLet
-import org.supla.core.shared.extensions.ifTrue
 import org.supla.core.shared.usecase.channel.valueformatter.DefaultValueFormatter
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatSpecification
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
@@ -73,7 +73,7 @@ class ElectricityMeterGeneralStateHandler @Inject constructor(
       .filter { channelWithChildren.flags and it.disabledFlag.rawValue == 0L }
       .size > 1
 
-    val vectorBalancedValues = (moreThanOnePhase && allTypes.hasForwardAndReverseEnergy).ifTrue {
+    val vectorBalancedValues = (moreThanOnePhase && allTypes.hasForwardAndReverseEnergy).forTrue {
       mapOf(
         FORWARD_ACTIVE_ENERGY_BALANCED to defaultFormatter.format(
           extendedValue.totalForwardActiveEnergyBalanced,

@@ -32,6 +32,9 @@ import java.util.Date
 sealed interface ListItem {
 
   fun isDifferentFrom(another: ListItem): Boolean {
+    if (this::class != another::class) {
+      return true
+    }
     if (this is SceneItem && another is SceneItem) {
       return sceneData.remoteId != another.sceneData.remoteId ||
         sceneData.sceneEntity.caption != another.sceneData.sceneEntity.caption
@@ -41,6 +44,9 @@ sealed interface ListItem {
     }
 
     if (this is ChannelBasedItem && another is ChannelBasedItem) {
+      if (this is DefaultItem && another is DefaultItem) {
+        return toSlideableListItemData() != another.toSlideableListItemData()
+      }
       return channelBase.remoteId != another.channelBase.remoteId ||
         channelBase.function != another.channelBase.function ||
         channelBase.status != another.channelBase.status ||
@@ -61,7 +67,8 @@ sealed interface ListItem {
     val captionProvider: LocalizedString,
     val icon: ImageId,
     val value: String?,
-    val issues: ListItemIssues
+    val issues: ListItemIssues,
+    val processing: Boolean = false
   ) : ChannelBasedItem(channel) {
     open fun toSlideableListItemData(): SlideableListItemData {
       return SlideableListItemData.Default(
@@ -71,7 +78,8 @@ sealed interface ListItem {
         value = value,
         issues = issues,
         estimatedTimerEndDate = null,
-        infoSupported = channel.showInfo
+        infoSupported = channel.showInfo,
+        processing = processing
       )
     }
   }
@@ -168,8 +176,9 @@ sealed interface ListItem {
     captionProvider: LocalizedString,
     icon: ImageId,
     value: String? = null,
-    issues: ListItemIssues
-  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, issues)
+    issues: ListItemIssues,
+    processing: Boolean = false
+  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, issues, processing)
 
   class IconWithButtonsItem(
     channel: ChannelDataEntity,
@@ -189,7 +198,8 @@ sealed interface ListItem {
         value = value,
         issues = issues,
         estimatedTimerEndDate = estimatedTimerEndDate,
-        infoSupported = channel.showInfo
+        infoSupported = channel.showInfo,
+        processing = false
       )
     }
   }
@@ -212,7 +222,8 @@ sealed interface ListItem {
         value = value,
         issues = issues,
         estimatedTimerEndDate = estimatedTimerEndDate,
-        infoSupported = channel.showInfo
+        infoSupported = channel.showInfo,
+        processing = false
       )
     }
   }

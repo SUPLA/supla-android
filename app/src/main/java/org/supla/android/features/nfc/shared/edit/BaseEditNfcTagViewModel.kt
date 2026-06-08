@@ -54,10 +54,10 @@ open class BaseEditNfcTagViewModel(
   private val sceneRepository: RoomSceneRepository,
   private val nfcCallRepository: NfcCallRepository,
   private val nfcTagRepository: NfcTagRepository,
-  private val schedulers: SuplaSchedulers,
   override val getChannelIconUseCase: GetChannelIconUseCase,
   override val getSceneIconUseCase: GetSceneIconUseCase,
-  override val getCaptionUseCase: GetCaptionUseCase
+  override val getCaptionUseCase: GetCaptionUseCase,
+  schedulers: SuplaSchedulers
 ) :
   BaseViewModel<EditNfcTagViewModelState, EditNfcTagViewEvent>(EditNfcTagViewModelState(), schedulers),
   SubjectItemConversionScope {

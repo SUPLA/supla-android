@@ -59,9 +59,9 @@ class ProvideChannelDetailTypeUseCase @Inject constructor() : BaseDetailTypeProv
 
   private fun getImpulseCounterPages(channelWithChildren: ChannelWithChildren): List<DetailPage> =
     if (SuplaChannelFlag.OCR inside channelWithChildren.flags) {
-      listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY, DetailPage.IC_OCR)
+      listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY, DetailPage.IC_OCR, DetailPage.IC_SETTINGS)
     } else {
-      listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY)
+      listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY, DetailPage.IC_SETTINGS)
     }
 
   private fun getSwitchDetailPages(channelWithChildren: ChannelWithChildren): List<DetailPage> {
@@ -76,8 +76,10 @@ class ProvideChannelDetailTypeUseCase @Inject constructor() : BaseDetailTypeProv
       list.add(DetailPage.EM_SETTINGS)
     } else if (meterChild?.channel?.isImpulseCounter() == true) {
       list.add(DetailPage.IC_HISTORY)
+      list.add(DetailPage.IC_SETTINGS)
     } else if (channelWithChildren.channel.channelValueEntity.subValueType == SUBV_TYPE_IC_MEASUREMENTS.toShort()) {
       list.add(DetailPage.IC_HISTORY)
+      list.add(DetailPage.IC_SETTINGS)
     } else if (channelWithChildren.channel.channelValueEntity.subValueType == SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()) {
       list.add(DetailPage.EM_HISTORY)
       list.add(DetailPage.EM_SETTINGS)

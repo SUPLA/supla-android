@@ -549,6 +549,7 @@
   <string name="details_timer_info_thermostat_off">A termosztátot kikapcsol a\n%1$s időpontok között</string>
   <string name="details_timer_info_thermostat_heating">A termosztát fűtési üzemmódban lesz\n%1$s időpontok között</string>
   <string name="details_timer_info_thermostat_cooling">A termosztát hűtési üzemmódban lesz\n%1$s időpontok között</string>
+  <string name="details_timer_info_thermostat_auto">A termosztát %1$s ideig automatikus módban lesz</string>
   <string name="details_timer_select_time">Adja meg az időtartamot</string>
   <string name="details_timer_counter">Mérőóra</string>
   <string name="details_timer_calendar">Naptár</string>
@@ -635,8 +636,8 @@
   <string name="details_em_forwarded_energy">Fogyasztott</string>
   <string name="details_em_reversed_energy">Visszatérő</string>
   <string name="details_em_cost">Költség</string>
-  <string name="details_em_settings_list_item">A csatornalistában megjelenő érték</string>
-  <string name="details_em_settings_title">Beállítások - %1$s</string>
+  <string name="details_ic_settings_list_item">A csatornalistában megjelenő érték</string>
+  <string name="details_settings_title">Beállítások - %1$s</string>
   <string name="details_em_total_suffix">(mérőóra állapota)</string>
   <string name="details_em_current_month_suffix">(folyó hó)</string>
   <string name="details_em_last_month_balancing">Az aktuális hónap mérlege</string>
@@ -822,4 +823,16 @@
   <string name="general_search">Keresés</string>
   <string name="toolbar_search_hint">Írjon be legalább 2 karaktert…</string>
   <string name="details_timer_select_program">Program kiválasztása</string>
+  <string name="settings_show_unavailable_channels">Az eszköz konfigurációja miatt nem elérhető csatornák elrejtése</string>
+  <string name="details_em_active_energy_balance">Hatásos energia egyenleg</string>
+  <string name="details_em_settings_list_metric">Kiválasztott érték</string>
+  <string name="general_current_hour">Aktuális óra</string>
+  <string name="general_current_day">Aktuális nap</string>
+  <string name="general_current_month">Aktuális hónap</string>
+  <string name="general_current_week">Aktuális hét</string>
+  <string name="impulse_counter_settings_counter_status">Aktuális mérőállás</string>
+  <string name="general_current_year">Aktuális év</string>
+  <string name="details_em_on_list_balance">Energiamérlegelési módszer</string>
+  <string name="details_em_on_list_value">Adattartomány</string>
+  <string name="details_em_on_list">Megjelenítés a csatornalistában</string>
 </resources>

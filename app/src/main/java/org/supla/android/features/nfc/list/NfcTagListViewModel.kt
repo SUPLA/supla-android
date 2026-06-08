@@ -31,7 +31,7 @@ import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
-import org.supla.core.shared.extensions.ifFalse
+import org.supla.core.shared.extensions.forFalse
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import javax.inject.Inject
 
@@ -91,7 +91,7 @@ class NfcTagListViewModel @Inject constructor(
       id = tagEntity.id,
       name = tagEntity.name,
       icon = icon(getChannelIconUseCase, getSceneIconUseCase),
-      profileName = (profilesCount == 1).ifFalse(profileEntity?.name),
+      profileName = (profilesCount == 1).forFalse(profileEntity?.name),
       subjectName = name(getCaptionUseCase),
       action = tagEntity.actionId,
       readOnly = tagEntity.readOnly,

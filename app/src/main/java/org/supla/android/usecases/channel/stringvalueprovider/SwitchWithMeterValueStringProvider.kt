@@ -18,17 +18,19 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import org.supla.android.core.storage.UserStateHolder
+import org.supla.android.data.model.settings.ListValueAggregation
+import org.supla.android.data.model.settings.eletricitymeter.ElectricityMeterMeasurementType
 import org.supla.android.data.source.local.entity.complex.ImpulseCounter
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.isImpulseCounter
 import org.supla.android.data.source.local.entity.isSwitch
-import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
 import org.supla.android.usecases.channel.ChannelValueStringProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueprovider.SwitchWithElectricityMeterValueProvider
 import org.supla.android.usecases.channel.valueprovider.SwitchWithImpulseCounterValueProvider
 import org.supla.core.shared.data.model.channel.ChannelRelationType
+import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
 import org.supla.core.shared.usecase.channel.valueformatter.formatters.ElectricityMeterValueFormatter
 import org.supla.core.shared.usecase.channel.valueformatter.formatters.ImpulseCounterValueFormatter
 import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
@@ -56,24 +58,33 @@ class SwitchWithMeterValueStringProvider @Inject constructor(
     val channelData = channelWithChildren.channel
     val meterChild = channelWithChildren.children.firstOrNull { it.relationType == ChannelRelationType.METER }
 
+    // trying handle electricity meter
     if (channelWithChildren.isOrHasElectricityMeter) {
       val value = switchWithElectricityMeterValueProvider.value(channelWithChildren, valueType)
-      val type = userStateHolder.getElectricityMeterSettings(channelData.profileId, channelData.remoteId).showOnListSafe
+      val settings = userStateHolder.getElectricityMeterSettings(channelData.profileId, channelData.remoteId)
+      val type = settings.metricOnList
 
-      return if (type == SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY) {
-        emFormatter.format(value, withUnit(withUnit))
+      return if (settings.usingAggregatedValue) {
+        channelWithChildren.channel.channelValueEntity.aggregatedValue ?: NO_VALUE_TEXT
       } else {
         emFormatter.format(
           value = value,
           format = ValueFormat(
             withUnit = withUnit,
-            customUnit = " ${type.unit}",
-            showNoValueText = false
+            customUnit = " ${type.suplaType.unit}",
+            showNoValueText = type == ElectricityMeterMeasurementType.FORWARD_ACTIVE_ENERGY
           )
         )
       }
     }
 
+    // trying handle aggregated value of impulse counter
+    val settings = userStateHolder.getImpulseCounterSettings(channelData.profileId, channelData.remoteId)
+    if (settings.showOnList != ListValueAggregation.NO_AGGREGATION) {
+      return channelData.channelValueEntity.aggregatedValue ?: NO_VALUE_TEXT
+    }
+
+    // trying handle impulse counter
     if (meterChild?.channel?.isImpulseCounter() == true) {
       return impulseCounterValueStringProvider.value(meterChild.withChildren, valueType, withUnit)
     }

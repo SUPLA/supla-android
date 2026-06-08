@@ -41,5 +41,13 @@ data class ChannelRelationEntity(
     const val COLUMN_DELETE_FLAG = "delete_flag"
 
     const val ALL_COLUMNS = "$COLUMN_CHANNEL_ID, $COLUMN_PARENT_ID, $COLUMN_CHANNEL_RELATION_TYPE, $COLUMN_PROFILE_ID, $COLUMN_DELETE_FLAG"
+
+    const val JOIN_COLUMNS =
+      """
+        relation.$COLUMN_PARENT_ID relation_$COLUMN_PARENT_ID,
+        relation.$COLUMN_CHANNEL_ID relation_$COLUMN_CHANNEL_ID,
+        relation.$COLUMN_CHANNEL_RELATION_TYPE relation_$COLUMN_CHANNEL_RELATION_TYPE,
+        relation.$COLUMN_DELETE_FLAG relation_$COLUMN_DELETE_FLAG,
+        relation.$COLUMN_PROFILE_ID relation_$COLUMN_PROFILE_ID"""
   }
 }

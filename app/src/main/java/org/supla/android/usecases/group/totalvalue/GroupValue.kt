@@ -199,12 +199,12 @@ data class DimmerCctAndRgbGroupValue(
     )
 
   companion object {
-    operator fun invoke(stringValue: String): DimmerAndRgbGroupValue {
+    operator fun invoke(stringValue: String): DimmerCctAndRgbGroupValue {
       val values = stringValue.split(SEPARATOR)
-      if (values.size != 3) {
+      if (values.size != 4) {
         throw IllegalArgumentException("Given string value is not correct `$stringValue`")
       }
-      return DimmerAndRgbGroupValue(values[0].toInt(), values[1].toInt(), values[2].toInt())
+      return DimmerCctAndRgbGroupValue(values[0].toInt(), values[1].toInt(), values[2].toInt(), values[3].toInt())
     }
   }
 }

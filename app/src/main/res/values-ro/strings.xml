@@ -551,6 +551,7 @@
   <string name="details_timer_info_thermostat_off">Termostatul va fi oprit prin\n%1$s</string>
   <string name="details_timer_info_thermostat_heating">Termostatul va fi în modul de încălzire pentru\n%1$s</string>
   <string name="details_timer_info_thermostat_cooling">Termostatul va fi în modul de răcire pentru\n%1$s</string>
+  <string name="details_timer_info_thermostat_auto">Termostatul va fi în modul automat timp de\\n%1$s</string>
   <string name="details_timer_select_time">Specificați ora</string>
   <string name="details_timer_counter">Contor</string>
   <string name="details_timer_calendar">Calendar</string>
@@ -637,8 +638,8 @@
   <string name="details_em_forwarded_energy">Descărcat</string>
   <string name="details_em_reversed_energy">Returnat</string>
   <string name="details_em_cost">Cost</string>
-  <string name="details_em_settings_list_item">Valoarea afișată în lista de canale</string>
-  <string name="details_em_settings_title">Setări - %1$s</string>
+  <string name="details_ic_settings_list_item">Valoarea afișată în lista de canale</string>
+  <string name="details_settings_title">Setări - %1$s</string>
   <string name="details_em_total_suffix">(starea contorului)</string>
   <string name="details_em_current_month_suffix">(luna curentă)</string>
   <string name="details_em_last_month_balancing">Echilibrarea lunii curente</string>
@@ -827,4 +828,16 @@
   <string name="general_search">Căutare</string>
   <string name="toolbar_search_hint">Introduceți cel puțin 2 caractere…</string>
   <string name="details_timer_select_program">Selectați un program</string>
+  <string name="settings_show_unavailable_channels">Ascunde canalele care nu sunt disponibile din cauza configurației dispozitivului</string>
+  <string name="details_em_active_energy_balance">Bilanțul energiei active</string>
+  <string name="details_em_settings_list_metric">Valoare selectată</string>
+  <string name="general_current_hour">Ora curentă</string>
+  <string name="general_current_day">Ziua curentă</string>
+  <string name="general_current_month">Luna curentă</string>
+  <string name="general_current_week">Săptămâna curentă</string>
+  <string name="impulse_counter_settings_counter_status">Citirea curentă a contorului</string>
+  <string name="general_current_year">Anul curent</string>
+  <string name="details_em_on_list_balance">Metodă de echilibrare a energiei</string>
+  <string name="details_em_on_list_value">Interval de date</string>
+  <string name="details_em_on_list">Afișare în lista canalelor</string>
 </resources>

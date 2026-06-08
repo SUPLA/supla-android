@@ -19,10 +19,10 @@ package org.supla.android.usecases.list.eventmappers
 
 import org.supla.android.core.shared.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.data.source.local.entity.extensions.onlineState
 import org.supla.android.data.source.local.entity.isGpm
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
+import org.supla.android.usecases.channel.ListFirstValue
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
 import org.supla.core.shared.usecase.GetCaptionUseCase
@@ -51,9 +51,10 @@ class ChannelWithChildrenToGpmUpdateEventMapper @Inject constructor(
       onlineState = channelWithChildren.onlineState,
       title = getCaptionUseCase(channelWithChildren.channel.shareable),
       icon = getChannelIconUseCase.invoke(channelWithChildren.channel),
-      value = getChannelValueStringUseCase(channelWithChildren),
+      value = getChannelValueStringUseCase(channelWithChildren, ListFirstValue),
       issues = getChannelIssuesForListUseCase(channelWithChildren.shareable),
       estimatedTimerEndDate = null,
-      infoSupported = channelWithChildren.showInfo
+      infoSupported = channelWithChildren.showInfo,
+      processing = false
     )
 }

@@ -21,6 +21,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -35,54 +36,6 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.ui.views.Switch
-
-@Composable
-fun SettingsListItem(
-  label: String,
-  checked: Boolean,
-  modifier: Modifier = Modifier,
-  description: String? = null,
-  onCheckedChanged: (Boolean) -> Unit
-) {
-  Row(
-    verticalAlignment = Alignment.CenterVertically,
-    modifier = modifier
-      .defaultMinSize(minHeight = 64.dp)
-      .background(MaterialTheme.colorScheme.background)
-      .padding(bottom = 1.dp)
-      .background(MaterialTheme.colorScheme.surface)
-      .fillMaxWidth()
-      .padding(horizontal = Distance.default)
-  ) {
-    if (description != null) {
-      Column(
-        modifier = Modifier.weight(1f)
-      ) {
-        Text(
-          text = label,
-          style = MaterialTheme.typography.bodyMedium,
-        )
-        Text(
-          text = description,
-          style = MaterialTheme.typography.bodySmall,
-          color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-      }
-    } else {
-      Text(
-        text = label,
-        style = MaterialTheme.typography.bodyMedium,
-        modifier = Modifier.weight(1f)
-      )
-    }
-
-    Switch(
-      checked = checked,
-      onCheckedChange = onCheckedChanged
-    )
-  }
-}
 
 @Composable
 fun SettingsList(
@@ -94,6 +47,52 @@ fun SettingsList(
     content = content
   )
 
+@Composable
+fun SettingLabel(
+  label: String,
+  modifier: Modifier = Modifier
+) =
+  Text(
+    text = label,
+    style = MaterialTheme.typography.bodyMedium,
+    modifier = modifier
+  )
+
+@Composable
+fun SettingDescription(
+  description: String
+) =
+  Text(
+    text = description,
+    style = MaterialTheme.typography.bodySmall,
+    color = MaterialTheme.colorScheme.onSurfaceVariant
+  )
+
+@Composable
+fun SettingRow(modifier: Modifier = Modifier, content: @Composable RowScope.() -> Unit) =
+  Row(
+    verticalAlignment = Alignment.CenterVertically,
+    modifier = modifier
+      .defaultMinSize(minHeight = 64.dp)
+      .background(MaterialTheme.colorScheme.background)
+      .padding(bottom = 1.dp)
+      .background(MaterialTheme.colorScheme.surface)
+      .fillMaxWidth()
+      .padding(horizontal = Distance.default),
+    content = content
+  )
+
+@Composable
+fun SettingsHeader(
+  text: String,
+  modifier: Modifier = Modifier
+) =
+  Text(
+    text = text.uppercase(),
+    style = MaterialTheme.typography.bodyMedium,
+    modifier = modifier.padding(start = Distance.small, bottom = Distance.tiny, end = Distance.small)
+  )
+
 @Preview
 @PreviewScreenSizes
 @PreviewFontScale
@@ -101,16 +100,22 @@ fun SettingsList(
 private fun Preview() {
   SuplaTheme {
     SettingsList {
-      SettingsListItem(
+      SettingCheckboxItem(
         label = "Screen rotation enabled",
         checked = false,
         onCheckedChanged = {}
       )
-      SettingsListItem(
+      SettingCheckboxItem(
         label = "Screen rotation enabled",
         checked = false,
         description = "App restart is needed",
         onCheckedChanged = {}
+      )
+      SettingTextFieldItem(
+        label = "Reset hour",
+        value = "1",
+        onValueChanged = {},
+        unit = ":00",
       )
     }
   }

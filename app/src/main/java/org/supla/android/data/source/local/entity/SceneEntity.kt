@@ -127,5 +127,21 @@ data class SceneEntity(
       COLUMN_INITIATOR_ID, COLUMN_INITIATOR_NAME, COLUMN_SORT_ORDER, COLUMN_VISIBLE,
       COLUMN_PROFILE_ID
     )
+
+    const val JOIN_COLUMNS =
+      """
+        scene.$COLUMN_ID scene_$COLUMN_ID,
+        scene.$COLUMN_REMOTE_ID scene_$COLUMN_REMOTE_ID, 
+        scene.$COLUMN_LOCATION_ID scene_$COLUMN_LOCATION_ID, 
+        scene.$COLUMN_ALT_ICON scene_$COLUMN_ALT_ICON, 
+        scene.$COLUMN_USER_ICON scene_$COLUMN_USER_ICON, 
+        scene.$COLUMN_CAPTION scene_$COLUMN_CAPTION,
+        scene.$COLUMN_STARTED_AT scene_$COLUMN_STARTED_AT,
+        scene.$COLUMN_ESTIMATED_END_DATE scene_$COLUMN_ESTIMATED_END_DATE,
+        scene.$COLUMN_INITIATOR_ID scene_$COLUMN_INITIATOR_ID,
+        scene.$COLUMN_INITIATOR_NAME scene_$COLUMN_INITIATOR_NAME,
+        scene.$COLUMN_SORT_ORDER scene_$COLUMN_SORT_ORDER,
+        scene.$COLUMN_VISIBLE scene_$COLUMN_VISIBLE,
+        scene.$COLUMN_PROFILE_ID scene_$COLUMN_PROFILE_ID"""
   }
 }

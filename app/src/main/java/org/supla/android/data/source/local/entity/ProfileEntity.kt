@@ -137,6 +137,24 @@ data class ProfileEntity(
     """
 
     const val SUBQUERY_ACTIVE = "(SELECT $COLUMN_ID FROM $TABLE_NAME WHERE $COLUMN_ACTIVE = 1)"
+
+    const val JOIN_COLUMNS =
+      """
+        profile.$COLUMN_ID profile_$COLUMN_ID,
+        profile.$COLUMN_NAME profile_$COLUMN_NAME,
+        profile.$COLUMN_EMAIL profile_$COLUMN_EMAIL,
+        profile.$COLUMN_SERVER_FOR_ACCESS_ID profile_$COLUMN_SERVER_FOR_ACCESS_ID,
+        profile.$COLUMN_SERVER_FOR_EMAIL profile_$COLUMN_SERVER_FOR_EMAIL,
+        profile.$COLUMN_SERVER_AUTO_DETECT profile_$COLUMN_SERVER_AUTO_DETECT,
+        profile.$COLUMN_EMAIL_AUTH profile_$COLUMN_EMAIL_AUTH,
+        profile.$COLUMN_ACCESS_ID profile_$COLUMN_ACCESS_ID,
+        profile.$COLUMN_ACCESS_ID_PASSWORD profile_$COLUMN_ACCESS_ID_PASSWORD,
+        profile.$COLUMN_PREFERRED_PROTOCOL_VERSION profile_$COLUMN_PREFERRED_PROTOCOL_VERSION,
+        profile.$COLUMN_ACTIVE profile_$COLUMN_ACTIVE,
+        profile.$COLUMN_ADVANCED_MODE profile_$COLUMN_ADVANCED_MODE,
+        profile.$COLUMN_POSITION profile_$COLUMN_POSITION,
+        profile.$COLUMN_GUID profile_$COLUMN_GUID,
+        profile.$COLUMN_AUTH_KEY profile_$COLUMN_AUTH_KEY"""
   }
 
   override fun equals(other: Any?): Boolean {

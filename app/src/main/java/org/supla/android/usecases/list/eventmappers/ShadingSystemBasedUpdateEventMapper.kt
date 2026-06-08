@@ -39,7 +39,8 @@ abstract class ShadingSystemBasedUpdateEventMapper(
       value = null,
       issues = getChannelIssuesForListUseCase(channelWithChildren.shareable),
       estimatedTimerEndDate = null,
-      infoSupported = channelWithChildren.showInfo
+      infoSupported = channelWithChildren.showInfo,
+      processing = false
     )
   }
 }

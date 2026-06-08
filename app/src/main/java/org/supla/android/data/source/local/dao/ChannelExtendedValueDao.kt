@@ -49,6 +49,16 @@ interface ChannelExtendedValueDao {
   )
   fun findByRemoteId(remoteId: Int): Single<ChannelExtendedValueEntity>
 
+  @Query(
+    """
+      SELECT $ALL_COLUMNS 
+      FROM $TABLE_NAME
+      WHERE $COLUMN_CHANNEL_ID = :remoteId
+        AND $COLUMN_PROFILE_ID = :profileId
+    """
+  )
+  suspend fun findBy(profileId: Long, remoteId: Int): ChannelExtendedValueEntity?
+
   @Update
   fun update(entity: ChannelExtendedValueEntity): Completable
 

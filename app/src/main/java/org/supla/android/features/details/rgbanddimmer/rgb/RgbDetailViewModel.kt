@@ -17,7 +17,6 @@ package org.supla.android.features.details.rgbanddimmer.rgb
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.viewModelScope
@@ -37,7 +36,6 @@ import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.source.ColorListRepository
 import org.supla.android.data.source.local.entity.ColorEntityType
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.remote.rgb.color
@@ -69,7 +67,7 @@ import org.supla.android.usecases.group.GroupWithChannels
 import org.supla.android.usecases.group.ReadGroupWithChannelsUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 import timber.log.Timber
@@ -355,7 +353,7 @@ class RgbDetailViewModel @Inject constructor(
 
   override fun onOpenColorDialog() {
     updateState {
-      val dialogState = it.viewState.offline.not().ifTrue {
+      val dialogState = it.viewState.offline.not().forTrue {
         ColorDialogState(it.viewState.value.hsv?.color?.toHexString() ?: "#00FF00")
       }
 

@@ -548,11 +548,11 @@
   <string name="history_range_last_30_days">Last 30 days</string>
   <string name="history_range_last_90_days">Last 90 days</string>
   <string name="history_range_last_365_days">Last 365 days</string>
-  <string name="history_range_current_day">Current day</string>
-  <string name="history_range_current_week">Current week</string>
-  <string name="history_range_current_month">Current month</string>
-  <string name="history_range_current_quarter">Current quarter</string>
-  <string name="history_range_current_year">Current year</string>
+  <string name="history_range_current_day">Day</string>
+  <string name="history_range_current_week">Week</string>
+  <string name="history_range_current_month">Month</string>
+  <string name="history_range_current_quarter">Quarter</string>
+  <string name="history_range_current_year">Year</string>
   <string name="history_range_custom">Custom range</string>
   <string name="history_refreshing">Refreshing…</string>
   <string name="history_refreshing_failed">Refresh failed</string>
@@ -571,6 +571,7 @@
   <string name="details_timer_info_thermostat_off">Thermostat will stay turned off for\n%1$s</string>
   <string name="details_timer_info_thermostat_heating">Thermostat will stay in heating mode for\n%1$s</string>
   <string name="details_timer_info_thermostat_cooling">Thermostat will stay in cooling mode for\n%1$s</string>
+  <string name="details_timer_info_thermostat_auto">Thermostat will stay in auto mode for\n%1$s</string>
   <string name="details_timer_select_time">Specify time</string>
   <string name="details_timer_counter">Counter</string>
   <string name="details_timer_calendar">Calendar</string>
@@ -678,8 +679,8 @@
   <string name="details_em_forwarded_energy">Forward</string>
   <string name="details_em_reversed_energy">Reverse</string>
   <string name="details_em_cost">Cost</string>
-  <string name="details_em_settings_list_item">Metric shown on the channel list</string>
-  <string name="details_em_settings_title">Settings - %1$s</string>
+  <string name="details_ic_settings_list_item">Metric shown on the channel list</string>
+  <string name="details_settings_title">Settings - %1$s</string>
   <string name="details_em_total_suffix">(meter reading)</string>
   <string name="details_em_current_month_suffix">(current month)</string>
   <string name="details_em_last_month_balancing">Type of balance for current month</string>
@@ -939,4 +940,16 @@
   <string name="general_search">Search</string>
   <string name="toolbar_search_hint">Type 2 characters for search…</string>
   <string name="details_timer_select_program">Select program</string>
+  <string name="settings_show_unavailable_channels">Hide channels that are unavailable due to the device configuration.</string>
+  <string name="general_current_hour">Current hour</string>
+  <string name="general_current_day">Current day</string>
+  <string name="general_current_month">Current month</string>
+  <string name="general_current_week">Current week</string>
+  <string name="impulse_counter_settings_counter_status">Counter status</string>
+  <string name="general_current_year">Current year</string>
+  <string name="details_em_on_list_balance">Energy balancing method</string>
+  <string name="details_em_on_list_value">Data range</string>
+  <string name="details_em_on_list">Display in the channel list</string>
+  <string name="details_em_active_energy_balance">Active energy balance</string>
+  <string name="details_em_settings_list_metric">Selected value</string>
 </resources>

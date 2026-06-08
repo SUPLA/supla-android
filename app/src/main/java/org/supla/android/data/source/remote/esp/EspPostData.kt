@@ -18,7 +18,7 @@ package org.supla.android.data.source.remote.esp
  */
 
 import org.supla.android.extensions.isNotNull
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 
 class EspPostData(
   val fieldMap: MutableMap<String, String>
@@ -113,7 +113,7 @@ private fun MutableMap<String, String>.putOrRemove(key: String, value: String?) 
 
 private fun MutableMap<String, String>.putOrRemove(key: String, value: Boolean?) {
   if (value != null) {
-    put(key, value.ifTrue { "1" } ?: "0")
+    put(key, value.forTrue { "1" } ?: "0")
   } else {
     remove(key)
   }

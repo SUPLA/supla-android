@@ -42,8 +42,8 @@ class ElectricityMeterLogRepository @Inject constructor(
   RemoveHiddenChannelsUseCase.ChannelsDeletable,
   DeleteProfileUseCase.ProfileRemover {
 
-  fun findMeasurements(remoteId: Int, profileId: Long, startDate: Date, endDate: Date) =
-    electricityMeterLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)
+  fun findMeasurements(remoteId: Int, profileId: Long, startTimestamp: Long, endTimestamp: Long) =
+    electricityMeterLogDao.findMeasurements(remoteId, profileId, startTimestamp, endTimestamp)
 
   fun findMeasurementsGrouped(remoteId: Int, profileId: Long, startDate: Date, endDate: Date, groupingStart: Int, groupingLength: Int) =
     electricityMeterLogDao.findMeasurementsGrouped(remoteId, profileId, startDate.time, endDate.time, groupingStart, groupingLength)

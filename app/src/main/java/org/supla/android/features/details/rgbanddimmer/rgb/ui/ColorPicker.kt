@@ -57,7 +57,7 @@ import org.supla.android.features.details.rgbanddimmer.common.ui.OUTER_SURFACE_W
 import org.supla.android.features.details.rgbanddimmer.common.ui.drawMarkerPoint
 import org.supla.android.features.details.rgbanddimmer.common.ui.drawSelectorPoint
 import org.supla.android.tools.SuplaSizeClassPreview
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -91,7 +91,7 @@ fun ColorPickerComponent(
       currentHue = hsv?.hue,
       currentSaturation = hsv?.saturation,
       enabled = enabled,
-      markers = hsv.isNull.ifTrue { markers } ?: emptyList(),
+      markers = hsv.isNull.forTrue { markers } ?: emptyList(),
       onDragStart = onColorSelectionStarted,
       onDrag = { newHue, newSaturation ->
         val color = hsv?.copy(hue = newHue, saturation = newSaturation) ?: HsvColor(newHue, newSaturation, 1f)
@@ -108,7 +108,7 @@ fun ColorPickerComponent(
       selectedColor = hsv?.color,
       enabled = enabled,
       startColor = hsv?.fullBrightnessColor ?: Color.White,
-      valueMarkers = hsv.isNull.ifTrue { markers.map { it.value } } ?: emptyList(),
+      valueMarkers = hsv.isNull.forTrue { markers.map { it.value } } ?: emptyList(),
       onValueChangeStarted = onColorSelectionStarted,
       onValueChanging = {
         // Setting brightness to 0 is not allowed. If the user wants turn off the dimmer
@@ -258,7 +258,7 @@ private fun SelectorLayout(
     val spacing = 24.dp.toPx().toInt()
 
     val colorSelectorWidth =
-      (possibleHeight > possibleWidth + brightnessSelectorWidth + spacing).ifTrue {
+      (possibleHeight > possibleWidth + brightnessSelectorWidth + spacing).forTrue {
         possibleWidth - brightnessSelectorWidth - spacing
       } ?: possibleHeight
 

@@ -27,17 +27,20 @@ import dagger.assisted.AssistedInject
 import org.supla.android.data.source.local.entity.measurements.HomePlusThermostatLogEntity
 import org.supla.android.data.source.remote.rest.channel.ThermostatMeasurement
 import org.supla.android.events.DownloadEventsManager
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.measurementsdownload.DownloadThermostatHeatpolLogUseCase
 
 @HiltWorker
 class DownloadThermostatHeatpolWorker @AssistedInject constructor(
   @Assisted appContext: Context,
   @Assisted workerParameters: WorkerParameters,
+  updateEventsManager: UpdateEventsManager,
   downloadEventsManager: DownloadEventsManager,
   downloadThermostatHeatpolLogUseCase: DownloadThermostatHeatpolLogUseCase
 ) : BaseDownloadLogWorker<ThermostatMeasurement, HomePlusThermostatLogEntity>(
   appContext,
   workerParameters,
+  updateEventsManager,
   downloadEventsManager,
   downloadThermostatHeatpolLogUseCase
 ) {

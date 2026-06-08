@@ -502,6 +502,7 @@
   <string name="details_timer_info_thermostat_off">Thermostat bleibt %1$s ausgeschaltet</string>
   <string name="details_timer_info_thermostat_heating">Thermostat bleibt %1$s im Heizmodus</string>
   <string name="details_timer_info_thermostat_cooling">Thermostat bleibt %1$s im Kühlmodus</string>
+  <string name="details_timer_info_thermostat_auto">Der Thermostat bleibt für %1$s im Automatikmodus</string>
   <string name="details_timer_select_time">Zeitauswahl</string>
   <string name="details_timer_counter">Zähler</string>
   <string name="details_timer_calendar">Kalender</string>
@@ -604,8 +605,8 @@
   <string name="details_em_forwarded_energy">Aufgenommen</string>
   <string name="details_em_reversed_energy">Zurückgegeben</string>
   <string name="details_em_cost">Kosten</string>
-  <string name="details_em_settings_list_item">In der Kanalliste angezeigte Metrik</string>
-  <string name="details_em_settings_title">Einstellungen - %1$s</string>
+  <string name="details_ic_settings_list_item">In der Kanalliste angezeigte Metrik</string>
+  <string name="details_settings_title">Einstellungen - %1$s</string>
   <string name="details_em_total_suffix">(Zählerstand)</string>
   <string name="details_em_current_month_suffix">(aktueller Monat)</string>
   <string name="details_em_last_month_balancing">Art des Saldos für den aktuellen Monat</string>
@@ -883,4 +884,16 @@
   <string name="general_search">Suchen</string>
   <string name="toolbar_search_hint">Geben Sie mindestens 2 Zeichen ein…</string>
   <string name="details_timer_select_program">Programm auswählen</string>
+  <string name="settings_show_unavailable_channels">Kanäle ausblenden, die aufgrund der Gerätekonfiguration nicht verfügbar sind</string>
+  <string name="details_em_active_energy_balance">Bilanz der Wirkenergie</string>
+  <string name="details_em_settings_list_metric">Ausgewählter Wert</string>
+  <string name="general_current_hour">Aktuelle Stunde</string>
+  <string name="general_current_day">Aktueller Tag</string>
+  <string name="general_current_month">Aktueller Monat</string>
+  <string name="general_current_week">Aktuelle Woche</string>
+  <string name="impulse_counter_settings_counter_status">Aktueller Zählerstand</string>
+  <string name="general_current_year">Aktuelles Jahr</string>
+  <string name="details_em_on_list_balance">Methode zur Energiebilanzierung</string>
+  <string name="details_em_on_list_value">Datenbereich</string>
+  <string name="details_em_on_list">Anzeige in der Kanalliste</string>
 </resources>

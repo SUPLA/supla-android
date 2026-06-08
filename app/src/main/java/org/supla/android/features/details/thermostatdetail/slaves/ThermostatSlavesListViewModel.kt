@@ -28,7 +28,6 @@ import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.extensions.onlineState
-import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.remote.thermostat.getIndicatorIcon
 import org.supla.android.data.source.remote.thermostat.getSetpointText
 import org.supla.android.data.source.runtime.ItemType
@@ -41,7 +40,7 @@ import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.model.channel.ChannelRelationType
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetChannelIssuesForSlavesUseCase
 import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
@@ -91,7 +90,7 @@ class ThermostatSlavesListViewModel @Inject constructor(
   override fun onSlaveClick(slave: ThermostatData) {
     sendEvent(
       ThermostatSlavesListViewEvent.OpenDetails(
-        bundle = ItemBundle(slave.channelId, slave.deviceId, ItemType.CHANNEL, slave.function),
+        bundle = ItemBundle(slave.channelId, slave.deviceId, slave.profileId, ItemType.CHANNEL, slave.function),
         pages = listOf(DetailPage.THERMOSTAT, DetailPage.THERMOSTAT_HISTORY)
       )
     )
@@ -134,7 +133,7 @@ class ThermostatSlavesListViewModel @Inject constructor(
       indicatorIcon = thermostatValue.getIndicatorIcon(),
       channelIssueItem = getChannelIssuesForSlavesUseCase(shareable),
       showChannelStateIcon = channel.showInfo,
-      subValue = withSetpointValue.ifTrue { thermostatValue.getSetpointText(thermometerValueFormatter) },
+      subValue = withSetpointValue.forTrue { thermostatValue.getSetpointText(thermometerValueFormatter) },
       pumpSwitchIcon = pumpSwitchChild?.let { getChannelIconUseCase(it.channelDataEntity) },
       sourceSwitchIcon = heatOrColdSourceSwitchChild?.let { getChannelIconUseCase(it.channelDataEntity) }
     )
@@ -157,7 +156,7 @@ class ThermostatSlavesListViewModel @Inject constructor(
       indicatorIcon = thermostatValue.getIndicatorIcon(),
       channelIssueItem = getChannelIssuesForSlavesUseCase(channelDataEntity.shareable),
       showChannelStateIcon = channelDataEntity.showInfo,
-      subValue = withSetpointValue.ifTrue { thermostatValue.getSetpointText(thermometerValueFormatter) },
+      subValue = withSetpointValue.forTrue { thermostatValue.getSetpointText(thermometerValueFormatter) },
       pumpSwitchIcon = pumpSwitchChild?.let { getChannelIconUseCase(it.channelDataEntity) },
       sourceSwitchIcon = heatOrColdSourceSwitchChild?.let { getChannelIconUseCase(it.channelDataEntity) }
     )

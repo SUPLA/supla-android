@@ -527,6 +527,7 @@
   <string name="details_timer_info_thermostat_off">Termostatas bus išjungtas \n%1$s</string>
   <string name="details_timer_info_thermostat_heating">Termostatas bus šildymo režime \n%1$s</string>
   <string name="details_timer_info_thermostat_cooling">Termostatas bus vėsinimo režime \n%1$s</string>
+  <string name="details_timer_info_thermostat_auto">Termostatas veiks automatiniu režimu\\n%1$s</string>
   <string name="details_timer_select_time">Nustatykite laiką</string>
   <string name="details_timer_counter">Skaitiklis</string>
   <string name="details_timer_calendar">Kalendorius</string>
@@ -613,8 +614,8 @@
   <string name="details_em_forwarded_energy">Paimta</string>
   <string name="details_em_reversed_energy">Grąžinta</string>
   <string name="details_em_cost">Kaina</string>
-  <string name="details_em_settings_list_item">Kanalų sąraše rodoma vertė</string>
-  <string name="details_em_settings_title">Nustatymai - %1$s</string>
+  <string name="details_ic_settings_list_item">Kanalų sąraše rodoma vertė</string>
+  <string name="details_settings_title">Nustatymai - %1$s</string>
   <string name="details_em_total_suffix">(skaitiklio būsena)</string>
   <string name="details_em_current_month_suffix">(einamasis mėnuo)</string>
   <string name="details_em_last_month_balancing">Einamojo mėnesio balansavimas</string>
@@ -804,4 +805,16 @@
   <string name="general_search">Ieškoti</string>
   <string name="toolbar_search_hint">Įveskite bent 2 simbolius…</string>
   <string name="details_timer_select_program">Pasirinkite programą</string>
+  <string name="settings_show_unavailable_channels">Slėpti kanalus, kurie nepasiekiami dėl įrenginio konfigūracijos</string>
+  <string name="details_em_active_energy_balance">Aktyviosios energijos balansas</string>
+  <string name="details_em_settings_list_metric">Pasirinkta reikšmė</string>
+  <string name="general_current_hour">Dabartinė valanda</string>
+  <string name="general_current_day">Dabartinė diena</string>
+  <string name="general_current_month">Dabartinis mėnuo</string>
+  <string name="general_current_week">Dabartinė savaitė</string>
+  <string name="impulse_counter_settings_counter_status">Dabartinis skaitiklio rodmuo</string>
+  <string name="general_current_year">Dabartiniai metai</string>
+  <string name="details_em_on_list_balance">Energijos balansavimo metodas</string>
+  <string name="details_em_on_list_value">Duomenų diapazonas</string>
+  <string name="details_em_on_list">Rodymas kanalų sąraše</string>
 </resources>

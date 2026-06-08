@@ -26,6 +26,7 @@ import java.io.Serializable
 data class ItemBundle(
   val remoteId: Int,
   val deviceId: Int,
+  val profileId: Long,
   val itemType: ItemType,
   val function: SuplaFunction
 ) : Serializable {
@@ -34,6 +35,7 @@ data class ItemBundle(
       ItemBundle(
         remoteId = channelData.remoteId,
         deviceId = channelData.channelEntity.deviceId ?: 0,
+        profileId = channelData.profileId,
         itemType = ItemType.CHANNEL,
         function = channelData.function
       )
@@ -42,6 +44,7 @@ data class ItemBundle(
       ItemBundle(
         remoteId = channelData.remoteId,
         deviceId = 0,
+        profileId = channelData.profileId,
         itemType = ItemType.GROUP,
         function = channelData.function
       )

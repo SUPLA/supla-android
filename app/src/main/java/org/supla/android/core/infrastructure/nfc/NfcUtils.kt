@@ -29,7 +29,7 @@ import android.os.Build.VERSION.SDK_INT
 import androidx.navigation3.runtime.NavKey
 import org.supla.android.features.nfc.call.CallActionFromData
 import org.supla.android.features.nfc.call.CallActionFromUrl
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 import timber.log.Timber
 import java.util.UUID
 
@@ -154,7 +154,7 @@ private fun Ndef.prepareForSupla(lockTag: Boolean): TagProcessingResult {
 
     if (uuidFromMimeRecord != null && uuidFromMimeRecord == uuidFromUriRecord) {
       Timber.i("NFC tag for supla found (id: $uuidFromMimeRecord)")
-      val readOnly = (lockTag && isWritable).ifTrue { makeReadOnly() } ?: !isWritable
+      val readOnly = (lockTag && isWritable).forTrue { makeReadOnly() } ?: !isWritable
       return TagProcessingResult.Success(uuidFromMimeRecord, readOnly)
     }
 
@@ -189,7 +189,7 @@ private fun Ndef.writeSuplaRecord(lockTag: Boolean): TagProcessingResult {
     return if (recordsSize < maxSize) {
       Timber.d("Writing supla message to NFC tag")
       writeNdefMessage(message)
-      val readOnly = lockTag.ifTrue { makeReadOnly() } ?: false
+      val readOnly = lockTag.forTrue { makeReadOnly() } ?: false
       TagProcessingResult.Success(id, readOnly)
     } else {
       Timber.e("Supla message is too big to write to NFC tag ($recordsSize vs $maxSize")

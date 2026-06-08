@@ -185,10 +185,16 @@ fun BodyMedium(
   )
 
 @Composable
-fun BodySmall(stringRes: Int, color: Color = MaterialTheme.colorScheme.onSurface, textAlign: TextAlign = TextAlign.Center) =
+fun BodySmall(
+  stringRes: Int,
+  modifier: Modifier = Modifier,
+  color: Color = MaterialTheme.colorScheme.onSurface,
+  textAlign: TextAlign = TextAlign.Center
+) =
   Text(
     text = stringResource(id = stringRes),
     style = MaterialTheme.typography.bodySmall,
     color = color,
-    textAlign = textAlign
+    textAlign = textAlign,
+    modifier = modifier
   )

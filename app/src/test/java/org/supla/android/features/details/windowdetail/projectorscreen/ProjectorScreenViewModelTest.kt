@@ -49,7 +49,6 @@ import org.supla.android.features.details.windowdetail.base.data.ProjectorScreen
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemPositionPresentation
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
-import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.usecases.channel.ObserveChannelWithChildrenUseCase
@@ -229,7 +228,7 @@ class ProjectorScreenViewModelTest : BaseViewModelTest<ProjectorScreenViewModelS
     val group: ChannelGroupEntity = mockk {
       every {
         this@mockk.groupTotalValues
-      } returns GroupTotalValue.parse(SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN, totalValue)
+      } returns GroupTotalValue.parse(SuplaFunction.PROJECTOR_SCREEN, totalValue)
     }
     val groupData: ChannelGroupDataEntity = mockk {
       every { id } returns groupId

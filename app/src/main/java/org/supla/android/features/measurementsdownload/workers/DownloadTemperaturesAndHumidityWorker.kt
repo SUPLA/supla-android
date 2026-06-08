@@ -27,17 +27,20 @@ import dagger.assisted.AssistedInject
 import org.supla.android.data.source.local.entity.measurements.TemperatureAndHumidityLogEntity
 import org.supla.android.data.source.remote.rest.channel.TemperatureAndHumidityMeasurement
 import org.supla.android.events.DownloadEventsManager
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.measurementsdownload.DownloadTemperatureAndHumidityLogUseCase
 
 @HiltWorker
 class DownloadTemperaturesAndHumidityWorker @AssistedInject constructor(
   @Assisted appContext: Context,
   @Assisted workerParameters: WorkerParameters,
+  updateEventsManager: UpdateEventsManager,
   downloadEventsManager: DownloadEventsManager,
   downloadTemperaturesAndHumidityLogUseCase: DownloadTemperatureAndHumidityLogUseCase
 ) : BaseDownloadLogWorker<TemperatureAndHumidityMeasurement, TemperatureAndHumidityLogEntity>(
   appContext,
   workerParameters,
+  updateEventsManager,
   downloadEventsManager,
   downloadTemperaturesAndHumidityLogUseCase
 ) {

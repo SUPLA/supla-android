@@ -64,7 +64,7 @@ data class ChannelGroupEntity(
 ) : ChannelBase {
 
   val groupTotalValues: List<GroupValue>
-    get() = GroupTotalValue.parse(function.value, totalValue)
+    get() = GroupTotalValue.parse(function, totalValue)
 
   companion object {
     const val TABLE_NAME = "channelgroup"
@@ -109,5 +109,21 @@ data class ChannelGroupEntity(
     const val ALL_COLUMNS = "$COLUMN_ID, $COLUMN_REMOTE_ID, $COLUMN_CAPTION, $COLUMN_ONLINE, " +
       "$COLUMN_FUNCTION, $COLUMN_VISIBLE, $COLUMN_LOCATION_ID, $COLUMN_ALT_ICON, $COLUMN_USER_ICON, " +
       "$COLUMN_FLAGS, $COLUMN_TOTAL_VALUE, $COLUMN_POSITION, $COLUMN_PROFILE_ID"
+
+    const val JOIN_COLUMNS =
+      """
+        channel_group.$COLUMN_ID group_$COLUMN_ID,
+        channel_group.$COLUMN_REMOTE_ID group_$COLUMN_REMOTE_ID,
+        channel_group.$COLUMN_CAPTION group_$COLUMN_CAPTION,
+        channel_group.$COLUMN_ONLINE group_$COLUMN_ONLINE,
+        channel_group.$COLUMN_FUNCTION group_$COLUMN_FUNCTION,
+        channel_group.$COLUMN_VISIBLE group_$COLUMN_VISIBLE,
+        channel_group.$COLUMN_LOCATION_ID group_$COLUMN_LOCATION_ID,
+        channel_group.$COLUMN_ALT_ICON group_$COLUMN_ALT_ICON,
+        channel_group.$COLUMN_USER_ICON group_$COLUMN_USER_ICON,
+        channel_group.$COLUMN_FLAGS group_$COLUMN_FLAGS,
+        channel_group.$COLUMN_TOTAL_VALUE group_$COLUMN_TOTAL_VALUE,
+        channel_group.$COLUMN_POSITION group_$COLUMN_POSITION,
+        channel_group.$COLUMN_PROFILE_ID group_$COLUMN_PROFILE_ID"""
   }
 }

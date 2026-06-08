@@ -27,6 +27,7 @@ import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity.Companion.ALL_COLUMNS
+import org.supla.android.data.source.local.entity.ChannelValueEntity.Companion.COLUMN_AGGREGATED_VALUE
 import org.supla.android.data.source.local.entity.ChannelValueEntity.Companion.COLUMN_CHANNEL_REMOTE_ID
 import org.supla.android.data.source.local.entity.ChannelValueEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.ChannelValueEntity.Companion.TABLE_NAME
@@ -59,4 +60,13 @@ interface ChannelValueDao {
 
   @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_PROFILE_ID = :profileId")
   fun deleteByProfile(profileId: Long): Completable
+
+  @Query(
+    """
+      UPDATE $TABLE_NAME 
+      SET $COLUMN_AGGREGATED_VALUE = :value 
+      WHERE $COLUMN_PROFILE_ID = :profileId AND $COLUMN_CHANNEL_REMOTE_ID = :remoteId
+    """
+  )
+  suspend fun updateAggregatedValue(profileId: Long, remoteId: Int, value: String)
 }

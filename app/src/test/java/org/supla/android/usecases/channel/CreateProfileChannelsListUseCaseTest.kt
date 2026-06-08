@@ -11,6 +11,7 @@ import io.reactivex.rxjava3.core.Single
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.supla.android.Preferences
 import org.supla.android.data.source.ChannelRelationRepository
 import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
@@ -19,6 +20,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
+import org.supla.android.events.DownloadEventsManager
 import org.supla.android.images.ImageId
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -60,6 +62,12 @@ class CreateProfileChannelsListUseCaseTest {
   private lateinit var getChannelChildrenTreeUseCase: GetChannelChildrenTreeUseCase
 
   @MockK
+  private lateinit var preferences: Preferences
+
+  @MockK
+  private lateinit var downloadEventsManager: DownloadEventsManager
+
+  @MockK
   private lateinit var gson: Gson
 
   @InjectMockKs
@@ -80,9 +88,11 @@ class CreateProfileChannelsListUseCaseTest {
     val fifth = mockListEntity(51, 42, channelFunction = SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER)
     val sixth = mockListEntity(61, 42, channelFunction = SuplaFunction.PROJECTOR_SCREEN)
 
+    every { preferences.hideUnavailableChannels } returns false
     every { channelRepository.findList() } returns Single.just(listOf(first, second, third, fourth, fifth, sixth))
     every { channelRelationRepository.findChildrenToParentsRelations() } returns Observable.just(emptyMap())
     every { getChannelIssuesForListUseCase.invoke(any()) } returns ListItemIssues.empty
+    every { downloadEventsManager.getLastChannelDownloadState(any(), any()) } returns null
 
     // when
     val testObserver = usecase().test()
@@ -120,9 +130,11 @@ class CreateProfileChannelsListUseCaseTest {
     val third = mockListEntity(31, 32, locationName = "12")
     val fourth = mockListEntity(41, 42)
 
-    every { channelRepository.findList() } returns Single.just(listOf(first, second, third, fourth))
+    every { preferences.hideUnavailableChannels } returns true
+    every { channelRepository.findListWithoutUnavailable() } returns Single.just(listOf(first, second, third, fourth))
     every { channelRelationRepository.findChildrenToParentsRelations() } returns Observable.just(emptyMap())
     every { getChannelIssuesForListUseCase.invoke(any()) } returns ListItemIssues.empty
+    every { downloadEventsManager.getLastChannelDownloadState(any(), any()) } returns null
 
     // when
     val testObserver = usecase().test()
@@ -155,6 +167,7 @@ class CreateProfileChannelsListUseCaseTest {
     val second = mockListEntity(21, 12)
     val third = mockListEntity(31, 12)
 
+    every { preferences.hideUnavailableChannels } returns false
     every { channelRepository.findList() } returns Single.just(listOf(first, second, third))
     val childrenRelation = mockk<ChannelRelationEntity> {
       every { channelId } returns 21
@@ -170,11 +183,12 @@ class CreateProfileChannelsListUseCaseTest {
     every {
       getChannelValueStringUseCase.valueOrNull(
         channel = eq(ChannelWithChildren(first, listOf(childEntity))),
-        valueType = eq(ValueType.FIRST),
+        valueType = eq(ListFirstValue),
         withUnit = eq(true)
       )
     } returns "value 11"
     every { getChannelIssuesForListUseCase.invoke(any()) } returns ListItemIssues.empty
+    every { downloadEventsManager.getLastChannelDownloadState(any(), any()) } returns null
 
     // when
     val testObserver = usecase().test()
@@ -244,7 +258,7 @@ class CreateProfileChannelsListUseCaseTest {
     every {
       getChannelValueStringUseCase.valueOrNull(
         channel = eq(ChannelWithChildren(this@mockk)),
-        valueType = eq(ValueType.FIRST),
+        valueType = eq(ListFirstValue),
         withUnit = eq(true)
       )
     } returns "value $channelRemoteId"

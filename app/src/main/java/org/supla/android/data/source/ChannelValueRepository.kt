@@ -38,4 +38,7 @@ class ChannelValueRepository @Inject constructor(
   override fun count(): Observable<Int> = channelValueDao.count()
   override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = channelValueDao.deleteKtx(remoteId, profileId)
   override fun deleteByProfile(profileId: Long): Completable = channelValueDao.deleteByProfile(profileId)
+
+  suspend fun updateAggregatedValue(profileId: Long, remoteId: Int, value: String) =
+    channelValueDao.updateAggregatedValue(profileId, remoteId, value)
 }

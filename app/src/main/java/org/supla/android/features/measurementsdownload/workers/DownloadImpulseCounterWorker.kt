@@ -24,23 +24,50 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import org.supla.android.core.storage.UserStateHolder
+import org.supla.android.data.model.settings.ListValueAggregation
 import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity
 import org.supla.android.data.source.remote.rest.channel.ImpulseCounterMeasurement
 import org.supla.android.events.DownloadEventsManager
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.measurementsdownload.DownloadImpulseCounterLogUseCase
+import org.supla.android.usecases.list.RefreshImpulseCounterAggregatedValueUseCase
+import timber.log.Timber
 
 @HiltWorker
 class DownloadImpulseCounterWorker @AssistedInject constructor(
   @Assisted appContext: Context,
   @Assisted workerParameters: WorkerParameters,
+  updateEventsManager: UpdateEventsManager,
   downloadEventsManager: DownloadEventsManager,
-  downloadImpulseCounterLogUseCase: DownloadImpulseCounterLogUseCase
+  downloadImpulseCounterLogUseCase: DownloadImpulseCounterLogUseCase,
+  private val userStateHolder: UserStateHolder,
+  private val refreshImpulseCounterAggregatedValueUseCase: RefreshImpulseCounterAggregatedValueUseCase
 ) : BaseDownloadLogWorker<ImpulseCounterMeasurement, ImpulseCounterLogEntity>(
   appContext,
   workerParameters,
+  updateEventsManager,
   downloadEventsManager,
   downloadImpulseCounterLogUseCase
 ) {
+
+  override suspend fun onDownloadFinished() {
+    val profileId = profileId
+    val remoteId = remoteId
+
+    if (profileId == null || remoteId == null) {
+      Timber.e("Trying to update aggregated value, but preconditions failed")
+      return
+    }
+
+    val settings = userStateHolder.getImpulseCounterSettings(profileId, remoteId)
+    if (settings.showOnList == ListValueAggregation.NO_AGGREGATION) {
+      Timber.d("No aggregated value to update")
+      return
+    }
+
+    refreshImpulseCounterAggregatedValueUseCase(profileId, remoteId)
+  }
 
   companion object {
     val WORK_ID: String = DownloadImpulseCounterWorker::class.java.simpleName

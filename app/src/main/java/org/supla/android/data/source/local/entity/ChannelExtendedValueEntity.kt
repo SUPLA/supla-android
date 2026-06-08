@@ -81,6 +81,14 @@ data class ChannelExtendedValueEntity(
 
     const val ALL_COLUMNS = "$COLUMN_ID, $COLUMN_CHANNEL_ID, $COLUMN_VALUE, $COLUMN_TIMER_START_TIME, $COLUMN_PROFILE_ID"
 
+    const val JOIN_COLUMNS =
+      """
+        extended_value.$COLUMN_ID extended_value_$COLUMN_ID,
+        extended_value.$COLUMN_CHANNEL_ID extended_value_$COLUMN_CHANNEL_ID,
+        extended_value.$COLUMN_VALUE extended_value_$COLUMN_VALUE,
+        extended_value.$COLUMN_TIMER_START_TIME extended_value_$COLUMN_TIMER_START_TIME,
+        extended_value.$COLUMN_PROFILE_ID extended_value_$COLUMN_PROFILE_ID"""
+
     val SQL = arrayOf(
       """
         CREATE TABLE $TABLE_NAME

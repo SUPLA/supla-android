@@ -27,17 +27,20 @@ import dagger.assisted.AssistedInject
 import org.supla.android.data.source.local.entity.measurements.PowerActiveHistoryLogEntity
 import org.supla.android.data.source.remote.rest.channel.HistoryMeasurement
 import org.supla.android.events.DownloadEventsManager
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.measurementsdownload.DownloadPowerActiveLogUseCase
 
 @HiltWorker
 class DownloadPowerActiveMeasurementsWorker @AssistedInject constructor(
   @Assisted appContext: Context,
   @Assisted workerParameters: WorkerParameters,
+  updateEventsManager: UpdateEventsManager,
   downloadEventsManager: DownloadEventsManager,
   downloadPowerActiveLogUseCase: DownloadPowerActiveLogUseCase
 ) : BaseDownloadLogWorker<HistoryMeasurement, PowerActiveHistoryLogEntity>(
   appContext,
   workerParameters,
+  updateEventsManager,
   downloadEventsManager,
   downloadPowerActiveLogUseCase
 ) {

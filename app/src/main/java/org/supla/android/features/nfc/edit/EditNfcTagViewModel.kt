@@ -53,9 +53,9 @@ class EditNfcTagViewModel @Inject constructor(
   sceneRepository,
   nfcCallRepository,
   nfcTagRepository,
-  schedulers,
   getChannelIconUseCase,
   getSceneIconUseCase,
-  getCaptionUseCase
+  getCaptionUseCase,
+  schedulers
 ),
   EditNfcTagViewScope

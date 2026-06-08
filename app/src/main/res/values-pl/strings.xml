@@ -551,6 +551,7 @@
   <string name="details_timer_info_thermostat_off">Termostat będzie wyłączony przez\n%1$s</string>
   <string name="details_timer_info_thermostat_heating">Termostat będzie w trybie grzania przez\n%1$s</string>
   <string name="details_timer_info_thermostat_cooling">Termostat będzie w trybie chłodzenia przez\n%1$s</string>
+  <string name="details_timer_info_thermostat_auto">Termostat będzie w trybie automatycznym przez\\n%1$s</string>
   <string name="details_timer_select_time">Określ czas</string>
   <string name="details_timer_counter">Licznik</string>
   <string name="details_timer_calendar">Kaledarz</string>
@@ -655,8 +656,8 @@
   <string name="details_em_forwarded_energy">Pobrana</string>
   <string name="details_em_reversed_energy">Zwrócona</string>
   <string name="details_em_cost">Koszt</string>
-  <string name="details_em_settings_list_item">Wartość pokazywana na liście kanałów</string>
-  <string name="details_em_settings_title">Ustawienia - %1$s</string>
+  <string name="details_ic_settings_list_item">Wartość pokazywana na liście kanałów</string>
+  <string name="details_settings_title">Ustawienia - %1$s</string>
   <string name="details_em_total_suffix">(stan licznika)</string>
   <string name="details_em_current_month_suffix">(bieżący miesiąc)</string>
   <string name="details_em_last_month_balancing">Bilansowanie bieżącego miesiąca</string>
@@ -915,4 +916,16 @@
   <string name="general_search">Szukaj</string>
   <string name="toolbar_search_hint">Wpisz 2 znaki, aby wyszukać…</string>
   <string name="details_timer_select_program">Wybierz program</string>
+  <string name="settings_show_unavailable_channels">Ukryj kanały, które są niedostępne ze względu na konfigurację urządzenia</string>
+  <string name="general_current_year">Bieżący rok</string>
+  <string name="details_em_on_list_balance">Metoda bilansowania energii</string>
+  <string name="details_em_on_list_value">Zakres danych</string>
+  <string name="details_em_on_list">Wyświetlanie na liście kanałów</string>
+  <string name="impulse_counter_settings_counter_status">Aktualny stan licznika</string>
+  <string name="details_em_active_energy_balance">Bilans enegrii czynnej</string>
+  <string name="details_em_settings_list_metric">Wybrana wartość</string>
+  <string name="general_current_hour">Bieżąca godzina</string>
+  <string name="general_current_day">Bieżący dzień</string>
+  <string name="general_current_month">Bieżący miesiąc</string>
+  <string name="general_current_week">Bieżący tydzień</string>
 </resources>

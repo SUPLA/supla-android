@@ -24,8 +24,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
@@ -114,7 +117,14 @@ fun IconValueListItemView(
         ListItemIcon(imageId = it, scale = scale)
       }
       data.value?.let {
-        ListItemValue(value = it, scale = scale)
+        Box(contentAlignment = Alignment.Center) {
+          if (data.processing) {
+            ListItemValue(value = it, scale = scale, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            CircularProgressIndicator(modifier = Modifier.size(dimensionResource(R.dimen.icon_default_size)))
+          } else {
+            ListItemValue(value = it, scale = scale)
+          }
+        }
       }
     }
   }
@@ -140,7 +150,8 @@ private fun Preview() {
             icon = ImageId(R.drawable.fnc_gpm_5),
             value = "100 hPa",
             issues = ListItemIssues(IssueIcon.Warning),
-            infoSupported = true
+            infoSupported = true,
+            processing = false
           ),
           scale = 0.75f,
           showInfoIcon = true
@@ -158,7 +169,27 @@ private fun Preview() {
             icon = ImageId(R.drawable.fnc_gpm_5),
             value = "100 hPa",
             issues = ListItemIssues(IssueIcon.Error),
-            infoSupported = true
+            infoSupported = true,
+            processing = false
+          ),
+          scale = 1f,
+          showInfoIcon = true
+        )
+      }
+      Box(
+        modifier = Modifier
+          .fillMaxWidth()
+          .height(dimensionResource(id = R.dimen.channel_layout_height))
+      ) {
+        IconValueListItemView(
+          data = SlideableListItemData.Default(
+            onlineState = ListOnlineState.ONLINE,
+            title = LocalizedString.Constant("Channel"),
+            icon = ImageId(R.drawable.fnc_gpm_5),
+            value = "100 hPa",
+            issues = ListItemIssues(IssueIcon.Error),
+            infoSupported = true,
+            processing = true
           ),
           scale = 1f,
           showInfoIcon = true
@@ -176,7 +207,8 @@ private fun Preview() {
             icon = ImageId(R.drawable.fnc_gpm_5),
             value = "100 hPa",
             issues = ListItemIssues(IssueIcon.Error),
-            infoSupported = true
+            infoSupported = true,
+            processing = false
           ),
           scale = 1.5f,
           showInfoIcon = true

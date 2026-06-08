@@ -18,6 +18,9 @@ package org.supla.android.usecases.channel.valueprovider
  */
 
 import org.supla.android.core.storage.UserStateHolder
+import org.supla.android.data.model.settings.eletricitymeter.ElectricityMeterBalanceType
+import org.supla.android.data.model.settings.eletricitymeter.ElectricityMeterMeasurementType
+import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.Electricity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.custom.Phase
@@ -39,11 +42,34 @@ class ElectricityMeterValueProvider @Inject constructor(
     channelWithChildren.function == SuplaFunction.ELECTRICITY_METER
 
   override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType): Any =
-    when (userStateHolder.getElectricityMeterSettings(channelWithChildren.profileId, channelWithChildren.remoteId).showOnListSafe) {
-      SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY ->
-        channelWithChildren.channel.Electricity.value?.summary?.totalReverseActiveEnergy ?: UNKNOWN_VALUE
-      SuplaElectricityMeasurementType.POWER_ACTIVE,
-      SuplaElectricityMeasurementType.POWER_ACTIVE_KW ->
+    when (valueType) {
+      is ValueType.List -> valueForList(channelWithChildren)
+      is ValueType.Default -> defaultValue(channelWithChildren.channel.channelValueEntity)
+    }
+
+  private fun valueForList(channelWithChildren: ChannelWithChildren): Double {
+    val settings = userStateHolder.getElectricityMeterSettings(channelWithChildren.profileId, channelWithChildren.remoteId)
+
+    return when (settings.metricOnList) {
+      ElectricityMeterMeasurementType.FORWARD_ACTIVE_ENERGY ->
+        when (settings.metricOnListBalancing) {
+          ElectricityMeterBalanceType.VECTOR ->
+            channelWithChildren.channel.Electricity.value?.totalForwardActiveEnergyBalanced ?: UNKNOWN_VALUE
+          else ->
+            channelWithChildren.channel.Electricity.value?.summary?.totalForwardActiveEnergy ?: UNKNOWN_VALUE
+        }
+      ElectricityMeterMeasurementType.REVERSE_ACTIVE_ENERGY ->
+        when (settings.metricOnListBalancing) {
+          ElectricityMeterBalanceType.VECTOR ->
+            channelWithChildren.channel.Electricity.value?.totalReverseActiveEnergyBalanced ?: UNKNOWN_VALUE
+          else ->
+            channelWithChildren.channel.Electricity.value?.summary?.totalReverseActiveEnergy ?: UNKNOWN_VALUE
+        }
+      ElectricityMeterMeasurementType.FORWARD_REACTIVE_ENERGY ->
+        channelWithChildren.channel.Electricity.value?.summary?.totalForwardReactiveEnergy ?: UNKNOWN_VALUE
+      ElectricityMeterMeasurementType.REVERSE_REACTIVE_ENERGY ->
+        channelWithChildren.channel.Electricity.value?.summary?.totalReverseReactiveEnergy ?: UNKNOWN_VALUE
+      ElectricityMeterMeasurementType.POWER_ACTIVE ->
         channelWithChildren.channel.Electricity.value?.let { value ->
           val powerActive = Phase.entries
             .filter { it.disabledFlag.rawValue and channelWithChildren.flags == 0L }
@@ -56,15 +82,26 @@ class ElectricityMeterValueProvider @Inject constructor(
             powerActive
           }
         } ?: UNKNOWN_VALUE
-      SuplaElectricityMeasurementType.VOLTAGE ->
+      ElectricityMeterMeasurementType.VOLTAGE ->
         channelWithChildren.channel.Electricity.value?.let { value ->
           Phase.entries
             .filter { it.disabledFlag.rawValue and channelWithChildren.flags == 0L }
             .mapNotNull { value.getMeasurement(it.value, 0)?.voltage }
             .average()
         } ?: UNKNOWN_VALUE
-      else -> asIntValue(channelWithChildren.channel.channelValueEntity, startPos = 1, endPos = 4)?.div(100.0) ?: UNKNOWN_VALUE
+      ElectricityMeterMeasurementType.CURRENT ->
+        channelWithChildren.channel.Electricity.value?.let { value ->
+          Phase.entries
+            .filter { it.disabledFlag.rawValue and channelWithChildren.flags == 0L }
+            .mapNotNull { value.getMeasurement(it.value, 0)?.current }
+            .sum()
+        } ?: UNKNOWN_VALUE
+      else -> defaultValue(channelWithChildren.channel.channelValueEntity)
     }
+  }
+
+  private fun defaultValue(channelValue: ChannelValueEntity) =
+    asIntValue(channelValue, startPos = 1, endPos = 4)?.div(100.0) ?: UNKNOWN_VALUE
 
   companion object {
     const val UNKNOWN_VALUE = 0.0

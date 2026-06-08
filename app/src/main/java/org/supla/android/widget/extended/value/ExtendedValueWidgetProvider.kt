@@ -27,7 +27,7 @@ import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.widget.extended.WidgetValue
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.data.model.suplaclient.SuplaResultCode
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.usecase.channel.valueformatter.formatters.ElectricityMeterValueFormatter
 import timber.log.Timber
 import javax.inject.Inject
@@ -80,11 +80,11 @@ class ElectricityMeterWidgetValueProvider(
       val hasReverseEnergy = channelValue.measuredValues
         .contains(SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY)
       val forwardEnergy = channelValue.phases.sumOf { it.forwardActiveEnergy }
-      val reversedEnergy = hasReverseEnergy.ifTrue { channelValue.phases.sumOf { it.reverseActiveEnergy } }
+      val reversedEnergy = hasReverseEnergy.forTrue { channelValue.phases.sumOf { it.reverseActiveEnergy } }
 
       val phases = Phase.entries
         .filter { configuration.channelEntity?.flags?.and(it.disabledFlag.rawValue) == 0L }
-      val phaseValues = (phases.size > 1).ifTrue { phases.associateWithValue(channelValue, hasReverseEnergy) } ?: emptyMap()
+      val phaseValues = (phases.size > 1).forTrue { phases.associateWithValue(channelValue, hasReverseEnergy) } ?: emptyMap()
 
       return WidgetValue.ElectricityMeter(
         totalEnergy = WidgetValue.ElectricityMeter.Energy(
@@ -106,7 +106,7 @@ class ElectricityMeterWidgetValueProvider(
       val phaseValues = value.phases[phase.phaseIndex]
       WidgetValue.ElectricityMeter.Energy(
         forwarded = formatter.format(phaseValues.forwardActiveEnergy),
-        reversed = hasReverseEnergy.ifTrue { formatter.format(phaseValues.reverseActiveEnergy) }
+        reversed = hasReverseEnergy.forTrue { formatter.format(phaseValues.reverseActiveEnergy) }
       )
     }
 }

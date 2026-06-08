@@ -57,7 +57,7 @@ import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.data.model.function.container.ContainerFlag
 import org.supla.core.shared.data.model.general.SuplaFunction
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetAllChannelIssuesUseCase
@@ -135,7 +135,7 @@ class ContainerGeneralDetailViewModel @Inject constructor(
     val config = data.second as? SuplaChannelContainerConfig
     val channelToLevelMap = config?.sensors?.associate { Pair(it.channelId, it.fillLevel) }
     val value = channelWithChildren.channel.channelValueEntity.asContainerValue()
-    val level = value.levelKnown.ifTrue { value.level.div(100f) }
+    val level = value.levelKnown.forTrue { value.level.div(100f) }
     val levelString = when {
       value.status.offline -> "offline"
       level == null -> "---"

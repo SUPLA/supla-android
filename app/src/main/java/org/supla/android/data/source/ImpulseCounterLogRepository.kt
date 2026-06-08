@@ -45,6 +45,9 @@ class ImpulseCounterLogRepository @Inject constructor(
   fun findMeasurements(remoteId: Int, profileId: Long, startDate: Date, endDate: Date): Observable<List<ImpulseCounterLogEntity>> =
     impulseCounterLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)
 
+  fun findMeasurements(remoteId: Int, profileId: Long): Observable<List<ImpulseCounterLogEntity>> =
+    impulseCounterLogDao.findMeasurements(remoteId, profileId)
+
   override fun getInitialMeasurements(cloudService: SuplaCloudService, remoteId: Int): Response<List<ImpulseCounterMeasurement>> =
     cloudService.getInitialImpulseCounterMeasurements(remoteId).execute()
 

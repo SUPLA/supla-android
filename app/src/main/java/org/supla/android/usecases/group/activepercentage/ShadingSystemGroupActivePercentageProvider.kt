@@ -1,17 +1,34 @@
 package org.supla.android.usecases.group.activepercentage
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
 
-import org.supla.android.lib.SuplaConst
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+
 import org.supla.android.usecases.group.GroupActivePercentageProvider
 import org.supla.android.usecases.group.totalvalue.GroupValue
 import org.supla.android.usecases.group.totalvalue.ShadingSystemGroupValue
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 object ShadingSystemGroupActivePercentageProvider : GroupActivePercentageProvider {
-  override fun handleFunction(function: Int) = when (function) {
-    SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
-    SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW,
-    SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING,
-    SuplaConst.SUPLA_CHANNELFNC_CURTAIN,
-    SuplaConst.SUPLA_CHANNELFNC_ROLLER_GARAGE_DOOR -> true
+  override fun handleFunction(function: SuplaFunction) = when (function) {
+    SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER,
+    SuplaFunction.CONTROLLING_THE_ROOF_WINDOW,
+    SuplaFunction.TERRACE_AWNING,
+    SuplaFunction.CURTAIN,
+    SuplaFunction.ROLLER_GARAGE_DOOR -> true
     else -> false
   }
 

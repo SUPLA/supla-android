@@ -21,7 +21,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import org.supla.android.lib.SuplaChannelStatePrintable
 import org.supla.core.shared.data.model.battery.BatteryInfo
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 
 @Entity(
   tableName = ChannelStateEntity.TABLE_NAME,
@@ -102,6 +102,26 @@ data class ChannelStateEntity(
       "$COLUMN_LIGHT_SOURCE_LIFESPAN_LEFT, $COLUMN_LIGHT_SOURCE_OPERATING_TIME, $COLUMN_MAC_ADDRESS, " +
       "$COLUMN_UPTIME, $COLUMN_WIFI_RSSI, $COLUMN_WIFI_SIGNAL_STRENGTH, $COLUMN_CHANNEL_ID, $COLUMN_PROFILE_ID"
 
+    const val JOIN_COLUMNS =
+      """
+        state.$COLUMN_BATTERY_HEALTH state_$COLUMN_BATTERY_HEALTH,
+        state.$COLUMN_BATTERY_LEVEL state_$COLUMN_BATTERY_LEVEL,
+        state.$COLUMN_BATTERY_POWERED state_$COLUMN_BATTERY_POWERED,
+        state.$COLUMN_BRIDGE_NODE_ONLINE state_$COLUMN_BRIDGE_NODE_ONLINE,
+        state.$COLUMN_BRIDGE_NODE_SIGNAL_STRENGTH state_$COLUMN_BRIDGE_NODE_SIGNAL_STRENGTH,
+        state.$COLUMN_CONNECTION_UPTIME state_$COLUMN_CONNECTION_UPTIME,
+        state.$COLUMN_IP_V4 state_$COLUMN_IP_V4,
+        state.$COLUMN_LAST_CONNECTION_RESET_CAUSE state_$COLUMN_LAST_CONNECTION_RESET_CAUSE,
+        state.$COLUMN_LIGHT_SOURCE_LIFESPAN state_$COLUMN_LIGHT_SOURCE_LIFESPAN,
+        state.$COLUMN_LIGHT_SOURCE_LIFESPAN_LEFT state_$COLUMN_LIGHT_SOURCE_LIFESPAN_LEFT,
+        state.$COLUMN_LIGHT_SOURCE_OPERATING_TIME state_$COLUMN_LIGHT_SOURCE_OPERATING_TIME,
+        state.$COLUMN_MAC_ADDRESS state_$COLUMN_MAC_ADDRESS,
+        state.$COLUMN_UPTIME state_$COLUMN_UPTIME,
+        state.$COLUMN_WIFI_RSSI state_$COLUMN_WIFI_RSSI,
+        state.$COLUMN_WIFI_SIGNAL_STRENGTH state_$COLUMN_WIFI_SIGNAL_STRENGTH,
+        state.$COLUMN_CHANNEL_ID state_$COLUMN_CHANNEL_ID,
+        state.$COLUMN_PROFILE_ID state_$COLUMN_PROFILE_ID"""
+
     operator fun invoke(channelId: Int, profileId: Long): ChannelStateEntity =
       ChannelStateEntity(
         batteryHealth = null,
@@ -125,6 +145,6 @@ data class ChannelStateEntity(
 
 val ChannelStateEntity.batteryInfo: BatteryInfo?
   get() =
-    (batteryPowered != null || batteryLevel != null).ifTrue {
+    (batteryPowered != null || batteryLevel != null).forTrue {
       BatteryInfo(batteryPowered, batteryLevel, batteryHealth)
     }

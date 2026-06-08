@@ -28,19 +28,20 @@ import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.ui.lists.onlineState
 import org.supla.android.ui.lists.sensordata.RelatedChannelData
 import org.supla.android.usecases.channel.GetChannelChildrenTreeUseCase
 import org.supla.android.usecases.channel.GetChannelStateUseCase
 import org.supla.android.usecases.group.totalvalue.DimmerAndRgbGroupValue
+import org.supla.android.usecases.group.totalvalue.DimmerCctAndRgbGroupValue
+import org.supla.android.usecases.group.totalvalue.DimmerCctGroupValue
 import org.supla.android.usecases.group.totalvalue.DimmerGroupValue
 import org.supla.android.usecases.group.totalvalue.GroupValue
 import org.supla.android.usecases.group.totalvalue.OpenedClosedGroupValue
 import org.supla.android.usecases.group.totalvalue.RgbGroupValue
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import java.util.LinkedList
 import javax.inject.Inject
@@ -102,12 +103,12 @@ data class GroupWithChannels(
 
     object OnOff : Policy {
       override fun map(value: GroupValue): ChannelState.Value =
-        (value as? OpenedClosedGroupValue)?.active?.ifTrue { ChannelState.Value.ON } ?: ChannelState.Value.OFF
+        (value as? OpenedClosedGroupValue)?.active?.forTrue { ChannelState.Value.ON } ?: ChannelState.Value.OFF
     }
 
     object OpenClosed : Policy {
       override fun map(value: GroupValue): ChannelState.Value =
-        (value as? OpenedClosedGroupValue)?.active?.ifTrue { ChannelState.Value.CLOSED } ?: ChannelState.Value.OPEN
+        (value as? OpenedClosedGroupValue)?.active?.forTrue { ChannelState.Value.CLOSED } ?: ChannelState.Value.OPEN
     }
 
     object Dimmer : Policy {
@@ -115,6 +116,8 @@ data class GroupWithChannels(
         when (value) {
           is DimmerGroupValue -> if (value.brightness == 0) ChannelState.Value.OFF else ChannelState.Value.ON
           is DimmerAndRgbGroupValue -> if (value.brightness == 0) ChannelState.Value.OFF else ChannelState.Value.ON
+          is DimmerCctGroupValue -> if (value.brightness == 0) ChannelState.Value.OFF else ChannelState.Value.ON
+          is DimmerCctAndRgbGroupValue -> if (value.brightness == 0) ChannelState.Value.OFF else ChannelState.Value.ON
           else -> ChannelState.Value.OFF
         }
     }
@@ -124,6 +127,7 @@ data class GroupWithChannels(
         when (value) {
           is RgbGroupValue -> if (value.brightness == 0) ChannelState.Value.OFF else ChannelState.Value.ON
           is DimmerAndRgbGroupValue -> if (value.brightnessColor == 0) ChannelState.Value.OFF else ChannelState.Value.ON
+          is DimmerCctAndRgbGroupValue -> if (value.brightnessColor == 0) ChannelState.Value.OFF else ChannelState.Value.ON
           else -> ChannelState.Value.OFF
         }
     }

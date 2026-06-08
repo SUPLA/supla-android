@@ -31,7 +31,7 @@ import org.supla.android.features.details.detailbase.history.ui.CheckboxItem
 import org.supla.android.features.details.electricitymeterdetail.history.ElectricityMeterChartType
 import org.supla.android.lib.SuplaChannelElectricityMeterValue
 import org.supla.core.shared.data.model.rest.channel.ElectricityMeterConfigDto
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.forTrue
 
 @Serializable
 data class ElectricityChartFilters(
@@ -104,10 +104,10 @@ data class ElectricityChartFilters(
           add(ElectricityMeterChartType.BALANCE_HOURLY)
           add(ElectricityMeterChartType.BALANCE_CHART_AGGREGATED)
         }
-        measuredTypes.hasBalance.ifTrue { add(ElectricityMeterChartType.BALANCE_VECTOR) }
-        electricityMeterConfigDto?.voltageLoggerEnabled?.ifTrue { add(ElectricityMeterChartType.VOLTAGE) }
-        electricityMeterConfigDto?.currentLoggerEnabled?.ifTrue { add(ElectricityMeterChartType.CURRENT) }
-        electricityMeterConfigDto?.powerActiveLoggerEnabled?.ifTrue { add(ElectricityMeterChartType.POWER_ACTIVE) }
+        measuredTypes.hasBalance.forTrue { add(ElectricityMeterChartType.BALANCE_VECTOR) }
+        electricityMeterConfigDto?.voltageLoggerEnabled?.forTrue { add(ElectricityMeterChartType.VOLTAGE) }
+        electricityMeterConfigDto?.currentLoggerEnabled?.forTrue { add(ElectricityMeterChartType.CURRENT) }
+        electricityMeterConfigDto?.powerActiveLoggerEnabled?.forTrue { add(ElectricityMeterChartType.POWER_ACTIVE) }
       }
     }
   }

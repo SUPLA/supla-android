@@ -20,16 +20,14 @@ package org.supla.android.usecases.channel.measurements.electricitymeter
 import io.reactivex.rxjava3.core.Maybe
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.storage.UserStateHolder
-import org.supla.android.data.model.electricitymeter.ElectricityMeterBalanceType
+import org.supla.android.data.model.settings.eletricitymeter.ElectricityMeterBalanceType
 import org.supla.android.data.source.ElectricityMeterLogRepository
-import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.Electricity
 import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity
 import org.supla.android.data.source.local.entity.measurements.balanceHourly
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.channel.measurements.ElectricityMeasurements
-import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -37,25 +35,28 @@ import javax.inject.Singleton
 class LoadElectricityMeterMeasurementsUseCase @Inject constructor(
   private val electricityMeterLogRepository: ElectricityMeterLogRepository,
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
-  private val profileRepository: RoomProfileRepository,
   private val userStateHolder: UserStateHolder,
   private val dateProvider: DateProvider
 ) {
 
-  operator fun invoke(remoteId: Int, startDate: Date? = null, endDate: Date? = null): Maybe<ElectricityMeasurements> =
-    profileRepository.findActiveProfile()
-      .flatMapObservable {
-        electricityMeterLogRepository.findMeasurements(
-          remoteId,
-          it.id!!,
-          startDate ?: Date(0),
-          endDate ?: dateProvider.currentDate()
-        )
-      }
+  operator fun invoke(
+    profileId: Long,
+    remoteId: Int,
+    balancing: ElectricityMeterBalanceType? = null,
+    startTimestamp: Long? = null,
+    endTimestamp: Long? = null
+  ): Maybe<ElectricityMeasurements> =
+    electricityMeterLogRepository.findMeasurements(
+      remoteId,
+      profileId,
+      startTimestamp ?: 0,
+      endTimestamp ?: dateProvider.currentTimestamp()
+    )
       .firstElement()
       .flatMap { measurements -> readChannelByRemoteIdUseCase(remoteId).map { Pair(it, measurements) } }
       .map { (channel, measurements) ->
-        when (userStateHolder.getElectricityMeterSettings(channel.profileId, channel.remoteId).balancing) {
+
+        when (balancing ?: userStateHolder.getElectricityMeterSettings(channel.profileId, channel.remoteId).currentMonthBalancing) {
           ElectricityMeterBalanceType.HOURLY -> hourlyBalance(measurements)
           ElectricityMeterBalanceType.ARITHMETIC -> arithmeticBalance(measurements)
           else -> defaultBalance(channel, measurements)
@@ -65,8 +66,8 @@ class LoadElectricityMeterMeasurementsUseCase @Inject constructor(
   private fun defaultBalance(channel: ChannelDataEntity, measurements: List<ElectricityMeterLogEntity>): ElectricityMeasurements =
     if (channel.Electricity.phases.size > 1 && channel.Electricity.hasBalance) {
       ElectricityMeasurements(
-        measurements.mapNotNull { it.faeBalanced }.sum(),
-        measurements.mapNotNull { it.raeBalanced }.sum()
+        forwardActiveEnergy = measurements.mapNotNull { it.faeBalanced }.sum(),
+        reversedActiveEnergy = measurements.mapNotNull { it.raeBalanced }.sum()
       )
     } else {
       arithmeticBalance(measurements)
@@ -74,15 +75,15 @@ class LoadElectricityMeterMeasurementsUseCase @Inject constructor(
 
   private fun arithmeticBalance(measurements: List<ElectricityMeterLogEntity>): ElectricityMeasurements =
     ElectricityMeasurements(
-      measurements.map { (it.phase1Fae ?: 0f) + (it.phase2Fae ?: 0f) + (it.phase3Fae ?: 0f) }.sum(),
-      measurements.map { (it.phase1Rae ?: 0f) + (it.phase2Rae ?: 0f) + (it.phase3Rae ?: 0f) }.sum()
+      forwardActiveEnergy = measurements.map { (it.phase1Fae ?: 0f) + (it.phase2Fae ?: 0f) + (it.phase3Fae ?: 0f) }.sum(),
+      reversedActiveEnergy = measurements.map { (it.phase1Rae ?: 0f) + (it.phase2Rae ?: 0f) + (it.phase3Rae ?: 0f) }.sum()
     )
 
   private fun hourlyBalance(measurements: List<ElectricityMeterLogEntity>): ElectricityMeasurements {
     val balancedValue = measurements.balanceHourly()
     return ElectricityMeasurements(
-      balancedValue.map { it.forwarded }.sum(),
-      balancedValue.map { it.reversed }.sum()
+      forwardActiveEnergy = balancedValue.map { it.forwarded }.sum(),
+      reversedActiveEnergy = balancedValue.map { it.reversed }.sum()
     )
   }
 }

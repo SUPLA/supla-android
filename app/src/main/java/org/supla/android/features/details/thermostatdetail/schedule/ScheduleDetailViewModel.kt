@@ -52,8 +52,8 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxKey
+import org.supla.core.shared.extensions.forFalse
 import org.supla.core.shared.extensions.guardLet
-import org.supla.core.shared.extensions.ifFalse
 import org.supla.core.shared.usecase.channel.valueformatter.DefaultValueFormatter
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import timber.log.Timber
@@ -487,9 +487,9 @@ class ScheduleDetailViewModel @Inject constructor(
         scheduleTableState = it.scheduleTableState.copy(
           schedule = data.weeklyScheduleConfig.viewScheduleBoxesMap(),
           currentDayOfWeek = data.deviceConfig.isAutomaticTimeSyncDisabled()
-            .ifFalse(DayOfWeek.from(calendar.get(Calendar.DAY_OF_WEEK) - 1)),
+            .forFalse(DayOfWeek.from(calendar.get(Calendar.DAY_OF_WEEK) - 1)),
           currentHour = data.deviceConfig.isAutomaticTimeSyncDisabled()
-            .ifFalse(calendar.get(Calendar.HOUR_OF_DAY)),
+            .forFalse(calendar.get(Calendar.HOUR_OF_DAY)),
         ),
         programs = data.weeklyScheduleConfig.viewProgramBoxesList(thermostatFunction, thermometerValueFormatter),
         configTemperatureMin = minTemperature,

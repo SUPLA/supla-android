@@ -55,7 +55,7 @@ abstract class ProfileDao {
     WHERE $COLUMN_ACTIVE = 1
   """
   )
-  abstract suspend fun findActiveProfileKtx(): ProfileEntity
+  abstract suspend fun findActiveProfileKtx(): ProfileEntity?
 
   @Query("SELECT $ALL_COLUMNS_STRING FROM $TABLE_NAME ORDER BY $COLUMN_POSITION, $COLUMN_ID")
   abstract fun findAllProfiles(): Observable<List<ProfileEntity>>

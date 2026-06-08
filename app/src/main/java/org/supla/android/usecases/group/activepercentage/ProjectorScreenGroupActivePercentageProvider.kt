@@ -1,13 +1,30 @@
 package org.supla.android.usecases.group.activepercentage
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
 
-import org.supla.android.lib.SuplaConst
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+
 import org.supla.android.usecases.group.GroupActivePercentageProvider
 import org.supla.android.usecases.group.totalvalue.GroupValue
 import org.supla.android.usecases.group.totalvalue.ProjectorScreenGroupValue
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 object ProjectorScreenGroupActivePercentageProvider : GroupActivePercentageProvider {
-  override fun handleFunction(function: Int) =
-    function == SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN
+  override fun handleFunction(function: SuplaFunction) =
+    function == SuplaFunction.PROJECTOR_SCREEN
 
   override fun getActivePercentage(valueIndex: Int, values: List<GroupValue>) =
     values.map { (it as ProjectorScreenGroupValue).position }
