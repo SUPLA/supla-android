@@ -49,6 +49,7 @@ class GetChannelActionStringUseCase {
       SuplaFunction.HVAC_THERMOSTAT,
       SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
       SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
+      SuplaFunction.HVAC_HRV,
       SuplaFunction.PUMP_SWITCH,
       SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH -> LocalizedStringId.GENERAL_TURN_ON
       SuplaFunction.UNKNOWN,
@@ -119,6 +120,7 @@ class GetChannelActionStringUseCase {
       SuplaFunction.HVAC_THERMOSTAT,
       SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
       SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
+      SuplaFunction.HVAC_HRV,
       SuplaFunction.PUMP_SWITCH,
       SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH -> LocalizedStringId.GENERAL_TURN_OFF
       SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,

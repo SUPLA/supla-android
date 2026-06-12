@@ -133,6 +133,7 @@ fun SuplaFunction.hasCustomFilters(): Boolean =
     SuplaFunction.HVAC_THERMOSTAT,
     SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
     SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
+    SuplaFunction.HVAC_HRV,
     SuplaFunction.ROLLER_GARAGE_DOOR,
     SuplaFunction.HUMIDITY_AND_TEMPERATURE,
     SuplaFunction.PUMP_SWITCH,

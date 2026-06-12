@@ -51,6 +51,7 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.CHANNEL_CAPTION_THERMOMETER -> R.string.channel_caption_thermometer
     LocalizedStringId.CHANNEL_CAPTION_HUMIDITY -> R.string.channel_caption_humidity
     LocalizedStringId.CHANNEL_CAPTION_HUMIDITY_AND_TEMPERATURE -> R.string.channel_caption_humidityandtemperature
+    LocalizedStringId.CHANNEL_CAPTION_HVAC_HRV -> R.string.channel_caption_hvac_hrv
     LocalizedStringId.CHANNEL_CAPTION_WIND_SENSOR -> R.string.channel_caption_windsensor
     LocalizedStringId.CHANNEL_CAPTION_PRESSURE_SENSOR -> R.string.channel_caption_pressuresensor
     LocalizedStringId.CHANNEL_CAPTION_RAIN_SENSOR -> R.string.channel_caption_rainsensor

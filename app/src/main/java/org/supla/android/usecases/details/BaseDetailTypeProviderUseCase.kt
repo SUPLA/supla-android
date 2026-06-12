@@ -23,43 +23,31 @@ import org.supla.core.shared.data.model.general.SuplaFunction
 abstract class BaseDetailTypeProviderUseCase {
 
   fun provide(function: SuplaFunction): DetailType? = when (function) {
-    SuplaFunction.DIMMER -> RgbwDetailType(listOf(DetailPage.DIMMER))
-    SuplaFunction.DIMMER_CCT -> RgbwDetailType(listOf(DetailPage.DIMMER_CCT))
-    SuplaFunction.DIMMER_AND_RGB_LIGHTING -> RgbwDetailType(listOf(DetailPage.RGB, DetailPage.DIMMER))
-    SuplaFunction.DIMMER_CCT_AND_RGB -> RgbwDetailType(listOf(DetailPage.RGB, DetailPage.DIMMER_CCT))
-    SuplaFunction.RGB_LIGHTING -> RgbwDetailType(listOf(DetailPage.RGB))
-    SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER ->
-      StandardDetailType(listOf(DetailPage.ROLLER_SHUTTER))
-    SuplaFunction.CONTROLLING_THE_ROOF_WINDOW ->
-      StandardDetailType(listOf(DetailPage.ROOF_WINDOW))
-    SuplaFunction.CONTROLLING_THE_FACADE_BLIND ->
-      StandardDetailType(listOf(DetailPage.FACADE_BLINDS))
-    SuplaFunction.TERRACE_AWNING ->
-      StandardDetailType(listOf(DetailPage.TERRACE_AWNING))
-    SuplaFunction.PROJECTOR_SCREEN ->
-      StandardDetailType(listOf(DetailPage.PROJECTOR_SCREEN))
-    SuplaFunction.CURTAIN ->
-      StandardDetailType(listOf(DetailPage.CURTAIN))
-    SuplaFunction.VERTICAL_BLIND ->
-      StandardDetailType(listOf(DetailPage.VERTICAL_BLIND))
-    SuplaFunction.ROLLER_GARAGE_DOOR ->
-      StandardDetailType(listOf(DetailPage.GARAGE_DOOR_ROLLER))
+    SuplaFunction.DIMMER -> RgbwDetailType(DetailPage.DIMMER)
+    SuplaFunction.DIMMER_CCT -> RgbwDetailType(DetailPage.DIMMER_CCT)
+    SuplaFunction.DIMMER_AND_RGB_LIGHTING -> RgbwDetailType(DetailPage.RGB, DetailPage.DIMMER)
+    SuplaFunction.DIMMER_CCT_AND_RGB -> RgbwDetailType(DetailPage.RGB, DetailPage.DIMMER_CCT)
+    SuplaFunction.RGB_LIGHTING -> RgbwDetailType(DetailPage.RGB)
+    SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER -> StandardDetailType(DetailPage.ROLLER_SHUTTER)
+    SuplaFunction.CONTROLLING_THE_ROOF_WINDOW -> StandardDetailType(DetailPage.ROOF_WINDOW)
+    SuplaFunction.CONTROLLING_THE_FACADE_BLIND -> StandardDetailType(DetailPage.FACADE_BLINDS)
+    SuplaFunction.TERRACE_AWNING -> StandardDetailType(DetailPage.TERRACE_AWNING)
+    SuplaFunction.PROJECTOR_SCREEN -> StandardDetailType(DetailPage.PROJECTOR_SCREEN)
+    SuplaFunction.CURTAIN -> StandardDetailType(DetailPage.CURTAIN)
+    SuplaFunction.VERTICAL_BLIND -> StandardDetailType(DetailPage.VERTICAL_BLIND)
+    SuplaFunction.ROLLER_GARAGE_DOOR -> StandardDetailType(DetailPage.GARAGE_DOOR_ROLLER)
     SuplaFunction.LIGHTSWITCH,
     SuplaFunction.POWER_SWITCH,
     SuplaFunction.STAIRCASE_TIMER,
     SuplaFunction.PUMP_SWITCH,
-    SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH ->
-      StandardDetailType(listOf(DetailPage.SWITCH))
-    SuplaFunction.ELECTRICITY_METER ->
-      StandardDetailType(listOf(DetailPage.EM_GENERAL, DetailPage.EM_HISTORY, DetailPage.EM_SETTINGS))
+    SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH -> StandardDetailType(DetailPage.SWITCH)
+    SuplaFunction.ELECTRICITY_METER -> StandardDetailType(DetailPage.EM_GENERAL, DetailPage.EM_HISTORY, DetailPage.EM_SETTINGS)
     SuplaFunction.IC_ELECTRICITY_METER,
     SuplaFunction.IC_GAS_METER,
     SuplaFunction.IC_WATER_METER,
-    SuplaFunction.IC_HEAT_METER ->
-      IcDetailType(listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY))
+    SuplaFunction.IC_HEAT_METER -> IcDetailType(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY)
     SuplaFunction.THERMOMETER,
-    SuplaFunction.HUMIDITY_AND_TEMPERATURE ->
-      ThermometerDetailType(listOf(DetailPage.THERMOMETER_HISTORY))
+    SuplaFunction.HUMIDITY_AND_TEMPERATURE -> ThermometerDetailType(listOf(DetailPage.THERMOMETER_HISTORY))
     SuplaFunction.HUMIDITY -> HumidityDetailType(listOf(DetailPage.HUMIDITY_HISTORY))
     SuplaFunction.HVAC_THERMOSTAT,
 //    Temporarily commented out, because is not supported yet.
@@ -76,20 +64,18 @@ abstract class BaseDetailTypeProviderUseCase {
           DetailPage.THERMOSTAT_HISTORY
         )
       )
+    SuplaFunction.HVAC_HRV -> StandardDetailType(DetailPage.RECUPERATOR_GENERAL, DetailPage.RECUPERATOR_SCHEDULE)
     SuplaFunction.DIGIGLASS_VERTICAL,
-    SuplaFunction.DIGIGLASS_HORIZONTAL ->
-      LegacyDetailType.DIGIGLASS
+    SuplaFunction.DIGIGLASS_HORIZONTAL -> LegacyDetailType.DIGIGLASS
     SuplaFunction.GENERAL_PURPOSE_MEASUREMENT,
-    SuplaFunction.GENERAL_PURPOSE_METER ->
-      GpmDetailType(listOf(DetailPage.GPM_HISTORY))
+    SuplaFunction.GENERAL_PURPOSE_METER -> GpmDetailType(listOf(DetailPage.GPM_HISTORY))
     SuplaFunction.CONTAINER,
     SuplaFunction.SEPTIC_TANK,
-    SuplaFunction.WATER_TANK ->
-      StandardDetailType(listOf(DetailPage.CONTAINER_GENERAL))
+    SuplaFunction.WATER_TANK -> StandardDetailType(DetailPage.CONTAINER_GENERAL)
     SuplaFunction.CONTROLLING_THE_GATE,
     SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
     SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
-    SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK -> StandardDetailType(listOf(DetailPage.GATE_GENERAL))
+    SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK -> StandardDetailType(DetailPage.GATE_GENERAL)
     SuplaFunction.UNKNOWN,
     SuplaFunction.NONE,
     SuplaFunction.OPEN_SENSOR_GATEWAY,
