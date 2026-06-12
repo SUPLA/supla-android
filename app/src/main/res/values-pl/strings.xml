@@ -916,6 +916,7 @@
   <string name="general_search">Szukaj</string>
   <string name="toolbar_search_hint">Wpisz 2 znaki, aby wyszukać…</string>
   <string name="details_timer_select_program">Wybierz program</string>
+  <string name="details_recuperator_open_window">Otw. okno</string>
   <string name="settings_show_unavailable_channels">Ukryj kanały, które są niedostępne ze względu na konfigurację urządzenia</string>
   <string name="general_current_year">Bieżący rok</string>
   <string name="details_em_on_list_balance">Metoda bilansowania energii</string>
@@ -928,4 +929,8 @@
   <string name="general_current_day">Bieżący dzień</string>
   <string name="general_current_month">Bieżący miesiąc</string>
   <string name="general_current_week">Bieżący tydzień</string>
+  <string name="channel_caption_hvac_hrv">Rekuperator</string>
+  <string name="details_recuperator_manual_mode_label">Tryb ręczny</string>
+  <string name="details_recuperator_ventilation">Wentylacja</string>
+  <string name="details_recuperator_empty_house">Pusty dom</string>
 </resources>

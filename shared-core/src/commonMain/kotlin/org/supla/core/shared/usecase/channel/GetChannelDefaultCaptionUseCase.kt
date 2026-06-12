@@ -43,6 +43,7 @@ import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_HE
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_HOTEL_CARD_SENSOR
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_HUMIDITY
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_HUMIDITY_AND_TEMPERATURE
+import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_HVAC_HRV
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_IC_GAS_METER
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_IC_HEAT_METER
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_IC_WATER_METER
@@ -126,6 +127,7 @@ class GetChannelDefaultCaptionUseCase {
       SuplaFunction.HVAC_THERMOSTAT,
       SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
       SuplaFunction.HVAC_DOMESTIC_HOT_WATER -> localizedString(CHANNEL_CAPTION_THERMOSTAT)
+      SuplaFunction.HVAC_HRV -> localizedString(CHANNEL_CAPTION_HVAC_HRV)
       SuplaFunction.ELECTRICITY_METER,
       SuplaFunction.IC_ELECTRICITY_METER -> localizedString(CHANNEL_CAPTION_ELECTRICITY_METER)
       SuplaFunction.DIGIGLASS_VERTICAL,

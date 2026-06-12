@@ -158,6 +158,7 @@ private fun ChannelGroupEntity.getGroupValue(value: ChannelValueEntity): GroupVa
     SuplaFunction.HVAC_THERMOSTAT,
     SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
     SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
+    SuplaFunction.HVAC_HRV,
     SuplaFunction.VALVE_PERCENTAGE,
     SuplaFunction.GENERAL_PURPOSE_MEASUREMENT,
     SuplaFunction.GENERAL_PURPOSE_METER,

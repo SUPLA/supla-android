@@ -29,7 +29,11 @@ enum class LegacyDetailType : DetailType {
 
 data class StandardDetailType(
   val pages: List<DetailPage>
-) : DetailType
+) : DetailType {
+  constructor(page: DetailPage) : this(listOf(page))
+  constructor(page1: DetailPage, page2: DetailPage) : this(listOf(page1, page2))
+  constructor(page1: DetailPage, page2: DetailPage, page3: DetailPage) : this(listOf(page1, page2, page3))
+}
 
 data class ThermostatDetailType(
   val pages: List<DetailPage>
@@ -49,8 +53,13 @@ data class GpmDetailType(
 
 data class IcDetailType(
   val pages: List<DetailPage>
-) : DetailType
+) : DetailType {
+  constructor(page1: DetailPage, page2: DetailPage) : this(listOf(page1, page2))
+}
 
 data class RgbwDetailType(
   val pages: List<DetailPage>
-) : DetailType
+) : DetailType {
+  constructor(page: DetailPage) : this(listOf(page))
+  constructor(page1: DetailPage, page2: DetailPage) : this(listOf(page1, page2))
+}

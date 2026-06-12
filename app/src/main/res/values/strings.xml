@@ -940,6 +940,9 @@
   <string name="general_search">Search</string>
   <string name="toolbar_search_hint">Type 2 characters for search…</string>
   <string name="details_timer_select_program">Select program</string>
+  <string name="details_recuperator_ventilation">Ventilation</string>
+  <string name="details_recuperator_empty_house">Empty house</string>
+  <string name="details_recuperator_open_window">Open window</string>
   <string name="settings_show_unavailable_channels">Hide channels that are unavailable due to the device configuration.</string>
   <string name="general_current_hour">Current hour</string>
   <string name="general_current_day">Current day</string>
@@ -952,4 +955,6 @@
   <string name="details_em_on_list">Display in the channel list</string>
   <string name="details_em_active_energy_balance">Active energy balance</string>
   <string name="details_em_settings_list_metric">Selected value</string>
+  <string name="channel_caption_hvac_hrv">Heat recovery ventilation</string>
+  <string name="details_recuperator_manual_mode_label">Manual Mode</string>
 </resources>

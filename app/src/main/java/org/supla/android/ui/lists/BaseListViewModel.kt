@@ -95,6 +95,7 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
       SuplaFunction.HVAC_THERMOSTAT,
       SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
       SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
+      SuplaFunction.HVAC_HRV,
       SuplaFunction.IC_HEAT_METER,
       SuplaFunction.GENERAL_PURPOSE_MEASUREMENT,
       SuplaFunction.GENERAL_PURPOSE_METER,

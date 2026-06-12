@@ -197,7 +197,7 @@ class EncryptedPreferences @Inject constructor(
     }
 
     val createdData = ProfileCredentials.create(randomGenerator)
-    preferences.edit { it[key] = gson.toJson(data) }
+    preferences.edit { it[key] = gson.toJson(createdData) }
     return createdData
   }
 

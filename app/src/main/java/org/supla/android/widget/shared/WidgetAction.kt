@@ -134,7 +134,8 @@ private fun getLeftButtonAction(function: SuplaFunction): ActionId? =
     SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS,
     SuplaFunction.HVAC_THERMOSTAT,
     SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
-    SuplaFunction.HVAC_DOMESTIC_HOT_WATER -> ActionId.TURN_OFF
+    SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
+    SuplaFunction.HVAC_HRV -> ActionId.TURN_OFF
     SuplaFunction.TERRACE_AWNING,
     SuplaFunction.PROJECTOR_SCREEN,
     SuplaFunction.CURTAIN -> ActionId.COLLAPSE
@@ -208,7 +209,8 @@ private fun getRightButtonAction(function: SuplaFunction): ActionId? =
     SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS,
     SuplaFunction.HVAC_THERMOSTAT,
     SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
-    SuplaFunction.HVAC_DOMESTIC_HOT_WATER -> ActionId.TURN_ON
+    SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
+    SuplaFunction.HVAC_HRV -> ActionId.TURN_ON
     SuplaFunction.TERRACE_AWNING,
     SuplaFunction.PROJECTOR_SCREEN,
     SuplaFunction.CURTAIN -> ActionId.EXPAND
@@ -279,6 +281,7 @@ private fun getDefaultAction(function: SuplaFunction): ActionId? =
     SuplaFunction.HVAC_THERMOSTAT,
     SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
     SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
+    SuplaFunction.HVAC_HRV,
     SuplaFunction.TERRACE_AWNING,
     SuplaFunction.PROJECTOR_SCREEN,
     SuplaFunction.CURTAIN -> null
@@ -358,6 +361,7 @@ private fun hasAction(function: SuplaFunction?): Boolean =
     SuplaFunction.HVAC_THERMOSTAT,
     SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
     SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
+    SuplaFunction.HVAC_HRV,
     SuplaFunction.TERRACE_AWNING,
     SuplaFunction.PROJECTOR_SCREEN,
     SuplaFunction.CURTAIN -> true

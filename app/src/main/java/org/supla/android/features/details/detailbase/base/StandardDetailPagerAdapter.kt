@@ -35,6 +35,8 @@ import org.supla.android.features.details.impulsecounter.general.ImpulseCounterG
 import org.supla.android.features.details.impulsecounter.history.ImpulseCounterHistoryDetailFragment
 import org.supla.android.features.details.impulsecounter.settings.ImpulseCounterSettingsFragment
 import org.supla.android.features.details.legacydetail.LegacyDetailFragment
+import org.supla.android.features.details.recuperator.general.RecuperatorGeneralDetailFragment
+import org.supla.android.features.details.recuperator.schedule.RecuperatorScheduleDetailFragment
 import org.supla.android.features.details.rgbanddimmer.dimmer.DimmerDetailFragment
 import org.supla.android.features.details.rgbanddimmer.dimmercct.DimmerCctDetailFragment
 import org.supla.android.features.details.rgbanddimmer.rgb.RgbDetailFragment
@@ -67,42 +69,49 @@ class StandardDetailPagerAdapter(
   override fun getItemCount(): Int = pages.size
 
   override fun createFragment(position: Int): Fragment = when (pages[position]) {
-    DetailPage.SWITCH -> SwitchGeneralFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.SWITCH_TIMER -> TimersDetailFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.THERMOSTAT -> ThermostatGeneralFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.THERMOSTAT_LIST -> ThermostatSlavesListFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.SCHEDULE -> ScheduleDetailFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.THERMOSTAT_TIMER -> TimerDetailFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.THERMOSTAT_HISTORY -> ThermostatHistoryDetailFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.THERMOSTAT_HEATPOL_HISTORY -> HeatpolHistoryDetailFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.THERMOMETER_HISTORY -> ThermometerHistoryDetailFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.HUMIDITY_HISTORY -> HumidityHistoryDetailFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.GPM_HISTORY -> GpmHistoryDetailFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.ROLLER_SHUTTER -> RollerShutterFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.ROOF_WINDOW -> RoofWindowFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.FACADE_BLINDS -> FacadeBlindsFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.TERRACE_AWNING -> TerraceAwningFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.PROJECTOR_SCREEN -> ProjectorScreenFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.CURTAIN -> CurtainFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.VERTICAL_BLIND -> VerticalBlindsFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.GARAGE_DOOR_ROLLER -> GarageDoorFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.EM_GENERAL -> ElectricityMeterGeneralFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.EM_HISTORY -> ElectricityMeterHistoryFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.EM_SETTINGS -> ElectricityMeterSettingsFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.CONTAINER_GENERAL -> ContainerGeneralDetailFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.IC_GENERAL -> ImpulseCounterGeneralFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.IC_HISTORY -> ImpulseCounterHistoryDetailFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.IC_OCR -> CounterPhotoFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.IC_SETTINGS -> ImpulseCounterSettingsFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.VALVE_GENERAL -> ValveGeneralDetailFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.GATE_GENERAL -> GateGeneralFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.RGB -> RgbDetailFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.DIMMER -> DimmerDetailFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.DIMMER_CCT -> DimmerCctDetailFragment().apply { arguments = bundle(itemBundle) }
-    DetailPage.THERMOSTAT_HEATPOL_GENERAL -> LegacyDetailFragment().apply {
-      arguments = LegacyDetailFragment.bundle(itemBundle.remoteId, LegacyDetailType.THERMOSTAT_HP, itemBundle.itemType)
-    }
+    DetailPage.SWITCH -> SwitchGeneralFragment()
+    DetailPage.SWITCH_TIMER -> TimersDetailFragment()
+    DetailPage.THERMOSTAT -> ThermostatGeneralFragment()
+    DetailPage.THERMOSTAT_LIST -> ThermostatSlavesListFragment()
+    DetailPage.SCHEDULE -> ScheduleDetailFragment()
+    DetailPage.THERMOSTAT_TIMER -> TimerDetailFragment()
+    DetailPage.THERMOSTAT_HISTORY -> ThermostatHistoryDetailFragment()
+    DetailPage.THERMOSTAT_HEATPOL_HISTORY -> HeatpolHistoryDetailFragment()
+    DetailPage.THERMOMETER_HISTORY -> ThermometerHistoryDetailFragment()
+    DetailPage.HUMIDITY_HISTORY -> HumidityHistoryDetailFragment()
+    DetailPage.GPM_HISTORY -> GpmHistoryDetailFragment()
+    DetailPage.ROLLER_SHUTTER -> RollerShutterFragment()
+    DetailPage.ROOF_WINDOW -> RoofWindowFragment()
+    DetailPage.FACADE_BLINDS -> FacadeBlindsFragment()
+    DetailPage.TERRACE_AWNING -> TerraceAwningFragment()
+    DetailPage.PROJECTOR_SCREEN -> ProjectorScreenFragment()
+    DetailPage.CURTAIN -> CurtainFragment()
+    DetailPage.VERTICAL_BLIND -> VerticalBlindsFragment()
+    DetailPage.GARAGE_DOOR_ROLLER -> GarageDoorFragment()
+    DetailPage.EM_GENERAL -> ElectricityMeterGeneralFragment()
+    DetailPage.EM_HISTORY -> ElectricityMeterHistoryFragment()
+    DetailPage.EM_SETTINGS -> ElectricityMeterSettingsFragment()
+    DetailPage.CONTAINER_GENERAL -> ContainerGeneralDetailFragment()
+    DetailPage.IC_GENERAL -> ImpulseCounterGeneralFragment()
+    DetailPage.IC_HISTORY -> ImpulseCounterHistoryDetailFragment()
+    DetailPage.IC_OCR -> CounterPhotoFragment()
+    DetailPage.IC_SETTINGS -> ImpulseCounterSettingsFragment()
+    DetailPage.VALVE_GENERAL -> ValveGeneralDetailFragment()
+    DetailPage.GATE_GENERAL -> GateGeneralFragment()
+    DetailPage.RGB -> RgbDetailFragment()
+    DetailPage.DIMMER -> DimmerDetailFragment()
+    DetailPage.DIMMER_CCT -> DimmerCctDetailFragment()
+    DetailPage.THERMOSTAT_HEATPOL_GENERAL -> LegacyDetailFragment()
+    DetailPage.RECUPERATOR_GENERAL -> RecuperatorGeneralDetailFragment()
+    DetailPage.RECUPERATOR_SCHEDULE -> RecuperatorScheduleDetailFragment()
   }
+    .apply {
+      arguments = if (this is LegacyDetailFragment) {
+        LegacyDetailFragment.bundle(itemBundle.remoteId, LegacyDetailType.THERMOSTAT_HP, itemBundle.itemType)
+      } else {
+        bundle(itemBundle)
+      }
+    }
 }
 
 enum class DetailPage(val item: DetailBottomItem) {
@@ -118,6 +127,10 @@ enum class DetailPage(val item: DetailBottomItem) {
   THERMOSTAT_TIMER(DetailBottomItem.TIMER),
   THERMOSTAT_HEATPOL_GENERAL(DetailBottomItem.GENERAL),
   THERMOSTAT_HEATPOL_HISTORY(DetailBottomItem.HISTORY),
+
+  // Recuperator
+  RECUPERATOR_GENERAL(DetailBottomItem.GENERAL),
+  RECUPERATOR_SCHEDULE(DetailBottomItem.SCHEDULE),
 
   // Thermometers
   THERMOMETER_HISTORY(DetailBottomItem.HISTORY),
