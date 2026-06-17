@@ -100,17 +100,19 @@ fun IconValueListItemView(
   val title = data.title(LocalContext.current)
   ListItemScaffold(
     itemTitle = title,
-    itemOnlineState = data.onlineState,
     itemEstimatedEndDate = data.estimatedTimerEndDate,
     onInfoClick = onInfoClick,
     onIssueClick = onIssueClick,
     onTitleLongClick = onTitleLongClick,
     onItemClick = onItemClick,
     issues = data.issues,
-    hasLeftButton = hasLeftButton,
-    hasRightButton = hasRightButton,
     scale = scale,
-    showInfoIcon = showInfoIcon && data.infoSupported
+    showInfoIcon = showInfoIcon && data.infoSupported,
+    statusIndicator = StatusIndicator(
+      listItemStatus = data.listItemStatus,
+      hasLeftButton = hasLeftButton,
+      hasRightButton = hasRightButton
+    )
   ) {
     ListItemMainRow(scale = scale) {
       data.icon?.let {
@@ -145,7 +147,7 @@ private fun Preview() {
       ) {
         IconValueListItemView(
           data = SlideableListItemData.Default(
-            onlineState = ListOnlineState.ONLINE,
+            listItemStatus = ListItemStatus.Channel(onlineState = ListOnlineState.ONLINE),
             title = LocalizedString.Constant("Channel"),
             icon = ImageId(R.drawable.fnc_gpm_5),
             value = "100 hPa",
@@ -164,7 +166,7 @@ private fun Preview() {
       ) {
         IconValueListItemView(
           data = SlideableListItemData.Default(
-            onlineState = ListOnlineState.ONLINE,
+            listItemStatus = ListItemStatus.Channel(onlineState = ListOnlineState.ONLINE),
             title = LocalizedString.Constant("Channel"),
             icon = ImageId(R.drawable.fnc_gpm_5),
             value = "100 hPa",
@@ -183,7 +185,7 @@ private fun Preview() {
       ) {
         IconValueListItemView(
           data = SlideableListItemData.Default(
-            onlineState = ListOnlineState.ONLINE,
+            listItemStatus = ListItemStatus.Channel(onlineState = ListOnlineState.ONLINE),
             title = LocalizedString.Constant("Channel"),
             icon = ImageId(R.drawable.fnc_gpm_5),
             value = "100 hPa",
@@ -202,7 +204,7 @@ private fun Preview() {
       ) {
         IconValueListItemView(
           data = SlideableListItemData.Default(
-            onlineState = ListOnlineState.ONLINE,
+            listItemStatus = ListItemStatus.Channel(onlineState = ListOnlineState.ONLINE),
             title = LocalizedString.Constant("Channel"),
             icon = ImageId(R.drawable.fnc_gpm_5),
             value = "100 hPa",

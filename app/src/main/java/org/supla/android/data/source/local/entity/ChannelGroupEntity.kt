@@ -66,6 +66,9 @@ data class ChannelGroupEntity(
   val groupTotalValues: List<GroupValue>
     get() = GroupTotalValue.parse(function, totalValue)
 
+  val onlinePercentage: Float
+    get() = online.coerceIn(0, 100).div(100f)
+
   companion object {
     const val TABLE_NAME = "channelgroup"
     const val COLUMN_ID = "_id"

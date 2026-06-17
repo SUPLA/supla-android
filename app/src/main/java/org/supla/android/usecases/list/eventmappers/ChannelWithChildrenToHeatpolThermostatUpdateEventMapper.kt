@@ -21,6 +21,7 @@ import org.supla.android.core.shared.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.di.FORMATTER_THERMOMETER
 import org.supla.android.ui.lists.data.SlideableListItemData
+import org.supla.android.ui.views.list.ListItemStatus
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ListFirstValue
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -63,7 +64,7 @@ class ChannelWithChildrenToHeatpolThermostatUpdateEventMapper @Inject constructo
     val thermostatValue = channelData.channelValueEntity.asHeatpolThermostatValue()
 
     return SlideableListItemData.Thermostat(
-      onlineState = channelWithChildren.onlineState,
+      listItemStatus = ListItemStatus.Channel(channelWithChildren.onlineState),
       title = getCaptionUseCase(channelData.shareable),
       icon = getChannelIconUseCase.invoke(channelData),
       value = getChannelValueStringUseCase(channelWithChildren, ListFirstValue),

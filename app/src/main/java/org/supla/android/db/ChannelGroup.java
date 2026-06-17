@@ -132,31 +132,25 @@ public class ChannelGroup extends ChannelBase {
   }
 
   public ArrayList<Double> getColors() {
-    switch (getFunc()) {
-      case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
-      case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
-        return getRGBWValues(0);
-    }
-    return null;
+    return switch (getFunc()) {
+      case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING, SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING -> getRGBWValues(0);
+      default -> null;
+    };
   }
 
   public ArrayList<Double> getColorBrightness() {
-    switch (getFunc()) {
-      case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
-      case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
-        return getRGBWValues(1);
-    }
-    return null;
+    return switch (getFunc()) {
+      case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING, SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING -> getRGBWValues(1);
+      default -> null;
+    };
   }
 
   public ArrayList<Double> getBrightness() {
-    switch (getFunc()) {
-      case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
-        return getDoubleValues();
-      case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
-        return getRGBWValues(2);
-    }
-    return null;
+    return switch (getFunc()) {
+      case SuplaConst.SUPLA_CHANNELFNC_DIMMER -> getDoubleValues();
+      case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING -> getRGBWValues(2);
+      default -> null;
+    };
   }
 
   private Double getMinMaxTemperature(boolean preset, boolean min) {
@@ -200,18 +194,5 @@ public class ChannelGroup extends ChannelBase {
 
   public Double getMaximumPresetTemperature() {
     return getMinMaxTemperature(true, false);
-  }
-
-  public CharSequence getHumanReadableValue() {
-    if (getFunc() == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS) {
-      return getHumanReadableThermostatTemperature(
-          getMinimumMeasuredTemperature(),
-          getMaximumMeasuredTemperature(),
-          getMinimumPresetTemperature(),
-          getMaximumPresetTemperature(),
-          0.8f,
-          0.6f);
-    }
-    return null;
   }
 }

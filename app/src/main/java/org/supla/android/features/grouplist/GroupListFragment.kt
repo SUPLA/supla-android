@@ -118,10 +118,6 @@ class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R
     }
   }
 
-  override fun onSuplaMessage(message: SuplaClientMessage) {
-    (message as? SuplaClientMessage.GroupDataChanged)?.let { viewModel.updateGroup(it.groupId) }
-  }
-
   private fun setupAdapter() {
     adapter.leftButtonClickCallback = {
       vibrationHelper.vibrate()

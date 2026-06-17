@@ -41,6 +41,7 @@ import org.supla.android.events.DownloadEventsManager
 import org.supla.android.events.inProgress
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.lists.onlineState
+import org.supla.android.ui.views.list.ListItemStatus
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.core.shared.data.model.general.SuplaFunction
@@ -204,7 +205,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       ListItem.IconValueItem(
         channelData,
         locationCaption = channelData.locationEntity.caption,
-        online = it.onlineState,
+        status = ListItemStatus.Channel(it.onlineState),
         captionProvider = getCaptionUseCase(channelData.shareable),
         icon = getChannelIconUseCase(channelData),
         value = getChannelValueStringUseCase.valueOrNull(it, ListFirstValue),
@@ -227,7 +228,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
     return ListItem.HvacThermostatItem(
       channelData,
       channelData.locationEntity.caption,
-      onlineState,
+      ListItemStatus.Channel(onlineState),
       getCaptionUseCase(channelData.shareable),
       getChannelIconUseCase(channelData),
       thermometerChild?.let { getChannelValueStringUseCase(it.withChildren, ListFirstValue) } ?: NO_VALUE_TEXT,
@@ -248,7 +249,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       ListItem.HeatpolThermostatItem(
         channelData,
         channelData.locationEntity.caption,
-        channelData.channelValueEntity.status.onlineState,
+        ListItemStatus.Channel(channelData.channelValueEntity.status.onlineState),
         getCaptionUseCase(channelData.shareable),
         getChannelIconUseCase(channelData),
         getChannelValueStringUseCase(channelWithChildren, ListFirstValue),
@@ -266,7 +267,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       ListItem.IconWithButtonsItem(
         channelData,
         channelData.locationEntity.caption,
-        it.onlineState,
+        ListItemStatus.Channel(it.onlineState),
         getCaptionUseCase(channelData.shareable),
         getChannelIconUseCase(channelData),
         value = getChannelValueStringUseCase.valueOrNull(it, ListFirstValue),
@@ -284,7 +285,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       ListItem.IconWithRightButtonItem(
         channelData,
         channelData.locationEntity.caption,
-        it.onlineState,
+        ListItemStatus.Channel(it.onlineState),
         getCaptionUseCase(channelData.shareable),
         getChannelIconUseCase(channelData),
         value = getChannelValueStringUseCase.valueOrNull(it, ListFirstValue),
@@ -302,7 +303,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       ListItem.DoubleValueItem(
         channelData,
         channelData.locationEntity.caption,
-        it.onlineState,
+        ListItemStatus.Channel(it.onlineState),
         getCaptionUseCase(channelData.shareable),
         getChannelIconUseCase(channelData),
         value = getChannelValueStringUseCase.valueOrNull(channel = it, valueType = ListFirstValue),

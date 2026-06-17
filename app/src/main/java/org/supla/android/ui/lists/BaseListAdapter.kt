@@ -61,7 +61,6 @@ abstract class BaseListAdapter<D>(
 
   override fun getItemViewType(pos: Int): Int {
     return when (items[pos]) {
-      is ListItem.ChannelItem -> ViewType.CHANNEL_ITEM
       is ListItem.HvacThermostatItem -> ViewType.HVAC_ITEM
       is ListItem.HeatpolThermostatItem -> ViewType.HEATPOL_ITEM
       is ListItem.IconValueItem -> ViewType.ICON_VALUE_ITEM
@@ -175,7 +174,6 @@ abstract class BaseListAdapter<D>(
 
   enum class ViewType {
     SCENE_ITEM,
-    CHANNEL_ITEM,
     LOCATION_ITEM,
 
     ICON_VALUE_ITEM,

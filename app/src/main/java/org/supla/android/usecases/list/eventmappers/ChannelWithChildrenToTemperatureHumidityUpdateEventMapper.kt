@@ -21,6 +21,7 @@ import org.supla.android.core.shared.shareable
 import org.supla.android.data.model.general.IconType
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.ui.lists.data.SlideableListItemData
+import org.supla.android.ui.views.list.ListItemStatus
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ListFirstValue
 import org.supla.android.usecases.channel.ListSecondValue
@@ -56,7 +57,7 @@ class ChannelWithChildrenToTemperatureHumidityUpdateEventMapper @Inject construc
   private fun toSlideableListItemData(channelWithChildren: ChannelWithChildren): SlideableListItemData.DoubleValue {
     val channelData = channelWithChildren.channel
     return SlideableListItemData.DoubleValue(
-      onlineState = channelWithChildren.onlineState,
+      listItemStatus = ListItemStatus.Channel(channelWithChildren.onlineState),
       title = getCaptionUseCase(channelData.shareable),
       icon = getChannelIconUseCase.invoke(channelData),
       value = getChannelValueStringUseCase(channelWithChildren, valueType = ListFirstValue),
