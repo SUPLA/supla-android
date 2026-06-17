@@ -17,10 +17,15 @@ package org.supla.android.usecases.list.eventmappers
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.core.shared.shareable
 import org.supla.android.data.source.local.entity.complex.isShadingSystem
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.data.source.local.entity.isGarageDoorRoller
+import org.supla.android.data.source.local.entity.isProjectorScreen
 import org.supla.android.ui.lists.data.SlideableListItemData
+import org.supla.android.ui.views.list.ListItemStatus
 import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
 import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetChannelIssuesForListUseCase
@@ -29,13 +34,15 @@ import javax.inject.Singleton
 
 @Singleton
 class ChannelWithChildrenToShadingSystemUpdateEventMapper @Inject constructor(
-  getCaptionUseCase: GetCaptionUseCase,
-  getChannelIconUseCase: GetChannelIconUseCase,
-  getChannelIssuesForListUseCase: GetChannelIssuesForListUseCase
-) : ShadingSystemBasedUpdateEventMapper(getCaptionUseCase, getChannelIconUseCase, getChannelIssuesForListUseCase) {
+  private val getCaptionUseCase: GetCaptionUseCase,
+  private val getChannelIconUseCase: GetChannelIconUseCase,
+  private val getChannelIssuesForListUseCase: GetChannelIssuesForListUseCase
+) : CreateListItemUpdateEventDataUseCase.Mapper {
 
   override fun handle(item: Any): Boolean {
-    return (item as? ChannelWithChildren)?.channel?.isShadingSystem() == true
+    return (item as? ChannelWithChildren)?.channel?.isShadingSystem() == true ||
+      (item as? ChannelWithChildren)?.channel?.isGarageDoorRoller() == true ||
+      (item as? ChannelWithChildren)?.channel?.isProjectorScreen() == true
   }
 
   override fun map(item: Any): SlideableListItemData {
@@ -44,5 +51,18 @@ class ChannelWithChildrenToShadingSystemUpdateEventMapper @Inject constructor(
     }
 
     return toListItemData(channel)
+  }
+
+  private fun toListItemData(channelWithChildren: ChannelWithChildren): SlideableListItemData.Default {
+    return SlideableListItemData.Default(
+      listItemStatus = ListItemStatus.Channel(channelWithChildren.onlineState),
+      title = getCaptionUseCase(channelWithChildren.channel.shareable),
+      icon = getChannelIconUseCase.invoke(channelWithChildren.channel),
+      value = null,
+      issues = getChannelIssuesForListUseCase(channelWithChildren.shareable),
+      estimatedTimerEndDate = null,
+      infoSupported = channelWithChildren.showInfo,
+      processing = false
+    )
   }
 }

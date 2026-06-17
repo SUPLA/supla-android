@@ -21,6 +21,7 @@ import org.supla.android.core.shared.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.isSwitch
 import org.supla.android.ui.lists.data.SlideableListItemData
+import org.supla.android.ui.views.list.ListItemStatus
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ListFirstValue
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -53,7 +54,7 @@ class ChannelWithChildrenToSwitchUpdateEventMapper @Inject constructor(
   private fun toListItemData(channelWithChildren: ChannelWithChildren): SlideableListItemData.Default {
     val channelData = channelWithChildren.channel
     return SlideableListItemData.Default(
-      onlineState = channelWithChildren.onlineState,
+      listItemStatus = ListItemStatus.Channel(channelWithChildren.onlineState),
       title = getCaptionUseCase(channelData.shareable),
       icon = getChannelIconUseCase.invoke(channelData),
       value = getChannelValueStringUseCase.valueOrNull(channelWithChildren, ListFirstValue),

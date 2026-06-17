@@ -22,22 +22,23 @@ import org.supla.android.core.shared.shareable
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.runtime.ItemType
+import org.supla.android.events.DownloadEventsManager
 import org.supla.android.events.UpdateEventsManager
+import org.supla.android.events.inProgress
 import org.supla.android.ui.lists.data.SlideableListItemData
-import org.supla.android.ui.lists.onlineState
+import org.supla.android.ui.views.list.ListItemStatus
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
+import org.supla.android.usecases.group.GetGroupActivePercentageUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
-import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToGarageDoorUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToGpmUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToHeatpolThermostatUpdateEventMapper
-import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToIconValueItemUpdateEventMapper
-import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToProjectScreenUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToShadingSystemUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToSwitchUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToTemperatureHumidityUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToThermostatUpdateEventMapper
+import org.supla.android.usecases.list.eventmappers.GroupToHeatpolThermostatUpdateEventMapper
 import org.supla.core.shared.data.model.lists.ListItemIssues
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetChannelIssuesForListUseCase
@@ -46,34 +47,32 @@ import javax.inject.Singleton
 
 @Singleton
 class CreateListItemUpdateEventDataUseCase @Inject constructor(
-  private val eventsManager: UpdateEventsManager,
-  private val readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   private val readChannelWithChildrenTreeUseCase: ReadChannelWithChildrenTreeUseCase,
-  private val getCaptionUseCase: GetCaptionUseCase,
-  private val getChannelIconUseCase: GetChannelIconUseCase,
-  private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
+  private val readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
+  private val getGroupActivePercentageUseCase: GetGroupActivePercentageUseCase,
   private val getChannelIssuesForListUseCase: GetChannelIssuesForListUseCase,
-  channelWithChildrenToThermostatUpdateEventMapper: ChannelWithChildrenToThermostatUpdateEventMapper,
-  channelWithChildrenToIconValueItemUpdateEventMapper: ChannelWithChildrenToIconValueItemUpdateEventMapper,
-  channelWithChildrenToGpmUpdateEventMapper: ChannelWithChildrenToGpmUpdateEventMapper,
-  channelWithChildrenToShadingSystemUpdateEventMapper: ChannelWithChildrenToShadingSystemUpdateEventMapper,
-  channelWithChildrenToProjectScreenUpdateEventMapper: ChannelWithChildrenToProjectScreenUpdateEventMapper,
-  channelWithChildrenToGarageDoorUpdateEventMapper: ChannelWithChildrenToGarageDoorUpdateEventMapper,
-  channelWithChildrenToSwitchUpdateEventMapper: ChannelWithChildrenToSwitchUpdateEventMapper,
+  private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
+  private val downloadEventsManager: DownloadEventsManager,
+  private val getChannelIconUseCase: GetChannelIconUseCase,
+  private val getCaptionUseCase: GetCaptionUseCase,
+  private val eventsManager: UpdateEventsManager,
   channelWithChildrenToTemperatureHumidityUpdateEventMapper: ChannelWithChildrenToTemperatureHumidityUpdateEventMapper,
-  channelWithChildrenToHeatpolThermostatUpdateEventMapper: ChannelWithChildrenToHeatpolThermostatUpdateEventMapper
+  channelWithChildrenToHeatpolThermostatUpdateEventMapper: ChannelWithChildrenToHeatpolThermostatUpdateEventMapper,
+  channelWithChildrenToShadingSystemUpdateEventMapper: ChannelWithChildrenToShadingSystemUpdateEventMapper,
+  channelWithChildrenToThermostatUpdateEventMapper: ChannelWithChildrenToThermostatUpdateEventMapper,
+  channelWithChildrenToSwitchUpdateEventMapper: ChannelWithChildrenToSwitchUpdateEventMapper,
+  channelWithChildrenToGpmUpdateEventMapper: ChannelWithChildrenToGpmUpdateEventMapper,
+  groupToHeatpolThermostatUpdateEventMapper: GroupToHeatpolThermostatUpdateEventMapper
 ) {
 
   private val mappers: List<Mapper> = listOf(
-    channelWithChildrenToThermostatUpdateEventMapper,
-    channelWithChildrenToIconValueItemUpdateEventMapper,
-    channelWithChildrenToGpmUpdateEventMapper,
-    channelWithChildrenToShadingSystemUpdateEventMapper,
-    channelWithChildrenToProjectScreenUpdateEventMapper,
-    channelWithChildrenToGarageDoorUpdateEventMapper,
-    channelWithChildrenToSwitchUpdateEventMapper,
     channelWithChildrenToTemperatureHumidityUpdateEventMapper,
-    channelWithChildrenToHeatpolThermostatUpdateEventMapper
+    channelWithChildrenToHeatpolThermostatUpdateEventMapper,
+    channelWithChildrenToShadingSystemUpdateEventMapper,
+    channelWithChildrenToThermostatUpdateEventMapper,
+    channelWithChildrenToSwitchUpdateEventMapper,
+    channelWithChildrenToGpmUpdateEventMapper,
+    groupToHeatpolThermostatUpdateEventMapper
   )
 
   operator fun invoke(itemType: ItemType, remoteId: Int): Observable<SlideableListItemData> {
@@ -92,18 +91,21 @@ class CreateListItemUpdateEventDataUseCase @Inject constructor(
 
     (item as? ChannelWithChildren)?.let {
       return SlideableListItemData.Default(
-        onlineState = it.onlineState,
+        listItemStatus = ListItemStatus.Channel(it.onlineState),
         title = getCaptionUseCase(it.channel.shareable),
         icon = getChannelIconUseCase(it.channel),
+        value = getChannelValueStringUseCase.valueOrNull(it),
         issues = getChannelIssuesForListUseCase(item.shareable),
         infoSupported = it.showInfo,
-        value = getChannelValueStringUseCase.valueOrNull(it),
-        processing = false
+        processing = downloadEventsManager.getLastChannelDownloadState(it.remoteId).inProgress
       )
     }
     (item as? ChannelGroupDataEntity)?.let {
       return SlideableListItemData.Default(
-        onlineState = it.status.onlineState,
+        listItemStatus = ListItemStatus.Group(
+          onlinePercentage = it.channelGroupEntity.onlinePercentage,
+          activePercentage = getGroupActivePercentageUseCase(it.channelGroupEntity).coerceIn(0, 100).div(100f)
+        ),
         title = getCaptionUseCase(it.shareable),
         icon = getChannelIconUseCase(it),
         issues = ListItemIssues.empty,

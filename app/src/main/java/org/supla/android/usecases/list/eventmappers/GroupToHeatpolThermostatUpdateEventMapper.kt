@@ -17,31 +17,38 @@ package org.supla.android.usecases.list.eventmappers
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.data.source.local.entity.isProjectorScreen
+import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
+import org.supla.android.di.FORMATTER_THERMOMETER
 import org.supla.android.ui.lists.data.SlideableListItemData
+import org.supla.android.usecases.group.GetGroupActivePercentageUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
+import org.supla.android.usecases.list.GroupToListItemMapper
+import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.usecase.GetCaptionUseCase
-import org.supla.core.shared.usecase.channel.GetChannelIssuesForListUseCase
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class ChannelWithChildrenToProjectScreenUpdateEventMapper @Inject constructor(
-  getCaptionUseCase: GetCaptionUseCase,
-  getChannelIconUseCase: GetChannelIconUseCase,
-  getChannelIssuesForListUseCase: GetChannelIssuesForListUseCase
-) : ShadingSystemBasedUpdateEventMapper(getCaptionUseCase, getChannelIconUseCase, getChannelIssuesForListUseCase) {
-
+class GroupToHeatpolThermostatUpdateEventMapper @Inject constructor(
+  override val getCaptionUseCase: GetCaptionUseCase,
+  override val getChannelIconUseCase: GetChannelIconUseCase,
+  override val getGroupActivePercentageUseCase: GetGroupActivePercentageUseCase,
+  @param:Named(FORMATTER_THERMOMETER) override val thermometerValueFormatter: ValueFormatter
+) :
+  CreateListItemUpdateEventDataUseCase.Mapper, GroupToListItemMapper {
   override fun handle(item: Any): Boolean {
-    return (item as? ChannelWithChildren)?.channel?.isProjectorScreen() == true
+    return (item as? ChannelGroupDataEntity)?.function == SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS
   }
 
   override fun map(item: Any): SlideableListItemData {
-    val (channel) = guardLet(item as? ChannelWithChildren) {
+    val (group) = guardLet(item as? ChannelGroupDataEntity) {
       throw IllegalArgumentException("Expected Channel but got $item")
     }
-    return toListItemData(channel)
+
+    return toHeatpolThermostatItem(group).toSlideableListItemData()
   }
 }

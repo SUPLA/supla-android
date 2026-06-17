@@ -20,12 +20,13 @@ package org.supla.android.ui.lists.data
 import androidx.annotation.DrawableRes
 import org.supla.android.images.ImageId
 import org.supla.android.ui.lists.ListOnlineState
+import org.supla.android.ui.views.list.ListItemStatus
 import org.supla.core.shared.data.model.lists.ListItemIssues
 import org.supla.core.shared.infrastructure.LocalizedString
 import java.util.Date
 
 sealed class SlideableListItemData {
-  abstract val onlineState: ListOnlineState
+  abstract val listItemStatus: ListItemStatus
   abstract val title: LocalizedString
   abstract val icon: ImageId?
   abstract val issues: ListItemIssues
@@ -33,7 +34,7 @@ sealed class SlideableListItemData {
   abstract val infoSupported: Boolean
 
   data class Thermostat(
-    override val onlineState: ListOnlineState,
+    override val listItemStatus: ListItemStatus,
     override val title: LocalizedString,
     override val icon: ImageId?,
     override val issues: ListItemIssues,
@@ -47,7 +48,7 @@ sealed class SlideableListItemData {
   }
 
   data class DoubleValue(
-    override val onlineState: ListOnlineState,
+    override val listItemStatus: ListItemStatus,
     override val title: LocalizedString,
     override val icon: ImageId?,
     override val issues: ListItemIssues,
@@ -61,7 +62,7 @@ sealed class SlideableListItemData {
   }
 
   data class Default(
-    override val onlineState: ListOnlineState,
+    override val listItemStatus: ListItemStatus,
     override val title: LocalizedString,
     override val icon: ImageId?,
     override val issues: ListItemIssues,
@@ -76,7 +77,7 @@ sealed class SlideableListItemData {
 
 fun SlideableListItemData.Thermostat.Companion.default(): SlideableListItemData.Thermostat =
   SlideableListItemData.Thermostat(
-    onlineState = ListOnlineState.OFFLINE,
+    listItemStatus = ListItemStatus.Channel(ListOnlineState.OFFLINE),
     title = LocalizedString.Empty,
     icon = null,
     value = "",
@@ -89,7 +90,7 @@ fun SlideableListItemData.Thermostat.Companion.default(): SlideableListItemData.
 
 fun SlideableListItemData.DoubleValue.Companion.default(): SlideableListItemData.DoubleValue =
   SlideableListItemData.DoubleValue(
-    onlineState = ListOnlineState.OFFLINE,
+    listItemStatus = ListItemStatus.Channel(ListOnlineState.OFFLINE),
     title = LocalizedString.Empty,
     icon = null,
     value = "",
@@ -102,7 +103,7 @@ fun SlideableListItemData.DoubleValue.Companion.default(): SlideableListItemData
 
 fun SlideableListItemData.Default.Companion.default(): SlideableListItemData.Default =
   SlideableListItemData.Default(
-    onlineState = ListOnlineState.OFFLINE,
+    listItemStatus = ListItemStatus.Channel(ListOnlineState.OFFLINE),
     title = LocalizedString.Empty,
     icon = null,
     value = "",

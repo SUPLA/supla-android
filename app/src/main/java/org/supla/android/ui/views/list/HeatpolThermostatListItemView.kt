@@ -102,17 +102,19 @@ fun HeatpolThermostatListItemView(
 ) {
   ListItemScaffold(
     itemTitle = data.title(LocalContext.current),
-    itemOnlineState = data.onlineState,
     itemEstimatedEndDate = data.estimatedTimerEndDate,
-    hasLeftButton = hasLeftButton,
-    hasRightButton = hasRightButton,
     onInfoClick = onInfoClick,
     onTitleLongClick = onTitleLongClick,
     showInfoIcon = showInfoIcon && data.infoSupported,
     issues = data.issues,
     onIssueClick = onIssueClick,
     onItemClick = onItemClick,
-    scale = scale
+    scale = scale,
+    statusIndicator = StatusIndicator(
+      listItemStatus = data.listItemStatus,
+      hasLeftButton = hasLeftButton,
+      hasRightButton = hasRightButton
+    )
   ) {
     ListItemMainRow(scale = scale) {
       data.icon?.let {
@@ -122,14 +124,14 @@ fun HeatpolThermostatListItemView(
       if (scale <= 1f) {
         Row(verticalAlignment = Alignment.Bottom) {
           ListItemValue(value = data.value, scale = scale)
-          if (data.onlineState.online) {
+          if (data.listItemStatus.online) {
             SetpointTemperature(indicatorIcon = null, subValue = "/${data.subValue}", scale = scale)
           }
         }
       } else {
         Column {
           ListItemValue(value = data.value, scale = scale)
-          if (data.onlineState.online) {
+          if (data.listItemStatus.online) {
             SetpointTemperature(indicatorIcon = null, subValue = data.subValue, scale = scale)
           }
         }
@@ -151,7 +153,7 @@ private fun Preview() {
       ) {
         ThermostatListItemView(
           data = SlideableListItemData.Thermostat(
-            onlineState = ListOnlineState.ONLINE,
+            listItemStatus = ListItemStatus.Channel(ListOnlineState.ONLINE),
             title = LocalizedString.Constant("Thermostat"),
             icon = ImageId(R.drawable.fnc_thermostat_cool),
             value = "20,7°C",
@@ -173,7 +175,7 @@ private fun Preview() {
       ) {
         ThermostatListItemView(
           data = SlideableListItemData.Thermostat(
-            onlineState = ListOnlineState.PARTIALLY_ONLINE,
+            listItemStatus = ListItemStatus.Channel(ListOnlineState.PARTIALLY_ONLINE),
             title = LocalizedString.Constant("Thermostat"),
             icon = ImageId(R.drawable.fnc_thermostat_cool),
             value = "20,7°C",
@@ -195,7 +197,7 @@ private fun Preview() {
       ) {
         ThermostatListItemView(
           data = SlideableListItemData.Thermostat(
-            onlineState = ListOnlineState.ONLINE,
+            listItemStatus = ListItemStatus.Channel(ListOnlineState.ONLINE),
             title = LocalizedString.Constant("Thermostat"),
             icon = ImageId(R.drawable.fnc_thermostat_cool),
             value = "20,7°C",
@@ -217,7 +219,7 @@ private fun Preview() {
       ) {
         ThermostatListItemView(
           data = SlideableListItemData.Thermostat(
-            onlineState = ListOnlineState.ONLINE,
+            listItemStatus = ListItemStatus.Channel(ListOnlineState.ONLINE),
             title = LocalizedString.Constant("Thermostat with very long name which goes out of the screen and must be cut"),
             icon = ImageId(R.drawable.fnc_thermostat_cool),
             value = "20,7°C",
@@ -252,7 +254,7 @@ private fun Preview_Narrow() {
       ) {
         HeatpolThermostatListItemView(
           data = SlideableListItemData.Thermostat(
-            onlineState = ListOnlineState.ONLINE,
+            listItemStatus = ListItemStatus.Channel(ListOnlineState.ONLINE),
             title = LocalizedString.Constant("Thermostat"),
             icon = ImageId(R.drawable.fnc_thermostat_cool),
             value = "20,7°C",
@@ -274,7 +276,7 @@ private fun Preview_Narrow() {
       ) {
         HeatpolThermostatListItemView(
           data = SlideableListItemData.Thermostat(
-            onlineState = ListOnlineState.ONLINE,
+            listItemStatus = ListItemStatus.Channel(ListOnlineState.ONLINE),
             title = LocalizedString.Constant("Thermostat"),
             icon = ImageId(R.drawable.fnc_thermostat_cool),
             value = "20,7°C",

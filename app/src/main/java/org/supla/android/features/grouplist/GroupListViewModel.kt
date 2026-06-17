@@ -182,23 +182,6 @@ class GroupListViewModel @Inject constructor(
     updateState { it.copy(actionAlertDialogState = null) }
   }
 
-  fun updateGroup(remoteId: Int) {
-    if (remoteId > 0) {
-      findGroupByRemoteIdUseCase(remoteId = remoteId)
-        .attachSilent()
-        .subscribeBy(
-          onSuccess = { channel ->
-            currentState().groups
-              ?.filterIsInstance<ListItem.ChannelItem>()
-              ?.firstOrNull { it.channelBase.remoteId == channel.remoteId }
-              ?.channelBase = channel
-          },
-          onError = defaultErrorHandler("updateGroup($remoteId)")
-        )
-        .disposeBySelf()
-    }
-  }
-
   private fun openDetailsByChannelFunction(group: ChannelGroupDataEntity) {
     if (isAvailableInOffline(group).not() && group.status.offline) {
       return // do not open details for offline channels
