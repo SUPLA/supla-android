@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
+import org.supla.android.Preferences
 import org.supla.android.core.shared.shareable
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.model.general.ChannelDataBase
@@ -41,7 +42,7 @@ class RgbwDetailViewModel @Inject constructor(
   readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   updateEventsManager: UpdateEventsManager,
-  preferences: ApplicationPreferences,
+  preferences: Preferences,
   schedulers: SuplaSchedulers
 ) : BaseDetailViewModel<RgbwDetailViewState, RgbwDetailViewEvent>(
   readChannelByRemoteIdUseCase,
@@ -73,6 +74,7 @@ class RgbwDetailViewModel @Inject constructor(
 
   private fun shouldShowRgbSettings(manufacturerId: Int?, productId: Int?): Boolean =
     (manufacturerId == SuplaConst.SUPLA_MFR_DOYLETRATT && productId == 1) ||
+      (manufacturerId == SuplaConst.SUPLA_MFR_DOYLETRATT && productId == 10) ||
       (manufacturerId == SuplaConst.SUPLA_MFR_ZAMEL && productId == SuplaConst.ZAM_PRODID_DIW_01) ||
       (manufacturerId == SuplaConst.SUPLA_MFR_COMELIT && productId == SuplaConst.COM_PRODID_WDIM100)
 }
