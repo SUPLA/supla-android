@@ -738,8 +738,6 @@
   <string name="rgb_detail_color">Culoare:</string>
   <string name="rgb_detail_brightness">Luminozitate:</string>
   <string name="rgb_detail_select_color">Selectați culoarea</string>
-  <string name="legacy_rgbw_settings_unauthorized_message">Este necesară autorizarea pentru a vedea configurația!</string>
-  <string name="legacy_rgbw_settings_authorize_button">Autorizați</string>
   <string name="rgb_detail_colors_limit">Limită atinsă!</string>
   <string name="channel_caption_invisible">Ascuns</string>
   <string name="dimmer_detail_temperature">Cromatica:</string>

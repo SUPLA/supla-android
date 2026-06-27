@@ -20,7 +20,7 @@ package org.supla.android.usecases.profile
 import android.net.Uri
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.core.infrastructure.UriProxy
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -37,7 +37,7 @@ sealed class CloudUrl {
 
 @Singleton
 class LoadActiveProfileUrlUseCase @Inject constructor(
-  private val profileRepository: RoomProfileRepository,
+  private val profileRepository: ProfileRepository,
   private val uriProxy: UriProxy
 ) {
 

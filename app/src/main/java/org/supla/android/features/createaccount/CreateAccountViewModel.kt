@@ -20,11 +20,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.core.ui.BaseViewModel
-import org.supla.android.data.source.RoomProfileRepository
-import org.supla.android.db.AuthProfileItem
+import org.supla.android.data.source.ProfileRepository
+import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.deleteaccountweb.DeleteAccountWebFragment
-import org.supla.android.profile.ProfileManager
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.client.ReconnectUseCase
 import org.supla.android.usecases.profile.DeleteProfileUseCase
@@ -32,21 +31,11 @@ import org.supla.android.usecases.profile.SaveProfileUseCase
 import timber.log.Timber
 import javax.inject.Inject
 
-/**
-A view model responsible for user credential input views. Handles both
-initial authentication screen and profile editing.
-
-@param profileManager profile manager to use for accessing account database
-@param item account currently being edited
-@param allowsBasicMode whether to allow basic mode (initial screen usually allows
-while profile editing mode does not.
- */
 @HiltViewModel
 class CreateAccountViewModel @Inject constructor(
-  private val profileManager: ProfileManager,
   private val saveProfileUseCase: SaveProfileUseCase,
   private val deleteProfileUseCase: DeleteProfileUseCase,
-  private val profileRepository: RoomProfileRepository,
+  private val profileRepository: ProfileRepository,
   private val reconnectUseCase: ReconnectUseCase,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<CreateAccountViewState, CreateAccountViewEvent>(CreateAccountViewState(), schedulers) {
@@ -67,7 +56,7 @@ class CreateAccountViewModel @Inject constructor(
       .disposeBySelf()
 
     if (profileId != null) {
-      profileManager.read(profileId)
+      profileRepository.findProfile(profileId)
         .attach()
         .subscribeBy(
           onSuccess = this::onProfileLoaded,
@@ -79,18 +68,18 @@ class CreateAccountViewModel @Inject constructor(
     }
   }
 
-  private fun onProfileLoaded(profile: AuthProfileItem) = profile.apply {
+  private fun onProfileLoaded(profile: ProfileEntity) = profile.apply {
     updateState {
       it.copy(
-        advancedMode = advancedAuthSetup,
+        advancedMode = advancedMode == true,
         accountName = name,
-        emailAddress = authInfo.emailAddress,
-        authorizeByEmail = authInfo.emailAuth,
-        autoServerAddress = authInfo.serverAutoDetect,
-        emailAddressServer = authInfo.serverForEmail,
-        accessIdentifier = authInfo.accessID.toAccessIdentifierString(),
-        accessIdentifierPassword = authInfo.accessIDpwd,
-        accessIdentifierServer = authInfo.serverForAccessID
+        emailAddress = email ?: "",
+        authorizeByEmail = emailAuth,
+        autoServerAddress = serverAutoDetect,
+        emailAddressServer = serverForEmail ?: "",
+        accessIdentifier = accessId?.toAccessIdentifierString() ?: "0",
+        accessIdentifierPassword = accessIdPassword ?: "",
+        accessIdentifierServer = serverForAccessId ?: ""
       )
     }
   }
@@ -156,8 +145,16 @@ class CreateAccountViewModel @Inject constructor(
     updateState { newState }
   }
 
-  fun saveProfile(profileId: Long?, defaultName: String) {
-    getSaveSingle(profileId, defaultName)
+  fun saveProfile(profileId: Long?) {
+    getSaveSingle(profileId)
+      .flatMap { saveProfileUseCase(it) }
+      .flatMapCompletable {
+        if (it.reconnectNeeded) {
+          reconnectUseCase()
+        } else {
+          Completable.complete()
+        }
+      }
       .attach()
       .subscribeBy(
         onComplete = { sendEvent(CreateAccountViewEvent.Close) },
@@ -170,34 +167,13 @@ class CreateAccountViewModel @Inject constructor(
     updateState { it.copy(loading = loading) }
   }
 
-  private fun getSaveSingle(profileId: Long?, defaultName: String): Completable = profileId.let { id ->
-    return@let if (id == null) {
-      profileRepository.findAllProfiles()
-        .firstOrError()
-        .map { profiles ->
-          val firstProfile = profiles.isEmpty()
-          val item = currentState().toProfileItem()
-          item.isActive = firstProfile
-          if (firstProfile) {
-            item.name = defaultName
-          }
-          item
-        }
-        .flatMapCompletable { profile ->
-          saveProfileUseCase(profile).let { if (profile.isActive) it.andThen(reconnectUseCase()) else it }
-        }
+  private fun getSaveSingle(profileId: Long?): Single<ProfileEntity> =
+    if (profileId == null) {
+      Single.just(currentState().toProfileItem())
     } else {
-      profileManager.read(id)
-        .toSingle()
-        .flatMapCompletable { profile ->
-          val state = currentState()
-          val authSettingsChanged = authSettingChanged(profile, state)
-          state.updateProfile(profile)
-
-          saveProfileUseCase(profile).let { if (authSettingsChanged) it.andThen(reconnectUseCase()) else it }
-        }
+      profileRepository.findProfile(profileId)
+        .map { currentState().updateProfile(it) }
     }
-  }
 
   private fun handleSaveError(error: Throwable) = when (error) {
     is SaveProfileUseCase.SaveAccountException.EmptyName ->
@@ -209,32 +185,13 @@ class CreateAccountViewModel @Inject constructor(
     else -> sendEvent(CreateAccountViewEvent.ShowUnknownErrorDialog)
   }
 
-  private fun authSettingChanged(profile: AuthProfileItem, state: CreateAccountViewState): Boolean {
-    return isAccessIdentifierEqual(profile, state).not() ||
-      profile.authInfo.emailAddress != state.emailAddress ||
-      profile.authInfo.serverForEmail != state.emailAddressServer ||
-      profile.authInfo.serverForAccessID != state.accessIdentifierServer ||
-      profile.authInfo.accessIDpwd != state.accessIdentifierPassword ||
-      profile.authInfo.emailAuth != state.authorizeByEmail ||
-      profile.authInfo.serverAutoDetect != state.autoServerAddress
-  }
-
-  private fun isAccessIdentifierEqual(profile: AuthProfileItem, state: CreateAccountViewState): Boolean {
-    return if (state.accessIdentifier.isNotEmpty() && profile.authInfo.accessID != 0) {
-      profile.authInfo.accessID == state.accessIdentifier.toInt()
-    } else {
-      profile.authInfo.accessID == 0 && (state.accessIdentifier.isEmpty() || state.accessIdentifier == "0")
-    }
-  }
-
   fun onDeleteProfile() {
     sendEvent(CreateAccountViewEvent.ConfirmDelete)
   }
 
   fun deleteProfile(profileId: Long?) {
-    profileId?.let {
-      profileManager.read(profileId)
-        .toSingle()
+    profileId?.let { id ->
+      profileRepository.findProfile(id)
         .flatMap(this::deleteAndGetReturnInfo)
         .attachLoadable()
         .subscribeBy(
@@ -251,9 +208,8 @@ class CreateAccountViewModel @Inject constructor(
   }
 
   fun deleteProfileWithCloud(profileId: Long?) {
-    profileId?.let {
-      profileManager.read(profileId)
-        .toSingle()
+    profileId?.let { id ->
+      profileRepository.findProfile(id)
         .flatMap(this::deleteAndGetReturnInfo)
         .attach()
         .subscribeBy(
@@ -271,10 +227,10 @@ class CreateAccountViewModel @Inject constructor(
     }
   }
 
-  private fun deleteAndGetReturnInfo(profile: AuthProfileItem): Single<RemovalBackInfo> =
-    deleteProfileUseCase(profile.id)
+  private fun deleteAndGetReturnInfo(profile: ProfileEntity): Single<RemovalBackInfo> =
+    deleteProfileUseCase(profile)
       .andThen(profileRepository.findAllProfiles())
-      .map { RemovalBackInfo(profile.authInfo.serverAddress, it.isEmpty()) }
+      .map { RemovalBackInfo(profile.serverForCurrentAuthMethod, it.isEmpty()) }
       .firstOrError()
 
   private fun Int.toAccessIdentifierString(): String = if (this == 0) {

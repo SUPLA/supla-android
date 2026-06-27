@@ -715,8 +715,6 @@
   <string name="rgb_detail_color">Spalva:</string>
   <string name="rgb_detail_brightness">Ryškumas:</string>
   <string name="rgb_detail_select_color">Pasirinkti spalvą</string>
-  <string name="legacy_rgbw_settings_unauthorized_message">Norint peržiūrėti konfigūraciją, reikalingas leidimas!</string>
-  <string name="legacy_rgbw_settings_authorize_button">Autorizuoti</string>
   <string name="rgb_detail_colors_limit">Pasiektas limitas!</string>
   <string name="channel_caption_invisible">Paslėptas</string>
   <string name="dimmer_detail_temperature">Spalvotė:</string>

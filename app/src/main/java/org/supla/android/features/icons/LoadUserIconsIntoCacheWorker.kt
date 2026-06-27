@@ -19,31 +19,27 @@ package org.supla.android.features.icons
 
 import android.content.Context
 import androidx.hilt.work.HiltWorker
+import androidx.work.CoroutineWorker
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.rx3.await
 import org.supla.android.usecases.icon.LoadUserIconsIntoCacheUseCase
-import org.supla.android.widget.WidgetManager
 import timber.log.Timber
 
 @HiltWorker
 class LoadUserIconsIntoCacheWorker @AssistedInject constructor(
   private val loadUserIconsIntoCacheUseCase: LoadUserIconsIntoCacheUseCase,
-  private val widgetManager: WidgetManager,
   @Assisted appContext: Context,
   @Assisted workerParameters: WorkerParameters
-) : Worker(appContext, workerParameters) {
-  override fun doWork(): Result {
+) : CoroutineWorker(appContext, workerParameters) {
+  override suspend fun doWork(): Result {
     return try {
-      val statistics = loadUserIconsIntoCacheUseCase().blockingGet()
-      if (statistics.iconsCount > 0 && statistics.changed) {
-        widgetManager.updateAllWidgets()
-      }
+      loadUserIconsIntoCacheUseCase().await()
       Result.success()
     } catch (_: Exception) {
       Timber.e("Load user icons into cache worker failed!")

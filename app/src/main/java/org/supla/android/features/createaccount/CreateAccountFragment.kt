@@ -165,7 +165,7 @@ class CreateAccountFragment : BaseFragment<CreateAccountViewState, CreateAccount
       cfgAdvanced.edAccessIDpwd.doOnTextChanged { text, _, _, _ -> viewModel?.changeAccessIdentifierPassword(text.toString()) }
       cfgAdvanced.edServerAddr.doOnTextChanged { text, _, _, _ -> viewModel?.changeAccessIdentifierServer(text.toString()) }
 
-      cfgSave.setOnClickListener { viewModel?.saveProfile(profileId, getString(R.string.profile_default_name)) }
+      cfgSave.setOnClickListener { viewModel?.saveProfile(profileId) }
       cfgDelete.setOnClickListener { viewModel?.onDeleteProfile() }
     }
   }

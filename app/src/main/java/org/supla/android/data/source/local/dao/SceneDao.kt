@@ -24,6 +24,7 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
+import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.data.source.local.entity.SceneEntity
@@ -42,6 +43,7 @@ import org.supla.android.data.source.local.entity.SceneEntity.Companion.COLUMN_S
 import org.supla.android.data.source.local.entity.SceneEntity.Companion.COLUMN_USER_ICON
 import org.supla.android.data.source.local.entity.SceneEntity.Companion.COLUMN_VISIBLE
 import org.supla.android.data.source.local.entity.SceneEntity.Companion.TABLE_NAME
+import org.supla.android.data.source.local.entity.UserIconEntity
 import org.supla.android.data.source.local.entity.complex.SceneDataEntity
 
 @Dao
@@ -152,4 +154,20 @@ interface SceneDao {
 
   @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_PROFILE_ID = :profileId")
   fun deleteByProfile(profileId: Long): Completable
+
+  @Query(
+    """
+      SELECT
+        scene.${COLUMN_USER_ICON}
+      FROM $TABLE_NAME scene
+      LEFT JOIN ${UserIconEntity.TABLE_NAME} icon
+        ON scene.${COLUMN_USER_ICON} = icon.${UserIconEntity.COLUMN_REMOTE_ID}
+          AND scene.${COLUMN_PROFILE_ID} = icon.${UserIconEntity.COLUMN_PROFILE_ID}
+      WHERE scene.${COLUMN_VISIBLE} > 0 
+        AND scene.${COLUMN_USER_ICON} > 0
+        AND scene.$COLUMN_PROFILE_ID = :profileId
+        AND icon.${UserIconEntity.COLUMN_REMOTE_ID} IS NULL 
+    """
+  )
+  suspend fun findIconIdsToDownload(profileId: Long): List<Int>
 }

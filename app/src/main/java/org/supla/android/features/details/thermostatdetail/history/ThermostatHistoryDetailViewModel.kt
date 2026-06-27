@@ -29,11 +29,11 @@ import org.supla.android.data.model.chart.ChartState
 import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.model.chart.datatype.ChartData
 import org.supla.android.data.model.chart.datatype.LineChartData
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.details.detailbase.history.BaseHistoryDetailViewModel
-import org.supla.android.profile.ProfileManager
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.DeleteChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
@@ -53,16 +53,16 @@ class ThermostatHistoryDetailViewModel @Inject constructor(
   deleteChannelMeasurementsUseCase: DeleteChannelMeasurementsUseCase,
   readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   groupingStringMigrationUseCase: GroupingStringMigrationUseCase,
+  profileRepository: ProfileRepository,
   userStateHolder: UserStateHolder,
-  profileManager: ProfileManager,
   schedulers: SuplaSchedulers,
   dateProvider: DateProvider
 ) : BaseHistoryDetailViewModel(
   deleteChannelMeasurementsUseCase,
   readChannelWithChildrenUseCase,
   groupingStringMigrationUseCase,
+  profileRepository,
   userStateHolder,
-  profileManager,
   dateProvider,
   schedulers
 ) {

@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.content.Context
 import org.supla.android.core.networking.suplacloud.SuplaCloudConfigHolder
 import org.supla.android.core.storage.EncryptedPreferences
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.db.room.app.AppDatabase
 import org.supla.android.db.room.measurements.MeasurementsDatabase
 import org.supla.android.events.ChannelConfigEventsManager
@@ -30,7 +31,6 @@ import org.supla.android.features.channelscleanup.RemoveHiddenChannelsManager
 import org.supla.android.features.scenescleanup.RemoveHiddenScenesManager
 import org.supla.android.lib.SuplaClient
 import org.supla.android.profile.ProfileIdHolder
-import org.supla.android.profile.ProfileManager
 import org.supla.android.usecases.channel.ChannelToRootRelationHolderUseCase
 import org.supla.android.usecases.channel.UpdateChannelExtendedValueUseCase
 import org.supla.android.usecases.channel.UpdateChannelUseCase
@@ -53,7 +53,7 @@ class SuplaClientBuilder @Inject constructor(private val dependencies: SuplaClie
 
 @Singleton
 data class SuplaClientDependencies @Inject constructor(
-  val profileManager: ProfileManager,
+  val profileRepository: ProfileRepository,
   val updateEventsManager: UpdateEventsManager,
   val channelConfigEventsManager: ChannelConfigEventsManager,
   val deviceConfigEventsManager: DeviceConfigEventsManager,

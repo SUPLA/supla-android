@@ -43,6 +43,8 @@ class RoomSceneRepository @Inject constructor(
 
   fun findProfileScenes(profileId: Long) = sceneDao.findProfileScenes(profileId)
 
+  suspend fun findIconIdsToDownload(profileId: Long) = sceneDao.findIconIdsToDownload(profileId)
+
   override fun count(): Observable<Int> = sceneDao.count()
 
   override fun updateCaption(caption: String, remoteId: Int, profileId: Long): Completable =

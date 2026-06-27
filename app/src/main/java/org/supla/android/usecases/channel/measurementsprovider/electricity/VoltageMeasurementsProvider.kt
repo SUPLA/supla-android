@@ -34,6 +34,10 @@ import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.lib.SuplaChannelElectricityMeterValue
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.usecase.GetCaptionUseCase
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.VoltageValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
+import org.supla.core.shared.usecase.channel.valueformatter.types.ValuePrecision
+import org.supla.core.shared.usecase.channel.valueformatter.types.custom
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -50,9 +54,6 @@ class VoltageMeasurementsProvider @Inject constructor(
   @Named(GSON_FOR_REPO) gson: Gson,
   preferences: ApplicationPreferences
 ) : ElectricityMeasurementsProvider<VoltageHistoryLogEntity>(gson, preferences) {
-
-  override val labelValueExtractor: (SuplaChannelElectricityMeterValue.Measurement?) -> Double
-    get() = { it?.voltage ?: 0.0 }
 
   operator fun invoke(
     channelWithChildren: ChannelWithChildren,
@@ -86,6 +87,12 @@ class VoltageMeasurementsProvider @Inject constructor(
       }
       .firstOrError()
   }
+
+  override fun formattedLabelValue(meterValue: SuplaChannelElectricityMeterValue, phase: Phase): String =
+    VoltageValueFormatter.format(
+      value = meterValue.getMeasurement(phase.value, 0)?.voltage,
+      format = ValueFormat(precision = custom(ValuePrecision.exact(1)), withUnit = false),
+    )
 
   private fun findMeasurementsForPhase(
     channelWithChildren: ChannelWithChildren,

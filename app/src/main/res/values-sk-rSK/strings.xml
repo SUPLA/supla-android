@@ -738,8 +738,6 @@
   <string name="rgb_detail_color">Farba:</string>
   <string name="rgb_detail_brightness">Jas:</string>
   <string name="rgb_detail_select_color">Vyberte farbu</string>
-  <string name="legacy_rgbw_settings_unauthorized_message">Na zobrazenie konfigurácie je potrebné oprávnenie!</string>
-  <string name="legacy_rgbw_settings_authorize_button">Autorizovať</string>
   <string name="rgb_detail_colors_limit">Limit bol dosiahnutý!</string>
   <string name="channel_caption_invisible">Skrytý</string>
   <string name="dimmer_detail_temperature">Farba:</string>

@@ -36,20 +36,20 @@ class ProvideGroupDetailTypeUseCaseTest {
 
   @Test
   fun `should provide detail for dimmer`() {
-    testDetailType(SuplaFunction.DIMMER, StandardDetailType(listOf(DetailPage.DIMMER)))
+    testDetailType(SuplaFunction.DIMMER, RgbwDetailType(listOf(DetailPage.DIMMER)))
   }
 
   @Test
   fun `should provide detail for dimmer and RGB`() {
     testDetailType(
       SuplaFunction.DIMMER_AND_RGB_LIGHTING,
-      StandardDetailType(listOf(DetailPage.RGB, DetailPage.DIMMER))
+      RgbwDetailType(listOf(DetailPage.RGB, DetailPage.DIMMER))
     )
   }
 
   @Test
   fun `should provide detail for RGB`() {
-    testDetailType(SuplaFunction.RGB_LIGHTING, StandardDetailType(listOf(DetailPage.RGB)))
+    testDetailType(SuplaFunction.RGB_LIGHTING, RgbwDetailType(listOf(DetailPage.RGB)))
   }
 
   @Test

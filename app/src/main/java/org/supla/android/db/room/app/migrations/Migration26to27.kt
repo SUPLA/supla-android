@@ -41,9 +41,7 @@ import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN
 import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_SERVER_FOR_EMAIL
 import org.supla.android.data.source.local.entity.SceneEntity
 import org.supla.android.data.source.local.view.SceneView
-import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.room.SqlExecutor
-import org.supla.android.profile.AuthInfo
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -63,9 +61,9 @@ class Migration26to27 @Inject constructor() : Migration(26, 27), SqlExecutor {
       if (cursor.moveToFirst()) {
         do {
           try {
-            val profile: AuthProfileItem = makeEmptyAuthItem()
-            profile.AssignCursorData(cursor)
-            if (profile.authInfo.isAuthDataComplete) {
+            val profileItem = AuthProfileItem()
+            profileItem.assignCursorData(cursor)
+            if (profileItem.isAuthDataComplete) {
               validAccountAvailable = true
             }
           } catch (ex: Exception) {
@@ -83,27 +81,6 @@ class Migration26to27 @Inject constructor() : Migration(26, 27), SqlExecutor {
 
   private fun getAllProfiles(database: SupportSQLiteDatabase): Cursor =
     database.query("SELECT $PROFILE_ALL_COLUMNS_VERSION_26 FROM ${ProfileEntity.TABLE_NAME}")
-
-  private fun makeEmptyAuthItem(): AuthProfileItem {
-    return AuthProfileItem(
-      name = "",
-      authInfo = AuthInfo(
-        emailAuth = true,
-        serverAutoDetect = true,
-        serverForEmail = "",
-        serverForAccessID = "",
-        emailAddress = "",
-        accessID = 0,
-        accessIDpwd = "",
-        preferredProtocolVersion = 0,
-        guid = byteArrayOf(0),
-        authKey = byteArrayOf(0)
-      ),
-      advancedAuthSetup = false,
-      isActive = false,
-      position = 0
-    )
-  }
 
   private fun migrateScenesDates(db: SupportSQLiteDatabase) {
     val allScenes = getAllScenes(db)
@@ -145,3 +122,99 @@ private const val PROFILE_ALL_COLUMNS_VERSION_26 =
   "$COLUMN_ID,$COLUMN_NAME,$COLUMN_EMAIL,$COLUMN_SERVER_FOR_ACCESS_ID,$COLUMN_SERVER_FOR_EMAIL," +
     "$COLUMN_SERVER_AUTO_DETECT,$COLUMN_EMAIL_AUTH,$COLUMN_ACCESS_ID,$COLUMN_ACCESS_ID_PASSWORD," +
     "$COLUMN_PREFERRED_PROTOCOL_VERSION,$COLUMN_ACTIVE,$COLUMN_ADVANCED_MODE,$COLUMN_GUID,$COLUMN_AUTH_KEY"
+
+private data class AuthProfileItem(
+  var id: Long = 0,
+  var name: String = "",
+  var email: String = "",
+  var serverForAccessId: String = "",
+  var serverForEmail: String = "",
+  var serverAutoDetect: Boolean = true,
+  var emailAuth: Boolean = true,
+  var accessId: Int = 0,
+  var accessIdPassword: String = "",
+  var preferredProtocolVersion: Int = 0,
+  var advancedAuthSetup: Boolean = false,
+  var isActive: Boolean = false,
+  var guid: ByteArray = byteArrayOf(),
+  var authKey: ByteArray = byteArrayOf()
+) {
+
+  fun assignCursorData(cur: Cursor) {
+    id = cur.getLong(cur.getColumnIndexOrThrow(COLUMN_ID))
+    name = cur.getString(cur.getColumnIndexOrThrow(COLUMN_NAME))
+    email = string(cur, cur.getColumnIndexOrThrow(COLUMN_EMAIL))
+    serverForAccessId = string(cur, cur.getColumnIndexOrThrow(COLUMN_SERVER_FOR_ACCESS_ID))
+    serverAutoDetect = cur.getInt(cur.getColumnIndexOrThrow(COLUMN_SERVER_AUTO_DETECT)) > 0
+    emailAuth = cur.getInt(cur.getColumnIndexOrThrow(COLUMN_EMAIL_AUTH)) > 0
+    accessId = cur.getInt(cur.getColumnIndexOrThrow(COLUMN_ACCESS_ID))
+    accessIdPassword = string(cur, cur.getColumnIndexOrThrow(COLUMN_ACCESS_ID_PASSWORD))
+    preferredProtocolVersion = cur.getInt(cur.getColumnIndexOrThrow(COLUMN_PREFERRED_PROTOCOL_VERSION))
+    advancedAuthSetup = cur.getInt(cur.getColumnIndexOrThrow(COLUMN_ADVANCED_MODE)) > 0
+    isActive = cur.getInt(cur.getColumnIndexOrThrow(COLUMN_ACTIVE)) > 0
+
+    val guidColumnId = cur.getColumnIndexOrThrow(COLUMN_GUID)
+    val authKeyColumnId = cur.getColumnIndexOrThrow(COLUMN_AUTH_KEY)
+    guid = if (cur.isNull(guidColumnId)) byteArrayOf() else cur.getBlob(guidColumnId)
+    authKey = if (cur.isNull(authKeyColumnId)) byteArrayOf() else cur.getBlob(authKeyColumnId)
+  }
+
+  val isAuthDataComplete: Boolean
+    get() {
+      return if (emailAuth) {
+        email.isNotEmpty() && (serverAutoDetect || serverForEmail.isNotEmpty())
+      } else {
+        serverForAccessId.isNotEmpty() && accessId > 0 && accessIdPassword.isNotEmpty()
+      }
+    }
+
+  private fun stringOrNull(cur: Cursor, idx: Int): String? {
+    return if (cur.isNull(idx)) null else cur.getString(idx)
+  }
+
+  private fun string(cur: Cursor, idx: Int, default: String = ""): String {
+    return stringOrNull(cur, idx) ?: default
+  }
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (javaClass != other?.javaClass) return false
+
+    other as AuthProfileItem
+
+    if (id != other.id) return false
+    if (serverAutoDetect != other.serverAutoDetect) return false
+    if (emailAuth != other.emailAuth) return false
+    if (accessId != other.accessId) return false
+    if (preferredProtocolVersion != other.preferredProtocolVersion) return false
+    if (advancedAuthSetup != other.advancedAuthSetup) return false
+    if (isActive != other.isActive) return false
+    if (name != other.name) return false
+    if (email != other.email) return false
+    if (serverForAccessId != other.serverForAccessId) return false
+    if (serverForEmail != other.serverForEmail) return false
+    if (accessIdPassword != other.accessIdPassword) return false
+    if (!guid.contentEquals(other.guid)) return false
+    if (!authKey.contentEquals(other.authKey)) return false
+
+    return true
+  }
+
+  override fun hashCode(): Int {
+    var result = id.hashCode()
+    result = 31 * result + serverAutoDetect.hashCode()
+    result = 31 * result + emailAuth.hashCode()
+    result = 31 * result + accessId
+    result = 31 * result + preferredProtocolVersion
+    result = 31 * result + advancedAuthSetup.hashCode()
+    result = 31 * result + isActive.hashCode()
+    result = 31 * result + name.hashCode()
+    result = 31 * result + email.hashCode()
+    result = 31 * result + serverForAccessId.hashCode()
+    result = 31 * result + serverForEmail.hashCode()
+    result = 31 * result + accessIdPassword.hashCode()
+    result = 31 * result + guid.contentHashCode()
+    result = 31 * result + authKey.contentHashCode()
+    return result
+  }
+}

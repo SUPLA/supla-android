@@ -25,7 +25,7 @@ import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientState
 import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
 import org.supla.android.core.ui.ViewEvent
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.lib.SuplaConst.SUPLA_RESULT_HOST_NOT_FOUND
 import org.supla.android.tools.SuplaSchedulers
@@ -46,7 +46,7 @@ class StatusViewModel @Inject constructor(
   private val suplaClientStateHolder: SuplaClientStateHolder,
   private val disconnectUseCase: DisconnectUseCase,
   suplaClientProvider: SuplaClientProvider,
-  profileRepository: RoomProfileRepository,
+  profileRepository: ProfileRepository,
   loginUseCase: LoginUseCase,
   authorizeUseCase: AuthorizeUseCase,
   suplaSchedulers: SuplaSchedulers

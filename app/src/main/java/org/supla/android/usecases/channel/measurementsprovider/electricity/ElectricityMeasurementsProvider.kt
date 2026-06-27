@@ -32,22 +32,15 @@ import org.supla.android.data.source.local.entity.custom.Phase
 import org.supla.android.data.source.local.entity.measurements.ElectricityBaseLogEntity
 import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.extensions.toTimestamp
-import org.supla.android.lib.SuplaChannelElectricityMeterValue.Measurement
+import org.supla.android.lib.SuplaChannelElectricityMeterValue
 import org.supla.android.usecases.channel.measurementsprovider.MeasurementsProvider
 import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
-import org.supla.core.shared.usecase.channel.valueformatter.formatters.VoltageValueFormatter
-import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
-import org.supla.core.shared.usecase.channel.valueformatter.types.ValuePrecision
-import org.supla.core.shared.usecase.channel.valueformatter.types.custom
 import javax.inject.Named
 
 open class ElectricityMeasurementsProvider<T : ElectricityBaseLogEntity>(
   @Named(GSON_FOR_REPO) gson: Gson,
   preferences: ApplicationPreferences
 ) : MeasurementsProvider(preferences, gson) {
-
-  open val labelValueExtractor: (Measurement?) -> Double
-    get() = { 0.0 }
 
   protected fun aggregating(
     measurements: List<T>,
@@ -103,19 +96,21 @@ open class ElectricityMeasurementsProvider<T : ElectricityBaseLogEntity>(
     )
 
   private fun createLabel(channel: ChannelDataEntity, phase: Phase): HistoryDataSet.Label {
-    val electricity = channel.Electricity
-    val phases = electricity.phases
+    if (channel.channelValueEntity.status.online) {
+      val electricity = channel.Electricity
 
-    if (phases.contains(phase)) {
-      electricity.value?.let {
-        val value = VoltageValueFormatter.format(
-          value = labelValueExtractor(it.getMeasurement(phase.value, 0)),
-          format = ValueFormat(precision = custom(ValuePrecision.exact(1)), withUnit = false),
-        )
-        return HistoryDataSet.Label.Single(HistoryDataSet.LabelData(null, value, phase.color))
+      if (electricity.phases.contains(phase)) {
+        electricity.value?.let {
+          return HistoryDataSet.Label.Single(
+            value = HistoryDataSet.LabelData(null, formattedLabelValue(it, phase), phase.color)
+          )
+        }
       }
     }
 
     return HistoryDataSet.Label.Single(HistoryDataSet.LabelData(null, NO_VALUE_TEXT, R.color.disabled))
   }
+
+  protected open fun formattedLabelValue(meterValue: SuplaChannelElectricityMeterValue, phase: Phase): String =
+    NO_VALUE_TEXT
 }

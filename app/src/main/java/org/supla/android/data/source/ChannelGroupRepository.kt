@@ -46,6 +46,8 @@ class ChannelGroupRepository @Inject constructor(
 
   fun update(groups: List<ChannelGroupEntity>) = channelGroupDao.update(groups)
 
+  suspend fun findIconIdsToDownload(profileId: Long) = channelGroupDao.findIconIdsToDownload(profileId)
+
   override fun count(): Observable<Int> = channelGroupDao.count()
 
   override fun updateCaption(caption: String, remoteId: Int, profileId: Long): Completable =

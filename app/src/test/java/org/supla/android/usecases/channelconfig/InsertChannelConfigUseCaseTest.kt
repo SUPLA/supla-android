@@ -34,7 +34,7 @@ import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.data.source.ChannelConfigRepository
 import org.supla.android.data.source.GeneralPurposeMeterLogRepository
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.ConfigResult
@@ -55,7 +55,7 @@ class InsertChannelConfigUseCaseTest {
   private lateinit var channelConfigRepository: ChannelConfigRepository
 
   @Mock
-  private lateinit var profileRepository: RoomProfileRepository
+  private lateinit var profileRepository: ProfileRepository
 
   @Mock
   private lateinit var generalPurposeMeterLogRepository: GeneralPurposeMeterLogRepository

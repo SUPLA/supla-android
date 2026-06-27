@@ -48,7 +48,6 @@ import org.supla.android.extensions.setStatusBarColor
 import org.supla.android.extensions.setupOrientationLock
 import org.supla.android.features.createaccount.CreateAccountFragment
 import org.supla.android.navigator.CfgActivityNavigator
-import org.supla.android.profile.ProfileManager
 import org.supla.android.ui.AppBar
 import org.supla.android.usecases.profile.GetProfilesCountUseCase
 import javax.inject.Inject
@@ -60,9 +59,6 @@ class CfgActivity : BaseActivity() {
   companion object {
     const val ACTION_AUTH = "org.supla.android.CfgActivity.AUTH"
   }
-
-  @Inject
-  lateinit var profileManager: ProfileManager
 
   @Inject
   lateinit var valuesFormatter: ValuesFormatter

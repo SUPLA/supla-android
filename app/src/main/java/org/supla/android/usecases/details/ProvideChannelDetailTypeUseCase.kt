@@ -50,11 +50,7 @@ class ProvideChannelDetailTypeUseCase @Inject constructor() : BaseDetailTypeProv
       SuplaFunction.VALVE_PERCENTAGE -> StandardDetailType(listOf(DetailPage.VALVE_GENERAL))
       SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS ->
         ThermostatDetailType(listOf(DetailPage.THERMOSTAT_HEATPOL_GENERAL, DetailPage.THERMOSTAT_HEATPOL_HISTORY))
-      else -> provide(
-        function = function,
-        manufacturerId = channelWithChildren.channel.channelEntity.manufacturerId.toInt(),
-        productId = channelWithChildren.channel.channelEntity.productId.toInt()
-      )
+      else -> provide(function)
     }
 
   private fun getImpulseCounterPages(channelWithChildren: ChannelWithChildren): List<DetailPage> =

@@ -20,7 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.data.model.general.EntityUpdateResult
 import org.supla.android.data.source.ChannelValueRepository
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.lib.SuplaChannel
@@ -32,7 +32,7 @@ import javax.inject.Singleton
 
 @Singleton
 class UpdateChannelValueUseCase @Inject constructor(
-  private val profileRepository: RoomProfileRepository,
+  private val profileRepository: ProfileRepository,
   private val channelValueRepository: ChannelValueRepository
 ) {
 

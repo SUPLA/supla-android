@@ -21,7 +21,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withTimeoutOrNull
 import okio.IOException
 import org.jsoup.nodes.Document
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.data.source.remote.esp.EspConfigurationSession
 import org.supla.android.data.source.remote.esp.EspDeviceProtocol
@@ -47,7 +47,7 @@ private val TIMEOUT = 60.seconds
 
 @Singleton
 class ConfigureEspUseCase @Inject constructor(
-  private val profileRepository: RoomProfileRepository,
+  private val profileRepository: ProfileRepository,
   private val session: EspConfigurationSession,
   private val espHtmlParser: EspHtmlParser,
   private val espService: EspService

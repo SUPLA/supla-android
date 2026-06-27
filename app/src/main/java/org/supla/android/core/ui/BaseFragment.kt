@@ -164,6 +164,6 @@ abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayo
   }
 }
 
-fun bundle(itemBundle: ItemBundle) = bundleOf(
-  ARG_ITEM_BUNDLE to itemBundle
-)
+fun bundle(itemBundle: ItemBundle) = Bundle().apply {
+  putSerializable(ARG_ITEM_BUNDLE, itemBundle)
+}

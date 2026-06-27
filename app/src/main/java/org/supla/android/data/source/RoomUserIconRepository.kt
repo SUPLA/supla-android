@@ -10,7 +10,7 @@ package org.supla.android.data.source
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-syays GNU General Public License for more details.
+ GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -20,6 +20,7 @@ syays GNU General Public License for more details.
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.dao.UserIconDao
+import org.supla.android.data.source.local.entity.UserIconEntity
 import org.supla.android.usecases.developerinfo.CountProvider
 import org.supla.android.usecases.profile.DeleteProfileUseCase
 import javax.inject.Inject
@@ -29,6 +30,8 @@ import javax.inject.Singleton
 class RoomUserIconRepository @Inject constructor(
   private val userIconDao: UserIconDao
 ) : CountProvider, DeleteProfileUseCase.ProfileRemover {
+
+  suspend fun save(entity: UserIconEntity) = userIconDao.save(entity)
 
   fun loadAllIcons() = userIconDao.loadAllIcons()
 

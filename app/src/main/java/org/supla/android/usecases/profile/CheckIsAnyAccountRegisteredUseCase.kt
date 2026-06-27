@@ -17,13 +17,13 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class GetProfilesCountUseCase @Inject constructor(
-  private val profileRepository: RoomProfileRepository
+  private val profileRepository: ProfileRepository
 ) {
   suspend operator fun invoke(): Int = profileRepository.findAllProfilesKtx().size
 }

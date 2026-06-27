@@ -36,7 +36,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import java.util.ArrayList;
 import javax.inject.Inject;
 import org.supla.android.core.branding.Configuration.Menu;
-import org.supla.android.profile.ProfileManager;
+import org.supla.android.data.source.ProfileRepository;
 
 @AndroidEntryPoint
 public class MenuItemsLayout extends LinearLayout implements View.OnClickListener {
@@ -60,7 +60,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
   private int availableButtons = 0;
   private OnClickListener mOnClickListener;
 
-  @Inject ProfileManager profileManager;
+  @Inject ProfileRepository profileRepository;
 
   public MenuItemsLayout(Context context) {
     super(context);
@@ -257,7 +257,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
       return;
     }
 
-    boolean hasManyAccounts = profileManager.getAllProfiles().blockingFirst().size() > 1;
+    boolean hasManyAccounts = profileRepository.findAllProfiles().blockingFirst().size() > 1;
 
     availableButtons = available;
     mMainButtonsAreaLayout.removeAllViews();

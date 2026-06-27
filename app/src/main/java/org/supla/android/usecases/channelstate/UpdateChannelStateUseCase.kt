@@ -20,7 +20,7 @@ package org.supla.android.usecases.channelstate
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import org.supla.android.data.source.ChannelStateRepository
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ChannelStateEntity
 import org.supla.android.lib.SuplaChannelState
 import org.supla.android.lib.toEntity
@@ -30,7 +30,7 @@ import javax.inject.Singleton
 
 @Singleton
 class UpdateChannelStateUseCase @Inject constructor(
-  private val profileRepository: RoomProfileRepository,
+  private val profileRepository: ProfileRepository,
   private val channelStateRepository: ChannelStateRepository
 ) {
 

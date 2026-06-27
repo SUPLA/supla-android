@@ -34,7 +34,7 @@ import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.data.model.general.LockScreenScope
 import org.supla.android.data.model.general.LockScreenSettings
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.features.lockscreen.UnlockAction
 
 class CheckPinUseCaseTest {
@@ -48,7 +48,7 @@ class CheckPinUseCaseTest {
   private lateinit var dateProvider: DateProvider
 
   @MockK
-  private lateinit var profileRepository: RoomProfileRepository
+  private lateinit var profileRepository: ProfileRepository
 
   @MockK
   private lateinit var suplaClientStateHolder: SuplaClientStateHolder

@@ -24,9 +24,8 @@ import androidx.annotation.WorkerThread
 import androidx.room.rxjava3.EmptyResultSetException
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.supla.android.core.infrastructure.NativeLoader
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
-import org.supla.android.db.AuthProfileItem
 import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_ACCESSID_DISABLED
 import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_ACCESSID_INACTIVE
 import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_ACCESSID_NOT_ASSIGNED
@@ -39,7 +38,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_RESULT_CANT_CONNECT_TO_HOST
 import org.supla.android.lib.SuplaConst.SUPLA_RESULT_HOST_NOT_FOUND
 import org.supla.android.lib.SuplaConst.SUPLA_RESULT_RESPONSE_TIMEOUT
 import org.supla.android.lib.actions.ActionParameters
-import org.supla.android.profile.AuthInfo
+import org.supla.android.lib.dto.AuthDataDto
 import org.supla.android.profile.NoSuchProfileException
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -53,26 +52,26 @@ import javax.inject.Singleton
 class SingleCall private constructor(
   var context: Context,
   var profileId: Long,
-  var profileRepository: RoomProfileRepository
+  var profileRepository: ProfileRepository
 ) {
 
   private external fun executeAction(
     context: Context,
-    authInfo: AuthInfo,
+    authInfo: AuthDataDto,
     parameters: ActionParameters,
     connectionTimeoutMs: Int
   )
 
   private external fun getChannelValue(
     context: Context,
-    authInfo: AuthInfo,
+    authInfo: AuthDataDto,
     channelId: Int,
     connectionTimeoutMs: Int
   ): ChannelValue
 
   private external fun registerPushNotificationClientToken(
     context: Context,
-    authInfo: AuthInfo,
+    authInfo: AuthDataDto,
     appId: Int,
     token: String,
     profileName: String,
@@ -80,14 +79,14 @@ class SingleCall private constructor(
   )
 
   @Throws(NoSuchProfileException::class)
-  private fun getProfile(): ProfileEntity {
+  private fun getAuthData(): AuthDataDto {
     if (Thread.currentThread().equals(Looper.getMainLooper().thread)) {
       throw NetworkOnMainThreadException()
     }
 
     return try {
-      profileRepository.findProfile(profileId).blockingGet()
-    } catch (ex: EmptyResultSetException) {
+      profileRepository.findProfile(profileId).blockingGet().authDataDto
+    } catch (_: EmptyResultSetException) {
       throw NoSuchProfileException(profileId)
     }
   }
@@ -95,7 +94,7 @@ class SingleCall private constructor(
   @WorkerThread
   fun executeAction(parameters: ActionParameters): Result =
     try {
-      executeAction(context, getProfile().authInfo, parameters, CONNECTION_NO_TIMEOUT)
+      executeAction(context, getAuthData(), parameters, CONNECTION_NO_TIMEOUT)
       Result.Success
     } catch (ex: ResultException) {
       ex.toResult
@@ -108,24 +107,18 @@ class SingleCall private constructor(
   @WorkerThread
   @Throws(NoSuchProfileException::class, ResultException::class)
   fun getChannelValue(channelId: Int): ChannelValue {
-    return getChannelValue(context, getProfile().authInfo, channelId, CONNECTION_NO_TIMEOUT)
+    return getChannelValue(context, getAuthData(), channelId, CONNECTION_NO_TIMEOUT)
   }
 
   @WorkerThread
   @Throws(NoSuchProfileException::class, ResultException::class)
   fun registerPushNotificationClientToken(appId: Int, token: String, profile: ProfileEntity) {
-    registerPushNotificationClientToken(context, profile.authInfo, appId, token, profile.name, CONNECTION_NO_TIMEOUT)
-  }
-
-  @WorkerThread
-  @Throws(NoSuchProfileException::class, ResultException::class)
-  fun registerPushNotificationClientToken(appId: Int, token: String, profile: AuthProfileItem) {
-    registerPushNotificationClientToken(context, profile.authInfo, appId, token, profile.name, CONNECTION_NO_TIMEOUT)
+    registerPushNotificationClientToken(context, getAuthData(), appId, token, profile.name, CONNECTION_NO_TIMEOUT)
   }
 
   @Singleton
   class Provider @Inject constructor(
-    private val profileRepository: RoomProfileRepository,
+    private val profileRepository: ProfileRepository,
     @param:ApplicationContext private val context: Context
   ) {
     fun provide(profileId: Long) = SingleCall(context, profileId, profileRepository)

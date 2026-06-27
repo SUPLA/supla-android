@@ -19,16 +19,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import io.reactivex.rxjava3.core.Completable
 import org.supla.android.data.source.ChannelRelationRepository
-import org.supla.android.profile.ProfileManager
+import org.supla.android.data.source.ProfileRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class MarkChannelRelationsAsRemovableUseCase @Inject constructor(
-  private val profileManager: ProfileManager,
+  private val profileRepository: ProfileRepository,
   private val channelRelationRepository: ChannelRelationRepository
 ) {
   operator fun invoke(): Completable =
-    profileManager.getCurrentProfile()
-      .flatMapCompletable { channelRelationRepository.markAsRemovable(it.id) }
+    profileRepository.findActiveProfile()
+      .flatMapCompletable { channelRelationRepository.markAsRemovable(it.id!!) }
 }

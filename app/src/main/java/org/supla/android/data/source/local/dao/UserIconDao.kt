@@ -18,6 +18,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy.Companion.REPLACE
 import androidx.room.Query
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -29,6 +31,9 @@ import org.supla.android.data.source.local.entity.UserIconEntity.Companion.TABLE
 
 @Dao
 interface UserIconDao {
+
+  @Insert(onConflict = REPLACE)
+  suspend fun save(entity: UserIconEntity)
 
   @Query("SELECT $ALL_COLUMNS FROM $TABLE_NAME")
   fun loadAllIcons(): Observable<List<UserIconEntity>>

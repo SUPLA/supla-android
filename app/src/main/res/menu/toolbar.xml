@@ -43,4 +43,10 @@
     android:title="@string/general_search"
     android:visible="false"
     app:showAsAction="always" />
+  <item
+    android:id="@+id/toolbar_settings"
+    android:icon="@drawable/ic_settings"
+    android:title="@string/settings"
+    android:visible="false"
+    app:showAsAction="ifRoom" />
 </menu>

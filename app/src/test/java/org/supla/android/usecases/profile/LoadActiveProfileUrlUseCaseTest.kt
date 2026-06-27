@@ -14,14 +14,14 @@ import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.core.infrastructure.UriProxy
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
 
 @RunWith(MockitoJUnitRunner::class)
 class LoadActiveProfileUrlUseCaseTest {
 
   @Mock
-  private lateinit var profileRepository: RoomProfileRepository
+  private lateinit var profileRepository: ProfileRepository
 
   @Mock
   private lateinit var uriProxy: UriProxy

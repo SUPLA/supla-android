@@ -31,7 +31,7 @@ import org.junit.Before
 import org.junit.Test
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.data.model.general.LockScreenScope
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.features.lockscreen.UnlockAction
 import org.supla.android.features.profileslist.ProfilesListState
@@ -54,7 +54,7 @@ class ProfilesViewModelTest : BaseViewModelTest<ProfilesListState, ProfilesListV
   private lateinit var getLockScreenSettingUseCase: GetLockScreenSettingUseCase
 
   @MockK
-  private lateinit var profileRepository: RoomProfileRepository
+  private lateinit var profileRepository: ProfileRepository
 
   @MockK
   override lateinit var schedulers: SuplaSchedulers

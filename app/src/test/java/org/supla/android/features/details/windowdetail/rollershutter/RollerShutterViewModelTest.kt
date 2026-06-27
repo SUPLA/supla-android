@@ -35,7 +35,7 @@ import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.ProfileEntity
@@ -112,7 +112,7 @@ class RollerShutterViewModelTest :
   lateinit var suplaClientProvider: SuplaClientProvider
 
   @RelaxedMockK
-  lateinit var profileRepository: RoomProfileRepository
+  lateinit var profileRepository: ProfileRepository
 
   @RelaxedMockK
   lateinit var loginUseCase: LoginUseCase

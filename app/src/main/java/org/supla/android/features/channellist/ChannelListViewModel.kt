@@ -35,6 +35,7 @@ import org.supla.android.features.details.detailbase.StandardDetailFragment
 import org.supla.android.features.details.detailbase.base.DetailPage
 import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.features.details.impulsecounter.ImpulseCounterDetailFragment
+import org.supla.android.features.details.rgbanddimmer.RgbwDetailFragment
 import org.supla.android.features.details.thermostatdetail.ThermostatDetailFragment
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
@@ -54,6 +55,7 @@ import org.supla.android.usecases.details.HumidityDetailType
 import org.supla.android.usecases.details.IcDetailType
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideChannelDetailTypeUseCase
+import org.supla.android.usecases.details.RgbwDetailType
 import org.supla.android.usecases.details.StandardDetailType
 import org.supla.android.usecases.details.ThermometerDetailType
 import org.supla.android.usecases.details.ThermostatDetailType
@@ -194,6 +196,7 @@ class ChannelListViewModel @Inject constructor(
       is StandardDetailType -> sendEvent(ChannelListViewEvent.OpenStandardDetail(ItemBundle.from(channel), detailType.pages))
       is ThermostatDetailType -> sendEvent(ChannelListViewEvent.OpenThermostatDetail(ItemBundle.from(channel), detailType.pages))
       is IcDetailType -> sendEvent(ChannelListViewEvent.OpenIcDetail(ItemBundle.from(channel), detailType.pages))
+      is RgbwDetailType -> sendEvent(ChannelListViewEvent.OpenRgbwDetail(ItemBundle.from(channel), detailType.pages))
       is LegacyDetailType -> sendEvent(ChannelListViewEvent.OpenLegacyDetails(channel.remoteId, detailType))
       null -> {} // no action
     }
@@ -214,6 +217,9 @@ sealed class ChannelListViewEvent : ViewEvent {
 
   data class OpenSingleHistoryDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
     BaseDetail(R.id.single_history_detail_fragment, StandardDetailFragment.bundle(itemBundle, pages.toTypedArray()))
+
+  data class OpenRgbwDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
+    BaseDetail(R.id.rgbw_detail_fragment, RgbwDetailFragment.bundle(itemBundle, pages.toTypedArray()))
 
   data object ReassignAdapter : ChannelListViewEvent()
 

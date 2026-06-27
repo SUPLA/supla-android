@@ -23,31 +23,7 @@ import io.reactivex.rxjava3.core.Completable
 import org.supla.android.core.SuplaAppProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientEvent
 import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
-import org.supla.android.data.source.AndroidAutoItemRepository
-import org.supla.android.data.source.ChannelConfigRepository
-import org.supla.android.data.source.ChannelExtendedValueRepository
-import org.supla.android.data.source.ChannelGroupRelationRepository
-import org.supla.android.data.source.ChannelGroupRepository
-import org.supla.android.data.source.ChannelRelationRepository
-import org.supla.android.data.source.ChannelStateRepository
-import org.supla.android.data.source.ChannelValueRepository
-import org.supla.android.data.source.ColorListRepository
-import org.supla.android.data.source.CurrentLogRepository
-import org.supla.android.data.source.ElectricityMeterLogRepository
-import org.supla.android.data.source.GeneralPurposeMeasurementLogRepository
-import org.supla.android.data.source.GeneralPurposeMeterLogRepository
-import org.supla.android.data.source.HomePlusThermostatLogRepository
-import org.supla.android.data.source.HumidityLogRepository
-import org.supla.android.data.source.ImpulseCounterLogRepository
-import org.supla.android.data.source.LocationRepository
-import org.supla.android.data.source.PowerActiveLogRepository
-import org.supla.android.data.source.RoomChannelRepository
-import org.supla.android.data.source.RoomProfileRepository
-import org.supla.android.data.source.RoomSceneRepository
-import org.supla.android.data.source.RoomUserIconRepository
-import org.supla.android.data.source.TemperatureAndHumidityLogRepository
-import org.supla.android.data.source.TemperatureLogRepository
-import org.supla.android.data.source.VoltageLogRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.lib.SuplaClient
 import org.supla.android.lib.singlecall.SingleCall
@@ -61,80 +37,23 @@ import javax.inject.Singleton
 @Singleton
 class DeleteProfileUseCase @Inject constructor(
   @param:ApplicationContext private val context: Context,
-  private val profileRepository: RoomProfileRepository,
-  private val suplaAppProvider: SuplaAppProvider,
-  private val profileIdHolder: ProfileIdHolder,
+  private val deleteProfileRelatedDataUseCase: DeleteProfileRelatedDataUseCase,
   private val activateProfileUseCase: ActivateProfileUseCase,
   private val suplaClientStateHolder: SuplaClientStateHolder,
-  private val disconnectUseCase: DisconnectUseCase,
+  private val profileRepository: ProfileRepository,
   private val singleCallProvider: SingleCall.Provider,
-  private val widgetManager: WidgetManager,
-
-  // Connected repositories
-  androidAutoItemRepository: AndroidAutoItemRepository,
-  channelRepository: RoomChannelRepository,
-  channelConfigRepository: ChannelConfigRepository,
-  channelExtendedValueRepository: ChannelExtendedValueRepository,
-  channelRelationRepository: ChannelRelationRepository,
-  channelStateRepository: ChannelStateRepository,
-  channelValueRepository: ChannelValueRepository,
-  channelGroupRepository: ChannelGroupRepository,
-  channelGroupRelationRepository: ChannelGroupRelationRepository,
-  colorListRepository: ColorListRepository,
-  locationRepository: LocationRepository,
-  sceneRepository: RoomSceneRepository,
-  userIconRepository: RoomUserIconRepository,
-  currentLogRepository: CurrentLogRepository,
-  electricityMeterLogRepository: ElectricityMeterLogRepository,
-  generalPurposeMeterLogRepository: GeneralPurposeMeterLogRepository,
-  generalPurposeMeasurementLogRepository: GeneralPurposeMeasurementLogRepository,
-  humidityLogRepository: HumidityLogRepository,
-  impulseCounterLogRepository: ImpulseCounterLogRepository,
-  powerActiveLogRepository: PowerActiveLogRepository,
-  temperatureLogRepository: TemperatureLogRepository,
-  temperatureAndHumidityLogRepository: TemperatureAndHumidityLogRepository,
-  homePlusThermostatLogRepository: HomePlusThermostatLogRepository,
-  voltageLogRepository: VoltageLogRepository
+  private val disconnectUseCase: DisconnectUseCase,
+  private val suplaAppProvider: SuplaAppProvider,
+  private val profileIdHolder: ProfileIdHolder,
+  private val widgetManager: WidgetManager
 ) {
 
-  private val profileDependencyRemovers: List<ProfileRemover> = listOf(
-    androidAutoItemRepository,
-    channelRepository,
-    channelConfigRepository,
-    channelExtendedValueRepository,
-    channelRelationRepository,
-    channelStateRepository,
-    channelValueRepository,
-    channelGroupRepository,
-    channelGroupRelationRepository,
-    colorListRepository,
-    locationRepository,
-    sceneRepository,
-    userIconRepository,
-    currentLogRepository,
-    electricityMeterLogRepository,
-    generalPurposeMeterLogRepository,
-    generalPurposeMeasurementLogRepository,
-    humidityLogRepository,
-    impulseCounterLogRepository,
-    powerActiveLogRepository,
-    temperatureLogRepository,
-    temperatureAndHumidityLogRepository,
-    homePlusThermostatLogRepository,
-    voltageLogRepository
-  )
-
-  operator fun invoke(profileId: Long): Completable =
-    profileRepository.findProfile(profileId)
-      .flatMapCompletable(this::removeProfile)
-
-  private fun removeProfile(profile: ProfileEntity): Completable {
-    return if (profile.active != true) {
-      deleteProfile(profile)
+  operator fun invoke(profileEntity: ProfileEntity): Completable =
+    if (profileEntity.active != true) {
+      deleteProfile(profileEntity)
     } else {
-      removeActiveProfile(profile)
+      removeActiveProfile(profileEntity)
     }
-  }
 
   private fun removeActiveProfile(profile: ProfileEntity): Completable =
     disconnectUseCase()
@@ -181,9 +100,7 @@ class DeleteProfileUseCase @Inject constructor(
     }
       .andThen(profileRepository.deleteProfile(profileEntity))
       .let { completable ->
-        profileEntity.id?.let { id ->
-          completable.andThen(Completable.merge(profileDependencyRemovers.map { it.deleteByProfile(id) }))
-        } ?: completable
+        profileEntity.id?.let { deleteProfileRelatedDataUseCase(it).andThen(completable) } ?: completable
       }
 
   interface ProfileRemover {

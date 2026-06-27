@@ -1,6 +1,7 @@
 package org.supla.android;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -80,6 +81,19 @@ public class VLCalibrationTool extends DimmerCalibrationTool
     calCfgRequest(VL_MSG_CONFIGURATION_MODE);
   }
 
+  @Override
+  protected void onSavePositiveClick(DialogInterface dialog) {
+    super.onSavePositiveClick(dialog);
+    mainNavigator.back();
+  }
+
+  @Override
+  protected void onSaveNegativeClick(DialogInterface dialog) {
+    super.onSaveNegativeClick(dialog);
+    calCfgConfigComplete(false);
+    mainNavigator.back();
+  }
+
   private void stopConfigurationRetryTimer() {
     if (startConfigurationRetryTimer != null) {
       startConfigurationRetryTimer.cancel();
@@ -130,6 +144,8 @@ public class VLCalibrationTool extends DimmerCalibrationTool
           displayCfgParameters(false);
         }
         break;
+      case VL_MSG_CONFIG_COMPLETE:
+        mainNavigator.back();
     }
   }
 
@@ -166,29 +182,22 @@ public class VLCalibrationTool extends DimmerCalibrationTool
   }
 
   private Button modeToBtn(int mode) {
-    switch (mode) {
-      case VLCfgParameters.MODE_AUTO:
-        return btnDmAuto;
-      case VLCfgParameters.MODE_1:
-        return btnDm1;
-      case VLCfgParameters.MODE_2:
-        return btnDm2;
-      case VLCfgParameters.MODE_3:
-        return btnDm3;
-    }
-    return null;
+    return switch (mode) {
+      case VLCfgParameters.MODE_AUTO -> btnDmAuto;
+      case VLCfgParameters.MODE_1 -> btnDm1;
+      case VLCfgParameters.MODE_2 -> btnDm2;
+      case VLCfgParameters.MODE_3 -> btnDm3;
+      default -> null;
+    };
   }
 
   private Button boostToBtn(int boost) {
-    switch (boost) {
-      case VLCfgParameters.BOOST_AUTO:
-        return btnBoostAuto;
-      case VLCfgParameters.BOOST_YES:
-        return btnBoostYes;
-      case VLCfgParameters.BOOST_NO:
-        return btnBoostNo;
-    }
-    return null;
+    return switch (boost) {
+      case VLCfgParameters.BOOST_AUTO -> btnBoostAuto;
+      case VLCfgParameters.BOOST_YES -> btnBoostYes;
+      case VLCfgParameters.BOOST_NO -> btnBoostNo;
+      default -> null;
+    };
   }
 
   private void setMode(int mode) {

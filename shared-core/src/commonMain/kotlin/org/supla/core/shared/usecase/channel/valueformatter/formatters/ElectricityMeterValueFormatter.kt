@@ -60,11 +60,11 @@ class ElectricityMeterValueFormatter(
     }
 
     return if (abs(doubleValue) < 100) {
-      ValuePrecision.Companion.exact(2)
+      ValuePrecision.exact(2)
     } else if (abs(doubleValue) < 1000) {
-      ValuePrecision.Companion.exact(1)
+      ValuePrecision.exact(1)
     } else {
-      ValuePrecision.Companion.exact(0)
+      ValuePrecision.exact(0)
     }
   }
 }

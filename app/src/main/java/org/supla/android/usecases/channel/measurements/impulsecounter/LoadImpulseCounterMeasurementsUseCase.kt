@@ -20,7 +20,7 @@ package org.supla.android.usecases.channel.measurements.impulsecounter
 import io.reactivex.rxjava3.core.Maybe
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.data.source.ImpulseCounterLogRepository
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.usecases.channel.measurements.ImpulseCounterMeasurements
 import java.util.Date
 import javax.inject.Inject
@@ -29,7 +29,7 @@ import javax.inject.Singleton
 @Singleton
 class LoadImpulseCounterMeasurementsUseCase @Inject constructor(
   private val impulseCounterLogRepository: ImpulseCounterLogRepository,
-  private val profileRepository: RoomProfileRepository,
+  private val profileRepository: ProfileRepository,
   private val dateProvider: DateProvider
 ) {
 

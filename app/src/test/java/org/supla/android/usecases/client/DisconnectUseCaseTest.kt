@@ -26,8 +26,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
-import org.supla.android.core.SuplaAppApi
-import org.supla.android.core.SuplaAppProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientApi
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.events.UpdateEventsManager
@@ -35,9 +33,6 @@ import org.supla.android.events.UpdateEventsManager
 class DisconnectUseCaseTest {
   @MockK
   private lateinit var suplaClientProvider: SuplaClientProvider
-
-  @MockK
-  private lateinit var suplaAppProvider: SuplaAppProvider
 
   @MockK
   private lateinit var updateEventsManager: UpdateEventsManager
@@ -58,12 +53,6 @@ class DisconnectUseCaseTest {
       every { cancel() } answers {}
     }
     every { suplaClientProvider.provide() } returns suplaClient
-
-    val suplaApp: SuplaAppApi = mockk {
-      every { CancelAllRestApiClientTasks(true) } answers {}
-      every { cleanupToken() } answers {}
-    }
-    every { suplaAppProvider.provide() } returns suplaApp
     mockUpdateEventsManager()
 
     // when
@@ -74,14 +63,12 @@ class DisconnectUseCaseTest {
     verify {
       suplaClient.canceled()
       suplaClient.cancel()
-      suplaApp.CancelAllRestApiClientTasks(true)
-      suplaApp.cleanupToken()
       updateEventsManager.cleanup()
       updateEventsManager.emitChannelsUpdate()
       updateEventsManager.emitGroupsUpdate()
       updateEventsManager.emitScenesUpdate()
     }
-    confirmVerified(suplaClient, suplaApp, updateEventsManager)
+    confirmVerified(suplaClient, updateEventsManager)
   }
 
   @Test
@@ -93,12 +80,6 @@ class DisconnectUseCaseTest {
       every { join() } answers {}
     }
     every { suplaClientProvider.provide() } returns suplaClient
-
-    val suplaApp: SuplaAppApi = mockk {
-      every { CancelAllRestApiClientTasks(true) } answers {}
-      every { cleanupToken() } answers {}
-    }
-    every { suplaAppProvider.provide() } returns suplaApp
     mockUpdateEventsManager()
 
     // when
@@ -110,8 +91,6 @@ class DisconnectUseCaseTest {
       suplaClient.canceled()
       suplaClient.cancel()
       suplaClient.join()
-      suplaApp.CancelAllRestApiClientTasks(true)
-      suplaApp.cleanupToken()
       updateEventsManager.cleanup()
       updateEventsManager.emitChannelsUpdate()
       updateEventsManager.emitGroupsUpdate()

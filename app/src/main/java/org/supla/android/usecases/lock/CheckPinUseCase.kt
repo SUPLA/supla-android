@@ -25,7 +25,7 @@ import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.data.model.general.LockScreenScope
 import org.supla.android.data.model.general.LockScreenSettings
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.features.lockscreen.UnlockAction
 import timber.log.Timber
 import javax.inject.Inject
@@ -41,7 +41,7 @@ class CheckPinUseCase @Inject constructor(
   private val encryptedPreferences: EncryptedPreferences,
   private val shaHashHelper: ShaHashHelper,
   private val dateProvider: DateProvider,
-  private val profileRepository: RoomProfileRepository,
+  private val profileRepository: ProfileRepository,
   private val suplaClientStateHolder: SuplaClientStateHolder,
 ) {
 

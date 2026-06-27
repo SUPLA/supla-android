@@ -41,6 +41,7 @@ import org.supla.android.data.model.chart.style.ElectricityChartStyle
 import org.supla.android.data.model.chart.style.ElectricityHistoryChartStyle
 import org.supla.android.data.model.general.MultipleSelectionList
 import org.supla.android.data.model.general.SingleSelectionList
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.complex.Electricity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
@@ -54,7 +55,6 @@ import org.supla.android.features.details.detailbase.history.HistoryDetailViewSt
 import org.supla.android.features.details.detailbase.history.ui.ChartDataSelectionDialogState
 import org.supla.android.features.details.detailbase.history.ui.CheckboxItem
 import org.supla.android.lib.SuplaChannelElectricityMeterValue
-import org.supla.android.profile.ProfileManager
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.views.spinner.SpinnerItem
 import org.supla.android.usecases.channel.DeleteChannelMeasurementsUseCase
@@ -87,15 +87,15 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
   deleteChannelMeasurementsUseCase: DeleteChannelMeasurementsUseCase,
   readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   groupingStringMigrationUseCase: GroupingStringMigrationUseCase,
-  profileManager: ProfileManager,
+  profileRepository: ProfileRepository,
   schedulers: SuplaSchedulers,
   dateProvider: DateProvider
 ) : BaseHistoryDetailViewModel(
   deleteChannelMeasurementsUseCase,
   readChannelWithChildrenUseCase,
   groupingStringMigrationUseCase,
+  profileRepository,
   userStateHolder,
-  profileManager,
   dateProvider,
   schedulers
 ) {

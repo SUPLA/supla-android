@@ -54,20 +54,11 @@ public class ChannelDetailRGBW extends DetailLayout {
 
   protected void init() {
     super.init();
-
-    findViewById(R.id.rgbAuthorizeButton)
-        .setOnClickListener(
-            v -> {
-              if (dimmerCalibrationTool != null
-                  && !dimmerCalibrationTool.isAuthorizationDialogOpened()) {
-                dimmerCalibrationTool.Show();
-              }
-            });
   }
 
   private void setupDimmerCalibrationTool() {
     if (getChannelBase() instanceof Channel c) {
-      if (c.getManufacturerID() == SuplaConst.SUPLA_MFR_DOYLETRATT && c.getProductID() == 1) {
+      if (c.getManufacturerID() == SuplaConst.SUPLA_MFR_DOYLETRATT && (c.getProductID() == 1 || c.getProductID() == 10)) {
         if (dimmerCalibrationTool == null
             || !(dimmerCalibrationTool instanceof VLCalibrationTool)) {
           dimmerCalibrationTool = new VLCalibrationTool(this, mainNavigator);

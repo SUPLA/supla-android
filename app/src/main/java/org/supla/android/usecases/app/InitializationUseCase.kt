@@ -24,7 +24,7 @@ import org.supla.android.core.infrastructure.ThreadHandler
 import org.supla.android.core.networking.suplaclient.SuplaClientEvent
 import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
 import org.supla.android.core.storage.EncryptedPreferences
-import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.ProfileRepository
 import org.supla.android.db.DbHelper
 import org.supla.android.db.room.app.AppDatabase
 import org.supla.android.db.room.measurements.MeasurementsDatabase
@@ -39,7 +39,7 @@ class InitializationUseCase @Inject constructor(
   private val stateHolder: SuplaClientStateHolder,
   private val appDatabase: AppDatabase,
   private val measurementsDatabase: MeasurementsDatabase,
-  private val profileRepository: RoomProfileRepository,
+  private val profileRepository: ProfileRepository,
   private val encryptedPreferences: EncryptedPreferences,
   private val dateProvider: DateProvider,
   private val threadHandler: ThreadHandler,
