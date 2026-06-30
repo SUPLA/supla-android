@@ -23,6 +23,7 @@ import android.net.NetworkCapabilities
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelAndJoin
@@ -37,6 +38,7 @@ import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientState
 import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
 import org.supla.android.core.storage.EncryptedPreferences
+import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.remote.esp.EspConfigurationSession
@@ -64,7 +66,7 @@ import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
-import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModel
+import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModelScope
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.DisconnectUseCase
 import org.supla.android.usecases.client.LoginUseCase
@@ -122,19 +124,16 @@ class AddWizardViewModel @Inject constructor(
   private val disconnectUseCase: DisconnectUseCase,
   private val dateProvider: DateProvider,
   private val wiFiScanner: WiFiScanner,
-  suplaClientProvider: SuplaClientProvider,
-  profileRepository: ProfileRepository,
-  authorizeUseCase: AuthorizeUseCase,
-  loginUseCase: LoginUseCase,
+  override val suplaClientProvider: SuplaClientProvider,
+  override val profileRepository: ProfileRepository,
+  override val authorizeUseCase: AuthorizeUseCase,
+  override val loginUseCase: LoginUseCase,
   schedulers: SuplaSchedulers
-) : BaseAuthorizationViewModel<AddWizardViewModelState, AddWizardViewEvent>(
-  suplaClientProvider,
-  profileRepository,
-  loginUseCase,
-  authorizeUseCase,
+) : BaseViewModel<AddWizardViewModelState, AddWizardViewEvent>(
   AddWizardViewModelState(),
   schedulers
 ),
+  BaseAuthorizationViewModelScope,
   AddWizardScope,
   EspConfigurationController {
 
@@ -147,9 +146,16 @@ class AddWizardViewModel @Inject constructor(
     updateState { it.copy(authorizationDialogState = updater(it.authorizationDialogState)) }
   }
 
+  override fun getAuthorizationDialogState(): AuthorizationDialogState? =
+    currentState().authorizationDialogState
+
   override fun onAuthorized(reason: AuthorizationReason) {
     closeAuthorizationDialog()
     configurationStateHolder.handleEvent(Authorized)
+  }
+
+  override fun launch(launcher: suspend CoroutineScope.() -> Unit) {
+    viewModelScope.launch { launcher() }
   }
 
   override fun onAuthorizationCancel() {
@@ -199,10 +205,6 @@ class AddWizardViewModel @Inject constructor(
     updateState { it.copy(showReconnectDialog = false) }
     configurationStateHolder.handleEvent(Reconnected)
     suplaClientStateHolder.handleEvent(SuplaClientEvent.AddWizardFinished)
-  }
-
-  override fun onBarCodeScan() {
-    sendEvent(AddWizardViewEvent.OpenScanner)
   }
 
   override fun onNetworkNameChanged(name: String) {
@@ -287,12 +289,14 @@ class AddWizardViewModel @Inject constructor(
     }
   }
 
-  override fun onClose(step: AddWizardScreen) {
-    if (step !is AddWizardScreen.Configuration || configurationStateHolder.isInactive) {
-      sendEvent(AddWizardViewEvent.Close(suplaClientStateHolder.isNotFinished))
-    } else {
-      configurationStateHolder.handleEvent(Close)
+  override fun onClose() {
+    currentState().screen?.let { step ->
+      if (step !is AddWizardScreen.Configuration || configurationStateHolder.isInactive) {
+        sendEvent(AddWizardViewEvent.Close(suplaClientStateHolder.isNotFinished))
+      }
     }
+
+    configurationStateHolder.handleEvent(Close)
   }
 
   override fun onWiFiListDismiss() {
@@ -722,7 +726,6 @@ class AddWizardViewModel @Inject constructor(
 
 sealed interface AddWizardViewEvent : ViewEvent {
   data class Close(val clientWorking: Boolean) : AddWizardViewEvent
-  data object OpenScanner : AddWizardViewEvent
   data object CheckPermissions : AddWizardViewEvent
   data object OpenCloud : AddWizardViewEvent
 }

@@ -21,12 +21,16 @@ import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.SceneRepository
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.ui.lists.ListItem
+import org.supla.android.ui.lists.locationItem
+import org.supla.android.ui.lists.sceneItem
+import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.android.usecases.location.CollapsedFlag
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class CreateProfileScenesListUseCase @Inject constructor(
+  private val getSceneIconUseCase: GetSceneIconUseCase,
   private val sceneRepository: SceneRepository
 ) {
   operator fun invoke(): Observable<List<ListItem>> =
@@ -41,13 +45,13 @@ class CreateProfileScenesListUseCase @Inject constructor(
 
           if (currentLocation == null || newLocation.caption != currentLocation.caption) {
             location = newLocation
-            result.add(ListItem.LocationItem(newLocation))
+            result.add(location.locationItem(CollapsedFlag.SCENE))
           }
         }
 
         location.let { locationEntity ->
           if (!locationEntity.isCollapsed(CollapsedFlag.SCENE)) {
-            result.add(ListItem.SceneItem(it))
+            result.add(it.sceneItem(getSceneIconUseCase))
           }
         }
       }

@@ -31,9 +31,11 @@ import org.supla.android.data.source.local.entity.LocationEntity.Companion.ALL_C
 import org.supla.android.data.source.local.entity.LocationEntity.Companion.COLUMN_CAPTION
 import org.supla.android.data.source.local.entity.LocationEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.LocationEntity.Companion.COLUMN_REMOTE_ID
+import org.supla.android.data.source.local.entity.LocationEntity.Companion.COLUMN_SORTING
 import org.supla.android.data.source.local.entity.LocationEntity.Companion.COLUMN_SORT_ORDER
 import org.supla.android.data.source.local.entity.LocationEntity.Companion.TABLE_NAME
 import org.supla.android.data.source.local.entity.ProfileEntity
+import org.supla.android.data.source.local.entity.custom.LocationSortingType
 
 @Dao
 interface LocationDao {
@@ -74,6 +76,16 @@ interface LocationDao {
   """
   )
   suspend fun getLocations(): List<LocationEntity>
+
+  @Query(
+    """
+      UPDATE $TABLE_NAME
+      SET $COLUMN_SORTING = :sortingType
+      WHERE $COLUMN_REMOTE_ID = :remoteId
+        AND $COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
+    """
+  )
+  suspend fun changeSortingType(remoteId: Int, sortingType: LocationSortingType)
 
   @Query("SELECT COUNT($COLUMN_PROFILE_ID) FROM $TABLE_NAME")
   fun count(): Observable<Int>

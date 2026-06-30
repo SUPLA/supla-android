@@ -21,6 +21,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Maybe
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
+import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
 import org.supla.android.core.shared.shareable
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.BaseViewModel
@@ -61,6 +62,7 @@ import org.supla.core.shared.data.model.lists.ChannelIssueItem
 import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetAllChannelIssuesUseCase
 import java.util.Date
@@ -73,6 +75,7 @@ class SwitchGeneralViewModel @Inject constructor(
   private val electricityMeterGeneralStateHandler: ElectricityMeterGeneralStateHandler,
   private val downloadChannelMeasurementsUseCase: DownloadChannelMeasurementsUseCase,
   private val impulseCounterGeneralStateHandler: ImpulseCounterGeneralStateHandler,
+  private val suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper,
   private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   private val readGroupWithChannelsUseCase: ReadGroupWithChannelsUseCase,
   private val executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
@@ -88,11 +91,34 @@ class SwitchGeneralViewModel @Inject constructor(
   SwitchGeneralScope,
   ChannelGroupRelationDataEntityConvertible {
 
+  private var remoteId = 0
+  private var itemType = ItemType.CHANNEL
+
+  init {
+    setupSuplaClientMessageHandler(suplaClientMessageHandlerWrapper)
+  }
+
   fun onViewCreated(remoteId: Int) {
     observeDownload(remoteId)
   }
 
+  override fun handleSuplaMessage(message: SuplaClientMessage) {
+    (message as? SuplaClientMessage.ChannelDataChanged)?.let {
+      if (it.channelId == remoteId && itemType == ItemType.CHANNEL) {
+        loadData(remoteId, itemType)
+      }
+    }
+    (message as? SuplaClientMessage.GroupDataChanged)?.let {
+      if (it.groupId == remoteId && itemType == ItemType.GROUP) {
+        loadData(remoteId, itemType)
+      }
+    }
+  }
+
   fun loadData(remoteId: Int, itemType: ItemType, cleanupDownloading: Boolean = false) {
+    this.remoteId = remoteId
+    this.itemType = itemType
+
     when (itemType) {
       ItemType.CHANNEL -> loadChannel(remoteId, cleanupDownloading)
       ItemType.GROUP -> loadGroup(remoteId)

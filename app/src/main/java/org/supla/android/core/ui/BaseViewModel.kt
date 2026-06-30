@@ -17,7 +17,6 @@ package org.supla.android.core.ui
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.lifecycle.ViewModel
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
@@ -25,17 +24,17 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
+import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessageHandler
 import timber.log.Timber
 
 interface BaseViewProxy<S : ViewState> {
@@ -45,24 +44,20 @@ interface BaseViewProxy<S : ViewState> {
 abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
   defaultState: S,
   protected open val schedulers: SuplaSchedulers
-) : ViewModel() {
+) : EventBasedViewModel<E>() {
 
   private val loadingState: MutableStateFlow<Boolean> = MutableStateFlow(false)
   private val viewState: MutableStateFlow<S> = MutableStateFlow(defaultState)
   fun getViewState(): StateFlow<S> = viewState
 
-  private val viewEvents: MutableSharedFlow<Event<E?>> =
-    MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
-
-  fun getViewEvents(): Flow<E> = viewEvents
-    .filter { it.item != null }
-    .filter { it.processed.not() }
-    .map {
-      it.run {
-        it.processed = true
-        it.item!!
-      }
+  private var suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper? = null
+  private val messageListener = object : SuplaClientMessageHandler.Listener {
+    override fun onReceived(message: SuplaClientMessage) {
+      handleSuplaMessage(message)
     }
+  }
+
+  private val compositeDisposable = CompositeDisposable()
 
   @FlowPreview
   fun isLoadingEvent(): Flow<Boolean> = loadingState
@@ -70,18 +65,13 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
     .distinctUntilChanged()
     .debounce(timeoutMillis = 350)
 
-  private val compositeDisposable = CompositeDisposable()
-
   override fun onCleared() {
     compositeDisposable.clear()
+    suplaClientMessageHandlerWrapper?.unregisterMessageListener(messageListener)
   }
 
   protected fun updateState(updater: (S) -> S) {
     viewState.tryEmit(updater(viewState.value))
-  }
-
-  protected fun sendEvent(event: E) {
-    viewEvents.tryEmit(Event(event))
   }
 
   protected fun currentState(): S {
@@ -92,9 +82,12 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
     throw IllegalStateException("Using `attachLoadable()` needs to override this method!")
   }
 
-  open fun onViewCreated() {}
-  open fun onStart() {}
-  open fun onStop() {}
+  protected fun setupSuplaClientMessageHandler(suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper) {
+    this.suplaClientMessageHandlerWrapper = suplaClientMessageHandlerWrapper
+    suplaClientMessageHandlerWrapper.registerMessageListener(messageListener)
+  }
+
+  open fun handleSuplaMessage(message: SuplaClientMessage) {}
 
   fun Disposable.disposeBySelf() {
     compositeDisposable.add(this)
@@ -228,9 +221,4 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
 
     return null
   }
-
-  data class Event<T>(
-    val item: T,
-    var processed: Boolean = false
-  )
 }

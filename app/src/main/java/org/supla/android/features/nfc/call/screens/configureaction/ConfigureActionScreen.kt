@@ -36,7 +36,7 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.model.spinner.ProfileItem
 import org.supla.android.data.model.spinner.SubjectItem
 import org.supla.android.features.nfc.call.screens.Navigator
-import org.supla.android.features.nfc.call.screens.ScreenScaffold
+import org.supla.android.features.nfc.call.screens.ViewModelHost
 import org.supla.android.features.nfc.shared.edit.EditNfcTagViewEvent
 import org.supla.android.features.nfc.shared.edit.EditNfcTagViewState
 import org.supla.android.features.nfc.shared.edit.NfcActions
@@ -59,7 +59,7 @@ fun ConfigureActionScreen(
   viewModel: ConfigureActionViewModel = hiltViewModel()
 ) {
   LaunchedEffect(tagId) { viewModel.onViewCreated(tagId) }
-  ScreenScaffold(
+  ViewModelHost(
     viewModel = viewModel,
     eventHandler = {
       when (it) {
@@ -81,7 +81,7 @@ fun ConfigureActionScreen(
   viewModel: ConfigureActionViewModel = hiltViewModel()
 ) {
   LaunchedEffect(uuid) { viewModel.onViewCreated(uuid, readOnly) }
-  ScreenScaffold(
+  ViewModelHost(
     viewModel = viewModel,
     eventHandler = {
       when (it) {

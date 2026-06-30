@@ -47,6 +47,8 @@ class ChannelGroupRepository @Inject constructor(
 
   fun update(groups: List<ChannelGroupEntity>) = channelGroupDao.update(groups)
 
+  suspend fun updatePosition(remoteId: Int, position: Int) = channelGroupDao.updatePosition(remoteId, position)
+
   suspend fun setChannelGroupsVisible(change: VisibilityChange): Boolean =
     channelGroupDao.setChannelGroupsVisible(change.newVisibility, change.applyForVisibility) > 0
 

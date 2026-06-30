@@ -90,6 +90,7 @@ fun ListItemScaffold(
     modifier = Modifier
       .fillMaxWidth()
       .fillMaxHeight()
+      .clickable(onClick = onItemClick)
   ) {
     itemEstimatedEndDate?.let {
       ListItemTimerText(date = it, scale = scale)

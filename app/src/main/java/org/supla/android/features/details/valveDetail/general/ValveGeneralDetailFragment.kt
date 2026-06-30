@@ -25,13 +25,9 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.core.ui.BaseComposeFragment
 import org.supla.android.core.ui.BaseViewModel
-import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.captionchangedialog.CaptionChangeViewModel
-import org.supla.android.features.captionchangedialog.View
 import org.supla.android.features.statedialog.StateDialogViewModel
-import org.supla.android.features.statedialog.View
-import org.supla.android.features.statedialog.handleStateDialogViewEvent
 import org.supla.android.ui.dialogs.AlertDialog
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 
@@ -63,8 +59,8 @@ class ValveGeneralDetailFragment : BaseComposeFragment<ValveGeneralDetailViewMod
           onNegativeClick = viewModel::closeErrorDialog
         )
       }
-      stateDialogViewModel.View()
-      captionChangeViewModel.View()
+      // stateDialogViewModel.View()
+      // captionChangeViewModel.View()
       ValveGeneralDetailView(
         state = viewState.viewState,
         onOpenClick = { viewModel.onActionClick(item.remoteId, ValveAction.OPEN) },
@@ -85,9 +81,5 @@ class ValveGeneralDetailFragment : BaseComposeFragment<ValveGeneralDetailViewMod
   }
 
   override fun handleEvents(event: ValveGeneralDetailViewEvent) {
-  }
-
-  override fun handleHelperEvents(event: ViewEvent) {
-    handleStateDialogViewEvent(event)
   }
 }

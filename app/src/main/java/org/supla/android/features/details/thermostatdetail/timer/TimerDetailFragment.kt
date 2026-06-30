@@ -51,7 +51,7 @@ class TimerDetailFragment : BaseComposeFragment<TimerDetailViewState, TimerDetai
 
   override fun onResume() {
     super.onResume()
-    viewModel.loadData(item.remoteId)
+    viewModel.loadData()
   }
 
   override fun handleEvents(event: TimerDetailViewEvent) {
@@ -60,7 +60,7 @@ class TimerDetailFragment : BaseComposeFragment<TimerDetailViewState, TimerDetai
   override fun onSuplaMessage(message: SuplaClientMessage) {
     (message as? SuplaClientMessage.ChannelDataChanged)?.let {
       if (it.channelId == item.remoteId && (it.timerValueChanged || !it.extendedValueChanged)) {
-        viewModel.loadData(item.remoteId)
+        viewModel.loadData()
       }
     }
   }

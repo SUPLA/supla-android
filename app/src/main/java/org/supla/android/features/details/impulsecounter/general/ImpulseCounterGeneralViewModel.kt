@@ -20,6 +20,7 @@ package org.supla.android.features.details.impulsecounter.general
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Maybe
 import org.supla.android.core.infrastructure.DateProvider
+import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
@@ -34,6 +35,7 @@ import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.channel.measurements.ImpulseCounterMeasurements
 import org.supla.android.usecases.channel.measurements.impulsecounter.LoadImpulseCounterMeasurementsUseCase
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,11 +46,24 @@ class ImpulseCounterGeneralViewModel @Inject constructor(
   private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   private val downloadEventsManager: DownloadEventsManager,
   private val dateProvider: DateProvider,
+  suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<ImpulseCounterGeneralViewModelState, ImpulseCounterGeneralViewEvent>(
   ImpulseCounterGeneralViewModelState(),
   schedulers
 ) {
+
+  init {
+    setupSuplaClientMessageHandler(suplaClientMessageHandlerWrapper)
+  }
+
+  override fun handleSuplaMessage(message: SuplaClientMessage) {
+    (message as? SuplaClientMessage.ChannelDataChanged)?.let {
+      if (it.channelId == currentState().remoteId) {
+        loadData(currentState().remoteId)
+      }
+    }
+  }
 
   fun onViewCreated(remoteId: Int) {
     downloadEventsManager.observeProgress(remoteId).attachSilent()

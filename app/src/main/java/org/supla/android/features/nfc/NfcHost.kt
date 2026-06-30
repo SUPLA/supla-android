@@ -17,9 +17,25 @@ package org.supla.android.features.nfc
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.content.Context
+import android.content.ContextWrapper
 import android.nfc.Tag
 
 interface NfcHost {
   fun enableNfcReader(intentHandler: (Tag) -> Unit)
   fun disableNfcReader()
+}
+
+fun Context.findNfcHost(): NfcHost? {
+  var context = this
+
+  while (context is ContextWrapper) {
+    if (context is NfcHost) {
+      return context
+    }
+
+    context = context.baseContext
+  }
+
+  return null
 }

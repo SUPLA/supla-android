@@ -31,24 +31,118 @@ import org.supla.android.core.shared.invoke
 import org.supla.core.shared.infrastructure.LocalizedString
 
 @Composable
-fun HeadlineSmall(stringRes: Int, color: Color = MaterialTheme.colorScheme.onSurface) =
-  Text(
-    text = stringResource(id = stringRes),
-    style = MaterialTheme.typography.headlineSmall,
-    color = color
+fun HeadlineLarge(
+  stringRes: Int,
+  modifier: Modifier = Modifier,
+  color: Color = MaterialTheme.colorScheme.onSurface,
+  maxLines: Int = Int.MAX_VALUE
+) =
+  HeadlineLarge(
+    text = stringResource(stringRes),
+    modifier = modifier,
+    color = color,
+    maxLines = maxLines
   )
 
 @Composable
-fun LabelLarge(@StringRes stringRes: Int, color: Color = MaterialTheme.colorScheme.onSurface, textAlign: TextAlign = TextAlign.Start) =
-  LabelLarge(text = stringResource(id = stringRes), color = color, textAlign = textAlign)
+fun HeadlineLarge(
+  text: String,
+  modifier: Modifier = Modifier,
+  color: Color = MaterialTheme.colorScheme.onSurface,
+  maxLines: Int = Int.MAX_VALUE
+) =
+  Text(
+    text = text,
+    style = MaterialTheme.typography.headlineLarge,
+    color = color,
+    modifier = modifier,
+    maxLines = maxLines
+  )
 
 @Composable
-fun LabelLarge(text: String, color: Color = MaterialTheme.colorScheme.onSurface, textAlign: TextAlign = TextAlign.Start) =
+fun HeadlineMedium(
+  stringRes: Int,
+  modifier: Modifier = Modifier,
+  color: Color = MaterialTheme.colorScheme.onSurface,
+  maxLines: Int = Int.MAX_VALUE
+) =
+  HeadlineMedium(
+    text = stringResource(stringRes),
+    modifier = modifier,
+    color = color,
+    maxLines = maxLines
+  )
+
+@Composable
+fun HeadlineMedium(
+  text: String,
+  modifier: Modifier = Modifier,
+  color: Color = MaterialTheme.colorScheme.onSurface,
+  maxLines: Int = Int.MAX_VALUE
+) =
+  Text(
+    text = text,
+    style = MaterialTheme.typography.headlineMedium,
+    color = color,
+    modifier = modifier,
+    maxLines = maxLines
+  )
+
+@Composable
+fun HeadlineSmall(
+  stringRes: Int,
+  modifier: Modifier = Modifier,
+  color: Color = MaterialTheme.colorScheme.onSurface,
+  maxLines: Int = Int.MAX_VALUE,
+  overflow: TextOverflow = TextOverflow.Ellipsis
+) =
+  HeadlineSmall(
+    text = stringResource(stringRes),
+    color = color,
+    modifier = modifier,
+    maxLines = maxLines,
+    overflow = overflow
+  )
+
+@Composable
+fun HeadlineSmall(
+  text: String,
+  modifier: Modifier = Modifier,
+  color: Color = MaterialTheme.colorScheme.onSurface,
+  maxLines: Int = Int.MAX_VALUE,
+  overflow: TextOverflow = TextOverflow.Ellipsis
+) =
+  Text(
+    text = text,
+    style = MaterialTheme.typography.headlineSmall,
+    color = color,
+    modifier = modifier,
+    maxLines = maxLines,
+    overflow = overflow
+  )
+
+@Composable
+fun LabelLarge(
+  @StringRes stringRes: Int,
+  modifier: Modifier = Modifier,
+  color: Color = MaterialTheme.colorScheme.onSurface,
+  textAlign: TextAlign = TextAlign.Start
+) =
+  LabelLarge(text = stringResource(id = stringRes), color = color, textAlign = textAlign, modifier = modifier)
+
+@Composable
+fun LabelLarge(
+  text: String,
+  modifier: Modifier = Modifier,
+  color: Color = MaterialTheme.colorScheme.onSurface,
+  textAlign: TextAlign = TextAlign.Start
+) =
   Text(
     text = text,
     style = MaterialTheme.typography.labelLarge,
     color = color,
-    textAlign = textAlign
+    textAlign = textAlign,
+    modifier = modifier
   )
 
 @Composable
@@ -150,9 +244,15 @@ fun BodyLarge(
   )
 
 @Composable
-fun BodyMedium(stringRes: Int, color: Color = MaterialTheme.colorScheme.onSurface, textAlign: TextAlign = TextAlign.Center) =
+fun BodyMedium(
+  stringRes: Int,
+  modifier: Modifier = Modifier,
+  color: Color = MaterialTheme.colorScheme.onSurface,
+  textAlign: TextAlign = TextAlign.Center
+) =
   BodyMedium(
     text = stringResource(id = stringRes),
+    modifier = modifier,
     color = color,
     textAlign = textAlign
   )
@@ -160,13 +260,15 @@ fun BodyMedium(stringRes: Int, color: Color = MaterialTheme.colorScheme.onSurfac
 @Composable
 fun BodyMedium(
   localizedString: LocalizedString,
+  modifier: Modifier = Modifier,
   color: Color = MaterialTheme.colorScheme.onSurface,
   textAlign: TextAlign = TextAlign.Center
 ) =
   BodyMedium(
     text = localizedString(LocalContext.current),
     color = color,
-    textAlign = textAlign
+    textAlign = textAlign,
+    modifier = modifier
   )
 
 @Composable

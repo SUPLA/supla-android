@@ -22,11 +22,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.FlowPreview
-import org.supla.android.MainActivity
 import org.supla.android.core.infrastructure.navigation.ToolbarOwner
 import org.supla.android.extensions.IntConverter
 import org.supla.android.extensions.visibleIf
@@ -35,7 +33,6 @@ import org.supla.android.lib.AndroidSuplaClientMessageHandler
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.AppBar
 import org.supla.android.ui.LoadableContent
-import org.supla.android.ui.ToolbarItemsClickHandler
 import org.supla.android.ui.ToolbarItemsController
 import org.supla.android.ui.ToolbarTitleController
 import org.supla.android.ui.ToolbarVisibilityController
@@ -98,16 +95,10 @@ abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayo
   override fun onResume() {
     super.onResume()
     AndroidSuplaClientMessageHandler.getGlobalInstance().register(suplaMessageListener)
-    if (this is ToolbarItemsClickHandler) {
-      (requireActivity() as? MainActivity)?.registerMenuItemClickHandler(this)
-    }
   }
 
   @CallSuper
   override fun onPause() {
-    if (this is ToolbarItemsClickHandler) {
-      (requireActivity() as? MainActivity)?.unregisterMenuItemClickHandler(this)
-    }
     AndroidSuplaClientMessageHandler.getGlobalInstance().unregister(suplaMessageListener)
     super.onPause()
   }

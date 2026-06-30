@@ -22,13 +22,13 @@ import androidx.work.ExistingWorkPolicy
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.supla.android.BuildConfig
-import org.supla.android.MainActivity
 import org.supla.android.R
 import org.supla.android.core.infrastructure.WorkManagerProxy
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.data.source.NotificationRepository
 import org.supla.android.features.updatetoken.UpdateTokenWorker
+import org.supla.android.main.MainActivity
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -52,14 +52,6 @@ class NotificationsHelper @Inject constructor(
 ) {
 
   private val notificationIdRandomizer = Random.Default
-
-  fun setup(activity: Activity, askPermissionCallback: () -> Unit) {
-    if (VERSION.SDK_INT >= VERSION_CODES.TIRAMISU) {
-      setupNotificationPermission(activity, askPermissionCallback)
-    } else if (VERSION.SDK_INT >= VERSION_CODES.O) {
-      setupNotificationChannel(activity)
-    }
-  }
 
   fun setupNotificationChannel(context: Context) {
     if (VERSION.SDK_INT < VERSION_CODES.O) {

@@ -634,11 +634,3 @@ private fun Preview() {
     )
   }
 }
-
-@Composable
-fun Modifier.suplaCard(): Modifier {
-  val shape = RoundedCornerShape(dimensionResource(id = R.dimen.radius_default))
-  return this then Modifier
-    .background(MaterialTheme.colorScheme.surface, shape)
-    .border(1.dp, MaterialTheme.colorScheme.outline, shape)
-}

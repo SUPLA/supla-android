@@ -44,6 +44,8 @@ class RoomChannelRepository @Inject constructor(
 
   fun findList() = channelDao.findList().firstOrError()
 
+  suspend fun updatePosition(remoteId: Int, position: Int) = channelDao.updatePosition(remoteId, position)
+
   suspend fun findChannelsBy(profileId: Long, function: SuplaFunction) = channelDao.findChannelsBy(profileId, function)
 
   fun findListWithoutUnavailable() = channelDao.findListWithoutUnavailable().firstOrError()

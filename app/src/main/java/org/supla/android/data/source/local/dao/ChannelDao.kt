@@ -101,6 +101,16 @@ interface ChannelDao {
 
   @Query(
     """
+      UPDATE $TABLE_NAME
+      SET $COLUMN_POSITION = :position
+      WHERE $COLUMN_CHANNEL_REMOTE_ID = :remoteId
+        AND $COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
+    """
+  )
+  suspend fun updatePosition(remoteId: Int, position: Int)
+
+  @Query(
+    """
     SELECT 
       ${ChannelEntity.JOIN_COLUMNS},
       ${ChannelValueEntity.JOIN_COLUMNS},

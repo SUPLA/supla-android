@@ -52,7 +52,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
-import org.supla.android.features.details.detailbase.electricitymeter.suplaCard
+import org.supla.android.extensions.suplaCard
 import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.Separator
 import org.supla.android.ui.views.SeparatorStyle

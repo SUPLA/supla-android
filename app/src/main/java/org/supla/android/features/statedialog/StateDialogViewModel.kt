@@ -17,12 +17,18 @@ package org.supla.android.features.statedialog
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
+import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
+import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
@@ -37,7 +43,7 @@ import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
-import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModel
+import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModelScope
 import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.LoginUseCase
@@ -45,6 +51,7 @@ import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetChannelDefaultCaptionUseCase
 import timber.log.Timber
@@ -57,23 +64,22 @@ private const val REFRESH_INTERVAL_MS = 4000
 class StateDialogViewModel @Inject constructor(
   private val readChannelWithChildrenTreeUseCase: ReadChannelWithChildrenTreeUseCase,
   private val getChannelDefaultCaptionUseCase: GetChannelDefaultCaptionUseCase,
+  override val suplaClientProvider: SuplaClientProvider,
   private val onlineEventsManager: OnlineEventsManager,
-  private val suplaClientProvider: SuplaClientProvider,
+  override val profileRepository: ProfileRepository,
   private val getCaptionUseCase: GetCaptionUseCase,
+  override val authorizeUseCase: AuthorizeUseCase,
+  override val loginUseCase: LoginUseCase,
   private val dateProvider: DateProvider,
-  profileRepository: ProfileRepository,
-  authorizeUseCase: AuthorizeUseCase,
-  loginUseCase: LoginUseCase,
+  suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper,
   schedulers: SuplaSchedulers
-) : BaseAuthorizationViewModel<StateDialogViewModelState, StateDialogViewEvent>(
-  suplaClientProvider,
-  profileRepository,
-  loginUseCase,
-  authorizeUseCase,
+) : BaseViewModel<StateDialogViewModelState, StateDialogViewEvent>(
   StateDialogViewModelState(),
   schedulers
 ),
-  StateDialogScope {
+  StateDialogScope,
+  LifespanDialogScope,
+  BaseAuthorizationViewModelScope {
 
   private var onlineDisposable: Disposable? = null
   private var refreshDisposable: Disposable? = null
@@ -85,6 +91,14 @@ class StateDialogViewModel @Inject constructor(
 
   private val currentChannel: ChannelData?
     get() = channels?.getOrNull(idx)
+
+  init {
+    setupSuplaClientMessageHandler(suplaClientMessageHandlerWrapper)
+  }
+
+  override fun handleSuplaMessage(message: SuplaClientMessage) {
+    (message as? SuplaClientMessage.ChannelState)?.let { updateStateDialog(it.channelState) }
+  }
 
   override fun onDismiss() {
     channels = null
@@ -132,11 +146,29 @@ class StateDialogViewModel @Inject constructor(
   override fun updateAuthorizationDialogState(updater: (AuthorizationDialogState?) -> AuthorizationDialogState?) =
     updateState { it.copy(authorizationDialogState = updater(it.authorizationDialogState)) }
 
+  override fun getAuthorizationDialogState(): AuthorizationDialogState? =
+    currentState().authorizationDialogState
+
   override fun onAuthorized(reason: AuthorizationReason) {
     closeAuthorizationDialog()
     if (reason is LifespanSettingsReason) {
-      sendEvent(StateDialogViewEvent.ShowLifespanSettingsDialog(reason.remoteId, reason.caption, reason.lifespan))
+      updateState {
+        val lifespan = reason.lifespan ?: 0
+        it.copy(
+          lifespanDialogViewState = LifespanDialogState(
+            title = reason.caption,
+            lifespanValue = "$lifespan",
+            saveEnabled = lifespan > 0,
+            lifespanInitialValue = lifespan,
+            channelId = reason.remoteId
+          )
+        )
+      }
     }
+  }
+
+  override fun launch(launcher: suspend CoroutineScope.() -> Unit) {
+    viewModelScope.launch { launcher() }
   }
 
   override fun onStart() {
@@ -293,17 +325,70 @@ class StateDialogViewModel @Inject constructor(
         addAll(allDescendantFlat.map { it.channelDataEntity.channelData })
       }
       .distinctBy { it.remoteId }
+
+  override fun onLifespanDialogDismiss() {
+    updateState { it.copy(lifespanDialogViewState = null) }
+  }
+
+  override fun onLifeSpanDialogResetChange(checked: Boolean) {
+    updateState {
+      it.copy(
+        lifespanDialogViewState = it.lifespanDialogViewState?.copy(resetActive = checked)
+      )
+    }
+  }
+
+  override fun onLifespanDialogValueChange(value: String) {
+    updateState {
+      it.copy(
+        lifespanDialogViewState = it.lifespanDialogViewState?.copy(
+          lifespanValue = value,
+          saveEnabled = value.isNotEmpty() && value.toIntOrNull() != null
+        )
+      )
+    }
+  }
+
+  override fun onLifespanDialogOk() {
+    updateState {
+      it.copy(lifespanDialogViewState = it.lifespanDialogViewState?.copy(processing = true))
+    }
+
+    Completable.fromRunnable {
+      val suplaClient = suplaClientProvider.provide() ?: throw IllegalStateException()
+      val state = currentState().lifespanDialogViewState ?: throw IllegalStateException()
+      val lifespan = state.lifespanValue.toIntOrNull() ?: throw IllegalStateException()
+
+      val result = suplaClient.setLightsourceLifespan(
+        remoteId = state.channelId,
+        resetCounter = state.resetActive,
+        setTime = lifespan != state.lifespanInitialValue,
+        lifespan = lifespan
+      )
+
+      if (!result) {
+        throw IllegalStateException()
+      }
+    }
+      .attach()
+      .subscribeBy(
+        onComplete = {
+          updateState { it.copy(lifespanDialogViewState = null) }
+        },
+        onError = {
+          updateState {
+            it.copy(lifespanDialogViewState = it.lifespanDialogViewState?.copy(error = true, processing = false))
+          }
+        }
+      )
+      .disposeBySelf()
+  }
 }
 
-sealed class StateDialogViewEvent : ViewEvent {
-  data class ShowLifespanSettingsDialog(
-    val remoteId: Int,
-    val caption: LocalizedString,
-    val lightSourceLifespan: Int?
-  ) : StateDialogViewEvent()
-}
+sealed class StateDialogViewEvent : ViewEvent
 
 data class StateDialogViewModelState(
   val viewState: StateDialogViewState? = null,
+  val lifespanDialogViewState: LifespanDialogState? = null,
   override val authorizationDialogState: AuthorizationDialogState? = null
 ) : AuthorizationModelState()

@@ -20,6 +20,7 @@ package org.supla.android.core.storage
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
+import androidx.compose.runtime.compositionLocalOf
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -53,6 +54,8 @@ private const val KEY_TEMPERATURE_PRECISION = "pref_temperature_precision"
 private const val KEY_ROTATION_ENABLED = "pref_rotation_enabled"
 
 const val PREF_CHANNEL_HEIGHT = "pref_channel_height_percent"
+
+val LocalApplicationPreferences = compositionLocalOf<ApplicationPreferences> { error("No ApplicationPreferences provided!") }
 
 @Singleton
 class ApplicationPreferences @Inject constructor(@ApplicationContext context: Context) : CoreApplicationPreferences {

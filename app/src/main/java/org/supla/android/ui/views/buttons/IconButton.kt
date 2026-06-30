@@ -38,6 +38,7 @@ fun IconButton(
   icon: Int,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
+  contentDescription: String? = null,
   enabled: Boolean = true,
   rotate: Boolean = false,
   tint: Color = MaterialTheme.colorScheme.primary,
@@ -49,7 +50,7 @@ fun IconButton(
 
     Icon(
       painter = painterResource(id = icon),
-      contentDescription = null,
+      contentDescription = contentDescription,
       modifier = if (rotate) iconModifier.rotate(180f) else iconModifier,
       tint = if (enabled) tint else colorResource(id = R.color.disabled)
     )

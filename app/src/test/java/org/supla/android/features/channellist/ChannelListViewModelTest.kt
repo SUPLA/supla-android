@@ -135,7 +135,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   @Test
   fun `should load channels`() {
     // given
-    val list = listOf(mockk<ListItem.ChannelItem>())
+    val list = listOf(mockk<ListItem.DefaultItem>())
     every { createProfileChannelsListUseCase() } returns Observable.just(list)
 
     // when
@@ -157,7 +157,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // given
     val location = mockk<LocationEntity>()
     every { toggleLocationUseCase(location, CollapsedFlag.CHANNEL) } returns Completable.complete()
-    val list = listOf(mockk<ListItem.ChannelItem>())
+    val list = listOf(mockk<ListItem.DefaultItem>())
     every { createProfileChannelsListUseCase() } returns Observable.just(list)
 
     // when
@@ -584,7 +584,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   @Test
   fun `should reload list on update`() {
     // given
-    val list = listOf(mockk<ListItem.ChannelItem>())
+    val list = listOf(mockk<ListItem.DefaultItem>())
     every { createProfileChannelsListUseCase() } returns Observable.just(list)
 
     // when

@@ -17,9 +17,13 @@ package org.supla.android.features.captionchangedialog
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.supla.android.R
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
+import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.extensions.subscribeBy
@@ -28,7 +32,7 @@ import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
-import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModel
+import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModelScope
 import org.supla.android.usecases.captionchange.CaptionChangeUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.LoginUseCase
@@ -41,22 +45,17 @@ import javax.inject.Inject
 class CaptionChangeViewModel @Inject constructor(
   private val captionChangeUseCase: CaptionChangeUseCase,
   private val vibrationHelper: VibrationHelper,
-  profileRepository: ProfileRepository,
-  suplaClientProvider: SuplaClientProvider,
-  authorizeUseCase: AuthorizeUseCase,
-  loginUseCase: LoginUseCase,
+  override val profileRepository: ProfileRepository,
+  override val suplaClientProvider: SuplaClientProvider,
+  override val authorizeUseCase: AuthorizeUseCase,
+  override val loginUseCase: LoginUseCase,
   schedulers: SuplaSchedulers
-) : BaseAuthorizationViewModel<CaptionChangeViewModelState, CaptionChangeViewEvent>(
-  suplaClientProvider,
-  profileRepository,
-  loginUseCase,
-  authorizeUseCase,
+) : BaseViewModel<CaptionChangeViewModelState, CaptionChangeViewEvent>(
   CaptionChangeViewModelState(),
   schedulers
 ),
-  CaptionChangeDialogScope {
-
-  var finishedCallback: ((CaptionChangeUseCase.Type) -> Unit)? = null
+  CaptionChangeDialogScope,
+  BaseAuthorizationViewModelScope {
 
   fun showChannelDialog(remoteId: Int, profileId: Long, caption: String) {
     showDialog(caption, remoteId, profileId, CaptionChangeUseCase.Type.CHANNEL)
@@ -94,11 +93,18 @@ class CaptionChangeViewModel @Inject constructor(
     updateState { it.copy(authorizationDialogState = updater(it.authorizationDialogState)) }
   }
 
+  override fun getAuthorizationDialogState(): AuthorizationDialogState? =
+    currentState().authorizationDialogState
+
   override fun onAuthorized(reason: AuthorizationReason) {
     closeAuthorizationDialog()
     if (reason == CaptionChange) {
       updateState { it.copy(viewState = it.viewState?.copy(authorized = true)) }
     }
+  }
+
+  override fun launch(launcher: suspend CoroutineScope.() -> Unit) {
+    viewModelScope.launch { launcher() }
   }
 
   override fun onCaptionChangeDismiss() {
@@ -118,7 +124,7 @@ class CaptionChangeViewModel @Inject constructor(
           .attachSilent()
           .subscribeBy(
             onComplete = {
-              finishedCallback?.invoke(state.type)
+              sendEvent(CaptionChangeViewEvent.Finish(state.type))
               updateState { it.copy(viewState = null) }
             },
             onError = this::showError
@@ -143,7 +149,9 @@ class CaptionChangeViewModel @Inject constructor(
 
 data object CaptionChange : AuthorizationReason
 
-sealed class CaptionChangeViewEvent : ViewEvent
+sealed class CaptionChangeViewEvent : ViewEvent {
+  data class Finish(val type: CaptionChangeUseCase.Type) : CaptionChangeViewEvent()
+}
 
 data class CaptionChangeViewModelState(
   val remoteId: Int = 0,

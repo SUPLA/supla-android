@@ -26,9 +26,7 @@ import org.supla.android.features.addwizard.model.AddWizardScreen
 import org.supla.android.features.addwizard.view.components.AddWizardContentText
 import org.supla.android.features.addwizard.view.components.AddWizardScaffold
 
-interface AddWizardWelcomeScope : AddWizardScope {
-  fun onBarCodeScan()
-}
+interface AddWizardWelcomeScope : AddWizardScope
 
 @Composable
 fun AddWizardWelcomeScope.AddWizardWelcomeView() {
@@ -43,9 +41,8 @@ fun AddWizardWelcomeScope.AddWizardWelcomeView() {
 }
 
 private val previewScope = object : AddWizardWelcomeScope {
-  override fun onBarCodeScan() {}
   override fun onStepFinished(step: AddWizardScreen) {}
-  override fun onClose(step: AddWizardScreen) {}
+  override fun onClose() {}
 }
 
 @Preview(backgroundColor = 0xFF12A71E, showBackground = true)

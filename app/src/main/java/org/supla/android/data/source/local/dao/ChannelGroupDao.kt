@@ -81,6 +81,16 @@ interface ChannelGroupDao {
 
   @Query(
     """
+      UPDATE $TABLE_NAME
+      SET $COLUMN_POSITION = :position
+      WHERE $COLUMN_REMOTE_ID = :remoteId
+        AND $COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
+    """
+  )
+  suspend fun updatePosition(remoteId: Int, position: Int)
+
+  @Query(
+    """
       SELECT
         channel_group.$COLUMN_ID group_$COLUMN_ID,
         channel_group.$COLUMN_REMOTE_ID group_$COLUMN_REMOTE_ID,
@@ -146,6 +156,7 @@ interface ChannelGroupDao {
       FROM $TABLE_NAME channel_group
       JOIN ${LocationEntity.TABLE_NAME} location
         ON channel_group.$COLUMN_LOCATION_ID = location.${LocationEntity.COLUMN_REMOTE_ID}
+          AND channel_group.$COLUMN_PROFILE_ID = location.${LocationEntity.COLUMN_PROFILE_ID}
       WHERE channel_group.$COLUMN_REMOTE_ID = :groupRemoteId
         AND channel_group.$COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
     """

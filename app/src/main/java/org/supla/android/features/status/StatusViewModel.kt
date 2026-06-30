@@ -17,13 +17,17 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.disposables.Disposable
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.supla.android.R
 import org.supla.android.core.networking.suplaclient.SuplaClientEvent
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientState
 import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
+import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.extensions.subscribeBy
@@ -32,7 +36,7 @@ import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
-import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModel
+import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModelScope
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.DisconnectUseCase
 import org.supla.android.usecases.client.LoginUseCase
@@ -45,19 +49,17 @@ import javax.inject.Inject
 class StatusViewModel @Inject constructor(
   private val suplaClientStateHolder: SuplaClientStateHolder,
   private val disconnectUseCase: DisconnectUseCase,
-  suplaClientProvider: SuplaClientProvider,
-  profileRepository: ProfileRepository,
-  loginUseCase: LoginUseCase,
-  authorizeUseCase: AuthorizeUseCase,
+  override val suplaClientProvider: SuplaClientProvider,
+  override val profileRepository: ProfileRepository,
+  override val loginUseCase: LoginUseCase,
+  override val authorizeUseCase: AuthorizeUseCase,
   suplaSchedulers: SuplaSchedulers
-) : BaseAuthorizationViewModel<StatusViewModelState, StatusViewEvent>(
-  suplaClientProvider,
-  profileRepository,
-  loginUseCase,
-  authorizeUseCase,
-  StatusViewModelState(),
+) : BaseViewModel<StatusViewState, StatusViewEvent>(
+  StatusViewState(),
   suplaSchedulers
-) {
+),
+  StatusViewScope,
+  BaseAuthorizationViewModelScope {
 
   private var stateDisposable: Disposable? = null
 
@@ -72,29 +74,27 @@ class StatusViewModel @Inject constructor(
             SuplaClientState.Initialization ->
               updateState {
                 it.copy(
-                  viewType = StatusViewModelState.ViewType.CONNECTING,
-                  viewState = it.viewState.copy(stateText = StatusViewStateText.INITIALIZING)
+                  viewType = StatusViewState.ViewType.CONNECTING,
+                  stateText = StatusViewStateText.INITIALIZING
                 )
               }
             is SuplaClientState.Connecting ->
               updateState {
                 it.copy(
-                  viewType = StatusViewModelState.ViewType.CONNECTING,
-                  viewState = it.viewState.copy(
-                    stateText = if (state.reason == SuplaClientState.Reason.NoNetwork) {
-                      StatusViewStateText.AWAITING_NETWORK
-                    } else {
-                      StatusViewStateText.CONNECTING
-                    }
-                  )
+                  viewType = StatusViewState.ViewType.CONNECTING,
+                  stateText = if (state.reason == SuplaClientState.Reason.NoNetwork) {
+                    StatusViewStateText.AWAITING_NETWORK
+                  } else {
+                    StatusViewStateText.CONNECTING
+                  }
                 )
               }
             is SuplaClientState.Disconnecting,
             SuplaClientState.Locking ->
               updateState {
                 it.copy(
-                  viewType = StatusViewModelState.ViewType.CONNECTING,
-                  viewState = it.viewState.copy(stateText = StatusViewStateText.DISCONNECTING)
+                  viewType = StatusViewState.ViewType.CONNECTING,
+                  stateText = StatusViewStateText.DISCONNECTING
                 )
               }
             else -> {}
@@ -107,11 +107,11 @@ class StatusViewModel @Inject constructor(
     stateDisposable?.dispose()
   }
 
-  fun cancelAndOpenProfiles() {
+  override fun onCancelAndGoToProfilesClick() {
     disconnectAndOpenProfiles()
   }
 
-  fun tryAgainClick() {
+  override fun onTryAgain() {
     suplaClientStateHolder.handleEvent(SuplaClientEvent.Initialized)
   }
 
@@ -119,10 +119,17 @@ class StatusViewModel @Inject constructor(
     updateState { it.copy(authorizationDialogState = updater(it.authorizationDialogState)) }
   }
 
+  override fun getAuthorizationDialogState(): AuthorizationDialogState? =
+    currentState().authorizationDialogState
+
   override fun onAuthorized(reason: AuthorizationReason) {
     updateState {
       it.copy(authorizationDialogState = null)
     }
+  }
+
+  override fun launch(launcher: suspend CoroutineScope.() -> Unit) {
+    viewModelScope.launch { launcher() }
   }
 
   override fun onAuthorize(userName: String, password: String) {
@@ -136,10 +143,8 @@ class StatusViewModel @Inject constructor(
 
     updateState {
       it.copy(
-        viewType = StatusViewModelState.ViewType.ERROR,
-        viewState = it.viewState.copy(
-          errorDescription = state.reason?.let { error -> getErrorDescription(error) }
-        )
+        viewType = StatusViewState.ViewType.ERROR,
+        errorDescription = state.reason?.let { error -> getErrorDescription(error) }
       )
     }
   }
@@ -182,8 +187,9 @@ sealed class StatusViewEvent : ViewEvent {
   data object NavigateToProfiles : StatusViewEvent()
 }
 
-data class StatusViewModelState(
-  val viewState: StatusViewState = StatusViewState(),
+data class StatusViewState(
+  val stateText: StatusViewStateText = StatusViewStateText.INITIALIZING,
+  val errorDescription: LocalizedString? = null,
   val viewType: ViewType = ViewType.CONNECTING,
   override val authorizationDialogState: AuthorizationDialogState? = null
 ) : AuthorizationModelState() {

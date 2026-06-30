@@ -17,14 +17,14 @@ package org.supla.android.ui.dialogs.authorize
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.rx3.await
+import kotlinx.coroutines.withContext
 import org.supla.android.R
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
-import org.supla.android.core.ui.BaseViewModel
-import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.ProfileRepository
-import org.supla.android.extensions.subscribeBy
-import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.AuthorizationDialogScope
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.AuthorizationReason
@@ -34,19 +34,21 @@ import org.supla.android.usecases.client.LoginUseCase
 import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
+import timber.log.Timber
 
-abstract class BaseAuthorizationViewModel<S : AuthorizationModelState, E : ViewEvent>(
-  private val suplaClientProvider: SuplaClientProvider,
-  private val profileRepository: ProfileRepository,
-  private val loginUseCase: LoginUseCase,
-  private val authorizeUseCase: AuthorizeUseCase,
-  defaultState: S,
-  schedulers: SuplaSchedulers,
-) : BaseViewModel<S, E>(defaultState, schedulers), AuthorizationDialogScope {
+interface BaseAuthorizationViewModelScope : AuthorizationDialogScope {
+  val suplaClientProvider: SuplaClientProvider
+  val profileRepository: ProfileRepository
+  val loginUseCase: LoginUseCase
+  val authorizeUseCase: AuthorizeUseCase
 
-  protected abstract fun updateAuthorizationDialogState(updater: (AuthorizationDialogState?) -> AuthorizationDialogState?)
+  fun updateAuthorizationDialogState(updater: (AuthorizationDialogState?) -> AuthorizationDialogState?)
 
-  abstract fun onAuthorized(reason: AuthorizationReason)
+  fun getAuthorizationDialogState(): AuthorizationDialogState?
+
+  fun onAuthorized(reason: AuthorizationReason)
+
+  fun launch(launcher: suspend CoroutineScope.() -> Unit)
 
   override fun onAuthorizationDismiss() {
     closeAuthorizationDialog()
@@ -60,8 +62,8 @@ abstract class BaseAuthorizationViewModel<S : AuthorizationModelState, E : ViewE
     authorize(userName, password)
   }
 
-  open fun onError(error: Throwable) {
-    defaultErrorHandler("authorize")(error)
+  fun onError(error: Throwable) {
+    Timber.e(error, "Got error by authorization call!")
   }
 
   override fun onStateChange(state: AuthorizationDialogState) {
@@ -77,80 +79,79 @@ abstract class BaseAuthorizationViewModel<S : AuthorizationModelState, E : ViewE
       return
     }
 
-    profileRepository.findActiveProfile()
-      .attach()
-      .subscribeBy(
-        onSuccess = { profile ->
-          updateAuthorizationDialogState {
-            it?.copy(
-              userName = profile.email,
-              isCloudAccount = profile.isCloudAccount,
-              userNameEnabled = suplaClientProvider.provide()?.registered() == true,
-              reason = reason,
-              clarification = clarificationMessage
-            ) ?: AuthorizationDialogState(
-              userName = profile.email,
-              isCloudAccount = profile.isCloudAccount,
-              userNameEnabled = suplaClientProvider.provide()?.registered() == true,
-              reason = reason,
-              clarification = clarificationMessage
-            )
-          }
-        }
-      )
-      .disposeBySelf()
+    launch {
+      val profile = withContext(Dispatchers.IO) {
+        runCatching { profileRepository.findActiveProfile().await() }.getOrNull()
+      } ?: return@launch
+
+      updateAuthorizationDialogState {
+        it?.copy(
+          userName = profile.email,
+          isCloudAccount = profile.isCloudAccount,
+          userNameEnabled = suplaClientProvider.provide()?.registered() == true,
+          reason = reason,
+          clarification = clarificationMessage
+        ) ?: AuthorizationDialogState(
+          userName = profile.email,
+          isCloudAccount = profile.isCloudAccount,
+          userNameEnabled = suplaClientProvider.provide()?.registered() == true,
+          reason = reason,
+          clarification = clarificationMessage
+        )
+      }
+    }
   }
 
   fun authorize(userName: String, password: String) {
-    authorizeUseCase(userName, password)
-      .attachSilent()
-      .doOnSubscribe { updateAuthorizationDialogState { it?.copy(processing = true) } }
-      .doOnTerminate { updateAuthorizationDialogState { it?.copy(processing = false) } }
-      .subscribeBy(
-        onSuccess = {
-          if (it.isAuthorized()) {
-            onAuthorized(currentState().authorizationDialogState?.reason ?: AuthorizationReason.Default)
-          } else {
-            updateAuthorizationDialogState { state -> state?.copy(error = localizedString(R.string.status_unknown_err)) }
+    launch {
+      try {
+        updateAuthorizationDialogState { it?.copy(processing = true) }
+        val result = withContext(Dispatchers.IO) { authorizeUseCase(userName, password).await() }
+        updateAuthorizationDialogState { it?.copy(processing = false) }
+
+        // Success
+        if (result.isAuthorized()) {
+          onAuthorized(getAuthorizationDialogState()?.reason ?: AuthorizationReason.Default)
+        } else {
+          updateAuthorizationDialogState { state -> state?.copy(error = localizedString(R.string.status_unknown_err)) }
+        }
+      } catch (error: Exception) {
+        // Failure
+        if (error is AuthorizationException) {
+          updateAuthorizationDialogState { state ->
+            state?.copy(error = error.localizedErrorMessage)
           }
-        },
-        onError = { error ->
-          if (error is AuthorizationException) {
-            updateAuthorizationDialogState { state ->
-              state?.copy(error = error.localizedErrorMessage)
-            }
-          } else {
-            onError(error)
-          }
-        },
-      )
-      .disposeBySelf()
+        } else {
+          onError(error)
+        }
+      }
+    }
   }
 
   fun login(userName: String, password: String) {
-    loginUseCase(userName, password)
-      .attachSilent()
-      .doOnSubscribe { updateAuthorizationDialogState { it?.copy(processing = true) } }
-      .doOnTerminate { updateAuthorizationDialogState { it?.copy(processing = false) } }
-      .subscribeBy(
-        onSuccess = {
-          if (it.isAuthorized()) {
-            onAuthorized(currentState().authorizationDialogState?.reason ?: AuthorizationReason.Default)
-          } else {
-            updateAuthorizationDialogState { state -> state?.copy(error = localizedString(R.string.status_unknown_err)) }
-          }
-        },
-        onError = { error ->
-          if (error is AuthorizationException) {
-            updateAuthorizationDialogState { state ->
-              state?.copy(error = error.localizedErrorMessage)
-            }
-          } else {
-            onError(error)
-          }
+    launch {
+      try {
+        updateAuthorizationDialogState { it?.copy(processing = true) }
+        val result = withContext(Dispatchers.IO) { loginUseCase(userName, password).await() }
+        updateAuthorizationDialogState { it?.copy(processing = false) }
+
+        // Success
+        if (result.isAuthorized()) {
+          onAuthorized(getAuthorizationDialogState()?.reason ?: AuthorizationReason.Default)
+        } else {
+          updateAuthorizationDialogState { state -> state?.copy(error = localizedString(R.string.status_unknown_err)) }
         }
-      )
-      .disposeBySelf()
+      } catch (error: Exception) {
+        // Failure
+        if (error is AuthorizationException) {
+          updateAuthorizationDialogState { state ->
+            state?.copy(error = error.localizedErrorMessage)
+          }
+        } else {
+          onError(error)
+        }
+      }
+    }
   }
 
   fun closeAuthorizationDialog() {

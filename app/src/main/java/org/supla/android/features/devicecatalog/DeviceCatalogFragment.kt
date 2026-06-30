@@ -20,7 +20,6 @@ package org.supla.android.features.devicecatalog
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
-import android.widget.FrameLayout
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -30,7 +29,7 @@ import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.extensions.visibleIf
 import org.supla.android.features.webcontent.WebContentFragment
-import org.supla.android.navigator.MainNavigator
+import org.supla.android.main.MainComposeNavigator
 import javax.inject.Inject
 
 private const val JS_MOBILE_CLASS = "document.body.classList.add('mobile'); "
@@ -43,7 +42,7 @@ class DeviceCatalogFragment : WebContentFragment<DeviceCatalogViewState, DeviceC
   override val viewModel: DeviceCatalogViewModel by viewModels()
 
   @Inject
-  internal lateinit var navigator: MainNavigator
+  internal lateinit var navigator: MainComposeNavigator
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
