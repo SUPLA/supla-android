@@ -17,8 +17,16 @@ package org.supla.android.ui
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.content.Context
+import android.content.ContextWrapper
 import android.view.MenuItem
 import androidx.annotation.ColorRes
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import org.supla.android.R
 
 interface ToolbarTitleController {
@@ -36,11 +44,61 @@ interface ToolbarVisibilityController {
     val visible: Boolean,
     @param:ColorRes val toolbarColorRes: Int = if (visible) R.color.primary_container else R.color.background,
     @param:ColorRes val navigationBarColorRes: Int = R.color.surface,
-    val isLight: Boolean = visible.not(),
-    val shadowVisible: Boolean = true
+    val isLight: Boolean = visible.not()
   )
 }
 
 interface ToolbarItemsClickHandler {
   fun onMenuItemClick(menuItem: MenuItem): Boolean
+}
+
+@Composable
+fun ToolbarVisibility(
+  visible: Boolean,
+  toolbarColorRes: Int = if (visible) R.color.primary_container else R.color.background,
+  navigationBarColorRes: Int = R.color.surface,
+  isLight: Boolean = visible.not()
+) {
+  val controller = LocalContext.current.findVisibilityController()
+  val lifecycleOwner = LocalLifecycleOwner.current
+
+  DisposableEffect(Unit) {
+    val observer = LifecycleEventObserver { _, event ->
+      when (event) {
+        Lifecycle.Event.ON_START ->
+          controller?.setToolbarVisible(
+            ToolbarVisibilityController.ToolbarVisibility(
+              visible = visible,
+              toolbarColorRes = toolbarColorRes,
+              navigationBarColorRes = navigationBarColorRes,
+              isLight = isLight
+            )
+          )
+        Lifecycle.Event.ON_STOP ->
+          controller?.setToolbarVisible(
+            ToolbarVisibilityController.ToolbarVisibility(
+              visible = true,
+              isLight = true
+            )
+          )
+        else -> Unit
+      }
+    }
+    lifecycleOwner.lifecycle.addObserver(observer)
+    onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+  }
+}
+
+fun Context.findVisibilityController(): ToolbarVisibilityController? {
+  var context = this
+
+  while (context is ContextWrapper) {
+    if (context is ToolbarVisibilityController) {
+      return context
+    }
+
+    context = context.baseContext
+  }
+
+  return null
 }

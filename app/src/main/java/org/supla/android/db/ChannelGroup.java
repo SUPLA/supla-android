@@ -133,14 +133,18 @@ public class ChannelGroup extends ChannelBase {
 
   public ArrayList<Double> getColors() {
     return switch (getFunc()) {
-      case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING, SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING -> getRGBWValues(0);
+      case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING,
+              SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING ->
+          getRGBWValues(0);
       default -> null;
     };
   }
 
   public ArrayList<Double> getColorBrightness() {
     return switch (getFunc()) {
-      case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING, SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING -> getRGBWValues(1);
+      case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING,
+              SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING ->
+          getRGBWValues(1);
       default -> null;
     };
   }

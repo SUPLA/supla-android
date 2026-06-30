@@ -79,7 +79,7 @@ fun AddWizardSuccessScope.AddWizardSuccessView(deviceParameters: List<DevicePara
 
 private val previewScope = object : AddWizardSuccessScope {
   override fun onStepFinished(step: AddWizardScreen) {}
-  override fun onClose(step: AddWizardScreen) {}
+  override fun onClose() {}
   override fun onAgain() {}
 }
 

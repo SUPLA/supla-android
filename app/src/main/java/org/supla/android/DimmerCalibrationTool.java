@@ -35,7 +35,7 @@ import androidx.core.content.res.ResourcesCompat;
 import java.util.Timer;
 import java.util.TimerTask;
 import org.supla.android.lib.AndroidSuplaClientMessageHandler;
-import org.supla.android.navigator.MainNavigator;
+import org.supla.android.main.MainComposeNavigator;
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage;
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage.CallConfigResult;
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessageHandler;
@@ -65,9 +65,9 @@ public abstract class DimmerCalibrationTool
   private Timer delayTimer2 = null;
   private boolean settingsChanged;
 
-  protected final MainNavigator mainNavigator;
+  protected final MainComposeNavigator mainNavigator;
 
-  public DimmerCalibrationTool(ChannelDetailRGBW detailRGB, MainNavigator navigator) {
+  public DimmerCalibrationTool(ChannelDetailRGBW detailRGB, MainComposeNavigator navigator) {
     if (detailRGB == null || !(detailRGB.getContext() instanceof ContextWrapper)) {
       throw new IllegalArgumentException("The detailRGB pattern is invalid");
     }

@@ -19,8 +19,12 @@ package org.supla.android.features.details.detailbase.base
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import kotlinx.serialization.Serializable
 import org.supla.android.R
 import org.supla.android.core.ui.bundle
 import org.supla.android.features.details.containerdetail.general.ContainerGeneralDetailFragment
@@ -114,6 +118,7 @@ class StandardDetailPagerAdapter(
     }
 }
 
+@Serializable
 enum class DetailPage(val item: DetailBottomItem) {
   // Switches
   SWITCH(DetailBottomItem.GENERAL),
@@ -187,5 +192,28 @@ enum class DetailBottomItem(val menuId: Int, @param:DrawableRes val iconRes: Int
   LIST(R.id.bottom_item_list, R.drawable.ic_bottom_list, R.string.details_list),
   OCR(R.id.bottom_item_ocr, R.drawable.ic_bottom_ocr, R.string.toolbar_ocr),
   RGB(R.id.bottom_item_rgb, R.drawable.ic_bottom_rgb, R.string.toolbar_rgb),
-  DIMMER(R.id.bottom_item_dimmer, R.drawable.ic_bottom_dimmer, R.string.toolbar_dimmer)
+  DIMMER(R.id.bottom_item_dimmer, R.drawable.ic_bottom_dimmer, R.string.toolbar_dimmer);
+
+  @Composable
+  fun Icon(selected: Boolean) {
+    when (this) {
+      RGB ->
+        androidx.compose.material3.Icon(
+          painter = painterResource(if (selected) R.drawable.ic_bottom_rgb_selected else R.drawable.ic_bottom_rgb),
+          contentDescription = null,
+          tint = Color.Unspecified
+        )
+      DIMMER ->
+        androidx.compose.material3.Icon(
+          painter = painterResource(if (selected) R.drawable.ic_bottom_dimmer_selected else R.drawable.ic_bottom_dimmer),
+          contentDescription = null,
+          tint = Color.Unspecified
+        )
+      else ->
+        androidx.compose.material3.Icon(
+          painter = painterResource(iconRes),
+          contentDescription = null
+        )
+    }
+  }
 }

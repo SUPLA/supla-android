@@ -48,7 +48,7 @@ import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.DisconnectUseCase
 import org.supla.android.usecases.client.LoginUseCase
 
-class StatusViewModelTest : BaseViewModelTest<StatusViewModelState, StatusViewEvent, StatusViewModel>(
+class StatusViewModelTest : BaseViewModelTest<StatusViewState, StatusViewEvent, StatusViewModel>(
   MockSchedulers.MOCKK
 ) {
 
@@ -128,8 +128,8 @@ class StatusViewModelTest : BaseViewModelTest<StatusViewModelState, StatusViewEv
     assertThat(states)
       .extracting({ it.authorizationDialogState }, { it.viewType })
       .containsExactly(
-        tuple(state, StatusViewModelState.ViewType.CONNECTING),
-        tuple(state, StatusViewModelState.ViewType.ERROR)
+        tuple(state, StatusViewState.ViewType.CONNECTING),
+        tuple(state, StatusViewState.ViewType.ERROR)
       )
   }
 
@@ -150,14 +150,14 @@ class StatusViewModelTest : BaseViewModelTest<StatusViewModelState, StatusViewEv
     assertThat(states)
       .extracting({ it.authorizationDialogState }, { it.viewType })
       .containsExactly(
-        tuple(null, StatusViewModelState.ViewType.ERROR)
+        tuple(null, StatusViewState.ViewType.ERROR)
       )
   }
 
   @Test
   fun `should show initialization`() {
     // given
-    val state = StatusViewModelState(viewType = StatusViewModelState.ViewType.ERROR)
+    val state = StatusViewState(viewType = StatusViewState.ViewType.ERROR)
     viewModel.setState(state)
     every { suplaClientStateHolder.state() } returns Observable.just(SuplaClientState.Initialization)
 
@@ -168,8 +168,8 @@ class StatusViewModelTest : BaseViewModelTest<StatusViewModelState, StatusViewEv
     assertThat(events).isEmpty()
     assertThat(states).containsExactly(
       state,
-      StatusViewModelState(
-        viewType = StatusViewModelState.ViewType.CONNECTING,
+      StatusViewState(
+        viewType = StatusViewState.ViewType.CONNECTING,
         viewState = StatusViewState(stateText = StatusViewStateText.INITIALIZING)
       )
     )
@@ -186,8 +186,8 @@ class StatusViewModelTest : BaseViewModelTest<StatusViewModelState, StatusViewEv
     // then
     assertThat(events).isEmpty()
     assertThat(states).containsExactly(
-      StatusViewModelState(
-        viewType = StatusViewModelState.ViewType.CONNECTING,
+      StatusViewState(
+        viewType = StatusViewState.ViewType.CONNECTING,
         viewState = StatusViewState(stateText = StatusViewStateText.CONNECTING)
       )
     )
@@ -204,8 +204,8 @@ class StatusViewModelTest : BaseViewModelTest<StatusViewModelState, StatusViewEv
     // then
     assertThat(events).isEmpty()
     assertThat(states).containsExactly(
-      StatusViewModelState(
-        viewType = StatusViewModelState.ViewType.CONNECTING,
+      StatusViewState(
+        viewType = StatusViewState.ViewType.CONNECTING,
         viewState = StatusViewState(stateText = StatusViewStateText.DISCONNECTING)
       )
     )

@@ -117,7 +117,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   @Test
   fun `should load groups`() {
     // given
-    val list = listOf(mockk<ListItem.ChannelItem>())
+    val list = listOf(mockk<ListItem.DefaultItem>())
     every { createProfileGroupsListUseCase.invoke() } returns Observable.just(list)
 
     // when
@@ -150,7 +150,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     // given
     val location = mockk<LocationEntity>()
     every { toggleLocationUseCase(location, CollapsedFlag.GROUP) } returns Completable.complete()
-    val list = listOf(mockk<ListItem.ChannelItem>())
+    val list = listOf(mockk<ListItem.DefaultItem>())
     every { createProfileGroupsListUseCase() } returns Observable.just(list)
 
     // when
@@ -445,7 +445,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   @Test
   fun `should reload list on update`() {
     // given
-    val list = listOf(mockk<ListItem.ChannelItem>())
+    val list = listOf(mockk<ListItem.DefaultItem>())
     every { createProfileGroupsListUseCase.invoke() } returns Observable.just(list)
 
     // when
@@ -480,7 +480,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     every { group.remoteId } returns groupId
     every { findGroupByRemoteIdUseCase(groupId) } returns Maybe.just(group)
 
-    val list = listOf(mockk<ListItem.ChannelItem>())
+    val list = listOf(mockk<ListItem.DefaultItem>())
     every { list[0].channelBase } returns group
     every { list[0].channelBase = group } answers { }
     every { createProfileGroupsListUseCase() } returns Observable.just(list)

@@ -33,7 +33,7 @@ import org.supla.android.core.networking.suplaclient.SuplaClientState.Locked;
 import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder;
 
 @SuppressLint("Registered")
-public abstract class WizardActivity extends NavigationActivity {
+public abstract class WizardActivity extends NavigationActivity implements View.OnClickListener {
 
   private Button mBtnNextRightPart;
   private Button mBtnNextMiddlePart;
@@ -194,8 +194,6 @@ public abstract class WizardActivity extends NavigationActivity {
 
   @Override
   public void onClick(View v) {
-    super.onClick(v);
-
     if (v == mBtnNextLeftPart || v == mBtnNextMiddlePart || v == mBtnNextRightPart) {
       onBtnNextClick();
     }

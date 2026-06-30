@@ -17,7 +17,9 @@ package org.supla.android.extensions
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.view.View
@@ -69,4 +71,18 @@ fun Context.showKeyboard(view: View) {
 fun Context.hideKeyboard(view: View) {
   val inputMethodManager = getSystemService(InputMethodManager::class.java)
   inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+}
+
+fun Context.findActivity(): Activity? {
+  var context = this
+
+  while (context is ContextWrapper) {
+    if (context is Activity) {
+      return context
+    }
+
+    context = context.baseContext
+  }
+
+  return null
 }

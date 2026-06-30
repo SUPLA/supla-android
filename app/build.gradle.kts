@@ -158,6 +158,7 @@ dependencies {
   implementation(libs.androidx.compose.material.icons)
   implementation(libs.androidx.compose.material3)
   implementation(libs.androidx.compose.material3.adaptive)
+  implementation(libs.androidx.compose.material3.adaptive.navigation.suite)
   implementation(libs.androidx.compose.constraintLayout)
   implementation(libs.androidx.car.app)
   implementation(libs.androidx.glance.widget)
@@ -167,6 +168,7 @@ dependencies {
   implementation(libs.androidx.navigation3.runtime)
   implementation(libs.androidx.navigation3.ui)
   implementation(libs.androidx.navigation3.viewmodel)
+  implementation(libs.androidx.biometric.compose)
   implementation(libs.hilt.navigation.compose)
 
   implementation(libs.rxjava)
@@ -184,7 +186,8 @@ dependencies {
   implementation(libs.jsoup)
   implementation(libs.coil)
   implementation(libs.guava)
-  implementation(libs.reorderable)
+  //implementation(libs.reorderable)
+  implementation(files("libs/reorderable-release.aar"))
   implementation(libs.google.barcode.scanner)
   implementation(libs.timber)
 

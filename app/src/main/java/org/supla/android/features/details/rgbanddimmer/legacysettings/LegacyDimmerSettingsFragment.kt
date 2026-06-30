@@ -32,7 +32,7 @@ import org.supla.android.core.ui.UpHandler
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.databinding.FragmentLegacyDetailBinding
-import org.supla.android.navigator.MainNavigator
+import org.supla.android.main.MainComposeNavigator
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 import javax.inject.Inject
 
@@ -45,7 +45,7 @@ class LegacyDimmerSettingsFragment :
   private lateinit var detailView: ChannelDetailRGBW
 
   @Inject
-  lateinit var navigator: MainNavigator
+  lateinit var navigator: MainComposeNavigator
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

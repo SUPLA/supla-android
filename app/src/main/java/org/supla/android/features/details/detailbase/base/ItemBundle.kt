@@ -23,6 +23,7 @@ import org.supla.android.data.source.runtime.ItemType
 import org.supla.core.shared.data.model.general.SuplaFunction
 import java.io.Serializable
 
+@kotlinx.serialization.Serializable
 data class ItemBundle(
   val remoteId: Int,
   val deviceId: Int,

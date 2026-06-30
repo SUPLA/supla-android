@@ -2,18 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:id="@+id/main_nav_graph"
-  app:startDestination="@id/status_fragment">
-
-  <!-- App entry point -->
-  <fragment
-    android:id="@+id/status_fragment"
-    android:name="org.supla.android.features.status.StatusFragment" />
-
-  <!-- Main view -->
-  <fragment
-    android:id="@+id/main_fragment"
-    android:name="org.supla.android.features.main.MainFragment"
-    android:label="@string/menubar_title" />
+  app:startDestination="@id/device_catalog_fragment">
 
   <!-- Standard detail fragment -->
   <fragment
@@ -48,78 +37,9 @@
     android:label="@string/menubar_appsettings" />
 
   <fragment
-    android:id="@+id/location_ordering_fragment"
-    android:name="org.supla.android.features.locationreorder.LocationReorderFragment"
-    android:label="@string/location_ordering" />
-
-  <fragment
-    android:id="@+id/notifications_log_fragment"
-    android:name="org.supla.android.features.notificationslog.NotificationsLogFragment"
-    android:label="@string/menu_notifications" />
-
-  <fragment
     android:id="@+id/device_catalog_fragment"
     android:name="org.supla.android.features.devicecatalog.DeviceCatalogFragment"
     android:label="@string/menu_device_catalog" />
-
-  <fragment
-    android:id="@+id/pin_setup_fragment"
-    android:name="org.supla.android.features.pinsetup.PinSetupFragment"
-    android:label="@string/pin_setup_title" />
-
-  <fragment
-    android:id="@+id/lock_screen_fragment"
-    android:name="org.supla.android.features.lockscreen.LockScreenFragment"
-    android:label="@string/pin_setup_title" />
-
-  <fragment
-    android:id="@+id/about_fragment"
-    android:name="org.supla.android.features.about.AboutFragment"
-    android:label="@string/menubar_title" />
-
-  <fragment
-    android:id="@+id/developer_info_fragment"
-    android:name="org.supla.android.features.developerinfo.DeveloperInfoFragment"
-    android:label="@string/developer_option" />
-
-  <fragment
-    android:id="@+id/android_auto_items_fragment"
-    android:name="org.supla.android.features.androidauto.AndroidAutoItemsFragment"
-    android:label="@string/settings_android_auto_label" />
-
-  <fragment
-    android:id="@+id/android_auto_add_item_fragment"
-    android:name="org.supla.android.features.androidauto.add.AddAndroidAutoItemFragment"
-    android:label="@string/settings_android_auto_label" />
-
-  <fragment
-    android:id="@+id/add_wizard_fragment"
-    android:name="org.supla.android.features.addwizard.AddWizardFragment"
-    android:label="@string/app_name_lowercased" />
-
-  <fragment
-    android:id="@+id/nfc_tag_add_fragment"
-    android:name="org.supla.android.features.nfc.add.AddNfcTagFragment"
-    android:label="@string/menu_nfc" />
-
-  <fragment
-    android:id="@+id/nfc_tag_list_fragment"
-    android:name="org.supla.android.features.nfc.list.NfcTagListFragment"
-    android:label="@string/nfc_list_title" />
-
-  <fragment
-    android:id="@+id/nfc_tag_edit_fragment"
-    android:name="org.supla.android.features.nfc.edit.EditNfcTagFragment"
-    android:label="@string/edit_nfc_tag_title" />
-
-  <fragment
-    android:id="@+id/nfc_tag_detail_fragment"
-    android:name="org.supla.android.features.nfc.detail.NfcTagDetailFragment" />
-
-  <fragment
-    android:id="@+id/nfc_tag_lock_fragment"
-    android:name="org.supla.android.features.nfc.lock.LockTagFragment"
-    android:label="@string/nfc_lock_tag_label" />
 
   <!-- Legacy fragment -->
   <fragment

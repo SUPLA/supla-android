@@ -26,7 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import org.supla.android.R
-import org.supla.android.data.source.runtime.ItemType
+import org.supla.android.lib.actions.SubjectType
 import org.supla.android.ui.lists.ListOnlineState
 import org.supla.android.ui.views.list.components.ListItemRect
 import org.supla.android.ui.views.list.components.RectColors
@@ -36,23 +36,29 @@ enum class StatusSide { START, END }
 sealed interface ListItemStatus {
   val isGroup: Boolean
   val online: Boolean
-  val itemType: ItemType
+  val type: SubjectType
 
   data class Channel(
     val onlineState: ListOnlineState
   ) : ListItemStatus {
     override val isGroup: Boolean = false
     override val online: Boolean = onlineState.online
-    override val itemType: ItemType = ItemType.CHANNEL
+    override val type: SubjectType = SubjectType.CHANNEL
   }
 
   data class Group(
     val onlinePercentage: Float,
     val activePercentage: Float
-  ): ListItemStatus {
+  ) : ListItemStatus {
     override val isGroup: Boolean = true
     override val online: Boolean = onlinePercentage > 0
-    override val itemType: ItemType = ItemType.GROUP
+    override val type: SubjectType = SubjectType.GROUP
+  }
+
+  data object Scene : ListItemStatus {
+    override val isGroup: Boolean = false
+    override val online: Boolean = true
+    override val type: SubjectType = SubjectType.SCENE
   }
 }
 
@@ -67,33 +73,34 @@ class StatusIndicator(
   @Composable
   fun View(side: StatusSide, modifier: Modifier = Modifier) {
     when (val type = listItemStatus) {
-      is ListItemStatus.Channel -> ChannelStatusView(onlineState = type.onlineState, side, modifier)
+      is ListItemStatus.Channel -> DotStatusView(onlineState = type.onlineState, side, modifier)
       is ListItemStatus.Group ->
-        GroupStatusView(
+        RectStatusView(
           onlinePercentage = type.onlinePercentage,
           activePercentage = type.activePercentage,
           side = side,
           modifier = modifier
         )
+      ListItemStatus.Scene -> DotStatusView(onlineState = ListOnlineState.ONLINE, side, modifier)
     }
   }
 
   @Composable
-  private fun ChannelStatusView(onlineState: ListOnlineState, side: StatusSide, modifier: Modifier) {
+  private fun DotStatusView(onlineState: ListOnlineState, side: StatusSide, modifier: Modifier) {
     ListItemDot(
       onlineState = onlineState,
-      withButton = side == StatusSide.START && hasLeftButton || side == StatusSide.END && hasRightButton,
+      withButton = (side == StatusSide.START && hasLeftButton) || (side == StatusSide.END && hasRightButton),
       paddingValues =
-        when (side) {
-          StatusSide.START -> PaddingValues(start = dimensionResource(id = R.dimen.list_horizontal_spacing))
-          StatusSide.END -> PaddingValues(end = dimensionResource(id = R.dimen.list_horizontal_spacing))
-        },
+      when (side) {
+        StatusSide.START -> PaddingValues(start = dimensionResource(id = R.dimen.list_horizontal_spacing))
+        StatusSide.END -> PaddingValues(end = dimensionResource(id = R.dimen.list_horizontal_spacing))
+      },
       modifier = modifier
     )
   }
 
   @Composable
-  private fun GroupStatusView(onlinePercentage: Float, activePercentage: Float, side: StatusSide, modifier: Modifier) {
+  private fun RectStatusView(onlinePercentage: Float, activePercentage: Float, side: StatusSide, modifier: Modifier) {
     when (side) {
       StatusSide.START ->
         if (hasLeftButton) {
@@ -110,7 +117,6 @@ class StatusIndicator(
               .padding(start = dimensionResource(R.dimen.list_horizontal_spacing))
           )
         }
-
       StatusSide.END ->
         Row(
           modifier = modifier.padding(end = dimensionResource(id = R.dimen.list_horizontal_spacing))

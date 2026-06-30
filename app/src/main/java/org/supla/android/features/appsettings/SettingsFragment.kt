@@ -17,10 +17,7 @@ package org.supla.android.features.appsettings
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
@@ -30,9 +27,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.databinding.FragmentSettingsBinding
-import org.supla.android.features.lockscreen.LockScreenFragment
-import org.supla.android.features.pinsetup.PinSetupFragment
-import org.supla.android.navigator.MainNavigator
+import org.supla.android.main.MainComposeNavigator
+import org.supla.android.main.MainRoute
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -42,7 +38,7 @@ class SettingsFragment : BaseFragment<SettingsViewState, SettingsViewEvent>(R.la
   private val binding by viewBinding(FragmentSettingsBinding::bind)
 
   @Inject
-  lateinit var navigator: MainNavigator
+  lateinit var navigator: MainComposeNavigator
 
   @Inject
   lateinit var adapter: SettingsListAdapter
@@ -63,23 +59,12 @@ class SettingsFragment : BaseFragment<SettingsViewState, SettingsViewEvent>(R.la
 
   override fun handleEvents(event: SettingsViewEvent) {
     when (event) {
-      SettingsViewEvent.NavigateToLocalizationsOrdering ->
-        navigator.navigateTo(R.id.location_ordering_fragment)
-      SettingsViewEvent.NavigateToAndroidAuto ->
-        navigator.navigateTo(R.id.android_auto_items_fragment)
-      SettingsViewEvent.NavigateToNfc ->
-        navigator.navigateTo(R.id.nfc_tag_list_fragment)
-      is SettingsViewEvent.NavigateToPinSetup ->
-        navigator.navigateTo(R.id.pin_setup_fragment, PinSetupFragment.bundle(event.lockScreenScope))
-      is SettingsViewEvent.NavigateToPinVerification ->
-        navigator.navigateTo(R.id.lock_screen_fragment, LockScreenFragment.bundle(event.verificationAction))
-      SettingsViewEvent.NavigateToSettings -> {
-        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-          data = Uri.fromParts("package", requireActivity().packageName, null)
-          addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-          startActivity(this)
-        }
-      }
+      SettingsViewEvent.NavigateToLocalizationsOrdering -> navigator.navigateTo(MainRoute.LocationReorder)
+      SettingsViewEvent.NavigateToAndroidAuto -> navigator.navigateTo(MainRoute.AndroidAutoItems)
+      SettingsViewEvent.NavigateToNfc -> navigator.navigateTo(MainRoute.NfcTagList)
+      is SettingsViewEvent.NavigateToPinSetup -> navigator.navigateTo(MainRoute.PinSetup(event.lockScreenScope))
+      is SettingsViewEvent.NavigateToPinVerification -> navigator.navigateTo(MainRoute.Lock(event.verificationAction))
+      SettingsViewEvent.NavigateToSettings -> navigator.navigateToSystemSettings()
     }
   }
 

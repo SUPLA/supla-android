@@ -27,6 +27,7 @@ import org.supla.android.usecases.list.GroupToListItemMapper
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.usecase.GetCaptionUseCase
+import org.supla.core.shared.usecase.GetChannelActionStringUseCase
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import javax.inject.Inject
 import javax.inject.Named
@@ -36,6 +37,7 @@ import javax.inject.Singleton
 class GroupToHeatpolThermostatUpdateEventMapper @Inject constructor(
   override val getCaptionUseCase: GetCaptionUseCase,
   override val getChannelIconUseCase: GetChannelIconUseCase,
+  override val getChannelActionStringUseCase: GetChannelActionStringUseCase,
   override val getGroupActivePercentageUseCase: GetGroupActivePercentageUseCase,
   @param:Named(FORMATTER_THERMOMETER) override val thermometerValueFormatter: ValueFormatter
 ) :
@@ -49,6 +51,7 @@ class GroupToHeatpolThermostatUpdateEventMapper @Inject constructor(
       throw IllegalArgumentException("Expected Channel but got $item")
     }
 
-    return toHeatpolThermostatItem(group).toSlideableListItemData()
+    // return toHeatpolThermostatItem(group).toSlideableListItemData()
+    throw IllegalStateException("Not implemented")
   }
 }

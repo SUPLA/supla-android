@@ -25,14 +25,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.core.ui.BaseComposeFragment
 import org.supla.android.core.ui.BaseViewModel
-import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.captionchangedialog.CaptionChangeViewModel
-import org.supla.android.features.captionchangedialog.View
 import org.supla.android.features.details.thermostatdetail.ThermostatDetailFragment
 import org.supla.android.features.statedialog.StateDialogViewModel
-import org.supla.android.features.statedialog.View
-import org.supla.android.features.statedialog.handleStateDialogViewEvent
 import org.supla.android.navigator.MainNavigator
 import org.supla.android.ui.dialogs.AlertDialog
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
@@ -63,8 +59,8 @@ class ThermostatSlavesListFragment : BaseComposeFragment<ThermostatSlavesListVie
           onPositiveClick = viewModel::closeMessage
         )
       }
-      stateDialogViewModel.View()
-      captionChangeViewModel.View()
+      // stateDialogViewModel.View()
+      // captionChangeViewModel.View()
 
       viewModel.View(
         state = viewState.viewState,
@@ -96,10 +92,6 @@ class ThermostatSlavesListFragment : BaseComposeFragment<ThermostatSlavesListVie
       is ThermostatSlavesListViewEvent.ShowInfo ->
         stateDialogViewModel.showDialog(event.data.channelId)
     }
-  }
-
-  override fun handleHelperEvents(event: ViewEvent) {
-    handleStateDialogViewEvent(event)
   }
 
   override fun onSuplaMessage(message: SuplaClientMessage) {

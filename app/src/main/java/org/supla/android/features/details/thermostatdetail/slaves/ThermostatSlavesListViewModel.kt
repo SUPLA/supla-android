@@ -41,6 +41,7 @@ import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.extensions.forTrue
+import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetChannelIssuesForSlavesUseCase
 import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
@@ -91,6 +92,7 @@ class ThermostatSlavesListViewModel @Inject constructor(
     sendEvent(
       ThermostatSlavesListViewEvent.OpenDetails(
         bundle = ItemBundle(slave.channelId, slave.deviceId, slave.profileId, ItemType.CHANNEL, slave.function),
+        title = slave.caption,
         pages = listOf(DetailPage.THERMOSTAT, DetailPage.THERMOSTAT_HISTORY)
       )
     )
@@ -166,7 +168,7 @@ class ThermostatSlavesListViewModel @Inject constructor(
 sealed interface ThermostatSlavesListViewEvent : ViewEvent {
   data class ShowInfo(val data: ThermostatData) : ThermostatSlavesListViewEvent
   data class ChangeCaption(val data: ThermostatData) : ThermostatSlavesListViewEvent
-  data class OpenDetails(val bundle: ItemBundle, val pages: List<DetailPage>) : ThermostatSlavesListViewEvent
+  data class OpenDetails(val bundle: ItemBundle, val title: LocalizedString, val pages: List<DetailPage>) : ThermostatSlavesListViewEvent
 }
 
 data class ThermostatSlavesListViewModelState(

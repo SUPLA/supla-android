@@ -38,6 +38,8 @@ class SceneRepository @Inject constructor(
 
   suspend fun findByRemoteIdKtx(remoteId: Int) = sceneDao.findByRemoteIdKtx(remoteId)
 
+  fun findSceneData(remoteId: Int) = sceneDao.findSceneData(remoteId)
+
   suspend fun insert(scene: SceneEntity) = sceneDao.insert(scene)
 
   suspend fun update(scene: SceneEntity) = sceneDao.update(scene)
@@ -47,6 +49,8 @@ class SceneRepository @Inject constructor(
   fun findList() = sceneDao.findList()
 
   fun update(scenes: List<SceneEntity>) = sceneDao.update(scenes)
+
+  suspend fun updatePosition(remoteId: Int, position: Int) = sceneDao.updatePosition(remoteId, position)
 
   suspend fun setScenesVisible(change: VisibilityChange): Boolean =
     sceneDao.setScenesVisible(change.newVisibility, change.applyForVisibility) > 0

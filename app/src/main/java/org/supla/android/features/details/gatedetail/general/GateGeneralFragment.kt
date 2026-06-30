@@ -24,13 +24,9 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.core.ui.BaseComposeFragment
 import org.supla.android.core.ui.BaseViewModel
-import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.captionchangedialog.CaptionChangeViewModel
-import org.supla.android.features.captionchangedialog.View
 import org.supla.android.features.statedialog.StateDialogViewModel
-import org.supla.android.features.statedialog.View
-import org.supla.android.features.statedialog.handleStateDialogViewEvent
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 
 @AndroidEntryPoint
@@ -55,8 +51,8 @@ class GateGeneralFragment : BaseComposeFragment<GateGeneralModelState, GateGener
         onInfoClick = { stateDialogViewModel.showDialog(it.channelId) },
         onCaptionLongPress = { captionChangeViewModel.showChannelDialog(it.channelId, it.profileId, it.userCaption) }
       )
-      stateDialogViewModel.View()
-      captionChangeViewModel.View()
+      // stateDialogViewModel.View()
+      // captionChangeViewModel.View()
     }
   }
 
@@ -64,9 +60,5 @@ class GateGeneralFragment : BaseComposeFragment<GateGeneralModelState, GateGener
 
   override fun onSuplaMessage(message: SuplaClientMessage) {
     (message as? SuplaClientMessage.ChannelState)?.let { stateDialogViewModel.updateStateDialog(it.channelState) }
-  }
-
-  override fun handleHelperEvents(event: ViewEvent) {
-    handleStateDialogViewEvent(event)
   }
 }

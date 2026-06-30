@@ -24,13 +24,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.os.bundleOf
 import androidx.core.view.isEmpty
 import androidx.fragment.app.viewModels
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.ChannelDetailDigiglass
-import org.supla.android.ChannelDetailRGBW
 import org.supla.android.ChannelDetailThermostatHP
 import org.supla.android.R
 import org.supla.android.core.ui.BaseFragment
@@ -38,7 +36,7 @@ import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.databinding.FragmentLegacyDetailBinding
 import org.supla.android.db.ChannelBase
 import org.supla.android.listview.DetailLayout
-import org.supla.android.navigator.MainNavigator
+import org.supla.android.main.MainComposeNavigator
 import org.supla.android.ui.animations.DEFAULT_ANIMATION_DURATION
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
@@ -62,7 +60,7 @@ class LegacyDetailFragment : BaseFragment<LegacyDetailViewState, LegacyDetailVie
   private val remoteId: Int by lazy { requireArguments().getInt(ARG_REMOTE_ID) }
 
   @Inject
-  lateinit var navigator: MainNavigator
+  lateinit var navigator: MainComposeNavigator
 
   private lateinit var detailView: DetailLayout
 

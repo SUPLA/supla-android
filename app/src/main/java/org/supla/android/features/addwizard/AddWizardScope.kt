@@ -21,5 +21,5 @@ import org.supla.android.features.addwizard.model.AddWizardScreen
 
 interface AddWizardScope {
   fun onStepFinished(step: AddWizardScreen)
-  fun onClose(step: AddWizardScreen)
+  fun onClose()
 }

@@ -30,7 +30,7 @@ import org.supla.android.usecases.location.ToggleLocationUseCase
 import org.supla.android.usecases.profile.CloudUrl
 import org.supla.android.usecases.profile.LoadActiveProfileUrlUseCase
 import org.supla.android.usecases.scene.CreateProfileScenesListUseCase
-import org.supla.android.usecases.scene.UpdateSceneOrderUseCase
+import org.supla.android.usecases.scene.ReorderScenesUseCase
 
 @RunWith(MockitoJUnitRunner::class)
 class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListViewEvent, SceneListViewModel>() {
@@ -42,7 +42,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
   private lateinit var createProfileScenesListUseCase: CreateProfileScenesListUseCase
 
   @Mock
-  private lateinit var updateSceneOrderUseCase: UpdateSceneOrderUseCase
+  private lateinit var reorderScenesUseCase: ReorderScenesUseCase
 
   @Mock
   private lateinit var updateEventsManager: UpdateEventsManager
@@ -62,7 +62,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
   override val viewModel: SceneListViewModel by lazy {
     SceneListViewModel(
       createProfileScenesListUseCase,
-      updateSceneOrderUseCase,
+      reorderScenesUseCase,
       toggleLocationUseCase,
       loadActiveProfileUrlUseCase,
       updateEventsManager,
@@ -102,7 +102,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
   fun `should update scenes order`() {
     // given
     val scenes: List<SceneDataEntity> = listOf(mockk(), mockk(), mockk())
-    whenever(updateSceneOrderUseCase.invoke(scenes)).thenReturn(Completable.complete())
+    whenever(reorderScenesUseCase.invoke(scenes)).thenReturn(Completable.complete())
 
     // when
     viewModel.onSceneOrderUpdate(scenes)
@@ -111,9 +111,9 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
     Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).isEmpty()
 
-    verify(updateSceneOrderUseCase).invoke(scenes)
-    verifyNoMoreInteractions(updateSceneOrderUseCase)
-    verifyNoInteractionsExcept(updateSceneOrderUseCase)
+    verify(reorderScenesUseCase).invoke(scenes)
+    verifyNoMoreInteractions(reorderScenesUseCase)
+    verifyNoInteractionsExcept(reorderScenesUseCase)
   }
 
   @Test
@@ -191,7 +191,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
     val allDependencies = listOf(
       toggleLocationUseCase,
       createProfileScenesListUseCase,
-      updateSceneOrderUseCase
+      reorderScenesUseCase
     )
     for (dependency in allDependencies) {
       if (!except.contains(dependency)) {

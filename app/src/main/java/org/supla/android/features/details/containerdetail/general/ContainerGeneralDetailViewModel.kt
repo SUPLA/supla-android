@@ -17,12 +17,16 @@ package org.supla.android.features.details.containerdetail.general
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Maybe
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.supla.android.R
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.shared.shareable
 import org.supla.android.core.storage.ApplicationPreferences
+import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.ProfileRepository
@@ -45,7 +49,7 @@ import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
-import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModel
+import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModelScope
 import org.supla.android.ui.lists.sensordata.RelatedChannelData
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
@@ -77,18 +81,15 @@ class ContainerGeneralDetailViewModel @Inject constructor(
   private val preferences: ApplicationPreferences,
   override val updateEventsManager: UpdateEventsManager,
   override val schedulers: SuplaSchedulers,
-  suplaClientProvider: SuplaClientProvider,
-  profileRepository: ProfileRepository,
-  authorizeUseCase: AuthorizeUseCase,
-  loginUseCase: LoginUseCase
-) : BaseAuthorizationViewModel<ContainerGeneralDetailViewModeState, ContainerGeneralDetailViewEvent>(
-  suplaClientProvider,
-  profileRepository,
-  loginUseCase,
-  authorizeUseCase,
+  override val suplaClientProvider: SuplaClientProvider,
+  override val profileRepository: ProfileRepository,
+  override val authorizeUseCase: AuthorizeUseCase,
+  override val loginUseCase: LoginUseCase
+) : BaseViewModel<ContainerGeneralDetailViewModeState, ContainerGeneralDetailViewEvent>(
   ContainerGeneralDetailViewModeState(),
   schedulers
 ),
+  BaseAuthorizationViewModelScope,
   ContainerGeneralDetailViewScope,
   ChannelUpdatesObserver {
 
@@ -96,12 +97,19 @@ class ContainerGeneralDetailViewModel @Inject constructor(
     updateState { it.copy(authorizationDialogState = updater(it.authorizationDialogState)) }
   }
 
+  override fun getAuthorizationDialogState(): AuthorizationDialogState? =
+    currentState().authorizationDialogState
+
   override fun onAuthorized(reason: AuthorizationReason) {
     closeAuthorizationDialog()
 
     if (reason is MuteSound) {
       muteAlarmSound()
     }
+  }
+
+  override fun launch(launcher: suspend CoroutineScope.() -> Unit) {
+    viewModelScope.launch { launcher() }
   }
 
   override fun onMuteClick() {

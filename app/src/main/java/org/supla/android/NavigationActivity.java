@@ -24,56 +24,29 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 import androidx.core.content.res.ResourcesCompat;
 import dagger.hilt.android.AndroidEntryPoint;
-import javax.inject.Inject;
-import org.supla.android.profile.ProfileChooser;
-import org.supla.android.usecases.profile.ActivateProfileUseCase;
-import org.supla.android.usecases.profile.ReadAllProfilesUseCase;
 
 @SuppressLint("registered")
 @AndroidEntryPoint
-public class NavigationActivity extends BaseActivity
-    implements View.OnClickListener, SuperuserAuthorizationDialog.OnAuthorizarionResultListener {
+public class NavigationActivity extends BaseActivity {
 
   public static final String INTENT_SENDER = "sender";
   public static final String INTENT_SENDER_MAIN = "main";
 
-  @Inject ActivateProfileUseCase activateProfileUseCase;
-  @Inject ReadAllProfilesUseCase readAllProfilesUseCase;
   private RelativeLayout RootLayout;
   private RelativeLayout ContentLayout;
-  private RelativeLayout MenuBarLayout;
   private ViewGroup Content;
-  private Button MenuButton;
-  private Button ProfileButton;
-  private SuperuserAuthorizationDialog mAuthDialog;
 
-  private static void showActivity(Activity sender, Class<?> cls) {
-
-    Intent i = new Intent(sender.getBaseContext(), cls);
+  public static void showMain(Activity sender) {
+    Intent i = new Intent(sender.getBaseContext(), org.supla.android.main.MainActivity.class);
     i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-    i.putExtra(INTENT_SENDER, sender instanceof MainActivity ? INTENT_SENDER_MAIN : "");
+    i.putExtra(INTENT_SENDER, "");
 
     sender.startActivity(i);
 
     sender.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-  }
-
-  public static void showMain(Activity sender) {
-    showActivity(sender, MainActivity.class);
-  }
-
-  public static void showProfile(Activity sender) {
-    showActivity(sender, org.supla.android.cfg.CfgActivity.class);
-  }
-
-  @Override
-  protected void onResume() {
-    super.onResume();
-    getMenuBarLayout();
   }
 
   @Override
@@ -98,27 +71,6 @@ public class NavigationActivity extends BaseActivity
   protected View Inflate(int resID, ViewGroup root) {
     LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
     return inflater == null ? null : inflater.inflate(resID, root);
-  }
-
-  private RelativeLayout getMenuBarLayout() {
-
-    if (MenuBarLayout == null) {
-
-      MenuBarLayout = (RelativeLayout) Inflate(R.layout.menubar, null);
-      MenuBarLayout.setVisibility(View.GONE);
-
-      getRootLayout().addView(MenuBarLayout);
-
-      MenuButton = findViewById(R.id.menubutton);
-      MenuButton.setVisibility(View.GONE);
-      MenuButton.setOnClickListener(this);
-
-      ProfileButton = findViewById(R.id.profilebutton);
-      ProfileButton.setVisibility(View.GONE);
-      ProfileButton.setOnClickListener(this);
-    }
-
-    return MenuBarLayout;
   }
 
   protected RelativeLayout getContentLayout() {
@@ -150,54 +102,4 @@ public class NavigationActivity extends BaseActivity
 
     Content = (ViewGroup) Inflate(layoutResID, getContentLayout());
   }
-
-  public void showZWaveConfigurationWizard() {
-    showActivity(this, ZWaveConfigurationWizardActivity.class);
-  }
-
-  protected void showProfileSelector() {
-    ProfileChooser profileChooser =
-        new ProfileChooser(this, activateProfileUseCase, readAllProfilesUseCase);
-    profileChooser.show();
-  }
-
-  @Override
-  public void onClick(View v) {
-    if (v == MenuButton && MenuButton.getTag().equals(1)) {
-      getOnBackPressedDispatcher().onBackPressed();
-      return;
-    }
-
-    if (v == ProfileButton) {
-      showProfileSelector();
-    }
-  }
-
-  public void SuperUserAuthorize(int sourceBtnId) {
-    if (mAuthDialog != null) {
-      mAuthDialog.close();
-      mAuthDialog = null;
-    }
-
-    mAuthDialog = new SuperuserAuthorizationDialog(this);
-    mAuthDialog.setObject(sourceBtnId);
-    mAuthDialog.setOnAuthorizarionResultListener(this);
-    mAuthDialog.showIfNeeded();
-  }
-
-  @Override
-  public void onSuperuserOnAuthorizarionResult(
-      SuperuserAuthorizationDialog dialog, boolean Success, int Code) {
-    if (Success
-        && dialog != null
-        && dialog == mAuthDialog
-        && dialog.getObject().equals(MenuItemsLayout.BTN_Z_WAVE)) {
-      mAuthDialog.close();
-      mAuthDialog = null;
-      showZWaveConfigurationWizard();
-    }
-  }
-
-  @Override
-  public void authorizationCanceled() {}
 }

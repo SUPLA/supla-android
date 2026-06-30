@@ -24,13 +24,9 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.core.ui.BaseComposeFragment
 import org.supla.android.core.ui.BaseViewModel
-import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.captionchangedialog.CaptionChangeViewModel
-import org.supla.android.features.captionchangedialog.View
 import org.supla.android.features.statedialog.StateDialogViewModel
-import org.supla.android.features.statedialog.View
-import org.supla.android.features.statedialog.handleStateDialogViewEvent
 import org.supla.android.ui.dialogs.AuthorizationDialog
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 
@@ -58,8 +54,8 @@ class ContainerGeneralDetailFragment : BaseComposeFragment<ContainerGeneralDetai
         showCaptionChangeDialog = captionChangeViewModel::showChannelDialog
       )
 
-      stateDialogViewModel.View()
-      captionChangeViewModel.View()
+      // stateDialogViewModel.View()
+      // captionChangeViewModel.View()
 
       viewState.authorizationDialogState?.let {
         viewModel.AuthorizationDialog(state = it)
@@ -77,9 +73,5 @@ class ContainerGeneralDetailFragment : BaseComposeFragment<ContainerGeneralDetai
   }
 
   override fun handleEvents(event: ContainerGeneralDetailViewEvent) {
-  }
-
-  override fun handleHelperEvents(event: ViewEvent) {
-    handleStateDialogViewEvent(event)
   }
 }

@@ -18,209 +18,236 @@ package org.supla.android.ui.lists
  */
 
 import androidx.annotation.DrawableRes
-import org.supla.android.data.model.general.ChannelDataBase
+import org.supla.android.R
 import org.supla.android.data.source.local.entity.LocationEntity
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.SceneDataEntity
 import org.supla.android.images.ImageId
-import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.ui.views.list.ListItemStatus
+import org.supla.android.usecases.icon.GetSceneIconUseCase
+import org.supla.android.usecases.location.CollapsedFlag
+import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.data.model.lists.ListItemIssues
 import org.supla.core.shared.infrastructure.LocalizedString
-import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
+import org.supla.core.shared.infrastructure.localizedString
 import java.util.Date
 
 sealed interface ListItem {
+  val remoteId: Int
+  val profileId: Long
+  val userCaption: String
+  val key: String
+  val draggable: Boolean
 
-  fun isDifferentFrom(another: ListItem): Boolean {
-    if (this::class != another::class) {
-      return true
-    }
-    if (this is SceneItem && another is SceneItem) {
-      return sceneData.remoteId != another.sceneData.remoteId ||
-        sceneData.sceneEntity.caption != another.sceneData.sceneEntity.caption
-    }
-    if (this is LocationItem && another is LocationItem) {
-      return location != another.location
-    }
-
-    if (this is ChannelBasedItem && another is ChannelBasedItem) {
-      if (this is DefaultItem && another is DefaultItem) {
-        return toSlideableListItemData() != another.toSlideableListItemData()
-      }
-      return channelBase.remoteId != another.channelBase.remoteId ||
-        channelBase.function != another.channelBase.function ||
-        channelBase.status != another.channelBase.status ||
-        channelBase.caption != another.channelBase.caption
-    }
-
-    return true
-  }
-
-  abstract class ChannelBasedItem(
-    open val channelBase: ChannelDataBase
-  ) : ListItem
-
-  abstract class DefaultItem(
-    val base: ChannelDataBase,
+  open class DefaultItem(
+    override val remoteId: Int,
+    override val profileId: Long,
+    override val userCaption: String,
+    val function: SuplaFunction,
     val locationCaption: String,
+    val locationId: Int,
     val status: ListItemStatus,
     val captionProvider: LocalizedString,
     val icon: ImageId,
     val value: String?,
     val issues: ListItemIssues,
-    val processing: Boolean = false
-  ) : ChannelBasedItem(base) {
-    open fun toSlideableListItemData(): SlideableListItemData {
-      return SlideableListItemData.Default(
-        listItemStatus = status,
-        title = captionProvider,
-        icon = icon,
-        value = value,
-        issues = issues,
-        estimatedTimerEndDate = null,
-        infoSupported = (base as? ChannelDataEntity)?.showInfo == true,
-        processing = processing
-      )
-    }
+    val processing: Boolean = false,
+    val estimatedTimerEndDate: Date? = null,
+    val infoSupported: Boolean = false,
+    val leftButtonString: LocalizedString? = null,
+    val rightButtonString: LocalizedString? = null
+  ) : ListItem {
+    override val key: String = "C$remoteId"
+    override val draggable: Boolean = true
   }
 
-  data class SceneItem(val sceneData: SceneDataEntity) : ListItem
-  data class LocationItem(val location: LocationEntity) : ListItem
-
-  class HvacThermostatItem(
-    private val channel: ChannelDataEntity,
+  open class GroupItem(
+    remoteId: Int,
+    profileId: Long,
+    function: SuplaFunction,
     locationCaption: String,
+    locationId: Int,
     status: ListItemStatus,
     captionProvider: LocalizedString,
-    icon: ImageId,
-    value: String?,
-    issues: ListItemIssues,
-    private val estimatedTimerEndDate: Date?,
-    private val subValue: String,
-    @param:DrawableRes private val indicatorIcon: Int?
-  ) : DefaultItem(channel, locationCaption, status, captionProvider, icon, value, issues) {
-    override fun toSlideableListItemData(): SlideableListItemData {
-      return SlideableListItemData.Thermostat(
-        listItemStatus = status,
-        title = captionProvider,
-        icon = icon,
-        issues = issues,
-        estimatedTimerEndDate = estimatedTimerEndDate,
-        value = value ?: NO_VALUE_TEXT,
-        subValue = subValue,
-        indicatorIcon = indicatorIcon,
-        infoSupported = channel.showInfo
-      )
-    }
-  }
-
-  class HeatpolThermostatItem(
-    private val dataBase: ChannelDataBase,
-    locationCaption: String,
-    status: ListItemStatus,
-    captionProvider: LocalizedString,
-    icon: ImageId,
-    value: String?,
-    issues: ListItemIssues,
-    private val subValue: String,
-  ) : DefaultItem(dataBase, locationCaption, status, captionProvider, icon, value, issues) {
-    override fun toSlideableListItemData(): SlideableListItemData {
-      return SlideableListItemData.Thermostat(
-        listItemStatus = status,
-        title = captionProvider,
-        icon = icon,
-        issues = issues,
-        estimatedTimerEndDate = null,
-        value = value ?: NO_VALUE_TEXT,
-        subValue = subValue,
-        indicatorIcon = null,
-        infoSupported = (dataBase as? ChannelDataEntity)?.showInfo == true,
-      )
-    }
-  }
-
-  class DoubleValueItem(
-    private val channel: ChannelDataEntity,
-    locationCaption: String,
-    status: ListItemStatus,
-    captionProvider: LocalizedString,
-    icon: ImageId,
-    value: String?,
-    issues: ListItemIssues,
-    private val secondIcon: ImageId?,
-    private val secondValue: String?
-  ) : DefaultItem(channel, locationCaption, status, captionProvider, icon, value, issues) {
-    override fun toSlideableListItemData(): SlideableListItemData {
-      return SlideableListItemData.DoubleValue(
-        listItemStatus = status,
-        title = captionProvider,
-        icon = icon,
-        issues = issues,
-        value = value ?: NO_VALUE_TEXT,
-        infoSupported = channel.showInfo,
-        secondIcon = secondIcon,
-        secondValue = secondValue
-      )
-    }
-  }
-
-  class IconValueItem(
-    dataBase: ChannelDataBase,
-    locationCaption: String,
-    status: ListItemStatus,
-    captionProvider: LocalizedString,
+    userCaption: String,
     icon: ImageId,
     value: String? = null,
+    issues: ListItemIssues = ListItemIssues.empty,
+    processing: Boolean = false,
+    estimatedTimerEndDate: Date? = null,
+    leftButtonString: LocalizedString? = null,
+    rightButtonString: LocalizedString? = null
+  ) : DefaultItem(
+    remoteId = remoteId,
+    profileId = profileId,
+    userCaption = userCaption,
+    function = function,
+    locationCaption = locationCaption,
+    locationId = locationId,
+    status = status,
+    captionProvider = captionProvider,
+    icon = icon,
+    value = value,
+    issues = issues,
+    processing = processing,
+    estimatedTimerEndDate = estimatedTimerEndDate,
+    infoSupported = false,
+    leftButtonString = leftButtonString,
+    rightButtonString = rightButtonString
+
+  ) {
+    override val key: String = "G$remoteId"
+    override val draggable: Boolean = true
+  }
+
+  data class SceneItem(
+    override val remoteId: Int,
+    override val profileId: Long,
+    override val userCaption: String,
+    val locationCaption: String,
+    val locationId: Int,
+    val status: ListItemStatus,
+    val icon: ImageId,
+    val estimatedTimerEndDate: Date?
+  ) : ListItem {
+    override val key: String = "S$remoteId"
+    override val draggable: Boolean = true
+  }
+
+  data class LocationItem(
+    override val remoteId: Int,
+    override val profileId: Long,
+    override val userCaption: String,
+    val collapsed: Boolean
+  ) : ListItem {
+    override val key: String = "L$remoteId"
+    override val draggable: Boolean = false
+  }
+
+  class HvacThermostatItem(
+    remoteId: Int,
+    profileId: Long,
+    function: SuplaFunction,
+    locationCaption: String,
+    locationId: Int,
+    status: ListItemStatus,
+    captionProvider: LocalizedString,
+    userCaption: String,
+    icon: ImageId,
+    value: String?,
     issues: ListItemIssues,
-    processing: Boolean = false
-  ) : DefaultItem(dataBase, locationCaption, status, captionProvider, icon, value, issues, processing)
+    processing: Boolean = false,
+    estimatedTimerEndDate: Date? = null,
+    infoSupported: Boolean = false,
+    val subValue: String,
+    @param:DrawableRes val indicatorIcon: Int?
+  ) : DefaultItem(
+    remoteId = remoteId,
+    profileId = profileId,
+    function = function,
+    locationCaption = locationCaption,
+    locationId = locationId,
+    status = status,
+    captionProvider = captionProvider,
+    userCaption = userCaption,
+    icon = icon,
+    value = value,
+    issues = issues,
+    processing = processing,
+    estimatedTimerEndDate = estimatedTimerEndDate,
+    infoSupported = infoSupported,
+    leftButtonString = localizedString(R.string.channel_btn_off),
+    rightButtonString = localizedString(R.string.channel_btn_on)
+  )
 
-  class IconWithButtonsItem(
-    private val dataBase: ChannelDataBase,
+  class HeatpolThermostatItem(
+    remoteId: Int,
+    profileId: Long,
     locationCaption: String,
+    locationId: Int,
     status: ListItemStatus,
     captionProvider: LocalizedString,
+    userCaption: String,
     icon: ImageId,
     value: String?,
-    private val estimatedTimerEndDate: Date?,
-    issues: ListItemIssues
-  ) : DefaultItem(dataBase, locationCaption, status, captionProvider, icon, value, issues) {
-    override fun toSlideableListItemData(): SlideableListItemData {
-      return SlideableListItemData.Default(
-        listItemStatus = status,
-        title = captionProvider,
-        icon = icon,
-        value = value,
-        issues = issues,
-        estimatedTimerEndDate = estimatedTimerEndDate,
-        infoSupported = (dataBase as? ChannelDataEntity)?.showInfo == true,
-        processing = false
-      )
-    }
-  }
+    issues: ListItemIssues,
+    processing: Boolean = false,
+    estimatedTimerEndDate: Date? = null,
+    infoSupported: Boolean = false,
+    val subValue: String,
+  ) : DefaultItem(
+    remoteId = remoteId,
+    profileId = profileId,
+    function = SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS,
+    locationCaption = locationCaption,
+    locationId = locationId,
+    status = status,
+    captionProvider = captionProvider,
+    userCaption = userCaption,
+    icon = icon,
+    value = value,
+    issues = issues,
+    processing = processing,
+    estimatedTimerEndDate = estimatedTimerEndDate,
+    infoSupported = infoSupported,
+    leftButtonString = localizedString(R.string.channel_btn_off),
+    rightButtonString = localizedString(R.string.channel_btn_on)
+  )
 
-  class IconWithRightButtonItem(
-    private val dataBase: ChannelDataBase,
+  class DoubleValueItem(
+    remoteId: Int,
+    profileId: Long,
+    function: SuplaFunction,
     locationCaption: String,
+    locationId: Int,
     status: ListItemStatus,
     captionProvider: LocalizedString,
+    userCaption: String,
     icon: ImageId,
     value: String?,
-    private val estimatedTimerEndDate: Date?,
-    issues: ListItemIssues
-  ) : DefaultItem(dataBase, locationCaption, status, captionProvider, icon, value, issues) {
-    override fun toSlideableListItemData(): SlideableListItemData {
-      return SlideableListItemData.Default(
-        listItemStatus = status,
-        title = captionProvider,
-        icon = icon,
-        value = value,
-        issues = issues,
-        estimatedTimerEndDate = estimatedTimerEndDate,
-        infoSupported = (dataBase as? ChannelDataEntity)?.showInfo == true,
-        processing = false
-      )
-    }
-  }
+    issues: ListItemIssues,
+    processing: Boolean = false,
+    estimatedTimerEndDate: Date? = null,
+    infoSupported: Boolean = false,
+    leftButtonString: LocalizedString? = null,
+    rightButtonString: LocalizedString? = null,
+    val secondIcon: ImageId?,
+    val secondValue: String?
+  ) : DefaultItem(
+    remoteId = remoteId,
+    profileId = profileId,
+    function = function,
+    locationCaption = locationCaption,
+    locationId = locationId,
+    status = status,
+    captionProvider = captionProvider,
+    userCaption = userCaption,
+    icon = icon,
+    value = value,
+    issues = issues,
+    processing = processing,
+    estimatedTimerEndDate = estimatedTimerEndDate,
+    infoSupported = infoSupported,
+    leftButtonString = leftButtonString,
+    rightButtonString = rightButtonString
+  )
 }
+
+fun LocationEntity.locationItem(collapsedFlag: CollapsedFlag): ListItem.LocationItem =
+  ListItem.LocationItem(
+    remoteId = remoteId,
+    profileId = profileId,
+    userCaption = caption,
+    collapsed = isCollapsed(collapsedFlag)
+  )
+
+fun SceneDataEntity.sceneItem(getSceneIconUseCase: GetSceneIconUseCase): ListItem.SceneItem =
+  ListItem.SceneItem(
+    remoteId = remoteId,
+    profileId = sceneEntity.profileId?.toLongOrNull() ?: 0,
+    locationCaption = locationEntity.caption,
+    locationId = locationEntity.remoteId,
+    userCaption = sceneEntity.caption,
+    status = ListItemStatus.Scene,
+    icon = getSceneIconUseCase(sceneEntity),
+    estimatedTimerEndDate = sceneEntity.estimatedEndDate
+  )

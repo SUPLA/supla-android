@@ -20,14 +20,14 @@ package org.supla.android.features.grouplist
 import android.net.Uri
 import android.os.Bundle
 import androidx.annotation.IdRes
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.rx3.awaitFirst
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
-import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
-import org.supla.android.data.model.general.ChannelDataBase
-import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.subscribeBy
@@ -52,6 +52,7 @@ import org.supla.android.usecases.details.RgbwDetailType
 import org.supla.android.usecases.details.StandardDetailType
 import org.supla.android.usecases.details.ThermostatDetailType
 import org.supla.android.usecases.group.CreateProfileGroupsListUseCase
+import org.supla.android.usecases.group.GroupToListItemMapper
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.group.ReorderGroupsUseCase
 import org.supla.android.usecases.location.CollapsedFlag
@@ -66,28 +67,37 @@ class GroupListViewModel @Inject constructor(
   private val provideGroupDetailTypeUseCase: ProvideGroupDetailTypeUseCase,
   private val findGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   private val executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
+  private val groupToListItemMapper: GroupToListItemMapper,
   private val toggleLocationUseCase: ToggleLocationUseCase,
-  private val groupActionUseCase: GroupActionUseCase,
   private val reorderGroupsUseCase: ReorderGroupsUseCase,
+  private val groupActionUseCase: GroupActionUseCase,
   loadActiveProfileUrlUseCase: LoadActiveProfileUrlUseCase,
   updateEventsManager: UpdateEventsManager,
   dateProvider: DateProvider,
-  preferences: ApplicationPreferences,
   schedulers: SuplaSchedulers
 ) : BaseListViewModel<GroupListViewState, GroupListViewEvent>(
-  preferences,
   dateProvider,
   schedulers,
   GroupListViewState(),
   loadActiveProfileUrlUseCase
-) {
-
-  override fun sendReassignEvent() = sendEvent(GroupListViewEvent.ReassignAdapter)
+),
+  GroupListScope {
 
   override fun reloadList() = loadGroups()
 
   init {
     observeUpdates(updateEventsManager.observeGroupsUpdate())
+
+    updateEventsManager.observeAllGroups()
+      .attach()
+      .flatMapMaybe { findGroupByRemoteIdUseCase(it) }
+      .map { groupToListItemMapper(it) }
+      .subscribeBy(
+        onNext = { listItem ->
+          updateState { it.copy(groups = it.groups?.replace(listItem)) }
+        }
+      )
+      .disposeBySelf()
   }
 
   fun loadGroups() {
@@ -96,32 +106,6 @@ class GroupListViewModel @Inject constructor(
       .subscribeBy(
         onNext = { updateState { state -> state.copy(groups = it) } },
         onError = defaultErrorHandler("loadGroups()")
-      )
-      .disposeBySelf()
-  }
-
-  fun toggleLocationCollapsed(location: LocationEntity) {
-    toggleLocationUseCase(location, CollapsedFlag.GROUP)
-      .andThen(createProfileGroupsListUseCase())
-      .attach()
-      .subscribeBy(
-        onNext = { updateState { state -> state.copy(groups = it) } },
-        onError = defaultErrorHandler("toggleLocationCollapsed($location)")
-      )
-      .disposeBySelf()
-  }
-
-  fun swapItems(firstItem: ChannelDataBase?, secondItem: ChannelDataBase?) {
-    val firstId = firstItem?.id
-    val secondId = secondItem?.id
-    if (firstId == null || secondId == null) {
-      return // nothing to swap
-    }
-
-    reorderGroupsUseCase(firstId, firstItem.locationId, secondId)
-      .attach()
-      .subscribeBy(
-        onError = defaultErrorHandler("swapItems(..., ...)")
       )
       .disposeBySelf()
   }
@@ -156,7 +140,7 @@ class GroupListViewModel @Inject constructor(
     }
   }
 
-  fun onAddGroupClick() {
+  override fun onAddGroupClick() {
     loadServerUrl {
       when (it) {
         is CloudUrl.DefaultCloud -> sendEvent(GroupListViewEvent.NavigateToSuplaCloud)
@@ -195,11 +179,83 @@ class GroupListViewModel @Inject constructor(
       else -> {} // no action
     }
   }
+
+  override fun onLeftButtonClick(remoteId: Int) {
+    performAction(remoteId, ButtonType.LEFT)
+  }
+
+  override fun onRightButtonClick(remoteId: Int) {
+    performAction(remoteId, ButtonType.RIGHT)
+  }
+
+  override fun swapItems(from: Int, to: Int): Boolean {
+    var result = false
+    updateState {
+      val groups = it.groups?.toMutableList() ?: return@updateState it
+      val firstItem = groups.getOrNull(from) as? ListItem.DefaultItem ?: return@updateState it
+      val secondItem = groups.getOrNull(to) as? ListItem.DefaultItem ?: return@updateState it
+
+      if (firstItem.locationCaption == secondItem.locationCaption) {
+        result = true
+        groups.add(to, groups.removeAt(from))
+        it.copy(groups = groups)
+      } else {
+        it
+      }
+    }
+
+    return result
+  }
+
+  override fun onDragStopped(remoteId: Int) {
+    val groups = currentState().groups ?: return
+    viewModelScope.launch {
+      val reorderedGroups = schedulers.io {
+        reorderGroupsUseCase(groups, remoteId)
+        createProfileGroupsListUseCase().awaitFirst()
+      }
+
+      updateState { it.copy(groups = reorderedGroups) }
+    }
+  }
+
+  override fun onLocationClick(remoteId: Int) {
+    toggleLocationUseCase(remoteId, CollapsedFlag.GROUP)
+      .andThen(createProfileGroupsListUseCase())
+      .attach()
+      .subscribeBy(
+        onNext = { updateState { state -> state.copy(groups = it) } },
+        onError = defaultErrorHandler("onLocationClick($remoteId)")
+      )
+      .disposeBySelf()
+  }
+
+  override fun onItemClick(remoteId: Int) {
+    if (isEventAllowed()) {
+      findGroupByRemoteIdUseCase(remoteId)
+        .attach()
+        .subscribeBy(
+          onSuccess = { openDetailsByChannelFunction(it) },
+          onError = defaultErrorHandler("onItemClick($remoteId)")
+        )
+        .disposeBySelf()
+    }
+  }
+
+  override fun onTitleLongClick(item: ListItem) {
+    sendEvent(GroupListViewEvent.ShowGroupCaptionChangeDialog(item.remoteId, item.profileId, item.userCaption))
+  }
+
+  override fun onLocationLongClick(item: ListItem.LocationItem) {
+    sendEvent(GroupListViewEvent.ShowLocationCaptionChangeDialog(item.remoteId, item.profileId, item.userCaption))
+  }
 }
 
 sealed class GroupListViewEvent : ViewEvent {
+  data class ShowLocationCaptionChangeDialog(val remoteId: Int, val profileId: Long, val caption: String) : GroupListViewEvent()
+  data class ShowGroupCaptionChangeDialog(val remoteId: Int, val profileId: Long, val caption: String) : GroupListViewEvent()
+
   data class OpenLegacyDetails(val remoteId: Int, val type: LegacyDetailType) : GroupListViewEvent()
-  data object ReassignAdapter : GroupListViewEvent()
   data object NavigateToSuplaCloud : GroupListViewEvent()
   data object NavigateToSuplaBetaCloud : GroupListViewEvent()
   data class NavigateToPrivateCloud(val url: Uri) : GroupListViewEvent()
@@ -210,7 +266,7 @@ sealed class GroupListViewEvent : ViewEvent {
   data class OpenRgbwDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
     BaseDetail(R.id.rgbw_detail_fragment, RgbwDetailFragment.bundle(itemBundle, pages.toTypedArray()))
 
-  abstract class BaseDetail(
+  sealed class BaseDetail(
     @param:IdRes val fragmentId: Int,
     val fragmentArguments: Bundle
   ) : GroupListViewEvent()
@@ -220,3 +276,12 @@ data class GroupListViewState(
   val groups: List<ListItem>? = null,
   val actionAlertDialogState: ActionAlertDialogState? = null
 ) : ViewState()
+
+private fun List<ListItem>.replace(item: ListItem): List<ListItem> =
+  map {
+    if (it is ListItem.GroupItem && it.remoteId == item.remoteId) {
+      item
+    } else {
+      it
+    }
+  }

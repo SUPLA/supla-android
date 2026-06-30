@@ -3,16 +3,16 @@
   xmlns:app="http://schemas.android.com/apk/res-auto">
   <item
     android:id="@+id/channel_list"
-    android:icon="@drawable/list"
+    android:icon="@drawable/navbar_channels"
     android:title="@string/navbar_channels" />
 
   <item
     android:id="@+id/group_list"
-    android:icon="@drawable/groupon"
+    android:icon="@drawable/navbar_groups"
     android:title="@string/navbar_groups" />
 
   <item
     android:id="@+id/scene_list"
-    android:icon="@drawable/coffee"
+    android:icon="@drawable/navbar_scenes"
     android:title="@string/navbar_scenes" />
 </menu>

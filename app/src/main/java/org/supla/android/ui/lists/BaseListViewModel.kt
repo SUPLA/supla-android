@@ -17,12 +17,8 @@ package org.supla.android.ui.lists
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener
-import androidx.annotation.CallSuper
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.core.infrastructure.DateProvider
-import org.supla.android.core.storage.ApplicationPreferences
-import org.supla.android.core.storage.PREF_CHANNEL_HEIGHT
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
@@ -36,7 +32,6 @@ import org.supla.core.shared.data.model.general.SuplaFunction
 private const val CLICK_EVENT_DELAY_MS = 250
 
 abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
-  private val preferences: ApplicationPreferences,
   private val dateProvider: DateProvider,
   schedulers: SuplaSchedulers,
   defaultState: S,
@@ -44,24 +39,6 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
 ) : BaseViewModel<S, E>(defaultState, schedulers) {
 
   protected var lastItemOpenTime: Long = 0
-
-  private val preferencesChangeListener = OnSharedPreferenceChangeListener { _, key ->
-    if (key.equals(PREF_CHANNEL_HEIGHT)) {
-      sendReassignEvent()
-    }
-  }
-
-  init {
-    preferences.registerChangeListener(preferencesChangeListener)
-  }
-
-  @CallSuper
-  override fun onCleared() {
-    preferences.unregisterChangeListener(preferencesChangeListener)
-    super.onCleared()
-  }
-
-  protected abstract fun sendReassignEvent()
 
   protected abstract fun reloadList()
 

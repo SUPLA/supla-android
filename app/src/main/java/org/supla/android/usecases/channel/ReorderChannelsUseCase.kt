@@ -17,11 +17,11 @@ package org.supla.android.usecases.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.LocationRepository
 import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.local.entity.custom.LocationSortingType
+import org.supla.android.ui.lists.ListItem
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -31,47 +31,33 @@ class ReorderChannelsUseCase @Inject constructor(
   private val locationRepository: LocationRepository
 ) {
 
-  operator fun invoke(firstItemId: Long, firstItemLocationId: Int, secondItemId: Long): Completable =
-    locationRepository.findByRemoteId(firstItemLocationId)
-      .toSingle()
-      .flatMapCompletable { location ->
-        channelRepository.findChannelsForLocation(location.caption)
-          .map { channels ->
-            val orderedIds = channels.map { requireNotNull(it.id) { "Channel id is null" } }.toMutableList()
-            val channelsById = channels.associateBy { requireNotNull(it.id) { "Channel id is null" } }
-            reorderList(orderedIds, firstItemId, secondItemId)
-            orderedIds to channelsById
-          }
-          .flatMapCompletable { (orderedIds, channelsById) ->
-            locationRepository.updateLocation(location.copy(sorting = LocationSortingType.USER_DEFINED))
-              .andThen(
-                Observable.fromIterable(orderedIds.withIndex())
-                  .concatMapCompletable { (position, channelId) ->
-                    channelRepository.update(channelsById.getValue(channelId).channelEntity.copy(position = position + 1))
-                  }
-              )
-          }
-      }
+  suspend operator fun invoke(items: List<ListItem>, movedItemId: Int) {
+    val moved = items.filterIsInstance<ListItem.DefaultItem>().firstOrNull { it.remoteId == movedItemId } ?: return
 
-  private fun reorderList(orderedItems: MutableList<Long>, firstItemId: Long, secondItemId: Long) {
-    var initialPosition = -1
-    var finalPosition = -1
-
-    for (i in orderedItems.indices) {
-      val id = orderedItems[i]
-      if (id == firstItemId) {
-        initialPosition = i
-      }
-      if (id == secondItemId) {
-        finalPosition = i
-      }
+    val locations = items.filterIsInstance<ListItem.LocationItem>().filter { it.userCaption == moved.locationCaption }
+    if (locations.isEmpty()) {
+      Timber.w("No location found, reorder stopped!")
+      return
     }
 
-    if (initialPosition < 0 || finalPosition < 0) {
-      throw IllegalArgumentException("Swap items not found")
+    var useId = true
+    if (locations.size > 1) {
+      useId = false
     }
 
-    val removedId = orderedItems.removeAt(initialPosition)
-    orderedItems.add(finalPosition, removedId)
+    val orderedChannels =
+      if (useId) {
+        items.filterIsInstance<ListItem.DefaultItem>().filter { it.locationId == moved.locationId }
+      } else {
+        items.filterIsInstance<ListItem.DefaultItem>().filter { it.locationCaption == moved.locationCaption }
+      }
+
+    val location = items.filterIsInstance<ListItem.LocationItem>().firstOrNull { it.remoteId == moved.locationId } ?: return
+    locationRepository.changeSortingType(location.remoteId, LocationSortingType.USER_DEFINED)
+
+    var position = 1
+    for (channel in orderedChannels) {
+      channelRepository.updatePosition(channel.remoteId, position++)
+    }
   }
 }

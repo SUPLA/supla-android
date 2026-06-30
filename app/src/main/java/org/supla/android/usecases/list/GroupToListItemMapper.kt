@@ -25,7 +25,9 @@ import org.supla.android.usecases.group.GetGroupActivePercentageUseCase
 import org.supla.android.usecases.group.totalvalue.HeatpolThermostatGroupValue
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.model.lists.ListItemIssues
+import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.GetCaptionUseCase
+import org.supla.core.shared.usecase.GetChannelActionStringUseCase
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
 import org.supla.core.shared.usecase.channel.valueformatter.types.ValuePrecision
@@ -35,68 +37,45 @@ interface GroupToListItemMapper {
   val getCaptionUseCase: GetCaptionUseCase
   val getChannelIconUseCase: GetChannelIconUseCase
   val thermometerValueFormatter: ValueFormatter
+  val getChannelActionStringUseCase: GetChannelActionStringUseCase
 
-  fun toIconValueItem(group: ChannelGroupDataEntity): ListItem.IconValueItem =
-    ListItem.IconValueItem(
-      dataBase = group,
+  fun toIconValueItem(group: ChannelGroupDataEntity): ListItem.GroupItem =
+    ListItem.GroupItem(
+      remoteId = group.remoteId,
+      profileId = group.profileId,
+      function = group.function,
       locationCaption = group.locationEntity.caption,
+      locationId = group.locationEntity.remoteId,
       status = ListItemStatus.Group(
         onlinePercentage = group.channelGroupEntity.onlinePercentage,
         activePercentage = getGroupActivePercentageUseCase(group.channelGroupEntity).coerceIn(0, 100).div(100f)
       ),
       captionProvider = getCaptionUseCase(group.shareable),
+      userCaption = group.caption,
       icon = getChannelIconUseCase(group),
-      value = null,
-      issues = ListItemIssues.empty,
-      processing = false
-    )
-
-  fun toIconWithButtonsItem(group: ChannelGroupDataEntity): ListItem.IconWithButtonsItem =
-    ListItem.IconWithButtonsItem(
-      dataBase = group,
-      locationCaption = group.locationEntity.caption,
-      status = ListItemStatus.Group(
-        onlinePercentage = group.channelGroupEntity.onlinePercentage,
-        activePercentage = getGroupActivePercentageUseCase(group.channelGroupEntity).coerceIn(0, 100).div(100f)
-      ),
-      captionProvider = getCaptionUseCase(group.shareable),
-      icon = getChannelIconUseCase(group),
-      value = null,
-      estimatedTimerEndDate = null,
-      issues = ListItemIssues.empty,
-    )
-
-  fun toIconWithRightButtonItem(group: ChannelGroupDataEntity): ListItem.IconWithRightButtonItem =
-    ListItem.IconWithRightButtonItem(
-      dataBase = group,
-      locationCaption = group.locationEntity.caption,
-      status = ListItemStatus.Group(
-        onlinePercentage = group.channelGroupEntity.onlinePercentage,
-        activePercentage = getGroupActivePercentageUseCase(group.channelGroupEntity).coerceIn(0, 100).div(100f)
-      ),
-      captionProvider = getCaptionUseCase(group.shareable),
-      icon = getChannelIconUseCase(group),
-      value = null,
-      estimatedTimerEndDate = null,
-      issues = ListItemIssues.empty
+      leftButtonString = localizedString(getChannelActionStringUseCase.leftButton(group.function)),
+      rightButtonString = localizedString(getChannelActionStringUseCase.rightButton(group.function))
     )
 
   fun toHeatpolThermostatItem(group: ChannelGroupDataEntity): ListItem.HeatpolThermostatItem =
     ListItem.HeatpolThermostatItem(
-      dataBase = group,
+      remoteId = group.remoteId,
+      profileId = group.profileId,
       locationCaption = group.locationEntity.caption,
+      locationId = group.locationEntity.remoteId,
       status = ListItemStatus.Group(
         onlinePercentage = group.channelGroupEntity.onlinePercentage,
         activePercentage = getGroupActivePercentageUseCase(group.channelGroupEntity).coerceIn(0, 100).div(100f)
       ),
       captionProvider = getCaptionUseCase(group.shareable),
+      userCaption = group.caption,
       icon = getChannelIconUseCase(group),
       value = getThermostatValue(group),
       issues = ListItemIssues.empty,
       subValue = getThermostatSubValue(group),
     )
 
-  private fun getThermostatValue(group: ChannelGroupDataEntity) : String {
+  private fun getThermostatValue(group: ChannelGroupDataEntity): String {
     val min = group.channelGroupEntity.groupTotalValues
       .mapNotNull { (it as? HeatpolThermostatGroupValue)?.measuredTemperature }
       .min()
@@ -112,7 +91,7 @@ interface GroupToListItemMapper {
     return "$minString - $maxString"
   }
 
-  private fun getThermostatSubValue(group: ChannelGroupDataEntity) : String {
+  private fun getThermostatSubValue(group: ChannelGroupDataEntity): String {
     val min = group.channelGroupEntity.groupTotalValues
       .mapNotNull { (it as? HeatpolThermostatGroupValue)?.presetTemperature }
       .min()

@@ -62,6 +62,7 @@ data class AuthorizationDialogState(
 
 interface AuthorizationReason {
   data object Default : AuthorizationReason
+  data object ZWaveWizard : AuthorizationReason
 }
 
 interface AuthorizationDialogScope {

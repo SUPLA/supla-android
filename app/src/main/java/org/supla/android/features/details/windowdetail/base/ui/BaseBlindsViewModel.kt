@@ -55,7 +55,7 @@ import kotlin.math.roundToInt
 abstract class BaseBlindsViewModel<S : BaseBlindsViewModelState>(
   private val channelConfigEventsManager: ChannelConfigEventsManager,
   private val executeShadingSystemActionUseCase: ExecuteShadingSystemActionUseCase,
-  private val suplaClientProvider: SuplaClientProvider,
+  override val suplaClientProvider: SuplaClientProvider,
   private val readGroupTiltingDetailsUseCase: ReadGroupTiltingDetailsUseCase,
   executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
   callSuplaClientOperationUseCase: CallSuplaClientOperationUseCase,

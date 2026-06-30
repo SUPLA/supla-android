@@ -23,21 +23,12 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.annotation.IdRes
-import androidx.core.net.toUri
-import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
-import org.supla.android.NavigationActivity
 import org.supla.android.R
-import org.supla.android.cfg.CfgActivity
-import org.supla.android.data.source.runtime.ItemType
-import org.supla.android.extensions.iterateVisibleFragments
-import org.supla.android.features.details.legacydetail.LegacyDetailFragment
-import org.supla.android.usecases.details.LegacyDetailType
-import org.supla.core.shared.extensions.guardLet
 import javax.inject.Inject
 
 @ActivityScoped
@@ -50,74 +41,8 @@ class MainNavigator @Inject constructor(@param:ActivityContext private val activ
     navController.navigate(destinationId, bundle, defaultAnimationOptions)
   }
 
-  fun navigateToLegacyDetails(remoteId: Int, legacyDetailType: LegacyDetailType, itemType: ItemType) {
-    navController.navigate(
-      R.id.legacy_detail_fragment,
-      LegacyDetailFragment.bundle(remoteId, legacyDetailType, itemType),
-      defaultAnimationOptions
-    )
-  }
-
-  fun navigateToAddWizard() {
-    navController.navigate(R.id.add_wizard_fragment, null, addWizardAnimationOptions)
-  }
-
-  fun navigateToProfiles() {
-    val intent = Intent(activityContext, CfgActivity::class.java).also {
-      it.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-      it.putExtra(NavigationActivity.INTENT_SENDER, NavigationActivity.INTENT_SENDER_MAIN)
-    }
-    activityContext.startActivity(intent)
-    (activityContext as? Activity)?.overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
-  }
-
-  fun navigateToNewProfile() {
-    val intent = Intent(activityContext, CfgActivity::class.java).also {
-      it.action = CfgActivity.ACTION_AUTH
-      it.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-      it.putExtra(NavigationActivity.INTENT_SENDER, NavigationActivity.INTENT_SENDER_MAIN)
-    }
-    activityContext.startActivity(intent)
-    (activityContext as? Activity)?.overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
-  }
-
-  fun navigateToCloudExternal() {
-    activityContext.startActivity(Intent(Intent.ACTION_VIEW, activityContext.resources.getString(R.string.cloud_url).toUri()))
-  }
-
-  fun navigateToBetaCloudExternal() {
-    activityContext.startActivity(Intent(Intent.ACTION_VIEW, activityContext.resources.getString(R.string.beta_cloud_url).toUri()))
-  }
-
   fun navigateToWeb(url: Uri) {
     activityContext.startActivity(Intent(Intent.ACTION_VIEW, url))
-  }
-
-  fun navigateToSuplaOrgExternal() {
-    navigateToWeb(activityContext.getString(R.string.homepage_url).toUri())
-  }
-
-  fun back(): Boolean =
-    navController.currentDestination?.id != R.id.main_fragment &&
-      navController.currentDestination?.id != R.id.status_fragment &&
-      navController.popBackStack()
-
-  fun navigateToStatus() {
-    if (navigationToStatusAllowed()) {
-      if (navController.popBackStack(R.id.status_fragment, false).not()) {
-        navController.navigate(R.id.status_fragment)
-      }
-    }
-  }
-
-  fun forcePopToStatus() {
-    navController.popBackStack(R.id.status_fragment, false)
-  }
-
-  fun navigateToMain() {
-    if (navController.popBackStack(R.id.main_fragment, false).not()) {
-      navController.navigate(R.id.main_fragment)
-    }
   }
 
   private val defaultAnimationOptions = NavOptions.Builder()
@@ -126,26 +51,4 @@ class MainNavigator @Inject constructor(@param:ActivityContext private val activ
     .setPopEnterAnim(R.anim.slide_right_in)
     .setPopExitAnim(R.anim.slide_right_out)
     .build()
-
-  private val addWizardAnimationOptions = NavOptions.Builder()
-    .setEnterAnim(R.anim.fade_in)
-    .setExitAnim(R.anim.fade_out)
-    .setPopEnterAnim(R.anim.fade_in)
-    .setPopExitAnim(R.anim.fade_out)
-    .build()
-
-  private fun navigationToStatusAllowed(): Boolean {
-    val (fragmentActivity) = guardLet(activityContext as? FragmentActivity) { return true }
-    var result = true
-    fragmentActivity.supportFragmentManager.iterateVisibleFragments {
-      if (it is NavigationSubcontroller && !it.screenTakeoverAllowed()) {
-        result = false
-        true
-      } else {
-        false
-      }
-    }
-
-    return result
-  }
 }

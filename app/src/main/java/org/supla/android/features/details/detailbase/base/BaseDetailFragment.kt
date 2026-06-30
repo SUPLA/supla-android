@@ -31,7 +31,7 @@ import org.supla.android.core.ui.ARG_ITEM_BUNDLE
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.extensions.clearEdgeToEdgePaddings
 import org.supla.android.extensions.visibleIf
-import org.supla.android.navigator.MainNavigator
+import org.supla.android.main.MainComposeNavigator
 import org.supla.android.ui.layouts.BottomBarHeightHandler
 import javax.inject.Inject
 
@@ -47,7 +47,7 @@ abstract class BaseDetailFragment<S : BaseDetailViewState, E : BaseDetailViewEve
   lateinit var bottomBarHeightHandler: BottomBarHeightHandler
 
   @Inject
-  lateinit var navigator: MainNavigator
+  lateinit var navigator: MainComposeNavigator
 
   @Suppress("UNCHECKED_CAST", "DEPRECATION") // Not deprecated method can be accessed from API 33
   protected val pages by lazy { (requireArguments().getSerializable(ARG_PAGES) as Array<DetailPage>).asList() }

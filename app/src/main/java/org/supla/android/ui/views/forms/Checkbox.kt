@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 fun Checkbox(
   checked: Boolean,
   label: String,
+  modifier: Modifier = Modifier,
   enabled: Boolean = true,
   checkedColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
   uncheckedColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -42,7 +43,10 @@ fun Checkbox(
   labelColor: Color = MaterialTheme.colorScheme.onBackground,
   onCheckedChange: (Boolean) -> Unit = { }
 ) {
-  Row(verticalAlignment = Alignment.CenterVertically) {
+  Row(
+    verticalAlignment = Alignment.CenterVertically,
+    modifier = modifier
+  ) {
     Checkbox(
       checked = checked,
       enabled = enabled,

@@ -17,8 +17,9 @@ package org.supla.android.usecases.group
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import io.reactivex.rxjava3.core.Completable
 import org.supla.android.data.source.ChannelGroupRepository
+import org.supla.android.ui.lists.ListItem
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -27,40 +28,30 @@ class ReorderGroupsUseCase @Inject constructor(
   private val channelGroupRepository: ChannelGroupRepository
 ) {
 
-  operator fun invoke(firstItemId: Long, firstItemLocationId: Int, secondItemId: Long): Completable =
-    channelGroupRepository.findList()
-      .map { groups ->
-        val groupsInLocation = groups.filter { it.locationEntity.remoteId == firstItemLocationId }
-        val orderedIds = groupsInLocation.map { requireNotNull(it.id) { "Group id is null" } }.toMutableList()
-        val groupsById = groupsInLocation.associateBy { requireNotNull(it.id) { "Group id is null" } }
+  suspend operator fun invoke(items: List<ListItem>, movedItemId: Int) {
+    val moved = items.filterIsInstance<ListItem.GroupItem>().firstOrNull { it.remoteId == movedItemId } ?: return
 
-        reorderList(orderedIds, firstItemId, secondItemId)
-
-        orderedIds.mapIndexed { position, groupId ->
-          groupsById.getValue(groupId).channelGroupEntity.copy(position = position + 1)
-        }
-      }
-      .flatMapCompletable { channelGroupRepository.update(it) }
-
-  private fun reorderList(orderedItems: MutableList<Long>, firstItemId: Long, secondItemId: Long) {
-    var initialPosition = -1
-    var finalPosition = -1
-
-    for (index in orderedItems.indices) {
-      val id = orderedItems[index]
-      if (id == firstItemId) {
-        initialPosition = index
-      }
-      if (id == secondItemId) {
-        finalPosition = index
-      }
+    val locations = items.filterIsInstance<ListItem.LocationItem>().filter { it.userCaption == moved.locationCaption }
+    if (locations.isEmpty()) {
+      Timber.w("No location found, reorder stopped!")
+      return
     }
 
-    if (initialPosition < 0 || finalPosition < 0) {
-      throw IllegalArgumentException("Swap items not found")
+    var useId = true
+    if (locations.size > 1) {
+      useId = false
     }
 
-    val removedId = orderedItems.removeAt(initialPosition)
-    orderedItems.add(finalPosition, removedId)
+    val orderedGroups =
+      if (useId) {
+        items.filterIsInstance<ListItem.GroupItem>().filter { it.locationId == moved.locationId }
+      } else {
+        items.filterIsInstance<ListItem.GroupItem>().filter { it.locationCaption == moved.locationCaption }
+      }
+
+    var position = 1
+    for (group in orderedGroups) {
+      channelGroupRepository.updatePosition(group.remoteId, position++)
+    }
   }
 }

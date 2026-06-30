@@ -24,6 +24,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
+import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
@@ -66,6 +67,7 @@ import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import java.util.Date
 import javax.inject.Inject
@@ -73,32 +75,44 @@ import javax.inject.Named
 
 @HiltViewModel
 class TimerDetailViewModel @Inject constructor(
+  private val executeThermostatActionUseCase: ExecuteThermostatActionUseCase,
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   private val channelConfigEventsManager: ChannelConfigEventsManager,
-  private val executeThermostatActionUseCase: ExecuteThermostatActionUseCase,
+  private val loadingTimeoutManager: LoadingTimeoutManager,
   private val suplaClientProvider: SuplaClientProvider,
   private val dateProvider: DateProvider,
-  private val loadingTimeoutManager: LoadingTimeoutManager,
   @param:Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter,
+  suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<TimerDetailViewState, TimerDetailViewEvent>(TimerDetailViewState(thermometerValueFormatter), schedulers),
   ThermostatTimerViewScope {
 
+  private var remoteId = 0
   private val channelSubject: PublishSubject<ChannelDataEntity> = PublishSubject.create()
+
+  init {
+    setupSuplaClientMessageHandler(suplaClientMessageHandlerWrapper)
+  }
 
   override fun onViewCreated() {
     loadingTimeoutManager.watch({ currentState().loadingState }) {
       updateState { state ->
-        state.remoteId?.let {
-          loadData(it)
-        }
+        loadData()
 
         state.copy(loadingState = state.loadingState.changingLoading(false, dateProvider))
       }
     }.disposeBySelf()
   }
 
-  fun loadData(remoteId: Int) {
+  override fun handleSuplaMessage(message: SuplaClientMessage) {
+    (message as? SuplaClientMessage.ChannelDataChanged)?.let {
+      if (it.channelId == remoteId && (it.timerValueChanged || !it.extendedValueChanged)) {
+        loadData()
+      }
+    }
+  }
+
+  fun loadData() {
     readChannelByRemoteIdUseCase.invoke(remoteId)
       .attach()
       .subscribeBy(
@@ -110,6 +124,7 @@ class TimerDetailViewModel @Inject constructor(
   }
 
   fun observeData(remoteId: Int) {
+    this.remoteId = remoteId
     Observable.combineLatest(
       channelSubject.hide(),
       channelConfigEventsManager.observerConfig(remoteId)
@@ -236,7 +251,6 @@ class TimerDetailViewModel @Inject constructor(
   override fun onStartTimer() {
     val state = currentState()
 
-    val (remoteId) = guardLet(state.remoteId) { return }
     val (duration) = guardLet(state.getTimerDuration(dateProvider.currentDate())) { return }
 
     updateState {
@@ -274,8 +288,6 @@ class TimerDetailViewModel @Inject constructor(
   }
 
   override fun cancelTimerStartManual() {
-    val (remoteId) = guardLet(currentState().remoteId) { return }
-
     updateState { it.copy(loadingState = it.loadingState.changingLoading(true, dateProvider)) }
 
     executeThermostatActionUseCase.invoke(
@@ -288,8 +300,6 @@ class TimerDetailViewModel @Inject constructor(
   }
 
   override fun cancelTimerStartProgram() {
-    val (remoteId) = guardLet(currentState().remoteId) { return }
-
     updateState { it.copy(loadingState = it.loadingState.changingLoading(true, dateProvider)) }
 
     executeThermostatActionUseCase.invoke(
@@ -355,7 +365,6 @@ class TimerDetailViewModel @Inject constructor(
 
     updateState {
       it.copy(
-        remoteId = channel.remoteId,
         currentMode = thermostatValue.mode,
         currentDate = currentDate,
         channelFunction = channel.function.value,
@@ -400,7 +409,6 @@ class TimerDetailViewModel @Inject constructor(
 
 data class TimerDetailViewState(
   val thermometerValueFormatter: ValueFormatter,
-  val remoteId: Int? = null,
   val currentMode: SuplaHvacMode? = null,
   val currentDate: Date? = null,
   val channelFunction: Int? = null,

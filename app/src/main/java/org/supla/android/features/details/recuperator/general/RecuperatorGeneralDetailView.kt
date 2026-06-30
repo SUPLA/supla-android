@@ -48,7 +48,7 @@ import org.supla.android.R
 import org.supla.android.core.ui.ViewState
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.features.details.detailbase.electricitymeter.suplaCard
+import org.supla.android.extensions.suplaCard
 import org.supla.android.features.details.recuperator.general.view.RecuperatorCanvas
 import org.supla.android.features.details.recuperator.general.view.SteppedSlider
 import org.supla.android.features.details.recuperator.general.view.drawCrossLines

@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import org.supla.android.R
 import java.io.Serializable
 
+@kotlinx.serialization.Serializable
 sealed class UnlockAction(val messageId: Int? = null, val showToolbar: Boolean = true, val showLogo: Boolean = false) : Serializable {
   data object AuthorizeApplication : UnlockAction(R.string.lock_screen_hello, showToolbar = false, showLogo = true) {
     private fun readResolve(): Any = AuthorizeApplication

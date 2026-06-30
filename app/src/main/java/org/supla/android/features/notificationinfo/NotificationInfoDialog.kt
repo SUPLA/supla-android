@@ -1,55 +1,69 @@
 package org.supla.android.features.notificationinfo
 
-import android.Manifest
-import android.app.Dialog
-import android.os.Build
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.annotation.RequiresApi
-import androidx.fragment.app.DialogFragment
-import dagger.hilt.android.AndroidEntryPoint
-import org.supla.android.MainActivity
-import org.supla.android.core.storage.ApplicationPreferences
-import org.supla.android.databinding.DialogNotificationInfoBinding
-import javax.inject.Inject
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import org.supla.android.R
+import org.supla.android.core.ui.theme.Distance
+import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.tools.SuplaPreview
+import org.supla.android.ui.dialogs.Dialog
+import org.supla.android.ui.views.Image
+import org.supla.android.ui.views.buttons.Button
+import org.supla.android.ui.views.buttons.OutlinedButton
+import org.supla.android.ui.views.texts.BodyMedium
+import org.supla.android.ui.views.texts.HeadlineMedium
 
-@AndroidEntryPoint
-class NotificationInfoDialog : DialogFragment() {
+@Composable
+fun NotificationInfoDialog(
+  onTurnOn: () -> Unit = {},
+  onSkip: () -> Unit = {}
+) {
+  Dialog(
+    onDismiss = {}
+  ) {
+    Column(
+      verticalArrangement = Arrangement.spacedBy(Distance.small),
+      horizontalAlignment = Alignment.CenterHorizontally,
+      modifier = Modifier.padding(Distance.default)
+    ) {
+      Image(
+        drawableId = R.drawable.notification_info,
+        modifier = Modifier.size(80.dp)
+      )
+      HeadlineMedium(stringRes = R.string.notification_info_title)
+      BodyMedium(stringRes = R.string.notification_info_message)
 
-  @Inject lateinit var preferences: ApplicationPreferences
+      Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier.fillMaxWidth()
+      ) {
+        OutlinedButton(
+          text = stringResource(R.string.skip),
+          onClick = onSkip
+        )
 
-  private lateinit var binding: DialogNotificationInfoBinding
-
-  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    return super.onCreateDialog(savedInstanceState).apply {
-      setCanceledOnTouchOutside(false)
+        Button(
+          text = stringResource(R.string.turn_on),
+          onClick = onTurnOn
+        )
+      }
     }
   }
+}
 
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-    binding = DialogNotificationInfoBinding.inflate(inflater, container, false)
-    return binding.root
-  }
-
-  @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-
-    binding.apply {
-      notificationInfoOk.setOnClickListener {
-        dismiss()
-        (requireActivity() as? MainActivity)?.requestPermissionLauncher?.launch(Manifest.permission.POST_NOTIFICATIONS)
-      }
-      notificationInfoSkip.setOnClickListener {
-        dismiss()
-        preferences.isNotificationsPopupDisplayed = true
-      }
-    }
-  }
-
-  companion object {
-    fun create(): NotificationInfoDialog = NotificationInfoDialog()
+@Composable
+@SuplaPreview
+private fun Preview() {
+  SuplaTheme {
+    NotificationInfoDialog()
   }
 }

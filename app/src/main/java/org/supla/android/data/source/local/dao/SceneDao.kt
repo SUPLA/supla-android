@@ -78,14 +78,7 @@ interface SceneDao {
         scene.$COLUMN_SORT_ORDER scene_$COLUMN_SORT_ORDER,
         scene.$COLUMN_VISIBLE scene_$COLUMN_VISIBLE,
         scene.$COLUMN_PROFILE_ID scene_$COLUMN_PROFILE_ID,
-        location.${LocationEntity.COLUMN_ID} location_${LocationEntity.COLUMN_ID},
-        location.${LocationEntity.COLUMN_REMOTE_ID} location_${LocationEntity.COLUMN_REMOTE_ID},
-        location.${LocationEntity.COLUMN_CAPTION} location_${LocationEntity.COLUMN_CAPTION},
-        location.${LocationEntity.COLUMN_VISIBLE} location_${LocationEntity.COLUMN_VISIBLE},
-        location.${LocationEntity.COLUMN_COLLAPSED} location_${LocationEntity.COLUMN_COLLAPSED},
-        location.${LocationEntity.COLUMN_SORTING} location_${LocationEntity.COLUMN_SORTING},
-        location.${LocationEntity.COLUMN_SORT_ORDER} location_${LocationEntity.COLUMN_SORT_ORDER},
-        location.${LocationEntity.COLUMN_PROFILE_ID} location_${LocationEntity.COLUMN_PROFILE_ID}
+        ${LocationEntity.JOIN_COLUMNS}
       FROM $TABLE_NAME scene
       JOIN ${LocationEntity.TABLE_NAME} location
         ON scene.$COLUMN_LOCATION_ID = location.${LocationEntity.COLUMN_REMOTE_ID}
@@ -117,14 +110,7 @@ interface SceneDao {
         scene.$COLUMN_SORT_ORDER scene_$COLUMN_SORT_ORDER,
         scene.$COLUMN_VISIBLE scene_$COLUMN_VISIBLE,
         scene.$COLUMN_PROFILE_ID scene_$COLUMN_PROFILE_ID,
-        location.${LocationEntity.COLUMN_ID} location_${LocationEntity.COLUMN_ID},
-        location.${LocationEntity.COLUMN_REMOTE_ID} location_${LocationEntity.COLUMN_REMOTE_ID},
-        location.${LocationEntity.COLUMN_CAPTION} location_${LocationEntity.COLUMN_CAPTION},
-        location.${LocationEntity.COLUMN_VISIBLE} location_${LocationEntity.COLUMN_VISIBLE},
-        location.${LocationEntity.COLUMN_COLLAPSED} location_${LocationEntity.COLUMN_COLLAPSED},
-        location.${LocationEntity.COLUMN_SORTING} location_${LocationEntity.COLUMN_SORTING},
-        location.${LocationEntity.COLUMN_SORT_ORDER} location_${LocationEntity.COLUMN_SORT_ORDER},
-        location.${LocationEntity.COLUMN_PROFILE_ID} location_${LocationEntity.COLUMN_PROFILE_ID}
+        ${LocationEntity.JOIN_COLUMNS}
       FROM $TABLE_NAME scene
       JOIN ${LocationEntity.TABLE_NAME} location
         ON scene.$COLUMN_LOCATION_ID = location.${LocationEntity.COLUMN_REMOTE_ID}
@@ -139,6 +125,33 @@ interface SceneDao {
     """
   )
   fun findProfileScenes(profileId: Long): Single<List<SceneDataEntity>>
+
+  @Query(
+    """
+      SELECT
+        scene.$COLUMN_ID scene_$COLUMN_ID,
+        scene.$COLUMN_REMOTE_ID scene_$COLUMN_REMOTE_ID, 
+        scene.$COLUMN_LOCATION_ID scene_$COLUMN_LOCATION_ID, 
+        scene.$COLUMN_ALT_ICON scene_$COLUMN_ALT_ICON, 
+        scene.$COLUMN_USER_ICON scene_$COLUMN_USER_ICON, 
+        scene.$COLUMN_CAPTION scene_$COLUMN_CAPTION,
+        scene.$COLUMN_STARTED_AT scene_$COLUMN_STARTED_AT,
+        scene.$COLUMN_ESTIMATED_END_DATE scene_$COLUMN_ESTIMATED_END_DATE,
+        scene.$COLUMN_INITIATOR_ID scene_$COLUMN_INITIATOR_ID,
+        scene.$COLUMN_INITIATOR_NAME scene_$COLUMN_INITIATOR_NAME,
+        scene.$COLUMN_SORT_ORDER scene_$COLUMN_SORT_ORDER,
+        scene.$COLUMN_VISIBLE scene_$COLUMN_VISIBLE,
+        scene.$COLUMN_PROFILE_ID scene_$COLUMN_PROFILE_ID,
+        ${LocationEntity.JOIN_COLUMNS}
+      FROM $TABLE_NAME scene
+      JOIN ${LocationEntity.TABLE_NAME} location
+        ON scene.$COLUMN_LOCATION_ID = location.${LocationEntity.COLUMN_REMOTE_ID}
+          AND scene.$COLUMN_PROFILE_ID = location.${LocationEntity.COLUMN_PROFILE_ID}
+      WHERE scene.$COLUMN_REMOTE_ID = :remoteId AND 
+        scene.$COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
+    """
+  )
+  fun findSceneData(remoteId: Int): Maybe<SceneDataEntity>
 
   @Query(
     """
@@ -158,6 +171,16 @@ interface SceneDao {
 
   @Update
   fun update(scenes: List<SceneEntity>): Completable
+
+  @Query(
+    """
+      UPDATE $TABLE_NAME
+      SET $COLUMN_SORT_ORDER = :position
+      WHERE $COLUMN_REMOTE_ID = :remoteId
+        AND $COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
+    """
+  )
+  suspend fun updatePosition(remoteId: Int, position: Int)
 
   @Query(
     """

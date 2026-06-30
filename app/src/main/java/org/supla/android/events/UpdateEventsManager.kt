@@ -47,6 +47,8 @@ class UpdateEventsManager @Inject constructor(
   private val groupUpdatesSubject: BehaviorSubject<Any> = BehaviorSubject.create()
   private val sceneUpdatesSubject: BehaviorSubject<Any> = BehaviorSubject.create()
 
+  private val updatesSubject: BehaviorSubject<Id> = BehaviorSubject.create()
+
   private val androidAutoReloadSubject = PublishSubject.create<Unit>()
 
   @Synchronized
@@ -56,20 +58,24 @@ class UpdateEventsManager @Inject constructor(
 
   fun emitSceneUpdate(sceneId: Int) {
     getSubjectForScene(sceneId).onNext(State.Scene)
+    updatesSubject.onNext(Id(IdType.SCENE, sceneId))
   }
 
   fun emitChannelUpdate(channelId: Int) {
     getSubjectForChannel(channelId).onNext(State.Channel)
+    updatesSubject.onNext(Id(IdType.CHANNEL, channelId))
 
     channelToRootRelationHolderUseCase.getParents(channelId)?.let { parents ->
       parents.forEach {
         getSubjectForChannel(it).onNext(State.Channel)
+        updatesSubject.onNext(Id(IdType.CHANNEL, it))
       }
     }
   }
 
   fun emitGroupUpdate(groupId: Int) {
     getSubjectForChannelGroup(groupId).onNext(State.Group)
+    updatesSubject.onNext(Id(IdType.GROUP, groupId))
   }
 
   fun emitChannelsUpdate() {
@@ -83,6 +89,24 @@ class UpdateEventsManager @Inject constructor(
   fun emitScenesUpdate() {
     sceneUpdatesSubject.onNext(Any())
   }
+
+  fun observeAllChannels(): Observable<Int> =
+    updatesSubject
+      .filter { it.type == IdType.CHANNEL }
+      .map { it.id }
+      .hide()
+
+  fun observeAllGroups(): Observable<Int> =
+    updatesSubject
+      .filter { it.type == IdType.GROUP }
+      .map { it.id }
+      .hide()
+
+  fun observeAllScenes(): Observable<Int> =
+    updatesSubject
+      .filter { it.type == IdType.SCENE }
+      .map { it.id }
+      .hide()
 
   fun observerScene(sceneId: Int): Observable<SceneEntity> {
     return getSubjectForScene(sceneId).hide()

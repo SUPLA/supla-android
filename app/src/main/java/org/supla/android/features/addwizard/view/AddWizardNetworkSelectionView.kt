@@ -263,7 +263,7 @@ private val previewScope = object : AddWizardNetworkSelectionScope {
   override fun onRemoveSpaces() {}
 
   override fun onStepFinished(step: AddWizardScreen) {}
-  override fun onClose(step: AddWizardScreen) {}
+  override fun onClose() {}
 }
 
 @Preview(backgroundColor = 0xFF12A71E, showBackground = true)
