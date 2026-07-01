@@ -23,7 +23,7 @@ import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.ChannelGroupRepository
-import org.supla.android.data.source.RoomChannelRepository
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.db.ChannelBase
 import org.supla.android.extensions.subscribeBy
@@ -33,7 +33,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LegacyDetailViewModel @Inject constructor(
   private val channelGroupRepository: ChannelGroupRepository,
-  private val channelRepository: RoomChannelRepository,
+  private val channelRepository: ChannelRepository,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<LegacyDetailViewState, LegacyDetailViewEvent>(LegacyDetailViewState(), schedulers) {
 

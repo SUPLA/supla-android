@@ -20,6 +20,7 @@ package org.supla.android.features.nfc.shared.edit
 import androidx.lifecycle.viewModelScope
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.launch
+import org.supla.android.R
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.model.spinner.ProfileItem
@@ -58,7 +59,11 @@ open class BaseEditNfcTagViewModel(
   override val getCaptionUseCase: GetCaptionUseCase,
   schedulers: SuplaSchedulers
 ) :
-  BaseViewModel<EditNfcTagViewState, EditNfcTagViewEvent>(EditNfcTagViewState(), schedulers),
+  BaseViewModel<EditNfcTagViewState, EditNfcTagViewEvent>(
+    defaultState = EditNfcTagViewState(),
+    schedulers = schedulers,
+    manageScreenTitle = true
+  ),
   SubjectItemConversionScope {
 
   private var mode: Mode = Mode.Unknown
@@ -213,8 +218,8 @@ open class BaseEditNfcTagViewModel(
     }
 
     when (mode) {
-      is Mode.Edit -> sendEvent(EditNfcTagViewEvent.SetEditTagTitle(name))
-      is Mode.Insert -> sendEvent(EditNfcTagViewEvent.SetNewTagTitle)
+      is Mode.Edit -> setScreenTitle(name)
+      is Mode.Insert -> setScreenTitle(R.string.edit_nfc_new_tag_header)
       else -> {} // No title change needed
     }
   }
@@ -301,8 +306,6 @@ open class BaseEditNfcTagViewModel(
 
 sealed interface EditNfcTagViewEvent : ViewEvent {
   data object Close : EditNfcTagViewEvent
-  data object SetNewTagTitle : EditNfcTagViewEvent
-  data class SetEditTagTitle(val name: String) : EditNfcTagViewEvent
 }
 
 private fun MutableSet<Selection>.addOrReplace(selection: Selection) {

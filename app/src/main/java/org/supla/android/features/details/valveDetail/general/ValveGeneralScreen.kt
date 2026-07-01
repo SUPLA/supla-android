@@ -38,12 +38,18 @@ fun ValveGeneralScreen(
 ) {
   ViewModelHost(
     viewModel = viewModel,
-    onResume = { viewModel.loadData(item.remoteId) },
-    eventHandler = { handleEvent(it) }
-  ) {
-    ValveGeneralDetailView(state = it.viewState)
+    onCreate = { viewModel.observe(item.remoteId) },
+    onStart = { viewModel.loadData(item.remoteId) }
+  ) { state ->
+    ValveGeneralDetailView(
+      state = state.viewState,
+      onOpenClick = { viewModel.onActionClick(item.remoteId, ValveAction.OPEN) },
+      onCloseClick = { viewModel.onActionClick(item.remoteId, ValveAction.CLOSE) },
+      onInfoClick = { stateDialogViewModel.showDialog(it.channelId) },
+      onCaptionLongPress = { captionChangeViewModel.showChannelDialog(it.channelId, it.profileId, it.userCaption) }
+    )
 
-    it.dialog?.let { dialog ->
+    state.dialog?.let { dialog ->
       AlertDialog(
         title = stringResource(id = android.R.string.dialog_alert_title),
         message = stringResource(dialog.messageRes),
@@ -62,7 +68,4 @@ fun ValveGeneralScreen(
   ViewModelHostBase(stateDialogViewModel) {
     stateDialogViewModel.View(it)
   }
-}
-
-private fun handleEvent(event: ValveGeneralDetailViewEvent) {
 }

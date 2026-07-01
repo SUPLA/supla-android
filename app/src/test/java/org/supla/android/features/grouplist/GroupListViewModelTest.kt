@@ -423,7 +423,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     // then
     Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).containsExactly(
-      GroupListViewEvent.OpenStandardDetail(ItemBundle(remoteId, 0, profileId, ItemType.GROUP, function), detailType.pages)
+      GroupListViewEvent.OpenDetail(ItemBundle(remoteId, 0, profileId, ItemType.GROUP, function), detailType.pages)
     )
 
     verify {

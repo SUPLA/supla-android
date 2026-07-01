@@ -18,6 +18,7 @@ package org.supla.android.features.deleteaccountweb
  */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
+import org.supla.android.R
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.features.webcontent.WebContentViewModel
 import org.supla.android.features.webcontent.WebContentViewState
@@ -27,7 +28,11 @@ import javax.inject.Inject
 @HiltViewModel
 class DeleteAccountWebViewModel @Inject constructor(
   schedulers: SuplaSchedulers
-) : WebContentViewModel<DeleteAccountWebViewState, DeleteAccountWebViewEvent>(DeleteAccountWebViewState(), schedulers) {
+) : WebContentViewModel<DeleteAccountWebViewState, DeleteAccountWebViewEvent>(
+  defaultState = DeleteAccountWebViewState(),
+  schedulers = schedulers,
+  defaultTitle = R.string.app_name
+) {
 
   override fun urlLoaded(url: String?) {
     super.urlLoaded(url)

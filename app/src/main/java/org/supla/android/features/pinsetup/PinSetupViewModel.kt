@@ -38,7 +38,11 @@ class PinSetupViewModel @Inject constructor(
   private val shaHashHelper: ShaHashHelper,
   private val biometricUtils: BiometricUtils,
   suplaSchedulers: SuplaSchedulers
-) : BaseViewModel<PinSetupViewModelState, PinSetupViewEvent>(PinSetupViewModelState(), suplaSchedulers) {
+) : BaseViewModel<PinSetupViewModelState, PinSetupViewEvent>(
+  defaultState = PinSetupViewModelState(),
+  schedulers = suplaSchedulers,
+  titleRes = R.string.pin_setup_title
+) {
 
   override fun onViewCreated() {
     updateState { it.copy(viewState = it.viewState.copy(biometricStatus = biometricUtils.canAuthenticate())) }

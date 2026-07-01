@@ -53,15 +53,11 @@ fun EditNfcTagScreen(
   val context = LocalContext.current
   val nfcHost = context.findNfcHost()
   val scope = rememberCoroutineScope()
-  val title = remember { mutableStateOf("") }
 
-  BackScaffold(
-    title = title.value,
-    navigator = navigator
-  ) {
+  BackScaffold(navigator) {
     ViewModelHost(
       viewModel = viewModel,
-      eventHandler = { handleEvent(it, navigator, title, context) },
+      eventHandler = { handleEvent(it, navigator) },
       onCreate = { onCreate(id, newItemData, navigator, viewModel) },
       onStart = {
         nfcHost?.enableNfcReader {
@@ -77,11 +73,9 @@ fun EditNfcTagScreen(
   }
 }
 
-private fun handleEvent(event: EditNfcTagViewEvent, navigator: MainComposeNavigator, title: MutableState<String>, context: Context) {
+private fun handleEvent(event: EditNfcTagViewEvent, navigator: MainComposeNavigator) {
   when (event) {
     EditNfcTagViewEvent.Close -> navigator.back()
-    is EditNfcTagViewEvent.SetEditTagTitle -> title.value = context.getString(R.string.edit_nfc_tag_title_with_name, event.name)
-    EditNfcTagViewEvent.SetNewTagTitle -> title.value = context.getString(R.string.edit_nfc_new_tag_header)
   }
 }
 

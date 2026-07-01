@@ -36,8 +36,8 @@ import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.core.ui.EventBasedViewModel
 import org.supla.android.core.ui.ViewEvent
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.ProfileRepository
-import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.AuthorizationReason
@@ -58,7 +58,7 @@ class MainListViewModel @Inject constructor(
   private val applicationPreferences: ApplicationPreferences,
   private val readAllProfilesUseCase: ReadAllProfilesUseCase,
   private val encryptedPreferences: EncryptedPreferences,
-  private val channelRepository: RoomChannelRepository,
+  private val channelRepository: ChannelRepository,
   private val notificationsHelper: NotificationsHelper,
   private val schedulers: SuplaSchedulers
 ) : EventBasedViewModel<MainListViewEvent>(), BaseAuthorizationViewModelScope {

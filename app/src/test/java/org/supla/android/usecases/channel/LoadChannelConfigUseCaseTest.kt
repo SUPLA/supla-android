@@ -31,7 +31,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
 import org.supla.android.data.source.ChannelConfigRepository
-import org.supla.android.data.source.RoomChannelRepository
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.SuplaChannelConfig
@@ -45,7 +45,7 @@ class LoadChannelConfigUseCaseTest {
   private lateinit var channelConfigRepository: ChannelConfigRepository
 
   @Mock
-  private lateinit var channelRepository: RoomChannelRepository
+  private lateinit var channelRepository: ChannelRepository
 
   @InjectMocks
   private lateinit var useCase: LoadChannelConfigUseCase

@@ -37,10 +37,10 @@ import org.supla.android.data.model.settings.ListValueAggregation
 import org.supla.android.data.model.settings.eletricitymeter.ElectricityMeterBalanceType
 import org.supla.android.data.model.settings.eletricitymeter.ElectricityMeterMeasurementType
 import org.supla.android.data.model.settings.eletricitymeter.ElectricityMeterSettings
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.ElectricityMeterLogRepository
 import org.supla.android.data.source.ImpulseCounterLogRepository
 import org.supla.android.data.source.ProfileRepository
-import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity
@@ -61,7 +61,7 @@ class TriggerLogHistoryDownloadUseCaseTest {
   private lateinit var profileRepository: ProfileRepository
 
   @MockK
-  private lateinit var channelRepository: RoomChannelRepository
+  private lateinit var channelRepository: ChannelRepository
 
   @MockK
   private lateinit var userStateHolder: UserStateHolder

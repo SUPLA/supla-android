@@ -52,7 +52,11 @@ class SettingsViewModel @Inject constructor(
   private val modeManager: UiModeManager,
   private val encryptedPreferences: EncryptedPreferences,
   schedulers: SuplaSchedulers
-) : BaseViewModel<SettingsViewState, SettingsViewEvent>(SettingsViewState(), schedulers) {
+) : BaseViewModel<SettingsViewState, SettingsViewEvent>(
+  defaultState = SettingsViewState(),
+  schedulers = schedulers,
+  titleRes = R.string.settings
+) {
 
   fun loadSettings() {
     configObservable()

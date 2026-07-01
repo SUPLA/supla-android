@@ -63,7 +63,7 @@ class SettingsFragment : BaseFragment<SettingsViewState, SettingsViewEvent>(R.la
       SettingsViewEvent.NavigateToAndroidAuto -> navigator.navigateTo(MainRoute.AndroidAutoItems)
       SettingsViewEvent.NavigateToNfc -> navigator.navigateTo(MainRoute.NfcTagList)
       is SettingsViewEvent.NavigateToPinSetup -> navigator.navigateTo(MainRoute.PinSetup(event.lockScreenScope))
-      is SettingsViewEvent.NavigateToPinVerification -> navigator.navigateTo(MainRoute.Lock(event.verificationAction))
+      is SettingsViewEvent.NavigateToPinVerification -> navigator.navigateTo(MainRoute.Unlock(event.verificationAction))
       SettingsViewEvent.NavigateToSettings -> navigator.navigateToSystemSettings()
     }
   }

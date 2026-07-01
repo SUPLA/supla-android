@@ -29,12 +29,8 @@ fun ThermostatScheduleScreen(
 ) {
   ViewModelHost(
     viewModel = viewModel,
-    onCreate = { viewModel.observeConfig(item.remoteId, item.deviceId) },
-    eventHandler = { handleEvent(it) }
+    onCreate = { viewModel.observeConfig(item.remoteId, item.deviceId) }
   ) {
     viewModel.View(it)
   }
-}
-
-private fun handleEvent(event: ScheduleDetailViewEvent) {
 }

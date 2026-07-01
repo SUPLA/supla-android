@@ -36,12 +36,16 @@ fun <S : BaseWindowViewModelState> WindowDetailScreen(
   item: ItemBundle,
   navigator: MainComposeNavigator,
   viewModel: BaseWindowViewModel<S>,
+  onCreate: () -> Unit = {},
   onResume: () -> Unit = {}
 ) {
   val context = LocalContext.current
   ViewModelHost(
     viewModel = viewModel,
-    onCreate = { viewModel.observeData(item.remoteId, item.itemType) },
+    onCreate = {
+      viewModel.observeData(item.remoteId, item.itemType)
+      onCreate()
+    },
     onResume = onResume,
     eventHandler = { handleEvent(it, context, navigator) }
   ) { state ->

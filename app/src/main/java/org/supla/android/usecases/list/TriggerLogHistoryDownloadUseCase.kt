@@ -21,10 +21,10 @@ import kotlinx.coroutines.rx3.awaitSingleOrNull
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.storage.UserStateHolder
 import org.supla.android.data.model.settings.ListValueAggregation
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.ElectricityMeterLogRepository
 import org.supla.android.data.source.ImpulseCounterLogRepository
 import org.supla.android.data.source.ProfileRepository
-import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
@@ -47,7 +47,7 @@ class TriggerLogHistoryDownloadUseCase @Inject constructor(
   userStateHolder: UserStateHolder,
   dateProvider: DateProvider,
   private val profileRepository: ProfileRepository,
-  private val channelRepository: RoomChannelRepository
+  private val channelRepository: ChannelRepository
 ) {
 
   private val handlers: List<ChannelHandler> = listOf(

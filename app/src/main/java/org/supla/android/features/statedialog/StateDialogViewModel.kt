@@ -74,8 +74,8 @@ class StateDialogViewModel @Inject constructor(
   suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<StateDialogViewModelState, StateDialogViewEvent>(
-  StateDialogViewModelState(),
-  schedulers
+  defaultState = StateDialogViewModelState(),
+  schedulers = schedulers
 ),
   StateDialogScope,
   LifespanDialogScope,

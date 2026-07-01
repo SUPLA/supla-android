@@ -26,7 +26,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.supla.android.data.source.ChannelRelationRepository
-import org.supla.android.data.source.RoomChannelRepository
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
@@ -38,7 +38,7 @@ class ReadChannelWithChildrenTreeUseCaseTest {
   private lateinit var channelRelationRepository: ChannelRelationRepository
 
   @MockK
-  private lateinit var channelRepository: RoomChannelRepository
+  private lateinit var channelRepository: ChannelRepository
 
   private lateinit var useCase: ReadChannelWithChildrenTreeUseCase
 

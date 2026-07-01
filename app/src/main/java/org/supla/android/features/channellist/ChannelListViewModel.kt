@@ -17,8 +17,6 @@ package org.supla.android.features.channellist
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.os.Bundle
-import androidx.annotation.IdRes
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -27,16 +25,11 @@ import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
-import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.subscribeBy
-import org.supla.android.features.details.detailbase.StandardDetailFragment
 import org.supla.android.features.details.detailbase.base.DetailPage
 import org.supla.android.features.details.detailbase.base.ItemBundle
-import org.supla.android.features.details.impulsecounter.ImpulseCounterDetailFragment
-import org.supla.android.features.details.rgbanddimmer.RgbwDetailFragment
-import org.supla.android.features.details.thermostatdetail.ThermostatDetailFragment
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
@@ -63,8 +56,6 @@ import org.supla.android.usecases.details.ThermometerDetailType
 import org.supla.android.usecases.details.ThermostatDetailType
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
-import org.supla.core.shared.infrastructure.LocalizedString
-import org.supla.core.shared.usecase.GetCaptionUseCase
 import javax.inject.Inject
 
 @HiltViewModel
@@ -77,7 +68,6 @@ class ChannelListViewModel @Inject constructor(
   private val reorderChannelsUseCase: ReorderChannelsUseCase,
   private val toggleLocationUseCase: ToggleLocationUseCase,
   private val channelActionUseCase: ChannelActionUseCase,
-  private val getCaptionUseCase: GetCaptionUseCase,
   updateEventsManager: UpdateEventsManager,
   dateProvider: DateProvider,
   schedulers: SuplaSchedulers
@@ -160,22 +150,15 @@ class ChannelListViewModel @Inject constructor(
       return // do not open details for offline channels
     }
 
-    val caption = getCaptionUseCase(channel.shareable)
     when (val detailType = provideChannelDetailTypeUseCase(data)) {
-      is ThermometerDetailType -> sendEvent(
-        ChannelListViewEvent.OpenSingleHistoryDetail(
-          caption,
-          ItemBundle.from(channel),
-          detailType.pages
-        )
-      )
-      is GpmDetailType -> sendEvent(ChannelListViewEvent.OpenSingleHistoryDetail(caption, ItemBundle.from(channel), detailType.pages))
-      is HumidityDetailType -> sendEvent(ChannelListViewEvent.OpenSingleHistoryDetail(caption, ItemBundle.from(channel), detailType.pages))
-      is StandardDetailType -> sendEvent(ChannelListViewEvent.OpenStandardDetail(caption, ItemBundle.from(channel), detailType.pages))
-      is ThermostatDetailType -> sendEvent(ChannelListViewEvent.OpenThermostatDetail(caption, ItemBundle.from(channel), detailType.pages))
-      is IcDetailType -> sendEvent(ChannelListViewEvent.OpenIcDetail(caption, ItemBundle.from(channel), detailType.pages))
-      is RgbwDetailType -> sendEvent(ChannelListViewEvent.OpenRgbwDetail(caption, ItemBundle.from(channel), detailType.pages))
-      is LegacyDetailType -> sendEvent(ChannelListViewEvent.OpenLegacyDetails(channel.remoteId, detailType))
+      is ThermometerDetailType -> sendEvent(ChannelListViewEvent.OpenDetail(ItemBundle.from(channel), detailType.pages))
+      is GpmDetailType -> sendEvent(ChannelListViewEvent.OpenDetail(ItemBundle.from(channel), detailType.pages))
+      is HumidityDetailType -> sendEvent(ChannelListViewEvent.OpenDetail(ItemBundle.from(channel), detailType.pages))
+      is StandardDetailType -> sendEvent(ChannelListViewEvent.OpenDetail(ItemBundle.from(channel), detailType.pages))
+      is ThermostatDetailType -> sendEvent(ChannelListViewEvent.OpenDetail(ItemBundle.from(channel), detailType.pages))
+      is IcDetailType -> sendEvent(ChannelListViewEvent.OpenDetail(ItemBundle.from(channel), detailType.pages))
+      is RgbwDetailType -> sendEvent(ChannelListViewEvent.OpenDetail(ItemBundle.from(channel), detailType.pages))
+      is LegacyDetailType -> sendEvent(ChannelListViewEvent.OpenLegacyDetail(channel.remoteId, detailType))
       null -> {} // no action
     }
   }
@@ -280,28 +263,8 @@ sealed class ChannelListViewEvent : ViewEvent {
   data class ShowLocationCaptionChangeDialog(val remoteId: Int, val profileId: Long, val caption: String) : ChannelListViewEvent()
   data class ShowChannelCaptionChangeDialog(val remoteId: Int, val profileId: Long, val caption: String) : ChannelListViewEvent()
   data class ShowInfoDialog(val remoteId: Int) : ChannelListViewEvent()
-
-  data class OpenLegacyDetails(val remoteId: Int, val type: LegacyDetailType) : ChannelListViewEvent()
-
-  data class OpenThermostatDetail(val caption: LocalizedString, val itemBundle: ItemBundle, val pages: List<DetailPage>) :
-    BaseDetail(R.id.thermostat_detail_fragment, ThermostatDetailFragment.bundle(itemBundle, pages.toTypedArray()))
-
-  data class OpenIcDetail(val caption: LocalizedString, val itemBundle: ItemBundle, val pages: List<DetailPage>) :
-    BaseDetail(R.id.impulse_counter_detail_fragment, ImpulseCounterDetailFragment.bundle(itemBundle, pages.toTypedArray()))
-
-  data class OpenStandardDetail(val caption: LocalizedString, val itemBundle: ItemBundle, val pages: List<DetailPage>) :
-    BaseDetail(R.id.standard_detail_fragment, StandardDetailFragment.bundle(itemBundle, pages.toTypedArray()))
-
-  data class OpenSingleHistoryDetail(val caption: LocalizedString, val itemBundle: ItemBundle, val pages: List<DetailPage>) :
-    BaseDetail(R.id.single_history_detail_fragment, StandardDetailFragment.bundle(itemBundle, pages.toTypedArray()))
-
-  data class OpenRgbwDetail(val caption: LocalizedString, val itemBundle: ItemBundle, val pages: List<DetailPage>) :
-    BaseDetail(R.id.rgbw_detail_fragment, RgbwDetailFragment.bundle(itemBundle, pages.toTypedArray()))
-
-  abstract class BaseDetail(
-    @param:IdRes val fragmentId: Int,
-    val fragmentArguments: Bundle
-  ) : ChannelListViewEvent()
+  data class OpenLegacyDetail(val remoteId: Int, val type: LegacyDetailType) : ChannelListViewEvent()
+  data class OpenDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) : ChannelListViewEvent()
 }
 
 data class ChannelListViewState(

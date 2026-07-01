@@ -30,7 +30,7 @@ import org.junit.Before
 import org.junit.Test
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.data.source.ChannelGroupRepository
-import org.supla.android.data.source.RoomChannelRepository
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.runtime.ItemType
@@ -43,7 +43,7 @@ class LegacyDetailViewModelTest : BaseViewModelTest<LegacyDetailViewState, Legac
 ) {
 
   @MockK
-  private lateinit var channelRepository: RoomChannelRepository
+  private lateinit var channelRepository: ChannelRepository
 
   @MockK
   lateinit var channelGroupRepository: ChannelGroupRepository

@@ -21,6 +21,7 @@ import android.nfc.NfcAdapter
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import org.supla.android.R
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
@@ -43,7 +44,12 @@ class NfcTagListViewModel @Inject constructor(
   private val getCaptionUseCase: GetCaptionUseCase,
   private val nfcTagRepository: NfcTagRepository,
   schedulers: SuplaSchedulers
-) : BaseViewModel<NfcTagListViewModelState, NfcTagListViewEvent>(NfcTagListViewModelState(), schedulers), NfcTagListScope {
+) : BaseViewModel<NfcTagListViewModelState, NfcTagListViewEvent>(
+  defaultState = NfcTagListViewModelState(),
+  schedulers = schedulers,
+  titleRes = R.string.nfc_list_title
+),
+  NfcTagListScope {
 
   fun onStart(nfcAdapter: NfcAdapter?) {
     val nfcState = when {

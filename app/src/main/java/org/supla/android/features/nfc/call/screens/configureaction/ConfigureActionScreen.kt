@@ -64,9 +64,6 @@ fun ConfigureActionScreen(
     eventHandler = {
       when (it) {
         EditNfcTagViewEvent.Close -> navigator.finish()
-        is EditNfcTagViewEvent.SetEditTagTitle,
-        EditNfcTagViewEvent.SetNewTagTitle -> {
-        } // nothing to do
       }
     },
     content = { View(it, viewModel) }
@@ -86,9 +83,6 @@ fun ConfigureActionScreen(
     eventHandler = {
       when (it) {
         EditNfcTagViewEvent.Close -> navigator.finish()
-        is EditNfcTagViewEvent.SetEditTagTitle,
-        EditNfcTagViewEvent.SetNewTagTitle -> {
-        } // nothing to do
       }
     },
     content = { View(it, viewModel) }

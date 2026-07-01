@@ -22,6 +22,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.supla.android.R
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.source.NfcTagRepository
@@ -36,7 +37,12 @@ class AddNfcTagViewModel @Inject constructor(
   private val prepareNfcTagUseCase: PrepareNfcTagUseCase,
   private val nfcTagRepository: NfcTagRepository,
   schedulers: SuplaSchedulers
-) : BaseViewModel<AddNfcTagViewState, AddNfcTagViewEvent>(AddNfcTagViewState(), schedulers), AddNfcTagScope {
+) : BaseViewModel<AddNfcTagViewState, AddNfcTagViewEvent>(
+  defaultState = AddNfcTagViewState(),
+  schedulers = schedulers,
+  titleRes = R.string.menu_nfc
+),
+  AddNfcTagScope {
 
   private var currentJob: Job? = null
 

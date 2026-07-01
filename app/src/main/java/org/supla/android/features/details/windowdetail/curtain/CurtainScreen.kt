@@ -29,5 +29,9 @@ fun CurtainScreen(
   navigator: MainComposeNavigator,
   viewModel: CurtainViewModel = hiltViewModel()
 ) {
-  WindowDetailScreen(item = item, navigator = navigator, viewModel = viewModel)
+  WindowDetailScreen(
+    item = item,
+    navigator = navigator,
+    viewModel = viewModel
+  )
 }

@@ -22,17 +22,28 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.features.details.detailbase.impulsecounter.ImpulseCounterMetricsView
 import org.supla.android.features.nfc.call.screens.ViewModelHost
+import org.supla.android.main.MainComposeNavigator
+import org.supla.android.main.MainRoute
+import org.supla.android.main.topbar.RegisterStatedTopBarIcon
+import org.supla.android.main.topbar.TopBarIcon
 
 @Composable
 fun ImpulseCounterGeneralScreen(
   item: ItemBundle,
+  navigator: MainComposeNavigator,
   viewModel: ImpulseCounterGeneralViewModel = hiltViewModel()
 ) {
   ViewModelHost(
     viewModel = viewModel,
     onCreate = { viewModel.onViewCreated(item.remoteId) },
-    onResume = { viewModel.loadData(item.remoteId) },
+    onStart = { viewModel.loadData(item.remoteId) },
   ) {
+    RegisterStatedTopBarIcon(
+      icon = TopBarIcon.OpenOcr,
+      visible = it.hasPhoto,
+      handler = { navigator.navigateTo(MainRoute.CounterPhoto(item.remoteId)) }
+    )
+
     ImpulseCounterMetricsView(it.viewState)
   }
 }

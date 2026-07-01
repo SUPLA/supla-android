@@ -20,9 +20,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.data.model.general.EntityUpdateResult
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.LocationRepository
 import org.supla.android.data.source.ProfileRepository
-import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.custom.LocationSortingType
@@ -39,7 +39,7 @@ import javax.inject.Singleton
 class UpdateChannelUseCase @Inject constructor(
   private val requestChannelConfigUseCase: RequestChannelConfigUseCase,
   private val profileRepository: ProfileRepository,
-  private val channelRepository: RoomChannelRepository,
+  private val channelRepository: ChannelRepository,
   private val locationRepository: LocationRepository,
   private val widgetPreferences: WidgetPreferences,
   private val widgetManager: WidgetManager

@@ -43,7 +43,7 @@ import java.util.TimerTask;
 import javax.inject.Inject;
 import org.supla.android.core.shared.SuplaChannelBasicCfgExtensionsKt;
 import org.supla.android.core.shared.ZWaveNodeExtensionsKt;
-import org.supla.android.data.source.RoomChannelRepository;
+import org.supla.android.data.source.ChannelRepository;
 import org.supla.android.db.Channel;
 import org.supla.android.lib.SuplaChannelBasicCfg;
 import org.supla.android.lib.SuplaClient;
@@ -121,7 +121,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
   private TextView mTvWakeUpInfo;
   private Button mBtnWakeUpSettings;
 
-  @Inject RoomChannelRepository channelRepository;
+  @Inject ChannelRepository channelRepository;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {

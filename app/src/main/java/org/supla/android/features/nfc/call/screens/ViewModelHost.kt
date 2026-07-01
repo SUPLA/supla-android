@@ -38,6 +38,7 @@ import org.supla.android.core.ui.EventBasedViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.main.scaffold.LocalScaffoldPadding
+import org.supla.android.main.topbar.ManageScreenTitle
 
 @Composable
 fun <S : ViewState, E : ViewEvent> ViewModelHost(
@@ -78,7 +79,7 @@ fun <S : ViewState, E : ViewEvent> ViewModelHostBase(
   onStop: () -> Unit = {},
   content: @Composable (S) -> Unit
 ) {
-  EventsHostBase(
+  EventBasedViewModelHost(
     viewModel = viewModel,
     eventHandler = eventHandler,
     onCreate = onCreate,
@@ -92,7 +93,7 @@ fun <S : ViewState, E : ViewEvent> ViewModelHostBase(
 }
 
 @Composable
-fun <E : ViewEvent> EventsHostBase(
+fun <E : ViewEvent> EventBasedViewModelHost(
   viewModel: EventBasedViewModel<E>,
   eventHandler: (E) -> Unit = {},
   onCreate: () -> Unit = {},
@@ -103,14 +104,41 @@ fun <E : ViewEvent> EventsHostBase(
 ) {
   val lifecycleOwner = LocalLifecycleOwner.current
 
-  LaunchedEffect(viewModel) {
-    viewModel.onViewCreated()
-    onCreate()
+  viewModel.LifeCycleObserver(
+    onCreate = onCreate,
+    onResume = onResume,
+    onStart = onStart,
+    onStop = onStop
+  )
+
+  LaunchedEffect(viewModel, lifecycleOwner) {
+    lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+      viewModel.getViewEvents().collect { eventHandler(it) }
+    }
   }
+
+  ManageScreenTitle(viewModel)
+
+  content()
+}
+
+@Composable
+fun EventBasedViewModel<out ViewEvent>.LifeCycleObserver(
+  onCreate: () -> Unit = {},
+  onResume: () -> Unit = {},
+  onStart: () -> Unit = {},
+  onStop: () -> Unit = {},
+) {
+  val viewModel = this
+  val lifecycleOwner = LocalLifecycleOwner.current
 
   DisposableEffect(lifecycleOwner, viewModel) {
     val observer = LifecycleEventObserver { _, event ->
       when (event) {
+        Lifecycle.Event.ON_CREATE -> {
+          viewModel.onViewCreated()
+          onCreate()
+        }
         Lifecycle.Event.ON_START -> {
           onStart()
           viewModel.onStart()
@@ -126,12 +154,4 @@ fun <E : ViewEvent> EventsHostBase(
     lifecycleOwner.lifecycle.addObserver(observer)
     onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
   }
-
-  LaunchedEffect(viewModel, lifecycleOwner) {
-    lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-      viewModel.getViewEvents().collect { eventHandler(it) }
-    }
-  }
-
-  content()
 }

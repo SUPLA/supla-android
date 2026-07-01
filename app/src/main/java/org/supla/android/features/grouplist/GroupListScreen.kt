@@ -31,11 +31,14 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.features.captionchangedialog.CaptionChangeViewEvent
 import org.supla.android.features.captionchangedialog.CaptionChangeViewModel
 import org.supla.android.features.captionchangedialog.View
 import org.supla.android.features.nfc.call.screens.ViewModelHostBase
 import org.supla.android.main.MainComposeNavigator
+import org.supla.android.main.MainRoute
+import org.supla.android.main.MainRoute.StandardDetail
 import org.supla.android.main.scaffold.screenUnderTopBarPaddings
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.lists.ListItem
@@ -77,16 +80,13 @@ fun GroupListScreen(
 
 private fun handleGroupEvents(event: GroupListViewEvent, navigator: MainComposeNavigator, viewModel: CaptionChangeViewModel) {
   when (event) {
-    is GroupListViewEvent.ShowGroupCaptionChangeDialog ->
-      viewModel.showGroupDialog(event.remoteId, event.profileId, event.caption)
-    is GroupListViewEvent.ShowLocationCaptionChangeDialog ->
-      viewModel.showLocationDialog(event.remoteId, event.profileId, event.caption)
+    is GroupListViewEvent.ShowGroupCaptionChangeDialog -> viewModel.showGroupDialog(event.remoteId, event.profileId, event.caption)
+    is GroupListViewEvent.ShowLocationCaptionChangeDialog -> viewModel.showLocationDialog(event.remoteId, event.profileId, event.caption)
     is GroupListViewEvent.NavigateToPrivateCloud -> navigator.navigateToWeb(event.url)
     GroupListViewEvent.NavigateToSuplaBetaCloud -> navigator.navigateToBetaCloudExternal()
     GroupListViewEvent.NavigateToSuplaCloud -> navigator.navigateToCloudExternal()
-    is GroupListViewEvent.OpenLegacyDetails -> TODO()
-    is GroupListViewEvent.OpenRgbwDetail -> TODO()
-    is GroupListViewEvent.OpenStandardDetail -> TODO()
+    is GroupListViewEvent.OpenLegacyDetail -> navigator.navigateTo(MainRoute.LegacyDetail(event.remoteId, ItemType.GROUP, event.type))
+    is GroupListViewEvent.OpenDetail -> navigator.navigateTo(StandardDetail(event.itemBundle, event.pages))
   }
 }
 

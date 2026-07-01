@@ -35,6 +35,7 @@ import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.storage.LocalApplicationPreferences
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.features.captionchangedialog.CaptionChangeViewEvent
 import org.supla.android.features.captionchangedialog.CaptionChangeViewModel
 import org.supla.android.features.captionchangedialog.View
@@ -43,6 +44,7 @@ import org.supla.android.features.statedialog.StateDialogViewModel
 import org.supla.android.features.statedialog.View
 import org.supla.android.images.ImageId
 import org.supla.android.main.MainComposeNavigator
+import org.supla.android.main.MainRoute
 import org.supla.android.main.MainRoute.AddWizard
 import org.supla.android.main.MainRoute.DeviceCatalog
 import org.supla.android.main.MainRoute.StandardDetail
@@ -109,24 +111,11 @@ private fun handleChannelEvents(
       captionChangeViewModel.showChannelDialog(event.remoteId, event.profileId, event.caption)
     is ChannelListViewEvent.ShowLocationCaptionChangeDialog ->
       captionChangeViewModel.showLocationDialog(event.remoteId, event.profileId, event.caption)
-    is ChannelListViewEvent.ShowInfoDialog ->
-      stateDialogViewModel.showDialog(event.remoteId)
-    is ChannelListViewEvent.OpenStandardDetail ->
-      navigator.navigateTo(StandardDetail(event.itemBundle, event.caption, event.pages))
-    is ChannelListViewEvent.OpenThermostatDetail ->
-      navigator.navigateTo(StandardDetail(event.itemBundle, event.caption, event.pages))
-    is ChannelListViewEvent.OpenIcDetail ->
-      navigator.navigateTo(StandardDetail(event.itemBundle, event.caption, event.pages))
-    is ChannelListViewEvent.OpenRgbwDetail ->
-      navigator.navigateTo(StandardDetail(event.itemBundle, event.caption, event.pages))
-    is ChannelListViewEvent.OpenSingleHistoryDetail ->
-      navigator.navigateTo(StandardDetail(event.itemBundle, event.caption, event.pages))
-    ChannelListViewEvent.NavigateToAddDevice ->
-      navigator.navigateTo(AddWizard)
-    ChannelListViewEvent.NavigateToDeviceCatalog ->
-      navigator.navigateTo(DeviceCatalog)
-    is ChannelListViewEvent.OpenLegacyDetails -> TODO()
-    is ChannelListViewEvent.BaseDetail -> TODO()
+    is ChannelListViewEvent.ShowInfoDialog -> stateDialogViewModel.showDialog(event.remoteId)
+    is ChannelListViewEvent.OpenDetail -> navigator.navigateTo(StandardDetail(event.itemBundle, event.pages))
+    ChannelListViewEvent.NavigateToAddDevice -> navigator.navigateTo(AddWizard)
+    ChannelListViewEvent.NavigateToDeviceCatalog -> navigator.navigateTo(DeviceCatalog)
+    is ChannelListViewEvent.OpenLegacyDetail -> navigator.navigateTo(MainRoute.LegacyDetail(event.remoteId, ItemType.CHANNEL, event.type))
   }
 }
 

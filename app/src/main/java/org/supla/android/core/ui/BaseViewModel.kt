@@ -17,6 +17,7 @@ package org.supla.android.core.ui
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.annotation.StringRes
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
@@ -33,6 +34,8 @@ import kotlinx.coroutines.flow.map
 import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessageHandler
 import timber.log.Timber
@@ -43,8 +46,17 @@ interface BaseViewProxy<S : ViewState> {
 
 abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
   defaultState: S,
-  protected open val schedulers: SuplaSchedulers
-) : EventBasedViewModel<E>() {
+  protected open val schedulers: SuplaSchedulers,
+  defaultTitle: LocalizedString = LocalizedString.Empty,
+  manageScreenTitle: Boolean = false
+) : EventBasedViewModel<E>(defaultTitle, manageScreenTitle) {
+
+  constructor(defaultState: S, schedulers: SuplaSchedulers, @StringRes titleRes: Int) : this(
+    defaultState = defaultState,
+    schedulers = schedulers,
+    defaultTitle = localizedString(titleRes),
+    manageScreenTitle = true
+  )
 
   private val loadingState: MutableStateFlow<Boolean> = MutableStateFlow(false)
   private val viewState: MutableStateFlow<S> = MutableStateFlow(defaultState)

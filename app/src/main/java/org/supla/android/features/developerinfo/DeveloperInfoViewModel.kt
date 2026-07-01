@@ -26,6 +26,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.supla.android.R
 import org.supla.android.core.infrastructure.WorkManagerProxy
 import org.supla.android.core.infrastructure.storage.DebugFileLoggingTree
 import org.supla.android.core.infrastructure.storage.FileUtils
@@ -57,7 +58,11 @@ class DeveloperInfoViewModel @Inject constructor(
   private val fileUtils: FileUtils,
   @param:ApplicationContext private val context: Context,
   suplaSchedulers: SuplaSchedulers
-) : BaseViewModel<DeveloperInfoViewModelState, DeveloperInfoViewEvent>(DeveloperInfoViewModelState(), suplaSchedulers),
+) : BaseViewModel<DeveloperInfoViewModelState, DeveloperInfoViewEvent>(
+  defaultState = DeveloperInfoViewModelState(),
+  schedulers = suplaSchedulers,
+  titleRes = R.string.developer_option
+),
   DeveloperInfoScope {
 
   private var notificationId = 0

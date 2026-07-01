@@ -17,25 +17,30 @@ package org.supla.android.features.details.impulsecounter.general
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.work.ExistingWorkPolicy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Maybe
 import org.supla.android.core.infrastructure.DateProvider
+import org.supla.android.core.infrastructure.WorkManagerProxy
 import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.extensions.monthStart
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.details.detailbase.impulsecounter.ImpulseCounterGeneralStateHandler
 import org.supla.android.features.details.detailbase.impulsecounter.ImpulseCounterState
+import org.supla.android.features.details.impulsecounter.counterphoto.DownloadPhotoWorker
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.channel.measurements.ImpulseCounterMeasurements
 import org.supla.android.usecases.channel.measurements.impulsecounter.LoadImpulseCounterMeasurementsUseCase
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
+import org.supla.core.shared.usecase.channel.CheckOcrPhotoExistsUseCase
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,7 +49,9 @@ class ImpulseCounterGeneralViewModel @Inject constructor(
   private val downloadChannelMeasurementsUseCase: DownloadChannelMeasurementsUseCase,
   private val impulseCounterGeneralStateHandler: ImpulseCounterGeneralStateHandler,
   private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
+  private val checkOcrPhotoExistsUseCase: CheckOcrPhotoExistsUseCase,
   private val downloadEventsManager: DownloadEventsManager,
+  private val workManagerProxy: WorkManagerProxy,
   private val dateProvider: DateProvider,
   suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper,
   schedulers: SuplaSchedulers
@@ -107,6 +114,24 @@ class ImpulseCounterGeneralViewModel @Inject constructor(
         )
       } ?: state
     }
+
+    if (SuplaChannelFlag.OCR notInside channelWithChildren.flags) {
+      updateState {
+        val hasPhoto = checkOcrPhotoExistsUseCase(channelWithChildren.profileId, channelWithChildren.remoteId)
+
+        if (it.photoDownloaded) {
+          it.copy(hasPhoto = hasPhoto)
+        } else {
+          workManagerProxy.enqueueUniqueWork(
+            "${DownloadPhotoWorker.WORK_ID}.${channelWithChildren.remoteId}",
+            ExistingWorkPolicy.KEEP,
+            DownloadPhotoWorker.build(channelWithChildren.remoteId, channelWithChildren.profileId)
+          )
+
+          it.copy(photoDownloaded = true, hasPhoto = hasPhoto)
+        }
+      }
+    }
   }
 
   private fun handleDownloadEvents(downloadState: DownloadEventsManager.State) {
@@ -127,5 +152,7 @@ sealed class ImpulseCounterGeneralViewEvent : ViewEvent
 data class ImpulseCounterGeneralViewModelState(
   val remoteId: Int = 0,
   val initialDataLoadStarted: Boolean = false,
+  val photoDownloaded: Boolean = false,
+  val hasPhoto: Boolean = false,
   val viewState: ImpulseCounterState = ImpulseCounterState()
 ) : ViewState()

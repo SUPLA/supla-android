@@ -143,8 +143,6 @@ class LegacyDetailFragment : BaseFragment<LegacyDetailViewState, LegacyDetailVie
   }
 
   private fun setupDetailView(channelBase: ChannelBase) {
-    setToolbarTitle(channelBase.getCaption(requireContext()))
-
     detailView = getDetailView().apply { setData(channelBase) }
     binding.legacyDetailContent.addView(
       detailView,

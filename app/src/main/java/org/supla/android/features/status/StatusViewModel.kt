@@ -55,8 +55,8 @@ class StatusViewModel @Inject constructor(
   override val authorizeUseCase: AuthorizeUseCase,
   suplaSchedulers: SuplaSchedulers
 ) : BaseViewModel<StatusViewState, StatusViewEvent>(
-  StatusViewState(),
-  suplaSchedulers
+  defaultState = StatusViewState(),
+  schedulers = suplaSchedulers
 ),
   StatusViewScope,
   BaseAuthorizationViewModelScope {
