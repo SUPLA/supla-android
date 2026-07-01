@@ -135,7 +135,7 @@ class MainActivity : FragmentActivity(), NfcHost, ToolbarVisibilityController {
               is SuplaClientState.Disconnecting,
               SuplaClientState.Locking,
               is SuplaClientState.Finished -> navigator.navigateToStatus()
-              SuplaClientState.Locked -> navigator.navigateTo(MainRoute.Lock(UnlockAction.AuthorizeApplication))
+              SuplaClientState.Locked -> navigator.navigateTo(MainRoute.UnlockApp(UnlockAction.AuthorizeApplication))
               else -> {}
             }
           }

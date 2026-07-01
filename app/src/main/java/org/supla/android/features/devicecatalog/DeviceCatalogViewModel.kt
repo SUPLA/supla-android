@@ -20,6 +20,7 @@ package org.supla.android.features.devicecatalog
 import android.net.Uri
 import android.webkit.WebResourceRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
+import org.supla.android.R
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.features.webcontent.WebContentViewModel
 import org.supla.android.features.webcontent.WebContentViewState
@@ -29,7 +30,11 @@ import javax.inject.Inject
 @HiltViewModel
 class DeviceCatalogViewModel @Inject constructor(
   schedulers: SuplaSchedulers
-) : WebContentViewModel<DeviceCatalogViewState, DeviceCatalogViewEvent>(DeviceCatalogViewState(), schedulers) {
+) : WebContentViewModel<DeviceCatalogViewState, DeviceCatalogViewEvent>(
+  defaultState = DeviceCatalogViewState(),
+  schedulers = schedulers,
+  defaultTitle = R.string.menu_device_catalog
+) {
 
   override fun loadingState(loading: Boolean) = currentState().copy(loading = loading)
 

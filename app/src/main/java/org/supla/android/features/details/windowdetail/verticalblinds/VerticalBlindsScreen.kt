@@ -33,6 +33,7 @@ fun VerticalBlindsScreen(
     item = item,
     navigator = navigator,
     viewModel = viewModel,
+    onCreate = { viewModel.observeConfig(item.remoteId, item.itemType) },
     onResume = { viewModel.loadConfig(item.remoteId, item.itemType) }
   )
 }

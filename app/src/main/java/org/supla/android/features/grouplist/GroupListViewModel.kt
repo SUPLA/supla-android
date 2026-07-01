@@ -18,23 +18,18 @@ package org.supla.android.features.grouplist
  */
 
 import android.net.Uri
-import android.os.Bundle
-import androidx.annotation.IdRes
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx3.awaitFirst
-import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.subscribeBy
-import org.supla.android.features.details.detailbase.StandardDetailFragment
 import org.supla.android.features.details.detailbase.base.DetailPage
 import org.supla.android.features.details.detailbase.base.ItemBundle
-import org.supla.android.features.details.rgbanddimmer.RgbwDetailFragment
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
@@ -172,10 +167,10 @@ class GroupListViewModel @Inject constructor(
     }
 
     when (val detailType = provideGroupDetailTypeUseCase(group)) {
-      is LegacyDetailType -> sendEvent(GroupListViewEvent.OpenLegacyDetails(group.remoteId, detailType))
-      is ThermostatDetailType -> sendEvent(GroupListViewEvent.OpenStandardDetail(ItemBundle.from(group), detailType.pages))
-      is StandardDetailType -> sendEvent(GroupListViewEvent.OpenStandardDetail(ItemBundle.from(group), detailType.pages))
-      is RgbwDetailType -> sendEvent(GroupListViewEvent.OpenRgbwDetail(ItemBundle.from(group), detailType.pages))
+      is LegacyDetailType -> sendEvent(GroupListViewEvent.OpenLegacyDetail(group.remoteId, detailType))
+      is StandardDetailType -> sendEvent(GroupListViewEvent.OpenDetail(ItemBundle.from(group), detailType.pages))
+      is RgbwDetailType -> sendEvent(GroupListViewEvent.OpenDetail(ItemBundle.from(group), detailType.pages))
+      is ThermostatDetailType -> sendEvent(GroupListViewEvent.OpenDetail(ItemBundle.from(group), detailType.pages))
       else -> {} // no action
     }
   }
@@ -255,21 +250,12 @@ sealed class GroupListViewEvent : ViewEvent {
   data class ShowLocationCaptionChangeDialog(val remoteId: Int, val profileId: Long, val caption: String) : GroupListViewEvent()
   data class ShowGroupCaptionChangeDialog(val remoteId: Int, val profileId: Long, val caption: String) : GroupListViewEvent()
 
-  data class OpenLegacyDetails(val remoteId: Int, val type: LegacyDetailType) : GroupListViewEvent()
   data object NavigateToSuplaCloud : GroupListViewEvent()
   data object NavigateToSuplaBetaCloud : GroupListViewEvent()
   data class NavigateToPrivateCloud(val url: Uri) : GroupListViewEvent()
 
-  data class OpenStandardDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
-    BaseDetail(R.id.standard_detail_fragment, StandardDetailFragment.bundle(itemBundle, pages.toTypedArray()))
-
-  data class OpenRgbwDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
-    BaseDetail(R.id.rgbw_detail_fragment, RgbwDetailFragment.bundle(itemBundle, pages.toTypedArray()))
-
-  sealed class BaseDetail(
-    @param:IdRes val fragmentId: Int,
-    val fragmentArguments: Bundle
-  ) : GroupListViewEvent()
+  data class OpenLegacyDetail(val remoteId: Int, val type: LegacyDetailType) : GroupListViewEvent()
+  data class OpenDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) : GroupListViewEvent()
 }
 
 data class GroupListViewState(

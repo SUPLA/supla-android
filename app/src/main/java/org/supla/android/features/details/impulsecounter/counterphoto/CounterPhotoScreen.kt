@@ -30,7 +30,7 @@ fun CounterPhotoScreen(
 ) {
   ViewModelHost(
     viewModel = viewModel,
-    onResume = {
+    onStart = {
       viewModel.loadData(remoteId)
       viewModel.onRefresh()
     },

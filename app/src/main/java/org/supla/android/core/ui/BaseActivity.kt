@@ -23,7 +23,7 @@ import org.supla.android.R
 import org.supla.android.extensions.setStatusBarColor
 import org.supla.android.ui.LoadableContent
 
-abstract class BaseActivity : AppCompatActivity(), LoadableContent, BackHandleOwner {
+abstract class BaseActivity : AppCompatActivity(), LoadableContent {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setStatusBarColor(R.color.primary_container, R.color.surface, false)

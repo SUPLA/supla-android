@@ -50,7 +50,7 @@ import org.supla.android.R
 import org.supla.android.core.storage.LocalApplicationPreferences
 import org.supla.android.features.channellist.ChannelListScreen
 import org.supla.android.features.grouplist.GroupListScreen
-import org.supla.android.features.nfc.call.screens.EventsHostBase
+import org.supla.android.features.nfc.call.screens.EventBasedViewModelHost
 import org.supla.android.features.notificationinfo.NotificationInfoDialog
 import org.supla.android.features.scenelist.SceneListScreen
 import org.supla.android.main.ListTab
@@ -76,7 +76,7 @@ fun MainListScreen(
   val scope = rememberCoroutineScope()
   var searchText by remember { mutableStateOf("") }
 
-  EventsHostBase(
+  EventBasedViewModelHost(
     viewModel = viewModel,
     eventHandler = { handleEvent(it, navigator) }
   ) {

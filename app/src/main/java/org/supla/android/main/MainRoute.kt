@@ -17,25 +17,19 @@ package org.supla.android.main
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
-import org.supla.android.R
-import org.supla.android.core.shared.invoke
 import org.supla.android.data.model.general.LockScreenScope
+import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.features.details.detailbase.base.DetailPage
 import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.features.lockscreen.UnlockAction
 import org.supla.android.features.nfc.edit.NewItemData
-import org.supla.core.shared.infrastructure.LocalizedString
-import org.supla.core.shared.infrastructure.localizedString
+import org.supla.android.usecases.details.LegacyDetailType
 
 @Serializable
 sealed interface MainRoute : NavKey {
   val screenTakeoverAllowed: Boolean
-
-  @Composable
-  fun title(): String = ""
 
   @Serializable
   data object Status : MainRoute {
@@ -50,26 +44,24 @@ sealed interface MainRoute : NavKey {
   @Serializable
   data class StandardDetail(
     val item: ItemBundle,
-    val title: LocalizedString,
     val pages: kotlin.collections.List<DetailPage>
   ) : MainRoute {
     override val screenTakeoverAllowed: Boolean = true
   }
 
   @Serializable
-  data class Lock(val unlockAction: UnlockAction) : MainRoute {
+  data class UnlockApp(val unlockAction: UnlockAction) : MainRoute {
     override val screenTakeoverAllowed: Boolean = true
+  }
 
-    @Composable
-    override fun title(): String = localizedString(R.string.pin_setup_title)()
+  @Serializable
+  data class Unlock(val unlockAction: UnlockAction) : MainRoute {
+    override val screenTakeoverAllowed: Boolean = true
   }
 
   @Serializable
   data object Settings : MainRoute {
     override val screenTakeoverAllowed: Boolean = true
-
-    @Composable
-    override fun title(): String = localizedString(R.string.settings)()
   }
 
   @Serializable
@@ -80,65 +72,41 @@ sealed interface MainRoute : NavKey {
   @Serializable
   data object DeviceCatalog : MainRoute {
     override val screenTakeoverAllowed: Boolean = true
-
-    @Composable
-    override fun title(): String = localizedString(R.string.menu_device_catalog)()
   }
 
   @Serializable
   data object NotificationsLog : MainRoute {
     override val screenTakeoverAllowed: Boolean = true
-
-    @Composable
-    override fun title(): String = localizedString(R.string.menu_notifications)()
   }
 
   @Serializable
   data object About : MainRoute {
     override val screenTakeoverAllowed: Boolean = true
-
-    @Composable
-    override fun title(): String = localizedString(R.string.about)()
   }
 
   @Serializable
   data object DeveloperInfo : MainRoute {
     override val screenTakeoverAllowed: Boolean = true
-
-    @Composable
-    override fun title(): String = localizedString(R.string.developer_option)()
   }
 
   @Serializable
   data object LocationReorder : MainRoute {
     override val screenTakeoverAllowed: Boolean = false
-
-    @Composable
-    override fun title(): String = localizedString(R.string.location_ordering)()
   }
 
   @Serializable
   data object AndroidAutoItems : MainRoute {
     override val screenTakeoverAllowed: Boolean = false
-
-    @Composable
-    override fun title(): String = localizedString(R.string.settings_android_auto_label)()
   }
 
   @Serializable
   data class AddAndroidAutoItem(val id: Long? = null) : MainRoute {
     override val screenTakeoverAllowed: Boolean = false
-
-    @Composable
-    override fun title(): String = localizedString(R.string.settings_android_auto_label)()
   }
 
   @Serializable
   data object NfcTagList : MainRoute {
     override val screenTakeoverAllowed: Boolean = true
-
-    @Composable
-    override fun title(): String = localizedString(R.string.nfc_list_title)()
   }
 
   @Serializable
@@ -149,9 +117,6 @@ sealed interface MainRoute : NavKey {
   @Serializable
   data object AddNfcTag : MainRoute {
     override val screenTakeoverAllowed: Boolean = false
-
-    @Composable
-    override fun title(): String = localizedString(R.string.menu_nfc)()
   }
 
   @Serializable
@@ -162,17 +127,11 @@ sealed interface MainRoute : NavKey {
   @Serializable
   data class LockNfcTag(val id: Long) : MainRoute {
     override val screenTakeoverAllowed: Boolean = false
-
-    @Composable
-    override fun title(): String = localizedString(R.string.nfc_lock_tag_label)()
   }
 
   @Serializable
   data class PinSetup(val lockScreenScope: LockScreenScope) : MainRoute {
     override val screenTakeoverAllowed: Boolean = false
-
-    @Composable
-    override fun title(): String = localizedString(R.string.pin_setup_title)()
   }
 
   @Serializable
@@ -182,6 +141,15 @@ sealed interface MainRoute : NavKey {
 
   @Serializable
   data class LegacyDimmerSettings(val item: ItemBundle) : MainRoute {
+    override val screenTakeoverAllowed: Boolean = true
+  }
+
+  @Serializable
+  data class LegacyDetail(
+    val remoteId: Int,
+    val itemType: ItemType,
+    val legacyDetailType: LegacyDetailType
+  ) : MainRoute {
     override val screenTakeoverAllowed: Boolean = true
   }
 }

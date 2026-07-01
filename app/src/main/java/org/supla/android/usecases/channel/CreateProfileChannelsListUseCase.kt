@@ -21,7 +21,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.ChannelRelationRepository
-import org.supla.android.data.source.RoomChannelRepository
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
@@ -38,7 +38,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
   private val getChannelChildrenTreeUseCase: GetChannelChildrenTreeUseCase,
   private val channelRelationRepository: ChannelRelationRepository,
   private val channelToListItemMapper: ChannelToListItemMapper,
-  private val channelRepository: RoomChannelRepository,
+  private val channelRepository: ChannelRepository,
   private val preferences: ApplicationPreferences,
 ) {
 

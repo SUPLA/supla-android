@@ -26,21 +26,31 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.supla.android.R
+import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.extensions.suplaCard
+import org.supla.android.main.topbar.Icon
+import org.supla.android.main.topbar.LocalTopBarController
+import org.supla.android.main.topbar.TopBarController
+import org.supla.android.main.topbar.TopBarIcon
+import org.supla.android.main.topbar.TopBarState
 import org.supla.android.tools.SuplaComponentPreview
 import org.supla.android.ui.views.buttons.DrawerBackButton
 import org.supla.android.ui.views.texts.HeadlineSmall
+import org.supla.core.shared.infrastructure.localizedString
 
 @Composable
 fun StandardTopBar(
-  title: String,
   onBackClick: () -> Unit
 ) {
   Surface(
@@ -55,17 +65,25 @@ fun StandardTopBar(
     Box(
       modifier = Modifier,
     ) {
+      val topBarController = LocalTopBarController.current
+      val topBarState by topBarController.state.collectAsStateWithLifecycle()
+
       DrawerBackButton(
         onClick = onBackClick,
         modifier = Modifier.align(Alignment.CenterStart)
       )
 
       HeadlineSmall(
-        text = title,
-        modifier = Modifier.align(Alignment.Center)
+        text = topBarState.title(),
+        modifier = Modifier
+          .align(Alignment.Center)
           .padding(horizontal = 64.dp),
         maxLines = 1
       )
+
+      topBarState.icons.forEach { icon ->
+        icon.Icon(topBarController, modifier = Modifier.align(Alignment.CenterEnd))
+      }
     }
   }
 }
@@ -73,12 +91,21 @@ fun StandardTopBar(
 @SuplaComponentPreview
 @Composable
 private fun Preview() {
-  SuplaTheme {
-    Box(Modifier.background(MaterialTheme.colorScheme.outline)) {
-      StandardTopBar(
-        title = "Supla",
-        onBackClick = {}
+  val topBarController = remember {
+    TopBarController(
+      initialState = TopBarState(
+        icons = listOf(TopBarIcon.OpenSettings),
+        title = localizedString(R.string.app_name)
       )
+    )
+  }
+  CompositionLocalProvider(LocalTopBarController provides topBarController) {
+    SuplaTheme {
+      Box(Modifier.background(MaterialTheme.colorScheme.outline)) {
+        StandardTopBar(
+          onBackClick = {},
+        )
+      }
     }
   }
 }

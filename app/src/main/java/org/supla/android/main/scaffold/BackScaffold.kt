@@ -25,16 +25,12 @@ import org.supla.android.main.view.StandardTopBar
 
 @Composable
 fun BackScaffold(
-  title: String,
   navigator: MainComposeNavigator,
   content: @Composable () -> Unit
 ) {
   Scaffold(
     topBar = {
-      StandardTopBar(
-        title = title,
-        onBackClick = { navigator.back() }
-      )
+      StandardTopBar { navigator.back() }
     },
   ) { paddings ->
     CompositionLocalProvider(LocalScaffoldPadding provides paddings) {

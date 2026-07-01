@@ -23,7 +23,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
-import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,7 +34,6 @@ import org.supla.android.databinding.FragmentComposeBinding
 import org.supla.android.features.createaccount.CreateAccountFragment
 import org.supla.android.navigator.CfgActivityNavigator
 import org.supla.android.navigator.MainNavigator
-import org.supla.android.ui.ToolbarVisibilityController
 import org.supla.android.ui.dialogs.AlertDialog
 import org.supla.android.ui.views.LoadingScrim
 import javax.inject.Inject
@@ -108,9 +106,6 @@ class LockScreenFragment : BaseFragment<LockScreenViewModelState, LockScreenView
       }
     }
   }
-
-  override fun getToolbarVisibility(): ToolbarVisibilityController.ToolbarVisibility =
-    ToolbarVisibilityController.ToolbarVisibility(unlockAction.showToolbar)
 
   override fun handleEvents(event: LockScreenViewEvent) {
     when (event) {

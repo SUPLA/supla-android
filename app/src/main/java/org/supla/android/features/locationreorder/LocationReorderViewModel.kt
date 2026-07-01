@@ -19,17 +19,14 @@ package org.supla.android.features.locationreorder
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx3.await
-import kotlinx.coroutines.withContext
+import org.supla.android.R
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.LocationRepository
 import org.supla.android.data.source.local.entity.LocationEntity
-import org.supla.android.extensions.subscribeBy
 import org.supla.android.tools.SuplaSchedulers
 import javax.inject.Inject
 
@@ -46,7 +43,12 @@ interface LocationReorderScope {
 class LocationReorderViewModel @Inject constructor(
   private val locationRepository: LocationRepository,
   schedulers: SuplaSchedulers
-) : BaseViewModel<LocationReorderViewState, ViewEvent>(LocationReorderViewState(), schedulers), LocationReorderScope {
+) : BaseViewModel<LocationReorderViewState, ViewEvent>(
+  defaultState = LocationReorderViewState(),
+  schedulers = schedulers,
+  titleRes = R.string.location_ordering
+),
+  LocationReorderScope {
 
   override fun onViewCreated() {
     viewModelScope.launch {

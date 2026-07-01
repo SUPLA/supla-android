@@ -63,6 +63,8 @@ class NfcTagDetailViewModel @Inject constructor(
       val profiles = schedulers.io { profileRepository.findAllProfilesKtx() }
       val profileName = profiles.firstOrNull { it.id == tagData.tagEntity.profileId }?.name
 
+      setScreenTitle(tagData.tagEntity.name)
+
       updateState { state ->
         state.copy(
           tagName = tagData.tagEntity.name,
@@ -74,7 +76,6 @@ class NfcTagDetailViewModel @Inject constructor(
           lastReadingItems = readingItems
         )
       }
-      sendEvent(NfcTagDetailViewEvent.SetToolbarTitle(tagData.tagEntity.name))
     }
   }
 
@@ -106,7 +107,6 @@ sealed interface NfcTagDetailViewEvent : ViewEvent {
   data object EditTag : NfcTagDetailViewEvent
   data object Close : NfcTagDetailViewEvent
   data object LockTag : NfcTagDetailViewEvent
-  data class SetToolbarTitle(val tagName: String) : NfcTagDetailViewEvent
 }
 
 private val NfcCallEntity.toReadingItem: NfcTagDetailViewState.ReadingItem

@@ -37,6 +37,7 @@ fun ContainerGeneralScreen(
 ) {
   ViewModelHost(
     viewModel = viewModel,
+    onCreate = { viewModel.observe(item.remoteId) },
     onResume = { viewModel.loadData(item.remoteId) },
   ) { state ->
     viewModel.View(

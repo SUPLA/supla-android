@@ -40,7 +40,11 @@ class LockScreenViewModel @Inject constructor(
   private val dateProvider: DateProvider,
   private val checkPinUseCase: CheckPinUseCase,
   suplaSchedulers: SuplaSchedulers
-) : BaseViewModel<LockScreenViewModelState, LockScreenViewEvent>(LockScreenViewModelState(), suplaSchedulers) {
+) : BaseViewModel<LockScreenViewModelState, LockScreenViewEvent>(
+  defaultState = LockScreenViewModelState(),
+  schedulers = suplaSchedulers,
+  titleRes = R.string.pin_setup_title
+) {
 
   override fun onViewCreated() {
     val lockScreenSettings = encryptedPreferences.lockScreenSettings

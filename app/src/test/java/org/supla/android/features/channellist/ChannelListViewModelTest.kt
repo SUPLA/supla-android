@@ -280,7 +280,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenStandardDetail(ItemBundle(remoteId, deviceId, profileId, ItemType.CHANNEL, function), detailType.pages)
+      ChannelListViewEvent.OpenDetail(ItemBundle(remoteId, deviceId, profileId, ItemType.CHANNEL, function), detailType.pages)
     )
 
     verify { provideDetailTypeUseCase(channel) }
@@ -308,7 +308,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenStandardDetail(ItemBundle(channelId, deviceId, profileId, ItemType.CHANNEL, function), detailType.pages)
+      ChannelListViewEvent.OpenDetail(ItemBundle(channelId, deviceId, profileId, ItemType.CHANNEL, function), detailType.pages)
     )
 
     verify { provideDetailTypeUseCase(channel) }
@@ -530,7 +530,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenStandardDetail(ItemBundle(channelId, deviceId, profileId, ItemType.CHANNEL, function), pages)
+      ChannelListViewEvent.OpenDetail(ItemBundle(channelId, deviceId, profileId, ItemType.CHANNEL, function), pages)
     )
     verify { provideDetailTypeUseCase(channel) }
     confirmDependenciesVerified()
@@ -557,7 +557,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenStandardDetail(ItemBundle(channelId, deviceId, profileId, ItemType.CHANNEL, function), pages)
+      ChannelListViewEvent.OpenDetail(ItemBundle(channelId, deviceId, profileId, ItemType.CHANNEL, function), pages)
     )
     verify { provideDetailTypeUseCase(channel) }
     confirmDependenciesVerified()

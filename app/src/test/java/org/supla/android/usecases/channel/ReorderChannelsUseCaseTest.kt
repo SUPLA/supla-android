@@ -10,8 +10,8 @@ import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import org.junit.Before
 import org.junit.Test
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.LocationRepository
-import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
@@ -21,7 +21,7 @@ import org.supla.core.shared.data.model.general.SuplaFunction
 class ReorderChannelsUseCaseTest {
 
   @MockK
-  private lateinit var channelRepository: RoomChannelRepository
+  private lateinit var channelRepository: ChannelRepository
 
   @MockK
   private lateinit var locationRepository: LocationRepository

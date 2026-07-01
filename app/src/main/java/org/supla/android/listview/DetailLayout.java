@@ -27,7 +27,7 @@ import android.widget.FrameLayout;
 import javax.inject.Inject;
 import org.supla.android.SuplaApp;
 import org.supla.android.data.source.ChannelGroupRepository;
-import org.supla.android.data.source.RoomChannelRepository;
+import org.supla.android.data.source.ChannelRepository;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.lib.SuplaClient;
@@ -39,7 +39,7 @@ public abstract class DetailLayout extends FrameLayout {
   private int mRemoteId;
   private boolean Group;
 
-  @Inject protected RoomChannelRepository channelRepository;
+  @Inject protected ChannelRepository channelRepository;
   @Inject protected ChannelGroupRepository channelGroupRepository;
 
   public DetailLayout(Context context) {

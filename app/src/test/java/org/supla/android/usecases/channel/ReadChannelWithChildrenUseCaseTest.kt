@@ -30,7 +30,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.data.source.ChannelRelationRepository
-import org.supla.android.data.source.RoomChannelRepository
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 
@@ -38,7 +38,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 class ReadChannelWithChildrenUseCaseTest {
 
   @Mock
-  lateinit var channelRepository: RoomChannelRepository
+  lateinit var channelRepository: ChannelRepository
 
   @Mock
   lateinit var channelRelationRepository: ChannelRelationRepository

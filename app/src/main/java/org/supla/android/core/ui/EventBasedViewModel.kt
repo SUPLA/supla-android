@@ -17,16 +17,27 @@ package org.supla.android.core.ui
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 
-abstract class EventBasedViewModel<E : ViewEvent> : ViewModel() {
+abstract class EventBasedViewModel<E : ViewEvent>(
+  defaultTitle: LocalizedString = LocalizedString.Empty,
+  val manageScreenTitle: Boolean = false
+) : ViewModel() {
   private val viewEvents: MutableSharedFlow<Event<E?>> =
     MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+
+  private val titleFlow: MutableStateFlow<LocalizedString> = MutableStateFlow(defaultTitle)
+  val title: StateFlow<LocalizedString> = titleFlow
 
   fun getViewEvents(): Flow<E> = viewEvents
     .filter { it.item != null }
@@ -41,6 +52,20 @@ abstract class EventBasedViewModel<E : ViewEvent> : ViewModel() {
   open fun onViewCreated() {}
   open fun onStart() {}
   open fun onStop() {}
+
+  fun setScreenTitle(text: String) {
+    setScreenTitle(LocalizedString.Constant(text))
+  }
+
+  fun setScreenTitle(@StringRes stringRes: Int) {
+    setScreenTitle(localizedString(stringRes))
+  }
+
+  fun setScreenTitle(string: LocalizedString) {
+    if (manageScreenTitle) {
+      titleFlow.tryEmit(string)
+    }
+  }
 
   protected fun sendEvent(event: E) {
     viewEvents.tryEmit(Event(event))

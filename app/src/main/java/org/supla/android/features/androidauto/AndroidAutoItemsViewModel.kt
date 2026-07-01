@@ -18,6 +18,7 @@ package org.supla.android.features.androidauto
  */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
+import org.supla.android.R
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
@@ -39,7 +40,11 @@ class AndroidAutoItemsViewModel @Inject constructor(
   private val updateEventsManager: UpdateEventsManager,
   private val preferences: ApplicationPreferences,
   schedulers: SuplaSchedulers
-) : BaseViewModel<AndroidAutoItemsViewModelState, AndroidAutoItemsViewEvent>(AndroidAutoItemsViewModelState(), schedulers),
+) : BaseViewModel<AndroidAutoItemsViewModelState, AndroidAutoItemsViewEvent>(
+  defaultState = AndroidAutoItemsViewModelState(),
+  schedulers = schedulers,
+  titleRes = R.string.settings_android_auto_label
+),
   AndroidAutoItemsViewScope {
 
   override fun onViewCreated() {

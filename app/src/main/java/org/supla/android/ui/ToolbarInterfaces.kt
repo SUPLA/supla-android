@@ -19,7 +19,6 @@ package org.supla.android.ui
 
 import android.content.Context
 import android.content.ContextWrapper
-import android.view.MenuItem
 import androidx.annotation.ColorRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -29,35 +28,21 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import org.supla.android.R
 
-interface ToolbarTitleController {
-  fun setToolbarTitle(title: AppBar.Title)
-}
-
-interface ToolbarItemsController {
-  fun setToolbarItemVisible(itemId: Int, visible: Boolean)
-}
-
 interface ToolbarVisibilityController {
   fun setToolbarVisible(visibility: ToolbarVisibility)
 
   data class ToolbarVisibility(
-    val visible: Boolean,
-    @param:ColorRes val toolbarColorRes: Int = if (visible) R.color.primary_container else R.color.background,
+    @param:ColorRes val toolbarColorRes: Int = R.color.background,
     @param:ColorRes val navigationBarColorRes: Int = R.color.surface,
-    val isLight: Boolean = visible.not()
+    val isLight: Boolean = true
   )
 }
 
-interface ToolbarItemsClickHandler {
-  fun onMenuItemClick(menuItem: MenuItem): Boolean
-}
-
 @Composable
-fun ToolbarVisibility(
-  visible: Boolean,
-  toolbarColorRes: Int = if (visible) R.color.primary_container else R.color.background,
+fun SystemBarsColors(
+  toolbarColorRes: Int = R.color.background,
   navigationBarColorRes: Int = R.color.surface,
-  isLight: Boolean = visible.not()
+  isLight: Boolean = true
 ) {
   val controller = LocalContext.current.findVisibilityController()
   val lifecycleOwner = LocalLifecycleOwner.current
@@ -68,19 +53,13 @@ fun ToolbarVisibility(
         Lifecycle.Event.ON_START ->
           controller?.setToolbarVisible(
             ToolbarVisibilityController.ToolbarVisibility(
-              visible = visible,
               toolbarColorRes = toolbarColorRes,
               navigationBarColorRes = navigationBarColorRes,
               isLight = isLight
             )
           )
         Lifecycle.Event.ON_STOP ->
-          controller?.setToolbarVisible(
-            ToolbarVisibilityController.ToolbarVisibility(
-              visible = true,
-              isLight = true
-            )
-          )
+          controller?.setToolbarVisible(ToolbarVisibilityController.ToolbarVisibility())
         else -> Unit
       }
     }

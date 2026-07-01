@@ -18,14 +18,10 @@ package org.supla.android.features.nfc.detail
  */
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.supla.android.features.nfc.call.screens.ViewModelHost
 import org.supla.android.main.MainComposeNavigator
 import org.supla.android.main.MainRoute
-import org.supla.android.main.scaffold.BackScaffold
 
 @Composable
 fun NfcTagDetailScreen(
@@ -33,26 +29,19 @@ fun NfcTagDetailScreen(
   navigator: MainComposeNavigator,
   viewModel: NfcTagDetailViewModel = hiltViewModel()
 ) {
-  val title = remember(viewModel) { mutableStateOf("") }
-  BackScaffold(
-    title = title.value,
-    navigator = navigator
+  ViewModelHost(
+    viewModel = viewModel,
+    eventHandler = { handleEvent(id, it, navigator) },
+    onCreate = { viewModel.setItemId(id) }
   ) {
-    ViewModelHost(
-      viewModel = viewModel,
-      eventHandler = { handleEvent(id, it, navigator, title) },
-      onCreate = { viewModel.setItemId(id) }
-    ) {
-      viewModel.View(it)
-    }
+    viewModel.View(it)
   }
 }
 
-private fun handleEvent(id: Long, event: NfcTagDetailViewEvent, navigator: MainComposeNavigator, title: MutableState<String>) {
+private fun handleEvent(id: Long, event: NfcTagDetailViewEvent, navigator: MainComposeNavigator) {
   when (event) {
     NfcTagDetailViewEvent.Close -> navigator.back()
     NfcTagDetailViewEvent.EditTag -> navigator.navigateTo(MainRoute.EditNfcTag(id = id))
     NfcTagDetailViewEvent.LockTag -> navigator.navigateTo(MainRoute.LockNfcTag(id = id))
-    is NfcTagDetailViewEvent.SetToolbarTitle -> title.value = event.tagName
   }
 }

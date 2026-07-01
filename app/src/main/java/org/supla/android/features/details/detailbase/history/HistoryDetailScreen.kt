@@ -25,6 +25,8 @@ import org.supla.android.R
 import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.features.details.detailbase.history.ui.View
 import org.supla.android.features.nfc.call.screens.ViewModelHost
+import org.supla.android.main.topbar.RegisterTopBarIcon
+import org.supla.android.main.topbar.TopBarIcon
 
 @Composable
 fun HistoryDetailScreen(
@@ -33,6 +35,12 @@ fun HistoryDetailScreen(
   popup: @Composable (HistoryDetailViewState) -> Unit = {}
 ) {
   val context = LocalContext.current
+
+  RegisterTopBarIcon(
+    TopBarIcon.ReloadHistory,
+    handler = { viewModel.deleteAndDownloadData(item.remoteId) }
+  )
+
   ViewModelHost(
     viewModel = viewModel,
     onResume = { viewModel.loadData(item.remoteId) },

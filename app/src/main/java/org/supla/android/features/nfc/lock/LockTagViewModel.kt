@@ -22,6 +22,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.supla.android.R
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.source.NfcTagRepository
@@ -35,7 +36,12 @@ class LockTagViewModel @Inject constructor(
   private val nfcTagRepository: NfcTagRepository,
   private val lockTagUseCase: LockTagUseCase,
   schedulers: SuplaSchedulers
-) : BaseViewModel<LockTagViewState, LockTagViewEvent>(LockTagViewState(), schedulers), LockTagViewScope {
+) : BaseViewModel<LockTagViewState, LockTagViewEvent>(
+  defaultState = LockTagViewState(),
+  schedulers = schedulers,
+  titleRes = R.string.nfc_lock_tag_label
+),
+  LockTagViewScope {
 
   private var currentJob: Job? = null
   private var tagId: Long = 0

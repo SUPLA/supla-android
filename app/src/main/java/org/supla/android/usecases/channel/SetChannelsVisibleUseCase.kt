@@ -20,13 +20,13 @@ package org.supla.android.usecases.channel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import org.supla.android.data.source.RoomChannelRepository
+import org.supla.android.data.source.ChannelRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class SetChannelsVisibleUseCase @Inject constructor(
-  private val channelRepository: RoomChannelRepository
+  private val channelRepository: ChannelRepository
 ) {
 
   operator fun invoke(change: VisibilityChange): Boolean =

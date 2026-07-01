@@ -18,9 +18,13 @@ package org.supla.android.features.appsettings
  */
 
 import androidx.compose.runtime.Composable
+import org.supla.android.R
+import org.supla.android.main.topbar.SetScreenTitle
 import org.supla.android.ui.views.LegacyFragmentScreen
+import org.supla.core.shared.infrastructure.localizedString
 
 @Composable
 fun SettingsScreen() {
+  SetScreenTitle(localizedString(R.string.settings))
   LegacyFragmentScreen(fragmentClass = SettingsFragment::class.java)
 }

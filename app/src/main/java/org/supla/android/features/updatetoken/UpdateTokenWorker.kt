@@ -35,8 +35,8 @@ import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.infrastructure.suplaclient.SingleCallProvider
 import org.supla.android.core.notifications.NotificationsHelper.Companion.areNotificationsEnabled
 import org.supla.android.core.storage.EncryptedPreferences
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.ProfileRepository
-import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.lib.SuplaClient
 import timber.log.Timber
@@ -50,7 +50,7 @@ class UpdateTokenWorker @AssistedInject constructor(
   private val singleCallProvider: SingleCallProvider,
   private val profileRepository: ProfileRepository,
   private val encryptedPreferences: EncryptedPreferences,
-  private val channelRepository: RoomChannelRepository,
+  private val channelRepository: ChannelRepository,
   private val dateProvider: DateProvider,
   private val notificationManager: NotificationManager,
   @Assisted appContext: Context,

@@ -85,12 +85,14 @@ fun CounterPhotoView(
   val pullToRefreshState = rememberPullToRefreshState()
 
   Box(
-    modifier = Modifier.pullToRefresh(
-      isRefreshing = state.refreshing,
-      onRefresh = onRefresh,
-      state = pullToRefreshState,
-      threshold = 58.dp
-    )
+    modifier = Modifier
+      .fillMaxWidth()
+      .pullToRefresh(
+        isRefreshing = state.refreshing,
+        onRefresh = onRefresh,
+        state = pullToRefreshState,
+        threshold = 58.dp
+      )
   ) {
     if (state.loadingError) {
       ErrorContent(

@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.ChannelRelationRepository
-import org.supla.android.data.source.RoomChannelRepository
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import timber.log.Timber
@@ -30,7 +30,7 @@ import javax.inject.Singleton
 @Singleton
 class ReadChannelWithChildrenTreeUseCase @Inject constructor(
   private val channelRelationRepository: ChannelRelationRepository,
-  private val channelRepository: RoomChannelRepository,
+  private val channelRepository: ChannelRepository,
   private val getChannelChildrenTreeUseCase: GetChannelChildrenTreeUseCase
 ) {
 

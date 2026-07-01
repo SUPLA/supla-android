@@ -19,19 +19,19 @@ package org.supla.android.usecases.channel
 
 import io.reactivex.rxjava3.core.Maybe
 import org.supla.android.data.source.ChannelRelationRepository
-import org.supla.android.data.source.RoomChannelRepository
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ReadChannelWithChildrenUseCase @Inject constructor(
-  private val roomChannelRepository: RoomChannelRepository,
+  private val channelRepository: ChannelRepository,
   private val channelRelationRepository: ChannelRelationRepository
 ) {
 
   operator fun invoke(remoteId: Int): Maybe<ChannelWithChildren> =
-    roomChannelRepository.findChannelDataEntity(remoteId)
+    channelRepository.findChannelDataEntity(remoteId)
       .firstElement()
       .flatMap { channel ->
         channelRelationRepository.findChildrenForParent(remoteId).map { ChannelWithChildren(channel, it) }

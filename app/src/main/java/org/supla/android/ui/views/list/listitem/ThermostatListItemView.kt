@@ -17,9 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import android.content.Context
 import android.content.res.Configuration
-import android.util.AttributeSet
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
@@ -32,18 +30,14 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.extensions.isNotNull
 import org.supla.android.extensions.preferences
 import org.supla.android.images.ImageId
-import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.ui.layouts.BaseSlideableContent
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.lists.ListOnlineState
-import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.ui.views.list.ListItemScaffold
 import org.supla.android.ui.views.list.ListItemStatus
 import org.supla.android.ui.views.list.StatusIndicator
@@ -51,45 +45,10 @@ import org.supla.android.ui.views.list.components.ListItemIcon
 import org.supla.android.ui.views.list.components.ListItemMainRow
 import org.supla.android.ui.views.list.components.ListItemValue
 import org.supla.android.ui.views.list.components.SetpointTemperature
-import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.data.model.lists.IssueIcon
 import org.supla.core.shared.data.model.lists.ListItemIssues
 import org.supla.core.shared.infrastructure.LocalizedString
-import javax.inject.Inject
-
-@AndroidEntryPoint
-class ThermostatListItemView : BaseSlideableContent<SlideableListItemData.Thermostat> {
-
-  constructor(context: Context) : super(context, null, 0)
-
-  constructor(context: Context, attrs: AttributeSet?) : super(context, attrs, 0)
-
-  constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
-
-  @Inject
-  override lateinit var createListItemUpdateEventDataUseCase: CreateListItemUpdateEventDataUseCase
-
-  @Inject
-  override lateinit var schedulers: SuplaSchedulers
-
-  @Composable
-  override fun Content() {
-//    val data = this.data ?: SlideableListItemData.Thermostat.default()
-//
-//    SuplaTheme {
-//      ThermostatListItemView(
-//        data = data,
-//        hasLeftButton = hasLeftButton,
-//        hasRightButton = hasRightButton,
-//        onInfoClick = onInfoClick,
-//        onIssueClick = onIssueClick,
-//        onTitleLongClick = onTitleLongClick,
-//        onItemClick = onItemClick
-//      )
-//    }
-  }
-}
 
 @Composable
 fun ThermostatListItemView(

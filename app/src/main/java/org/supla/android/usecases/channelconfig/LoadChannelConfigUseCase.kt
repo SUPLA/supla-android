@@ -19,7 +19,7 @@ package org.supla.android.usecases.channelconfig
 
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.data.source.ChannelConfigRepository
-import org.supla.android.data.source.RoomChannelRepository
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.SuplaChannelConfig
 import javax.inject.Inject
@@ -28,7 +28,7 @@ import javax.inject.Singleton
 @Singleton
 class LoadChannelConfigUseCase @Inject constructor(
   private val channelConfigRepository: ChannelConfigRepository,
-  private val channelRepository: RoomChannelRepository
+  private val channelRepository: ChannelRepository
 ) {
 
   operator fun invoke(remoteId: Int): Single<SuplaChannelConfig> {

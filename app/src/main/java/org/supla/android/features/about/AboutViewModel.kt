@@ -19,6 +19,7 @@ package org.supla.android.features.about
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.BuildConfig
+import org.supla.android.R
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
@@ -33,7 +34,11 @@ class AboutViewModel @Inject constructor(
   private val dateFormatter: DateFormatter,
   private val encryptedPreferences: EncryptedPreferences,
   suplaSchedulers: SuplaSchedulers
-) : BaseViewModel<AboutViewModelState, AboutViewEvent>(AboutViewModelState(), suplaSchedulers) {
+) : BaseViewModel<AboutViewModelState, AboutViewEvent>(
+  defaultState = AboutViewModelState(),
+  schedulers = suplaSchedulers,
+  titleRes = R.string.about
+) {
 
   private var versionClickCount: Int = 0
 

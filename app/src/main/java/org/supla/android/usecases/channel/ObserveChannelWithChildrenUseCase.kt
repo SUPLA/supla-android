@@ -19,19 +19,19 @@ package org.supla.android.usecases.channel
 
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.ChannelRelationRepository
-import org.supla.android.data.source.RoomChannelRepository
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ObserveChannelWithChildrenUseCase @Inject constructor(
-  private val roomChannelRepository: RoomChannelRepository,
+  private val channelRepository: ChannelRepository,
   private val channelRelationRepository: ChannelRelationRepository
 ) {
 
   operator fun invoke(remoteId: Int): Observable<ChannelWithChildren> =
-    roomChannelRepository.findChannelDataEntity(remoteId)
+    channelRepository.findChannelDataEntity(remoteId)
       .flatMap { channel ->
         channelRelationRepository
           .findChildrenForParent(remoteId)

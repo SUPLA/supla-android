@@ -20,6 +20,7 @@ package org.supla.android.features.notificationslog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.disposables.Disposable
+import org.supla.android.R
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
@@ -41,7 +42,11 @@ class NotificationsLogViewModel @Inject constructor(
   private val deleteNotificationUseCase: DeleteNotificationUseCase,
   private val deleteNotificationsUseCase: DeleteNotificationsUseCase,
   schedulers: SuplaSchedulers
-) : BaseViewModel<NotificationsLogViewState, NotificationsLogViewEvent>(NotificationsLogViewState(), schedulers),
+) : BaseViewModel<NotificationsLogViewState, NotificationsLogViewEvent>(
+  defaultState = NotificationsLogViewState(),
+  schedulers = schedulers,
+  titleRes = R.string.menu_notifications
+),
   NotificationsLogViewScope {
 
   private val deletionDisposablesMap: MutableMap<Long, Disposable> = mutableMapOf()

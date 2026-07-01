@@ -44,7 +44,7 @@ import org.supla.android.main.MainRoute
 import org.supla.android.main.scaffold.LocalScaffoldPadding
 import org.supla.android.main.scaffold.screenPaddings
 import org.supla.android.main.view.BackOnlyTopBar
-import org.supla.android.ui.ToolbarVisibility
+import org.supla.android.ui.SystemBarsColors
 import org.supla.android.ui.dialogs.AuthorizationDialog
 
 @Composable
@@ -52,8 +52,7 @@ fun AddWizardScreen(
   navigator: MainComposeNavigator,
   viewModel: AddWizardViewModel = hiltViewModel()
 ) {
-  ToolbarVisibility(
-    visible = true,
+  SystemBarsColors(
     toolbarColorRes = R.color.primary_container,
     navigationBarColorRes = R.color.primary_container,
     isLight = false

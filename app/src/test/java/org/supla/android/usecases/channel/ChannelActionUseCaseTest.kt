@@ -14,7 +14,7 @@ import org.junit.Before
 import org.junit.Test
 import org.supla.android.core.networking.suplaclient.SuplaClientApi
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
-import org.supla.android.data.source.RoomChannelRepository
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
@@ -28,7 +28,7 @@ import org.supla.core.shared.data.model.valve.ValveValue
 
 class ChannelActionUseCaseTest {
   @MockK
-  private lateinit var channelRepository: RoomChannelRepository
+  private lateinit var channelRepository: ChannelRepository
 
   @MockK
   private lateinit var suplaClientProvider: SuplaClientProvider
