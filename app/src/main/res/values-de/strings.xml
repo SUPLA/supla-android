@@ -725,7 +725,9 @@
   <string name="android_auto_add">Android Auto Eintrag hinzufügen</string>
   <string name="channel_btn_stop">Stoppen</string>
   <string name="android_auto_action">Aktion: %1$s</string>
-  <string name="android_auto_empty">Android Auto nicht konfiguriert. Öffnen Sie bitte Supla App -> Einstelllungen -> Android Auto und konfiguriere dort.</string>
+  <string name="android_auto_empty_header">Konfiguration erforderlich</string>
+  <string name="android_auto_empty_refresh">Aktualisieren</string>
+  <string name="android_auto_empty_message">Richten Sie Android Auto in der SUPLA-App nur dann ein, wenn das Fahrzeug geparkt ist.</string>
   <string name="android_auto_executing">Ausführen…</string>
   <string name="android_auto_delete_title">Eintrag löschen</string>
   <string name="android_auto_delete_message">Wollen Sie fortfahren?</string>

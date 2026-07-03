@@ -642,6 +642,9 @@
   <string name="channel_battery_level_with_info">Nível de bateria (%1$d - %2$s): %3$d%%</string>
   <string name="channel_btn_stop">Parar</string>
   <string name="android_auto_action">Acção: %1$s</string>
+  <string name="android_auto_empty_header">Configuração necessária</string>
+  <string name="android_auto_empty_refresh">Atualizar</string>
+  <string name="android_auto_empty_message">Configure o Android Auto na app SUPLA apenas quando o carro estiver estacionado.</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Se você tiver um código QR, use o leitor. Para dispositivos sem código QR, pressione <b>Próximo</b> para continuar.]]></string>
   <string name="add_wizard_network_name">Nome da rede</string>
   <string name="add_wizard_step_2_search_network">Procurar rede</string>

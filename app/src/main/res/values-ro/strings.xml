@@ -654,6 +654,9 @@
   <string name="channel_battery_level_with_info">Nivelul bateriei (%1$d - %2$s): %3$d%%</string>
   <string name="channel_btn_stop">Oprește</string>
   <string name="android_auto_action">Acțiune: %1$s</string>
+  <string name="android_auto_empty_header">Configurare necesară</string>
+  <string name="android_auto_empty_refresh">Actualizează</string>
+  <string name="android_auto_empty_message">Configurați Android Auto în aplicația SUPLA numai când mașina este parcată.</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Dacă aveți un cod QR, utilizați scanerul. Pentru dispozitivele fără un cod QR, apăsați <b>Următorul</b> pentru a continua.]]></string>
   <string name="add_wizard_network_name">Nume rețea</string>
   <string name="add_wizard_step_2_search_network">Căutați rețea</string>

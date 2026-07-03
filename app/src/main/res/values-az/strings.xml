@@ -725,7 +725,9 @@
   <string name="android_auto_add" translatable="false">Android Auto elementi əlavə et</string>
   <string name="channel_btn_stop">Dayandır</string>
   <string name="android_auto_action">Əməliyyat: %1$s</string>
-  <string name="android_auto_empty" translatable="false">Android Auto konfiqurasiya olunmayıb. Supla Tətbiqi -> Parametrlər -> Android Auto bölməsinə gedərək konfiqurasiyanı hazırlayın.</string>
+  <string name="android_auto_empty_header">Konfiqurasiya tələb olunur</string>
+  <string name="android_auto_empty_refresh">Yenilə</string>
+  <string name="android_auto_empty_message">Android Auto-nu SUPLA tətbiqində yalnız avtomobil park vəziyyətində olanda qurun.</string>
   <string name="android_auto_executing" translatable="false">İcra olunur…</string>
   <string name="android_auto_delete_title" translatable="false">Element silinir</string>
   <string name="android_auto_delete_message" translatable="false">Davam etmək istəyirsiniz?</string>
