@@ -24,6 +24,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -33,8 +34,10 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
@@ -44,6 +47,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import org.supla.android.R
 import org.supla.android.core.shared.invoke
@@ -56,6 +61,7 @@ import kotlin.math.roundToInt
 
 @Composable
 fun ReorderableCollectionItemScope.SlideableListItem(
+  objectId: Int,
   initialOffset: Float,
   onOffsetChanged: (Float) -> Unit,
   isDragging: Boolean,
@@ -82,6 +88,25 @@ fun ReorderableCollectionItemScope.SlideableListItem(
     }
   }
 
+  val controller = LocalSlideableController.current
+  val preferences = LocalApplicationPreferences.current
+  LaunchedEffect(objectId) {
+    controller.events.collect {
+      when (it) {
+        SlideableListEvent.ScrollStarted -> offset.animateTo(0f)
+        SlideableListEvent.ListButtonClick ->
+          if (preferences.isButtonAutohide) {
+            offset.animateTo(0f)
+            onOffsetChanged(0f) // Needed because button click is handled only internally inside SlideableListItem
+          }
+        is SlideableListEvent.DragStarted ->
+          if (it.objectId != objectId) {
+            offset.animateTo(0f)
+          }
+      }
+    }
+  }
+
   val defaultItemHeight = dimensionResource(R.dimen.channel_layout_height)
   Box(
     modifier = modifier
@@ -94,7 +119,10 @@ fun ReorderableCollectionItemScope.SlideableListItem(
   ) {
     leftButtonString?.let {
       ActionPane(
-        onClick = onLeftButtonClick,
+        onClick = {
+          onLeftButtonClick()
+          scope.launch { controller.emit(SlideableListEvent.ListButtonClick) }
+        },
         modifier = Modifier.align(Alignment.CenterStart),
         transformation = { it.leftButtonTransformation(if (offset.value > 0) offset.value else 0f, actionWidthPx) },
         actionString = leftButtonString
@@ -103,7 +131,10 @@ fun ReorderableCollectionItemScope.SlideableListItem(
 
     rightButtonString?.let {
       ActionPane(
-        onClick = onRightButtonClick,
+        onClick = {
+          onRightButtonClick()
+          scope.launch { controller.emit(SlideableListEvent.ListButtonClick) }
+        },
         modifier = Modifier.align(Alignment.CenterEnd),
         transformation = { it.rightButtonTransformation(if (offset.value < 0) offset.value else 0f, actionWidthPx) },
         actionString = rightButtonString
@@ -116,6 +147,7 @@ fun ReorderableCollectionItemScope.SlideableListItem(
         .draggable(
           orientation = Orientation.Horizontal,
           state = dragState,
+          onDragStarted = { controller.emit(SlideableListEvent.DragStarted(objectId)) },
           onDragStopped = {
             scope.launch {
               val target = when {
@@ -145,7 +177,11 @@ private fun ActionPane(
     modifier = modifier
       .fillMaxHeight()
       .width(dimensionResource(R.dimen.channel_layout_button_width))
-      .clickable(onClick = onClick)
+      .clickable(
+        onClick = onClick,
+        interactionSource = remember { MutableInteractionSource() },
+        indication = null
+      )
       .let { transformation(it) }
       .background(MaterialTheme.colorScheme.primaryContainer),
     contentAlignment = Alignment.Center
@@ -191,3 +227,22 @@ fun Modifier.rightButtonTransformation(
     .offset { IntOffset(x = offsetX.roundToInt(), y = 0) }
     .graphicsLayer { rotationY = rotation }
 }
+
+class SlideableController {
+  private val _events = MutableSharedFlow<SlideableListEvent>()
+  val events = _events.asSharedFlow()
+
+  suspend fun emit(event: SlideableListEvent) {
+    _events.emit(event)
+  }
+}
+
+interface SlideableListEvent {
+  data class DragStarted(val objectId: Int) : SlideableListEvent
+  data object ScrollStarted : SlideableListEvent
+  data object ListButtonClick : SlideableListEvent
+}
+
+private val DefaultSlideableController = SlideableController()
+
+val LocalSlideableController = staticCompositionLocalOf { DefaultSlideableController }

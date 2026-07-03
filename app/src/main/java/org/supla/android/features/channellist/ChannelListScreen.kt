@@ -21,7 +21,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -70,6 +70,7 @@ interface ChannelListScope : MainListScope {
 @Composable
 fun ChannelListScreen(
   navigator: MainComposeNavigator,
+  modifier: Modifier = Modifier,
   viewModel: ChannelListViewModel = hiltViewModel(),
   captionChangeViewModel: CaptionChangeViewModel = hiltViewModel(),
   stateDialogViewModel: StateDialogViewModel = hiltViewModel()
@@ -78,7 +79,10 @@ fun ChannelListScreen(
     viewModel = viewModel,
     eventHandler = { handleChannelEvents(it, navigator, captionChangeViewModel, stateDialogViewModel) }
   ) { state ->
-    viewModel.Content(state)
+    viewModel.Content(
+      state = state,
+      modifier = modifier
+    )
 
     state.actionAlertDialogState?.View(
       onPositiveClick = { remoteId, actionId -> viewModel.forceAction(remoteId, actionId) },
@@ -127,17 +131,23 @@ private fun handleCaptionChangeEvents(event: CaptionChangeViewEvent, viewModel: 
 }
 
 @Composable
-private fun ChannelListScope.Content(state: ChannelListViewState) {
+private fun ChannelListScope.Content(
+  state: ChannelListViewState,
+  modifier: Modifier = Modifier
+) {
   if (state.channels.isNullOrEmpty()) {
     Box(
-      modifier = Modifier
-        .fillMaxSize()
+      modifier = modifier
+        .fillMaxHeight()
         .screenUnderTopBarPaddings()
     ) {
       EmptyContent(modifier = Modifier.align(Alignment.Center))
     }
   } else {
-    ListView(items = state.channels)
+    ListView(
+      items = state.channels,
+      modifier = modifier
+    )
   }
 }
 

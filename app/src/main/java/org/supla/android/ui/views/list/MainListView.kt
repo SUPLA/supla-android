@@ -23,15 +23,20 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import kotlinx.coroutines.flow.distinctUntilChanged
 import org.supla.android.R
 import org.supla.android.main.scaffold.screenUnderTopBarPaddings
 import org.supla.android.main.scaffold.topSearchBarPaddings
 import org.supla.android.ui.lists.ListItem
+import org.supla.android.ui.lists.LocalSlideableController
+import org.supla.android.ui.lists.SlideableListEvent
 import org.supla.android.ui.lists.SlideableListItem
 import org.supla.android.ui.lists.message
 import org.supla.android.ui.views.list.listitem.DoubleIconValueListItemView
@@ -75,6 +80,18 @@ fun MainListScope.ListView(
     swapItems(from.index, to.index)
   }
 
+  val slideableController = LocalSlideableController.current
+  LaunchedEffect(lazyListState) {
+    snapshotFlow { lazyListState.isScrollInProgress }
+      .distinctUntilChanged()
+      .collect {
+        if (it) {
+          offsets.clear()
+          slideableController.emit(SlideableListEvent.ScrollStarted)
+        }
+      }
+  }
+
   LazyColumn(
     state = lazyListState,
     modifier = modifier
@@ -116,8 +133,12 @@ fun MainListScope.ListView(
             )
           is ListItem.SceneItem ->
             SlideableListItem(
+              objectId = item.remoteId,
               initialOffset = offsets[item.remoteId] ?: 0f,
-              onOffsetChanged = { offsets[item.remoteId] = it },
+              onOffsetChanged = {
+                offsets.clear()
+                offsets[item.remoteId] = it
+              },
               isDragging = isDragging,
               onLeftButtonClick = { onLeftButtonClick(item.remoteId) },
               onRightButtonClick = { onRightButtonClick(item.remoteId) },
@@ -151,8 +172,12 @@ fun ReorderableCollectionItemScope.DefaultItemView(
   onTitleLongClick: () -> Unit = {},
 ) {
   SlideableListItem(
+    objectId = item.remoteId,
     initialOffset = offsets[item.remoteId] ?: 0f,
-    onOffsetChanged = { offsets[item.remoteId] = it },
+    onOffsetChanged = {
+      offsets.clear()
+      offsets[item.remoteId] = it
+    },
     isDragging = isDragging,
     onLeftButtonClick = onLeftButtonClick,
     onRightButtonClick = onRightButtonClick,
