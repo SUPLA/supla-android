@@ -19,6 +19,7 @@ package org.supla.android.main.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -47,7 +48,7 @@ import org.supla.android.ui.views.buttons.IconButton
 @Composable
 fun MainTopBar(
   searchText: String,
-  onMenuClick: () -> Unit,
+  onMenuClick: (() -> Unit)?,
   onProfilesClick: () -> Unit,
   onTextChange: (String) -> Unit
 ) {
@@ -64,7 +65,9 @@ fun MainTopBar(
       modifier = Modifier,
       verticalAlignment = Alignment.CenterVertically
     ) {
-      DrawerMenuButton(onClick = onMenuClick)
+      onMenuClick?.let {
+        DrawerMenuButton(onClick = it)
+      }
 
       OutlinedTextField(
         value = searchText,
@@ -98,10 +101,16 @@ fun MainTopBar(
 @Composable
 private fun Preview() {
   SuplaTheme {
-    Box(Modifier.background(MaterialTheme.colorScheme.outline)) {
+    Column(Modifier.background(MaterialTheme.colorScheme.outline)) {
       MainTopBar(
         searchText = "",
         onMenuClick = {},
+        onProfilesClick = {},
+        onTextChange = {}
+      )
+      MainTopBar(
+        searchText = "",
+        onMenuClick = null,
         onProfilesClick = {},
         onTextChange = {}
       )

@@ -116,7 +116,7 @@ fun RegisterStatedTopBarIcon(
 
   LaunchedEffect(visible) {
     if (visible) {
-      topBarController.update { it.copy(icons = listOf(TopBarIcon.OpenOcr)) }
+      topBarController.update { it.copy(icons = listOf(icon)) }
     } else {
       topBarController.update { it.copy(icons = emptyList()) }
     }
@@ -175,6 +175,5 @@ fun SetScreenTitle(title: LocalizedString) {
   }
 }
 
-val LocalTopBarController = staticCompositionLocalOf<TopBarController> {
-  error("TopBarEventController not provided!")
-}
+private val DefaultTopBarController = TopBarController()
+val LocalTopBarController = staticCompositionLocalOf { DefaultTopBarController }

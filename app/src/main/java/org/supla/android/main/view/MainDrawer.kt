@@ -37,6 +37,8 @@ import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
+import androidx.compose.material3.PermanentDrawerSheet
+import androidx.compose.material3.PermanentNavigationDrawer
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -85,6 +87,32 @@ fun MainDrawer(
       ) {
         CompositionLocalProvider(
           value = LocalDrawerContext provides LocalDrawerContextHolder(navigator, drawerState)
+        ) {
+          DrawerContent(developerOptionsVisibleFlow, zWaveVisibleFlow, zWaveOpenCallback)
+        }
+      }
+    },
+    content = content
+  )
+
+@Composable
+fun PermanentMainDrawer(
+  navigator: MainComposeNavigator,
+  developerOptionsVisibleFlow: StateFlow<Boolean>,
+  zWaveVisibleFlow: StateFlow<Boolean>,
+  zWaveOpenCallback: () -> Unit,
+  content: @Composable (() -> Unit)
+) =
+  PermanentNavigationDrawer(
+    drawerContent = {
+      PermanentDrawerSheet(
+        modifier = Modifier.width(300.dp),
+        drawerContainerColor = MaterialTheme.colorScheme.surface,
+        drawerContentColor = MaterialTheme.colorScheme.onSurface,
+        drawerTonalElevation = 0.dp
+      ) {
+        CompositionLocalProvider(
+          value = LocalDrawerContext provides LocalDrawerContextHolder(navigator, null)
         ) {
           DrawerContent(developerOptionsVisibleFlow, zWaveVisibleFlow, zWaveOpenCallback)
         }
@@ -236,7 +264,7 @@ private fun DrawerItem(
     selected = selected,
     onClick = {
       onNavigate()
-      scope.launch { drawerState.close() }
+      drawerState?.let { scope.launch { it.close() } }
     },
     modifier = Modifier.padding(start = Distance.small, top = 4.dp, end = Distance.small),
     colors = NavigationDrawerItemDefaults.colors(
@@ -276,7 +304,7 @@ private fun Preview() {
 
 private data class LocalDrawerContextHolder(
   val navigator: MainComposeNavigator,
-  val drawerState: DrawerState
+  val drawerState: DrawerState?
 )
 
 private val LocalDrawerContext = compositionLocalOf<LocalDrawerContextHolder> { error("LocalDrawerState not initialized!") }

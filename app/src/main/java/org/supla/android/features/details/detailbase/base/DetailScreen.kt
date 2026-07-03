@@ -18,11 +18,13 @@ package org.supla.android.features.details.detailbase.base
  */
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -31,10 +33,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import org.supla.android.core.storage.LocalApplicationPreferences
 import org.supla.android.features.details.containerdetail.general.ContainerGeneralScreen
 import org.supla.android.features.details.electricitymeterdetail.general.ElectricityMeterGeneralScreen
 import org.supla.android.features.details.electricitymeterdetail.history.ElectricityMeterHistoryScreen
@@ -76,7 +77,9 @@ import org.supla.android.main.scaffold.LocalScaffoldPadding
 import org.supla.android.main.topbar.ManageScreenTitle
 import org.supla.android.main.view.NavigationBarLabel
 import org.supla.android.main.view.StandardTopBar
-import org.supla.android.ui.extensions.ifTrue
+import org.supla.android.ui.extensions.isPhoneLandscape
+import org.supla.android.ui.navigation.SuplaNavigationBarItem
+import org.supla.android.ui.navigation.SuplaRailItem
 
 @Composable
 fun DetailScreen(
@@ -85,17 +88,28 @@ fun DetailScreen(
   navigator: MainComposeNavigator,
   viewModel: DetailViewModel = hiltViewModel()
 ) {
-  var page by remember(pages) { mutableStateOf(pages.first()) }
-
   viewModel.LifeCycleObserver(
     onCreate = { viewModel.loadTitle(item) }
   )
   ManageScreenTitle(viewModel)
 
+  if (LocalConfiguration.current.isPhoneLandscape) {
+    LandscapeScreen(item, pages, navigator)
+  } else {
+    PortraitScreen(item, pages, navigator)
+  }
+}
+
+@Composable
+private fun PortraitScreen(
+  item: ItemBundle,
+  pages: List<DetailPage>,
+  navigator: MainComposeNavigator,
+) {
+  var page by remember(pages) { mutableStateOf(pages.first()) }
+
   Scaffold(
-    topBar = {
-      StandardTopBar(onBackClick = { navigator.back() })
-    },
+    topBar = { StandardTopBar(onBackClick = { navigator.back() }) },
     bottomBar = {
       if (pages.size > 1) {
         NavigationBar(
@@ -103,10 +117,11 @@ fun DetailScreen(
             .border(1.dp, MaterialTheme.colorScheme.outline),
         ) {
           pages.forEach {
-            NavigationItem(
-              currentPage = page,
-              destinationPage = it,
+            SuplaNavigationBarItem(
+              selected = page == it,
               onClick = { page = it },
+              icon = { it.item.Icon(page == it) },
+              label = { NavigationBarLabel(it.item.stringRes) }
             )
           }
         }
@@ -114,67 +129,101 @@ fun DetailScreen(
     }
   ) { paddings ->
     CompositionLocalProvider(LocalScaffoldPadding provides paddings) {
-      when (page) {
-        DetailPage.SWITCH -> SwitchGeneralScreen(item)
-        DetailPage.SWITCH_TIMER -> SwitchTimerScreen(item)
-        DetailPage.THERMOSTAT -> ThermostatGeneralScreen(item)
-        DetailPage.THERMOSTAT_LIST -> ThermostatSlavesListScreen(item, navigator)
-        DetailPage.SCHEDULE -> ThermostatScheduleScreen(item)
-        DetailPage.THERMOSTAT_HISTORY -> ThermostatHistoryScreen(item)
-        DetailPage.THERMOSTAT_TIMER -> ThermostatTimerScreen(item)
-        DetailPage.THERMOSTAT_HEATPOL_GENERAL -> ThermostatHeatpolGeneralScreen(item)
-        DetailPage.THERMOSTAT_HEATPOL_HISTORY -> HeatpolHistoryScreen(item)
-        DetailPage.RECUPERATOR_GENERAL -> RecuperatorGeneralScreen(item)
-        DetailPage.RECUPERATOR_SCHEDULE -> RecuperatorScheduleScreen(item)
-        DetailPage.THERMOMETER_HISTORY -> ThermometerHistoryScreen(item)
-        DetailPage.HUMIDITY_HISTORY -> HumidityHistoryScreen(item)
-        DetailPage.GPM_HISTORY -> GpmHistoryScreen(item)
-        DetailPage.ROLLER_SHUTTER -> RollerShutterScreen(item, navigator)
-        DetailPage.ROOF_WINDOW -> RoofWindowScreen(item, navigator)
-        DetailPage.FACADE_BLINDS -> FacadeBlindsScreen(item, navigator)
-        DetailPage.TERRACE_AWNING -> TerraceAwningScreen(item, navigator)
-        DetailPage.PROJECTOR_SCREEN -> ProjectorScreenScreen(item, navigator)
-        DetailPage.CURTAIN -> CurtainScreen(item, navigator)
-        DetailPage.VERTICAL_BLIND -> VerticalBlindsScreen(item, navigator)
-        DetailPage.GARAGE_DOOR_ROLLER -> GarageDoorScreen(item, navigator)
-        DetailPage.EM_GENERAL -> ElectricityMeterGeneralScreen(item)
-        DetailPage.EM_HISTORY -> ElectricityMeterHistoryScreen(item)
-        DetailPage.EM_SETTINGS -> ElectricityMeterSettingsScreen(item)
-        DetailPage.CONTAINER_GENERAL -> ContainerGeneralScreen(item)
-        DetailPage.IC_GENERAL -> ImpulseCounterGeneralScreen(item, navigator)
-        DetailPage.IC_HISTORY -> ImpulseCounterHistoryScreen(item)
-        DetailPage.IC_OCR -> CounterPhotoScreen(item.remoteId, navigator)
-        DetailPage.IC_SETTINGS -> ImpulseCounterSettingsScreen(item)
-        DetailPage.VALVE_GENERAL -> ValveGeneralScreen(item)
-        DetailPage.GATE_GENERAL -> GateGeneralScreen(item)
-        DetailPage.RGB -> RgbDetailScreen(item)
-        DetailPage.DIMMER -> DimmerDetailScreen(item, navigator)
-        DetailPage.DIMMER_CCT -> DimmerCctDetailScreen(item)
+      Content(
+        item = item,
+        page = page,
+        navigator = navigator
+      )
+    }
+  }
+}
+
+@Composable
+private fun LandscapeScreen(
+  item: ItemBundle,
+  pages: List<DetailPage>,
+  navigator: MainComposeNavigator
+) {
+  var page by remember(pages) { mutableStateOf(pages.first()) }
+
+  Row {
+    Scaffold(
+      topBar = { StandardTopBar(onBackClick = { navigator.back() }) },
+      modifier = Modifier.weight(1f)
+    ) { paddings ->
+      CompositionLocalProvider(LocalScaffoldPadding provides paddings) {
+        Content(
+          item = item,
+          page = page,
+          navigator = navigator
+        )
+      }
+    }
+
+    if (pages.size > 1) {
+      NavigationRail(
+        modifier = Modifier
+          .fillMaxHeight()
+          .border(1.dp, MaterialTheme.colorScheme.outline)
+      ) {
+        Column(
+          modifier = Modifier.fillMaxHeight(),
+          verticalArrangement = Arrangement.SpaceEvenly
+        ) {
+          pages.forEach {
+            SuplaRailItem(
+              selected = page == it,
+              onClick = { page = it },
+              icon = { it.item.Icon(page == it) },
+              label = { NavigationBarLabel(it.item.stringRes) }
+            )
+          }
+        }
       }
     }
   }
 }
 
 @Composable
-private fun RowScope.NavigationItem(
-  currentPage: DetailPage,
-  destinationPage: DetailPage,
-  onClick: () -> Unit,
+private fun Content(
+  item: ItemBundle,
+  page: DetailPage,
+  navigator: MainComposeNavigator
 ) =
-  NavigationBarItem(
-    selected = currentPage == destinationPage,
-    onClick = onClick,
-    icon = { destinationPage.item.Icon(currentPage == destinationPage) },
-    label = {
-      LocalApplicationPreferences.current.isShowBottomLabel.ifTrue {
-        NavigationBarLabel(destinationPage.item.stringRes)
-      }
-    },
-    colors = NavigationBarItemDefaults.colors(
-      selectedIconColor = MaterialTheme.colorScheme.primary,
-      selectedTextColor = MaterialTheme.colorScheme.primary,
-      indicatorColor = Color.Transparent,
-      unselectedIconColor = MaterialTheme.colorScheme.onBackground,
-      unselectedTextColor = MaterialTheme.colorScheme.onBackground
-    )
-  )
+  when (page) {
+    DetailPage.SWITCH -> SwitchGeneralScreen(item)
+    DetailPage.SWITCH_TIMER -> SwitchTimerScreen(item)
+    DetailPage.THERMOSTAT -> ThermostatGeneralScreen(item)
+    DetailPage.THERMOSTAT_LIST -> ThermostatSlavesListScreen(item, navigator)
+    DetailPage.SCHEDULE -> ThermostatScheduleScreen(item)
+    DetailPage.THERMOSTAT_HISTORY -> ThermostatHistoryScreen(item)
+    DetailPage.THERMOSTAT_TIMER -> ThermostatTimerScreen(item)
+    DetailPage.THERMOSTAT_HEATPOL_GENERAL -> ThermostatHeatpolGeneralScreen(item)
+    DetailPage.THERMOSTAT_HEATPOL_HISTORY -> HeatpolHistoryScreen(item)
+    DetailPage.RECUPERATOR_GENERAL -> RecuperatorGeneralScreen(item)
+    DetailPage.RECUPERATOR_SCHEDULE -> RecuperatorScheduleScreen(item)
+    DetailPage.THERMOMETER_HISTORY -> ThermometerHistoryScreen(item)
+    DetailPage.HUMIDITY_HISTORY -> HumidityHistoryScreen(item)
+    DetailPage.GPM_HISTORY -> GpmHistoryScreen(item)
+    DetailPage.ROLLER_SHUTTER -> RollerShutterScreen(item, navigator)
+    DetailPage.ROOF_WINDOW -> RoofWindowScreen(item, navigator)
+    DetailPage.FACADE_BLINDS -> FacadeBlindsScreen(item, navigator)
+    DetailPage.TERRACE_AWNING -> TerraceAwningScreen(item, navigator)
+    DetailPage.PROJECTOR_SCREEN -> ProjectorScreenScreen(item, navigator)
+    DetailPage.CURTAIN -> CurtainScreen(item, navigator)
+    DetailPage.VERTICAL_BLIND -> VerticalBlindsScreen(item, navigator)
+    DetailPage.GARAGE_DOOR_ROLLER -> GarageDoorScreen(item, navigator)
+    DetailPage.EM_GENERAL -> ElectricityMeterGeneralScreen(item)
+    DetailPage.EM_HISTORY -> ElectricityMeterHistoryScreen(item)
+    DetailPage.EM_SETTINGS -> ElectricityMeterSettingsScreen(item)
+    DetailPage.CONTAINER_GENERAL -> ContainerGeneralScreen(item)
+    DetailPage.IC_GENERAL -> ImpulseCounterGeneralScreen(item, navigator)
+    DetailPage.IC_HISTORY -> ImpulseCounterHistoryScreen(item)
+    DetailPage.IC_OCR -> CounterPhotoScreen(item.remoteId, navigator)
+    DetailPage.IC_SETTINGS -> ImpulseCounterSettingsScreen(item)
+    DetailPage.VALVE_GENERAL -> ValveGeneralScreen(item)
+    DetailPage.GATE_GENERAL -> GateGeneralScreen(item)
+    DetailPage.RGB -> RgbDetailScreen(item)
+    DetailPage.DIMMER -> DimmerDetailScreen(item, navigator)
+    DetailPage.DIMMER_CCT -> DimmerCctDetailScreen(item)
+  }

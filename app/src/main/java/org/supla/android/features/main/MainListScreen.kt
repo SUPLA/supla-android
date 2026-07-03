@@ -21,15 +21,15 @@ import android.Manifest
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material3.DrawerState
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -40,14 +40,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import org.supla.android.R
-import org.supla.android.core.storage.LocalApplicationPreferences
 import org.supla.android.features.channellist.ChannelListScreen
 import org.supla.android.features.grouplist.GroupListScreen
 import org.supla.android.features.nfc.call.screens.EventBasedViewModelHost
@@ -61,10 +61,14 @@ import org.supla.android.main.view.ChannelListLabel
 import org.supla.android.main.view.GroupListLabel
 import org.supla.android.main.view.MainDrawer
 import org.supla.android.main.view.MainTopBar
+import org.supla.android.main.view.PermanentMainDrawer
 import org.supla.android.main.view.SceneListLabel
 import org.supla.android.ui.dialogs.AuthorizationDialog
 import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.ui.extensions.ifTrue
+import org.supla.android.ui.extensions.isPhoneLandscape
+import org.supla.android.ui.navigation.SuplaNavigationBarItem
+import org.supla.android.ui.navigation.SuplaRailItem
 
 @Composable
 fun MainListScreen(
@@ -73,39 +77,16 @@ fun MainListScreen(
   navigator: MainComposeNavigator,
   viewModel: MainListViewModel = hiltViewModel()
 ) {
-  val scope = rememberCoroutineScope()
-  var searchText by remember { mutableStateOf("") }
-
   EventBasedViewModelHost(
     viewModel = viewModel,
     eventHandler = { handleEvent(it, navigator) }
   ) {
-    MainDrawer(
-      navigator = navigator,
-      drawerState = drawerState,
-      developerOptionsVisibleFlow = viewModel.developerOptionsVisible,
-      zWaveVisibleFlow = viewModel.zWaveAvailable,
-      zWaveOpenCallback = { viewModel.showAuthorizationDialog(AuthorizationReason.ZWaveWizard) }
-    ) {
-      Scaffold(
-        topBar = {
-          MainTopBar(
-            searchText = searchText,
-            onMenuClick = { scope.launch { drawerState.open() } },
-            onProfilesClick = viewModel::showProfilesPopup,
-            onTextChange = { searchText = it }
-          )
-        },
-        bottomBar = { BottomNavigationBar(navigator) }
-      ) { paddings ->
-        CompositionLocalProvider(LocalScaffoldPadding provides paddings) {
-          when (selectedTab) {
-            ListTab.CHANNELS -> ChannelListScreen(navigator)
-            ListTab.GROUPS -> GroupListScreen(navigator)
-            ListTab.SCENES -> SceneListScreen(navigator)
-          }
-        }
-      }
+    if (LocalWindowInfo.current.containerDpSize.width >= 600.dp) {
+      WideView(selectedTab, navigator, viewModel)
+    } else if (LocalConfiguration.current.isPhoneLandscape) {
+      LandscapePhoneView(selectedTab, drawerState, navigator, viewModel)
+    } else {
+      PortraitPhoneView(selectedTab, drawerState, navigator, viewModel)
     }
 
     viewModel.authorizationDialogState.collectAsState().value?.let {
@@ -127,51 +108,184 @@ fun MainListScreen(
 }
 
 @Composable
+private fun PortraitPhoneView(
+  selectedTab: ListTab,
+  drawerState: DrawerState,
+  navigator: MainComposeNavigator,
+  viewModel: MainListViewModel
+) {
+  val scope = rememberCoroutineScope()
+  var searchText by remember { mutableStateOf("") }
+
+  MainDrawer(
+    navigator = navigator,
+    drawerState = drawerState,
+    developerOptionsVisibleFlow = viewModel.developerOptionsVisible,
+    zWaveVisibleFlow = viewModel.zWaveAvailable,
+    zWaveOpenCallback = { viewModel.showAuthorizationDialog(AuthorizationReason.ZWaveWizard) }
+  ) {
+    Scaffold(
+      topBar = {
+        MainTopBar(
+          searchText = searchText,
+          onMenuClick = { scope.launch { drawerState.open() } },
+          onProfilesClick = viewModel::showProfilesPopup,
+          onTextChange = { searchText = it }
+        )
+      },
+      bottomBar = { BottomNavigationBar(navigator) }
+    ) { paddings ->
+      CompositionLocalProvider(LocalScaffoldPadding provides paddings) {
+        when (selectedTab) {
+          ListTab.CHANNELS -> ChannelListScreen(navigator)
+          ListTab.GROUPS -> GroupListScreen(navigator)
+          ListTab.SCENES -> SceneListScreen(navigator)
+        }
+      }
+    }
+  }
+}
+
+@Composable
+private fun LandscapePhoneView(
+  selectedTab: ListTab,
+  drawerState: DrawerState,
+  navigator: MainComposeNavigator,
+  viewModel: MainListViewModel
+) {
+  val scope = rememberCoroutineScope()
+  var searchText by remember { mutableStateOf("") }
+
+  MainDrawer(
+    navigator = navigator,
+    drawerState = drawerState,
+    developerOptionsVisibleFlow = viewModel.developerOptionsVisible,
+    zWaveVisibleFlow = viewModel.zWaveAvailable,
+    zWaveOpenCallback = { viewModel.showAuthorizationDialog(AuthorizationReason.ZWaveWizard) }
+  ) {
+    Row {
+      Scaffold(
+        topBar = {
+          MainTopBar(
+            searchText = searchText,
+            onMenuClick = { scope.launch { drawerState.open() } },
+            onProfilesClick = viewModel::showProfilesPopup,
+            onTextChange = { searchText = it }
+          )
+        },
+        modifier = Modifier.weight(1f)
+      ) { paddings ->
+        CompositionLocalProvider(LocalScaffoldPadding provides paddings) {
+          when (selectedTab) {
+            ListTab.CHANNELS -> ChannelListScreen(navigator)
+            ListTab.GROUPS -> GroupListScreen(navigator)
+            ListTab.SCENES -> SceneListScreen(navigator)
+          }
+        }
+      }
+      RightNavigationRail(navigator)
+    }
+  }
+}
+
+@Composable
+private fun WideView(
+  selectedTab: ListTab,
+  navigator: MainComposeNavigator,
+  viewModel: MainListViewModel
+) {
+  var searchText by remember { mutableStateOf("") }
+
+  PermanentMainDrawer(
+    navigator = navigator,
+    developerOptionsVisibleFlow = viewModel.developerOptionsVisible,
+    zWaveVisibleFlow = viewModel.zWaveAvailable,
+    zWaveOpenCallback = { viewModel.showAuthorizationDialog(AuthorizationReason.ZWaveWizard) }
+  ) {
+    Scaffold(
+      topBar = {
+        MainTopBar(
+          searchText = searchText,
+          onMenuClick = null,
+          onProfilesClick = viewModel::showProfilesPopup,
+          onTextChange = { searchText = it }
+        )
+      },
+      bottomBar = { BottomNavigationBar(navigator) }
+    ) { paddings ->
+      CompositionLocalProvider(LocalScaffoldPadding provides paddings) {
+        when (selectedTab) {
+          ListTab.CHANNELS -> ChannelListScreen(navigator)
+          ListTab.GROUPS -> GroupListScreen(navigator)
+          ListTab.SCENES -> SceneListScreen(navigator)
+        }
+      }
+    }
+  }
+}
+
+@Composable
 private fun BottomNavigationBar(navigator: MainComposeNavigator) =
   NavigationBar(
-    modifier = Modifier
-      .border(1.dp, MaterialTheme.colorScheme.outline),
+    modifier = Modifier.border(1.dp, MaterialTheme.colorScheme.outline),
   ) {
-    NavigationItem(
-      tab = ListTab.CHANNELS,
-      navigator = navigator,
+    SuplaNavigationBarItem(
+      selected = navigator.current() == MainRoute.List(ListTab.CHANNELS),
+      onClick = { navigator.replace(MainRoute.List(ListTab.CHANNELS)) },
       iconRes = R.drawable.navbar_channels,
-      label = ::ChannelListLabel
+      label = ::ChannelListLabel,
+      iconDescription = stringResource(R.string.navbar_channels)
     )
-    NavigationItem(
-      tab = ListTab.GROUPS,
-      navigator = navigator,
+    SuplaNavigationBarItem(
+      selected = navigator.current() == MainRoute.List(ListTab.GROUPS),
+      onClick = { navigator.replace(MainRoute.List(ListTab.GROUPS)) },
       iconRes = R.drawable.navbar_groups,
-      label = ::GroupListLabel
+      label = ::GroupListLabel,
+      iconDescription = stringResource(R.string.navbar_groups)
     )
-    NavigationItem(
-      tab = ListTab.SCENES,
-      navigator = navigator,
+    SuplaNavigationBarItem(
+      selected = navigator.current() == MainRoute.List(ListTab.SCENES),
+      onClick = { navigator.replace(MainRoute.List(ListTab.SCENES)) },
       iconRes = R.drawable.navbar_scenes,
-      label = ::SceneListLabel
+      label = ::SceneListLabel,
+      iconDescription = stringResource(R.string.navbar_scenes)
     )
   }
 
 @Composable
-private fun RowScope.NavigationItem(
-  tab: ListTab,
-  navigator: MainComposeNavigator,
-  @DrawableRes iconRes: Int,
-  label: @Composable () -> Unit
-) =
-  NavigationBarItem(
-    selected = navigator.current() == MainRoute.List(tab),
-    onClick = { navigator.replace(MainRoute.List(tab)) },
-    icon = { Icon(painter = painterResource(iconRes), null) },
-    label = if (LocalApplicationPreferences.current.isShowBottomLabel) label else null,
-    colors = NavigationBarItemDefaults.colors(
-      selectedIconColor = MaterialTheme.colorScheme.primary,
-      selectedTextColor = MaterialTheme.colorScheme.primary,
-      indicatorColor = Color.Transparent,
-      unselectedIconColor = MaterialTheme.colorScheme.onBackground,
-      unselectedTextColor = MaterialTheme.colorScheme.onBackground
-    )
-  )
+private fun RightNavigationRail(navigator: MainComposeNavigator) =
+  NavigationRail(
+    modifier = Modifier
+      .fillMaxHeight()
+      .border(1.dp, MaterialTheme.colorScheme.outline)
+  ) {
+    Column(
+      modifier = Modifier.fillMaxHeight(),
+      verticalArrangement = Arrangement.SpaceEvenly
+    ) {
+      SuplaRailItem(
+        selected = navigator.current() == MainRoute.List(ListTab.CHANNELS),
+        onClick = { navigator.replace(MainRoute.List(ListTab.CHANNELS)) },
+        iconRes = R.drawable.navbar_channels,
+        label = ::ChannelListLabel,
+        iconDescription = stringResource(R.string.navbar_channels)
+      )
+      SuplaRailItem(
+        selected = navigator.current() == MainRoute.List(ListTab.GROUPS),
+        onClick = { navigator.replace(MainRoute.List(ListTab.GROUPS)) },
+        iconRes = R.drawable.navbar_groups,
+        label = ::GroupListLabel,
+        iconDescription = stringResource(R.string.navbar_groups)
+      )
+      SuplaRailItem(
+        selected = navigator.current() == MainRoute.List(ListTab.SCENES),
+        onClick = { navigator.replace(MainRoute.List(ListTab.SCENES)) },
+        iconRes = R.drawable.navbar_scenes,
+        label = ::SceneListLabel,
+        iconDescription = stringResource(R.string.navbar_scenes)
+      )
+    }
+  }
 
 @Composable
 private fun NotificationInfo(viewModel: MainListViewModel) {

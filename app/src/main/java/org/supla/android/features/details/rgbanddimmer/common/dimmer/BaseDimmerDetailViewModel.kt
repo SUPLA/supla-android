@@ -417,6 +417,7 @@ abstract class BaseDimmerDetailViewModel(
 
   private fun shouldShowRgbSettings(manufacturerId: Int?, productId: Int?): Boolean =
     (manufacturerId == SuplaConst.SUPLA_MFR_DOYLETRATT && productId == 1) ||
+      (manufacturerId == SuplaConst.SUPLA_MFR_DOYLETRATT && productId == 10) ||
       (manufacturerId == SuplaConst.SUPLA_MFR_ZAMEL && productId == SuplaConst.ZAM_PRODID_DIW_01) ||
       (manufacturerId == SuplaConst.SUPLA_MFR_COMELIT && productId == SuplaConst.COM_PRODID_WDIM100)
 }
