@@ -19,14 +19,23 @@ package org.supla.android.features.devicecatalog
 
 import androidx.compose.runtime.Composable
 import org.supla.android.R
-import org.supla.android.main.topbar.SetScreenTitle
+import org.supla.android.main.topbar.ManageTopBar
+import org.supla.android.main.topbar.TopBarState
 import org.supla.android.ui.views.LegacyFragmentScreen
+import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 
 @Composable
 fun DeviceCatalogScreen() {
-  SetScreenTitle(localizedString(R.string.menu_device_catalog))
+  ManageTopBarTitle(localizedString(R.string.menu_device_catalog))
   LegacyFragmentScreen(
     fragmentClass = DeviceCatalogFragment::class.java
+  )
+}
+
+@Composable
+private fun ManageTopBarTitle(title: LocalizedString) {
+  ManageTopBar(
+    state = TopBarState(title = title)
   )
 }

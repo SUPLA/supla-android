@@ -20,9 +20,9 @@ package org.supla.android.features.nfc.lock
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import org.supla.android.features.nfc.call.screens.ViewModelHost
 import org.supla.android.features.nfc.findNfcHost
 import org.supla.android.main.MainComposeNavigator
+import org.supla.android.main.ViewModelHost
 
 @Composable
 fun LockNfcTagScreen(

@@ -18,9 +18,11 @@ package org.supla.android.main.scaffold
  */
 
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import org.supla.android.main.MainComposeNavigator
+import org.supla.android.main.snackbar.LocalSnackbarController
 import org.supla.android.main.view.StandardTopBar
 
 @Composable
@@ -28,10 +30,11 @@ fun BackScaffold(
   navigator: MainComposeNavigator,
   content: @Composable () -> Unit
 ) {
+  val snackbarController = LocalSnackbarController.current
+
   Scaffold(
-    topBar = {
-      StandardTopBar { navigator.back() }
-    },
+    topBar = { StandardTopBar(navigator) },
+    snackbarHost = { SnackbarHost(snackbarController.state) }
   ) { paddings ->
     CompositionLocalProvider(LocalScaffoldPadding provides paddings) {
       content()

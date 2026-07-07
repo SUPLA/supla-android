@@ -25,8 +25,8 @@ import androidx.compose.ui.res.stringResource
 import org.supla.android.R
 import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.features.details.windowdetail.base.ui.WindowView
-import org.supla.android.features.nfc.call.screens.ViewModelHost
 import org.supla.android.main.MainComposeNavigator
+import org.supla.android.main.ViewModelHost
 import org.supla.android.ui.dialogs.AlertDialog
 import org.supla.android.ui.dialogs.AuthorizationDialog
 import org.supla.android.ui.extensions.ifTrue

@@ -18,74 +18,38 @@ package org.supla.android.main.view
  */
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import org.supla.android.R
-import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.main.topbar.LocalTopBarController
 import org.supla.android.tools.SuplaComponentPreview
 import org.supla.android.ui.views.buttons.DrawerMenuButton
 import org.supla.android.ui.views.buttons.IconButton
 
 @Composable
 fun MainTopBar(
-  searchText: String,
   onMenuClick: (() -> Unit)?,
   onProfilesClick: () -> Unit,
-  onTextChange: (String) -> Unit
 ) {
-  Surface(
-    modifier = Modifier
-      .fillMaxWidth()
-      .statusBarsPadding()
-      .padding(horizontal = Distance.default, vertical = Distance.small)
-      .shadow(elevation = 4.dp, shape = RoundedCornerShape(dimensionResource(R.dimen.radius_default))),
-    shape = RoundedCornerShape(dimensionResource(R.dimen.radius_default)),
-    color = MaterialTheme.colorScheme.surface
-  ) {
-    Row(
-      modifier = Modifier,
-      verticalAlignment = Alignment.CenterVertically
-    ) {
+  val topBarController = LocalTopBarController.current
+  val state = topBarController.state
+
+  TopBarSurface {
+    Row(verticalAlignment = Alignment.CenterVertically) {
       onMenuClick?.let {
         DrawerMenuButton(onClick = it)
       }
 
-      OutlinedTextField(
-        value = searchText,
-        onValueChange = { onTextChange(it) },
-        modifier = Modifier.weight(1f),
-        placeholder = {
-          Text(
-            text = "${stringResource(R.string.general_search)}...",
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-          )
-        },
-        singleLine = true,
-        colors = OutlinedTextFieldDefaults.colors(
-          focusedBorderColor = Color.Transparent,
-          disabledBorderColor = Color.Transparent,
-          unfocusedBorderColor = Color.Transparent
-        )
+      TopBarSearchField(
+        searchText = state.search?.query ?: "",
+        onTextChange = { topBarController.updateSearchValue(it) },
+        modifier = Modifier.weight(1f)
       )
 
       IconButton(
@@ -103,16 +67,16 @@ private fun Preview() {
   SuplaTheme {
     Column(Modifier.background(MaterialTheme.colorScheme.outline)) {
       MainTopBar(
-        searchText = "",
         onMenuClick = {},
         onProfilesClick = {},
-        onTextChange = {}
       )
       MainTopBar(
-        searchText = "",
         onMenuClick = null,
         onProfilesClick = {},
-        onTextChange = {}
+      )
+      MainTopBar(
+        onMenuClick = null,
+        onProfilesClick = {},
       )
     }
   }

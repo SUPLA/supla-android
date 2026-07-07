@@ -33,12 +33,19 @@ class CreateProfileScenesListUseCase @Inject constructor(
   private val getSceneIconUseCase: GetSceneIconUseCase,
   private val sceneRepository: SceneRepository
 ) {
-  operator fun invoke(): Observable<List<ListItem>> =
+  operator fun invoke(filterString: String = ""): Observable<List<ListItem>> =
     sceneRepository.findList().map { entities ->
       val result = mutableListOf<ListItem>()
 
       var location: LocationEntity? = null
       entities.forEach {
+        if (filterString.length > 1) {
+          if (!it.sceneEntity.caption.contains(filterString, ignoreCase = true)) {
+            // Skip filtered out channels
+            return@forEach
+          }
+        }
+
         val currentLocation = location
         if (currentLocation == null || currentLocation.remoteId != it.locationEntity.remoteId) {
           val newLocation = it.locationEntity

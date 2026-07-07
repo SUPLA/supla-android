@@ -22,10 +22,10 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
@@ -56,8 +56,7 @@ import org.supla.android.main.MainComposeNavigator
 import org.supla.android.main.MainRoute
 import org.supla.android.main.scaffold.BackScaffold
 import org.supla.android.main.scaffold.EmptyScreenScaffold
-import org.supla.android.main.topbar.LocalTopBarController
-import org.supla.android.main.topbar.TopBarController
+import org.supla.android.main.topbar.LocalTopBarScreenKey
 
 @Composable
 fun MainComposeNavHost(
@@ -74,30 +73,44 @@ fun MainComposeNavHost(
       rememberSaveableStateHolderNavEntryDecorator(),
       rememberViewModelStoreNavEntryDecorator(),
     ),
-    entryProvider = entryProvider {
-      entry<MainRoute.Status> { EmptyScreenScaffold { StatusScreen(navigator) } }
-      entry<MainRoute.List> { MainListScreen(it.tab, drawerState, navigator) }
-      entry<MainRoute.UnlockApp> { EmptyScreenScaffold { LockScreen(it.unlockAction, navigator) } }
-      entry<MainRoute.Unlock> { BackScaffold(navigator) { LockScreen(it.unlockAction, navigator) } }
-      entry<MainRoute.StandardDetail> { DetailScreen(it.item, it.pages, navigator) }
-      entry<MainRoute.Settings> { BackScaffold(navigator) { SettingsScreen() } }
-      entry<MainRoute.AddWizard> { AddWizardScreen(navigator) }
-      entry<MainRoute.DeviceCatalog> { BackScaffold(navigator) { DeviceCatalogScreen() } }
-      entry<MainRoute.NotificationsLog> { NotificationsLogScreen(navigator) }
-      entry<MainRoute.About> { BackScaffold(navigator) { AboutScreen(navigator) } }
-      entry<MainRoute.DeveloperInfo> { BackScaffold(navigator) { DeveloperInfoScreen() } }
-      entry<MainRoute.LocationReorder> { BackScaffold(navigator) { LocationReorderScreen() } }
-      entry<MainRoute.AndroidAutoItems> { BackScaffold(navigator) { AndroidAutoItemsScreen(navigator) } }
-      entry<MainRoute.AddAndroidAutoItem> { BackScaffold(navigator) { AddAndroidAutoItemScreen(navigator, it.id) } }
-      entry<MainRoute.NfcTagList> { BackScaffold(navigator) { NfcTagListScreen(navigator) } }
-      entry<MainRoute.NfcTagDetail> { BackScaffold(navigator) { NfcTagDetailScreen(it.id, navigator) } }
-      entry<MainRoute.AddNfcTag> { BackScaffold(navigator) { AddNfcTagScreen(navigator) } }
-      entry<MainRoute.EditNfcTag> { EditNfcTagScreen(it.id, it.newItemData, navigator) }
-      entry<MainRoute.LockNfcTag> { BackScaffold(navigator) { LockNfcTagScreen(it.id, navigator) } }
-      entry<MainRoute.PinSetup> { BackScaffold(navigator) { PinSetupScreen(it.lockScreenScope, navigator) } }
-      entry<MainRoute.CounterPhoto> { BackScaffold(navigator) { CounterPhotoScreen(it.remoteId, navigator) } }
-      entry<MainRoute.LegacyDimmerSettings> { BackScaffold(navigator) { LegacyDimmerSettingsScreen(it.item) } }
-      entry<MainRoute.LegacyDetail> { BackScaffold(navigator) { LegacyDetailScreen(it) } }
-    }
+    entryProvider = topBarEntryProvider(
+      entryProvider {
+        entry<MainRoute.Status> { EmptyScreenScaffold { StatusScreen(navigator) } }
+        entry<MainRoute.List> { MainListScreen(it.tab, drawerState, navigator) }
+        entry<MainRoute.UnlockApp> { EmptyScreenScaffold { LockScreen(it.unlockAction, navigator) } }
+        entry<MainRoute.Unlock> { BackScaffold(navigator) { LockScreen(it.unlockAction, navigator) } }
+        entry<MainRoute.StandardDetail> { DetailScreen(it.item, it.pages, navigator) }
+        entry<MainRoute.Settings> { BackScaffold(navigator) { SettingsScreen() } }
+        entry<MainRoute.AddWizard> { AddWizardScreen(navigator) }
+        entry<MainRoute.DeviceCatalog> { BackScaffold(navigator) { DeviceCatalogScreen() } }
+        entry<MainRoute.NotificationsLog> { BackScaffold(navigator) { NotificationsLogScreen(navigator) } }
+        entry<MainRoute.About> { BackScaffold(navigator) { AboutScreen(navigator) } }
+        entry<MainRoute.DeveloperInfo> { BackScaffold(navigator) { DeveloperInfoScreen() } }
+        entry<MainRoute.LocationReorder> { BackScaffold(navigator) { LocationReorderScreen() } }
+        entry<MainRoute.AndroidAutoItems> { BackScaffold(navigator) { AndroidAutoItemsScreen(navigator) } }
+        entry<MainRoute.AddAndroidAutoItem> { BackScaffold(navigator) { AddAndroidAutoItemScreen(navigator, it.id) } }
+        entry<MainRoute.NfcTagList> { BackScaffold(navigator) { NfcTagListScreen(navigator) } }
+        entry<MainRoute.NfcTagDetail> { BackScaffold(navigator) { NfcTagDetailScreen(it.id, navigator) } }
+        entry<MainRoute.AddNfcTag> { BackScaffold(navigator) { AddNfcTagScreen(navigator) } }
+        entry<MainRoute.EditNfcTag> { EditNfcTagScreen(it.id, it.newItemData, navigator) }
+        entry<MainRoute.LockNfcTag> { BackScaffold(navigator) { LockNfcTagScreen(it.id, navigator) } }
+        entry<MainRoute.PinSetup> { BackScaffold(navigator) { PinSetupScreen(it.lockScreenScope, navigator) } }
+        entry<MainRoute.CounterPhoto> { BackScaffold(navigator) { CounterPhotoScreen(it.remoteId, navigator) } }
+        entry<MainRoute.LegacyDimmerSettings> { BackScaffold(navigator) { LegacyDimmerSettingsScreen(it.item) } }
+        entry<MainRoute.LegacyDetail> { BackScaffold(navigator) { LegacyDetailScreen(it) } }
+      }
+    )
   )
+}
+
+fun <T : Any> topBarEntryProvider(
+  base: (T) -> NavEntry<T>
+): (T) -> NavEntry<T> = { key ->
+  val entry = base(key)
+
+  NavEntry(key) {
+    CompositionLocalProvider(LocalTopBarScreenKey provides key) {
+      entry.Content()
+    }
+  }
 }

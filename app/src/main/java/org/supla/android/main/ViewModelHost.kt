@@ -1,4 +1,4 @@
-package org.supla.android.features.nfc.call.screens
+package org.supla.android.main
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -38,11 +38,13 @@ import org.supla.android.core.ui.EventBasedViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.main.scaffold.LocalScaffoldPadding
-import org.supla.android.main.topbar.ManageScreenTitle
+import org.supla.android.main.topbar.ManageTopBar
+import org.supla.android.main.topbar.TopBarState
 
 @Composable
 fun <S : ViewState, E : ViewEvent> ViewModelHost(
   viewModel: BaseViewModel<S, E>,
+  topBarState: TopBarState? = null,
   eventHandler: (E) -> Unit = {},
   onCreate: () -> Unit = {},
   onResume: () -> Unit = {},
@@ -52,6 +54,7 @@ fun <S : ViewState, E : ViewEvent> ViewModelHost(
 ) {
   ViewModelHostBase(
     viewModel = viewModel,
+    topBarState = topBarState,
     eventHandler = eventHandler,
     onCreate = onCreate,
     onResume = onResume,
@@ -72,6 +75,7 @@ fun <S : ViewState, E : ViewEvent> ViewModelHost(
 @Composable
 fun <S : ViewState, E : ViewEvent> ViewModelHostBase(
   viewModel: BaseViewModel<S, E>,
+  topBarState: TopBarState? = null,
   eventHandler: (E) -> Unit = {},
   onCreate: () -> Unit = {},
   onResume: () -> Unit = {},
@@ -81,6 +85,7 @@ fun <S : ViewState, E : ViewEvent> ViewModelHostBase(
 ) {
   EventBasedViewModelHost(
     viewModel = viewModel,
+    topBarState = topBarState,
     eventHandler = eventHandler,
     onCreate = onCreate,
     onResume = onResume,
@@ -95,6 +100,7 @@ fun <S : ViewState, E : ViewEvent> ViewModelHostBase(
 @Composable
 fun <E : ViewEvent> EventBasedViewModelHost(
   viewModel: EventBasedViewModel<E>,
+  topBarState: TopBarState? = null,
   eventHandler: (E) -> Unit = {},
   onCreate: () -> Unit = {},
   onResume: () -> Unit = {},
@@ -117,7 +123,7 @@ fun <E : ViewEvent> EventBasedViewModelHost(
     }
   }
 
-  ManageScreenTitle(viewModel)
+  ManageTopBar(viewModel, topBarState)
 
   content()
 }

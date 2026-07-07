@@ -17,18 +17,23 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
+import org.supla.android.core.shared.invoke
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.ChannelRelationRepository
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.lists.locationItem
 import org.supla.android.usecases.location.CollapsedFlag
+import org.supla.core.shared.usecase.GetCaptionUseCase
 import java.util.LinkedList
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -39,7 +44,9 @@ class CreateProfileChannelsListUseCase @Inject constructor(
   private val channelRelationRepository: ChannelRelationRepository,
   private val channelToListItemMapper: ChannelToListItemMapper,
   private val channelRepository: ChannelRepository,
+  private val getCaptionUseCase: GetCaptionUseCase,
   private val preferences: ApplicationPreferences,
+  @param:ApplicationContext private val context: Context
 ) {
 
   private val channelListSource: Single<List<ChannelDataEntity>>
@@ -50,7 +57,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
         channelRepository.findList()
       }
 
-  operator fun invoke(): Observable<List<ListItem>> =
+  operator fun invoke(filterString: String = ""): Observable<List<ListItem>> =
     Single.zip(
       channelRelationRepository.findChildrenToParentsRelations().firstOrError(),
       channelListSource
@@ -72,6 +79,13 @@ class CreateProfileChannelsListUseCase @Inject constructor(
           if (allChildrenIds.contains(it.remoteId)) {
             // Skip channels which have parent ID.
             return@forEach
+          }
+          if (filterString.length > 1) {
+            val caption = getCaptionUseCase.invoke(it.shareable)(context)
+            if (!caption.contains(filterString, ignoreCase = true)) {
+              // Skip filtered out channels
+              return@forEach
+            }
           }
 
           val currentLocation = location

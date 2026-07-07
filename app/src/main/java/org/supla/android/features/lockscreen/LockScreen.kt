@@ -28,8 +28,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.supla.android.R
 import org.supla.android.extensions.findActivity
-import org.supla.android.features.nfc.call.screens.ViewModelHost
 import org.supla.android.main.MainComposeNavigator
+import org.supla.android.main.ViewModelHost
 import org.supla.android.ui.dialogs.AlertDialog
 import org.supla.android.ui.views.LoadingScrim
 

@@ -27,7 +27,7 @@ import org.supla.android.core.infrastructure.storage.DebugFileLoggingTree
 import org.supla.android.core.storage.LocalApplicationPreferences
 import org.supla.android.extensions.findActivity
 import org.supla.android.extensions.setupOrientationLock
-import org.supla.android.features.nfc.call.screens.ViewModelHost
+import org.supla.android.main.ViewModelHost
 
 @Composable
 fun DeveloperInfoScreen(

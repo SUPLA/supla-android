@@ -21,7 +21,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -39,7 +39,6 @@ import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.features.captionchangedialog.CaptionChangeViewEvent
 import org.supla.android.features.captionchangedialog.CaptionChangeViewModel
 import org.supla.android.features.captionchangedialog.View
-import org.supla.android.features.nfc.call.screens.ViewModelHostBase
 import org.supla.android.features.statedialog.StateDialogViewModel
 import org.supla.android.features.statedialog.View
 import org.supla.android.images.ImageId
@@ -48,7 +47,10 @@ import org.supla.android.main.MainRoute
 import org.supla.android.main.MainRoute.AddWizard
 import org.supla.android.main.MainRoute.DeviceCatalog
 import org.supla.android.main.MainRoute.StandardDetail
+import org.supla.android.main.ViewModelHostBase
 import org.supla.android.main.scaffold.screenUnderTopBarPaddings
+import org.supla.android.main.topbar.TopBarSearchState
+import org.supla.android.main.topbar.TopBarState
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.lists.ListOnlineState
@@ -77,10 +79,17 @@ fun ChannelListScreen(
 ) {
   ViewModelHostBase(
     viewModel = viewModel,
+    topBarState = TopBarState(
+      search = TopBarSearchState(
+        query = viewModel.filterText,
+        onQueryChange = viewModel::setFilterText
+      ),
+    ),
     eventHandler = { handleChannelEvents(it, navigator, captionChangeViewModel, stateDialogViewModel) }
   ) { state ->
     viewModel.Content(
       state = state,
+      dragEnabled = viewModel.filterText.isEmpty(),
       modifier = modifier
     )
 
@@ -97,9 +106,7 @@ fun ChannelListScreen(
     captionChangeViewModel.View(it)
   }
 
-  ViewModelHostBase(
-    viewModel = stateDialogViewModel,
-  ) {
+  ViewModelHostBase(stateDialogViewModel) {
     stateDialogViewModel.View(it)
   }
 }
@@ -133,12 +140,13 @@ private fun handleCaptionChangeEvents(event: CaptionChangeViewEvent, viewModel: 
 @Composable
 private fun ChannelListScope.Content(
   state: ChannelListViewState,
+  dragEnabled: Boolean,
   modifier: Modifier = Modifier
 ) {
   if (state.channels.isNullOrEmpty()) {
     Box(
       modifier = modifier
-        .fillMaxHeight()
+        .fillMaxSize()
         .screenUnderTopBarPaddings()
     ) {
       EmptyContent(modifier = Modifier.align(Alignment.Center))
@@ -146,6 +154,7 @@ private fun ChannelListScope.Content(
   } else {
     ListView(
       items = state.channels,
+      dragEnabled = dragEnabled,
       modifier = modifier
     )
   }
@@ -191,7 +200,8 @@ val previewScope = object : ChannelListScope {
 private fun PreviewEmpty() {
   SuplaTheme {
     previewScope.Content(
-      ChannelListViewState()
+      state = ChannelListViewState(),
+      dragEnabled = false
     )
   }
 }
@@ -202,7 +212,7 @@ private fun PreviewList() {
   SuplaTheme {
     CompositionLocalProvider(LocalApplicationPreferences provides ApplicationPreferences(LocalContext.current)) {
       previewScope.Content(
-        ChannelListViewState(
+        state = ChannelListViewState(
           channels = listOf(
             ListItem.LocationItem(1, 1L, "Leaving Room", false),
             ListItem.DefaultItem(
@@ -234,7 +244,8 @@ private fun PreviewList() {
               processing = false
             )
           )
-        )
+        ),
+        dragEnabled = false
       )
     }
   }

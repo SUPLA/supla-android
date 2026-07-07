@@ -38,9 +38,9 @@ import org.supla.android.extensions.allGranted
 import org.supla.android.extensions.applicationName
 import org.supla.android.extensions.findActivity
 import org.supla.android.features.addwizard.view.View
-import org.supla.android.features.nfc.call.screens.ViewModelHostBase
 import org.supla.android.main.MainComposeNavigator
 import org.supla.android.main.MainRoute
+import org.supla.android.main.ViewModelHostBase
 import org.supla.android.main.scaffold.LocalScaffoldPadding
 import org.supla.android.main.scaffold.screenPaddings
 import org.supla.android.main.view.BackOnlyTopBar

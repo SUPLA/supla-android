@@ -20,8 +20,8 @@ package org.supla.android.features.pinsetup
 import androidx.compose.runtime.Composable
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.supla.android.data.model.general.LockScreenScope
-import org.supla.android.features.nfc.call.screens.ViewModelHost
 import org.supla.android.main.MainComposeNavigator
+import org.supla.android.main.ViewModelHost
 
 @Composable
 fun PinSetupScreen(

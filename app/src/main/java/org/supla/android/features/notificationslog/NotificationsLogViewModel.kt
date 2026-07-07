@@ -39,8 +39,8 @@ const val DELETE_DELAY_SECS = 5L
 @HiltViewModel
 class NotificationsLogViewModel @Inject constructor(
   private val loadAllNotificationsUseCase: LoadAllNotificationsUseCase,
-  private val deleteNotificationUseCase: DeleteNotificationUseCase,
   private val deleteNotificationsUseCase: DeleteNotificationsUseCase,
+  private val deleteNotificationUseCase: DeleteNotificationUseCase,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<NotificationsLogViewState, NotificationsLogViewEvent>(
   defaultState = NotificationsLogViewState(),
@@ -50,7 +50,9 @@ class NotificationsLogViewModel @Inject constructor(
   NotificationsLogViewScope {
 
   private val deletionDisposablesMap: MutableMap<Long, Disposable> = mutableMapOf()
-  private var lastFilterString: String? = null
+
+  var filterString: String = ""
+    private set
 
   override fun onViewCreated() {
     loadAll()
@@ -68,7 +70,11 @@ class NotificationsLogViewModel @Inject constructor(
   }
 
   fun loadAll() {
-    loadAllNotificationsUseCase()
+    if (filterString.length > 1) {
+      loadAllNotificationsUseCase(filterString)
+    } else {
+      loadAllNotificationsUseCase()
+    }
       .attach()
       .subscribeBy(
         onNext = this::setItems
@@ -76,21 +82,9 @@ class NotificationsLogViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  fun search(filterString: String) {
-    if (filterString.trim().length > 1) {
-      if (filterString != lastFilterString) {
-        loadAllNotificationsUseCase(filterString)
-          .attach()
-          .subscribeBy(
-            onNext = this::setItems
-          )
-          .disposeBySelf()
-      }
-      lastFilterString = filterString
-    } else if (lastFilterString != null) {
-      lastFilterString = null
-      loadAll()
-    }
+  fun setFilterString(string: String) {
+    filterString = string
+    loadAll()
   }
 
   fun cancelDeletion(id: Long) {

@@ -1,4 +1,4 @@
-package org.supla.android.features.details.electricitymeterdetail.settings
+package org.supla.android.main.snackbar
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,20 +17,12 @@ package org.supla.android.features.details.electricitymeterdetail.settings
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.compose.runtime.Composable
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import org.supla.android.features.details.detailbase.base.ItemBundle
-import org.supla.android.main.ViewModelHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.staticCompositionLocalOf
 
-@Composable
-fun ElectricityMeterSettingsScreen(
-  item: ItemBundle,
-  viewModel: ElectricityMeterSettingsViewModel = hiltViewModel()
-) {
-  ViewModelHost(
-    viewModel = viewModel,
-    onResume = { viewModel.loadData(item.remoteId) },
-  ) {
-    viewModel.View(state = it)
-  }
+class SnackbarController {
+  var state = SnackbarHostState()
 }
+
+private val DefaultSnackbarController = SnackbarController()
+val LocalSnackbarController = staticCompositionLocalOf { DefaultSnackbarController }

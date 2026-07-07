@@ -24,10 +24,10 @@ import org.supla.android.R
 import org.supla.android.features.captionchangedialog.CaptionChangeViewModel
 import org.supla.android.features.captionchangedialog.View
 import org.supla.android.features.details.detailbase.base.ItemBundle
-import org.supla.android.features.nfc.call.screens.ViewModelHost
-import org.supla.android.features.nfc.call.screens.ViewModelHostBase
 import org.supla.android.features.statedialog.StateDialogViewModel
 import org.supla.android.features.statedialog.View
+import org.supla.android.main.ViewModelHost
+import org.supla.android.main.ViewModelHostBase
 import org.supla.android.ui.dialogs.AlertDialog
 
 @Composable

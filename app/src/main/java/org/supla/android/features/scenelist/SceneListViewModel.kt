@@ -64,6 +64,9 @@ class SceneListViewModel @Inject constructor(
 ),
   SceneListScope {
 
+  var filterText: String = ""
+    private set
+
   override fun reloadList() = loadScenes()
 
   init {
@@ -81,8 +84,13 @@ class SceneListViewModel @Inject constructor(
       .disposeBySelf()
   }
 
+  fun setFilterText(text: String) {
+    filterText = text
+    loadScenes()
+  }
+
   fun loadScenes() {
-    createProfileScenesListUseCase()
+    createProfileScenesListUseCase(filterText)
       .attach()
       .subscribeBy(
         onNext = { updateState { state -> state.copy(scenes = it) } },
@@ -147,7 +155,7 @@ class SceneListViewModel @Inject constructor(
 
   override fun onLocationClick(remoteId: Int) {
     toggleLocationUseCase(remoteId, CollapsedFlag.SCENE)
-      .andThen(createProfileScenesListUseCase())
+      .andThen(createProfileScenesListUseCase(filterText))
       .attach()
       .subscribeBy(
         onNext = { updateState { state -> state.copy(scenes = it) } },
