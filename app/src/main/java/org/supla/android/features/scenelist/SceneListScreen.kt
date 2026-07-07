@@ -34,9 +34,11 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.captionchangedialog.CaptionChangeViewEvent
 import org.supla.android.features.captionchangedialog.CaptionChangeViewModel
 import org.supla.android.features.captionchangedialog.View
-import org.supla.android.features.nfc.call.screens.ViewModelHostBase
 import org.supla.android.main.MainComposeNavigator
+import org.supla.android.main.ViewModelHostBase
 import org.supla.android.main.scaffold.screenUnderTopBarPaddings
+import org.supla.android.main.topbar.TopBarSearchState
+import org.supla.android.main.topbar.TopBarState
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.views.EmptyListInfoView
@@ -57,9 +59,18 @@ fun SceneListScreen(
 ) {
   ViewModelHostBase(
     viewModel = viewModel,
+    topBarState = TopBarState(
+      search = TopBarSearchState(
+        query = viewModel.filterText,
+        onQueryChange = viewModel::setFilterText
+      )
+    ),
     eventHandler = { handleSceneEvents(it, navigator, captionChangeViewModel) }
   ) { state ->
-    viewModel.Content(state)
+    viewModel.Content(
+      state = state,
+      dragEnabled = viewModel.filterText.isEmpty()
+    )
   }
 
   ViewModelHostBase(
@@ -81,6 +92,7 @@ private fun handleSceneEvents(event: SceneListViewEvent, navigator: MainComposeN
     SceneListViewEvent.NavigateToSuplaCloud -> navigator.navigateToCloudExternal()
   }
 }
+
 private fun handleCaptionChangeEvents(event: CaptionChangeViewEvent, viewModel: SceneListViewModel) {
   when (event) {
     is CaptionChangeViewEvent.Finish ->
@@ -89,7 +101,10 @@ private fun handleCaptionChangeEvents(event: CaptionChangeViewEvent, viewModel: 
 }
 
 @Composable
-private fun SceneListScope.Content(state: SceneListViewState) {
+private fun SceneListScope.Content(
+  state: SceneListViewState,
+  dragEnabled: Boolean
+) {
   if (state.scenes.isNullOrEmpty()) {
     Box(
       modifier = Modifier
@@ -99,7 +114,10 @@ private fun SceneListScope.Content(state: SceneListViewState) {
       EmptyContent(modifier = Modifier.align(Alignment.Center))
     }
   } else {
-    ListView(items = state.scenes)
+    ListView(
+      items = state.scenes,
+      dragEnabled = dragEnabled
+    )
   }
 }
 
@@ -138,7 +156,8 @@ val previewScope = object : SceneListScope {
 private fun PreviewEmpty() {
   SuplaTheme {
     previewScope.Content(
-      SceneListViewState()
+      state = SceneListViewState(),
+      dragEnabled = false
     )
   }
 }

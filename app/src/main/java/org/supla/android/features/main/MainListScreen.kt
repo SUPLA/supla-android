@@ -34,11 +34,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -48,11 +44,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import org.supla.android.R
+import org.supla.android.core.storage.LocalApplicationPreferences
 import org.supla.android.features.channellist.ChannelListScreen
 import org.supla.android.features.grouplist.GroupListScreen
-import org.supla.android.features.nfc.call.screens.EventBasedViewModelHost
 import org.supla.android.features.notificationinfo.NotificationInfoDialog
 import org.supla.android.features.scenelist.SceneListScreen
+import org.supla.android.main.EventBasedViewModelHost
 import org.supla.android.main.ListTab
 import org.supla.android.main.MainComposeNavigator
 import org.supla.android.main.MainRoute
@@ -115,7 +112,6 @@ private fun PortraitPhoneView(
   viewModel: MainListViewModel
 ) {
   val scope = rememberCoroutineScope()
-  var searchText by remember { mutableStateOf("") }
 
   MainDrawer(
     navigator = navigator,
@@ -127,13 +123,15 @@ private fun PortraitPhoneView(
     Scaffold(
       topBar = {
         MainTopBar(
-          searchText = searchText,
           onMenuClick = { scope.launch { drawerState.open() } },
           onProfilesClick = viewModel::showProfilesPopup,
-          onTextChange = { searchText = it }
         )
       },
-      bottomBar = { BottomNavigationBar(navigator) }
+      bottomBar = {
+        if (LocalApplicationPreferences.current.isShowBottomMenu) {
+          BottomNavigationBar(navigator)
+        }
+      }
     ) { paddings ->
       CompositionLocalProvider(LocalScaffoldPadding provides paddings) {
         when (selectedTab) {
@@ -154,7 +152,6 @@ private fun LandscapePhoneView(
   viewModel: MainListViewModel
 ) {
   val scope = rememberCoroutineScope()
-  var searchText by remember { mutableStateOf("") }
 
   MainDrawer(
     navigator = navigator,
@@ -167,10 +164,8 @@ private fun LandscapePhoneView(
       Scaffold(
         topBar = {
           MainTopBar(
-            searchText = searchText,
             onMenuClick = { scope.launch { drawerState.open() } },
             onProfilesClick = viewModel::showProfilesPopup,
-            onTextChange = { searchText = it }
           )
         },
         modifier = Modifier.weight(1f)
@@ -183,7 +178,9 @@ private fun LandscapePhoneView(
           }
         }
       }
-      RightNavigationRail(navigator)
+      if (LocalApplicationPreferences.current.isShowBottomMenu) {
+        RightNavigationRail(navigator)
+      }
     }
   }
 }
@@ -194,8 +191,6 @@ private fun WideView(
   navigator: MainComposeNavigator,
   viewModel: MainListViewModel
 ) {
-  var searchText by remember { mutableStateOf("") }
-
   PermanentMainDrawer(
     navigator = navigator,
     developerOptionsVisibleFlow = viewModel.developerOptionsVisible,
@@ -205,13 +200,15 @@ private fun WideView(
     Scaffold(
       topBar = {
         MainTopBar(
-          searchText = searchText,
           onMenuClick = null,
           onProfilesClick = viewModel::showProfilesPopup,
-          onTextChange = { searchText = it }
         )
       },
-      bottomBar = { BottomNavigationBar(navigator) }
+      bottomBar = {
+        if (LocalApplicationPreferences.current.isShowBottomMenu) {
+          BottomNavigationBar(navigator)
+        }
+      }
     ) { paddings ->
       CompositionLocalProvider(LocalScaffoldPadding provides paddings) {
         when (selectedTab) {

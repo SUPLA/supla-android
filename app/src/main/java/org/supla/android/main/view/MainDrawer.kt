@@ -59,6 +59,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.supla.android.R
 import org.supla.android.core.branding.Configuration.Menu
+import org.supla.android.core.storage.LocalApplicationPreferences
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.main.ListTab
@@ -122,6 +123,7 @@ fun PermanentMainDrawer(
   )
 
 @Composable
+@Suppress("SimplifyBooleanWithConstants")
 private fun DrawerContent(
   developerOptionsVisibleFlow: StateFlow<Boolean>,
   zWaveVisibleFlow: StateFlow<Boolean>,
@@ -136,22 +138,24 @@ private fun DrawerContent(
       color = MaterialTheme.colorScheme.primary,
       modifier = Modifier.padding(vertical = Distance.small, horizontal = Distance.default)
     )
-    HorizontalDivider(modifier = Modifier.padding(bottom = Distance.small))
-    DrawerItem(
-      iconRes = R.drawable.navbar_channels,
-      labelRes = R.string.navbar_channels,
-      route = MainRoute.List()
-    )
-    DrawerItem(
-      iconRes = R.drawable.navbar_groups,
-      labelRes = R.string.navbar_groups,
-      route = MainRoute.List(ListTab.GROUPS)
-    )
-    DrawerItem(
-      iconRes = R.drawable.navbar_scenes,
-      labelRes = R.string.navbar_scenes,
-      route = MainRoute.List(ListTab.SCENES)
-    )
+    if (!LocalApplicationPreferences.current.isShowBottomMenu) {
+      HorizontalDivider(modifier = Modifier.padding(bottom = Distance.small))
+      DrawerItem(
+        iconRes = R.drawable.navbar_channels,
+        labelRes = R.string.navbar_channels,
+        route = MainRoute.List()
+      )
+      DrawerItem(
+        iconRes = R.drawable.navbar_groups,
+        labelRes = R.string.navbar_groups,
+        route = MainRoute.List(ListTab.GROUPS)
+      )
+      DrawerItem(
+        iconRes = R.drawable.navbar_scenes,
+        labelRes = R.string.navbar_scenes,
+        route = MainRoute.List(ListTab.SCENES)
+      )
+    }
     HorizontalDivider(modifier = Modifier.padding(top = Distance.small, bottom = Distance.tiny))
 
     val navigator = LocalDrawerContext.current.navigator
@@ -296,7 +300,11 @@ private fun Preview() {
       CompositionLocalProvider(
         value = LocalDrawerContext provides LocalDrawerContextHolder(navigator, drawerState)
       ) {
-        DrawerContent(MutableStateFlow(true), MutableStateFlow(false), {})
+        DrawerContent(
+          developerOptionsVisibleFlow = MutableStateFlow(true),
+          zWaveVisibleFlow = MutableStateFlow(false),
+          zWaveOpenCallback = {}
+        )
       }
     }
   }

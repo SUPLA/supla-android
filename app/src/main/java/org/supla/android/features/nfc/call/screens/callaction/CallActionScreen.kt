@@ -47,8 +47,8 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.nfc.call.CallActionFromData
 import org.supla.android.features.nfc.call.CallActionFromUrl
 import org.supla.android.features.nfc.call.screens.Navigator
-import org.supla.android.features.nfc.call.screens.ViewModelHost
 import org.supla.android.lib.actions.ActionId
+import org.supla.android.main.ViewModelHost
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.DotsLoadingIndicator
 import org.supla.android.ui.views.Image

@@ -18,110 +18,73 @@ package org.supla.android.features.notificationslog
  */
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.Box
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import kotlinx.coroutines.launch
 import org.supla.android.R
-import org.supla.android.features.nfc.call.screens.ViewModelHost
 import org.supla.android.main.MainComposeNavigator
-import org.supla.android.main.scaffold.LocalScaffoldPadding
-import org.supla.android.main.view.SearchTopBar
-import org.supla.android.ui.views.texts.BodyMedium
+import org.supla.android.main.ViewModelHost
+import org.supla.android.main.snackbar.LocalSnackbarController
+import org.supla.android.main.topbar.LocalTopBarController
+import org.supla.android.main.topbar.TopBarEvent
+import org.supla.android.main.topbar.TopBarIcon
+import org.supla.android.main.topbar.TopBarSearchState
+import org.supla.android.main.topbar.TopBarState
+import org.supla.android.main.topbar.topBarAction
 
 @Composable
 fun NotificationsLogScreen(
   navigator: MainComposeNavigator,
   viewModel: NotificationsLogViewModel = hiltViewModel()
 ) {
-  var searchText by remember { mutableStateOf("") }
+  val topBarController = LocalTopBarController.current
+  val snackbarController = LocalSnackbarController.current
+  val scope = rememberCoroutineScope()
+
+  val snackbarMessage = stringResource(R.string.notification_deleted)
+  val snackbarActionLabel = stringResource(R.string.cancel)
 
   BackHandler {
-    if (searchText.isEmpty()) {
+    if (viewModel.filterString.isEmpty()) {
       navigator.back()
     } else {
-      searchText = ""
-      viewModel.loadAll()
+      topBarController.updateSearchValue("")
     }
   }
 
-  Scaffold(
-    topBar = {
-      SearchTopBar(
-        searchText = searchText,
-        onBackClick = {
-          if (searchText.isEmpty()) {
-            navigator.back()
-          } else {
-            searchText = ""
-            viewModel.loadAll()
+  ViewModelHost(
+    viewModel = viewModel,
+    topBarState = TopBarState(
+      search = TopBarSearchState(
+        query = viewModel.filterString,
+        onQueryChange = viewModel::setFilterString
+      ),
+      action = topBarAction {
+        icon = TopBarIcon.NotificationsDeletion
+        handle<TopBarEvent.DeleteAll> { viewModel.askDeleteAll() }
+        handle<TopBarEvent.DeleteLastMonth> { viewModel.askDeleteOlderThanMonth() }
+      }
+    ),
+    eventHandler = { event ->
+      when (event) {
+        is NotificationsLogViewEvent.ShowDeleteNotification ->
+          scope.launch {
+            val result = snackbarController.state.showSnackbar(
+              message = snackbarMessage,
+              actionLabel = snackbarActionLabel
+            )
+
+            when (result) {
+              SnackbarResult.Dismissed -> {} // nothing to do
+              SnackbarResult.ActionPerformed -> viewModel.cancelDeletion(event.id)
+            }
           }
-        },
-        onTextChange = {
-          searchText = it
-          viewModel.search(it)
-        },
-        rightIcon = {
-          RightMenu(
-            onDeleteAll = { viewModel.askDeleteAll() },
-            onDeleteOlderThanMonth = { viewModel.askDeleteOlderThanMonth() }
-          )
-        }
-      )
-    }
-  ) { paddings ->
-    CompositionLocalProvider(LocalScaffoldPadding provides paddings) {
-      ViewModelHost(
-        viewModel = viewModel
-      ) { state ->
-        viewModel.View(state)
       }
     }
-  }
-}
-
-@Composable
-fun RightMenu(
-  onDeleteAll: () -> Unit,
-  onDeleteOlderThanMonth: () -> Unit
-) {
-  Box {
-    var menuExpanded by remember { mutableStateOf(false) }
-
-    IconButton(onClick = { menuExpanded = true }) {
-      Icon(Icons.Default.MoreVert, contentDescription = "Więcej")
-    }
-
-    DropdownMenu(
-      expanded = menuExpanded,
-      onDismissRequest = { menuExpanded = false }
-    ) {
-      DropdownMenuItem(
-        text = { BodyMedium(R.string.toolbar_delete_all) },
-        onClick = {
-          menuExpanded = false
-          onDeleteAll()
-        }
-      )
-
-      DropdownMenuItem(
-        text = { BodyMedium(R.string.toolbar_delete_older_than_month) },
-        onClick = {
-          menuExpanded = false
-          onDeleteOlderThanMonth()
-        }
-      )
-    }
+  ) { state ->
+    viewModel.View(state)
   }
 }

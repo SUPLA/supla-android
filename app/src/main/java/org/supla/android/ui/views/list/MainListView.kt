@@ -70,6 +70,7 @@ interface MainListScope {
 @Composable
 fun MainListScope.ListView(
   items: List<ListItem>,
+  dragEnabled: Boolean,
   modifier: Modifier = Modifier
 ) {
   val offsets = remember { mutableStateMapOf<Int, Float>() }
@@ -114,6 +115,7 @@ fun MainListScope.ListView(
               item = item,
               offsets = offsets,
               isDragging = isDragging,
+              dragEnabled = dragEnabled,
               onLeftButtonClick = { onLeftButtonClick(item.remoteId) },
               onRightButtonClick = { onRightButtonClick(item.remoteId) },
               onDragStopped = { onDragStopped(item.remoteId) },
@@ -140,6 +142,7 @@ fun MainListScope.ListView(
                 offsets[item.remoteId] = it
               },
               isDragging = isDragging,
+              dragEnabled = dragEnabled,
               onLeftButtonClick = { onLeftButtonClick(item.remoteId) },
               onRightButtonClick = { onRightButtonClick(item.remoteId) },
               onDragStopped = { onDragStopped(item.remoteId) },
@@ -163,6 +166,7 @@ fun ReorderableCollectionItemScope.DefaultItemView(
   item: ListItem.DefaultItem,
   offsets: SnapshotStateMap<Int, Float>,
   isDragging: Boolean,
+  dragEnabled: Boolean,
   onLeftButtonClick: () -> Unit = {},
   onRightButtonClick: () -> Unit = {},
   onDragStopped: () -> Unit = {},
@@ -179,6 +183,7 @@ fun ReorderableCollectionItemScope.DefaultItemView(
       offsets[item.remoteId] = it
     },
     isDragging = isDragging,
+    dragEnabled = dragEnabled,
     onLeftButtonClick = onLeftButtonClick,
     onRightButtonClick = onRightButtonClick,
     onDragStopped = onDragStopped,

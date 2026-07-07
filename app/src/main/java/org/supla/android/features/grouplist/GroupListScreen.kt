@@ -35,11 +35,13 @@ import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.features.captionchangedialog.CaptionChangeViewEvent
 import org.supla.android.features.captionchangedialog.CaptionChangeViewModel
 import org.supla.android.features.captionchangedialog.View
-import org.supla.android.features.nfc.call.screens.ViewModelHostBase
 import org.supla.android.main.MainComposeNavigator
 import org.supla.android.main.MainRoute
 import org.supla.android.main.MainRoute.StandardDetail
+import org.supla.android.main.ViewModelHostBase
 import org.supla.android.main.scaffold.screenUnderTopBarPaddings
+import org.supla.android.main.topbar.TopBarSearchState
+import org.supla.android.main.topbar.TopBarState
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.views.EmptyListInfoView
@@ -60,9 +62,18 @@ fun GroupListScreen(
 ) {
   ViewModelHostBase(
     viewModel = viewModel,
+    topBarState = TopBarState(
+      search = TopBarSearchState(
+        query = viewModel.filterText,
+        onQueryChange = viewModel::setFilterText
+      ),
+    ),
     eventHandler = { handleGroupEvents(it, navigator, captionChangeViewModel) }
   ) { state ->
-    viewModel.Content(state)
+    viewModel.Content(
+      state = state,
+      dragEnabled = viewModel.filterText.isEmpty()
+    )
 
     state.actionAlertDialogState?.View(
       onPositiveClick = { remoteId, actionId -> viewModel.forceAction(remoteId, actionId) },
@@ -98,7 +109,10 @@ private fun handleCaptionChangeEvents(event: CaptionChangeViewEvent, viewModel: 
 }
 
 @Composable
-private fun GroupListScope.Content(state: GroupListViewState) {
+private fun GroupListScope.Content(
+  state: GroupListViewState,
+  dragEnabled: Boolean
+) {
   if (state.groups.isNullOrEmpty()) {
     Box(
       modifier = Modifier
@@ -108,7 +122,10 @@ private fun GroupListScope.Content(state: GroupListViewState) {
       EmptyContent(modifier = Modifier.align(Alignment.Center))
     }
   } else {
-    ListView(items = state.groups)
+    ListView(
+      items = state.groups,
+      dragEnabled = dragEnabled
+    )
   }
 }
 
@@ -147,7 +164,8 @@ val previewScope = object : GroupListScope {
 private fun PreviewEmpty() {
   SuplaTheme {
     previewScope.Content(
-      GroupListViewState()
+      state = GroupListViewState(),
+      dragEnabled = false
     )
   }
 }

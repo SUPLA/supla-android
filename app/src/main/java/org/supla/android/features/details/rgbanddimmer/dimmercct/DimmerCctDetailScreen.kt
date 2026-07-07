@@ -25,7 +25,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.supla.android.R
 import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.features.details.rgbanddimmer.common.dimmer.DimmerDetailViewEvent
-import org.supla.android.features.nfc.call.screens.ViewModelHost
+import org.supla.android.main.ViewModelHost
 
 @Composable
 fun DimmerCctDetailScreen(

@@ -80,6 +80,9 @@ class ChannelListViewModel @Inject constructor(
 
   override fun reloadList() = loadChannels()
 
+  var filterText: String = ""
+    private set
+
   init {
     observeUpdates(updateEventsManager.observeChannelsUpdate())
 
@@ -95,12 +98,17 @@ class ChannelListViewModel @Inject constructor(
       .disposeBySelf()
   }
 
+  fun setFilterText(text: String) {
+    filterText = text
+    loadChannels()
+  }
+
   override fun onStart() {
     loadChannels()
   }
 
   fun loadChannels() {
-    createProfileChannelsListUseCase()
+    createProfileChannelsListUseCase(filterString = filterText)
       .attach()
       .subscribeBy(
         onNext = { updateState { state -> state.copy(channels = it) } },
@@ -212,7 +220,7 @@ class ChannelListViewModel @Inject constructor(
 
   override fun onLocationClick(remoteId: Int) {
     toggleLocationUseCase(remoteId, CollapsedFlag.CHANNEL)
-      .andThen(createProfileChannelsListUseCase())
+      .andThen(createProfileChannelsListUseCase(filterString = filterText))
       .attach()
       .subscribeBy(
         onNext = { updateState { state -> state.copy(channels = it) } },

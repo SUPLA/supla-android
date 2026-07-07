@@ -19,10 +19,10 @@ package org.supla.android.features.status
 
 import androidx.compose.runtime.Composable
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import org.supla.android.features.nfc.call.screens.ViewModelHost
 import org.supla.android.main.ListTab
 import org.supla.android.main.MainComposeNavigator
 import org.supla.android.main.MainRoute
+import org.supla.android.main.ViewModelHost
 import org.supla.android.ui.dialogs.AuthorizationDialog
 
 @Composable

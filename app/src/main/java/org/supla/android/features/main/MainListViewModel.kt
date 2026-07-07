@@ -129,6 +129,8 @@ class MainListViewModel @Inject constructor(
   }
 
   fun onNotificationPermissionGranted(context: Context) {
+    applicationPreferences.isNotificationsPopupDisplayed = true
+
     notificationsHelper.setupNotificationChannel(context)
     notificationsHelper.setupBackgroundNotificationChannel(context)
 

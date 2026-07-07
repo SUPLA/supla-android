@@ -17,12 +17,8 @@ package org.supla.android.features.nfc.edit
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.content.Context
 import android.widget.Toast
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -30,10 +26,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import org.supla.android.R
-import org.supla.android.features.nfc.call.screens.ViewModelHost
 import org.supla.android.features.nfc.findNfcHost
 import org.supla.android.features.nfc.shared.edit.EditNfcTagViewEvent
 import org.supla.android.main.MainComposeNavigator
+import org.supla.android.main.ViewModelHost
 import org.supla.android.main.scaffold.BackScaffold
 import timber.log.Timber
 

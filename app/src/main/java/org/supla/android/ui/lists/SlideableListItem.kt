@@ -65,6 +65,7 @@ fun ReorderableCollectionItemScope.SlideableListItem(
   initialOffset: Float,
   onOffsetChanged: (Float) -> Unit,
   isDragging: Boolean,
+  dragEnabled: Boolean,
   modifier: Modifier = Modifier,
   onLeftButtonClick: () -> Unit = {},
   onRightButtonClick: () -> Unit = {},
@@ -114,7 +115,7 @@ fun ReorderableCollectionItemScope.SlideableListItem(
       .height(defaultItemHeight.times(LocalApplicationPreferences.current.channelHeight.div(100f)))
       .background(MaterialTheme.colorScheme.surface.copy(if (isDragging) 0.8f else 1f))
       .shadow(if (isDragging) 2.dp else 0.dp)
-      .longPressDraggableHandle(onDragStopped = onDragStopped)
+      .longPressDraggableHandle(enabled = dragEnabled, onDragStopped = onDragStopped)
       .clipToBounds()
   ) {
     leftButtonString?.let {

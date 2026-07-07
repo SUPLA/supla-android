@@ -19,8 +19,8 @@ package org.supla.android.features.details.impulsecounter.counterphoto
 
 import androidx.compose.runtime.Composable
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import org.supla.android.features.nfc.call.screens.ViewModelHost
 import org.supla.android.main.MainComposeNavigator
+import org.supla.android.main.ViewModelHost
 
 @Composable
 fun CounterPhotoScreen(

@@ -36,12 +36,12 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.model.spinner.ProfileItem
 import org.supla.android.data.model.spinner.SubjectItem
 import org.supla.android.features.nfc.call.screens.Navigator
-import org.supla.android.features.nfc.call.screens.ViewModelHost
 import org.supla.android.features.nfc.shared.edit.EditNfcTagViewEvent
 import org.supla.android.features.nfc.shared.edit.EditNfcTagViewState
 import org.supla.android.features.nfc.shared.edit.NfcActions
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
+import org.supla.android.main.ViewModelHost
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.configuration.ActionConfigurationScope

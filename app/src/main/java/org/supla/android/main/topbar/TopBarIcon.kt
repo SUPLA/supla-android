@@ -28,33 +28,44 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import kotlinx.coroutines.launch
 import org.supla.android.R
 import org.supla.android.ui.views.texts.BodyMedium
 
+sealed class TopBarIcon(val event: TopBarEvent, val iconRes: Int? = null, val descriptionRes: Int? = null) {
+  data object ReloadHistory : TopBarIcon(TopBarEvent.ReloadChartHistory)
+  data object NotificationsDeletion : TopBarIcon(TopBarEvent.Empty)
+  data object OpenOcr : TopBarIcon(
+    event = TopBarEvent.OpenOcr,
+    iconRes = R.drawable.ic_ocr_photo,
+    descriptionRes = R.string.toolbar_ocr
+  )
+
+  data object OpenSettings : TopBarIcon(
+    event = TopBarEvent.OpenSettings,
+    iconRes = R.drawable.ic_settings,
+    descriptionRes = R.string.settings
+  )
+}
+
 @Composable
-fun TopBarIcon.Icon(
-  topBarController: TopBarController,
+fun TopBarAction.Icon(
   modifier: Modifier = Modifier
 ) {
-  when (this) {
-    TopBarIcon.ReloadHistory -> DeleteChartHistory(topBarController, modifier)
-    TopBarIcon.OpenOcr -> OpenOcr(topBarController, modifier)
-    TopBarIcon.OpenSettings -> OpenSettings(topBarController, modifier)
+  when (icon) {
+    TopBarIcon.ReloadHistory -> DeleteChartHistory(modifier)
+    TopBarIcon.NotificationsDeletion -> DeleteNotifications(modifier)
+    else -> SingleIcon(modifier)
   }
 }
 
 @Composable
-private fun DeleteChartHistory(
-  topBarController: TopBarController,
+private fun TopBarAction.DeleteChartHistory(
   modifier: Modifier = Modifier
 ) {
-  val scope = rememberCoroutineScope()
   Box(modifier = modifier) {
     var menuExpanded by remember { mutableStateOf(false) }
 
@@ -70,9 +81,7 @@ private fun DeleteChartHistory(
         text = { BodyMedium(R.string.toolbar_delete_chart_history) },
         onClick = {
           menuExpanded = false
-          scope.launch {
-            topBarController.emit(TopBarEvent.ReloadChartHistory)
-          }
+          handlers[TopBarEvent.ReloadChartHistory::class]?.invoke()
         }
       )
     }
@@ -80,27 +89,45 @@ private fun DeleteChartHistory(
 }
 
 @Composable
-private fun OpenOcr(
-  topBarController: TopBarController,
-  modifier: Modifier = Modifier
-) = SingleIcon(TopBarIcon.OpenOcr, topBarController, modifier)
-
-@Composable
-private fun OpenSettings(
-  topBarController: TopBarController,
-  modifier: Modifier = Modifier
-) = SingleIcon(TopBarIcon.OpenSettings, topBarController, modifier)
-
-@Composable
-private fun SingleIcon(
-  icon: TopBarIcon,
-  topBarController: TopBarController,
+private fun TopBarAction.DeleteNotifications(
   modifier: Modifier = Modifier
 ) {
-  val scope = rememberCoroutineScope()
+  Box(modifier = modifier) {
+    var menuExpanded by remember { mutableStateOf(false) }
 
+    IconButton(onClick = { menuExpanded = true }) {
+      Icon(Icons.Default.MoreVert, contentDescription = null)
+    }
+
+    DropdownMenu(
+      expanded = menuExpanded,
+      onDismissRequest = { menuExpanded = false }
+    ) {
+      DropdownMenuItem(
+        text = { BodyMedium(R.string.toolbar_delete_all) },
+        onClick = {
+          menuExpanded = false
+          handlers[TopBarEvent.DeleteAll::class]?.invoke()
+        }
+      )
+
+      DropdownMenuItem(
+        text = { BodyMedium(R.string.toolbar_delete_older_than_month) },
+        onClick = {
+          menuExpanded = false
+          handlers[TopBarEvent.DeleteLastMonth::class]?.invoke()
+        }
+      )
+    }
+  }
+}
+
+@Composable
+private fun TopBarAction.SingleIcon(
+  modifier: Modifier = Modifier
+) {
   IconButton(
-    onClick = { scope.launch { topBarController.emit(icon.event) } },
+    onClick = { handlers[icon.event::class]?.invoke() },
     modifier = modifier
   ) {
     Icon(

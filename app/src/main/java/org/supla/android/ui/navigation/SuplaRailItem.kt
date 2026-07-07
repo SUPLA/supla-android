@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import org.supla.android.core.storage.LocalApplicationPreferences
+import org.supla.android.main.topbar.LocalTopBarController
 
 @Composable
 fun SuplaRailItem(
@@ -48,10 +49,14 @@ fun SuplaRailItem(
   onClick: () -> Unit,
   icon: @Composable () -> Unit,
   label: @Composable () -> Unit
-) =
+) {
+  val topBarController = LocalTopBarController.current
   NavigationRailItem(
     selected = selected,
-    onClick = onClick,
+    onClick = {
+      topBarController.setAction(null)
+      onClick()
+    },
     icon = icon,
     label = if (LocalApplicationPreferences.current.isShowBottomLabel) label else null,
     colors = NavigationRailItemDefaults.colors(
@@ -62,3 +67,4 @@ fun SuplaRailItem(
       unselectedTextColor = MaterialTheme.colorScheme.onBackground
     )
   )
+}

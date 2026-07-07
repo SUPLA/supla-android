@@ -1,4 +1,4 @@
-package org.supla.android.features.details.electricitymeterdetail.settings
+package org.supla.android.main.topbar
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -18,19 +18,29 @@ package org.supla.android.features.details.electricitymeterdetail.settings
  */
 
 import androidx.compose.runtime.Composable
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import org.supla.android.features.details.detailbase.base.ItemBundle
-import org.supla.android.main.ViewModelHost
+import androidx.compose.runtime.LaunchedEffect
 
+/**
+ * Should be called only inside [org.supla.android.main.ViewModelHostBase]
+ */
 @Composable
-fun ElectricityMeterSettingsScreen(
-  item: ItemBundle,
-  viewModel: ElectricityMeterSettingsViewModel = hiltViewModel()
+fun RegisterStatedTopBarIcon(
+  icon: TopBarIcon,
+  visible: Boolean,
+  handler: () -> Unit
 ) {
-  ViewModelHost(
-    viewModel = viewModel,
-    onResume = { viewModel.loadData(item.remoteId) },
-  ) {
-    viewModel.View(state = it)
+  val topBarController = LocalTopBarController.current
+
+  LaunchedEffect(visible) {
+    if (visible) {
+      topBarController.setAction(
+        TopBarAction(
+          icon = icon,
+          handlers = mapOf(icon.event::class to handler)
+        )
+      )
+    } else {
+      topBarController.setAction(null)
+    }
   }
 }

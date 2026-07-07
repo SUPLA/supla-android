@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import org.supla.android.core.storage.LocalApplicationPreferences
+import org.supla.android.main.topbar.LocalTopBarController
 
 @Composable
 fun RowScope.SuplaNavigationBarItem(
@@ -49,10 +50,14 @@ fun RowScope.SuplaNavigationBarItem(
   onClick: () -> Unit,
   icon: @Composable () -> Unit,
   label: @Composable () -> Unit
-) =
+) {
+  val topBarController = LocalTopBarController.current
   NavigationBarItem(
     selected = selected,
-    onClick = onClick,
+    onClick = {
+      topBarController.setAction(null)
+      onClick()
+    },
     icon = icon,
     label = if (LocalApplicationPreferences.current.isShowBottomLabel) label else null,
     colors = NavigationBarItemDefaults.colors(
@@ -63,3 +68,4 @@ fun RowScope.SuplaNavigationBarItem(
       unselectedTextColor = MaterialTheme.colorScheme.onBackground
     )
   )
+}

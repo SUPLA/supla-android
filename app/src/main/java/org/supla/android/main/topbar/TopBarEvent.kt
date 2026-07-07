@@ -1,4 +1,4 @@
-package org.supla.android.features.details.electricitymeterdetail.settings
+package org.supla.android.main.topbar
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,20 +17,11 @@ package org.supla.android.features.details.electricitymeterdetail.settings
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.compose.runtime.Composable
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import org.supla.android.features.details.detailbase.base.ItemBundle
-import org.supla.android.main.ViewModelHost
-
-@Composable
-fun ElectricityMeterSettingsScreen(
-  item: ItemBundle,
-  viewModel: ElectricityMeterSettingsViewModel = hiltViewModel()
-) {
-  ViewModelHost(
-    viewModel = viewModel,
-    onResume = { viewModel.loadData(item.remoteId) },
-  ) {
-    viewModel.View(state = it)
-  }
+sealed interface TopBarEvent {
+  data object Empty : TopBarEvent
+  data object ReloadChartHistory : TopBarEvent
+  data object OpenOcr : TopBarEvent
+  data object OpenSettings : TopBarEvent
+  data object DeleteLastMonth : TopBarEvent
+  data object DeleteAll : TopBarEvent
 }

@@ -21,7 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.features.details.thermostatdetail.general.ui.ThermostatDetail
-import org.supla.android.features.nfc.call.screens.ViewModelHost
+import org.supla.android.main.ViewModelHost
 
 @Composable
 fun ThermostatGeneralScreen(

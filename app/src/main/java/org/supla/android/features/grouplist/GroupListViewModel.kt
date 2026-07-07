@@ -80,6 +80,9 @@ class GroupListViewModel @Inject constructor(
 
   override fun reloadList() = loadGroups()
 
+  var filterText: String = ""
+    private set
+
   init {
     observeUpdates(updateEventsManager.observeGroupsUpdate())
 
@@ -95,8 +98,13 @@ class GroupListViewModel @Inject constructor(
       .disposeBySelf()
   }
 
+  fun setFilterText(text: String) {
+    filterText = text
+    loadGroups()
+  }
+
   fun loadGroups() {
-    createProfileGroupsListUseCase()
+    createProfileGroupsListUseCase(filterText)
       .attach()
       .subscribeBy(
         onNext = { updateState { state -> state.copy(groups = it) } },
@@ -216,7 +224,7 @@ class GroupListViewModel @Inject constructor(
 
   override fun onLocationClick(remoteId: Int) {
     toggleLocationUseCase(remoteId, CollapsedFlag.GROUP)
-      .andThen(createProfileGroupsListUseCase())
+      .andThen(createProfileGroupsListUseCase(filterText))
       .attach()
       .subscribeBy(
         onNext = { updateState { state -> state.copy(groups = it) } },

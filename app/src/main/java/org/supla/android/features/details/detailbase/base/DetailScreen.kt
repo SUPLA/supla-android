@@ -71,10 +71,10 @@ import org.supla.android.features.details.windowdetail.rollershutter.RollerShutt
 import org.supla.android.features.details.windowdetail.roofwindow.RoofWindowScreen
 import org.supla.android.features.details.windowdetail.terraceawning.TerraceAwningScreen
 import org.supla.android.features.details.windowdetail.verticalblinds.VerticalBlindsScreen
-import org.supla.android.features.nfc.call.screens.LifeCycleObserver
+import org.supla.android.main.LifeCycleObserver
 import org.supla.android.main.MainComposeNavigator
 import org.supla.android.main.scaffold.LocalScaffoldPadding
-import org.supla.android.main.topbar.ManageScreenTitle
+import org.supla.android.main.topbar.ManageTopBar
 import org.supla.android.main.view.NavigationBarLabel
 import org.supla.android.main.view.StandardTopBar
 import org.supla.android.ui.extensions.isPhoneLandscape
@@ -91,7 +91,7 @@ fun DetailScreen(
   viewModel.LifeCycleObserver(
     onCreate = { viewModel.loadTitle(item) }
   )
-  ManageScreenTitle(viewModel)
+  ManageTopBar(viewModel)
 
   if (LocalConfiguration.current.isPhoneLandscape) {
     LandscapeScreen(item, pages, navigator)
@@ -109,7 +109,7 @@ private fun PortraitScreen(
   var page by remember(pages) { mutableStateOf(pages.first()) }
 
   Scaffold(
-    topBar = { StandardTopBar(onBackClick = { navigator.back() }) },
+    topBar = { StandardTopBar(navigator) },
     bottomBar = {
       if (pages.size > 1) {
         NavigationBar(
@@ -148,7 +148,7 @@ private fun LandscapeScreen(
 
   Row {
     Scaffold(
-      topBar = { StandardTopBar(onBackClick = { navigator.back() }) },
+      topBar = { StandardTopBar(navigator) },
       modifier = Modifier.weight(1f)
     ) { paddings ->
       CompositionLocalProvider(LocalScaffoldPadding provides paddings) {
