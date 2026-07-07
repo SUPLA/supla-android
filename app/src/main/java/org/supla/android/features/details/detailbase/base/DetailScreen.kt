@@ -71,6 +71,7 @@ import org.supla.android.features.details.windowdetail.rollershutter.RollerShutt
 import org.supla.android.features.details.windowdetail.roofwindow.RoofWindowScreen
 import org.supla.android.features.details.windowdetail.terraceawning.TerraceAwningScreen
 import org.supla.android.features.details.windowdetail.verticalblinds.VerticalBlindsScreen
+import org.supla.android.main.EventHandler
 import org.supla.android.main.LifeCycleObserver
 import org.supla.android.main.MainComposeNavigator
 import org.supla.android.main.scaffold.LocalScaffoldPadding
@@ -89,8 +90,10 @@ fun DetailScreen(
   viewModel: DetailViewModel = hiltViewModel()
 ) {
   viewModel.LifeCycleObserver(
-    onCreate = { viewModel.loadTitle(item) }
+    onCreate = { viewModel.setup(item) }
   )
+
+  EventHandler(viewModel) { handleEvent(it, navigator) }
   ManageTopBar(viewModel)
 
   if (LocalConfiguration.current.isPhoneLandscape) {
@@ -226,4 +229,9 @@ private fun Content(
     DetailPage.RGB -> RgbDetailScreen(item)
     DetailPage.DIMMER -> DimmerDetailScreen(item, navigator)
     DetailPage.DIMMER_CCT -> DimmerCctDetailScreen(item)
+  }
+
+private fun handleEvent(event: DetailViewEvent, navigator: MainComposeNavigator) =
+  when (event) {
+    DetailViewEvent.Close -> navigator.back()
   }
