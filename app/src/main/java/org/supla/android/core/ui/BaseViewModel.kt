@@ -62,13 +62,6 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
   private val viewState: MutableStateFlow<S> = MutableStateFlow(defaultState)
   fun getViewState(): StateFlow<S> = viewState
 
-  private var suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper? = null
-  private val messageListener = object : SuplaClientMessageHandler.Listener {
-    override fun onReceived(message: SuplaClientMessage) {
-      handleSuplaMessage(message)
-    }
-  }
-
   private val compositeDisposable = CompositeDisposable()
 
   @FlowPreview
@@ -78,8 +71,8 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
     .debounce(timeoutMillis = 350)
 
   override fun onCleared() {
+    super.onCleared()
     compositeDisposable.clear()
-    suplaClientMessageHandlerWrapper?.unregisterMessageListener(messageListener)
   }
 
   protected fun updateState(updater: (S) -> S) {
@@ -93,13 +86,6 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
   protected open fun setLoading(loading: Boolean) {
     throw IllegalStateException("Using `attachLoadable()` needs to override this method!")
   }
-
-  protected fun setupSuplaClientMessageHandler(suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper) {
-    this.suplaClientMessageHandlerWrapper = suplaClientMessageHandlerWrapper
-    suplaClientMessageHandlerWrapper.registerMessageListener(messageListener)
-  }
-
-  open fun handleSuplaMessage(message: SuplaClientMessage) {}
 
   fun Disposable.disposeBySelf() {
     compositeDisposable.add(this)

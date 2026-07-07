@@ -108,8 +108,6 @@ fun <E : ViewEvent> EventBasedViewModelHost(
   onStop: () -> Unit = {},
   content: @Composable () -> Unit
 ) {
-  val lifecycleOwner = LocalLifecycleOwner.current
-
   viewModel.LifeCycleObserver(
     onCreate = onCreate,
     onResume = onResume,
@@ -117,15 +115,22 @@ fun <E : ViewEvent> EventBasedViewModelHost(
     onStop = onStop
   )
 
-  LaunchedEffect(viewModel, lifecycleOwner) {
-    lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-      viewModel.getViewEvents().collect { eventHandler(it) }
-    }
-  }
+  EventHandler(viewModel, eventHandler)
 
   ManageTopBar(viewModel, topBarState)
 
   content()
+}
+
+@Composable
+fun <E : ViewEvent> EventHandler(viewModel: EventBasedViewModel<E>, handler: (E) -> Unit) {
+  val lifecycleOwner = LocalLifecycleOwner.current
+
+  LaunchedEffect(viewModel, lifecycleOwner) {
+    lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+      viewModel.getViewEvents().collect { handler(it) }
+    }
+  }
 }
 
 @Composable

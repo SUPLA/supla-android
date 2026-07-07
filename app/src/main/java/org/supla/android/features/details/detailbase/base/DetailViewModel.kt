@@ -21,40 +21,97 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx3.awaitFirst
+import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
+import org.supla.android.core.shared.shareable
 import org.supla.android.core.ui.EventBasedViewModel
 import org.supla.android.core.ui.ViewEvent
+import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.ChannelRepository
-import org.supla.android.data.source.local.entity.complex.shareable
+import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
+  suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper,
   private val channelGroupRepository: ChannelGroupRepository,
   private val getCaptionUseCase: GetCaptionUseCase,
   private val channelRepository: ChannelRepository,
   private val schedulers: SuplaSchedulers
 ) : EventBasedViewModel<DetailViewEvent>(manageScreenTitle = true) {
 
-  fun loadTitle(item: ItemBundle) {
+  init {
+    setupSuplaClientMessageHandler(suplaClientMessageHandlerWrapper)
+  }
+
+  private lateinit var item: ItemBundle
+
+  private var function: SuplaFunction? = null
+  private var subfunction: ThermostatSubfunction? = null
+
+  fun setup(item: ItemBundle) {
+    this.item = item
+    loadData()
+  }
+
+  override fun handleSuplaMessage(message: SuplaClientMessage) {
+    if (message.isDataChange(item)) {
+      loadData()
+    }
+  }
+
+  private fun loadData() {
     viewModelScope.launch {
       val data = schedulers.io {
         runCatching {
           when (item.itemType) {
-            ItemType.CHANNEL -> channelRepository.findChannelDataEntity(item.remoteId).map { it.shareable }
-            ItemType.GROUP -> channelGroupRepository.findGroupDataEntity(item.remoteId).map { it.shareable }
+            ItemType.CHANNEL -> channelRepository.findChannelDataEntity(item.remoteId)
+            ItemType.GROUP -> channelGroupRepository.findGroupDataEntity(item.remoteId)
           }.awaitFirst()
         }.getOrNull()
       }
 
       data?.let {
-        setScreenTitle(getCaptionUseCase(it))
+        if (function == null) {
+          setScreenTitle(getCaptionUseCase(it.shareable))
+          function = it.function
+          subfunction = it.subfunction
+        } else if (function != it.function || subfunction != it.subfunction) {
+          sendEvent(DetailViewEvent.Close)
+        }
       }
     }
   }
 }
 
-sealed interface DetailViewEvent : ViewEvent
+sealed interface DetailViewEvent : ViewEvent {
+  data object Close : DetailViewEvent
+}
+
+private val SuplaFunction.isHvac: Boolean
+  get() = when (this) {
+    SuplaFunction.HVAC_THERMOSTAT,
+    SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
+    SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL -> true
+    else -> false
+  }
+
+private val ChannelDataBase.subfunction: ThermostatSubfunction?
+  get() {
+    if (this is ChannelDataEntity && function.isHvac) {
+      return channelValueEntity.asThermostatValue().subfunction
+    }
+
+    return null
+  }
+
+private fun SuplaClientMessage.isDataChange(item: ItemBundle): Boolean {
+  return (item.itemType == ItemType.CHANNEL && this is SuplaClientMessage.ChannelDataChanged && channelId == item.remoteId) ||
+    (item.itemType == ItemType.GROUP && this is SuplaClientMessage.GroupDataChanged && groupId == item.remoteId)
+}

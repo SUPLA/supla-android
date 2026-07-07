@@ -26,8 +26,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
+import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessageHandler
 
 abstract class EventBasedViewModel<E : ViewEvent>(
   defaultTitle: LocalizedString = LocalizedString.Empty,
@@ -38,6 +41,13 @@ abstract class EventBasedViewModel<E : ViewEvent>(
 
   private val titleFlow: MutableStateFlow<LocalizedString> = MutableStateFlow(defaultTitle)
   val title: StateFlow<LocalizedString> = titleFlow
+
+  private var suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper? = null
+  private val messageListener = object : SuplaClientMessageHandler.Listener {
+    override fun onReceived(message: SuplaClientMessage) {
+      handleSuplaMessage(message)
+    }
+  }
 
   fun getViewEvents(): Flow<E> = viewEvents
     .filter { it.item != null }
@@ -52,6 +62,7 @@ abstract class EventBasedViewModel<E : ViewEvent>(
   open fun onViewCreated() {}
   open fun onStart() {}
   open fun onStop() {}
+  open fun handleSuplaMessage(message: SuplaClientMessage) {}
 
   fun setScreenTitle(text: String) {
     setScreenTitle(LocalizedString.Constant(text))
@@ -65,6 +76,15 @@ abstract class EventBasedViewModel<E : ViewEvent>(
     if (manageScreenTitle) {
       titleFlow.tryEmit(string)
     }
+  }
+
+  override fun onCleared() {
+    suplaClientMessageHandlerWrapper?.unregisterMessageListener(messageListener)
+  }
+
+  protected fun setupSuplaClientMessageHandler(suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper) {
+    this.suplaClientMessageHandlerWrapper = suplaClientMessageHandlerWrapper
+    suplaClientMessageHandlerWrapper.registerMessageListener(messageListener)
   }
 
   protected fun sendEvent(event: E) {
