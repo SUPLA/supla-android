@@ -18,15 +18,41 @@ package org.supla.android.features.details.legacydetail
  */
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import org.supla.android.features.details.detailbase.base.DetailViewEvent
+import org.supla.android.features.details.detailbase.base.DetailViewModel
+import org.supla.android.features.details.detailbase.base.ItemBundle
+import org.supla.android.main.EventHandler
+import org.supla.android.main.LifeCycleObserver
+import org.supla.android.main.MainComposeNavigator
 import org.supla.android.main.MainRoute
+import org.supla.android.main.topbar.ManageTopBar
 import org.supla.android.ui.views.LegacyFragmentScreen
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @Composable
 fun LegacyDetailScreen(
-  route: MainRoute.LegacyDetail
+  route: MainRoute.LegacyDetail,
+  navigator: MainComposeNavigator,
+  viewModel: DetailViewModel = hiltViewModel()
 ) {
+  viewModel.LifeCycleObserver(
+    onCreate = { viewModel.setup(route.itemBundle) }
+  )
+
+  EventHandler(viewModel) { handleEvent(it, navigator) }
+  ManageTopBar(viewModel)
+
   LegacyFragmentScreen(
     fragmentClass = LegacyDetailFragment::class.java,
     arguments = LegacyDetailFragment.bundle(route.remoteId, route.legacyDetailType, route.itemType)
   )
 }
+
+private fun handleEvent(event: DetailViewEvent, navigator: MainComposeNavigator) =
+  when (event) {
+    DetailViewEvent.Close -> navigator.back()
+  }
+
+private val MainRoute.LegacyDetail.itemBundle: ItemBundle
+  get() = ItemBundle(remoteId, 0, 0L, itemType, SuplaFunction.NONE)

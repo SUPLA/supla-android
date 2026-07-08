@@ -40,6 +40,7 @@ import org.supla.android.core.ui.ViewState
 import org.supla.android.main.scaffold.LocalScaffoldPadding
 import org.supla.android.main.topbar.ManageTopBar
 import org.supla.android.main.topbar.TopBarState
+import org.supla.android.main.view.LocalLoadingController
 
 @Composable
 fun <S : ViewState, E : ViewEvent> ViewModelHost(
@@ -92,6 +93,9 @@ fun <S : ViewState, E : ViewEvent> ViewModelHostBase(
     onStart = onStart,
     onStop = onStop
   ) {
+    val loading by viewModel.isLoadingEvent().collectAsState(false)
+    LocalLoadingController.current.loading = loading
+
     val state by viewModel.getViewState().collectAsState()
     content(state)
   }
