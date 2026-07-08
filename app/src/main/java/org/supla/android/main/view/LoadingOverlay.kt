@@ -1,4 +1,4 @@
-package org.supla.android.ui.views
+package org.supla.android.main.view
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,22 +17,35 @@ package org.supla.android.ui.views
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
-import org.supla.android.R
+import org.supla.android.ui.extensions.ifTrue
+import org.supla.android.ui.views.LoadingScrim
 
 @Composable
-fun LoadingScrim() =
+fun LoadingOverlay(
+  content: @Composable () -> Unit
+) {
   Box(
-    modifier = Modifier
-      .fillMaxSize()
-      .background(color = colorResource(id = R.color.dialog_scrim))
+    modifier = Modifier.fillMaxSize()
   ) {
-    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+    content()
+
+    LocalLoadingController.current.loading.ifTrue {
+      LoadingScrim()
+    }
   }
+}
+
+class LoadingController {
+  var loading by mutableStateOf(false)
+}
+
+val DefaultLoadingController = LoadingController()
+val LocalLoadingController = staticCompositionLocalOf { DefaultLoadingController }

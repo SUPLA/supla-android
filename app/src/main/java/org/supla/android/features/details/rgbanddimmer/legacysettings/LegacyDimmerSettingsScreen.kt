@@ -18,16 +18,37 @@ package org.supla.android.features.details.rgbanddimmer.legacysettings
  */
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.supla.android.core.ui.bundle
+import org.supla.android.features.details.detailbase.base.DetailViewEvent
+import org.supla.android.features.details.detailbase.base.DetailViewModel
 import org.supla.android.features.details.detailbase.base.ItemBundle
+import org.supla.android.main.EventHandler
+import org.supla.android.main.LifeCycleObserver
+import org.supla.android.main.MainComposeNavigator
+import org.supla.android.main.topbar.ManageTopBar
 import org.supla.android.ui.views.LegacyFragmentScreen
 
 @Composable
 fun LegacyDimmerSettingsScreen(
-  itemBundle: ItemBundle
+  itemBundle: ItemBundle,
+  navigator: MainComposeNavigator,
+  viewModel: DetailViewModel = hiltViewModel()
 ) {
+  viewModel.LifeCycleObserver(
+    onCreate = { viewModel.setup(itemBundle) }
+  )
+
+  EventHandler(viewModel) { handleEvent(it, navigator) }
+  ManageTopBar(viewModel)
+
   LegacyFragmentScreen(
     fragmentClass = LegacyDimmerSettingsFragment::class.java,
     arguments = bundle(itemBundle)
   )
 }
+
+private fun handleEvent(event: DetailViewEvent, navigator: MainComposeNavigator) =
+  when (event) {
+    DetailViewEvent.Close -> navigator.back()
+  }
