@@ -824,6 +824,13 @@
   <string name="general_search">Keresés</string>
   <string name="toolbar_search_hint">Írjon be legalább 2 karaktert…</string>
   <string name="details_timer_select_program">Program kiválasztása</string>
+  <string name="details_recuperator_ventilation">Szellőztetés</string>
+  <string name="details_recuperator_empty_house">Üres ház</string>
+  <string name="details_recuperator_open_window">Ablak nyitása</string>
+  <string name="channel_caption_hvac_hrv">Hővisszanyerős szellőzés</string>
+  <string name="details_recuperator_manual_mode_label">Kézi mód</string>
+  <string name="profile_selected">Kiválasztott profil</string>
+  <string name="general_clear_search">Keresés törlése</string>
   <string name="settings_show_unavailable_channels">Az eszköz konfigurációja miatt nem elérhető csatornák elrejtése</string>
   <string name="details_em_active_energy_balance">Hatásos energia egyenleg</string>
   <string name="details_em_settings_list_metric">Kiválasztott érték</string>
