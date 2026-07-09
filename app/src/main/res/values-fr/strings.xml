@@ -812,6 +812,13 @@
   <string name="general_search">Rechercher</string>
   <string name="toolbar_search_hint">Saisissez au moins 2 caractères…</string>
   <string name="details_timer_select_program">Sélectionnez un programme</string>
+  <string name="details_recuperator_ventilation">Ventilation</string>
+  <string name="details_recuperator_empty_house">Maison vide</string>
+  <string name="details_recuperator_open_window">Ouvrir la fenêtre</string>
+  <string name="channel_caption_hvac_hrv">Ventilation avec récupération de chaleur</string>
+  <string name="details_recuperator_manual_mode_label">Mode manuel</string>
+  <string name="profile_selected">Profil sélectionné</string>
+  <string name="general_clear_search">Effacer la recherche</string>
   <string name="settings_show_unavailable_channels">Masquer les canaux indisponibles en raison de la configuration de l’appareil</string>
   <string name="details_em_active_energy_balance">Bilan de l’énergie active</string>
   <string name="details_em_settings_list_metric">Valeur sélectionnée</string>

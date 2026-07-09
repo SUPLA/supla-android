@@ -825,6 +825,13 @@
   <string name="general_search">Zoeken</string>
   <string name="toolbar_search_hint">Voer minimaal 2 tekens in…</string>
   <string name="details_timer_select_program">Selecteer een programma</string>
+  <string name="details_recuperator_ventilation">Ventilatie</string>
+  <string name="details_recuperator_empty_house">Leeg huis</string>
+  <string name="details_recuperator_open_window">Raam openen</string>
+  <string name="channel_caption_hvac_hrv">Warmteterugwinning-ventilatie</string>
+  <string name="details_recuperator_manual_mode_label">Handmatige modus</string>
+  <string name="profile_selected">Geselecteerd profiel</string>
+  <string name="general_clear_search">Zoekopdracht wissen</string>
   <string name="settings_show_unavailable_channels">Verberg kanalen die niet beschikbaar zijn vanwege de apparaatconfiguratie</string>
   <string name="details_em_active_energy_balance">Balans van actieve energie</string>
   <string name="details_em_settings_list_metric">Geselecteerde waarde</string>

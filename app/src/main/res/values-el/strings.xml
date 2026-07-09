@@ -821,6 +821,13 @@
   <string name="general_search">Αναζήτηση</string>
   <string name="toolbar_search_hint">Πληκτρολογήστε τουλάχιστον 2 χαρακτήρες…</string>
   <string name="details_timer_select_program">Επιλέξτε πρόγραμμα</string>
+  <string name="details_recuperator_ventilation">Αερισμός</string>
+  <string name="details_recuperator_empty_house">Άδειο σπίτι</string>
+  <string name="details_recuperator_open_window">Άνοιγμα παραθύρου</string>
+  <string name="channel_caption_hvac_hrv">Αερισμός με ανάκτηση θερμότητας</string>
+  <string name="details_recuperator_manual_mode_label">Χειροκίνητη λειτουργία</string>
+  <string name="profile_selected">Επιλεγμένο προφίλ</string>
+  <string name="general_clear_search">Εκκαθάριση αναζήτησης</string>
   <string name="settings_show_unavailable_channels">Απόκρυψη καναλιών που δεν είναι διαθέσιμα λόγω της διαμόρφωσης της συσκευής</string>
   <string name="details_em_active_energy_balance">Ισοζύγιο ενεργού ενέργειας</string>
   <string name="details_em_settings_list_metric">Επιλεγμένη τιμή</string>
