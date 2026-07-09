@@ -75,7 +75,7 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
   override val loginUseCase: LoginUseCase,
   override val authorizeUseCase: AuthorizeUseCase,
   defaultState: S,
-  schedulers: SuplaSchedulers
+  override val schedulers: SuplaSchedulers
 ) : BaseViewModel<S, BaseWindowViewEvent>(
   defaultState,
   schedulers

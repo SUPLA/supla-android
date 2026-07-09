@@ -1,29 +1,63 @@
 package org.supla.android.usecases.channel
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
 
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+
+import android.content.Context
+import io.mockk.MockKAnnotations
 import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Single
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.whenever
 import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.group.CreateProfileGroupsListUseCase
+import org.supla.android.usecases.group.GroupToListItemMapper
 import org.supla.android.usecases.location.CollapsedFlag
+import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.usecase.GetCaptionUseCase
 
-@RunWith(MockitoJUnitRunner::class)
 class CreateProfileGroupsListUseCaseTest {
-  @Mock
+  @MockK
   private lateinit var channelGroupRepository: ChannelGroupRepository
 
-  @InjectMocks
+  @MockK
+  private lateinit var groupToListItemMapper: GroupToListItemMapper
+
+  @MockK
+  private lateinit var getCaptionUseCase: GetCaptionUseCase
+
+  @MockK
+  private lateinit var context: Context
+
+  @InjectMockKs
   private lateinit var usecase: CreateProfileGroupsListUseCase
+
+  @Before
+  fun setup() {
+    MockKAnnotations.init(this)
+  }
 
   @Test
   fun `should create list of channels and locations`() {
@@ -37,7 +71,11 @@ class CreateProfileGroupsListUseCaseTest {
     val thirdGroup = mockGroupData(33, collapsedLocationId, "Collapsed location", true)
     val fourthGroup = mockGroupData(44, thirdLocationId)
 
-    whenever(channelGroupRepository.findList()).thenReturn(Single.just(listOf(firstGroup, secondGroup, thirdGroup, fourthGroup)))
+    every { channelGroupRepository.findList() } returns Single.just(listOf(firstGroup, secondGroup, thirdGroup, fourthGroup))
+    every { groupToListItemMapper(firstGroup) } returns mockGroupItem(11)
+    every { groupToListItemMapper(secondGroup) } returns mockGroupItem(22)
+    every { groupToListItemMapper(thirdGroup) } returns mockGroupItem(33)
+    every { groupToListItemMapper(fourthGroup) } returns mockGroupItem(44)
 
     // when
     val testObserver = usecase.invoke().test()
@@ -46,21 +84,21 @@ class CreateProfileGroupsListUseCaseTest {
     testObserver.assertComplete()
     val list = testObserver.values()[0]
 
-    Assertions.assertThat(list).hasSize(6)
-    Assertions.assertThat(list[0]).isInstanceOf(ListItem.LocationItem::class.java)
-    Assertions.assertThat(list[1]).isInstanceOf(ListItem.DefaultItem::class.java)
-    Assertions.assertThat(list[2]).isInstanceOf(ListItem.DefaultItem::class.java)
-    Assertions.assertThat(list[3]).isInstanceOf(ListItem.LocationItem::class.java)
-    Assertions.assertThat(list[4]).isInstanceOf(ListItem.LocationItem::class.java)
-    Assertions.assertThat(list[5]).isInstanceOf(ListItem.DefaultItem::class.java)
+    assertThat(list).hasSize(6)
+    assertThat(list[0]).isInstanceOf(ListItem.LocationItem::class.java)
+    assertThat(list[1]).isInstanceOf(ListItem.DefaultItem::class.java)
+    assertThat(list[2]).isInstanceOf(ListItem.DefaultItem::class.java)
+    assertThat(list[3]).isInstanceOf(ListItem.LocationItem::class.java)
+    assertThat(list[4]).isInstanceOf(ListItem.LocationItem::class.java)
+    assertThat(list[5]).isInstanceOf(ListItem.DefaultItem::class.java)
 
-    Assertions.assertThat((list[1] as ListItem.DefaultItem).channelBase.remoteId).isEqualTo(11)
-    Assertions.assertThat((list[2] as ListItem.DefaultItem).channelBase.remoteId).isEqualTo(22)
-    Assertions.assertThat((list[5] as ListItem.DefaultItem).channelBase.remoteId).isEqualTo(44)
+    assertThat((list[1] as ListItem.DefaultItem).remoteId).isEqualTo(11)
+    assertThat((list[2] as ListItem.DefaultItem).remoteId).isEqualTo(22)
+    assertThat((list[5] as ListItem.DefaultItem).remoteId).isEqualTo(44)
 
-    Assertions.assertThat((list[0] as ListItem.LocationItem).location.remoteId).isEqualTo(firstLocationId)
-    Assertions.assertThat((list[3] as ListItem.LocationItem).location.remoteId).isEqualTo(collapsedLocationId)
-    Assertions.assertThat((list[4] as ListItem.LocationItem).location.remoteId).isEqualTo(thirdLocationId)
+    assertThat((list[0] as ListItem.LocationItem).remoteId).isEqualTo(firstLocationId)
+    assertThat((list[3] as ListItem.LocationItem).remoteId).isEqualTo(collapsedLocationId)
+    assertThat((list[4] as ListItem.LocationItem).remoteId).isEqualTo(thirdLocationId)
   }
 
   @Test
@@ -75,7 +113,11 @@ class CreateProfileGroupsListUseCaseTest {
     val thirdGroup = mockGroupData(33, secondLocationId, "Location")
     val fourthGroup = mockGroupData(44, thirdLocationId)
 
-    whenever(channelGroupRepository.findList()).thenReturn(Single.just(listOf(firstGroup, secondGroup, thirdGroup, fourthGroup)))
+    every { channelGroupRepository.findList() } returns Single.just(listOf(firstGroup, secondGroup, thirdGroup, fourthGroup))
+    every { groupToListItemMapper(firstGroup) } returns mockGroupItem(11)
+    every { groupToListItemMapper(secondGroup) } returns mockGroupItem(22)
+    every { groupToListItemMapper(thirdGroup) } returns mockGroupItem(33)
+    every { groupToListItemMapper(fourthGroup) } returns mockGroupItem(44)
 
     // when
     val testObserver = usecase().test()
@@ -84,21 +126,41 @@ class CreateProfileGroupsListUseCaseTest {
     testObserver.assertComplete()
     val list = testObserver.values()[0]
 
-    Assertions.assertThat(list).hasSize(6)
-    Assertions.assertThat(list[0]).isInstanceOf(ListItem.LocationItem::class.java)
-    Assertions.assertThat(list[1]).isInstanceOf(ListItem.DefaultItem::class.java)
-    Assertions.assertThat(list[2]).isInstanceOf(ListItem.DefaultItem::class.java)
-    Assertions.assertThat(list[3]).isInstanceOf(ListItem.DefaultItem::class.java)
-    Assertions.assertThat(list[4]).isInstanceOf(ListItem.LocationItem::class.java)
-    Assertions.assertThat(list[5]).isInstanceOf(ListItem.DefaultItem::class.java)
+    assertThat(list).hasSize(6)
+    assertThat(list[0]).isInstanceOf(ListItem.LocationItem::class.java)
+    assertThat(list[1]).isInstanceOf(ListItem.DefaultItem::class.java)
+    assertThat(list[2]).isInstanceOf(ListItem.DefaultItem::class.java)
+    assertThat(list[3]).isInstanceOf(ListItem.DefaultItem::class.java)
+    assertThat(list[4]).isInstanceOf(ListItem.LocationItem::class.java)
+    assertThat(list[5]).isInstanceOf(ListItem.DefaultItem::class.java)
 
-    Assertions.assertThat((list[1] as ListItem.DefaultItem).channelBase.remoteId).isEqualTo(11)
-    Assertions.assertThat((list[2] as ListItem.DefaultItem).channelBase.remoteId).isEqualTo(22)
-    Assertions.assertThat((list[3] as ListItem.DefaultItem).channelBase.remoteId).isEqualTo(33)
-    Assertions.assertThat((list[5] as ListItem.DefaultItem).channelBase.remoteId).isEqualTo(44)
+    assertThat((list[1] as ListItem.DefaultItem).remoteId).isEqualTo(11)
+    assertThat((list[2] as ListItem.DefaultItem).remoteId).isEqualTo(22)
+    assertThat((list[3] as ListItem.DefaultItem).remoteId).isEqualTo(33)
+    assertThat((list[5] as ListItem.DefaultItem).remoteId).isEqualTo(44)
 
-    Assertions.assertThat((list[0] as ListItem.LocationItem).location.remoteId).isEqualTo(firstLocationId)
-    Assertions.assertThat((list[4] as ListItem.LocationItem).location.remoteId).isEqualTo(thirdLocationId)
+    assertThat((list[0] as ListItem.LocationItem).remoteId).isEqualTo(firstLocationId)
+    assertThat((list[4] as ListItem.LocationItem).remoteId).isEqualTo(thirdLocationId)
+  }
+
+  @Test
+  fun `should filter groups by caption`() {
+    // given
+    val firstGroup = mockGroupData(11, 1, "Location")
+    val secondGroup = mockGroupData(22, 1, "Location")
+    every { channelGroupRepository.findList() } returns Single.just(listOf(firstGroup, secondGroup))
+    every { groupToListItemMapper(firstGroup) } returns mockGroupItem(11)
+
+    // when
+    val testObserver = usecase("caption 1").test()
+
+    // then
+    testObserver.assertComplete()
+    val list = testObserver.values()[0]
+
+    assertThat(list).hasSize(2)
+    assertThat((list[0] as ListItem.LocationItem).remoteId).isEqualTo(1)
+    assertThat((list[1] as ListItem.DefaultItem).remoteId).isEqualTo(11)
   }
 
   private fun mockGroupData(
@@ -108,16 +170,26 @@ class CreateProfileGroupsListUseCaseTest {
     locationCollapsed: Boolean = false
   ): ChannelGroupDataEntity {
     val location: LocationEntity = mockk {
+      every { profileId } returns 1L
       every { remoteId } returns locationRemoteId
       every { caption } returns locationCaption
       every { isCollapsed(CollapsedFlag.GROUP) } returns locationCollapsed
     }
 
+    every { getCaptionUseCase.invoke(match { it.remoteId == groupRemoteId }) } returns
+      LocalizedString.Constant("caption $groupRemoteId")
+
     return mockk {
+      every { remoteId } returns groupRemoteId
+      every { function } returns SuplaFunction.NONE
       every { locationEntity } returns location
       every { getLegacyGroup() } returns mockk()
-      every { remoteId } returns groupRemoteId
       every { locationId } returns locationRemoteId
+      every { caption } returns "caption $groupRemoteId"
     }
+  }
+
+  private fun mockGroupItem(remoteId: Int): ListItem.DefaultItem = mockk {
+    every { this@mockk.remoteId } returns remoteId
   }
 }

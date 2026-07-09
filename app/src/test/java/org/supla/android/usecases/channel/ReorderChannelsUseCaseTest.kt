@@ -1,22 +1,39 @@
 package org.supla.android.usecases.channel
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
 import io.mockk.MockKAnnotations
+import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.confirmVerified
 import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
+import io.mockk.just
 import io.mockk.mockk
-import io.mockk.verifyOrder
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Maybe
-import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.LocationRepository
-import org.supla.android.data.source.local.entity.ChannelEntity
-import org.supla.android.data.source.local.entity.LocationEntity
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.LocationSortingType
-import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.android.ui.lists.ListItem
 
 class ReorderChannelsUseCaseTest {
 
@@ -26,87 +43,124 @@ class ReorderChannelsUseCaseTest {
   @MockK
   private lateinit var locationRepository: LocationRepository
 
+  @InjectMockKs
   private lateinit var useCase: ReorderChannelsUseCase
 
   @Before
-  fun setUp() {
+  fun setup() {
     MockKAnnotations.init(this)
-    useCase = ReorderChannelsUseCase(channelRepository, locationRepository)
   }
 
   @Test
-  fun `should reorder channels and update location sorting`() {
+  fun `should do nothing when moved item is not a channel item`() = runTest {
     // given
-    val locationId = 21
-    val locationCaption = "Living room"
-    val location = LocationEntity(
-      id = 1L,
-      remoteId = locationId,
-      caption = locationCaption,
-      visible = 1,
-      collapsed = 0,
-      sorting = LocationSortingType.DEFAULT,
-      sortOrder = 1,
-      profileId = 7L
+    val items = listOf(
+      mockLocationItem(remoteId = 10, userCaption = "Kitchen"),
+      mockLocationItem(remoteId = 11, userCaption = "Hall")
     )
-    val expectedLocation = location.copy(sorting = LocationSortingType.USER_DEFINED)
-
-    val first = channelDataEntity(channelEntity(id = 11L, remoteId = 101, position = 1))
-    val second = channelDataEntity(channelEntity(id = 12L, remoteId = 102, position = 2))
-    val third = channelDataEntity(channelEntity(id = 13L, remoteId = 103, position = 3))
-    val fourth = channelDataEntity(channelEntity(id = 14L, remoteId = 104, position = 4))
-    val expectedSecond = second.channelEntity.copy(position = 1)
-    val expectedThird = third.channelEntity.copy(position = 2)
-    val expectedFirst = first.channelEntity.copy(position = 3)
-    val expectedFourth = fourth.channelEntity.copy(position = 4)
-
-    every { locationRepository.findByRemoteId(locationId) } returns Maybe.just(location)
-    every { channelRepository.findChannelsForLocation(locationCaption) } returns Single.just(
-      listOf(first, second, third, fourth)
-    )
-    every { locationRepository.updateLocation(match { it.sorting == LocationSortingType.USER_DEFINED }) } returns Completable.complete()
-    every { channelRepository.update(any()) } returns Completable.complete()
 
     // when
-    useCase(firstItemId = 11L, firstItemLocationId = locationId, secondItemId = 13L)
-      .test()
-      .assertComplete()
+    useCase(items, movedItemId = 123)
 
     // then
-    verifyOrder {
-      locationRepository.findByRemoteId(locationId)
-      channelRepository.findChannelsForLocation(locationCaption)
-      locationRepository.updateLocation(expectedLocation)
-      channelRepository.update(expectedSecond)
-      channelRepository.update(expectedThird)
-      channelRepository.update(expectedFirst)
-      channelRepository.update(expectedFourth)
-    }
+    coVerify(exactly = 0) { locationRepository.changeSortingType(any(), any()) }
+    coVerify(exactly = 0) { channelRepository.updatePosition(any(), any()) }
+    confirmVerified(locationRepository, channelRepository)
   }
 
-  private fun channelEntity(id: Long, remoteId: Int, position: Int): ChannelEntity =
-    ChannelEntity(
-      id = id,
-      remoteId = remoteId,
-      deviceId = null,
-      caption = "Channel $remoteId",
-      type = 0,
-      function = SuplaFunction.UNKNOWN,
-      visible = 1,
-      locationId = 21,
-      altIcon = 0,
-      userIcon = 0,
-      manufacturerId = 0.toShort(),
-      productId = 0.toShort(),
-      flags = 0,
-      protocolVersion = 0,
-      position = position,
-      profileId = 7L
+  @Test
+  fun `should do nothing when matching location caption is missing`() = runTest {
+    // given
+    val movedItem = mockChannelItem(remoteId = 11, locationId = 1, locationCaption = "Kitchen")
+    val otherItem = mockChannelItem(remoteId = 22, locationId = 1, locationCaption = "Kitchen")
+    val items = listOf(
+      mockLocationItem(remoteId = 2, userCaption = "Hall"),
+      movedItem,
+      otherItem
     )
 
-  private fun channelDataEntity(channelEntity: ChannelEntity): ChannelDataEntity =
+    // when
+    useCase(items, movedItemId = 11)
+
+    // then
+    coVerify(exactly = 0) { locationRepository.changeSortingType(any(), any()) }
+    coVerify(exactly = 0) { channelRepository.updatePosition(any(), any()) }
+    confirmVerified(locationRepository, channelRepository)
+  }
+
+  @Test
+  fun `should reorder channels in moved item location and change sorting type`() = runTest {
+    // given
+    val movedItem = mockChannelItem(remoteId = 11, locationId = 1, locationCaption = "Kitchen")
+    val secondItem = mockChannelItem(remoteId = 22, locationId = 1, locationCaption = "Kitchen")
+    val otherLocationItem = mockChannelItem(remoteId = 33, locationId = 2, locationCaption = "Hall")
+    val items = listOf(
+      mockLocationItem(remoteId = 1, userCaption = "Kitchen"),
+      movedItem,
+      secondItem,
+      mockLocationItem(remoteId = 2, userCaption = "Hall"),
+      otherLocationItem
+    )
+    coEvery { locationRepository.changeSortingType(1, LocationSortingType.USER_DEFINED) } just Runs
+    coEvery { channelRepository.updatePosition(11, 1) } just Runs
+    coEvery { channelRepository.updatePosition(22, 2) } just Runs
+
+    // when
+    useCase(items, movedItemId = 11)
+
+    // then
+    coVerify {
+      locationRepository.changeSortingType(1, LocationSortingType.USER_DEFINED)
+      channelRepository.updatePosition(11, 1)
+      channelRepository.updatePosition(22, 2)
+    }
+    coVerify(exactly = 0) { channelRepository.updatePosition(33, any()) }
+    confirmVerified(locationRepository, channelRepository)
+  }
+
+  @Test
+  fun `should reorder channels by caption when there are duplicated location captions`() = runTest {
+    // given
+    val firstKitchen = mockLocationItem(remoteId = 1, userCaption = "Kitchen")
+    val secondKitchen = mockLocationItem(remoteId = 2, userCaption = "Kitchen")
+    val movedItem = mockChannelItem(remoteId = 11, locationId = 1, locationCaption = "Kitchen")
+    val sameCaptionDifferentLocation = mockChannelItem(remoteId = 22, locationId = 2, locationCaption = "Kitchen")
+    val hallItem = mockChannelItem(remoteId = 33, locationId = 3, locationCaption = "Hall")
+    val items = listOf(
+      firstKitchen,
+      movedItem,
+      secondKitchen,
+      sameCaptionDifferentLocation,
+      mockLocationItem(remoteId = 3, userCaption = "Hall"),
+      hallItem
+    )
+    coEvery { locationRepository.changeSortingType(1, LocationSortingType.USER_DEFINED) } just Runs
+    coEvery { channelRepository.updatePosition(11, 1) } just Runs
+    coEvery { channelRepository.updatePosition(22, 2) } just Runs
+
+    // when
+    useCase(items, movedItemId = 11)
+
+    // then
+    coVerify {
+      locationRepository.changeSortingType(1, LocationSortingType.USER_DEFINED)
+      channelRepository.updatePosition(11, 1)
+      channelRepository.updatePosition(22, 2)
+    }
+    coVerify(exactly = 0) { channelRepository.updatePosition(33, any()) }
+    confirmVerified(locationRepository, channelRepository)
+  }
+
+  private fun mockChannelItem(remoteId: Int, locationId: Int, locationCaption: String): ListItem.DefaultItem =
     mockk {
-      every { id } returns channelEntity.id
-      every { this@mockk.channelEntity } returns channelEntity
+      every { this@mockk.remoteId } returns remoteId
+      every { this@mockk.locationId } returns locationId
+      every { this@mockk.locationCaption } returns locationCaption
+    }
+
+  private fun mockLocationItem(remoteId: Int, userCaption: String): ListItem.LocationItem =
+    mockk {
+      every { this@mockk.remoteId } returns remoteId
+      every { this@mockk.userCaption } returns userCaption
     }
 }

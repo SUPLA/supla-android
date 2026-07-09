@@ -17,30 +17,38 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import io.mockk.MockKAnnotations
 import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Single
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.whenever
 import org.supla.android.data.source.SceneRepository
 import org.supla.android.data.source.local.entity.LocationEntity
+import org.supla.android.data.source.local.entity.SceneEntity
 import org.supla.android.data.source.local.entity.complex.SceneDataEntity
+import org.supla.android.images.ImageId
 import org.supla.android.ui.lists.ListItem
+import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.android.usecases.location.CollapsedFlag
 
-@RunWith(MockitoJUnitRunner::class)
 class CreateProfileScenesListUseCaseTest {
+  @MockK
+  private lateinit var getSceneIconUseCase: GetSceneIconUseCase
 
-  @Mock
+  @MockK
   private lateinit var sceneRepository: SceneRepository
 
-  @InjectMocks
+  @InjectMockKs
   private lateinit var useCase: CreateProfileScenesListUseCase
+
+  @Before
+  fun setup() {
+    MockKAnnotations.init(this)
+  }
 
   @Test
   fun `should create list of scenes with locations`() {
@@ -54,13 +62,13 @@ class CreateProfileScenesListUseCaseTest {
     val thirdLocation = mockLocation(thirdLocationId)
 
     val scenes = listOf(
-      mockScene(firstLocation),
-      mockScene(firstLocation),
-      mockScene(collapsedLocation),
-      mockScene(thirdLocation)
+      mockScene(111, firstLocation),
+      mockScene(112, firstLocation),
+      mockScene(113, collapsedLocation),
+      mockScene(114, thirdLocation)
     )
 
-    whenever(sceneRepository.findList()).thenReturn(Single.just(scenes))
+    every { sceneRepository.findList() } returns Single.just(scenes)
 
     // when
     val testObserver = useCase().test()
@@ -69,21 +77,59 @@ class CreateProfileScenesListUseCaseTest {
     testObserver.assertComplete()
     val list = testObserver.values()[0]
 
-    Assertions.assertThat(list).hasSize(6)
-    Assertions.assertThat(list[0]).isInstanceOf(ListItem.LocationItem::class.java)
-    Assertions.assertThat(list[1]).isInstanceOf(ListItem.SceneItem::class.java)
-    Assertions.assertThat(list[2]).isInstanceOf(ListItem.SceneItem::class.java)
-    Assertions.assertThat(list[3]).isInstanceOf(ListItem.LocationItem::class.java)
-    Assertions.assertThat(list[4]).isInstanceOf(ListItem.LocationItem::class.java)
-    Assertions.assertThat(list[5]).isInstanceOf(ListItem.SceneItem::class.java)
+    assertThat(list).hasSize(6)
+    assertThat(list[0]).isInstanceOf(ListItem.LocationItem::class.java)
+    assertThat(list[1]).isInstanceOf(ListItem.SceneItem::class.java)
+    assertThat(list[2]).isInstanceOf(ListItem.SceneItem::class.java)
+    assertThat(list[3]).isInstanceOf(ListItem.LocationItem::class.java)
+    assertThat(list[4]).isInstanceOf(ListItem.LocationItem::class.java)
+    assertThat(list[5]).isInstanceOf(ListItem.SceneItem::class.java)
 
-    Assertions.assertThat((list[1] as ListItem.SceneItem).sceneData).isEqualTo(scenes[0])
-    Assertions.assertThat((list[2] as ListItem.SceneItem).sceneData).isEqualTo(scenes[1])
-    Assertions.assertThat((list[5] as ListItem.SceneItem).sceneData).isEqualTo(scenes[3])
+    assertThat((list[1] as ListItem.SceneItem).remoteId).isEqualTo(111)
+    assertThat((list[2] as ListItem.SceneItem).remoteId).isEqualTo(112)
+    assertThat((list[5] as ListItem.SceneItem).remoteId).isEqualTo(114)
 
-    Assertions.assertThat((list[0] as ListItem.LocationItem).location).isEqualTo(firstLocation)
-    Assertions.assertThat((list[3] as ListItem.LocationItem).location).isEqualTo(collapsedLocation)
-    Assertions.assertThat((list[4] as ListItem.LocationItem).location).isEqualTo(thirdLocation)
+    assertThat((list[0] as ListItem.LocationItem).remoteId).isEqualTo(firstLocationId)
+    assertThat((list[3] as ListItem.LocationItem).remoteId).isEqualTo(collapsedLocationId)
+    assertThat((list[4] as ListItem.LocationItem).remoteId).isEqualTo(thirdLocationId)
+  }
+
+  @Test
+  fun `should create list of scenes with locations - filtered`() {
+    // given
+    val firstLocationId = 2
+    val collapsedLocationId = 4
+    val thirdLocationId = 8
+
+    val firstLocation = mockLocation(firstLocationId)
+    val collapsedLocation = mockLocation(collapsedLocationId, collapsed = true)
+    val thirdLocation = mockLocation(thirdLocationId)
+
+    val scenes = listOf(
+      mockScene(111, firstLocation),
+      mockScene(112, firstLocation),
+      mockScene(123, collapsedLocation),
+      mockScene(124, thirdLocation)
+    )
+
+    every { sceneRepository.findList() } returns Single.just(scenes)
+
+    // when
+    val testObserver = useCase("caption 11").test()
+
+    // then
+    testObserver.assertComplete()
+    val list = testObserver.values()[0]
+
+    assertThat(list).hasSize(3)
+    assertThat(list[0]).isInstanceOf(ListItem.LocationItem::class.java)
+    assertThat(list[1]).isInstanceOf(ListItem.SceneItem::class.java)
+    assertThat(list[2]).isInstanceOf(ListItem.SceneItem::class.java)
+
+    assertThat((list[1] as ListItem.SceneItem).remoteId).isEqualTo(111)
+    assertThat((list[2] as ListItem.SceneItem).remoteId).isEqualTo(112)
+
+    assertThat((list[0] as ListItem.LocationItem).remoteId).isEqualTo(firstLocationId)
   }
 
   @Test
@@ -98,13 +144,13 @@ class CreateProfileScenesListUseCaseTest {
     val thirdLocation = mockLocation(thirdLocationId)
 
     val scenes = listOf(
-      mockScene(firstLocation),
-      mockScene(firstLocation),
-      mockScene(secondLocation),
-      mockScene(thirdLocation)
+      mockScene(111, firstLocation),
+      mockScene(112, firstLocation),
+      mockScene(113, secondLocation),
+      mockScene(114, thirdLocation)
     )
 
-    whenever(sceneRepository.findList()).thenReturn(Single.just(scenes))
+    every { sceneRepository.findList() } returns Single.just(scenes)
 
     // when
     val testObserver = useCase().test()
@@ -113,31 +159,42 @@ class CreateProfileScenesListUseCaseTest {
     testObserver.assertComplete()
     val list = testObserver.values()[0]
 
-    Assertions.assertThat(list).hasSize(6)
-    Assertions.assertThat(list[0]).isInstanceOf(ListItem.LocationItem::class.java)
-    Assertions.assertThat(list[1]).isInstanceOf(ListItem.SceneItem::class.java)
-    Assertions.assertThat(list[2]).isInstanceOf(ListItem.SceneItem::class.java)
-    Assertions.assertThat(list[3]).isInstanceOf(ListItem.SceneItem::class.java)
-    Assertions.assertThat(list[4]).isInstanceOf(ListItem.LocationItem::class.java)
-    Assertions.assertThat(list[5]).isInstanceOf(ListItem.SceneItem::class.java)
+    assertThat(list).hasSize(6)
+    assertThat(list[0]).isInstanceOf(ListItem.LocationItem::class.java)
+    assertThat(list[1]).isInstanceOf(ListItem.SceneItem::class.java)
+    assertThat(list[2]).isInstanceOf(ListItem.SceneItem::class.java)
+    assertThat(list[3]).isInstanceOf(ListItem.SceneItem::class.java)
+    assertThat(list[4]).isInstanceOf(ListItem.LocationItem::class.java)
+    assertThat(list[5]).isInstanceOf(ListItem.SceneItem::class.java)
 
-    Assertions.assertThat((list[1] as ListItem.SceneItem).sceneData).isEqualTo(scenes[0])
-    Assertions.assertThat((list[2] as ListItem.SceneItem).sceneData).isEqualTo(scenes[1])
-    Assertions.assertThat((list[3] as ListItem.SceneItem).sceneData).isEqualTo(scenes[2])
-    Assertions.assertThat((list[5] as ListItem.SceneItem).sceneData).isEqualTo(scenes[3])
+    assertThat((list[1] as ListItem.SceneItem).remoteId).isEqualTo(111)
+    assertThat((list[2] as ListItem.SceneItem).remoteId).isEqualTo(112)
+    assertThat((list[3] as ListItem.SceneItem).remoteId).isEqualTo(113)
+    assertThat((list[5] as ListItem.SceneItem).remoteId).isEqualTo(114)
 
-    Assertions.assertThat((list[0] as ListItem.LocationItem).location).isEqualTo(firstLocation)
-    Assertions.assertThat((list[4] as ListItem.LocationItem).location).isEqualTo(thirdLocation)
+    assertThat((list[0] as ListItem.LocationItem).remoteId).isEqualTo(firstLocationId)
+    assertThat((list[4] as ListItem.LocationItem).remoteId).isEqualTo(thirdLocationId)
   }
 
-  private fun mockScene(locationEntity: LocationEntity): SceneDataEntity {
+  private fun mockScene(remoteId: Int, locationEntity: LocationEntity): SceneDataEntity {
+    val sceneEntity: SceneEntity = mockk {
+      every { profileId } returns "1"
+      every { caption } returns "caption $remoteId"
+      every { estimatedEndDate } returns null
+    }
     val scene: SceneDataEntity = mockk()
+    every { scene.remoteId } returns remoteId
     every { scene.locationEntity } returns locationEntity
+    every { scene.sceneEntity } returns sceneEntity
+
+    every { getSceneIconUseCase.invoke(sceneEntity) } returns ImageId(0)
+
     return scene
   }
 
   private fun mockLocation(locationRemoteId: Int, name: String = "Location $locationRemoteId", collapsed: Boolean = false): LocationEntity {
     val location: LocationEntity = mockk()
+    every { location.profileId } returns 1L
     every { location.remoteId } returns locationRemoteId
     every { location.caption } returns name
     every { location.isCollapsed(CollapsedFlag.SCENE) } returns collapsed

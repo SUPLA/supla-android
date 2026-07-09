@@ -75,7 +75,6 @@ class SwitchGeneralViewModel @Inject constructor(
   private val electricityMeterGeneralStateHandler: ElectricityMeterGeneralStateHandler,
   private val downloadChannelMeasurementsUseCase: DownloadChannelMeasurementsUseCase,
   private val impulseCounterGeneralStateHandler: ImpulseCounterGeneralStateHandler,
-  private val suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper,
   private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   private val readGroupWithChannelsUseCase: ReadGroupWithChannelsUseCase,
   private val executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
@@ -86,6 +85,7 @@ class SwitchGeneralViewModel @Inject constructor(
   override val getChannelStateUseCase: GetChannelStateUseCase,
   override val getChannelIconUseCase: GetChannelIconUseCase,
   override val getCaptionUseCase: GetCaptionUseCase,
+  suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<SwitchGeneralViewState, SwitchGeneralViewEvent>(SwitchGeneralViewState(), schedulers),
   SwitchGeneralScope,

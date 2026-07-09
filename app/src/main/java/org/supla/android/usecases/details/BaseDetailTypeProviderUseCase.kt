@@ -23,11 +23,11 @@ import org.supla.core.shared.data.model.general.SuplaFunction
 abstract class BaseDetailTypeProviderUseCase {
 
   fun provide(function: SuplaFunction): DetailType? = when (function) {
-    SuplaFunction.DIMMER -> RgbwDetailType(DetailPage.DIMMER)
-    SuplaFunction.DIMMER_CCT -> RgbwDetailType(DetailPage.DIMMER_CCT)
-    SuplaFunction.DIMMER_AND_RGB_LIGHTING -> RgbwDetailType(DetailPage.RGB, DetailPage.DIMMER)
-    SuplaFunction.DIMMER_CCT_AND_RGB -> RgbwDetailType(DetailPage.RGB, DetailPage.DIMMER_CCT)
-    SuplaFunction.RGB_LIGHTING -> RgbwDetailType(DetailPage.RGB)
+    SuplaFunction.DIMMER -> StandardDetailType(DetailPage.DIMMER)
+    SuplaFunction.DIMMER_CCT -> StandardDetailType(DetailPage.DIMMER_CCT)
+    SuplaFunction.DIMMER_AND_RGB_LIGHTING -> StandardDetailType(DetailPage.RGB, DetailPage.DIMMER)
+    SuplaFunction.DIMMER_CCT_AND_RGB -> StandardDetailType(DetailPage.RGB, DetailPage.DIMMER_CCT)
+    SuplaFunction.RGB_LIGHTING -> StandardDetailType(DetailPage.RGB)
     SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER -> StandardDetailType(DetailPage.ROLLER_SHUTTER)
     SuplaFunction.CONTROLLING_THE_ROOF_WINDOW -> StandardDetailType(DetailPage.ROOF_WINDOW)
     SuplaFunction.CONTROLLING_THE_FACADE_BLIND -> StandardDetailType(DetailPage.FACADE_BLINDS)
@@ -45,10 +45,10 @@ abstract class BaseDetailTypeProviderUseCase {
     SuplaFunction.IC_ELECTRICITY_METER,
     SuplaFunction.IC_GAS_METER,
     SuplaFunction.IC_WATER_METER,
-    SuplaFunction.IC_HEAT_METER -> IcDetailType(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY)
+    SuplaFunction.IC_HEAT_METER -> StandardDetailType(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY)
     SuplaFunction.THERMOMETER,
-    SuplaFunction.HUMIDITY_AND_TEMPERATURE -> ThermometerDetailType(listOf(DetailPage.THERMOMETER_HISTORY))
-    SuplaFunction.HUMIDITY -> HumidityDetailType(listOf(DetailPage.HUMIDITY_HISTORY))
+    SuplaFunction.HUMIDITY_AND_TEMPERATURE -> StandardDetailType(listOf(DetailPage.THERMOMETER_HISTORY))
+    SuplaFunction.HUMIDITY -> StandardDetailType(listOf(DetailPage.HUMIDITY_HISTORY))
     SuplaFunction.HVAC_THERMOSTAT,
 //    Temporarily commented out, because is not supported yet.
 //    SuplaConst.SuplaChannelFunction.HVAC_THERMOSTAT_AUTO,
@@ -56,19 +56,12 @@ abstract class BaseDetailTypeProviderUseCase {
 //    SuplaConst.SuplaChannelFunction.HVAC_FAN,
 //    SuplaConst.SuplaChannelFunction.HVAC_THERMOSTAT_DIFFERENTIAL,
     SuplaFunction.HVAC_DOMESTIC_HOT_WATER ->
-      ThermostatDetailType(
-        listOf(
-          DetailPage.THERMOSTAT,
-          DetailPage.SCHEDULE,
-          DetailPage.THERMOSTAT_TIMER,
-          DetailPage.THERMOSTAT_HISTORY
-        )
-      )
+      StandardDetailType(DetailPage.THERMOSTAT, DetailPage.SCHEDULE, DetailPage.THERMOSTAT_TIMER, DetailPage.THERMOSTAT_HISTORY)
     SuplaFunction.HVAC_HRV -> StandardDetailType(DetailPage.RECUPERATOR_GENERAL, DetailPage.RECUPERATOR_SCHEDULE)
     SuplaFunction.DIGIGLASS_VERTICAL,
     SuplaFunction.DIGIGLASS_HORIZONTAL -> LegacyDetailType.DIGIGLASS
     SuplaFunction.GENERAL_PURPOSE_MEASUREMENT,
-    SuplaFunction.GENERAL_PURPOSE_METER -> GpmDetailType(listOf(DetailPage.GPM_HISTORY))
+    SuplaFunction.GENERAL_PURPOSE_METER -> StandardDetailType(listOf(DetailPage.GPM_HISTORY))
     SuplaFunction.CONTAINER,
     SuplaFunction.SEPTIC_TANK,
     SuplaFunction.WATER_TANK -> StandardDetailType(DetailPage.CONTAINER_GENERAL)

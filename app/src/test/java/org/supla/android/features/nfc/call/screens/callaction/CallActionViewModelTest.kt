@@ -53,7 +53,7 @@ import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.usecase.GetCaptionUseCase
 
 class CallActionViewModelTest :
-  BaseViewModelTest<CallActionViewModelState, CallActionViewEvent, CallActionViewModel>(MockSchedulers.MOCKK) {
+  BaseViewModelTest<CallActionScreenState, CallActionViewEvent, CallActionViewModel>(MockSchedulers.MOCKK) {
 
   @get:Rule
   override val mainDispatcherRule = MainDispatcherRule()
@@ -95,8 +95,8 @@ class CallActionViewModelTest :
 
     // then
     assertThat(states).containsExactly(
-      CallActionViewModelState(
-        screenState = CallActionScreenState(step = TagProcessingStep.Failure(TagProcessingStep.FailureType.IllegalIntent))
+      CallActionScreenState(
+        step = TagProcessingStep.Failure(TagProcessingStep.FailureType.IllegalIntent)
       )
     )
   }
@@ -108,8 +108,8 @@ class CallActionViewModelTest :
 
     // then
     assertThat(states).containsExactly(
-      CallActionViewModelState(
-        screenState = CallActionScreenState(step = TagProcessingStep.Failure(TagProcessingStep.FailureType.UnknownUrl))
+      CallActionScreenState(
+        step = TagProcessingStep.Failure(TagProcessingStep.FailureType.UnknownUrl)
       )
     )
   }
@@ -133,10 +133,8 @@ class CallActionViewModelTest :
 
     // then
     assertThat(states).containsExactly(
-      CallActionViewModelState(screenState = CallActionScreenState(step = TagProcessingStep.Processing)),
-      CallActionViewModelState(
-        screenState = CallActionScreenState(step = TagProcessingStep.Failure(TagProcessingStep.FailureType.TagNotFound(tagUuid)))
-      )
+      CallActionScreenState(step = TagProcessingStep.Processing),
+      CallActionScreenState(step = TagProcessingStep.Failure(TagProcessingStep.FailureType.TagNotFound(tagUuid)))
     )
   }
 
@@ -173,12 +171,10 @@ class CallActionViewModelTest :
     // then
 
     assertThat(states).contains(
-      CallActionViewModelState(screenState = CallActionScreenState(step = TagProcessingStep.Processing)),
-      CallActionViewModelState(
-        screenState = CallActionScreenState(
-          step = TagProcessingStep.Failure(TagProcessingStep.FailureType.TagNotConfigured(tagId)),
-          tagData = CallActionScreenState.TagData(tagName, null, LocalizedString.Empty)
-        )
+      CallActionScreenState(step = TagProcessingStep.Processing),
+      CallActionScreenState(
+        step = TagProcessingStep.Failure(TagProcessingStep.FailureType.TagNotConfigured(tagId)),
+        tagData = CallActionScreenState.TagData(tagName, null, LocalizedString.Empty)
       )
     )
   }
@@ -223,18 +219,14 @@ class CallActionViewModelTest :
 
     // then
     assertThat(states).containsExactly(
-      CallActionViewModelState(screenState = CallActionScreenState(step = TagProcessingStep.Processing)),
-      CallActionViewModelState(
-        screenState = CallActionScreenState(
-          step = TagProcessingStep.Processing,
-          tagData = CallActionScreenState.TagData(tagName, null, LocalizedString.Empty)
-        )
+      CallActionScreenState(step = TagProcessingStep.Processing),
+      CallActionScreenState(
+        step = TagProcessingStep.Processing,
+        tagData = CallActionScreenState.TagData(tagName, null, LocalizedString.Empty)
       ),
-      CallActionViewModelState(
-        screenState = CallActionScreenState(
-          step = TagProcessingStep.Success,
-          tagData = CallActionScreenState.TagData(tagName, null, LocalizedString.Empty)
-        )
+      CallActionScreenState(
+        step = TagProcessingStep.Success,
+        tagData = CallActionScreenState.TagData(tagName, null, LocalizedString.Empty)
       )
     )
 
@@ -292,18 +284,14 @@ class CallActionViewModelTest :
 
     // then
     assertThat(states).containsExactly(
-      CallActionViewModelState(screenState = CallActionScreenState(step = TagProcessingStep.Processing)),
-      CallActionViewModelState(
-        screenState = CallActionScreenState(
-          step = TagProcessingStep.Processing,
-          tagData = CallActionScreenState.TagData(tagName, null, LocalizedString.Empty)
-        )
+      CallActionScreenState(step = TagProcessingStep.Processing),
+      CallActionScreenState(
+        step = TagProcessingStep.Processing,
+        tagData = CallActionScreenState.TagData(tagName, null, LocalizedString.Empty)
       ),
-      CallActionViewModelState(
-        screenState = CallActionScreenState(
-          step = TagProcessingStep.Success,
-          tagData = CallActionScreenState.TagData(tagName, null, LocalizedString.Empty)
-        )
+      CallActionScreenState(
+        step = TagProcessingStep.Success,
+        tagData = CallActionScreenState.TagData(tagName, null, LocalizedString.Empty)
       )
     )
 

@@ -30,8 +30,10 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.supla.android.core.BaseViewModelTest
+import org.supla.android.core.MainDispatcherRule
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.storage.ApplicationPreferences
@@ -77,6 +79,9 @@ import org.supla.core.shared.infrastructure.LocalizedStringId
 
 class RollerShutterViewModelTest :
   BaseViewModelTest<RollerShutterViewModelState, BaseWindowViewEvent, RollerShutterViewModel>(MockSchedulers.MOCKK) {
+
+  @get:Rule
+  override val mainDispatcherRule = MainDispatcherRule()
 
   @RelaxedMockK
   lateinit var loadingTimeoutManager: LoadingTimeoutManager

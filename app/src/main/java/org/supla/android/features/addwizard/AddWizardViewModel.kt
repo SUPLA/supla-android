@@ -128,7 +128,7 @@ class AddWizardViewModel @Inject constructor(
   override val profileRepository: ProfileRepository,
   override val authorizeUseCase: AuthorizeUseCase,
   override val loginUseCase: LoginUseCase,
-  schedulers: SuplaSchedulers
+  override val schedulers: SuplaSchedulers
 ) : BaseViewModel<AddWizardViewModelState, AddWizardViewEvent>(
   AddWizardViewModelState(),
   schedulers

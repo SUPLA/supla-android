@@ -1,30 +1,52 @@
 package org.supla.android.features.scenelist
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
 import android.net.Uri
+import io.mockk.MockKAnnotations
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.confirmVerified
+import io.mockk.every
+import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
+import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
 import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.core.BaseViewModelTest
+import org.supla.android.core.MainDispatcherRule
 import org.supla.android.core.infrastructure.DateProvider
-import org.supla.android.core.storage.ApplicationPreferences
-import org.supla.android.data.source.local.entity.LocationEntity
-import org.supla.android.data.source.local.entity.complex.SceneDataEntity
+import org.supla.android.data.source.SceneRepository
 import org.supla.android.events.UpdateEventsManager
+import org.supla.android.lib.actions.ActionId
+import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.ListItem
+import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
+import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 import org.supla.android.usecases.profile.CloudUrl
@@ -32,43 +54,52 @@ import org.supla.android.usecases.profile.LoadActiveProfileUrlUseCase
 import org.supla.android.usecases.scene.CreateProfileScenesListUseCase
 import org.supla.android.usecases.scene.ReorderScenesUseCase
 
-@RunWith(MockitoJUnitRunner::class)
-class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListViewEvent, SceneListViewModel>() {
+class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListViewEvent, SceneListViewModel>(MockSchedulers.MOCKK) {
+  @get:Rule
+  override val mainDispatcherRule = MainDispatcherRule()
 
-  @Mock
+  @MockK
   private lateinit var toggleLocationUseCase: ToggleLocationUseCase
 
-  @Mock
+  @MockK
   private lateinit var createProfileScenesListUseCase: CreateProfileScenesListUseCase
 
-  @Mock
+  @MockK
+  private lateinit var executeSimpleActionUseCase: ExecuteSimpleActionUseCase
+
+  @MockK
+  private lateinit var getSceneIconUseCase: GetSceneIconUseCase
+
+  @MockK
   private lateinit var reorderScenesUseCase: ReorderScenesUseCase
 
-  @Mock
+  @MockK
+  private lateinit var sceneRepository: SceneRepository
+
+  @MockK
   private lateinit var updateEventsManager: UpdateEventsManager
 
-  @Mock
+  @MockK
   private lateinit var loadActiveProfileUrlUseCase: LoadActiveProfileUrlUseCase
 
-  @Mock
-  private lateinit var preferences: ApplicationPreferences
-
-  @Mock
+  @MockK
   private lateinit var dateProvider: DateProvider
 
-  @Mock
+  @MockK
   override lateinit var schedulers: SuplaSchedulers
 
   override val viewModel: SceneListViewModel by lazy {
     SceneListViewModel(
       createProfileScenesListUseCase,
+      executeSimpleActionUseCase,
       reorderScenesUseCase,
       toggleLocationUseCase,
+      getSceneIconUseCase,
+      sceneRepository,
       loadActiveProfileUrlUseCase,
       updateEventsManager,
       schedulers,
-      dateProvider,
-      preferences
+      dateProvider
     )
   }
 
@@ -76,7 +107,9 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
 
   @Before
   override fun setUp() {
-    whenever(updateEventsManager.observeScenesUpdate()).thenReturn(listsEventsSubject)
+    MockKAnnotations.init(this)
+    every { updateEventsManager.observeScenesUpdate() } returns listsEventsSubject
+    every { updateEventsManager.observeAllScenes() } returns Observable.empty()
     super.setUp()
   }
 
@@ -84,7 +117,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
   fun `should load scenes`() {
     // given
     val items: List<ListItem.SceneItem> = listOf(mockk())
-    whenever(createProfileScenesListUseCase()).thenReturn(Observable.just(items))
+    every { createProfileScenesListUseCase() } returns Observable.just(items)
 
     // when
     viewModel.loadScenes()
@@ -95,37 +128,101 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
       state.copy(scenes = items)
     )
     Assertions.assertThat(events).isEmpty()
-    verifyNoInteractionsExcept(createProfileScenesListUseCase)
+    verify { createProfileScenesListUseCase() }
+    confirmVerified(createProfileScenesListUseCase)
+    confirmDependencies()
   }
 
   @Test
   fun `should update scenes order`() {
     // given
-    val scenes: List<SceneDataEntity> = listOf(mockk(), mockk(), mockk())
-    whenever(reorderScenesUseCase.invoke(scenes)).thenReturn(Completable.complete())
+    val firstItem: ListItem.SceneItem = mockk {
+      every { locationCaption } returns "1"
+    }
+    val secondItem: ListItem.SceneItem = mockk {
+      every { locationCaption } returns "1"
+    }
+    val thirdItem: ListItem.SceneItem = mockk {
+      every { locationCaption } returns "1"
+    }
+    val scenes = listOf(firstItem, secondItem, thirdItem)
+    viewModel.setState(SceneListViewState(scenes = scenes))
 
     // when
-    viewModel.onSceneOrderUpdate(scenes)
+    viewModel.moveItems(0, 2)
 
     // then
-    Assertions.assertThat(states).isEmpty()
+    assertThat(states).containsExactly(
+      SceneListViewState(scenes = listOf(firstItem, secondItem, thirdItem)),
+      SceneListViewState(scenes = listOf(secondItem, thirdItem, firstItem))
+    )
     Assertions.assertThat(events).isEmpty()
 
-    verify(reorderScenesUseCase).invoke(scenes)
-    verifyNoMoreInteractions(reorderScenesUseCase)
-    verifyNoInteractionsExcept(reorderScenesUseCase)
+    confirmDependencies()
+  }
+
+  @Test
+  fun `should not swap when items are in different location`() {
+    // given
+    val firstItem: ListItem.SceneItem = mockk {
+      every { locationCaption } returns "1"
+    }
+    val secondItem: ListItem.SceneItem = mockk {
+      every { locationCaption } returns "1"
+    }
+    val thirdItem: ListItem.SceneItem = mockk {
+      every { locationCaption } returns "2"
+    }
+    val scenes = listOf(firstItem, secondItem, thirdItem)
+    viewModel.setState(SceneListViewState(scenes = scenes))
+
+    // when
+    viewModel.moveItems(0, 2)
+
+    // then
+    assertThat(states).containsExactly(
+      SceneListViewState(scenes = listOf(firstItem, secondItem, thirdItem)),
+    )
+    Assertions.assertThat(events).isEmpty()
+
+    confirmDependencies()
+  }
+
+  @Test
+  fun `should not swap when different items`() {
+    // given
+    val firstItem: ListItem.LocationItem = mockk()
+    val secondItem: ListItem.SceneItem = mockk {
+      every { locationCaption } returns "1"
+    }
+    val thirdItem: ListItem.SceneItem = mockk {
+      every { locationCaption } returns "1"
+    }
+    val scenes = listOf(firstItem, secondItem, thirdItem)
+    viewModel.setState(SceneListViewState(scenes = scenes))
+
+    // when
+    viewModel.moveItems(2, 0)
+
+    // then
+    assertThat(states).containsExactly(
+      SceneListViewState(scenes = listOf(firstItem, secondItem, thirdItem)),
+    )
+    Assertions.assertThat(events).isEmpty()
+
+    confirmDependencies()
   }
 
   @Test
   fun `should toggle location collapsed and reload scenes`() {
     // given
-    val location = mockk<LocationEntity>()
-    whenever(toggleLocationUseCase(location, CollapsedFlag.SCENE)).thenReturn(Completable.complete())
+    val locationId = 1
+    every { toggleLocationUseCase(locationId, CollapsedFlag.SCENE) } returns Completable.complete()
     val list = listOf<ListItem.SceneItem>(mockk())
-    whenever(createProfileScenesListUseCase()).thenReturn(Observable.just(list))
+    every { createProfileScenesListUseCase() } returns Observable.just(list)
 
     // when
-    viewModel.toggleLocationCollapsed(location)
+    viewModel.onLocationClick(locationId)
 
     // then
     val state = SceneListViewState()
@@ -133,14 +230,17 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
       state.copy(scenes = list)
     )
     Assertions.assertThat(events).isEmpty()
-    verifyNoInteractionsExcept(createProfileScenesListUseCase, toggleLocationUseCase)
+    verify { toggleLocationUseCase(locationId, CollapsedFlag.SCENE) }
+    verify { createProfileScenesListUseCase() }
+    confirmVerified(toggleLocationUseCase, createProfileScenesListUseCase)
+    confirmDependencies()
   }
 
   @Test
   fun `should reload list on update`() {
     // given
     val list = listOf<ListItem.SceneItem>(mockk())
-    whenever(createProfileScenesListUseCase()).thenReturn(Observable.just(list))
+    every { createProfileScenesListUseCase() } returns Observable.just(list)
 
     // when
     listsEventsSubject.onNext(Any())
@@ -151,13 +251,105 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
       state.copy(scenes = list)
     )
     Assertions.assertThat(events).isEmpty()
-    verifyNoInteractionsExcept(createProfileScenesListUseCase)
+    verify { createProfileScenesListUseCase() }
+    confirmVerified(createProfileScenesListUseCase)
+    confirmDependencies()
+  }
+
+  @Test
+  fun `should set filter text and reload scenes`() {
+    // given
+    val filterText = "kitchen"
+    val list = listOf(mockk<ListItem.SceneItem>())
+    every { createProfileScenesListUseCase(filterText) } returns Observable.just(list)
+
+    // when
+    viewModel.setFilterText(filterText)
+
+    // then
+    assertThat(viewModel.filterText).isEqualTo(filterText)
+    assertThat(states).containsExactly(
+      SceneListViewState(scenes = list)
+    )
+    assertThat(events).isEmpty()
+
+    verify { createProfileScenesListUseCase(filterText) }
+    confirmVerified(createProfileScenesListUseCase)
+    confirmDependencies()
+  }
+
+  @Test
+  fun `should execute interrupt action on left button click`() {
+    // given
+    val remoteId = 123
+    every { executeSimpleActionUseCase(ActionId.INTERRUPT, SubjectType.SCENE, remoteId) } returns Completable.complete()
+
+    // when
+    viewModel.onLeftButtonClick(remoteId)
+
+    // then
+    assertThat(states).isEmpty()
+    assertThat(events).isEmpty()
+
+    verify { executeSimpleActionUseCase(ActionId.INTERRUPT, SubjectType.SCENE, remoteId) }
+    confirmVerified(executeSimpleActionUseCase)
+    confirmDependencies()
+  }
+
+  @Test
+  fun `should execute scene action on right button click`() {
+    // given
+    val remoteId = 123
+    every { executeSimpleActionUseCase(ActionId.EXECUTE, SubjectType.SCENE, remoteId) } returns Completable.complete()
+
+    // when
+    viewModel.onRightButtonClick(remoteId)
+
+    // then
+    assertThat(states).isEmpty()
+    assertThat(events).isEmpty()
+
+    verify { executeSimpleActionUseCase(ActionId.EXECUTE, SubjectType.SCENE, remoteId) }
+    confirmVerified(executeSimpleActionUseCase)
+    confirmDependencies()
+  }
+
+  @Test
+  fun `should reorder scenes and reload list when drag stops`() {
+    // given
+    val remoteId = 123
+    val firstItem: ListItem.SceneItem = mockk {
+      every { locationCaption } returns "1"
+    }
+    val secondItem: ListItem.SceneItem = mockk {
+      every { locationCaption } returns "1"
+    }
+    val scenes = listOf<ListItem>(firstItem, secondItem)
+    val reorderedScenes = listOf<ListItem>(secondItem, firstItem)
+    coEvery { reorderScenesUseCase(scenes, remoteId) } returns Unit
+    every { createProfileScenesListUseCase() } returns Observable.just(reorderedScenes)
+    viewModel.setState(SceneListViewState(scenes = scenes))
+    states.clear()
+
+    // when
+    viewModel.onDragStopped(remoteId)
+
+    // then
+    assertThat(states).containsExactly(
+      SceneListViewState(scenes = reorderedScenes)
+    )
+    assertThat(events).isEmpty()
+
+    coVerify { reorderScenesUseCase(scenes, remoteId) }
+    verify { createProfileScenesListUseCase() }
+    confirmVerified(createProfileScenesListUseCase, reorderScenesUseCase)
+    confirmDependencies()
   }
 
   @Test
   fun `on add group click should open supla cloud`() {
     // given
-    whenever(loadActiveProfileUrlUseCase.invoke()).thenReturn(Single.just(CloudUrl.DefaultCloud))
+    every { loadActiveProfileUrlUseCase() } returns Single.just(CloudUrl.DefaultCloud)
 
     // when
     viewModel.onAddGroupClick()
@@ -165,16 +357,16 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
     // then
     Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).containsExactly(SceneListViewEvent.NavigateToSuplaCloud)
-    verify(loadActiveProfileUrlUseCase).invoke()
-    verifyNoMoreInteractions(loadActiveProfileUrlUseCase)
-    verifyNoInteractionsExcept(loadActiveProfileUrlUseCase)
+    verify { loadActiveProfileUrlUseCase() }
+    confirmVerified(loadActiveProfileUrlUseCase)
+    confirmDependencies()
   }
 
   @Test
   fun `on add group click should open private cloud`() {
     // given
     val url: Uri = mockk()
-    whenever(loadActiveProfileUrlUseCase.invoke()).thenReturn(Single.just(CloudUrl.ServerUri(url)))
+    every { loadActiveProfileUrlUseCase() } returns Single.just(CloudUrl.ServerUri(url))
 
     // when
     viewModel.onAddGroupClick()
@@ -182,21 +374,21 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
     // then
     Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).containsExactly(SceneListViewEvent.NavigateToPrivateCloud(url))
-    verify(loadActiveProfileUrlUseCase).invoke()
-    verifyNoMoreInteractions(loadActiveProfileUrlUseCase)
-    verifyNoInteractionsExcept(loadActiveProfileUrlUseCase)
+    verify { loadActiveProfileUrlUseCase() }
+    confirmVerified(loadActiveProfileUrlUseCase)
+    confirmDependencies()
   }
 
-  private fun verifyNoInteractionsExcept(vararg except: Any) {
-    val allDependencies = listOf(
+  private fun confirmDependencies() {
+    confirmVerified(
       toggleLocationUseCase,
       createProfileScenesListUseCase,
-      reorderScenesUseCase
+      reorderScenesUseCase,
+      executeSimpleActionUseCase,
+      getSceneIconUseCase,
+      sceneRepository,
+      loadActiveProfileUrlUseCase,
+      dateProvider
     )
-    for (dependency in allDependencies) {
-      if (!except.contains(dependency)) {
-        verifyNoInteractions(dependency)
-      }
-    }
   }
 }

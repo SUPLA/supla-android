@@ -28,7 +28,7 @@ class ProvideGroupDetailTypeUseCase @Inject constructor() : BaseDetailTypeProvid
 
   operator fun invoke(group: ChannelGroupDataEntity): DetailType? =
     when (group.function) {
-      SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS -> ThermostatDetailType(listOf(DetailPage.THERMOSTAT_HEATPOL_GENERAL))
+      SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS -> StandardDetailType(listOf(DetailPage.THERMOSTAT_HEATPOL_GENERAL))
       else -> provide(group.function)
     }
 }

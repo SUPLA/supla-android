@@ -53,10 +53,10 @@ class StatusViewModel @Inject constructor(
   override val profileRepository: ProfileRepository,
   override val loginUseCase: LoginUseCase,
   override val authorizeUseCase: AuthorizeUseCase,
-  suplaSchedulers: SuplaSchedulers
+  override val schedulers: SuplaSchedulers
 ) : BaseViewModel<StatusViewState, StatusViewEvent>(
   defaultState = StatusViewState(),
-  schedulers = suplaSchedulers
+  schedulers = schedulers
 ),
   StatusViewScope,
   BaseAuthorizationViewModelScope {

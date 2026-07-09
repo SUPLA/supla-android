@@ -122,7 +122,7 @@ class SceneListViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  override fun swapItems(from: Int, to: Int): Boolean {
+  override fun moveItems(from: Int, to: Int): Boolean {
     var result = false
     updateState {
       val scenes = it.scenes?.toMutableList() ?: return@updateState it

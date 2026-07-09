@@ -1,28 +1,50 @@
 package org.supla.android.ui.dialogs.authorize
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
 
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+
+import io.mockk.MockKAnnotations
+import io.mockk.confirmVerified
 import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.impl.annotations.SpyK
 import io.mockk.mockk
+import io.mockk.slot
+import io.mockk.verify
 import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.tuple
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.times
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.R
-import org.supla.android.core.BaseViewModelTest
+import org.supla.android.core.CoroutineTest
+import org.supla.android.core.MainDispatcherRule
 import org.supla.android.core.networking.suplaclient.SuplaClientApi
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
-import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
+import org.supla.android.extensions.isNull
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.AuthorizationReason
@@ -32,60 +54,65 @@ import org.supla.android.usecases.client.LoginUseCase
 import org.supla.core.shared.infrastructure.LocalizedStringId
 import org.supla.core.shared.infrastructure.localizedString
 
-@RunWith(MockitoJUnitRunner::class)
-class BaseAuthorizationViewModelTest :
-  BaseViewModelTest<TestAuthorizationModelState, TestAuthorizationViewEvent, TestAuthorizationViewModel>() {
+@OptIn(ExperimentalCoroutinesApi::class)
+class BaseAuthorizationViewModelTest : CoroutineTest {
 
-  @Mock
+  @get:Rule
+  override val mainDispatcherRule = MainDispatcherRule()
+
+  @MockK
   private lateinit var suplaClientProvider: SuplaClientProvider
 
-  @Mock
+  @MockK
   private lateinit var profileRepository: ProfileRepository
 
-  @Mock
+  @MockK
   private lateinit var loginUseCase: LoginUseCase
 
-  @Mock
+  @MockK
   private lateinit var authorizeUseCase: AuthorizeUseCase
 
-  @Mock
+  @MockK
   override lateinit var schedulers: SuplaSchedulers
 
-  @InjectMocks
-  override lateinit var viewModel: TestAuthorizationViewModel
+  private val testScope = TestScope()
+
+  @SpyK
+  @InjectMockKs
+  private lateinit var viewModel: TestAuthorizationViewModel
 
   @Before
   override fun setUp() {
+    MockKAnnotations.init(this)
     super.setUp()
   }
 
   @Test
-  fun `should show authorization dialog`() {
+  fun `should show authorization dialog`() = testScope.runTest {
     // given
+    val email = "some-email@supla.org"
     val profile: ProfileEntity = mockk {
-      every { email } returns "some-email@supla.org"
-      every { isCloudAccount } returns true
+      every { this@mockk.email } returns email
+      every { this@mockk.isCloudAccount } returns true
     }
-    whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profile))
+    every { profileRepository.findActiveProfile() } returns Single.just(profile)
+    every { suplaClientProvider.provide() } returns null
 
     // when
     viewModel.showAuthorizationDialog()
+    advanceUntilIdle()
 
     // then
-    assertThat(states).containsExactly(
-      TestAuthorizationModelState(
-        authorizationDialogState = AuthorizationDialogState(
-          userName = "some-email@supla.org",
-          isCloudAccount = true,
-          userNameEnabled = false
-        )
-      )
-    )
-
-    verify(suplaClientProvider, times(2)).provide()
-    verify(profileRepository).findActiveProfile()
-    verifyNoMoreInteractions(suplaClientProvider, profileRepository)
-    verifyNoInteractions(loginUseCase, authorizeUseCase)
+    assertCreatedState {
+      assertThat(userName).isEqualTo(email)
+      assertThat(isCloudAccount).isTrue
+      assertThat(userNameEnabled).isFalse
+      assertThat(reason).isEqualTo(AuthorizationReason.Default)
+      assertThat(clarification).isNull
+    }
+    verify(exactly = 2) { suplaClientProvider.provide() }
+    verify { profileRepository.findActiveProfile() }
+    confirmAllDependenciesVerified()
   }
 
   @Test
@@ -95,302 +122,347 @@ class BaseAuthorizationViewModelTest :
       every { registered() } returns true
       every { isSuperUserAuthorized() } returns true
     }
-    whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
+    every { suplaClientProvider.provide() } returns suplaClient
 
     // when
     viewModel.showAuthorizationDialog()
 
     // then
-    assertThat(states).containsExactly(
-      TestAuthorizationModelState(
-        authorizationsCount = 1
-      )
-    )
-    verify(suplaClientProvider).provide()
-    verifyNoMoreInteractions(suplaClientProvider)
-    verifyNoInteractions(loginUseCase, authorizeUseCase, profileRepository)
+    verify { viewModel.onAuthorized(AuthorizationReason.Default) }
+    verify { suplaClientProvider.provide() }
+    confirmVerified(suplaClientProvider, loginUseCase, authorizeUseCase, profileRepository)
   }
 
   @Test
-  fun `shouldn't authorize when there is no supla client`() {
+  fun `shouldn't authorize when there is no supla client`() = testScope.runTest {
     // given
     val username = "username"
     val password = "password"
-    whenever(authorizeUseCase.invoke(username, password))
-      .thenReturn(Single.error(IllegalStateException("SuplaClient is null")))
+    val error = IllegalStateException("SuplaClient is null")
+    every { authorizeUseCase.invoke(username, password) } returns Single.error(error)
 
     // when
     viewModel.authorize(username, password)
+    advanceUntilIdle()
 
     // then
-    assertThat(states)
-      .extracting({ it.authorizationsCount }, { it.errors.count() }, { it.authorizationDialogState })
-      .containsExactly(tuple(0, 1, null))
-    assertThat(states[0].errors[0]).isInstanceOfAny(IllegalStateException::class.java)
+    assertUpdatedState(2) {
+      val firstUpdate = requireNotNull(it[0])
+      assertThat(firstUpdate.processing).isTrue
 
-    verify(authorizeUseCase).invoke(username, password)
-    verifyNoMoreInteractions(authorizeUseCase)
-    verifyNoInteractions(suplaClientProvider, loginUseCase, profileRepository)
+      val secondUpdate = requireNotNull(it[1])
+      assertThat(secondUpdate.processing).isFalse
+    }
+    verify { viewModel.onError(match { it is IllegalStateException && it.message == "SuplaClient is null" }) }
+    verify { authorizeUseCase.invoke(username, password) }
+    confirmVerified(authorizeUseCase, suplaClientProvider, loginUseCase, profileRepository)
   }
 
   @Test
-  fun `should authorize with success`() {
+  fun `should authorize with success`() = testScope.runTest {
     // given
     val userName = "test@supla.org"
     val password = "password"
-    whenever(authorizeUseCase.invoke(userName, password)).thenReturn(Single.just(AuthorizeUseCase.Result.Authorized))
+    every { authorizeUseCase.invoke(userName, password) } returns Single.just(AuthorizeUseCase.Result.Authorized)
 
     // when
     viewModel.authorize(userName, password)
+    advanceUntilIdle()
 
     // then
-    assertThat(states).containsExactly(
-      TestAuthorizationModelState(
-        authorizationsCount = 1
-      )
-    )
-    verify(authorizeUseCase).invoke(userName, password)
-    verifyNoMoreInteractions(authorizeUseCase)
-    verifyNoInteractions(loginUseCase, suplaClientProvider, profileRepository)
+    assertUpdatedState(2) {
+      val firstUpdate = requireNotNull(it[0])
+      assertThat(firstUpdate.processing).isTrue
+
+      val secondUpdate = requireNotNull(it[1])
+      assertThat(secondUpdate.processing).isFalse
+    }
+    verify { viewModel.onAuthorized(AuthorizationReason.Default) }
+    verify { authorizeUseCase.invoke(userName, password) }
+    confirmVerified(authorizeUseCase, loginUseCase, suplaClientProvider, profileRepository)
   }
 
   @Test
-  fun `should authorize with error`() {
+  fun `should not authorize without throwing an error`() = testScope.runTest {
     // given
     val userName = "test@supla.org"
     val password = "password"
-    whenever(authorizeUseCase.invoke(userName, password))
-      .thenReturn(Single.error(AuthorizationException.WithResource(R.string.incorrect_email_or_password)))
+    every { authorizeUseCase.invoke(userName, password) } returns
+      Single.error(AuthorizationException.WithResource(R.string.incorrect_email_or_password))
 
     val profile: ProfileEntity = mockk {
       every { email } returns userName
       every { isCloudAccount } returns true
     }
-    whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profile))
+    every { profileRepository.findActiveProfile() } returns Single.just(profile)
 
     val suplaClient: SuplaClientApi = mockk {
       every { registered() } returns false
     }
-    whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
+    every { suplaClientProvider.provide() } returns suplaClient
 
     // when
-    viewModel.showAuthorizationDialog()
+    viewModel.showAuthorizationDialog(reason = AuthorizationReason.ZWaveWizard)
+    advanceUntilIdle()
     viewModel.authorize(userName, password)
+    advanceUntilIdle()
 
     // then
-    assertThat(states)
-      .extracting(
-        { it.authorizationDialogState?.error },
-        { it.authorizationDialogState?.processing },
-        { it.errors.count() },
-        { it.authorizationsCount }
-      )
-      .containsExactly(
-        tuple(null, false, 0, 0),
-        tuple(null, true, 0, 0),
-        tuple(null, false, 0, 0),
-        tuple(localizedString(R.string.incorrect_email_or_password), false, 0, 0)
-      )
-    verify(suplaClientProvider, times(2)).provide()
-    verify(profileRepository).findActiveProfile()
-    verify(authorizeUseCase).invoke(userName, password)
-    verifyNoMoreInteractions(suplaClientProvider, authorizeUseCase, profileRepository)
-    verifyNoInteractions(loginUseCase)
+    assertUpdatedState(3) {
+      // from viewModel.showAuthorizationDialog
+      var state = requireNotNull(it[0])
+      assertThat(state.userName).isEqualTo(userName)
+      assertThat(state.isCloudAccount).isTrue
+      assertThat(state.userNameEnabled).isFalse
+      assertThat(state.reason).isEqualTo(AuthorizationReason.ZWaveWizard)
+      assertThat(state.clarification).isNull
+
+      // from viewModel.authorize()
+      state = requireNotNull(it[1])
+      assertThat(state.processing).isTrue
+
+      state = requireNotNull(it[2])
+      assertThat(state.processing).isFalse
+      assertThat(state.error).isEqualTo(localizedString(R.string.incorrect_email_or_password))
+    }
+    verify(exactly = 2) { suplaClientProvider.provide() }
+    verify { profileRepository.findActiveProfile() }
+    verify { authorizeUseCase.invoke(userName, password) }
+    confirmVerified(suplaClientProvider, authorizeUseCase, profileRepository, loginUseCase)
   }
 
   @Test
-  fun `should not authorize without throwing an error`() {
+  fun `should not authorize`() = testScope.runTest {
     // given
     val userName = "test@supla.org"
     val password = "password"
-    whenever(authorizeUseCase.invoke(userName, password))
-      .thenReturn(Single.just(AuthorizeUseCase.Result.Unauthorized))
+    every { authorizeUseCase.invoke(userName, password) } returns Single.just(AuthorizeUseCase.Result.Unauthorized)
 
     val profile: ProfileEntity = mockk {
       every { email } returns userName
       every { isCloudAccount } returns true
     }
-    whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profile))
+    every { profileRepository.findActiveProfile() } returns Single.just(profile)
 
     val suplaClient: SuplaClientApi = mockk {
       every { registered() } returns false
     }
-    whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
+    every { suplaClientProvider.provide() } returns suplaClient
 
     // when
     viewModel.showAuthorizationDialog()
+    advanceUntilIdle()
     viewModel.authorize(userName, password)
+    advanceUntilIdle()
 
     // then
-    assertThat(states)
-      .extracting(
-        { it.authorizationDialogState?.error },
-        { it.authorizationDialogState?.processing },
-        { it.errors.count() },
-        { it.authorizationsCount }
-      )
-      .containsExactly(
-        tuple(null, false, 0, 0),
-        tuple(null, true, 0, 0),
-        tuple(null, false, 0, 0),
-        tuple(localizedString(R.string.status_unknown_err), false, 0, 0)
-      )
-    verify(suplaClientProvider, times(2)).provide()
-    verify(profileRepository).findActiveProfile()
-    verify(authorizeUseCase).invoke(userName, password)
-    verifyNoMoreInteractions(suplaClientProvider, authorizeUseCase, profileRepository)
-    verifyNoInteractions(loginUseCase)
+    assertUpdatedState(4) {
+      // from viewModel.showAuthorizationDialog
+      var state = requireNotNull(it[0])
+      assertThat(state.userName).isEqualTo(userName)
+      assertThat(state.isCloudAccount).isTrue
+      assertThat(state.userNameEnabled).isFalse
+      assertThat(state.reason).isEqualTo(AuthorizationReason.Default)
+      assertThat(state.clarification).isNull
+
+      // from viewModel.authorize()
+      state = requireNotNull(it[1])
+      assertThat(state.processing).isTrue
+
+      state = requireNotNull(it[2])
+      assertThat(state.processing).isFalse
+
+      state = requireNotNull(it[3])
+      assertThat(state.error).isEqualTo(localizedString(R.string.status_unknown_err))
+    }
+
+    verify(exactly = 2) { suplaClientProvider.provide() }
+    verify { profileRepository.findActiveProfile() }
+    verify { authorizeUseCase.invoke(userName, password) }
+    confirmVerified(suplaClientProvider, authorizeUseCase, profileRepository, loginUseCase)
   }
 
   @Test
-  fun `should login with success`() {
+  fun `should login with success`() = testScope.runTest {
     // given
     val userName = "test@supla.org"
     val password = "password"
-    whenever(loginUseCase.invoke(userName, password)).thenReturn(Single.just(LoginUseCase.Result.Authorized))
+    every { loginUseCase.invoke(userName, password) } returns Single.just(LoginUseCase.Result.Authorized)
 
     // when
     viewModel.login(userName, password)
+    advanceUntilIdle()
 
     // then
-    assertThat(states).containsExactly(
-      TestAuthorizationModelState(
-        authorizationsCount = 1
-      )
-    )
-    verify(loginUseCase).invoke(userName, password)
-    verifyNoMoreInteractions(loginUseCase)
-    verifyNoInteractions(authorizeUseCase, suplaClientProvider, profileRepository)
+    verify { viewModel.onAuthorized(AuthorizationReason.Default) }
+    verify { loginUseCase.invoke(userName, password) }
+    confirmVerified(loginUseCase, authorizeUseCase, suplaClientProvider, profileRepository)
   }
 
   @Test
-  fun `should not login without throwing an error`() {
+  fun `should not login returning unauthorized`() = testScope.runTest {
     // given
     val userName = "test@supla.org"
     val password = "password"
-    whenever(loginUseCase.invoke(userName, password))
-      .thenReturn(Single.just(LoginUseCase.Result.Unauthorized))
+    every { loginUseCase.invoke(userName, password) } returns Single.just(LoginUseCase.Result.Unauthorized)
 
     val profile: ProfileEntity = mockk {
       every { email } returns userName
       every { isCloudAccount } returns true
     }
-    whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profile))
+    every { profileRepository.findActiveProfile() } returns Single.just(profile)
 
     val suplaClient: SuplaClientApi = mockk {
       every { registered() } returns false
     }
-    whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
+    every { suplaClientProvider.provide() } returns suplaClient
 
     // when
     viewModel.showAuthorizationDialog()
+    advanceUntilIdle()
     viewModel.login(userName, password)
+    advanceUntilIdle()
 
     // then
-    assertThat(states)
-      .extracting(
-        { it.authorizationDialogState?.error },
-        { it.authorizationDialogState?.processing },
-        { it.errors.count() },
-        { it.authorizationsCount }
-      )
-      .containsExactly(
-        tuple(null, false, 0, 0),
-        tuple(null, true, 0, 0),
-        tuple(null, false, 0, 0),
-        tuple(localizedString(R.string.status_unknown_err), false, 0, 0)
-      )
-    verify(suplaClientProvider, times(2)).provide()
-    verify(profileRepository).findActiveProfile()
-    verify(loginUseCase).invoke(userName, password)
-    verifyNoMoreInteractions(suplaClientProvider, loginUseCase, profileRepository)
-    verifyNoInteractions(authorizeUseCase)
+    assertUpdatedState(4) {
+      // from viewModel.showAuthorizationDialog
+      var state = requireNotNull(it[0])
+      assertThat(state.userName).isEqualTo(userName)
+      assertThat(state.isCloudAccount).isTrue
+      assertThat(state.userNameEnabled).isFalse
+      assertThat(state.reason).isEqualTo(AuthorizationReason.Default)
+      assertThat(state.clarification).isNull
+
+      // from viewModel.authorize()
+      state = requireNotNull(it[1])
+      assertThat(state.processing).isTrue
+
+      state = requireNotNull(it[2])
+      assertThat(state.processing).isFalse
+
+      state = requireNotNull(it[3])
+      assertThat(state.error).isEqualTo(localizedString(R.string.status_unknown_err))
+    }
+    verify(exactly = 2) { suplaClientProvider.provide() }
+    verify { profileRepository.findActiveProfile() }
+    verify { loginUseCase.invoke(userName, password) }
+    confirmVerified(suplaClientProvider, loginUseCase, profileRepository, authorizeUseCase)
   }
 
   @Test
-  fun `should login with error`() {
+  fun `should login with error`() = testScope.runTest {
     // given
     val userName = "test@supla.org"
     val password = "password"
     val exception = AuthorizationException.WithLocalizedString(localizedString(LocalizedStringId.RESULT_CODE_CLIENT_LIMIT_EXCEEDED))
-    whenever(loginUseCase.invoke(userName, password))
-      .thenReturn(Single.error(exception))
+    every { loginUseCase.invoke(userName, password) } returns Single.error(exception)
 
     val profile: ProfileEntity = mockk {
       every { email } returns userName
       every { isCloudAccount } returns true
     }
-    whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profile))
+    every { profileRepository.findActiveProfile() } returns Single.just(profile)
 
     val suplaClient: SuplaClientApi = mockk {
       every { registered() } returns false
     }
-    whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
+    every { suplaClientProvider.provide() } returns suplaClient
 
     // when
     viewModel.showAuthorizationDialog()
+    advanceUntilIdle()
     viewModel.login(userName, password)
+    advanceUntilIdle()
 
     // then
-    assertThat(states)
-      .extracting(
-        { it.authorizationDialogState?.error },
-        { it.authorizationDialogState?.processing },
-        { it.errors.count() },
-        { it.authorizationsCount }
-      )
-      .containsExactly(
-        tuple(null, false, 0, 0),
-        tuple(null, true, 0, 0),
-        tuple(null, false, 0, 0),
-        tuple(localizedString(LocalizedStringId.RESULT_CODE_CLIENT_LIMIT_EXCEEDED), false, 0, 0)
-      )
-    verify(suplaClientProvider, times(2)).provide()
-    verify(profileRepository).findActiveProfile()
-    verify(loginUseCase).invoke(userName, password)
-    verifyNoMoreInteractions(suplaClientProvider, loginUseCase, profileRepository)
-    verifyNoInteractions(authorizeUseCase)
+    assertUpdatedState(3) {
+      // from viewModel.showAuthorizationDialog
+      var state = requireNotNull(it[0])
+      assertThat(state.userName).isEqualTo(userName)
+      assertThat(state.isCloudAccount).isTrue
+      assertThat(state.userNameEnabled).isFalse
+      assertThat(state.reason).isEqualTo(AuthorizationReason.Default)
+      assertThat(state.clarification).isNull
+
+      // from viewModel.authorize()
+      state = requireNotNull(it[1])
+      assertThat(state.processing).isTrue
+
+      state = requireNotNull(it[2])
+      assertThat(state.processing).isFalse
+      assertThat(state.error).isEqualTo(localizedString(LocalizedStringId.RESULT_CODE_CLIENT_LIMIT_EXCEEDED))
+    }
+    verify(exactly = 2) { suplaClientProvider.provide() }
+    verify { profileRepository.findActiveProfile() }
+    verify { loginUseCase.invoke(userName, password) }
+    confirmVerified(suplaClientProvider, loginUseCase, profileRepository, authorizeUseCase)
+  }
+
+  private fun confirmAllDependenciesVerified() {
+    confirmVerified(
+      suplaClientProvider,
+      loginUseCase,
+      profileRepository,
+      authorizeUseCase
+    )
+  }
+
+  private fun assertCreatedState(assertions: AuthorizationDialogState.() -> Unit) {
+    val stateSlot = slot<(AuthorizationDialogState?) -> AuthorizationDialogState?>()
+    verify {
+      viewModel.updateAuthorizationDialogState(capture(stateSlot))
+    }
+    val state = stateSlot.captured.invoke(null)
+    assertThat(state).isNotNull
+
+    val stateNotNull = requireNotNull(state)
+    assertions.invoke(stateNotNull)
+  }
+
+  private fun assertUpdatedState(count: Int = 1, assertions: (List<AuthorizationDialogState?>) -> Unit) {
+    val captured = mutableListOf<(AuthorizationDialogState?) -> AuthorizationDialogState?>()
+    verify(exactly = count) {
+      viewModel.updateAuthorizationDialogState(capture(captured))
+    }
+    val initialState = AuthorizationDialogState(userName = "", isCloudAccount = false, userNameEnabled = false)
+
+    assertThat(captured.size).isEqualTo(count)
+    assertions.invoke(captured.map { it.invoke(initialState) })
   }
 }
 
 class TestAuthorizationViewModel(
-  suplaClientProvider: SuplaClientProvider,
-  profileRepository: ProfileRepository,
-  loginUseCase: LoginUseCase,
-  authorizeUseCase: AuthorizeUseCase,
-  schedulers: SuplaSchedulers
-) : BaseAuthorizationViewModel<TestAuthorizationModelState, TestAuthorizationViewEvent>(
-  suplaClientProvider,
-  profileRepository,
-  loginUseCase,
-  authorizeUseCase,
-  TestAuthorizationModelState(),
-  schedulers
-) {
+  override val suplaClientProvider: SuplaClientProvider,
+  override val profileRepository: ProfileRepository,
+  override val loginUseCase: LoginUseCase,
+  override val authorizeUseCase: AuthorizeUseCase,
+  override val schedulers: SuplaSchedulers,
+  private val testScope: TestScope
+) : BaseAuthorizationViewModelScope {
+
   override fun updateAuthorizationDialogState(updater: (AuthorizationDialogState?) -> AuthorizationDialogState?) {
-    updateState { it.copy(authorizationDialogState = updater(it.authorizationDialogState)) }
   }
+
+  override fun getAuthorizationDialogState(): AuthorizationDialogState? = null
 
   override fun onAuthorized(reason: AuthorizationReason) {
-    updateState { it.copy(authorizationsCount = it.authorizationsCount + 1) }
   }
 
-  override fun onError(error: Throwable) {
-    updateState { state ->
-      state.copy(
-        errors = mutableListOf<Throwable>().also {
-          it.add(error)
-          it.addAll(state.errors)
-        }
-      )
+  override fun launch(launcher: suspend CoroutineScope.() -> Unit) {
+    testScope.launch {
+      launcher()
     }
   }
+
+  override fun onAuthorizationDismiss() {
+  }
+
+  override fun onAuthorizationCancel() {
+  }
+
+  override fun onAuthorize(userName: String, password: String) {
+  }
+
+  override fun onStateChange(state: AuthorizationDialogState) {
+  }
 }
-
-data class TestAuthorizationModelState(
-  val authorizationsCount: Int = 0,
-  val errors: List<Throwable> = emptyList(),
-  override val authorizationDialogState: AuthorizationDialogState? = null,
-) : AuthorizationModelState()
-
-sealed class TestAuthorizationViewEvent : ViewEvent

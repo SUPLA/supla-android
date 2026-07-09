@@ -64,15 +64,15 @@ private const val REFRESH_INTERVAL_MS = 4000
 class StateDialogViewModel @Inject constructor(
   private val readChannelWithChildrenTreeUseCase: ReadChannelWithChildrenTreeUseCase,
   private val getChannelDefaultCaptionUseCase: GetChannelDefaultCaptionUseCase,
-  override val suplaClientProvider: SuplaClientProvider,
   private val onlineEventsManager: OnlineEventsManager,
-  override val profileRepository: ProfileRepository,
   private val getCaptionUseCase: GetCaptionUseCase,
+  private val dateProvider: DateProvider,
+  override val suplaClientProvider: SuplaClientProvider,
+  override val profileRepository: ProfileRepository,
   override val authorizeUseCase: AuthorizeUseCase,
   override val loginUseCase: LoginUseCase,
-  private val dateProvider: DateProvider,
-  suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper,
-  schedulers: SuplaSchedulers
+  override val schedulers: SuplaSchedulers,
+  suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper
 ) : BaseViewModel<StateDialogViewModelState, StateDialogViewEvent>(
   defaultState = StateDialogViewModelState(),
   schedulers = schedulers

@@ -49,7 +49,7 @@ class CaptionChangeViewModel @Inject constructor(
   override val suplaClientProvider: SuplaClientProvider,
   override val authorizeUseCase: AuthorizeUseCase,
   override val loginUseCase: LoginUseCase,
-  schedulers: SuplaSchedulers
+  override val schedulers: SuplaSchedulers
 ) : BaseViewModel<CaptionChangeViewModelState, CaptionChangeViewEvent>(
   CaptionChangeViewModelState(),
   schedulers

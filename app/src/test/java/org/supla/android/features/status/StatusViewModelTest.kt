@@ -30,8 +30,10 @@ import io.reactivex.rxjava3.core.Single
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.tuple
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.supla.android.core.BaseViewModelTest
+import org.supla.android.core.MainDispatcherRule
 import org.supla.android.core.networking.suplaclient.SuplaClientApi
 import org.supla.android.core.networking.suplaclient.SuplaClientEvent
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
@@ -51,6 +53,9 @@ import org.supla.android.usecases.client.LoginUseCase
 class StatusViewModelTest : BaseViewModelTest<StatusViewState, StatusViewEvent, StatusViewModel>(
   MockSchedulers.MOCKK
 ) {
+
+  @get:Rule
+  override val mainDispatcherRule = MainDispatcherRule()
 
   @MockK
   private lateinit var suplaClientStateHolder: SuplaClientStateHolder
@@ -170,7 +175,7 @@ class StatusViewModelTest : BaseViewModelTest<StatusViewState, StatusViewEvent, 
       state,
       StatusViewState(
         viewType = StatusViewState.ViewType.CONNECTING,
-        viewState = StatusViewState(stateText = StatusViewStateText.INITIALIZING)
+        stateText = StatusViewStateText.INITIALIZING
       )
     )
   }
@@ -188,7 +193,7 @@ class StatusViewModelTest : BaseViewModelTest<StatusViewState, StatusViewEvent, 
     assertThat(states).containsExactly(
       StatusViewState(
         viewType = StatusViewState.ViewType.CONNECTING,
-        viewState = StatusViewState(stateText = StatusViewStateText.CONNECTING)
+        stateText = StatusViewStateText.CONNECTING
       )
     )
   }
@@ -206,7 +211,7 @@ class StatusViewModelTest : BaseViewModelTest<StatusViewState, StatusViewEvent, 
     assertThat(states).containsExactly(
       StatusViewState(
         viewType = StatusViewState.ViewType.CONNECTING,
-        viewState = StatusViewState(stateText = StatusViewStateText.DISCONNECTING)
+        stateText = StatusViewStateText.DISCONNECTING
       )
     )
   }
@@ -217,7 +222,7 @@ class StatusViewModelTest : BaseViewModelTest<StatusViewState, StatusViewEvent, 
     every { disconnectUseCase.invoke() } returns Completable.complete()
 
     // when
-    viewModel.cancelAndOpenProfiles()
+    viewModel.onCancelAndGoToProfilesClick()
 
     // then
     assertThat(events).containsExactly(StatusViewEvent.NavigateToProfiles)
@@ -230,7 +235,7 @@ class StatusViewModelTest : BaseViewModelTest<StatusViewState, StatusViewEvent, 
     every { suplaClientStateHolder.handleEvent(SuplaClientEvent.Initialized) } answers {}
 
     // when
-    viewModel.tryAgainClick()
+    viewModel.onTryAgain()
 
     // then
     verify { suplaClientStateHolder.handleEvent(SuplaClientEvent.Initialized) }

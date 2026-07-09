@@ -18,13 +18,12 @@ package org.supla.android.ui.dialogs.authorize
  */
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.rx3.await
-import kotlinx.coroutines.withContext
 import org.supla.android.R
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.ProfileRepository
+import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.AuthorizationDialogScope
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.AuthorizationReason
@@ -41,6 +40,7 @@ interface BaseAuthorizationViewModelScope : AuthorizationDialogScope {
   val profileRepository: ProfileRepository
   val loginUseCase: LoginUseCase
   val authorizeUseCase: AuthorizeUseCase
+  val schedulers: SuplaSchedulers
 
   fun updateAuthorizationDialogState(updater: (AuthorizationDialogState?) -> AuthorizationDialogState?)
 
@@ -80,7 +80,7 @@ interface BaseAuthorizationViewModelScope : AuthorizationDialogScope {
     }
 
     launch {
-      val profile = withContext(Dispatchers.IO) {
+      val profile = schedulers.io {
         runCatching { profileRepository.findActiveProfile().await() }.getOrNull()
       } ?: return@launch
 
@@ -106,7 +106,7 @@ interface BaseAuthorizationViewModelScope : AuthorizationDialogScope {
     launch {
       try {
         updateAuthorizationDialogState { it?.copy(processing = true) }
-        val result = withContext(Dispatchers.IO) { authorizeUseCase(userName, password).await() }
+        val result = schedulers.io { authorizeUseCase(userName, password).await() }
         updateAuthorizationDialogState { it?.copy(processing = false) }
 
         // Success
@@ -119,9 +119,10 @@ interface BaseAuthorizationViewModelScope : AuthorizationDialogScope {
         // Failure
         if (error is AuthorizationException) {
           updateAuthorizationDialogState { state ->
-            state?.copy(error = error.localizedErrorMessage)
+            state?.copy(error = error.localizedErrorMessage, processing = false)
           }
         } else {
+          updateAuthorizationDialogState { it?.copy(processing = false) }
           onError(error)
         }
       }
@@ -132,7 +133,7 @@ interface BaseAuthorizationViewModelScope : AuthorizationDialogScope {
     launch {
       try {
         updateAuthorizationDialogState { it?.copy(processing = true) }
-        val result = withContext(Dispatchers.IO) { loginUseCase(userName, password).await() }
+        val result = schedulers.io { loginUseCase(userName, password).await() }
         updateAuthorizationDialogState { it?.copy(processing = false) }
 
         // Success
@@ -145,9 +146,10 @@ interface BaseAuthorizationViewModelScope : AuthorizationDialogScope {
         // Failure
         if (error is AuthorizationException) {
           updateAuthorizationDialogState { state ->
-            state?.copy(error = error.localizedErrorMessage)
+            state?.copy(error = error.localizedErrorMessage, processing = false)
           }
         } else {
+          updateAuthorizationDialogState { it?.copy(processing = false) }
           onError(error)
         }
       }

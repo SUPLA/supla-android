@@ -43,9 +43,7 @@ import org.supla.android.usecases.channel.GroupActionUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideGroupDetailTypeUseCase
-import org.supla.android.usecases.details.RgbwDetailType
 import org.supla.android.usecases.details.StandardDetailType
-import org.supla.android.usecases.details.ThermostatDetailType
 import org.supla.android.usecases.group.CreateProfileGroupsListUseCase
 import org.supla.android.usecases.group.GroupToListItemMapper
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
@@ -177,8 +175,6 @@ class GroupListViewModel @Inject constructor(
     when (val detailType = provideGroupDetailTypeUseCase(group)) {
       is LegacyDetailType -> sendEvent(GroupListViewEvent.OpenLegacyDetail(group.remoteId, detailType))
       is StandardDetailType -> sendEvent(GroupListViewEvent.OpenDetail(ItemBundle.from(group), detailType.pages))
-      is RgbwDetailType -> sendEvent(GroupListViewEvent.OpenDetail(ItemBundle.from(group), detailType.pages))
-      is ThermostatDetailType -> sendEvent(GroupListViewEvent.OpenDetail(ItemBundle.from(group), detailType.pages))
       else -> {} // no action
     }
   }
@@ -191,7 +187,7 @@ class GroupListViewModel @Inject constructor(
     performAction(remoteId, ButtonType.RIGHT)
   }
 
-  override fun swapItems(from: Int, to: Int): Boolean {
+  override fun moveItems(from: Int, to: Int): Boolean {
     var result = false
     updateState {
       val groups = it.groups?.toMutableList() ?: return@updateState it

@@ -29,7 +29,7 @@ class ReorderScenesUseCase @Inject constructor(
 ) {
 
   suspend operator fun invoke(items: List<ListItem>, movedItemId: Int) {
-    val moved = items.filterIsInstance<ListItem.GroupItem>().firstOrNull { it.remoteId == movedItemId } ?: return
+    val moved = items.filterIsInstance<ListItem.SceneItem>().firstOrNull { it.remoteId == movedItemId } ?: return
 
     val locations = items.filterIsInstance<ListItem.LocationItem>().filter { it.userCaption == moved.locationCaption }
     if (locations.isEmpty()) {
@@ -44,9 +44,9 @@ class ReorderScenesUseCase @Inject constructor(
 
     val orderedScenes =
       if (useId) {
-        items.filterIsInstance<ListItem.GroupItem>().filter { it.locationId == moved.locationId }
+        items.filterIsInstance<ListItem.SceneItem>().filter { it.locationId == moved.locationId }
       } else {
-        items.filterIsInstance<ListItem.GroupItem>().filter { it.locationCaption == moved.locationCaption }
+        items.filterIsInstance<ListItem.SceneItem>().filter { it.locationCaption == moved.locationCaption }
       }
 
     var position = 1
