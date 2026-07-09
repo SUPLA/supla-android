@@ -54,13 +54,13 @@ class MainListViewModel @Inject constructor(
   override val profileRepository: ProfileRepository,
   override val authorizeUseCase: AuthorizeUseCase,
   override val loginUseCase: LoginUseCase,
+  override val schedulers: SuplaSchedulers,
   private val activateProfileUseCase: ActivateProfileUseCase,
   private val applicationPreferences: ApplicationPreferences,
   private val readAllProfilesUseCase: ReadAllProfilesUseCase,
   private val encryptedPreferences: EncryptedPreferences,
-  private val channelRepository: ChannelRepository,
   private val notificationsHelper: NotificationsHelper,
-  private val schedulers: SuplaSchedulers
+  private val channelRepository: ChannelRepository
 ) : EventBasedViewModel<MainListViewEvent>(), BaseAuthorizationViewModelScope {
 
   private val authorizationDialogStateFlow: MutableStateFlow<AuthorizationDialogState?> = MutableStateFlow(null)

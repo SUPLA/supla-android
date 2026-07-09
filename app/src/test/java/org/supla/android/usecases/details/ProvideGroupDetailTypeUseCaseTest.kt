@@ -36,20 +36,20 @@ class ProvideGroupDetailTypeUseCaseTest {
 
   @Test
   fun `should provide detail for dimmer`() {
-    testDetailType(SuplaFunction.DIMMER, RgbwDetailType(listOf(DetailPage.DIMMER)))
+    testDetailType(SuplaFunction.DIMMER, StandardDetailType(listOf(DetailPage.DIMMER)))
   }
 
   @Test
   fun `should provide detail for dimmer and RGB`() {
     testDetailType(
       SuplaFunction.DIMMER_AND_RGB_LIGHTING,
-      RgbwDetailType(listOf(DetailPage.RGB, DetailPage.DIMMER))
+      StandardDetailType(listOf(DetailPage.RGB, DetailPage.DIMMER))
     )
   }
 
   @Test
   fun `should provide detail for RGB`() {
-    testDetailType(SuplaFunction.RGB_LIGHTING, RgbwDetailType(listOf(DetailPage.RGB)))
+    testDetailType(SuplaFunction.RGB_LIGHTING, StandardDetailType(listOf(DetailPage.RGB)))
   }
 
   @Test
@@ -98,39 +98,39 @@ class ProvideGroupDetailTypeUseCaseTest {
 
   @Test
   fun `should provide detail for electricity IC`() {
-    testDetailType(SuplaFunction.IC_ELECTRICITY_METER, IcDetailType(listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY)))
+    testDetailType(SuplaFunction.IC_ELECTRICITY_METER, StandardDetailType(listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY)))
   }
 
   @Test
   fun `should provide detail for gas IC`() {
-    testDetailType(SuplaFunction.IC_GAS_METER, IcDetailType(listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY)))
+    testDetailType(SuplaFunction.IC_GAS_METER, StandardDetailType(listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY)))
   }
 
   @Test
   fun `should provide detail for water IC`() {
-    testDetailType(SuplaFunction.IC_WATER_METER, IcDetailType(listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY)))
+    testDetailType(SuplaFunction.IC_WATER_METER, StandardDetailType(listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY)))
   }
 
   @Test
   fun `should provide detail for heat IC`() {
-    testDetailType(SuplaFunction.IC_HEAT_METER, IcDetailType(listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY)))
+    testDetailType(SuplaFunction.IC_HEAT_METER, StandardDetailType(listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY)))
   }
 
   @Test
   fun `should provide detail for thermometer`() {
-    testDetailType(SuplaFunction.THERMOMETER, ThermometerDetailType(listOf(DetailPage.THERMOMETER_HISTORY)))
+    testDetailType(SuplaFunction.THERMOMETER, StandardDetailType(listOf(DetailPage.THERMOMETER_HISTORY)))
   }
 
   @Test
   fun `should provide detail for thermometer with humidity`() {
-    testDetailType(SuplaFunction.HUMIDITY_AND_TEMPERATURE, ThermometerDetailType(listOf(DetailPage.THERMOMETER_HISTORY)))
+    testDetailType(SuplaFunction.HUMIDITY_AND_TEMPERATURE, StandardDetailType(listOf(DetailPage.THERMOMETER_HISTORY)))
   }
 
   @Test
   fun `should provide detail for HP thermostat`() {
     testDetailType(
       SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS,
-      ThermostatDetailType(listOf(DetailPage.THERMOSTAT_HEATPOL_GENERAL))
+      StandardDetailType(listOf(DetailPage.THERMOSTAT_HEATPOL_GENERAL))
     )
   }
 
@@ -157,7 +157,7 @@ class ProvideGroupDetailTypeUseCaseTest {
   fun `should provide detail for hvac thermostat heat`() {
     testDetailType(
       SuplaFunction.HVAC_THERMOSTAT,
-      ThermostatDetailType(listOf(DetailPage.THERMOSTAT, DetailPage.SCHEDULE, DetailPage.THERMOSTAT_TIMER, DetailPage.THERMOSTAT_HISTORY))
+      StandardDetailType(listOf(DetailPage.THERMOSTAT, DetailPage.SCHEDULE, DetailPage.THERMOSTAT_TIMER, DetailPage.THERMOSTAT_HISTORY))
     )
   }
 
@@ -168,12 +168,12 @@ class ProvideGroupDetailTypeUseCaseTest {
 
   @Test
   fun `should provide detail for general purpose measurement`() {
-    testDetailType(SuplaFunction.GENERAL_PURPOSE_MEASUREMENT, GpmDetailType(listOf(DetailPage.GPM_HISTORY)))
+    testDetailType(SuplaFunction.GENERAL_PURPOSE_MEASUREMENT, StandardDetailType(listOf(DetailPage.GPM_HISTORY)))
   }
 
   @Test
   fun `should provide detail for general purpose meter`() {
-    testDetailType(SuplaFunction.GENERAL_PURPOSE_METER, GpmDetailType(listOf(DetailPage.GPM_HISTORY)))
+    testDetailType(SuplaFunction.GENERAL_PURPOSE_METER, StandardDetailType(listOf(DetailPage.GPM_HISTORY)))
   }
 
   @Test

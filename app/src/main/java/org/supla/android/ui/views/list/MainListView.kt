@@ -55,7 +55,7 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 interface MainListScope {
   fun onLeftButtonClick(remoteId: Int)
   fun onRightButtonClick(remoteId: Int)
-  fun swapItems(from: Int, to: Int): Boolean
+  fun moveItems(from: Int, to: Int): Boolean
   fun onDragStopped(remoteId: Int)
   fun onLocationClick(remoteId: Int)
   fun onItemClick(remoteId: Int)
@@ -78,7 +78,7 @@ fun MainListScope.ListView(
   val reorderableLazyListState = rememberReorderableLazyListState(
     lazyListState = lazyListState
   ) { from, to ->
-    swapItems(from.index, to.index)
+    moveItems(from.index, to.index)
   }
 
   val slideableController = LocalSlideableController.current

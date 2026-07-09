@@ -174,34 +174,10 @@ class NotificationsLogViewModelTest : BaseViewModelTest<NotificationsLogViewStat
     every { loadAllNotificationsUseCase.invoke(searchText) } returns Observable.just(emptyList())
 
     // when
-    viewModel.search(searchText)
+    viewModel.setFilterString(searchText)
 
     // then
     verify(exactly = 1) { loadAllNotificationsUseCase(searchText) }
-    confirmVerified(loadAllNotificationsUseCase)
-  }
-
-  @Test
-  fun `should not call filtered use case again when filter did not change`() {
-    // given
-    val searchText = "abc"
-    every { loadAllNotificationsUseCase.invoke(searchText) } returns Observable.just(emptyList())
-
-    // when
-    viewModel.search(searchText)
-    viewModel.search(searchText)
-
-    // then
-    verify(exactly = 1) { loadAllNotificationsUseCase(searchText) }
-    confirmVerified(loadAllNotificationsUseCase)
-  }
-
-  @Test
-  fun `should not call anything when filter length after trim is less than or equal to 2 and there was no previous filter`() {
-    // when
-    viewModel.search("a")
-
-    // then
     confirmVerified(loadAllNotificationsUseCase)
   }
 
@@ -213,10 +189,10 @@ class NotificationsLogViewModelTest : BaseViewModelTest<NotificationsLogViewStat
     every { loadAllNotificationsUseCase.invoke(firstSearch) } returns Observable.just(emptyList())
     every { loadAllNotificationsUseCase.invoke() } returns Observable.just(emptyList())
 
-    viewModel.search(firstSearch)
+    viewModel.setFilterString(firstSearch)
 
     // when
-    viewModel.search(secondSearch)
+    viewModel.setFilterString(secondSearch)
 
     // then
     verify {
@@ -235,8 +211,8 @@ class NotificationsLogViewModelTest : BaseViewModelTest<NotificationsLogViewStat
     every { loadAllNotificationsUseCase.invoke(secondSearch) } returns Observable.just(emptyList())
 
     // when
-    viewModel.search(firstSearch)
-    viewModel.search(secondSearch)
+    viewModel.setFilterString(firstSearch)
+    viewModel.setFilterString(secondSearch)
 
     // then
     verify {

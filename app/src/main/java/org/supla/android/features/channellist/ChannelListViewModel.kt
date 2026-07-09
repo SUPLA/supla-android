@@ -45,15 +45,9 @@ import org.supla.android.usecases.channel.CreateProfileChannelsListUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.channel.ReorderChannelsUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
-import org.supla.android.usecases.details.GpmDetailType
-import org.supla.android.usecases.details.HumidityDetailType
-import org.supla.android.usecases.details.IcDetailType
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideChannelDetailTypeUseCase
-import org.supla.android.usecases.details.RgbwDetailType
 import org.supla.android.usecases.details.StandardDetailType
-import org.supla.android.usecases.details.ThermometerDetailType
-import org.supla.android.usecases.details.ThermostatDetailType
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 import javax.inject.Inject
@@ -159,13 +153,7 @@ class ChannelListViewModel @Inject constructor(
     }
 
     when (val detailType = provideChannelDetailTypeUseCase(data)) {
-      is ThermometerDetailType -> sendEvent(ChannelListViewEvent.OpenDetail(ItemBundle.from(channel), detailType.pages))
-      is GpmDetailType -> sendEvent(ChannelListViewEvent.OpenDetail(ItemBundle.from(channel), detailType.pages))
-      is HumidityDetailType -> sendEvent(ChannelListViewEvent.OpenDetail(ItemBundle.from(channel), detailType.pages))
       is StandardDetailType -> sendEvent(ChannelListViewEvent.OpenDetail(ItemBundle.from(channel), detailType.pages))
-      is ThermostatDetailType -> sendEvent(ChannelListViewEvent.OpenDetail(ItemBundle.from(channel), detailType.pages))
-      is IcDetailType -> sendEvent(ChannelListViewEvent.OpenDetail(ItemBundle.from(channel), detailType.pages))
-      is RgbwDetailType -> sendEvent(ChannelListViewEvent.OpenDetail(ItemBundle.from(channel), detailType.pages))
       is LegacyDetailType -> sendEvent(ChannelListViewEvent.OpenLegacyDetail(channel.remoteId, detailType))
       null -> {} // no action
     }
@@ -187,7 +175,7 @@ class ChannelListViewModel @Inject constructor(
     performAction(remoteId, ButtonType.RIGHT)
   }
 
-  override fun swapItems(from: Int, to: Int): Boolean {
+  override fun moveItems(from: Int, to: Int): Boolean {
     var result = false
     updateState {
       val channels = it.channels?.toMutableList() ?: return@updateState it

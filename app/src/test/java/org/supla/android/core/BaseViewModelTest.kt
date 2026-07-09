@@ -42,7 +42,6 @@ import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.extensions.isNotNull
 import org.supla.android.testhelpers.StdoutTree
-import org.supla.android.tools.SuplaSchedulers
 import timber.log.Timber
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.isAccessible
@@ -50,11 +49,10 @@ import kotlin.reflect.jvm.isAccessible
 @OptIn(ExperimentalCoroutinesApi::class)
 abstract class BaseViewModelTest<S : ViewState, E : ViewEvent, VM : BaseViewModel<S, E>>(
   private val mockSchedulers: MockSchedulers = MockSchedulers.MOCK
-) {
+) : CoroutineTest {
 
-  protected abstract val schedulers: SuplaSchedulers
   protected abstract val viewModel: VM
-  open val mainDispatcherRule: MainDispatcherRule? = null
+  override val mainDispatcherRule: MainDispatcherRule? = null
 
   protected val states = mutableListOf<S>()
   protected val events = mutableListOf<E>()
@@ -62,7 +60,7 @@ abstract class BaseViewModelTest<S : ViewState, E : ViewEvent, VM : BaseViewMode
   protected val testScheduler = TestScheduler()
 
   @CallSuper
-  open fun setUp() {
+  override fun setUp() {
     Timber.uprootAll()
     Timber.plant(StdoutTree())
     states.clear()
