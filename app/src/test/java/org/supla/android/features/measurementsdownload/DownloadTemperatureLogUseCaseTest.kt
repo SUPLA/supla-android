@@ -32,9 +32,6 @@ import okhttp3.Headers
 import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentMatchers.eq
-import org.mockito.kotlin.any
-import org.mockito.kotlin.verify
 import org.supla.android.data.source.TemperatureLogRepository
 import org.supla.android.data.source.local.entity.measurements.TemperatureLogEntity
 import org.supla.android.data.source.remote.rest.SuplaCloudService

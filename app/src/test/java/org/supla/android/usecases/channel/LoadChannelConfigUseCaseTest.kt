@@ -18,18 +18,15 @@ package org.supla.android.usecases.channel
  */
 
 import android.annotation.SuppressLint
-import io.mockk.every
-import io.mockk.mockk
+import io.mockk.*
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.whenever
 import org.supla.android.data.source.ChannelConfigRepository
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.ChannelEntity
@@ -38,17 +35,21 @@ import org.supla.android.data.source.remote.SuplaChannelConfig
 import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
 
-@RunWith(MockitoJUnitRunner::class)
 class LoadChannelConfigUseCaseTest {
 
-  @Mock
+  @MockK
   private lateinit var channelConfigRepository: ChannelConfigRepository
 
-  @Mock
+  @MockK
   private lateinit var channelRepository: ChannelRepository
 
-  @InjectMocks
+  @InjectMockKs
   private lateinit var useCase: LoadChannelConfigUseCase
+
+  @Before
+  fun setUp() {
+    MockKAnnotations.init(this)
+  }
 
   @Test
   fun `should load general purpose measurement config`() {
@@ -60,9 +61,9 @@ class LoadChannelConfigUseCaseTest {
       every { this@mockk.profileId } returns profileId
     }
     val config: SuplaChannelConfig = mockk()
-    whenever(channelRepository.findByRemoteId(remoteId)).thenReturn(Maybe.just(channelEntity))
-    whenever(channelConfigRepository.findChannelConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_MEASUREMENT))
-      .thenReturn(Single.just(config))
+    every { channelRepository.findByRemoteId(remoteId) } returns Maybe.just(channelEntity)
+    every { channelConfigRepository.findChannelConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_MEASUREMENT) } returns
+      Single.just(config)
 
     // when
     val resultConfig = useCase(remoteId).test()
@@ -82,9 +83,9 @@ class LoadChannelConfigUseCaseTest {
       every { this@mockk.profileId } returns profileId
     }
     val config: SuplaChannelConfig = mockk()
-    whenever(channelRepository.findByRemoteId(remoteId)).thenReturn(Maybe.just(channelEntity))
-    whenever(channelConfigRepository.findChannelConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER))
-      .thenReturn(Single.just(config))
+    every { channelRepository.findByRemoteId(remoteId) } returns Maybe.just(channelEntity)
+    every { channelConfigRepository.findChannelConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER) } returns
+      Single.just(config)
 
     // when
     val resultConfig = useCase(remoteId).test()
@@ -103,7 +104,7 @@ class LoadChannelConfigUseCaseTest {
       every { function } returns SuplaFunction.ALARM
       every { profileId } returns 1L
     }
-    whenever(channelRepository.findByRemoteId(remoteId)).thenReturn(Maybe.just(channelEntity))
+    every { channelRepository.findByRemoteId(remoteId) } returns Maybe.just(channelEntity)
 
     // when
     val throwable = catchThrowable {

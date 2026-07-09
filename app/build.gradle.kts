@@ -202,8 +202,6 @@ dependencies {
   testImplementation(libs.testing.coroutines)
   testImplementation(libs.testing.mockk)
   testImplementation(libs.testing.assertj)
-  testImplementation(libs.testing.mockito)
-  testImplementation(libs.testing.mockito.kotlin)
   testImplementation(libs.testing.androidx)
   testImplementation(libs.testing.androidx.navigation)
   testImplementation(libs.testing.androidx.runner)

@@ -36,7 +36,6 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description
-import org.mockito.kotlin.whenever
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
@@ -48,7 +47,7 @@ import kotlin.reflect.jvm.isAccessible
 
 @OptIn(ExperimentalCoroutinesApi::class)
 abstract class BaseViewModelTest<S : ViewState, E : ViewEvent, VM : BaseViewModel<S, E>>(
-  private val mockSchedulers: MockSchedulers = MockSchedulers.MOCK
+  private val mockSchedulers: MockSchedulers = MockSchedulers.MOCKK
 ) : CoroutineTest {
 
   protected abstract val viewModel: VM
@@ -67,10 +66,6 @@ abstract class BaseViewModelTest<S : ViewState, E : ViewEvent, VM : BaseViewMode
     events.clear()
 
     when (mockSchedulers) {
-      MockSchedulers.MOCK -> {
-        whenever(schedulers.io).thenReturn(Schedulers.trampoline())
-        whenever(schedulers.ui).thenReturn(Schedulers.trampoline())
-      }
       MockSchedulers.MOCKK -> {
         every { schedulers.io } returns Schedulers.trampoline()
         every { schedulers.ui } returns Schedulers.trampoline()
@@ -100,7 +95,7 @@ abstract class BaseViewModelTest<S : ViewState, E : ViewEvent, VM : BaseViewMode
   }
 
   enum class MockSchedulers {
-    MOCK, MOCKK, NONE
+    MOCKK, NONE
   }
 
   @Suppress("UNCHECKED_CAST")

@@ -2,33 +2,28 @@ package org.supla.android.widget
 
 import android.appwidget.AppWidgetManager
 import android.content.Context
+import io.mockk.MockKAnnotations
+import io.mockk.Runs
 import io.mockk.confirmVerified
 import io.mockk.every
+import io.mockk.impl.annotations.MockK
+import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkStatic
+import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.any
-import org.mockito.kotlin.argThat
-import org.mockito.kotlin.eq
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.extensions.getAllWidgetIds
 import org.supla.android.extensions.getOnOffWidgetIds
 import org.supla.android.extensions.getSingleWidgetIds
 import org.supla.android.lib.actions.SubjectType
 import org.supla.core.shared.data.model.general.SuplaFunction
 
-@RunWith(MockitoJUnitRunner::class)
 class WidgetManagerTest {
-  @Mock
+  @MockK
   private lateinit var context: Context
 
-  @Mock
+  @MockK
   private lateinit var widgetPreferences: WidgetPreferences
 
   private lateinit var appWidgetManager: AppWidgetManager
@@ -37,6 +32,7 @@ class WidgetManagerTest {
 
   @Before
   fun setUp() {
+    MockKAnnotations.init(this)
     appWidgetManager = mockk()
     mockkStatic("org.supla.android.extensions.WidgetExtensionsKt")
     manager = WidgetManager(context, appWidgetManager, widgetPreferences)
@@ -61,7 +57,10 @@ class WidgetManagerTest {
       1,
       2
     )
-    whenever(widgetPreferences.getWidgetConfiguration(widgetId)).thenReturn(widgetConfiguration)
+    every { widgetPreferences.getWidgetConfiguration(widgetId) } returns widgetConfiguration
+    every { widgetPreferences.setWidgetConfiguration(widgetId, match { it.profileId == INVALID_LONG }) } just Runs
+
+    every { context.sendBroadcast(any()) } just Runs
 
     every { appWidgetManager.getAllWidgetIds(context) } returns intArrayOf(widgetId)
     every { appWidgetManager.getOnOffWidgetIds(context) } returns intArrayOf(widgetId)
@@ -72,18 +71,14 @@ class WidgetManagerTest {
     manager.onProfileRemoved(profileId)
 
     // then
-    verify(widgetPreferences).getWidgetConfiguration(widgetId)
-    verify(widgetPreferences).setWidgetConfiguration(
-      eq(widgetId),
-      argThat { conf -> conf.profileId == INVALID_LONG }
-    )
-    verify(context).sendBroadcast(any())
-    io.mockk.verify {
+    verify {
+      widgetPreferences.getWidgetConfiguration(widgetId)
+      widgetPreferences.setWidgetConfiguration(widgetId, match { it.profileId == INVALID_LONG })
+      context.sendBroadcast(any())
       appWidgetManager.getAllWidgetIds(context)
       appWidgetManager.getOnOffWidgetIds(context)
       appWidgetManager.getSingleWidgetIds(context)
     }
-    confirmVerified(appWidgetManager)
-    verifyNoMoreInteractions(widgetPreferences, context)
+    confirmVerified(appWidgetManager, widgetPreferences, context)
   }
 }

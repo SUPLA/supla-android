@@ -1,28 +1,27 @@
 package org.supla.android.features.deleteaccountweb
 
+import io.mockk.*
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.tools.SuplaSchedulers
 
-@RunWith(MockitoJUnitRunner::class)
 class DeleteAccountWebViewModelTest : BaseViewModelTest<DeleteAccountWebViewState, DeleteAccountWebViewEvent, DeleteAccountWebViewModel>(
   mockSchedulers = MockSchedulers.NONE
 ) {
 
-  @Mock
+  @MockK
   override lateinit var schedulers: SuplaSchedulers
 
-  @InjectMocks
+  @InjectMockKs
   override lateinit var viewModel: DeleteAccountWebViewModel
 
   @Before
   override fun setUp() {
+    MockKAnnotations.init(this)
     super.setUp()
   }
 

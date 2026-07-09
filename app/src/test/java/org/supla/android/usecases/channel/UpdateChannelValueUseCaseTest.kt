@@ -17,24 +17,16 @@ package org.supla.android.usecases.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import io.mockk.confirmVerified
-import io.mockk.every
-import io.mockk.mockk
+import io.mockk.*
+import io.mockk.Called
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.any
-import org.mockito.kotlin.argumentCaptor
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.data.model.general.EntityUpdateResult
 import org.supla.android.data.source.ChannelValueRepository
 import org.supla.android.data.source.ProfileRepository
@@ -44,17 +36,21 @@ import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStat
 import org.supla.android.testhelpers.suplaChannel
 import org.supla.android.testhelpers.suplaChannelValue
 
-@RunWith(MockitoJUnitRunner::class)
 class UpdateChannelValueUseCaseTest {
 
-  @Mock
+  @MockK
   private lateinit var profileRepository: ProfileRepository
 
-  @Mock
+  @MockK
   private lateinit var channelValueRepository: ChannelValueRepository
 
-  @InjectMocks
+  @InjectMockKs
   private lateinit var useCase: UpdateChannelValueUseCase
+
+  @Before
+  fun setUp() {
+    MockKAnnotations.init(this)
+  }
 
   @Test
   fun `should insert value`() {
@@ -67,9 +63,9 @@ class UpdateChannelValueUseCaseTest {
       every { id } returns profileId
     }
 
-    whenever(channelValueRepository.findByRemoteId(channelRemoteId)).thenReturn(Maybe.empty())
-    whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profileEntity))
-    whenever(channelValueRepository.insert(any())).thenReturn(Completable.complete())
+    every { channelValueRepository.findByRemoteId(channelRemoteId) } returns Maybe.empty()
+    every { profileRepository.findActiveProfile() } returns Single.just(profileEntity)
+    every { channelValueRepository.insert(any()) } returns Completable.complete()
 
     // when
     val result = useCase.invoke(suplaChannel).test()
@@ -78,18 +74,18 @@ class UpdateChannelValueUseCaseTest {
     result.assertComplete()
     result.assertResult(EntityUpdateResult.UPDATED)
 
-    verify(channelValueRepository).findByRemoteId(channelRemoteId)
-    verify(profileRepository).findActiveProfile()
+    verify { channelValueRepository.findByRemoteId(channelRemoteId) }
+    verify { profileRepository.findActiveProfile() }
 
-    val captor = argumentCaptor<ChannelValueEntity>()
-    verify(channelValueRepository).insert(captor.capture())
-    with(captor.firstValue) {
+    val captor = slot<ChannelValueEntity>()
+    verify { channelValueRepository.insert(capture(captor)) }
+    with(captor.captured) {
       assertThat(this.channelRemoteId).isEqualTo(channelRemoteId)
       assertThat(status).isEqualTo(SuplaChannelAvailabilityStatus.ONLINE)
       assertThat(this.profileId).isEqualTo(profileId)
     }
 
-    verifyNoMoreInteractions(channelValueRepository, profileRepository)
+    confirmVerified(channelValueRepository, profileRepository)
   }
 
   @Test
@@ -104,8 +100,8 @@ class UpdateChannelValueUseCaseTest {
       every { updatedBy(suplaChannelValue, status) } returns this
     }
 
-    whenever(channelValueRepository.findByRemoteId(channelRemoteId)).thenReturn(Maybe.just(channelValueEntity))
-    whenever(channelValueRepository.update(channelValueEntity)).thenReturn(Completable.complete())
+    every { channelValueRepository.findByRemoteId(channelRemoteId) } returns Maybe.just(channelValueEntity)
+    every { channelValueRepository.update(channelValueEntity) } returns Completable.complete()
 
     // when
     val result = useCase.invoke(suplaChannel).test()
@@ -114,16 +110,14 @@ class UpdateChannelValueUseCaseTest {
     result.assertComplete()
     result.assertResult(EntityUpdateResult.UPDATED)
 
-    verify(channelValueRepository).findByRemoteId(channelRemoteId)
-    verify(channelValueRepository).update(channelValueEntity)
-
-    io.mockk.verify {
+    verify {
+      channelValueRepository.findByRemoteId(channelRemoteId)
+      channelValueRepository.update(channelValueEntity)
       channelValueEntity.differsFrom(suplaChannelValue, status)
       channelValueEntity.updatedBy(suplaChannelValue, status)
     }
 
-    verifyNoMoreInteractions(channelValueRepository)
-    verifyNoInteractions(profileRepository)
+    confirmVerified(channelValueRepository, profileRepository)
   }
 
   @Test
@@ -137,7 +131,7 @@ class UpdateChannelValueUseCaseTest {
       every { differsFrom(suplaChannelValue, status) } returns false
     }
 
-    whenever(channelValueRepository.findByRemoteId(channelRemoteId)).thenReturn(Maybe.just(channelValueEntity))
+    every { channelValueRepository.findByRemoteId(channelRemoteId) } returns Maybe.just(channelValueEntity)
 
     // when
     val result = useCase.invoke(suplaChannel).test()
@@ -146,12 +140,8 @@ class UpdateChannelValueUseCaseTest {
     result.assertComplete()
     result.assertResult(EntityUpdateResult.NOP)
 
-    verify(channelValueRepository).findByRemoteId(channelRemoteId)
-
-    io.mockk.verify { channelValueEntity.differsFrom(suplaChannelValue, status) }
-    confirmVerified(channelValueEntity)
-
-    verifyNoMoreInteractions(channelValueRepository)
-    verifyNoInteractions(profileRepository)
+    verify { channelValueRepository.findByRemoteId(channelRemoteId) }
+    verify { channelValueEntity.differsFrom(suplaChannelValue, status) }
+    confirmVerified(channelValueEntity, channelValueRepository, profileRepository)
   }
 }

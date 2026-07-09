@@ -17,21 +17,14 @@ package org.supla.android.usecases.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import io.mockk.every
-import io.mockk.mockk
+import io.mockk.*
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import org.assertj.core.api.Assertions
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.any
-import org.mockito.kotlin.eq
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.data.model.chart.ChannelChartSets
 import org.supla.android.data.model.chart.ChartDataAggregation
 import org.supla.android.data.model.chart.ChartDataSpec
@@ -44,19 +37,24 @@ import org.supla.android.usecases.channel.measurementsprovider.TemperatureMeasur
 import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.data.model.general.SuplaFunction
 
-@RunWith(MockitoJUnitRunner::class)
 class LoadChannelWithChildrenMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
-  @Mock
+
+  @MockK
   private lateinit var readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase
 
-  @Mock
+  @MockK
   private lateinit var temperatureMeasurementsProvider: TemperatureMeasurementsProvider
 
-  @Mock
+  @MockK
   private lateinit var temperatureAndHumidityMeasurementsProvider: TemperatureAndHumidityMeasurementsProvider
 
-  @InjectMocks
+  @InjectMockKs
   private lateinit var useCase: LoadChannelWithChildrenMeasurementsUseCase
+
+  @Before
+  fun setUp() {
+    MockKAnnotations.init(this)
+  }
 
   @Test
   fun `should load temperature measurements`() {
@@ -69,11 +67,12 @@ class LoadChannelWithChildrenMeasurementsUseCaseTest : BaseLoadMeasurementsUseCa
     val temperatureAndHumiditySets: ChannelChartSets = mockk()
 
     val channelWithChildren = mockChannelWithChildren()
-    whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelWithChildren))
-    whenever(temperatureMeasurementsProvider.provide(eq(channelWithChildren.children[1].withChildren), eq(spec), any()))
-      .thenReturn(Single.just(temperatureSets))
-    whenever(temperatureAndHumidityMeasurementsProvider.provide(eq(channelWithChildren.children[0].withChildren), eq(spec), any()))
-      .thenReturn(Single.just(temperatureAndHumiditySets))
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channelWithChildren)
+    val child1 = channelWithChildren.children[1].withChildren
+    every { temperatureMeasurementsProvider.provide(eq(child1), eq(spec), any()) } returns Single.just(temperatureSets)
+    val child0 = channelWithChildren.children[0].withChildren
+    every { temperatureAndHumidityMeasurementsProvider.provide(eq(child0), eq(spec), any()) } returns
+      Single.just(temperatureAndHumiditySets)
 
     // when
     val testObserver = useCase.invoke(remoteId, ChartDataSpec(startDate, endDate, ChartDataAggregation.MINUTES)).test()
@@ -86,10 +85,10 @@ class LoadChannelWithChildrenMeasurementsUseCaseTest : BaseLoadMeasurementsUseCa
     Assertions.assertThat(result)
       .containsExactlyInAnyOrder(temperatureSets, temperatureAndHumiditySets)
 
-    verify(readChannelWithChildrenUseCase).invoke(remoteId)
-    verify(temperatureMeasurementsProvider).provide(eq(channelWithChildren.children[1].withChildren), eq(spec), any())
-    verify(temperatureAndHumidityMeasurementsProvider).provide(eq(channelWithChildren.children[0].withChildren), eq(spec), any())
-    verifyNoMoreInteractions(readChannelWithChildrenUseCase, temperatureMeasurementsProvider, temperatureAndHumidityMeasurementsProvider)
+    verify { readChannelWithChildrenUseCase.invoke(remoteId) }
+    verify { temperatureMeasurementsProvider.provide(eq(child1), eq(spec), any()) }
+    verify { temperatureAndHumidityMeasurementsProvider.provide(eq(child0), eq(spec), any()) }
+    confirmVerified(readChannelWithChildrenUseCase, temperatureMeasurementsProvider, temperatureAndHumidityMeasurementsProvider)
   }
 
   private fun mockChannelWithChildren(): ChannelWithChildren =

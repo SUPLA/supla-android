@@ -17,16 +17,12 @@ package org.supla.android.usecases.client
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.slot
+import io.mockk.*
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.whenever
 import org.supla.android.core.networking.suplaclient.SuplaClientApi
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
@@ -34,14 +30,18 @@ import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.HvacActionParameters
 import org.supla.android.lib.actions.SubjectType
 
-@RunWith(MockitoJUnitRunner::class)
 class ExecuteThermostatActionUseCaseTest {
 
-  @Mock
+  @MockK
   lateinit var suplaClientProvider: SuplaClientProvider
 
-  @InjectMocks
+  @InjectMockKs
   lateinit var useCase: ExecuteThermostatActionUseCase
+
+  @Before
+  fun setUp() {
+    MockKAnnotations.init(this)
+  }
 
   @Test
   fun `should invoke thermostat action`() {
@@ -57,7 +57,7 @@ class ExecuteThermostatActionUseCaseTest {
     val suplaClient = mockk<SuplaClientApi>()
     every { suplaClient.executeAction(capture(argumentSlot)) } returns true
 
-    whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
+    every { suplaClientProvider.provide() } returns suplaClient
 
     // when
     val observer = useCase.invoke(type, remoteId, mode, setpointTemperatureHeat, setpointTemperatureCool, durationInSec).test()

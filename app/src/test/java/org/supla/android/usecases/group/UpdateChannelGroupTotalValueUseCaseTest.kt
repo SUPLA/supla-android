@@ -17,44 +17,44 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import androidx.compose.ui.graphics.Color
+import io.mockk.MockKAnnotations
+import io.mockk.confirmVerified
 import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
+import io.mockk.slot
+import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.tuple
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.any
-import org.mockito.kotlin.argumentCaptor
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.data.source.ChannelGroupRelationRepository
 import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupRelationDataEntity
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
-import org.supla.android.data.source.remote.rgb.color
 import org.supla.core.shared.data.model.general.SuplaFunction
 
 @Suppress("SameParameterValue")
-@RunWith(MockitoJUnitRunner::class)
 class UpdateChannelGroupTotalValueUseCaseTest {
 
-  @Mock
+  @MockK
   private lateinit var channelGroupRelationRepository: ChannelGroupRelationRepository
 
-  @Mock
+  @MockK
   private lateinit var channelGroupRepository: ChannelGroupRepository
 
-  @InjectMocks
+  @InjectMockKs
   private lateinit var useCase: UpdateChannelGroupTotalValueUseCase
+
+  @Before
+  fun setUp() {
+    MockKAnnotations.init(this)
+  }
 
   @Test
   fun `should build total string`() {
@@ -76,23 +76,21 @@ class UpdateChannelGroupTotalValueUseCaseTest {
     val powerSwitchRelationOff = mockPowerSwitch(2)
     val powerSwitchRelationOn = mockPowerSwitch(2, on = true)
 
-    whenever(channelGroupRelationRepository.findAllVisibleRelations()).thenReturn(
-      Single.just(
-        listOf(
-          rollerShutterRelationData,
-          roofWindowRelationData,
-          roofWindowRelationDataOffline,
-          facadeBlindRelationData,
-          facadeBlindRelationDataOffline,
-          heatpolData,
-          doorLockRelationDataClosed,
-          doorLockRelationDataOpened,
-          powerSwitchRelationOff,
-          powerSwitchRelationOn
-        )
+    every { channelGroupRelationRepository.findAllVisibleRelations() } returns Single.just(
+      listOf(
+        rollerShutterRelationData,
+        roofWindowRelationData,
+        roofWindowRelationDataOffline,
+        facadeBlindRelationData,
+        facadeBlindRelationDataOffline,
+        heatpolData,
+        doorLockRelationDataClosed,
+        doorLockRelationDataOpened,
+        powerSwitchRelationOff,
+        powerSwitchRelationOn
       )
     )
-    whenever(channelGroupRepository.update(any())).thenReturn(Completable.complete())
+    every { channelGroupRepository.update(any()) } returns Completable.complete()
 
     // when
     val observer = useCase.invoke().test()
@@ -101,12 +99,12 @@ class UpdateChannelGroupTotalValueUseCaseTest {
     observer.assertComplete()
     observer.assertResult(listOf(123, 234, 345, 1, 2))
 
-    val captor = argumentCaptor<List<ChannelGroupEntity>>()
-    verify(channelGroupRepository).update(captor.capture())
-    verify(channelGroupRelationRepository).findAllVisibleRelations()
-    verifyNoMoreInteractions(channelGroupRepository, channelGroupRelationRepository)
+    val captor = slot<List<ChannelGroupEntity>>()
+    verify { channelGroupRepository.update(capture(captor)) }
+    verify { channelGroupRelationRepository.findAllVisibleRelations() }
+    confirmVerified(channelGroupRepository, channelGroupRelationRepository)
 
-    val groups = captor.firstValue
+    val groups = captor.captured
     assertThat(groups)
       .extracting({ it.remoteId }, { it.online }, { it.totalValue })
       .containsExactly(
@@ -124,10 +122,9 @@ class UpdateChannelGroupTotalValueUseCaseTest {
     val doorLockRelationDataClosed = mockDoorLock(1)
     val doorLockRelationDataOpened = mockDoorLock(1, open = true)
 
-    whenever(channelGroupRelationRepository.findAllVisibleRelations()).thenReturn(
+    every { channelGroupRelationRepository.findAllVisibleRelations() } returns
       Single.just(listOf(doorLockRelationDataClosed, doorLockRelationDataOpened))
-    )
-    whenever(channelGroupRepository.update(any())).thenReturn(Completable.complete())
+    every { channelGroupRepository.update(any()) } returns Completable.complete()
 
     // when
     val observer = useCase.invoke().test()
@@ -136,12 +133,12 @@ class UpdateChannelGroupTotalValueUseCaseTest {
     observer.assertComplete()
     observer.assertResult(listOf(1))
 
-    val captor = argumentCaptor<List<ChannelGroupEntity>>()
-    verify(channelGroupRepository).update(captor.capture())
-    verify(channelGroupRelationRepository).findAllVisibleRelations()
-    verifyNoMoreInteractions(channelGroupRepository, channelGroupRelationRepository)
+    val captor = slot<List<ChannelGroupEntity>>()
+    verify { channelGroupRepository.update(capture(captor)) }
+    verify { channelGroupRelationRepository.findAllVisibleRelations() }
+    confirmVerified(channelGroupRepository, channelGroupRelationRepository)
 
-    val groups = captor.firstValue
+    val groups = captor.captured
     assertThat(groups)
       .extracting({ it.remoteId }, { it.online }, { it.totalValue })
       .containsExactly(tuple(1, 100, "0|1"))
@@ -153,10 +150,9 @@ class UpdateChannelGroupTotalValueUseCaseTest {
     val powerSwitchRelationOff = mockPowerSwitch(2)
     val powerSwitchRelationOn = mockPowerSwitch(2, on = true)
 
-    whenever(channelGroupRelationRepository.findAllVisibleRelations()).thenReturn(
+    every { channelGroupRelationRepository.findAllVisibleRelations() } returns
       Single.just(listOf(powerSwitchRelationOff, powerSwitchRelationOn))
-    )
-    whenever(channelGroupRepository.update(any())).thenReturn(Completable.complete())
+    every { channelGroupRepository.update(any()) } returns Completable.complete()
 
     // when
     val observer = useCase.invoke().test()
@@ -165,12 +161,12 @@ class UpdateChannelGroupTotalValueUseCaseTest {
     observer.assertComplete()
     observer.assertResult(listOf(2))
 
-    val captor = argumentCaptor<List<ChannelGroupEntity>>()
-    verify(channelGroupRepository).update(captor.capture())
-    verify(channelGroupRelationRepository).findAllVisibleRelations()
-    verifyNoMoreInteractions(channelGroupRepository, channelGroupRelationRepository)
+    val captor = slot<List<ChannelGroupEntity>>()
+    verify { channelGroupRepository.update(capture(captor)) }
+    verify { channelGroupRelationRepository.findAllVisibleRelations() }
+    confirmVerified(channelGroupRepository, channelGroupRelationRepository)
 
-    val groups = captor.firstValue
+    val groups = captor.captured
     assertThat(groups)
       .extracting({ it.remoteId }, { it.online }, { it.totalValue })
       .containsExactly(tuple(2, 100, "0|1"))
@@ -182,10 +178,8 @@ class UpdateChannelGroupTotalValueUseCaseTest {
     val dimmerRelationOff = mockDimmer(2)
     val dimmerRelationOn = mockDimmer(2, brightness = 44)
 
-    whenever(channelGroupRelationRepository.findAllVisibleRelations()).thenReturn(
-      Single.just(listOf(dimmerRelationOff, dimmerRelationOn))
-    )
-    whenever(channelGroupRepository.update(any())).thenReturn(Completable.complete())
+    every { channelGroupRelationRepository.findAllVisibleRelations() } returns Single.just(listOf(dimmerRelationOff, dimmerRelationOn))
+    every { channelGroupRepository.update(any()) } returns Completable.complete()
 
     // when
     val observer = useCase.invoke().test()
@@ -194,12 +188,12 @@ class UpdateChannelGroupTotalValueUseCaseTest {
     observer.assertComplete()
     observer.assertResult(listOf(2))
 
-    val captor = argumentCaptor<List<ChannelGroupEntity>>()
-    verify(channelGroupRepository).update(captor.capture())
-    verify(channelGroupRelationRepository).findAllVisibleRelations()
-    verifyNoMoreInteractions(channelGroupRepository, channelGroupRelationRepository)
+    val captor = slot<List<ChannelGroupEntity>>()
+    verify { channelGroupRepository.update(capture(captor)) }
+    verify { channelGroupRelationRepository.findAllVisibleRelations() }
+    confirmVerified(channelGroupRepository, channelGroupRelationRepository)
 
-    val groups = captor.firstValue
+    val groups = captor.captured
     assertThat(groups)
       .extracting({ it.remoteId }, { it.online }, { it.totalValue })
       .containsExactly(tuple(2, 100, "0|44"))
@@ -211,10 +205,8 @@ class UpdateChannelGroupTotalValueUseCaseTest {
     val rgbRelationOff = mockRgb(1)
     val rgbRelationOn = mockRgb(2, color = 11, brightness = 44)
 
-    whenever(channelGroupRelationRepository.findAllVisibleRelations()).thenReturn(
-      Single.just(listOf(rgbRelationOff, rgbRelationOn))
-    )
-    whenever(channelGroupRepository.update(any())).thenReturn(Completable.complete())
+    every { channelGroupRelationRepository.findAllVisibleRelations() } returns Single.just(listOf(rgbRelationOff, rgbRelationOn))
+    every { channelGroupRepository.update(any()) } returns Completable.complete()
 
     // when
     val observer = useCase.invoke().test()
@@ -223,12 +215,12 @@ class UpdateChannelGroupTotalValueUseCaseTest {
     observer.assertComplete()
     observer.assertResult(listOf(1, 2))
 
-    val captor = argumentCaptor<List<ChannelGroupEntity>>()
-    verify(channelGroupRepository).update(captor.capture())
-    verify(channelGroupRelationRepository).findAllVisibleRelations()
-    verifyNoMoreInteractions(channelGroupRepository, channelGroupRelationRepository)
+    val captor = slot<List<ChannelGroupEntity>>()
+    verify { channelGroupRepository.update(capture(captor)) }
+    verify { channelGroupRelationRepository.findAllVisibleRelations() }
+    confirmVerified(channelGroupRepository, channelGroupRelationRepository)
 
-    val groups = captor.firstValue
+    val groups = captor.captured
     assertThat(groups)
       .extracting({ it.remoteId }, { it.online }, { it.totalValue })
       .containsExactly(
@@ -243,10 +235,8 @@ class UpdateChannelGroupTotalValueUseCaseTest {
     val rgbRelationOff = mockDimmerAndRgb(2)
     val rgbRelationOn = mockDimmerAndRgb(2, color = 11, brightnessColor = 33, brightness = 44)
 
-    whenever(channelGroupRelationRepository.findAllVisibleRelations()).thenReturn(
-      Single.just(listOf(rgbRelationOff, rgbRelationOn))
-    )
-    whenever(channelGroupRepository.update(any())).thenReturn(Completable.complete())
+    every { channelGroupRelationRepository.findAllVisibleRelations() } returns Single.just(listOf(rgbRelationOff, rgbRelationOn))
+    every { channelGroupRepository.update(any()) } returns Completable.complete()
 
     // when
     val observer = useCase.invoke().test()
@@ -255,12 +245,12 @@ class UpdateChannelGroupTotalValueUseCaseTest {
     observer.assertComplete()
     observer.assertResult(listOf(2))
 
-    val captor = argumentCaptor<List<ChannelGroupEntity>>()
-    verify(channelGroupRepository).update(captor.capture())
-    verify(channelGroupRelationRepository).findAllVisibleRelations()
-    verifyNoMoreInteractions(channelGroupRepository, channelGroupRelationRepository)
+    val captor = slot<List<ChannelGroupEntity>>()
+    verify { channelGroupRepository.update(capture(captor)) }
+    verify { channelGroupRelationRepository.findAllVisibleRelations() }
+    confirmVerified(channelGroupRepository, channelGroupRelationRepository)
 
-    val groups = captor.firstValue
+    val groups = captor.captured
     assertThat(groups)
       .extracting({ it.remoteId }, { it.online }, { it.totalValue })
       .containsExactly(tuple(2, 100, "0:0:0|11:33:44"))
@@ -271,10 +261,8 @@ class UpdateChannelGroupTotalValueUseCaseTest {
     // given
     val terraceAwning = mockTerraceAwning(2, status = SuplaChannelAvailabilityStatus.ONLINE, position = 30)
 
-    whenever(channelGroupRelationRepository.findAllVisibleRelations()).thenReturn(
-      Single.just(listOf(terraceAwning))
-    )
-    whenever(channelGroupRepository.update(any())).thenReturn(Completable.complete())
+    every { channelGroupRelationRepository.findAllVisibleRelations() } returns Single.just(listOf(terraceAwning))
+    every { channelGroupRepository.update(any()) } returns Completable.complete()
 
     // when
     val observer = useCase.invoke().test()
@@ -283,12 +271,12 @@ class UpdateChannelGroupTotalValueUseCaseTest {
     observer.assertComplete()
     observer.assertResult(listOf(2))
 
-    val captor = argumentCaptor<List<ChannelGroupEntity>>()
-    verify(channelGroupRepository).update(captor.capture())
-    verify(channelGroupRelationRepository).findAllVisibleRelations()
-    verifyNoMoreInteractions(channelGroupRepository, channelGroupRelationRepository)
+    val captor = slot<List<ChannelGroupEntity>>()
+    verify { channelGroupRepository.update(capture(captor)) }
+    verify { channelGroupRelationRepository.findAllVisibleRelations() }
+    confirmVerified(channelGroupRepository, channelGroupRelationRepository)
 
-    val groups = captor.firstValue
+    val groups = captor.captured
     assertThat(groups)
       .extracting({ it.remoteId }, { it.online }, { it.totalValue })
       .containsExactly(tuple(2, 100, "30:0"))
@@ -299,10 +287,8 @@ class UpdateChannelGroupTotalValueUseCaseTest {
     // given
     val projectorScreen = mockProjectorScreen(2, status = SuplaChannelAvailabilityStatus.ONLINE, position = 45)
 
-    whenever(channelGroupRelationRepository.findAllVisibleRelations()).thenReturn(
-      Single.just(listOf(projectorScreen))
-    )
-    whenever(channelGroupRepository.update(any())).thenReturn(Completable.complete())
+    every { channelGroupRelationRepository.findAllVisibleRelations() } returns Single.just(listOf(projectorScreen))
+    every { channelGroupRepository.update(any()) } returns Completable.complete()
 
     // when
     val observer = useCase.invoke().test()
@@ -311,12 +297,12 @@ class UpdateChannelGroupTotalValueUseCaseTest {
     observer.assertComplete()
     observer.assertResult(listOf(2))
 
-    val captor = argumentCaptor<List<ChannelGroupEntity>>()
-    verify(channelGroupRepository).update(captor.capture())
-    verify(channelGroupRelationRepository).findAllVisibleRelations()
-    verifyNoMoreInteractions(channelGroupRepository, channelGroupRelationRepository)
+    val captor = slot<List<ChannelGroupEntity>>()
+    verify { channelGroupRepository.update(capture(captor)) }
+    verify { channelGroupRelationRepository.findAllVisibleRelations() }
+    confirmVerified(channelGroupRepository, channelGroupRelationRepository)
 
-    val groups = captor.firstValue
+    val groups = captor.captured
     assertThat(groups)
       .extracting({ it.remoteId }, { it.online }, { it.totalValue })
       .containsExactly(tuple(2, 100, "45"))
@@ -327,10 +313,8 @@ class UpdateChannelGroupTotalValueUseCaseTest {
     // given
     val curtain = mockCurtain(2, status = SuplaChannelAvailabilityStatus.ONLINE, position = 30)
 
-    whenever(channelGroupRelationRepository.findAllVisibleRelations()).thenReturn(
-      Single.just(listOf(curtain))
-    )
-    whenever(channelGroupRepository.update(any())).thenReturn(Completable.complete())
+    every { channelGroupRelationRepository.findAllVisibleRelations() } returns Single.just(listOf(curtain))
+    every { channelGroupRepository.update(any()) } returns Completable.complete()
 
     // when
     val observer = useCase.invoke().test()
@@ -339,12 +323,12 @@ class UpdateChannelGroupTotalValueUseCaseTest {
     observer.assertComplete()
     observer.assertResult(listOf(2))
 
-    val captor = argumentCaptor<List<ChannelGroupEntity>>()
-    verify(channelGroupRepository).update(captor.capture())
-    verify(channelGroupRelationRepository).findAllVisibleRelations()
-    verifyNoMoreInteractions(channelGroupRepository, channelGroupRelationRepository)
+    val captor = slot<List<ChannelGroupEntity>>()
+    verify { channelGroupRepository.update(capture(captor)) }
+    verify { channelGroupRelationRepository.findAllVisibleRelations() }
+    confirmVerified(channelGroupRepository, channelGroupRelationRepository)
 
-    val groups = captor.firstValue
+    val groups = captor.captured
     assertThat(groups)
       .extracting({ it.remoteId }, { it.online }, { it.totalValue })
       .containsExactly(tuple(2, 100, "30:0"))
@@ -355,10 +339,8 @@ class UpdateChannelGroupTotalValueUseCaseTest {
     // given
     val curtain = mockVerticalBlind(2, status = SuplaChannelAvailabilityStatus.ONLINE, position = 30)
 
-    whenever(channelGroupRelationRepository.findAllVisibleRelations()).thenReturn(
-      Single.just(listOf(curtain))
-    )
-    whenever(channelGroupRepository.update(any())).thenReturn(Completable.complete())
+    every { channelGroupRelationRepository.findAllVisibleRelations() } returns Single.just(listOf(curtain))
+    every { channelGroupRepository.update(any()) } returns Completable.complete()
 
     // when
     val observer = useCase.invoke().test()
@@ -367,12 +349,12 @@ class UpdateChannelGroupTotalValueUseCaseTest {
     observer.assertComplete()
     observer.assertResult(listOf(2))
 
-    val captor = argumentCaptor<List<ChannelGroupEntity>>()
-    verify(channelGroupRepository).update(captor.capture())
-    verify(channelGroupRelationRepository).findAllVisibleRelations()
-    verifyNoMoreInteractions(channelGroupRepository, channelGroupRelationRepository)
+    val captor = slot<List<ChannelGroupEntity>>()
+    verify { channelGroupRepository.update(capture(captor)) }
+    verify { channelGroupRelationRepository.findAllVisibleRelations() }
+    confirmVerified(channelGroupRepository, channelGroupRelationRepository)
 
-    val groups = captor.firstValue
+    val groups = captor.captured
     assertThat(groups)
       .extracting({ it.remoteId }, { it.online }, { it.totalValue })
       .containsExactly(tuple(2, 100, "30:0"))
@@ -382,8 +364,8 @@ class UpdateChannelGroupTotalValueUseCaseTest {
   fun `should not crash when function is not supported`() {
     // given
     val relation = mockRelationData(1, SuplaFunction.ALARM) {}
-    whenever(channelGroupRelationRepository.findAllVisibleRelations()).thenReturn(Single.just(listOf(relation)))
-    whenever(channelGroupRepository.update(any())).thenReturn(Completable.complete())
+    every { channelGroupRelationRepository.findAllVisibleRelations() } returns Single.just(listOf(relation))
+    every { channelGroupRepository.update(any()) } returns Completable.complete()
 
     // when
     val observer = useCase.invoke().test()
@@ -392,12 +374,12 @@ class UpdateChannelGroupTotalValueUseCaseTest {
     observer.assertComplete()
     observer.assertResult(listOf(1))
 
-    val captor = argumentCaptor<List<ChannelGroupEntity>>()
-    verify(channelGroupRepository).update(captor.capture())
-    verify(channelGroupRelationRepository).findAllVisibleRelations()
-    verifyNoMoreInteractions(channelGroupRepository, channelGroupRelationRepository)
+    val captor = slot<List<ChannelGroupEntity>>()
+    verify { channelGroupRepository.update(capture(captor)) }
+    verify { channelGroupRelationRepository.findAllVisibleRelations() }
+    confirmVerified(channelGroupRepository, channelGroupRelationRepository)
 
-    val groups = captor.firstValue
+    val groups = captor.captured
     assertThat(groups)
       .extracting({ it.remoteId }, { it.online }, { it.totalValue })
       .containsExactly(tuple(1, 0, ""))

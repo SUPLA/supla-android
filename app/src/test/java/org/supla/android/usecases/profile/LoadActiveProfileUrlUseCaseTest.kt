@@ -1,33 +1,49 @@
 package org.supla.android.usecases.profile
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
 import android.net.Uri
-import io.mockk.every
-import io.mockk.mockk
+import io.mockk.*
+import io.mockk.Called
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import io.reactivex.rxjava3.core.Single
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.core.infrastructure.UriProxy
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
 
-@RunWith(MockitoJUnitRunner::class)
 class LoadActiveProfileUrlUseCaseTest {
 
-  @Mock
+  @MockK
   private lateinit var profileRepository: ProfileRepository
 
-  @Mock
+  @MockK
   private lateinit var uriProxy: UriProxy
 
-  @InjectMocks
+  @InjectMockKs
   private lateinit var useCase: LoadActiveProfileUrlUseCase
+
+  @Before
+  fun setUp() {
+    MockKAnnotations.init(this)
+  }
 
   @Test
   fun `should get supla cloud when email auth`() {
@@ -38,7 +54,7 @@ class LoadActiveProfileUrlUseCaseTest {
       every { serverForEmail } returns url
       every { serverAutoDetect } returns true
     }
-    whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profile))
+    every { profileRepository.findActiveProfile() } returns Single.just(profile)
 
     // when
     val observer = useCase.invoke().test()
@@ -47,9 +63,11 @@ class LoadActiveProfileUrlUseCaseTest {
     observer.assertComplete()
     observer.assertResult(CloudUrl.DefaultCloud)
 
-    verify(profileRepository).findActiveProfile()
-    verifyNoMoreInteractions(profileRepository)
-    verifyNoInteractions(uriProxy)
+    verify { profileRepository.findActiveProfile() }
+    confirmVerified(profileRepository)
+    verify {
+      uriProxy wasNot Called
+    }
   }
 
   @Test
@@ -62,8 +80,8 @@ class LoadActiveProfileUrlUseCaseTest {
       every { serverAutoDetect } returns false
     }
     val uri: Uri = mockk()
-    whenever(uriProxy.toUri("https://$url")).thenReturn(uri)
-    whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profile))
+    every { uriProxy.toUri("https://$url") } returns uri
+    every { profileRepository.findActiveProfile() } returns Single.just(profile)
 
     // when
     val observer = useCase.invoke().test()
@@ -72,9 +90,9 @@ class LoadActiveProfileUrlUseCaseTest {
     observer.assertComplete()
     observer.assertResult(CloudUrl.ServerUri(uri))
 
-    verify(profileRepository).findActiveProfile()
-    verify(uriProxy).toUri("https://$url")
-    verifyNoMoreInteractions(profileRepository, uriProxy)
+    verify { profileRepository.findActiveProfile() }
+    verify { uriProxy.toUri("https://$url") }
+    confirmVerified(profileRepository, uriProxy)
   }
 
   @Test
@@ -85,7 +103,7 @@ class LoadActiveProfileUrlUseCaseTest {
       every { serverForAccessId } returns ""
       every { serverAutoDetect } returns false
     }
-    whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profile))
+    every { profileRepository.findActiveProfile() } returns Single.just(profile)
 
     // when
     val observer = useCase.invoke().test()
@@ -94,9 +112,11 @@ class LoadActiveProfileUrlUseCaseTest {
     observer.assertComplete()
     observer.assertResult(CloudUrl.DefaultCloud)
 
-    verify(profileRepository).findActiveProfile()
-    verifyNoMoreInteractions(profileRepository)
-    verifyNoInteractions(uriProxy)
+    verify { profileRepository.findActiveProfile() }
+    confirmVerified(profileRepository)
+    verify {
+      uriProxy wasNot Called
+    }
   }
 
   @Test
@@ -109,8 +129,8 @@ class LoadActiveProfileUrlUseCaseTest {
       every { serverAutoDetect } returns false
     }
     val uri: Uri = mockk()
-    whenever(uriProxy.toUri("https://$url")).thenReturn(uri)
-    whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profile))
+    every { uriProxy.toUri("https://$url") } returns uri
+    every { profileRepository.findActiveProfile() } returns Single.just(profile)
 
     // when
     val observer = useCase.invoke().test()
@@ -119,8 +139,8 @@ class LoadActiveProfileUrlUseCaseTest {
     observer.assertComplete()
     observer.assertResult(CloudUrl.ServerUri(uri))
 
-    verify(profileRepository).findActiveProfile()
-    verify(uriProxy).toUri("https://$url")
-    verifyNoMoreInteractions(profileRepository, uriProxy)
+    verify { profileRepository.findActiveProfile() }
+    verify { uriProxy.toUri("https://$url") }
+    confirmVerified(profileRepository, uriProxy)
   }
 }
