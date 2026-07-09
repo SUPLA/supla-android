@@ -18,27 +18,28 @@ package org.supla.android.usecases.channel
  */
 
 import androidx.work.ExistingWorkPolicy
+import io.mockk.*
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.impl.annotations.RelaxedMockK
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.any
-import org.mockito.kotlin.eq
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoMoreInteractions
 import org.supla.android.core.infrastructure.WorkManagerProxy
 import org.supla.android.testhelpers.extensions.mock
 import org.supla.core.shared.data.model.general.SuplaFunction
 
-@RunWith(MockitoJUnitRunner::class)
 class DownloadChannelMeasurementsUseCaseTest {
 
-  @Mock
+  @RelaxedMockK
   private lateinit var workManagerProxy: WorkManagerProxy
 
-  @InjectMocks
+  @InjectMockKs
   private lateinit var useCase: DownloadChannelMeasurementsUseCase
+
+  @Before
+  fun setUp() {
+    MockKAnnotations.init(this)
+  }
 
   @Test
   fun `should enqueue thermometer download`() {
@@ -52,12 +53,14 @@ class DownloadChannelMeasurementsUseCaseTest {
     useCase.invoke(channelWithChildren)
 
     // then
-    verify(workManagerProxy).enqueueUniqueWork(
-      eq("DownloadTemperaturesWorker.$remoteId"),
-      eq(ExistingWorkPolicy.KEEP),
-      any()
-    )
-    verifyNoMoreInteractions(workManagerProxy)
+    verify {
+      workManagerProxy.enqueueUniqueWork(
+        eq("DownloadTemperaturesWorker.$remoteId"),
+        eq(ExistingWorkPolicy.KEEP),
+        any()
+      )
+    }
+    confirmVerified(workManagerProxy)
   }
 
   @Test
@@ -72,12 +75,14 @@ class DownloadChannelMeasurementsUseCaseTest {
     useCase.invoke(channelWithChildren)
 
     // then
-    verify(workManagerProxy).enqueueUniqueWork(
-      eq("DownloadTemperaturesAndHumidityWorker.$remoteId"),
-      eq(ExistingWorkPolicy.KEEP),
-      any()
-    )
-    verifyNoMoreInteractions(workManagerProxy)
+    verify {
+      workManagerProxy.enqueueUniqueWork(
+        eq("DownloadTemperaturesAndHumidityWorker.$remoteId"),
+        eq(ExistingWorkPolicy.KEEP),
+        any()
+      )
+    }
+    confirmVerified(workManagerProxy)
   }
 
   @Test
@@ -92,12 +97,14 @@ class DownloadChannelMeasurementsUseCaseTest {
     useCase.invoke(channelWithChildren)
 
     // then
-    verify(workManagerProxy).enqueueUniqueWork(
-      eq("DownloadGeneralPurposeMeasurementsWorker.$remoteId"),
-      eq(ExistingWorkPolicy.KEEP),
-      any()
-    )
-    verifyNoMoreInteractions(workManagerProxy)
+    verify {
+      workManagerProxy.enqueueUniqueWork(
+        eq("DownloadGeneralPurposeMeasurementsWorker.$remoteId"),
+        eq(ExistingWorkPolicy.KEEP),
+        any()
+      )
+    }
+    confirmVerified(workManagerProxy)
   }
 
   @Test
@@ -112,11 +119,13 @@ class DownloadChannelMeasurementsUseCaseTest {
     useCase.invoke(channelWithChildren)
 
     // then
-    verify(workManagerProxy).enqueueUniqueWork(
-      eq("DownloadGeneralPurposeMeterWorker.$remoteId"),
-      eq(ExistingWorkPolicy.KEEP),
-      any()
-    )
-    verifyNoMoreInteractions(workManagerProxy)
+    verify {
+      workManagerProxy.enqueueUniqueWork(
+        eq("DownloadGeneralPurposeMeterWorker.$remoteId"),
+        eq(ExistingWorkPolicy.KEEP),
+        any()
+      )
+    }
+    confirmVerified(workManagerProxy)
   }
 }

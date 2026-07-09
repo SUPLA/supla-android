@@ -70,8 +70,6 @@ testing-junit = "4.13.2"
 testing-hamcrest = "1.3"
 testing-mockk = "1.14.11"
 testing-assertj = "3.27.7"
-testing-mockito = "5.23.0"
-testing-mockito-kotlin = "6.3.0"
 testing-androidx = "1.7.0"
 testing-androidx-runner = "1.7.0"
 testing-androidx-rules = "1.7.0"
@@ -170,8 +168,6 @@ testing-hamcrest = { group = "org.hamcrest", name = "hamcrest-all", version.ref 
 testing-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
 testing-mockk = { group = "io.mockk", name = "mockk", version.ref = "testing-mockk" }
 testing-assertj = { group = "org.assertj", name = "assertj-core", version.ref = "testing-assertj" }
-testing-mockito = { group = "org.mockito", name = "mockito-core", version.ref = "testing-mockito" }
-testing-mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "testing-mockito-kotlin" }
 testing-androidx = { group = "androidx.test", name = "core", version.ref = "testing-androidx" }
 testing-androidx-navigation = { group = "androidx.navigation", name = "navigation-testing", version.ref = "androidx-navigation" }
 testing-androidx-runner = { group = "androidx.test", name = "runner", version.ref = "testing-androidx-runner" }

@@ -17,29 +17,28 @@ package org.supla.android.features.createaccountweb
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import io.mockk.MockKAnnotations
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.tools.SuplaSchedulers
 
-@RunWith(MockitoJUnitRunner::class)
 class CreateAccountWebViewModelTest : BaseViewModelTest<CreateAccountWebViewState, CreateAccountWebViewEvent, CreateAccountWebViewModel>(
   mockSchedulers = MockSchedulers.NONE
 ) {
 
-  @Mock
+  @MockK
   override lateinit var schedulers: SuplaSchedulers
 
-  @InjectMocks
+  @InjectMockKs
   override lateinit var viewModel: CreateAccountWebViewModel
 
   @Before
   override fun setUp() {
+    MockKAnnotations.init(this)
     super.setUp()
   }
 
