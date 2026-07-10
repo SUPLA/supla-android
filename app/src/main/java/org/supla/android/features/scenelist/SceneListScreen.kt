@@ -38,11 +38,7 @@ import org.supla.android.main.LocalNavigator
 import org.supla.android.main.MainComposeNavigator
 import org.supla.android.main.ViewModelHostBase
 import org.supla.android.main.scaffold.screenUnderTopBarPaddings
-import org.supla.android.main.topbar.NavigationType
-import org.supla.android.main.topbar.TopBarIcon
-import org.supla.android.main.topbar.TopBarSearchState
-import org.supla.android.main.topbar.TopBarState
-import org.supla.android.main.topbar.topBarAction
+import org.supla.android.main.topbar.RegisterTopBarSearch
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.views.EmptyListInfoView
@@ -50,7 +46,6 @@ import org.supla.android.ui.views.buttons.OutlinedButton
 import org.supla.android.ui.views.list.ListView
 import org.supla.android.ui.views.list.MainListScope
 import org.supla.core.shared.extensions.forTrue
-import org.supla.core.shared.infrastructure.localizedString
 
 interface SceneListScope : MainListScope {
   fun onAddGroupClick()
@@ -58,7 +53,6 @@ interface SceneListScope : MainListScope {
 
 @Composable
 fun SceneListScreen(
-  onProfilesClick: () -> Unit,
   viewModel: SceneListViewModel = hiltViewModel(),
   captionChangeViewModel: CaptionChangeViewModel = hiltViewModel()
 ) {
@@ -66,17 +60,13 @@ fun SceneListScreen(
 
   ViewModelHostBase(
     viewModel = viewModel,
-    topBarState = TopBarState(
-      title = localizedString(R.string.app_name),
-      navigationType = NavigationType.DRAWER,
-      search = TopBarSearchState(
-        data = viewModel.searchData,
-        observer = viewModel::handle
-      ),
-      action = topBarAction(TopBarIcon.Profiles, onProfilesClick)
-    ),
     eventHandler = { handleSceneEvents(it, navigator, captionChangeViewModel) }
   ) { state ->
+    RegisterTopBarSearch(
+      data = viewModel.searchData,
+      handler = viewModel::handle
+    )
+
     viewModel.Content(
       state = state,
       dragEnabled = viewModel.searchData.query.isEmpty()

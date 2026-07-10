@@ -24,6 +24,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material3.DrawerState
@@ -50,8 +51,11 @@ import org.supla.android.features.scenelist.SceneListScreen
 import org.supla.android.main.EventBasedViewModelHost
 import org.supla.android.main.ListTab
 import org.supla.android.main.MainComposeNavigator
-import org.supla.android.main.MainRoute
 import org.supla.android.main.scaffold.LocalScaffoldPadding
+import org.supla.android.main.topbar.NavigationType
+import org.supla.android.main.topbar.TopBarIcon
+import org.supla.android.main.topbar.TopBarState
+import org.supla.android.main.topbar.topBarAction
 import org.supla.android.main.view.ChannelListLabel
 import org.supla.android.main.view.GroupListLabel
 import org.supla.android.main.view.LocalDrawerState
@@ -65,25 +69,32 @@ import org.supla.android.ui.extensions.ifTrue
 import org.supla.android.ui.extensions.isPhoneLandscape
 import org.supla.android.ui.navigation.SuplaNavigationBarItem
 import org.supla.android.ui.navigation.SuplaRailItem
+import org.supla.core.shared.infrastructure.localizedString
 
 @Composable
 fun MainListScreen(
-  selectedTab: ListTab,
   drawerState: DrawerState,
   navigator: MainComposeNavigator,
   viewModel: MainListViewModel = hiltViewModel()
 ) {
+  val wideScreen = LocalWindowInfo.current.containerDpSize.width >= 600.dp && LocalWindowInfo.current.containerDpSize.height >= 500.dp
+
   CompositionLocalProvider(LocalDrawerState provides drawerState) {
     EventBasedViewModelHost(
       viewModel = viewModel,
+      topBarState = TopBarState(
+        title = localizedString(R.string.app_name),
+        navigationType = if (wideScreen) NavigationType.NONE else NavigationType.DRAWER,
+        action = topBarAction(TopBarIcon.Profiles, viewModel::showProfilesPopup)
+      ),
       eventHandler = { handleEvent(it, navigator) }
     ) {
-      if (LocalWindowInfo.current.containerDpSize.width >= 600.dp) {
-        WideView(selectedTab, navigator, viewModel)
+      if (wideScreen) {
+        WideView(viewModel)
       } else if (LocalConfiguration.current.isPhoneLandscape) {
-        LandscapePhoneView(selectedTab, drawerState, navigator, viewModel)
+        LandscapePhoneView(viewModel)
       } else {
-        PortraitPhoneView(selectedTab, drawerState, navigator, viewModel)
+        PortraitPhoneView(viewModel)
       }
 
       viewModel.authorizationDialogState.collectAsState().value?.let {
@@ -107,13 +118,9 @@ fun MainListScreen(
 
 @Composable
 private fun PortraitPhoneView(
-  selectedTab: ListTab,
-  drawerState: DrawerState,
-  navigator: MainComposeNavigator,
   viewModel: MainListViewModel
 ) {
   MainDrawer(
-    drawerState = drawerState,
     developerOptionsVisibleFlow = viewModel.developerOptionsVisible,
     zWaveVisibleFlow = viewModel.zWaveAvailable,
     zWaveOpenCallback = { viewModel.showAuthorizationDialog(AuthorizationReason.ZWaveWizard) }
@@ -122,30 +129,18 @@ private fun PortraitPhoneView(
       topBar = { StandardTopBar() },
       bottomBar = {
         if (LocalApplicationPreferences.current.isShowBottomMenu) {
-          BottomNavigationBar(navigator)
+          BottomNavigationBar()
         }
       }
-    ) { paddings ->
-      CompositionLocalProvider(LocalScaffoldPadding provides paddings) {
-        when (selectedTab) {
-          ListTab.CHANNELS -> ChannelListScreen(onProfilesClick = viewModel::showProfilesPopup)
-          ListTab.GROUPS -> GroupListScreen(onProfilesClick = viewModel::showProfilesPopup)
-          ListTab.SCENES -> SceneListScreen(onProfilesClick = viewModel::showProfilesPopup)
-        }
-      }
-    }
+    ) { CommonContent(it) }
   }
 }
 
 @Composable
 private fun LandscapePhoneView(
-  selectedTab: ListTab,
-  drawerState: DrawerState,
-  navigator: MainComposeNavigator,
   viewModel: MainListViewModel
 ) {
   MainDrawer(
-    drawerState = drawerState,
     developerOptionsVisibleFlow = viewModel.developerOptionsVisible,
     zWaveVisibleFlow = viewModel.zWaveAvailable,
     zWaveOpenCallback = { viewModel.showAuthorizationDialog(AuthorizationReason.ZWaveWizard) }
@@ -154,17 +149,9 @@ private fun LandscapePhoneView(
       Scaffold(
         topBar = { StandardTopBar() },
         modifier = Modifier.weight(1f)
-      ) { paddings ->
-        CompositionLocalProvider(LocalScaffoldPadding provides paddings) {
-          when (selectedTab) {
-            ListTab.CHANNELS -> ChannelListScreen(onProfilesClick = viewModel::showProfilesPopup)
-            ListTab.GROUPS -> GroupListScreen(onProfilesClick = viewModel::showProfilesPopup)
-            ListTab.SCENES -> SceneListScreen(onProfilesClick = viewModel::showProfilesPopup)
-          }
-        }
-      }
+      ) { CommonContent(it) }
       if (LocalApplicationPreferences.current.isShowBottomMenu) {
-        RightNavigationRail(navigator)
+        RightNavigationRail()
       }
     }
   }
@@ -172,8 +159,6 @@ private fun LandscapePhoneView(
 
 @Composable
 private fun WideView(
-  selectedTab: ListTab,
-  navigator: MainComposeNavigator,
   viewModel: MainListViewModel
 ) {
   PermanentMainDrawer(
@@ -185,43 +170,50 @@ private fun WideView(
       topBar = { StandardTopBar() },
       bottomBar = {
         if (LocalApplicationPreferences.current.isShowBottomMenu) {
-          BottomNavigationBar(navigator)
+          BottomNavigationBar()
         }
       }
-    ) { paddings ->
-      CompositionLocalProvider(LocalScaffoldPadding provides paddings) {
-        when (selectedTab) {
-          ListTab.CHANNELS -> ChannelListScreen(onProfilesClick = viewModel::showProfilesPopup)
-          ListTab.GROUPS -> GroupListScreen(onProfilesClick = viewModel::showProfilesPopup)
-          ListTab.SCENES -> SceneListScreen(onProfilesClick = viewModel::showProfilesPopup)
-        }
-      }
+    ) { CommonContent(it) }
+  }
+}
+
+@Composable
+private fun CommonContent(paddings: PaddingValues) {
+  CompositionLocalProvider(LocalScaffoldPadding provides paddings) {
+    val selectedTab = LocalMainListTabController.current.tab
+    when (selectedTab) {
+      ListTab.CHANNELS -> ChannelListScreen()
+      ListTab.GROUPS -> GroupListScreen()
+      ListTab.SCENES -> SceneListScreen()
     }
   }
 }
 
 @Composable
-private fun BottomNavigationBar(navigator: MainComposeNavigator) =
+private fun BottomNavigationBar() =
   NavigationBar(
     modifier = Modifier.border(1.dp, MaterialTheme.colorScheme.outline),
   ) {
+    val tabController = LocalMainListTabController.current
+    val selectedTab = tabController.tab
+
     SuplaNavigationBarItem(
-      selected = navigator.current() == MainRoute.List(ListTab.CHANNELS),
-      onClick = { navigator.replace(MainRoute.List(ListTab.CHANNELS)) },
+      selected = selectedTab == ListTab.CHANNELS,
+      onClick = { tabController.changeTab(ListTab.CHANNELS) },
       iconRes = R.drawable.navbar_channels,
       label = ::ChannelListLabel,
       iconDescription = stringResource(R.string.navbar_channels)
     )
     SuplaNavigationBarItem(
-      selected = navigator.current() == MainRoute.List(ListTab.GROUPS),
-      onClick = { navigator.replace(MainRoute.List(ListTab.GROUPS)) },
+      selected = selectedTab == ListTab.GROUPS,
+      onClick = { tabController.changeTab(ListTab.GROUPS) },
       iconRes = R.drawable.navbar_groups,
       label = ::GroupListLabel,
       iconDescription = stringResource(R.string.navbar_groups)
     )
     SuplaNavigationBarItem(
-      selected = navigator.current() == MainRoute.List(ListTab.SCENES),
-      onClick = { navigator.replace(MainRoute.List(ListTab.SCENES)) },
+      selected = selectedTab == ListTab.SCENES,
+      onClick = { tabController.changeTab(ListTab.SCENES) },
       iconRes = R.drawable.navbar_scenes,
       label = ::SceneListLabel,
       iconDescription = stringResource(R.string.navbar_scenes)
@@ -229,33 +221,36 @@ private fun BottomNavigationBar(navigator: MainComposeNavigator) =
   }
 
 @Composable
-private fun RightNavigationRail(navigator: MainComposeNavigator) =
+private fun RightNavigationRail() =
   NavigationRail(
     modifier = Modifier
       .fillMaxHeight()
       .border(1.dp, MaterialTheme.colorScheme.outline)
   ) {
+    val tabController = LocalMainListTabController.current
+    val selectedTab = tabController.tab
+
     Column(
       modifier = Modifier.fillMaxHeight(),
       verticalArrangement = Arrangement.SpaceEvenly
     ) {
       SuplaRailItem(
-        selected = navigator.current() == MainRoute.List(ListTab.CHANNELS),
-        onClick = { navigator.replace(MainRoute.List(ListTab.CHANNELS)) },
+        selected = selectedTab == ListTab.CHANNELS,
+        onClick = { tabController.changeTab(ListTab.CHANNELS) },
         iconRes = R.drawable.navbar_channels,
         label = ::ChannelListLabel,
         iconDescription = stringResource(R.string.navbar_channels)
       )
       SuplaRailItem(
-        selected = navigator.current() == MainRoute.List(ListTab.GROUPS),
-        onClick = { navigator.replace(MainRoute.List(ListTab.GROUPS)) },
+        selected = selectedTab == ListTab.GROUPS,
+        onClick = { tabController.changeTab(ListTab.GROUPS) },
         iconRes = R.drawable.navbar_groups,
         label = ::GroupListLabel,
         iconDescription = stringResource(R.string.navbar_groups)
       )
       SuplaRailItem(
-        selected = navigator.current() == MainRoute.List(ListTab.SCENES),
-        onClick = { navigator.replace(MainRoute.List(ListTab.SCENES)) },
+        selected = selectedTab == ListTab.SCENES,
+        onClick = { tabController.changeTab(ListTab.SCENES) },
         iconRes = R.drawable.navbar_scenes,
         label = ::SceneListLabel,
         iconDescription = stringResource(R.string.navbar_scenes)

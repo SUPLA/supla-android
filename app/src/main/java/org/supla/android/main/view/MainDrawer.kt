@@ -58,6 +58,7 @@ import org.supla.android.core.branding.Configuration.Menu
 import org.supla.android.core.storage.LocalApplicationPreferences
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.features.main.LocalMainListTabController
 import org.supla.android.main.ListTab
 import org.supla.android.main.LocalNavigator
 import org.supla.android.main.MainRoute
@@ -66,14 +67,13 @@ import org.supla.android.ui.views.buttons.TextButton
 
 @Composable
 fun MainDrawer(
-  drawerState: DrawerState,
   developerOptionsVisibleFlow: StateFlow<Boolean>,
   zWaveVisibleFlow: StateFlow<Boolean>,
   zWaveOpenCallback: () -> Unit,
   content: @Composable (() -> Unit)
 ) =
   ModalNavigationDrawer(
-    drawerState = drawerState,
+    drawerState = requireNotNull(LocalDrawerState.current),
     drawerContent = {
       ModalDrawerSheet(
         modifier = Modifier.width(300.dp),
@@ -125,21 +125,26 @@ private fun DrawerContent(
       modifier = Modifier.padding(vertical = Distance.small, horizontal = Distance.default)
     )
     if (!LocalApplicationPreferences.current.isShowBottomMenu) {
+      val tabController = LocalMainListTabController.current
+      val selectedTab = tabController.tab
       HorizontalDivider(modifier = Modifier.padding(bottom = Distance.small))
       DrawerItem(
         iconRes = R.drawable.navbar_channels,
         labelRes = R.string.navbar_channels,
-        route = MainRoute.List()
+        selected = selectedTab == ListTab.CHANNELS,
+        onNavigate = { tabController.changeTab(ListTab.CHANNELS) },
       )
       DrawerItem(
         iconRes = R.drawable.navbar_groups,
         labelRes = R.string.navbar_groups,
-        route = MainRoute.List(ListTab.GROUPS)
+        selected = selectedTab == ListTab.GROUPS,
+        onNavigate = { tabController.changeTab(ListTab.GROUPS) },
       )
       DrawerItem(
         iconRes = R.drawable.navbar_scenes,
         labelRes = R.string.navbar_scenes,
-        route = MainRoute.List(ListTab.SCENES)
+        selected = selectedTab == ListTab.SCENES,
+        onNavigate = { tabController.changeTab(ListTab.SCENES) },
       )
     }
     HorizontalDivider(modifier = Modifier.padding(top = Distance.small, bottom = Distance.tiny))
@@ -222,21 +227,6 @@ private fun DrawerContent(
       )
     }
   }
-}
-
-@Composable
-private fun DrawerItem(
-  @DrawableRes iconRes: Int,
-  @StringRes labelRes: Int,
-  route: MainRoute
-) {
-  val navigator = LocalNavigator.current
-  DrawerItem(
-    iconRes = iconRes,
-    labelRes = labelRes,
-    selected = navigator?.current() == route,
-    onNavigate = { navigator?.replace(route) }
-  )
 }
 
 @Composable

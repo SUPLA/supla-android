@@ -37,7 +37,7 @@ sealed interface MainRoute : NavKey {
   }
 
   @Serializable
-  data class List(val tab: ListTab = ListTab.CHANNELS) : MainRoute {
+  data object List : MainRoute {
     override val screenTakeoverAllowed: Boolean = true
   }
 

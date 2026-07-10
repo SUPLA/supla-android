@@ -50,11 +50,7 @@ import org.supla.android.main.MainRoute.DeviceCatalog
 import org.supla.android.main.MainRoute.StandardDetail
 import org.supla.android.main.ViewModelHostBase
 import org.supla.android.main.scaffold.screenUnderTopBarPaddings
-import org.supla.android.main.topbar.NavigationType
-import org.supla.android.main.topbar.TopBarIcon
-import org.supla.android.main.topbar.TopBarSearchState
-import org.supla.android.main.topbar.TopBarState
-import org.supla.android.main.topbar.topBarAction
+import org.supla.android.main.topbar.RegisterTopBarSearch
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.lists.ListOnlineState
@@ -67,7 +63,6 @@ import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.data.model.lists.ListItemIssues
 import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.infrastructure.LocalizedString
-import org.supla.core.shared.infrastructure.localizedString
 
 interface ChannelListScope : MainListScope {
   fun onDeviceCatalogClick()
@@ -76,7 +71,6 @@ interface ChannelListScope : MainListScope {
 
 @Composable
 fun ChannelListScreen(
-  onProfilesClick: () -> Unit,
   modifier: Modifier = Modifier,
   viewModel: ChannelListViewModel = hiltViewModel(),
   captionChangeViewModel: CaptionChangeViewModel = hiltViewModel(),
@@ -86,17 +80,12 @@ fun ChannelListScreen(
 
   ViewModelHostBase(
     viewModel = viewModel,
-    topBarState = TopBarState(
-      title = localizedString(R.string.app_name),
-      navigationType = NavigationType.DRAWER,
-      search = TopBarSearchState(
-        data = viewModel.searchData,
-        observer = viewModel::handle,
-      ),
-      action = topBarAction(TopBarIcon.Profiles, onProfilesClick)
-    ),
     eventHandler = { handleChannelEvents(it, navigator, captionChangeViewModel, stateDialogViewModel) }
   ) { state ->
+    RegisterTopBarSearch(
+      data = viewModel.searchData,
+      handler = viewModel::handle
+    )
     viewModel.Content(
       state = state,
       dragEnabled = viewModel.searchData.query.isEmpty(),

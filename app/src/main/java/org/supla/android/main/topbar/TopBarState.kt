@@ -30,7 +30,7 @@ data class TopBarState(
 }
 
 enum class NavigationType {
-  DRAWER, BACK
+  DRAWER, BACK, NONE
 }
 
 data class TopBarSearchState(

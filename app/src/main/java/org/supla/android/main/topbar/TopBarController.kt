@@ -75,6 +75,10 @@ class TopBarController(initialState: TopBarState = TopBarState()) {
     state = state.copy(action = action)
   }
 
+  fun setSearch(search: TopBarSearchState?) {
+    state = state.copy(search = search)
+  }
+
   fun clear(owner: TopBarOwner) {
     if (this.owner?.instance == owner.instance) {
       this.owner = null

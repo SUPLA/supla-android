@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import org.supla.android.core.storage.LocalApplicationPreferences
 import org.supla.android.main.topbar.LocalTopBarController
+import org.supla.core.shared.extensions.forTrue
 
 @Composable
 fun RowScope.SuplaNavigationBarItem(
@@ -35,13 +36,15 @@ fun RowScope.SuplaNavigationBarItem(
   onClick: () -> Unit,
   @DrawableRes iconRes: Int,
   label: @Composable () -> Unit,
-  iconDescription: String? = null
+  iconDescription: String? = null,
+  clearAction: Boolean = false
 ) =
   SuplaNavigationBarItem(
     selected = selected,
     onClick = onClick,
     icon = { Icon(painter = painterResource(iconRes), iconDescription) },
     label = label,
+    clearAction = clearAction
   )
 
 @Composable
@@ -49,13 +52,14 @@ fun RowScope.SuplaNavigationBarItem(
   selected: Boolean,
   onClick: () -> Unit,
   icon: @Composable () -> Unit,
-  label: @Composable () -> Unit
+  label: @Composable () -> Unit,
+  clearAction: Boolean = true
 ) {
   val topBarController = LocalTopBarController.current
   NavigationBarItem(
     selected = selected,
     onClick = {
-      topBarController.setAction(null)
+      clearAction.forTrue { topBarController.setAction(null) }
       onClick()
     },
     icon = icon,

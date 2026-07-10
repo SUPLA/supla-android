@@ -77,7 +77,7 @@ fun MainComposeNavHost(
       entryProvider = topBarEntryProvider(
         entryProvider {
           entry<MainRoute.Status> { EmptyScreenScaffold { StatusScreen(navigator) } }
-          entry<MainRoute.List> { MainListScreen(it.tab, drawerState, navigator) }
+          entry<MainRoute.List> { MainListScreen(drawerState, navigator) }
           entry<MainRoute.UnlockApp> { EmptyScreenScaffold { LockScreen(it.unlockAction, navigator) } }
           entry<MainRoute.Unlock> { BackScaffold { LockScreen(it.unlockAction, navigator) } }
           entry<MainRoute.StandardDetail> { DetailScreen(it.item, it.pages, navigator) }
