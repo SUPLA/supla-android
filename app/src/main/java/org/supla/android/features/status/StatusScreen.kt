@@ -19,7 +19,6 @@ package org.supla.android.features.status
 
 import androidx.compose.runtime.Composable
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import org.supla.android.main.ListTab
 import org.supla.android.main.MainComposeNavigator
 import org.supla.android.main.MainRoute
 import org.supla.android.main.ViewModelHost
@@ -34,7 +33,7 @@ fun StatusScreen(
     viewModel = viewModel,
     eventHandler = { event ->
       when (event) {
-        StatusViewEvent.NavigateToMain -> navigator.navigateTo(MainRoute.List(ListTab.CHANNELS))
+        StatusViewEvent.NavigateToMain -> navigator.navigateTo(MainRoute.List)
         StatusViewEvent.NavigateToProfiles -> navigator.navigateToProfiles()
       }
     }

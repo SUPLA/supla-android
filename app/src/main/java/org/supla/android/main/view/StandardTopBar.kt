@@ -156,6 +156,7 @@ private fun NavigatorIcon(
         },
         modifier = modifier
       )
+    NavigationType.NONE -> {}
   }
 }
 
