@@ -51,6 +51,7 @@ import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
+import org.supla.android.main.topbar.TopBarSearchEvent
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.ActionAlertDialogState
 import org.supla.android.ui.lists.ListItem
@@ -469,10 +470,10 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     every { createProfileChannelsListUseCase(filterString = filterText) } returns Observable.just(list)
 
     // when
-    viewModel.setFilterText(filterText)
+    viewModel.handle(TopBarSearchEvent.QueryChange(filterText))
 
     // then
-    assertThat(viewModel.filterText).isEqualTo(filterText)
+    assertThat(viewModel.searchData.query).isEqualTo(filterText)
     assertThat(states).containsExactly(
       ChannelListViewState(channels = list)
     )
