@@ -32,6 +32,8 @@ import org.supla.android.features.details.detailbase.base.DetailPage
 import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
+import org.supla.android.main.topbar.TopBarSearchData
+import org.supla.android.main.topbar.TopBarSearchEvent
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.ActionAlertDialogState
 import org.supla.android.ui.dialogs.dialogState
@@ -78,7 +80,7 @@ class GroupListViewModel @Inject constructor(
 
   override fun reloadList() = loadGroups()
 
-  var filterText: String = ""
+  var searchData: TopBarSearchData = TopBarSearchData()
     private set
 
   init {
@@ -96,13 +98,13 @@ class GroupListViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  fun setFilterText(text: String) {
-    filterText = text
+  fun handle(event: TopBarSearchEvent) {
+    searchData = searchData.handle(event)
     loadGroups()
   }
 
   fun loadGroups() {
-    createProfileGroupsListUseCase(filterText)
+    createProfileGroupsListUseCase(searchData.query)
       .attach()
       .subscribeBy(
         onNext = { updateState { state -> state.copy(groups = it) } },
@@ -220,7 +222,7 @@ class GroupListViewModel @Inject constructor(
 
   override fun onLocationClick(remoteId: Int) {
     toggleLocationUseCase(remoteId, CollapsedFlag.GROUP)
-      .andThen(createProfileGroupsListUseCase(filterText))
+      .andThen(createProfileGroupsListUseCase(searchData.query))
       .attach()
       .subscribeBy(
         onNext = { updateState { state -> state.copy(groups = it) } },

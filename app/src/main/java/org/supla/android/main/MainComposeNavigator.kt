@@ -22,22 +22,22 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.core.net.toUri
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
-import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.supla.android.NavigationActivity
 import org.supla.android.R
 import org.supla.android.ZWaveConfigurationWizardActivity
 import org.supla.android.cfg.CfgActivity
+import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 @ActivityScoped
-class MainComposeNavigator @Inject constructor(
-  @param:ActivityContext private val activityContext: Context,
-) {
+class MainComposeNavigator @Inject constructor() {
+  private lateinit var activityContext: WeakReference<Context>
   private val backStack = MutableStateFlow<NavBackStack<NavKey>?>(null)
 
   fun current(): NavKey? = backStack.value?.lastOrNull()
@@ -76,62 +76,81 @@ class MainComposeNavigator @Inject constructor(
   }
 
   fun navigateToNewProfile() {
-    val intent = Intent(activityContext, CfgActivity::class.java).also {
-      it.action = CfgActivity.ACTION_AUTH
-      it.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-      it.putExtra(NavigationActivity.INTENT_SENDER, NavigationActivity.INTENT_SENDER_MAIN)
+    withContext {
+      val intent = Intent(this, CfgActivity::class.java).also {
+        it.action = CfgActivity.ACTION_AUTH
+        it.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+        it.putExtra(NavigationActivity.INTENT_SENDER, NavigationActivity.INTENT_SENDER_MAIN)
+      }
+      startActivity(intent)
+      (this as? Activity)?.overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
     }
-    activityContext.startActivity(intent)
-    (activityContext as? Activity)?.overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
   }
 
   fun navigateToProfiles() {
-    val intent = Intent(activityContext, CfgActivity::class.java).also {
-      it.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-      it.putExtra(NavigationActivity.INTENT_SENDER, NavigationActivity.INTENT_SENDER_MAIN)
+    withContext {
+      val intent = Intent(this, CfgActivity::class.java).also {
+        it.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+        it.putExtra(NavigationActivity.INTENT_SENDER, NavigationActivity.INTENT_SENDER_MAIN)
+      }
+      startActivity(intent)
+      (this as? Activity)?.overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
     }
-    activityContext.startActivity(intent)
-    (activityContext as? Activity)?.overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
   }
 
   fun navigateToZWaveConfigurationWizard() {
-    val intent = Intent(activityContext, ZWaveConfigurationWizardActivity::class.java).also {
-      it.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-      it.putExtra(NavigationActivity.INTENT_SENDER, NavigationActivity.INTENT_SENDER_MAIN)
+    withContext {
+      val intent = Intent(this, ZWaveConfigurationWizardActivity::class.java).also {
+        it.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+        it.putExtra(NavigationActivity.INTENT_SENDER, NavigationActivity.INTENT_SENDER_MAIN)
+      }
+      startActivity(intent)
+      (this as? Activity)?.overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
     }
-    activityContext.startActivity(intent)
-    (activityContext as? Activity)?.overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
   }
 
   fun navigateToCloudExternal() {
-    activityContext.startActivity(Intent(Intent.ACTION_VIEW, activityContext.resources.getString(R.string.cloud_url).toUri()))
-  }
-
-  fun navigateToBetaCloudExternal() {
-    activityContext.startActivity(Intent(Intent.ACTION_VIEW, activityContext.resources.getString(R.string.beta_cloud_url).toUri()))
-  }
-
-  fun navigateToWeb(url: Uri) {
-    activityContext.startActivity(Intent(Intent.ACTION_VIEW, url))
-  }
-
-  fun navigateToSuplaOrgExternal() {
-    navigateToWeb(activityContext.getString(R.string.homepage_url).toUri())
-  }
-
-  fun navigateToNfcSettings() {
-    activityContext.startActivity(Intent(Settings.ACTION_NFC_SETTINGS))
-  }
-
-  fun navigateToSystemSettings() {
-    Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-      data = Uri.fromParts("package", activityContext.packageName, null)
-      addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-      activityContext.startActivity(this)
+    withContext {
+      startActivity(Intent(Intent.ACTION_VIEW, resources.getString(R.string.cloud_url).toUri()))
     }
   }
 
-  fun bind(backStack: NavBackStack<NavKey>) {
+  fun navigateToBetaCloudExternal() {
+    withContext {
+      startActivity(Intent(Intent.ACTION_VIEW, resources.getString(R.string.beta_cloud_url).toUri()))
+    }
+  }
+
+  fun navigateToWeb(url: Uri) {
+    withContext {
+      startActivity(Intent(Intent.ACTION_VIEW, url))
+    }
+  }
+
+  fun navigateToSuplaOrgExternal() {
+    withContext {
+      navigateToWeb(getString(R.string.homepage_url).toUri())
+    }
+  }
+
+  fun navigateToNfcSettings() {
+    withContext {
+      startActivity(Intent(Settings.ACTION_NFC_SETTINGS))
+    }
+  }
+
+  fun navigateToSystemSettings() {
+    withContext {
+      Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+        data = Uri.fromParts("package", packageName, null)
+        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(this)
+      }
+    }
+  }
+
+  fun bind(activity: Activity, backStack: NavBackStack<NavKey>) {
+    this.activityContext = WeakReference(activity)
     this.backStack.value = backStack
   }
 
@@ -140,4 +159,10 @@ class MainComposeNavigator @Inject constructor(
       this.backStack.value = null
     }
   }
+
+  fun withContext(runnable: Context.() -> Unit) {
+    activityContext.get()?.let { runnable.invoke(it) }
+  }
 }
+
+val LocalNavigator = staticCompositionLocalOf<MainComposeNavigator?> { null }

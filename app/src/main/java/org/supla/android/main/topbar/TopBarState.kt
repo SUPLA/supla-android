@@ -18,19 +18,41 @@ package org.supla.android.main.topbar
  */
 
 import org.supla.core.shared.infrastructure.LocalizedString
-import kotlin.collections.set
 import kotlin.reflect.KClass
 
 data class TopBarState(
   val title: LocalizedString = LocalizedString.Empty,
+  val navigationType: NavigationType = NavigationType.BACK,
   val search: TopBarSearchState? = null,
   val action: TopBarAction? = null
-)
+) {
+  val inSearch: Boolean = search != null && search.data.visible && search.data.query.isNotEmpty()
+}
+
+enum class NavigationType {
+  DRAWER, BACK
+}
 
 data class TopBarSearchState(
-  val query: String,
-  val onQueryChange: (String) -> Unit
+  val data: TopBarSearchData,
+  val observer: (TopBarSearchEvent) -> Unit,
 )
+
+data class TopBarSearchData(
+  val query: String = "",
+  val visible: Boolean = false
+) {
+  fun handle(event: TopBarSearchEvent): TopBarSearchData =
+    when (event) {
+      is TopBarSearchEvent.QueryChange -> copy(query = event.query)
+      is TopBarSearchEvent.VisibilityChange -> copy(visible = event.visible)
+    }
+}
+
+sealed interface TopBarSearchEvent {
+  data class QueryChange(val query: String) : TopBarSearchEvent
+  data class VisibilityChange(val visible: Boolean) : TopBarSearchEvent
+}
 
 data class TopBarAction(
   val icon: TopBarIcon,

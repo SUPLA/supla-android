@@ -42,6 +42,7 @@ import org.supla.android.features.captionchangedialog.View
 import org.supla.android.features.statedialog.StateDialogViewModel
 import org.supla.android.features.statedialog.View
 import org.supla.android.images.ImageId
+import org.supla.android.main.LocalNavigator
 import org.supla.android.main.MainComposeNavigator
 import org.supla.android.main.MainRoute
 import org.supla.android.main.MainRoute.AddWizard
@@ -49,8 +50,11 @@ import org.supla.android.main.MainRoute.DeviceCatalog
 import org.supla.android.main.MainRoute.StandardDetail
 import org.supla.android.main.ViewModelHostBase
 import org.supla.android.main.scaffold.screenUnderTopBarPaddings
+import org.supla.android.main.topbar.NavigationType
+import org.supla.android.main.topbar.TopBarIcon
 import org.supla.android.main.topbar.TopBarSearchState
 import org.supla.android.main.topbar.TopBarState
+import org.supla.android.main.topbar.topBarAction
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.lists.ListOnlineState
@@ -63,6 +67,7 @@ import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.data.model.lists.ListItemIssues
 import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 
 interface ChannelListScope : MainListScope {
   fun onDeviceCatalogClick()
@@ -71,25 +76,30 @@ interface ChannelListScope : MainListScope {
 
 @Composable
 fun ChannelListScreen(
-  navigator: MainComposeNavigator,
+  onProfilesClick: () -> Unit,
   modifier: Modifier = Modifier,
   viewModel: ChannelListViewModel = hiltViewModel(),
   captionChangeViewModel: CaptionChangeViewModel = hiltViewModel(),
   stateDialogViewModel: StateDialogViewModel = hiltViewModel()
 ) {
+  val navigator = LocalNavigator.current
+
   ViewModelHostBase(
     viewModel = viewModel,
     topBarState = TopBarState(
+      title = localizedString(R.string.app_name),
+      navigationType = NavigationType.DRAWER,
       search = TopBarSearchState(
-        query = viewModel.filterText,
-        onQueryChange = viewModel::setFilterText
+        data = viewModel.searchData,
+        observer = viewModel::handle,
       ),
+      action = topBarAction(TopBarIcon.Profiles, onProfilesClick)
     ),
     eventHandler = { handleChannelEvents(it, navigator, captionChangeViewModel, stateDialogViewModel) }
   ) { state ->
     viewModel.Content(
       state = state,
-      dragEnabled = viewModel.filterText.isEmpty(),
+      dragEnabled = viewModel.searchData.query.isEmpty(),
       modifier = modifier
     )
 
@@ -113,7 +123,7 @@ fun ChannelListScreen(
 
 private fun handleChannelEvents(
   event: ChannelListViewEvent,
-  navigator: MainComposeNavigator,
+  navigator: MainComposeNavigator?,
   captionChangeViewModel: CaptionChangeViewModel,
   stateDialogViewModel: StateDialogViewModel
 ) {
@@ -123,10 +133,10 @@ private fun handleChannelEvents(
     is ChannelListViewEvent.ShowLocationCaptionChangeDialog ->
       captionChangeViewModel.showLocationDialog(event.remoteId, event.profileId, event.caption)
     is ChannelListViewEvent.ShowInfoDialog -> stateDialogViewModel.showDialog(event.remoteId)
-    is ChannelListViewEvent.OpenDetail -> navigator.navigateTo(StandardDetail(event.itemBundle, event.pages))
-    ChannelListViewEvent.NavigateToAddDevice -> navigator.navigateTo(AddWizard)
-    ChannelListViewEvent.NavigateToDeviceCatalog -> navigator.navigateTo(DeviceCatalog)
-    is ChannelListViewEvent.OpenLegacyDetail -> navigator.navigateTo(MainRoute.LegacyDetail(event.remoteId, ItemType.CHANNEL, event.type))
+    is ChannelListViewEvent.OpenDetail -> navigator?.navigateTo(StandardDetail(event.itemBundle, event.pages))
+    ChannelListViewEvent.NavigateToAddDevice -> navigator?.navigateTo(AddWizard)
+    ChannelListViewEvent.NavigateToDeviceCatalog -> navigator?.navigateTo(DeviceCatalog)
+    is ChannelListViewEvent.OpenLegacyDetail -> navigator?.navigateTo(MainRoute.LegacyDetail(event.remoteId, ItemType.CHANNEL, event.type))
   }
 }
 

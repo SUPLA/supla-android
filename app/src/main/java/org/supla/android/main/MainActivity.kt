@@ -108,12 +108,13 @@ class MainActivity : FragmentActivity(), NfcHost, ToolbarVisibilityController {
     val backStack = rememberNavBackStack(MainRoute.Status)
 
     DisposableEffect(backStack) {
-      navigator.bind(backStack)
+      navigator.bind(this@MainActivity, backStack)
       onDispose { navigator.unbind(backStack) }
     }
 
     CompositionLocalProvider(
-      LocalApplicationPreferences provides applicationPreferences
+      LocalApplicationPreferences provides applicationPreferences,
+      LocalNavigator provides navigator
     ) {
       SuplaTheme {
         MainComposeNavHost(backStack, navigator)

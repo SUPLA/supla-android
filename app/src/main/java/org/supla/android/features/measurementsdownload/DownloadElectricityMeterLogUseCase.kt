@@ -103,7 +103,7 @@ class DownloadElectricityMeterLogUseCase @Inject constructor(
     var oldestEntry = lastEntry
 
     val complementedEntities = mutableListOf<ElectricityMeterLogEntity>().also { list ->
-      entries.map { entry ->
+      entries.forEach { entry ->
         val oldest = oldestEntry
 
         if (oldest == null) {

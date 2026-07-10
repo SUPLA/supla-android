@@ -30,6 +30,8 @@ import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
+import org.supla.android.main.topbar.TopBarSearchData
+import org.supla.android.main.topbar.TopBarSearchEvent
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.BaseListViewModel
 import org.supla.android.ui.lists.ListItem
@@ -64,7 +66,7 @@ class SceneListViewModel @Inject constructor(
 ),
   SceneListScope {
 
-  var filterText: String = ""
+  var searchData: TopBarSearchData = TopBarSearchData()
     private set
 
   override fun reloadList() = loadScenes()
@@ -84,13 +86,13 @@ class SceneListViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  fun setFilterText(text: String) {
-    filterText = text
+  fun handle(event: TopBarSearchEvent) {
+    searchData = searchData.handle(event)
     loadScenes()
   }
 
   fun loadScenes() {
-    createProfileScenesListUseCase(filterText)
+    createProfileScenesListUseCase(searchData.query)
       .attach()
       .subscribeBy(
         onNext = { updateState { state -> state.copy(scenes = it) } },
@@ -155,7 +157,7 @@ class SceneListViewModel @Inject constructor(
 
   override fun onLocationClick(remoteId: Int) {
     toggleLocationUseCase(remoteId, CollapsedFlag.SCENE)
-      .andThen(createProfileScenesListUseCase(filterText))
+      .andThen(createProfileScenesListUseCase(searchData.query))
       .attach()
       .subscribeBy(
         onNext = { updateState { state -> state.copy(scenes = it) } },

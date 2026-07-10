@@ -112,7 +112,7 @@ private fun PortraitScreen(
   var page by remember(pages) { mutableStateOf(pages.first()) }
 
   Scaffold(
-    topBar = { StandardTopBar(navigator) },
+    topBar = { StandardTopBar() },
     bottomBar = {
       if (pages.size > 1) {
         NavigationBar(
@@ -151,7 +151,7 @@ private fun LandscapeScreen(
 
   Row {
     Scaffold(
-      topBar = { StandardTopBar(navigator) },
+      topBar = { StandardTopBar() },
       modifier = Modifier.weight(1f)
     ) { paddings ->
       CompositionLocalProvider(LocalScaffoldPadding provides paddings) {

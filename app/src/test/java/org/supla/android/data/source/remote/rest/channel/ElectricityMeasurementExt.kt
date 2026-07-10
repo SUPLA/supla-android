@@ -1,4 +1,4 @@
-package org.supla.android.ui.views.buttons
+package org.supla.android.data.source.remote.rest.channel
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,24 +17,26 @@ package org.supla.android.ui.views.buttons
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import org.supla.android.R
+import java.util.Date
 
-@Composable
-fun DrawerMenuButton(
-  modifier: Modifier = Modifier,
-  onClick: () -> Unit
-) {
-  IconButton(
-    icon = Icons.Default.Menu,
-    onClick = onClick,
-    contentDescription = stringResource(R.string.general_open_drawer),
-    modifier = modifier.size(40.dp)
+fun ElectricityMeasurement.Companion.mock(
+  date: Date,
+  phase1Fae: Long? = null
+) =
+  ElectricityMeasurement(
+    date = date,
+    phase1Fae = phase1Fae,
+    phase1Rae = null,
+    phase1Fre = null,
+    phase1Rre = null,
+    phase2Fae = null,
+    phase2Rae = null,
+    phase2Fre = null,
+    phase2Rre = null,
+    phase3Fae = null,
+    phase3Rae = null,
+    phase3Fre = null,
+    phase3Rre = null,
+    faeBalanced = null,
+    raeBalanced = null
   )
-}

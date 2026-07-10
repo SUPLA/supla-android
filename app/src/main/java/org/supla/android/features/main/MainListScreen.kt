@@ -34,7 +34,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -42,7 +41,6 @@ import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import kotlinx.coroutines.launch
 import org.supla.android.R
 import org.supla.android.core.storage.LocalApplicationPreferences
 import org.supla.android.features.channellist.ChannelListScreen
@@ -56,10 +54,11 @@ import org.supla.android.main.MainRoute
 import org.supla.android.main.scaffold.LocalScaffoldPadding
 import org.supla.android.main.view.ChannelListLabel
 import org.supla.android.main.view.GroupListLabel
+import org.supla.android.main.view.LocalDrawerState
 import org.supla.android.main.view.MainDrawer
-import org.supla.android.main.view.MainTopBar
 import org.supla.android.main.view.PermanentMainDrawer
 import org.supla.android.main.view.SceneListLabel
+import org.supla.android.main.view.StandardTopBar
 import org.supla.android.ui.dialogs.AuthorizationDialog
 import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.ui.extensions.ifTrue
@@ -74,32 +73,34 @@ fun MainListScreen(
   navigator: MainComposeNavigator,
   viewModel: MainListViewModel = hiltViewModel()
 ) {
-  EventBasedViewModelHost(
-    viewModel = viewModel,
-    eventHandler = { handleEvent(it, navigator) }
-  ) {
-    if (LocalWindowInfo.current.containerDpSize.width >= 600.dp) {
-      WideView(selectedTab, navigator, viewModel)
-    } else if (LocalConfiguration.current.isPhoneLandscape) {
-      LandscapePhoneView(selectedTab, drawerState, navigator, viewModel)
-    } else {
-      PortraitPhoneView(selectedTab, drawerState, navigator, viewModel)
-    }
+  CompositionLocalProvider(LocalDrawerState provides drawerState) {
+    EventBasedViewModelHost(
+      viewModel = viewModel,
+      eventHandler = { handleEvent(it, navigator) }
+    ) {
+      if (LocalWindowInfo.current.containerDpSize.width >= 600.dp) {
+        WideView(selectedTab, navigator, viewModel)
+      } else if (LocalConfiguration.current.isPhoneLandscape) {
+        LandscapePhoneView(selectedTab, drawerState, navigator, viewModel)
+      } else {
+        PortraitPhoneView(selectedTab, drawerState, navigator, viewModel)
+      }
 
-    viewModel.authorizationDialogState.collectAsState().value?.let {
-      viewModel.AuthorizationDialog(it)
-    }
+      viewModel.authorizationDialogState.collectAsState().value?.let {
+        viewModel.AuthorizationDialog(it)
+      }
 
-    viewModel.showNotificationInfo.collectAsState().value.ifTrue {
-      NotificationInfo(viewModel)
-    }
+      viewModel.showNotificationInfo.collectAsState().value.ifTrue {
+        NotificationInfo(viewModel)
+      }
 
-    viewModel.profileSelectionState.collectAsState().value?.let {
-      ProfileSelectionDialog(
-        profiles = it.profiles,
-        onDismiss = viewModel::onDismissProfileSelection,
-        onProfileSelected = viewModel::onProfileSelected
-      )
+      viewModel.profileSelectionState.collectAsState().value?.let {
+        ProfileSelectionDialog(
+          profiles = it.profiles,
+          onDismiss = viewModel::onDismissProfileSelection,
+          onProfileSelected = viewModel::onProfileSelected
+        )
+      }
     }
   }
 }
@@ -111,22 +112,14 @@ private fun PortraitPhoneView(
   navigator: MainComposeNavigator,
   viewModel: MainListViewModel
 ) {
-  val scope = rememberCoroutineScope()
-
   MainDrawer(
-    navigator = navigator,
     drawerState = drawerState,
     developerOptionsVisibleFlow = viewModel.developerOptionsVisible,
     zWaveVisibleFlow = viewModel.zWaveAvailable,
     zWaveOpenCallback = { viewModel.showAuthorizationDialog(AuthorizationReason.ZWaveWizard) }
   ) {
     Scaffold(
-      topBar = {
-        MainTopBar(
-          onMenuClick = { scope.launch { drawerState.open() } },
-          onProfilesClick = viewModel::showProfilesPopup,
-        )
-      },
+      topBar = { StandardTopBar() },
       bottomBar = {
         if (LocalApplicationPreferences.current.isShowBottomMenu) {
           BottomNavigationBar(navigator)
@@ -135,9 +128,9 @@ private fun PortraitPhoneView(
     ) { paddings ->
       CompositionLocalProvider(LocalScaffoldPadding provides paddings) {
         when (selectedTab) {
-          ListTab.CHANNELS -> ChannelListScreen(navigator)
-          ListTab.GROUPS -> GroupListScreen(navigator)
-          ListTab.SCENES -> SceneListScreen(navigator)
+          ListTab.CHANNELS -> ChannelListScreen(onProfilesClick = viewModel::showProfilesPopup)
+          ListTab.GROUPS -> GroupListScreen(onProfilesClick = viewModel::showProfilesPopup)
+          ListTab.SCENES -> SceneListScreen(onProfilesClick = viewModel::showProfilesPopup)
         }
       }
     }
@@ -151,10 +144,7 @@ private fun LandscapePhoneView(
   navigator: MainComposeNavigator,
   viewModel: MainListViewModel
 ) {
-  val scope = rememberCoroutineScope()
-
   MainDrawer(
-    navigator = navigator,
     drawerState = drawerState,
     developerOptionsVisibleFlow = viewModel.developerOptionsVisible,
     zWaveVisibleFlow = viewModel.zWaveAvailable,
@@ -162,19 +152,14 @@ private fun LandscapePhoneView(
   ) {
     Row {
       Scaffold(
-        topBar = {
-          MainTopBar(
-            onMenuClick = { scope.launch { drawerState.open() } },
-            onProfilesClick = viewModel::showProfilesPopup,
-          )
-        },
+        topBar = { StandardTopBar() },
         modifier = Modifier.weight(1f)
       ) { paddings ->
         CompositionLocalProvider(LocalScaffoldPadding provides paddings) {
           when (selectedTab) {
-            ListTab.CHANNELS -> ChannelListScreen(navigator)
-            ListTab.GROUPS -> GroupListScreen(navigator)
-            ListTab.SCENES -> SceneListScreen(navigator)
+            ListTab.CHANNELS -> ChannelListScreen(onProfilesClick = viewModel::showProfilesPopup)
+            ListTab.GROUPS -> GroupListScreen(onProfilesClick = viewModel::showProfilesPopup)
+            ListTab.SCENES -> SceneListScreen(onProfilesClick = viewModel::showProfilesPopup)
           }
         }
       }
@@ -192,18 +177,12 @@ private fun WideView(
   viewModel: MainListViewModel
 ) {
   PermanentMainDrawer(
-    navigator = navigator,
     developerOptionsVisibleFlow = viewModel.developerOptionsVisible,
     zWaveVisibleFlow = viewModel.zWaveAvailable,
     zWaveOpenCallback = { viewModel.showAuthorizationDialog(AuthorizationReason.ZWaveWizard) }
   ) {
     Scaffold(
-      topBar = {
-        MainTopBar(
-          onMenuClick = null,
-          onProfilesClick = viewModel::showProfilesPopup,
-        )
-      },
+      topBar = { StandardTopBar() },
       bottomBar = {
         if (LocalApplicationPreferences.current.isShowBottomMenu) {
           BottomNavigationBar(navigator)
@@ -212,9 +191,9 @@ private fun WideView(
     ) { paddings ->
       CompositionLocalProvider(LocalScaffoldPadding provides paddings) {
         when (selectedTab) {
-          ListTab.CHANNELS -> ChannelListScreen(navigator)
-          ListTab.GROUPS -> GroupListScreen(navigator)
-          ListTab.SCENES -> SceneListScreen(navigator)
+          ListTab.CHANNELS -> ChannelListScreen(onProfilesClick = viewModel::showProfilesPopup)
+          ListTab.GROUPS -> GroupListScreen(onProfilesClick = viewModel::showProfilesPopup)
+          ListTab.SCENES -> SceneListScreen(onProfilesClick = viewModel::showProfilesPopup)
         }
       }
     }
