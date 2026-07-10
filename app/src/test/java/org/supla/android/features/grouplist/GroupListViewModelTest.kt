@@ -49,6 +49,7 @@ import org.supla.android.features.details.detailbase.base.DetailPage
 import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
+import org.supla.android.main.topbar.TopBarSearchEvent
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.ActionAlertDialogState
 import org.supla.android.ui.lists.ListItem
@@ -496,10 +497,10 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     every { createProfileGroupsListUseCase(filterText) } returns Observable.just(list)
 
     // when
-    viewModel.setFilterText(filterText)
+    viewModel.handle(TopBarSearchEvent.QueryChange(filterText))
 
     // then
-    assertThat(viewModel.filterText).isEqualTo(filterText)
+    assertThat(viewModel.searchData.query).isEqualTo(filterText)
     assertThat(states).containsExactly(
       GroupListViewState(groups = list)
     )

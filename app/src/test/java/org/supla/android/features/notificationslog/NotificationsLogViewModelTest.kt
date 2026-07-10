@@ -31,6 +31,7 @@ import org.junit.Before
 import org.junit.Test
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.data.source.local.entity.NotificationEntity
+import org.supla.android.main.topbar.TopBarSearchEvent
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.notifications.DeleteNotificationUseCase
 import org.supla.android.usecases.notifications.DeleteNotificationsUseCase
@@ -174,7 +175,7 @@ class NotificationsLogViewModelTest : BaseViewModelTest<NotificationsLogViewStat
     every { loadAllNotificationsUseCase.invoke(searchText) } returns Observable.just(emptyList())
 
     // when
-    viewModel.setFilterString(searchText)
+    viewModel.handle(TopBarSearchEvent.QueryChange(searchText))
 
     // then
     verify(exactly = 1) { loadAllNotificationsUseCase(searchText) }
@@ -189,10 +190,9 @@ class NotificationsLogViewModelTest : BaseViewModelTest<NotificationsLogViewStat
     every { loadAllNotificationsUseCase.invoke(firstSearch) } returns Observable.just(emptyList())
     every { loadAllNotificationsUseCase.invoke() } returns Observable.just(emptyList())
 
-    viewModel.setFilterString(firstSearch)
-
     // when
-    viewModel.setFilterString(secondSearch)
+    viewModel.handle(TopBarSearchEvent.QueryChange(firstSearch))
+    viewModel.handle(TopBarSearchEvent.QueryChange(secondSearch))
 
     // then
     verify {
@@ -211,8 +211,8 @@ class NotificationsLogViewModelTest : BaseViewModelTest<NotificationsLogViewStat
     every { loadAllNotificationsUseCase.invoke(secondSearch) } returns Observable.just(emptyList())
 
     // when
-    viewModel.setFilterString(firstSearch)
-    viewModel.setFilterString(secondSearch)
+    viewModel.handle(TopBarSearchEvent.QueryChange(firstSearch))
+    viewModel.handle(TopBarSearchEvent.QueryChange(secondSearch))
 
     // then
     verify {

@@ -43,6 +43,7 @@ import org.supla.android.data.source.SceneRepository
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
+import org.supla.android.main.topbar.TopBarSearchEvent
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
@@ -264,10 +265,10 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
     every { createProfileScenesListUseCase(filterText) } returns Observable.just(list)
 
     // when
-    viewModel.setFilterText(filterText)
+    viewModel.handle(TopBarSearchEvent.QueryChange(filterText))
 
     // then
-    assertThat(viewModel.filterText).isEqualTo(filterText)
+    assertThat(viewModel.searchData.query).isEqualTo(filterText)
     assertThat(states).containsExactly(
       SceneListViewState(scenes = list)
     )
