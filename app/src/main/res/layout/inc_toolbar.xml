@@ -35,31 +35,6 @@
           android:layout_height="wrap_content"
           android:layout_gravity="center"
           android:visibility="gone" />
-
-        <LinearLayout
-          android:id="@+id/supla_toolbar_search"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          android:visibility="gone">
-
-          <EditText
-            android:id="@+id/supla_toolbar_search_field"
-            style="@style/AppTheme.ToolbarSearch"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="@string/toolbar_search_hint"
-            android:layout_weight="1"/>
-
-          <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/supla_toolbar_search_close"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_close"
-            android:tint="@color/on_primary_container"
-            android:paddingHorizontal="@dimen/distance_small"/>
-        </LinearLayout>
       </org.supla.android.ui.AppBar>
     </com.google.android.material.appbar.AppBarLayout>
   </merge>

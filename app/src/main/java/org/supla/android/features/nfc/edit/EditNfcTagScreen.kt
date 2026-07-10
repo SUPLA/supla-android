@@ -50,7 +50,7 @@ fun EditNfcTagScreen(
   val nfcHost = context.findNfcHost()
   val scope = rememberCoroutineScope()
 
-  BackScaffold(navigator) {
+  BackScaffold {
     ViewModelHost(
       viewModel = viewModel,
       eventHandler = { handleEvent(it, navigator) },

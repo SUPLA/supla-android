@@ -34,11 +34,15 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.captionchangedialog.CaptionChangeViewEvent
 import org.supla.android.features.captionchangedialog.CaptionChangeViewModel
 import org.supla.android.features.captionchangedialog.View
+import org.supla.android.main.LocalNavigator
 import org.supla.android.main.MainComposeNavigator
 import org.supla.android.main.ViewModelHostBase
 import org.supla.android.main.scaffold.screenUnderTopBarPaddings
+import org.supla.android.main.topbar.NavigationType
+import org.supla.android.main.topbar.TopBarIcon
 import org.supla.android.main.topbar.TopBarSearchState
 import org.supla.android.main.topbar.TopBarState
+import org.supla.android.main.topbar.topBarAction
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.views.EmptyListInfoView
@@ -46,6 +50,7 @@ import org.supla.android.ui.views.buttons.OutlinedButton
 import org.supla.android.ui.views.list.ListView
 import org.supla.android.ui.views.list.MainListScope
 import org.supla.core.shared.extensions.forTrue
+import org.supla.core.shared.infrastructure.localizedString
 
 interface SceneListScope : MainListScope {
   fun onAddGroupClick()
@@ -53,23 +58,28 @@ interface SceneListScope : MainListScope {
 
 @Composable
 fun SceneListScreen(
-  navigator: MainComposeNavigator,
+  onProfilesClick: () -> Unit,
   viewModel: SceneListViewModel = hiltViewModel(),
   captionChangeViewModel: CaptionChangeViewModel = hiltViewModel()
 ) {
+  val navigator = LocalNavigator.current
+
   ViewModelHostBase(
     viewModel = viewModel,
     topBarState = TopBarState(
+      title = localizedString(R.string.app_name),
+      navigationType = NavigationType.DRAWER,
       search = TopBarSearchState(
-        query = viewModel.filterText,
-        onQueryChange = viewModel::setFilterText
-      )
+        data = viewModel.searchData,
+        observer = viewModel::handle
+      ),
+      action = topBarAction(TopBarIcon.Profiles, onProfilesClick)
     ),
     eventHandler = { handleSceneEvents(it, navigator, captionChangeViewModel) }
   ) { state ->
     viewModel.Content(
       state = state,
-      dragEnabled = viewModel.filterText.isEmpty()
+      dragEnabled = viewModel.searchData.query.isEmpty()
     )
   }
 
@@ -81,15 +91,15 @@ fun SceneListScreen(
   }
 }
 
-private fun handleSceneEvents(event: SceneListViewEvent, navigator: MainComposeNavigator, viewModel: CaptionChangeViewModel) {
+private fun handleSceneEvents(event: SceneListViewEvent, navigator: MainComposeNavigator?, viewModel: CaptionChangeViewModel) {
   when (event) {
     is SceneListViewEvent.ShowLocationCaptionChangeDialog ->
       viewModel.showLocationDialog(event.remoteId, event.profileId, event.caption)
     is SceneListViewEvent.ShowSceneCaptionChangeDialog ->
       viewModel.showSceneDialog(event.remoteId, event.profileId, event.caption)
-    is SceneListViewEvent.NavigateToPrivateCloud -> navigator.navigateToWeb(event.url)
-    SceneListViewEvent.NavigateToSuplaBetaCloud -> navigator.navigateToBetaCloudExternal()
-    SceneListViewEvent.NavigateToSuplaCloud -> navigator.navigateToCloudExternal()
+    is SceneListViewEvent.NavigateToPrivateCloud -> navigator?.navigateToWeb(event.url)
+    SceneListViewEvent.NavigateToSuplaBetaCloud -> navigator?.navigateToBetaCloudExternal()
+    SceneListViewEvent.NavigateToSuplaCloud -> navigator?.navigateToCloudExternal()
   }
 }
 

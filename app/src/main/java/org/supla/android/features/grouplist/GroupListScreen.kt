@@ -35,13 +35,17 @@ import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.features.captionchangedialog.CaptionChangeViewEvent
 import org.supla.android.features.captionchangedialog.CaptionChangeViewModel
 import org.supla.android.features.captionchangedialog.View
+import org.supla.android.main.LocalNavigator
 import org.supla.android.main.MainComposeNavigator
 import org.supla.android.main.MainRoute
 import org.supla.android.main.MainRoute.StandardDetail
 import org.supla.android.main.ViewModelHostBase
 import org.supla.android.main.scaffold.screenUnderTopBarPaddings
+import org.supla.android.main.topbar.NavigationType
+import org.supla.android.main.topbar.TopBarIcon
 import org.supla.android.main.topbar.TopBarSearchState
 import org.supla.android.main.topbar.TopBarState
+import org.supla.android.main.topbar.topBarAction
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.views.EmptyListInfoView
@@ -49,6 +53,7 @@ import org.supla.android.ui.views.buttons.OutlinedButton
 import org.supla.android.ui.views.list.ListView
 import org.supla.android.ui.views.list.MainListScope
 import org.supla.core.shared.extensions.forTrue
+import org.supla.core.shared.infrastructure.localizedString
 
 interface GroupListScope : MainListScope {
   fun onAddGroupClick()
@@ -56,23 +61,28 @@ interface GroupListScope : MainListScope {
 
 @Composable
 fun GroupListScreen(
-  navigator: MainComposeNavigator,
+  onProfilesClick: () -> Unit,
   viewModel: GroupListViewModel = hiltViewModel(),
   captionChangeViewModel: CaptionChangeViewModel = hiltViewModel()
 ) {
+  val navigator = LocalNavigator.current
+
   ViewModelHostBase(
     viewModel = viewModel,
     topBarState = TopBarState(
+      title = localizedString(R.string.app_name),
+      navigationType = NavigationType.DRAWER,
       search = TopBarSearchState(
-        query = viewModel.filterText,
-        onQueryChange = viewModel::setFilterText
+        data = viewModel.searchData,
+        observer = viewModel::handle
       ),
+      action = topBarAction(TopBarIcon.Profiles, onProfilesClick)
     ),
     eventHandler = { handleGroupEvents(it, navigator, captionChangeViewModel) }
   ) { state ->
     viewModel.Content(
       state = state,
-      dragEnabled = viewModel.filterText.isEmpty()
+      dragEnabled = viewModel.searchData.query.isEmpty()
     )
 
     state.actionAlertDialogState?.View(
@@ -89,15 +99,15 @@ fun GroupListScreen(
   }
 }
 
-private fun handleGroupEvents(event: GroupListViewEvent, navigator: MainComposeNavigator, viewModel: CaptionChangeViewModel) {
+private fun handleGroupEvents(event: GroupListViewEvent, navigator: MainComposeNavigator?, viewModel: CaptionChangeViewModel) {
   when (event) {
     is GroupListViewEvent.ShowGroupCaptionChangeDialog -> viewModel.showGroupDialog(event.remoteId, event.profileId, event.caption)
     is GroupListViewEvent.ShowLocationCaptionChangeDialog -> viewModel.showLocationDialog(event.remoteId, event.profileId, event.caption)
-    is GroupListViewEvent.NavigateToPrivateCloud -> navigator.navigateToWeb(event.url)
-    GroupListViewEvent.NavigateToSuplaBetaCloud -> navigator.navigateToBetaCloudExternal()
-    GroupListViewEvent.NavigateToSuplaCloud -> navigator.navigateToCloudExternal()
-    is GroupListViewEvent.OpenLegacyDetail -> navigator.navigateTo(MainRoute.LegacyDetail(event.remoteId, ItemType.GROUP, event.type))
-    is GroupListViewEvent.OpenDetail -> navigator.navigateTo(StandardDetail(event.itemBundle, event.pages))
+    is GroupListViewEvent.NavigateToPrivateCloud -> navigator?.navigateToWeb(event.url)
+    GroupListViewEvent.NavigateToSuplaBetaCloud -> navigator?.navigateToBetaCloudExternal()
+    GroupListViewEvent.NavigateToSuplaCloud -> navigator?.navigateToCloudExternal()
+    is GroupListViewEvent.OpenLegacyDetail -> navigator?.navigateTo(MainRoute.LegacyDetail(event.remoteId, ItemType.GROUP, event.type))
+    is GroupListViewEvent.OpenDetail -> navigator?.navigateTo(StandardDetail(event.itemBundle, event.pages))
   }
 }
 

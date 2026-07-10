@@ -17,6 +17,7 @@ package org.supla.android.ui.views.buttons
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -25,11 +26,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
 
@@ -45,11 +48,32 @@ fun IconButton(
   iconSize: Dp = dimensionResource(id = R.dimen.icon_default_size)
 ) =
   IconButton(onClick = onClick, enabled = enabled, modifier = modifier) {
-    val iconModifier = Modifier
-      .size(iconSize)
+    val iconModifier = Modifier.size(iconSize)
 
     Icon(
       painter = painterResource(id = icon),
+      contentDescription = contentDescription,
+      modifier = if (rotate) iconModifier.rotate(180f) else iconModifier,
+      tint = if (enabled) tint else colorResource(id = R.color.disabled)
+    )
+  }
+
+@Composable
+fun IconButton(
+  icon: ImageVector,
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+  contentDescription: String? = null,
+  enabled: Boolean = true,
+  rotate: Boolean = false,
+  tint: Color = MaterialTheme.colorScheme.primary,
+  iconSize: Dp = dimensionResource(id = R.dimen.icon_default_size)
+) =
+  IconButton(onClick = onClick, enabled = enabled, modifier = modifier) {
+    val iconModifier = Modifier.size(iconSize)
+
+    Icon(
+      imageVector = icon,
       contentDescription = contentDescription,
       modifier = if (rotate) iconModifier.rotate(180f) else iconModifier,
       tint = if (enabled) tint else colorResource(id = R.color.disabled)
@@ -60,6 +84,9 @@ fun IconButton(
 @Composable
 private fun Preview() {
   SuplaTheme {
-    IconButton(icon = R.drawable.ic_arrow_right, onClick = { })
+    Row {
+      IconButton(icon = R.drawable.ic_arrow_right, onClick = { }, modifier = Modifier.size(40.dp))
+      IconButton(icon = R.drawable.ic_double_arrow_right, onClick = { }, modifier = Modifier.size(40.dp))
+    }
   }
 }

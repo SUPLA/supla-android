@@ -17,6 +17,8 @@ package org.supla.android.main.topbar
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -59,8 +61,10 @@ class TopBarController(initialState: TopBarState = TopBarState()) {
   }
 
   fun updateSearchValue(value: String) {
-    state = state.copy(search = state.search?.copy(query = value))
-    state.search?.onQueryChange(value)
+    state.search?.let { searchState ->
+      state = state.copy(search = searchState.copy(data = searchState.data.copy(query = value)))
+      searchState.observer(TopBarSearchEvent.QueryChange(value))
+    }
   }
 
   fun updateTitle(title: LocalizedString) {
@@ -77,6 +81,13 @@ class TopBarController(initialState: TopBarState = TopBarState()) {
       state = TopBarState()
     }
   }
+
+  fun setSearchVisible(visible: Boolean) {
+    state.search?.let { searchState ->
+      state = state.copy(search = searchState.copy(data = searchState.data.copy(visible = visible)))
+      searchState.observer(TopBarSearchEvent.VisibilityChange(visible))
+    }
+  }
 }
 
 data class TopBarOwner(
@@ -87,3 +98,48 @@ data class TopBarOwner(
 private val DefaultTopBarController = TopBarController()
 val LocalTopBarController = staticCompositionLocalOf { DefaultTopBarController }
 val LocalTopBarScreenKey = staticCompositionLocalOf<Any> { error("LocalTopBarScreenKey not provided!") }
+
+/**
+ * Prepared for previews.
+ */
+@Composable
+fun MockedTopBarController(
+  title: LocalizedString = LocalizedString.Empty,
+  searchQuery: String = "",
+  searchVisible: Boolean = false,
+  action: TopBarAction? = null,
+  content: @Composable () -> Unit
+) {
+  MockedTopBarController(
+    title = title,
+    search = TopBarSearchState(
+      data = TopBarSearchData(searchQuery, searchVisible),
+      observer = {}
+    ),
+    action = action,
+    content = content
+  )
+}
+
+@Composable
+fun MockedTopBarController(
+  title: LocalizedString = LocalizedString.Empty,
+  search: TopBarSearchState? = null,
+  action: TopBarAction? = null,
+  content: @Composable () -> Unit
+) {
+  val topBarControllerWithSearch = TopBarController()
+  topBarControllerWithSearch.setTopBar(
+    owner = TopBarOwner(""),
+    state = TopBarState(
+      title = title,
+      search = search,
+      action = action
+    )
+  )
+
+  CompositionLocalProvider(
+    value = LocalTopBarController provides topBarControllerWithSearch,
+    content = content
+  )
+}

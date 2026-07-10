@@ -24,4 +24,5 @@ sealed interface TopBarEvent {
   data object OpenSettings : TopBarEvent
   data object DeleteLastMonth : TopBarEvent
   data object DeleteAll : TopBarEvent
+  data object OpenProfileSelector : TopBarEvent
 }

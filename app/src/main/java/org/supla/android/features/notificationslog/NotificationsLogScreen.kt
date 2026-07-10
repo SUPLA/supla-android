@@ -48,7 +48,7 @@ fun NotificationsLogScreen(
   val snackbarActionLabel = stringResource(R.string.cancel)
 
   BackHandler {
-    if (viewModel.filterString.isEmpty()) {
+    if (viewModel.searchData.query.isEmpty()) {
       navigator.back()
     } else {
       topBarController.updateSearchValue("")
@@ -59,8 +59,8 @@ fun NotificationsLogScreen(
     viewModel = viewModel,
     topBarState = TopBarState(
       search = TopBarSearchState(
-        query = viewModel.filterString,
-        onQueryChange = viewModel::setFilterString
+        data = viewModel.searchData,
+        observer = viewModel::handle
       ),
       action = topBarAction {
         icon = TopBarIcon.NotificationsDeletion

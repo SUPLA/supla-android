@@ -823,6 +823,8 @@
   <string name="scene_inactive">De scène is inactief</string>
   <string name="nfc_detail_action_added">Toegevoegd aan de app</string>
   <string name="general_search">Zoeken</string>
+  <string name="general_open_drawer">Menu openen</string>
+  <string name="general_back">Terug</string>
   <string name="toolbar_search_hint">Voer minimaal 2 tekens in…</string>
   <string name="details_timer_select_program">Selecteer een programma</string>
   <string name="details_recuperator_ventilation">Ventilatie</string>

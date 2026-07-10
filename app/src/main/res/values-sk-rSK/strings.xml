@@ -827,6 +827,8 @@
   <string name="scene_inactive">Scéna je neaktívna</string>
   <string name="nfc_detail_action_added">Pridané do aplikácie</string>
   <string name="general_search">Hľadať</string>
+  <string name="general_open_drawer">Otvoriť menu</string>
+  <string name="general_back">Späť</string>
   <string name="toolbar_search_hint">Zadajte aspoň 2 znaky…</string>
   <string name="details_timer_select_program">Vyberte program</string>
   <string name="details_recuperator_ventilation">Vetranie</string>

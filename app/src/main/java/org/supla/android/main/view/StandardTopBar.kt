@@ -22,63 +22,68 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import org.supla.android.R
 import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.main.LocalNavigator
 import org.supla.android.main.MainComposeNavigator
 import org.supla.android.main.topbar.Icon
 import org.supla.android.main.topbar.LocalTopBarController
+import org.supla.android.main.topbar.MockedTopBarController
+import org.supla.android.main.topbar.NavigationType
 import org.supla.android.main.topbar.TopBarAction
 import org.supla.android.main.topbar.TopBarController
 import org.supla.android.main.topbar.TopBarIcon
+import org.supla.android.main.topbar.TopBarSearchData
 import org.supla.android.main.topbar.TopBarSearchState
 import org.supla.android.main.topbar.TopBarState
 import org.supla.android.tools.SuplaComponentPreview
 import org.supla.android.ui.views.buttons.DrawerBackButton
+import org.supla.android.ui.views.buttons.DrawerMenuButton
+import org.supla.android.ui.views.buttons.IconButton
 import org.supla.android.ui.views.texts.HeadlineSmall
 import org.supla.core.shared.infrastructure.localizedString
 
 @Composable
-fun StandardTopBar(navigator: MainComposeNavigator) {
+fun StandardTopBar() {
   TopBarSurface {
     val topBarController = LocalTopBarController.current
     val topBarState = topBarController.state
+    val searchState = topBarState.search
 
-    topBarState.search?.let {
-      SearchContent(navigator, it, topBarState, topBarController)
-    } ?: TitleContent(navigator, topBarState)
+    if (searchState != null && searchState.data.visible) {
+      SearchContent(searchState, topBarState, topBarController)
+    } else {
+      TitleContent(topBarState, topBarController)
+    }
   }
 }
 
 @Composable
 private fun SearchContent(
-  navigator: MainComposeNavigator,
   searchState: TopBarSearchState,
   topBarState: TopBarState,
   topBarController: TopBarController
 ) {
+  val navigator = LocalNavigator.current
   Row(verticalAlignment = Alignment.CenterVertically) {
-    DrawerBackButton(
-      onClick = {
-        if (searchState.query.isEmpty()) {
-          navigator.back()
-        } else {
-          topBarController.updateSearchValue("")
-        }
-      }
+    NavigatorIcon(
+      navigator = navigator,
+      topBarState = topBarState,
+      onSearchValue = topBarController::updateSearchValue
     )
 
     TopBarSearchField(
-      searchText = searchState.query,
-      onTextChange = { topBarController.updateSearchValue(it) },
+      searchText = searchState.data.query,
       modifier = Modifier.weight(1f)
     )
 
@@ -88,12 +93,15 @@ private fun SearchContent(
 
 @Composable
 private fun TitleContent(
-  navigator: MainComposeNavigator,
-  topBarState: TopBarState
+  topBarState: TopBarState,
+  topBarController: TopBarController
 ) {
+  val navigator = LocalNavigator.current
   Box {
-    DrawerBackButton(
-      onClick = { navigator.back() },
+    NavigatorIcon(
+      navigator = navigator,
+      topBarState = topBarState,
+      onSearchValue = topBarController::updateSearchValue,
       modifier = Modifier.align(Alignment.CenterStart)
     )
 
@@ -101,11 +109,53 @@ private fun TitleContent(
       text = topBarState.title(),
       modifier = Modifier
         .align(Alignment.Center)
-        .padding(horizontal = 64.dp),
+        .padding(horizontal = if (topBarState.search == null) 48.dp else 88.dp),
       maxLines = 1
     )
 
+    topBarState.search?.let {
+      IconButton(
+        R.drawable.ic_search,
+        onClick = { topBarController.setSearchVisible(true) },
+        contentDescription = stringResource(R.string.general_search),
+        modifier = Modifier
+          .align(Alignment.CenterEnd)
+          .padding(end = if (topBarState.action == null) 0.dp else 40.dp)
+          .size(40.dp)
+      )
+    }
+
     topBarState.action?.Icon(modifier = Modifier.align(Alignment.CenterEnd))
+  }
+}
+
+@Composable
+private fun NavigatorIcon(
+  navigator: MainComposeNavigator?,
+  topBarState: TopBarState,
+  onSearchValue: (String) -> Unit,
+  modifier: Modifier = Modifier
+) {
+  when (topBarState.navigationType) {
+    NavigationType.DRAWER -> {
+      val scope = rememberCoroutineScope()
+      val drawerState = LocalDrawerState.current
+      DrawerMenuButton(
+        onClick = { drawerState?.let { scope.launch { it.open() } } },
+        modifier = modifier
+      )
+    }
+    NavigationType.BACK ->
+      DrawerBackButton(
+        onClick = {
+          if (topBarState.inSearch) {
+            onSearchValue("")
+          } else {
+            navigator?.back()
+          }
+        },
+        modifier = modifier
+      )
   }
 }
 
@@ -114,31 +164,50 @@ private fun TitleContent(
 private fun Preview() {
   SuplaTheme {
     Column(Modifier.background(MaterialTheme.colorScheme.outline)) {
-      val titleTopBarController = remember {
-        TopBarController(
-          initialState = TopBarState(
-            title = localizedString(R.string.app_name),
-            action = TopBarAction(TopBarIcon.OpenSettings)
-          )
-        )
-      }
-      CompositionLocalProvider(LocalTopBarController provides titleTopBarController) {
-        StandardTopBar(MainComposeNavigator(LocalContext.current))
+      MockedTopBarController(
+        title = localizedString(R.string.app_name),
+        action = TopBarAction(TopBarIcon.OpenSettings)
+      ) {
+        StandardTopBar()
       }
 
-      val searchTopBarController = remember {
-        TopBarController(
-          initialState = TopBarState(
-            search = TopBarSearchState(
-              query = "",
-              onQueryChange = {}
-            ),
-            action = TopBarAction(TopBarIcon.OpenSettings)
-          )
-        )
+      MockedTopBarController(
+        title = localizedString(R.string.app_name),
+        search = TopBarSearchState(
+          data = TopBarSearchData(),
+          observer = {}
+        ),
+        action = TopBarAction(TopBarIcon.OpenSettings)
+      ) {
+        StandardTopBar()
       }
-      CompositionLocalProvider(LocalTopBarController provides searchTopBarController) {
-        StandardTopBar(MainComposeNavigator(LocalContext.current))
+
+      MockedTopBarController(
+        search = TopBarSearchState(
+          data = TopBarSearchData(visible = true),
+          observer = {}
+        ),
+        action = TopBarAction(TopBarIcon.OpenSettings)
+      ) {
+        StandardTopBar()
+      }
+
+      MockedTopBarController(
+        search = TopBarSearchState(
+          data = TopBarSearchData(),
+          observer = {}
+        )
+      ) {
+        StandardTopBar()
+      }
+
+      MockedTopBarController(
+        search = TopBarSearchState(
+          data = TopBarSearchData(visible = true),
+          observer = {}
+        )
+      ) {
+        StandardTopBar()
       }
     }
   }

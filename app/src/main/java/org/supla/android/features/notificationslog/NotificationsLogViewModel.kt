@@ -26,6 +26,8 @@ import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.local.entity.NotificationEntity
 import org.supla.android.extensions.subscribeBy
+import org.supla.android.main.topbar.TopBarSearchData
+import org.supla.android.main.topbar.TopBarSearchEvent
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.notifications.DeleteNotificationUseCase
 import org.supla.android.usecases.notifications.DeleteNotificationsUseCase
@@ -51,7 +53,7 @@ class NotificationsLogViewModel @Inject constructor(
 
   private val deletionDisposablesMap: MutableMap<Long, Disposable> = mutableMapOf()
 
-  var filterString: String = ""
+  var searchData: TopBarSearchData = TopBarSearchData()
     private set
 
   override fun onViewCreated() {
@@ -70,8 +72,8 @@ class NotificationsLogViewModel @Inject constructor(
   }
 
   fun loadAll() {
-    if (filterString.length > 1) {
-      loadAllNotificationsUseCase(filterString)
+    if (searchData.query.length > 1) {
+      loadAllNotificationsUseCase(searchData.query)
     } else {
       loadAllNotificationsUseCase()
     }
@@ -82,8 +84,8 @@ class NotificationsLogViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  fun setFilterString(string: String) {
-    filterString = string
+  fun handle(event: TopBarSearchEvent) {
+    searchData = searchData.handle(event)
     loadAll()
   }
 

@@ -18,24 +18,24 @@ package org.supla.android.main.topbar
  */
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import org.supla.android.R
+import org.supla.android.ui.views.buttons.IconButton
 import org.supla.android.ui.views.texts.BodyMedium
 
-sealed class TopBarIcon(val event: TopBarEvent, val iconRes: Int? = null, val descriptionRes: Int? = null) {
+sealed class TopBarIcon(val event: TopBarEvent, val iconRes: Int? = null, val descriptionRes: Int? = null, val tintRes: Int? = null) {
   data object ReloadHistory : TopBarIcon(TopBarEvent.ReloadChartHistory)
   data object NotificationsDeletion : TopBarIcon(TopBarEvent.Empty)
   data object OpenOcr : TopBarIcon(
@@ -48,6 +48,13 @@ sealed class TopBarIcon(val event: TopBarEvent, val iconRes: Int? = null, val de
     event = TopBarEvent.OpenSettings,
     iconRes = R.drawable.ic_settings,
     descriptionRes = R.string.settings
+  )
+
+  data object Profiles : TopBarIcon(
+    event = TopBarEvent.OpenProfileSelector,
+    iconRes = R.drawable.profile_unselected,
+    descriptionRes = R.string.profile_plural,
+    tintRes = R.color.primary
   )
 }
 
@@ -69,9 +76,11 @@ private fun TopBarAction.DeleteChartHistory(
   Box(modifier = modifier) {
     var menuExpanded by remember { mutableStateOf(false) }
 
-    IconButton(onClick = { menuExpanded = true }) {
-      Icon(Icons.Default.MoreVert, contentDescription = null)
-    }
+    IconButton(
+      icon = Icons.Default.MoreVert,
+      onClick = { menuExpanded = true },
+      modifier = modifier.size(40.dp)
+    )
 
     DropdownMenu(
       expanded = menuExpanded,
@@ -95,9 +104,11 @@ private fun TopBarAction.DeleteNotifications(
   Box(modifier = modifier) {
     var menuExpanded by remember { mutableStateOf(false) }
 
-    IconButton(onClick = { menuExpanded = true }) {
-      Icon(Icons.Default.MoreVert, contentDescription = null)
-    }
+    IconButton(
+      icon = Icons.Default.MoreVert,
+      onClick = { menuExpanded = true },
+      modifier = modifier.size(40.dp)
+    )
 
     DropdownMenu(
       expanded = menuExpanded,
@@ -127,12 +138,9 @@ private fun TopBarAction.SingleIcon(
   modifier: Modifier = Modifier
 ) {
   IconButton(
+    icon = icon.iconRes!!,
     onClick = { handlers[icon.event::class]?.invoke() },
-    modifier = modifier
-  ) {
-    Icon(
-      painter = painterResource(icon.iconRes!!),
-      contentDescription = icon.descriptionRes?.let { stringResource(it) }
-    )
-  }
+    contentDescription = icon.descriptionRes?.let { stringResource(it) },
+    modifier = modifier.size(40.dp)
+  )
 }

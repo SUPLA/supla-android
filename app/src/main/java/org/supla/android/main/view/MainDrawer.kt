@@ -29,7 +29,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -40,15 +39,12 @@ import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.PermanentDrawerSheet
 import androidx.compose.material3.PermanentNavigationDrawer
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -63,14 +59,13 @@ import org.supla.android.core.storage.LocalApplicationPreferences
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.main.ListTab
-import org.supla.android.main.MainComposeNavigator
+import org.supla.android.main.LocalNavigator
 import org.supla.android.main.MainRoute
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.views.buttons.TextButton
 
 @Composable
 fun MainDrawer(
-  navigator: MainComposeNavigator,
   drawerState: DrawerState,
   developerOptionsVisibleFlow: StateFlow<Boolean>,
   zWaveVisibleFlow: StateFlow<Boolean>,
@@ -86,11 +81,7 @@ fun MainDrawer(
         drawerContentColor = MaterialTheme.colorScheme.onSurface,
         drawerTonalElevation = 0.dp
       ) {
-        CompositionLocalProvider(
-          value = LocalDrawerContext provides LocalDrawerContextHolder(navigator, drawerState)
-        ) {
-          DrawerContent(developerOptionsVisibleFlow, zWaveVisibleFlow, zWaveOpenCallback)
-        }
+        DrawerContent(developerOptionsVisibleFlow, zWaveVisibleFlow, zWaveOpenCallback)
       }
     },
     content = content
@@ -98,7 +89,6 @@ fun MainDrawer(
 
 @Composable
 fun PermanentMainDrawer(
-  navigator: MainComposeNavigator,
   developerOptionsVisibleFlow: StateFlow<Boolean>,
   zWaveVisibleFlow: StateFlow<Boolean>,
   zWaveOpenCallback: () -> Unit,
@@ -112,11 +102,7 @@ fun PermanentMainDrawer(
         drawerContentColor = MaterialTheme.colorScheme.onSurface,
         drawerTonalElevation = 0.dp
       ) {
-        CompositionLocalProvider(
-          value = LocalDrawerContext provides LocalDrawerContextHolder(navigator, null)
-        ) {
-          DrawerContent(developerOptionsVisibleFlow, zWaveVisibleFlow, zWaveOpenCallback)
-        }
+        DrawerContent(developerOptionsVisibleFlow, zWaveVisibleFlow, zWaveOpenCallback)
       }
     },
     content = content
@@ -158,11 +144,11 @@ private fun DrawerContent(
     }
     HorizontalDivider(modifier = Modifier.padding(top = Distance.small, bottom = Distance.tiny))
 
-    val navigator = LocalDrawerContext.current.navigator
+    val navigator = LocalNavigator.current
     DrawerItem(
       iconRes = R.drawable.ic_menu_add_device,
       labelRes = R.string.add_device,
-      onNavigate = { navigator.navigateTo(MainRoute.AddWizard) }
+      onNavigate = { navigator?.navigateTo(MainRoute.AddWizard) }
     )
 
     val zWaveVisible by zWaveVisibleFlow.collectAsState()
@@ -177,44 +163,44 @@ private fun DrawerContent(
       DrawerItem(
         iconRes = R.drawable.ic_menu_device_catalog,
         labelRes = R.string.menu_device_catalog,
-        onNavigate = { navigator.navigateTo(MainRoute.DeviceCatalog) }
+        onNavigate = { navigator?.navigateTo(MainRoute.DeviceCatalog) }
       )
     }
     DrawerItem(
       iconRes = R.drawable.ic_notification,
       labelRes = R.string.menu_notifications,
-      onNavigate = { navigator.navigateTo(MainRoute.NotificationsLog) }
+      onNavigate = { navigator?.navigateTo(MainRoute.NotificationsLog) }
     )
     HorizontalDivider(modifier = Modifier.padding(top = Distance.small, bottom = Distance.tiny))
     DrawerItem(
       iconRes = R.drawable.ic_menu_profiles,
       labelRes = R.string.profile_plural,
-      onNavigate = { navigator.navigateToProfiles() }
+      onNavigate = { navigator?.navigateToProfiles() }
     )
     DrawerItem(
       iconRes = R.drawable.ic_menu_settings,
       labelRes = R.string.settings,
-      onNavigate = { navigator.navigateTo(MainRoute.Settings) }
+      onNavigate = { navigator?.navigateTo(MainRoute.Settings) }
     )
     HorizontalDivider(modifier = Modifier.padding(top = Distance.small, bottom = Distance.tiny))
     DrawerItem(
       iconRes = R.drawable.ic_menu_cloud,
       labelRes = R.string.supla_cloud,
-      onNavigate = { navigator.navigateToCloudExternal() }
+      onNavigate = { navigator?.navigateToCloudExternal() }
     )
     if (Menu.HELP_OPTION_VISIBLE) {
       val url = stringResource(R.string.forumpage_url)
       DrawerItem(
         iconRes = R.drawable.ic_menu_help,
         labelRes = R.string.help,
-        onNavigate = { navigator.navigateToWeb(url.toUri()) }
+        onNavigate = { navigator?.navigateToWeb(url.toUri()) }
       )
     }
     if (Menu.ABOUT_OPTION_VISIBLE) {
       DrawerItem(
         iconRes = R.drawable.ic_menu_about,
         labelRes = R.string.about,
-        onNavigate = { navigator.navigateTo(MainRoute.About) }
+        onNavigate = { navigator?.navigateTo(MainRoute.About) }
       )
     }
     val developerOptionsVisible by developerOptionsVisibleFlow.collectAsState()
@@ -222,7 +208,7 @@ private fun DrawerContent(
       DrawerItem(
         iconRes = R.drawable.ic_dev_option,
         labelRes = R.string.developer_option,
-        onNavigate = { navigator.navigateTo(MainRoute.DeveloperInfo) }
+        onNavigate = { navigator?.navigateTo(MainRoute.DeveloperInfo) }
       )
     }
 
@@ -232,7 +218,7 @@ private fun DrawerContent(
     ) {
       TextButton(
         text = stringResource(R.string.homepage),
-        onClick = { navigator.navigateToSuplaOrgExternal() }
+        onClick = { navigator?.navigateToSuplaOrgExternal() }
       )
     }
   }
@@ -244,12 +230,12 @@ private fun DrawerItem(
   @StringRes labelRes: Int,
   route: MainRoute
 ) {
-  val navigator = LocalDrawerContext.current.navigator
+  val navigator = LocalNavigator.current
   DrawerItem(
     iconRes = iconRes,
     labelRes = labelRes,
-    selected = navigator.current() == route,
-    onNavigate = { navigator.replace(route) }
+    selected = navigator?.current() == route,
+    onNavigate = { navigator?.replace(route) }
   )
 }
 
@@ -261,7 +247,7 @@ private fun DrawerItem(
   onNavigate: () -> Unit,
 ) {
   val scope = rememberCoroutineScope()
-  val drawerState = LocalDrawerContext.current.drawerState
+  val drawerState = LocalDrawerState.current
   NavigationDrawerItem(
     icon = { Icon(painterResource(iconRes), null) },
     label = { DrawerLabel(labelRes) },
@@ -295,24 +281,13 @@ private fun DrawerLabel(@StringRes stringRes: Int) =
 private fun Preview() {
   SuplaTheme {
     Column(modifier = Modifier.systemBarsPadding()) {
-      val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-      val navigator = MainComposeNavigator(LocalContext.current)
-      CompositionLocalProvider(
-        value = LocalDrawerContext provides LocalDrawerContextHolder(navigator, drawerState)
-      ) {
-        DrawerContent(
-          developerOptionsVisibleFlow = MutableStateFlow(true),
-          zWaveVisibleFlow = MutableStateFlow(false),
-          zWaveOpenCallback = {}
-        )
-      }
+      DrawerContent(
+        developerOptionsVisibleFlow = MutableStateFlow(true),
+        zWaveVisibleFlow = MutableStateFlow(false),
+        zWaveOpenCallback = {}
+      )
     }
   }
 }
 
-private data class LocalDrawerContextHolder(
-  val navigator: MainComposeNavigator,
-  val drawerState: DrawerState?
-)
-
-private val LocalDrawerContext = compositionLocalOf<LocalDrawerContextHolder> { error("LocalDrawerState not initialized!") }
+val LocalDrawerState = staticCompositionLocalOf<DrawerState?> { null }
