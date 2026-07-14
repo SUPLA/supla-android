@@ -24,6 +24,7 @@ import androidx.work.ExistingWorkPolicy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.supla.android.R
@@ -45,6 +46,7 @@ import org.supla.android.usecases.developerinfo.TableDetail
 import org.supla.android.usecases.developerinfo.TableDetailType
 import timber.log.Timber
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class DeveloperInfoViewModel @Inject constructor(
@@ -203,6 +205,14 @@ class DeveloperInfoViewModel @Inject constructor(
 
   override fun exportMeasurementsDatabase() {
     sendEvent(DeveloperInfoViewEvent.ExportMeasurementsDatabase)
+  }
+
+  override fun showLoading() {
+    viewModelScope.launch {
+      withLoader {
+        delay(5.seconds)
+      }
+    }
   }
 
   fun writeMeasurementsDatabaseFile(uri: Uri?) {

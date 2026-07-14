@@ -33,6 +33,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.FlowPreview
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.EventBasedViewModel
 import org.supla.android.core.ui.ViewEvent
@@ -93,11 +94,20 @@ fun <S : ViewState, E : ViewEvent> ViewModelHostBase(
     onStart = onStart,
     onStop = onStop
   ) {
-    val loading by viewModel.isLoadingEvent().collectAsState(false)
-    LocalLoadingController.current.loading = loading
-
+    LoadingHost(viewModel)
     val state by viewModel.getViewState().collectAsState()
     content(state)
+  }
+}
+
+@Composable
+@OptIn(FlowPreview::class)
+private fun LoadingHost(viewModel: BaseViewModel<*, *>) {
+  val loading by viewModel.isLoadingEvent().collectAsState(false)
+  val loadingController = LocalLoadingController.current
+
+  if (loadingController.loading != loading) {
+    loadingController.loading = loading
   }
 }
 
