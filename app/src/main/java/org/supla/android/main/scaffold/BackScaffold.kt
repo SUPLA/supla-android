@@ -21,17 +21,20 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalConfiguration
 import org.supla.android.main.snackbar.LocalSnackbarController
 import org.supla.android.main.view.StandardTopBar
+import org.supla.android.ui.extensions.isPhoneLandscape
 
 @Composable
 fun BackScaffold(
   content: @Composable () -> Unit
 ) {
   val snackbarController = LocalSnackbarController.current
+  val useNavigationBarPadding = LocalConfiguration.current.isPhoneLandscape
 
   Scaffold(
-    topBar = { StandardTopBar() },
+    topBar = { StandardTopBar(useNavigationBarPadding) },
     snackbarHost = { SnackbarHost(snackbarController.state) }
   ) { paddings ->
     CompositionLocalProvider(LocalScaffoldPadding provides paddings) {

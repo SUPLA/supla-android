@@ -45,6 +45,7 @@ import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.main.topbar.TopBarSearchEvent
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
@@ -87,6 +88,9 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
   private lateinit var dateProvider: DateProvider
 
   @MockK
+  private lateinit var vibrationHelper: VibrationHelper
+
+  @MockK
   override lateinit var schedulers: SuplaSchedulers
 
   override val viewModel: SceneListViewModel by lazy {
@@ -99,6 +103,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
       sceneRepository,
       loadActiveProfileUrlUseCase,
       updateEventsManager,
+      vibrationHelper,
       schedulers,
       dateProvider
     )

@@ -152,6 +152,7 @@ val previewScope = object : GroupListScope {
   override fun onLeftButtonClick(remoteId: Int) {}
   override fun onRightButtonClick(remoteId: Int) {}
   override fun moveItems(from: Int, to: Int): Boolean = false
+  override fun onDragStarted(remoteId: Int) {}
   override fun onDragStopped(remoteId: Int) {}
   override fun onLocationClick(remoteId: Int) {}
   override fun onItemClick(remoteId: Int) {}

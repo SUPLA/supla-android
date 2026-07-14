@@ -21,7 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.features.details.detailbase.impulsecounter.ImpulseCounterMetricsView
-import org.supla.android.main.MainComposeNavigator
+import org.supla.android.main.LocalNavigator
 import org.supla.android.main.MainRoute
 import org.supla.android.main.ViewModelHost
 import org.supla.android.main.topbar.RegisterStatedTopBarIcon
@@ -30,9 +30,9 @@ import org.supla.android.main.topbar.TopBarIcon
 @Composable
 fun ImpulseCounterGeneralScreen(
   item: ItemBundle,
-  navigator: MainComposeNavigator,
   viewModel: ImpulseCounterGeneralViewModel = hiltViewModel()
 ) {
+  val navigator = LocalNavigator.current
   ViewModelHost(
     viewModel = viewModel,
     onCreate = { viewModel.onViewCreated(item.remoteId) },
@@ -41,7 +41,7 @@ fun ImpulseCounterGeneralScreen(
     RegisterStatedTopBarIcon(
       icon = TopBarIcon.OpenOcr,
       visible = it.hasPhoto,
-      handler = { navigator.navigateTo(MainRoute.CounterPhoto(item.remoteId)) }
+      handler = { navigator?.navigateTo(MainRoute.CounterPhoto(item.remoteId)) }
     )
 
     ImpulseCounterMetricsView(it.viewState)

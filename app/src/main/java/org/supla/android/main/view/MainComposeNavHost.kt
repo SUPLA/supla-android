@@ -80,7 +80,7 @@ fun MainComposeNavHost(
           entry<MainRoute.List> { MainListScreen(drawerState, navigator) }
           entry<MainRoute.UnlockApp> { EmptyScreenScaffold { LockScreen(it.unlockAction, navigator) } }
           entry<MainRoute.Unlock> { BackScaffold { LockScreen(it.unlockAction, navigator) } }
-          entry<MainRoute.StandardDetail> { DetailScreen(it.item, it.pages, navigator) }
+          entry<MainRoute.StandardDetail> { DetailScreen(it.item, it.pages) }
           entry<MainRoute.Settings> { BackScaffold { SettingsScreen() } }
           entry<MainRoute.AddWizard> { AddWizardScreen(navigator) }
           entry<MainRoute.DeviceCatalog> { BackScaffold { DeviceCatalogScreen() } }
@@ -96,7 +96,7 @@ fun MainComposeNavHost(
           entry<MainRoute.EditNfcTag> { EditNfcTagScreen(it.id, it.newItemData, navigator) }
           entry<MainRoute.LockNfcTag> { BackScaffold { LockNfcTagScreen(it.id, navigator) } }
           entry<MainRoute.PinSetup> { BackScaffold { PinSetupScreen(it.lockScreenScope, navigator) } }
-          entry<MainRoute.CounterPhoto> { BackScaffold { CounterPhotoScreen(it.remoteId, navigator) } }
+          entry<MainRoute.CounterPhoto> { BackScaffold { CounterPhotoScreen(it.remoteId) } }
           entry<MainRoute.LegacyDimmerSettings> { BackScaffold { LegacyDimmerSettingsScreen(it.item, navigator) } }
           entry<MainRoute.LegacyDetail> { BackScaffold { LegacyDetailScreen(it, navigator) } }
         }

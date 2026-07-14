@@ -21,17 +21,14 @@ import androidx.compose.runtime.Composable
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.features.details.windowdetail.base.WindowDetailScreen
-import org.supla.android.main.MainComposeNavigator
 
 @Composable
 fun VerticalBlindsScreen(
   item: ItemBundle,
-  navigator: MainComposeNavigator,
   viewModel: VerticalBlindsViewModel = hiltViewModel()
 ) {
   WindowDetailScreen(
     item = item,
-    navigator = navigator,
     viewModel = viewModel,
     onCreate = { viewModel.observeConfig(item.remoteId, item.itemType) },
     onResume = { viewModel.loadConfig(item.remoteId, item.itemType) }

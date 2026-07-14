@@ -29,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.flow.distinctUntilChanged
 import org.supla.android.R
@@ -56,6 +57,7 @@ interface MainListScope {
   fun onLeftButtonClick(remoteId: Int)
   fun onRightButtonClick(remoteId: Int)
   fun moveItems(from: Int, to: Int): Boolean
+  fun onDragStarted(remoteId: Int)
   fun onDragStopped(remoteId: Int)
   fun onLocationClick(remoteId: Int)
   fun onItemClick(remoteId: Int)
@@ -106,7 +108,8 @@ fun MainListScope.ListView(
       ReorderableItem(
         state = reorderableLazyListState,
         key = item.key,
-        enabled = item.draggable
+        enabled = item.draggable,
+        animateItemModifier = Modifier
       ) { isDragging ->
         when (item) {
           is ListItem.DefaultItem -> {
@@ -118,6 +121,7 @@ fun MainListScope.ListView(
               dragEnabled = dragEnabled,
               onLeftButtonClick = { onLeftButtonClick(item.remoteId) },
               onRightButtonClick = { onRightButtonClick(item.remoteId) },
+              onDragStarted = { onDragStarted(item.remoteId) },
               onDragStopped = { onDragStopped(item.remoteId) },
               onInfoClick = { onInfoClick(item.remoteId) },
               onIssueClick = { onIssueClick(item.issues.message(context)) },
@@ -145,6 +149,7 @@ fun MainListScope.ListView(
               dragEnabled = dragEnabled,
               onLeftButtonClick = { onLeftButtonClick(item.remoteId) },
               onRightButtonClick = { onRightButtonClick(item.remoteId) },
+              onDragStarted = { onDragStarted(item.remoteId) },
               onDragStopped = { onDragStopped(item.remoteId) },
               leftButtonString = item.status.online.forTrue { localizedString(R.string.btn_abort) },
               rightButtonString = item.status.online.forTrue { localizedString(R.string.btn_execute) }
@@ -169,6 +174,7 @@ fun ReorderableCollectionItemScope.DefaultItemView(
   dragEnabled: Boolean,
   onLeftButtonClick: () -> Unit = {},
   onRightButtonClick: () -> Unit = {},
+  onDragStarted: (Offset) -> Unit = {},
   onDragStopped: () -> Unit = {},
   onInfoClick: () -> Unit = {},
   onIssueClick: (ListItemIssues) -> Unit = {},
@@ -186,6 +192,7 @@ fun ReorderableCollectionItemScope.DefaultItemView(
     dragEnabled = dragEnabled,
     onLeftButtonClick = onLeftButtonClick,
     onRightButtonClick = onRightButtonClick,
+    onDragStarted = onDragStarted,
     onDragStopped = onDragStopped,
     leftButtonString = item.status.online.forTrue { item.leftButtonString },
     rightButtonString = item.status.online.forTrue { item.rightButtonString }

@@ -85,7 +85,6 @@ class ValveGeneralDetailViewModel @Inject constructor(
   }
 
   fun onActionClick(remoteId: Int, action: ValveAction) {
-    vibrationHelper.vibrate()
     channelActionUseCase(remoteId, action.buttonType)
       .attach()
       .subscribeBy(

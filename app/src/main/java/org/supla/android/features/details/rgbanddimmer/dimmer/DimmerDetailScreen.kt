@@ -25,7 +25,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.supla.android.R
 import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.features.details.rgbanddimmer.common.dimmer.DimmerDetailViewEvent
-import org.supla.android.main.MainComposeNavigator
+import org.supla.android.main.LocalNavigator
 import org.supla.android.main.MainRoute
 import org.supla.android.main.ViewModelHost
 import org.supla.android.main.topbar.RegisterStatedTopBarIcon
@@ -34,9 +34,9 @@ import org.supla.android.main.topbar.TopBarIcon
 @Composable
 fun DimmerDetailScreen(
   item: ItemBundle,
-  navigator: MainComposeNavigator,
   viewModel: DimmerDetailViewModel = hiltViewModel()
 ) {
+  val navigator = LocalNavigator.current
   val context = LocalContext.current
   ViewModelHost(
     viewModel = viewModel,
@@ -46,7 +46,7 @@ fun DimmerDetailScreen(
     RegisterStatedTopBarIcon(
       icon = TopBarIcon.OpenSettings,
       visible = state.hasSettings,
-      handler = { navigator.navigateTo(MainRoute.LegacyDimmerSettings(item)) }
+      handler = { navigator?.navigateTo(MainRoute.LegacyDimmerSettings(item)) }
     )
 
     viewModel.View(state.viewState)

@@ -32,6 +32,7 @@ import org.supla.android.NavigationActivity
 import org.supla.android.R
 import org.supla.android.ZWaveConfigurationWizardActivity
 import org.supla.android.cfg.CfgActivity
+import org.supla.android.extensions.findActivity
 import java.lang.ref.WeakReference
 import javax.inject.Inject
 
@@ -42,7 +43,13 @@ class MainComposeNavigator @Inject constructor() {
 
   fun current(): NavKey? = backStack.value?.lastOrNull()
 
-  fun back(): Boolean = backStack.value?.removeLastOrNull() != null
+  fun back() {
+    if (backStack.value?.size == 1) {
+      activityContext.get()?.findActivity()?.finish()
+    } else {
+      backStack.value?.removeLastOrNull()
+    }
+  }
 
   fun navigateTo(destination: NavKey) {
     backStack.value?.add(destination)

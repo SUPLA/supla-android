@@ -26,6 +26,7 @@ import org.supla.android.features.captionchangedialog.View
 import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.features.statedialog.StateDialogViewModel
 import org.supla.android.features.statedialog.View
+import org.supla.android.main.LocalNavigator
 import org.supla.android.main.MainComposeNavigator
 import org.supla.android.main.MainRoute
 import org.supla.android.main.ViewModelHost
@@ -35,11 +36,11 @@ import org.supla.android.ui.dialogs.AlertDialog
 @Composable
 fun ThermostatSlavesListScreen(
   item: ItemBundle,
-  navigator: MainComposeNavigator,
   viewModel: ThermostatSlavesListViewModel = hiltViewModel(),
   stateDialogViewModel: StateDialogViewModel = hiltViewModel(),
   captionChangeViewModel: CaptionChangeViewModel = hiltViewModel()
 ) {
+  val navigator = LocalNavigator.current
   ViewModelHost(
     viewModel = viewModel,
     onCreate = { viewModel.onCreate(item.remoteId) },
@@ -69,7 +70,7 @@ fun ThermostatSlavesListScreen(
 
 private fun handleEvent(
   event: ThermostatSlavesListViewEvent,
-  navigator: MainComposeNavigator,
+  navigator: MainComposeNavigator?,
   captionChangeViewModel: CaptionChangeViewModel,
   stateDialogViewModel: StateDialogViewModel
 ) {
@@ -77,7 +78,7 @@ private fun handleEvent(
     is ThermostatSlavesListViewEvent.ChangeCaption ->
       captionChangeViewModel.showChannelDialog(event.data.channelId, event.data.profileId, event.data.userCaption)
     is ThermostatSlavesListViewEvent.OpenDetails ->
-      navigator.navigateTo(MainRoute.StandardDetail(event.bundle, event.pages))
+      navigator?.navigateTo(MainRoute.StandardDetail(event.bundle, event.pages))
     is ThermostatSlavesListViewEvent.ShowInfo ->
       stateDialogViewModel.showDialog(event.data.channelId)
   }

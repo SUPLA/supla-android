@@ -18,6 +18,7 @@ package org.supla.android.main.scaffold
  */
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -34,7 +35,7 @@ fun Modifier.screenUnderTopBarPaddings(): Modifier {
   val layoutDirection = LocalLayoutDirection.current
   return this.padding(
     start = scaffoldPadding.calculateStartPadding(layoutDirection),
-    end = scaffoldPadding.calculateStartPadding(layoutDirection),
+    end = scaffoldPadding.calculateEndPadding(layoutDirection),
     bottom = scaffoldPadding.calculateBottomPadding()
   )
 }
@@ -49,5 +50,17 @@ fun Modifier.topSearchBarPaddings(): Modifier {
   val scaffoldPadding = LocalScaffoldPadding.current
   return this.padding(
     top = scaffoldPadding.calculateTopPadding()
+  )
+}
+
+@Composable
+fun PaddingValues.withRightPanel(): PaddingValues {
+  val layoutDirection = LocalLayoutDirection.current
+
+  return PaddingValues(
+    start = calculateStartPadding(layoutDirection),
+    top = calculateTopPadding(),
+    end = 0.dp,
+    bottom = calculateBottomPadding()
   )
 }

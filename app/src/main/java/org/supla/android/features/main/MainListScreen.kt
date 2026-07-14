@@ -19,6 +19,8 @@ package org.supla.android.features.main
 
 import android.Manifest
 import android.os.Build
+import android.view.Surface
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
@@ -26,7 +28,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -38,6 +43,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -50,8 +56,10 @@ import org.supla.android.features.notificationinfo.NotificationInfoDialog
 import org.supla.android.features.scenelist.SceneListScreen
 import org.supla.android.main.EventBasedViewModelHost
 import org.supla.android.main.ListTab
+import org.supla.android.main.LocalNavigator
 import org.supla.android.main.MainComposeNavigator
 import org.supla.android.main.scaffold.LocalScaffoldPadding
+import org.supla.android.main.scaffold.withRightPanel
 import org.supla.android.main.topbar.NavigationType
 import org.supla.android.main.topbar.TopBarIcon
 import org.supla.android.main.topbar.TopBarState
@@ -126,7 +134,7 @@ private fun PortraitPhoneView(
     zWaveOpenCallback = { viewModel.showAuthorizationDialog(AuthorizationReason.ZWaveWizard) }
   ) {
     Scaffold(
-      topBar = { StandardTopBar() },
+      topBar = { StandardTopBar(false) },
       bottomBar = {
         if (LocalApplicationPreferences.current.isShowBottomMenu) {
           BottomNavigationBar()
@@ -147,9 +155,9 @@ private fun LandscapePhoneView(
   ) {
     Row {
       Scaffold(
-        topBar = { StandardTopBar() },
+        topBar = { StandardTopBar(false) },
         modifier = Modifier.weight(1f)
-      ) { CommonContent(it) }
+      ) { CommonContent(it.withRightPanel()) }
       if (LocalApplicationPreferences.current.isShowBottomMenu) {
         RightNavigationRail()
       }
@@ -167,7 +175,7 @@ private fun WideView(
     zWaveOpenCallback = { viewModel.showAuthorizationDialog(AuthorizationReason.ZWaveWizard) }
   ) {
     Scaffold(
-      topBar = { StandardTopBar() },
+      topBar = { StandardTopBar(false) },
       bottomBar = {
         if (LocalApplicationPreferences.current.isShowBottomMenu) {
           BottomNavigationBar()
@@ -179,8 +187,18 @@ private fun WideView(
 
 @Composable
 private fun CommonContent(paddings: PaddingValues) {
+  val tabController = LocalMainListTabController.current
+  val selectedTab = tabController.tab
+  val navigator = LocalNavigator.current
+  BackHandler {
+    if (selectedTab != ListTab.CHANNELS) {
+      tabController.changeTab(ListTab.CHANNELS)
+    } else {
+      navigator?.back()
+    }
+  }
+
   CompositionLocalProvider(LocalScaffoldPadding provides paddings) {
-    val selectedTab = LocalMainListTabController.current.tab
     when (selectedTab) {
       ListTab.CHANNELS -> ChannelListScreen()
       ListTab.GROUPS -> GroupListScreen()
@@ -225,7 +243,14 @@ private fun RightNavigationRail() =
   NavigationRail(
     modifier = Modifier
       .fillMaxHeight()
-      .border(1.dp, MaterialTheme.colorScheme.outline)
+      .border(1.dp, MaterialTheme.colorScheme.outline),
+    windowInsets = if (LocalView.current.display?.rotation ==
+      Surface.ROTATION_90
+    ) {
+      WindowInsets.navigationBars
+    } else {
+      WindowInsets.displayCutout
+    }
   ) {
     val tabController = LocalMainListTabController.current
     val selectedTab = tabController.tab
