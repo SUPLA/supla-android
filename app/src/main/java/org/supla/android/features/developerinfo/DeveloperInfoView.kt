@@ -17,6 +17,7 @@ package org.supla.android.features.developerinfo
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -35,6 +36,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewFontScale
@@ -71,12 +73,15 @@ interface DeveloperInfoScope {
   fun sendTestNotification()
   fun exportSuplaDatabase()
   fun exportMeasurementsDatabase()
+  fun showLoading()
 }
 
 @Composable
 fun DeveloperInfoScope.View(
   viewState: DeveloperInfoViewState
 ) {
+  val context = LocalContext.current
+
   Column(
     verticalArrangement = Arrangement.spacedBy(Distance.tiny),
     modifier = Modifier
@@ -114,11 +119,15 @@ fun DeveloperInfoScope.View(
         value = viewState.debugLoggingFilter,
         label = { TextFieldLabel("Filtering string") },
         onValueChange = { onFilterChanged(it) },
-        modifier = Modifier.fillMaxWidth().padding(horizontal = Distance.default)
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(horizontal = Distance.default)
       )
       Row(
         horizontalArrangement = Arrangement.spacedBy(Distance.default),
-        modifier = Modifier.fillMaxWidth().padding(horizontal = Distance.default)
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(horizontal = Distance.default)
       ) {
         Button(
           text = "Export",
@@ -142,8 +151,20 @@ fun DeveloperInfoScope.View(
     )
     Button(
       text = "Test notification",
-      modifier = Modifier.fillMaxWidth().padding(horizontal = Distance.default),
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = Distance.default),
       onClick = { sendTestNotification() }
+    )
+    Button(
+      text = "Show loader",
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = Distance.default),
+      onClick = {
+        showLoading()
+        Toast.makeText(context, "Loading shown for 5 seconds", Toast.LENGTH_SHORT).show()
+      }
     )
 
     HeaderLarge(
@@ -152,12 +173,16 @@ fun DeveloperInfoScope.View(
     )
     Button(
       text = "Export Supla database",
-      modifier = Modifier.fillMaxWidth().padding(horizontal = Distance.default),
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = Distance.default),
       onClick = { exportSuplaDatabase() }
     )
     Button(
       text = "Export measurements database",
-      modifier = Modifier.fillMaxWidth().padding(horizontal = Distance.default),
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = Distance.default),
       onClick = { exportMeasurementsDatabase() }
     )
     HeaderSmall(
@@ -187,7 +212,8 @@ private fun HeaderLarge(text: String, modifier: Modifier = Modifier) =
   Text(
     text = text,
     style = MaterialTheme.typography.titleLarge,
-    modifier = modifier.padding(horizontal = Distance.default)
+    modifier = modifier
+      .padding(horizontal = Distance.default)
       .padding(bottom = Distance.tiny)
   )
 
@@ -210,6 +236,7 @@ val previewScope = object : DeveloperInfoScope {
   override fun sendTestNotification() {}
   override fun exportSuplaDatabase() {}
   override fun exportMeasurementsDatabase() {}
+  override fun showLoading() {}
 }
 
 @PreviewScreenSizes

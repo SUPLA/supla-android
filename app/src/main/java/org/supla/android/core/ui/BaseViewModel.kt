@@ -24,6 +24,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,13 +32,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
-import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
-import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
-import org.supla.core.shared.infrastructure.messaging.SuplaClientMessageHandler
 import timber.log.Timber
 
 interface BaseViewProxy<S : ViewState> {
@@ -115,6 +113,15 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
           onError = onError
         )
     )
+  }
+
+  protected suspend fun CoroutineScope.withLoader(block: suspend CoroutineScope.() -> Unit) {
+    loadingState.emit(true)
+    try {
+      block()
+    } finally {
+      loadingState.emit(false)
+    }
   }
 
   fun <T : Any> Maybe<T>.attach(): Maybe<T> {

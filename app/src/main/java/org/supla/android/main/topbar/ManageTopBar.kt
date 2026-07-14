@@ -33,13 +33,12 @@ fun ManageTopBar(
   viewModel: EventBasedViewModel<out ViewEvent>? = null,
   state: TopBarState? = TopBarState()
 ) {
-  state?.let {
-    val controller = LocalTopBarController.current
-    val scope = rememberCoroutineScope()
+  val scope = rememberCoroutineScope()
+  val controller = LocalTopBarController.current
+  val screenKey = LocalTopBarScreenKey.current
+  val owner = remember(screenKey) { TopBarOwner(screenKey) }
 
-    val screenKey = LocalTopBarScreenKey.current
-    val owner = remember(screenKey) { TopBarOwner(screenKey) }
-
+  if (state != null) {
     DisposableEffect(state) {
       controller.setTopBar(
         owner = owner,
@@ -56,9 +55,22 @@ fun ManageTopBar(
         }
       }
 
-      onDispose {
-        controller.clear(owner)
+      onDispose { controller.clear(owner) }
+    }
+  } else if (viewModel?.manageScreenTitle == true) {
+    DisposableEffect(viewModel) {
+      controller.setTopBar(
+        owner = owner,
+        state = TopBarState(),
+      )
+
+      scope.launch {
+        viewModel.title.collect { title ->
+          controller.updateTitle(title)
+        }
       }
+
+      onDispose { controller.clear(owner) }
     }
   }
 }

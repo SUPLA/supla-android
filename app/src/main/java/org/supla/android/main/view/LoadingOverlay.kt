@@ -36,10 +36,14 @@ fun LoadingOverlay(
     modifier = Modifier.fillMaxSize()
   ) {
     content()
+    LoadingOverlayScrim()
+  }
+}
 
-    LocalLoadingController.current.loading.ifTrue {
-      LoadingScrim()
-    }
+@Composable
+private fun LoadingOverlayScrim() {
+  LocalLoadingController.current.loading.ifTrue {
+    LoadingScrim()
   }
 }
 
