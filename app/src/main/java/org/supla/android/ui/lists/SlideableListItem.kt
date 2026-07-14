@@ -42,9 +42,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -69,6 +71,7 @@ fun ReorderableCollectionItemScope.SlideableListItem(
   modifier: Modifier = Modifier,
   onLeftButtonClick: () -> Unit = {},
   onRightButtonClick: () -> Unit = {},
+  onDragStarted: (Offset) -> Unit = {},
   onDragStopped: () -> Unit = {},
   leftButtonString: LocalizedString? = null,
   rightButtonString: LocalizedString? = null,
@@ -115,7 +118,7 @@ fun ReorderableCollectionItemScope.SlideableListItem(
       .height(defaultItemHeight.times(LocalApplicationPreferences.current.channelHeight.div(100f)))
       .background(MaterialTheme.colorScheme.surface.copy(if (isDragging) 0.8f else 1f))
       .shadow(if (isDragging) 2.dp else 0.dp)
-      .longPressDraggableHandle(enabled = dragEnabled, onDragStopped = onDragStopped)
+      .longPressDraggableHandle(enabled = dragEnabled, onDragStarted = onDragStarted, onDragStopped = onDragStopped)
       .clipToBounds()
   ) {
     leftButtonString?.let {
@@ -190,6 +193,7 @@ private fun ActionPane(
     LabelLarge(
       text = actionString(),
       color = MaterialTheme.colorScheme.onPrimaryContainer,
+      textAlign = TextAlign.Center
     )
   }
 

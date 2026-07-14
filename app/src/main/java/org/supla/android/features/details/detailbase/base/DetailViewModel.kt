@@ -61,7 +61,7 @@ class DetailViewModel @Inject constructor(
   }
 
   override fun handleSuplaMessage(message: SuplaClientMessage) {
-    if (message.isDataChange(item)) {
+    if (::item.isInitialized && message.isDataChange(item)) {
       loadData()
     }
   }

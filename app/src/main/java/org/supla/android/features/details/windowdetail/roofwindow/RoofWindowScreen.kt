@@ -21,13 +21,11 @@ import androidx.compose.runtime.Composable
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.features.details.windowdetail.base.WindowDetailScreen
-import org.supla.android.main.MainComposeNavigator
 
 @Composable
 fun RoofWindowScreen(
   item: ItemBundle,
-  navigator: MainComposeNavigator,
   viewModel: RoofWindowViewModel = hiltViewModel()
 ) {
-  WindowDetailScreen(item = item, navigator = navigator, viewModel = viewModel)
+  WindowDetailScreen(item = item, viewModel = viewModel)
 }

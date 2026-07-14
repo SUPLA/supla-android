@@ -1,10 +1,12 @@
 package org.supla.android.usecases.channel
 
 import io.mockk.MockKAnnotations
+import io.mockk.Runs
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
+import io.mockk.just
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
@@ -21,6 +23,7 @@ import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.ActionParameters
 import org.supla.android.lib.actions.SubjectType
+import org.supla.android.tools.VibrationHelper
 import org.supla.core.shared.data.model.function.relay.SuplaRelayFlag
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.data.model.valve.SuplaValveFlag
@@ -32,6 +35,9 @@ class ChannelActionUseCaseTest {
 
   @MockK
   private lateinit var suplaClientProvider: SuplaClientProvider
+
+  @MockK
+  private lateinit var vibrationHelper: VibrationHelper
 
   @InjectMockKs
   private lateinit var useCase: ChannelActionUseCase
@@ -270,6 +276,7 @@ class ChannelActionUseCaseTest {
     every { suplaClient.executeAction(capture(parametersSlot)) } returns true
 
     every { suplaClientProvider.provide() } returns suplaClient
+    every { vibrationHelper.vibrate() } just Runs
 
     // when
     val testObserver = useCase(channelId, buttonType).test()
@@ -282,8 +289,9 @@ class ChannelActionUseCaseTest {
     verify {
       channelRepository.findChannelDataEntity(channelId)
       suplaClientProvider.provide()
+      vibrationHelper.vibrate()
     }
-    confirmVerified(channelRepository, suplaClientProvider)
+    confirmVerified(channelRepository, suplaClientProvider, vibrationHelper)
   }
 
   private fun testOpenClose(channelId: Int, channelFunc: SuplaFunction, buttonType: ButtonType, openValue: Int) {
@@ -305,6 +313,7 @@ class ChannelActionUseCaseTest {
     every { suplaClient.open(channelId, false, openValue) } returns true
 
     every { suplaClientProvider.provide() } returns suplaClient
+    every { vibrationHelper.vibrate() } just Runs
 
     // when
     val testObserver = useCase(channelId, buttonType).test()
@@ -315,7 +324,8 @@ class ChannelActionUseCaseTest {
     verify {
       channelRepository.findChannelDataEntity(channelId)
       suplaClientProvider.provide()
+      vibrationHelper.vibrate()
     }
-    confirmVerified(channelRepository, suplaClientProvider)
+    confirmVerified(channelRepository, suplaClientProvider, vibrationHelper)
   }
 }

@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import org.supla.android.R
 import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.features.details.windowdetail.base.ui.WindowView
+import org.supla.android.main.LocalNavigator
 import org.supla.android.main.MainComposeNavigator
 import org.supla.android.main.ViewModelHost
 import org.supla.android.ui.dialogs.AlertDialog
@@ -34,11 +35,11 @@ import org.supla.android.ui.extensions.ifTrue
 @Composable
 fun <S : BaseWindowViewModelState> WindowDetailScreen(
   item: ItemBundle,
-  navigator: MainComposeNavigator,
   viewModel: BaseWindowViewModel<S>,
   onCreate: () -> Unit = {},
   onResume: () -> Unit = {}
 ) {
+  val navigator = LocalNavigator.current
   val context = LocalContext.current
   ViewModelHost(
     viewModel = viewModel,
@@ -72,11 +73,11 @@ fun <S : BaseWindowViewModelState> WindowDetailScreen(
   }
 }
 
-private fun handleEvent(event: BaseWindowViewEvent, context: Context, navigator: MainComposeNavigator) {
+private fun handleEvent(event: BaseWindowViewEvent, context: Context, navigator: MainComposeNavigator?) {
   when (event) {
     BaseWindowViewEvent.LoadingError -> {
       Toast.makeText(context, R.string.channel_loading_error, Toast.LENGTH_LONG).show()
-      navigator.back()
+      navigator?.back()
     }
   }
 }

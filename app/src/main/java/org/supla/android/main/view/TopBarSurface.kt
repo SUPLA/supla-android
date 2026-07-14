@@ -34,10 +34,11 @@ import org.supla.android.extensions.suplaCard
 
 @Composable
 fun TopBarSurface(
+  modifier: Modifier = Modifier,
   content: @Composable (() -> Unit)
 ) =
   Surface(
-    modifier = Modifier
+    modifier = modifier
       .fillMaxWidth()
       .statusBarsPadding()
       .padding(horizontal = Distance.default, vertical = Distance.small)

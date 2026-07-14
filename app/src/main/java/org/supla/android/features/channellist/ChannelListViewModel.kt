@@ -35,6 +35,7 @@ import org.supla.android.lib.actions.SubjectType
 import org.supla.android.main.topbar.TopBarSearchData
 import org.supla.android.main.topbar.TopBarSearchEvent
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.dialogs.ActionAlertDialogState
 import org.supla.android.ui.dialogs.dialogState
 import org.supla.android.ui.lists.BaseListViewModel
@@ -65,9 +66,11 @@ class ChannelListViewModel @Inject constructor(
   private val toggleLocationUseCase: ToggleLocationUseCase,
   private val channelActionUseCase: ChannelActionUseCase,
   updateEventsManager: UpdateEventsManager,
+  vibrationHelper: VibrationHelper,
   dateProvider: DateProvider,
   schedulers: SuplaSchedulers
 ) : BaseListViewModel<ChannelListViewState, ChannelListViewEvent>(
+  vibrationHelper,
   dateProvider,
   schedulers,
   ChannelListViewState()

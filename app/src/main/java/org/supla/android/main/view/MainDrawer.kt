@@ -19,6 +19,7 @@ package org.supla.android.main.view
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -76,7 +77,9 @@ fun MainDrawer(
     drawerState = requireNotNull(LocalDrawerState.current),
     drawerContent = {
       ModalDrawerSheet(
-        modifier = Modifier.width(300.dp),
+        modifier = Modifier
+          .width(300.dp)
+          .border(1.dp, MaterialTheme.colorScheme.outline),
         drawerContainerColor = MaterialTheme.colorScheme.surface,
         drawerContentColor = MaterialTheme.colorScheme.onSurface,
         drawerTonalElevation = 0.dp

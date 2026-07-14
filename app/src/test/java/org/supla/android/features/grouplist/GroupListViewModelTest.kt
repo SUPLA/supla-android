@@ -51,6 +51,7 @@ import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.main.topbar.TopBarSearchEvent
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.dialogs.ActionAlertDialogState
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.ActionException
@@ -106,6 +107,9 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   @MockK
   private lateinit var dateProvider: DateProvider
 
+  @MockK
+  private lateinit var vibrationHelper: VibrationHelper
+
   @MockK(relaxed = true)
   override lateinit var schedulers: SuplaSchedulers
 
@@ -121,6 +125,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       groupActionUseCase,
       loadActiveProfileUrlUseCase,
       updateEventsManager,
+      vibrationHelper,
       dateProvider,
       schedulers
     )

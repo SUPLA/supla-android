@@ -33,7 +33,7 @@ fun StatusScreen(
     viewModel = viewModel,
     eventHandler = { event ->
       when (event) {
-        StatusViewEvent.NavigateToMain -> navigator.navigateTo(MainRoute.List)
+        StatusViewEvent.NavigateToMain -> navigator.replaceTop(MainRoute.List)
         StatusViewEvent.NavigateToProfiles -> navigator.navigateToProfiles()
       }
     }

@@ -17,11 +17,14 @@ package org.supla.android.features.details.detailbase.base
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationRail
@@ -73,8 +76,10 @@ import org.supla.android.features.details.windowdetail.terraceawning.TerraceAwni
 import org.supla.android.features.details.windowdetail.verticalblinds.VerticalBlindsScreen
 import org.supla.android.main.EventHandler
 import org.supla.android.main.LifeCycleObserver
+import org.supla.android.main.LocalNavigator
 import org.supla.android.main.MainComposeNavigator
 import org.supla.android.main.scaffold.LocalScaffoldPadding
+import org.supla.android.main.scaffold.withRightPanel
 import org.supla.android.main.topbar.ManageTopBar
 import org.supla.android.main.view.NavigationBarLabel
 import org.supla.android.main.view.StandardTopBar
@@ -86,9 +91,19 @@ import org.supla.android.ui.navigation.SuplaRailItem
 fun DetailScreen(
   item: ItemBundle,
   pages: List<DetailPage>,
-  navigator: MainComposeNavigator,
   viewModel: DetailViewModel = hiltViewModel()
 ) {
+  val navigator = LocalNavigator.current
+
+  var page by remember(pages) { mutableStateOf(pages.first()) }
+  BackHandler {
+    if (page == pages.first()) {
+      navigator?.back()
+    } else {
+      page = pages.first()
+    }
+  }
+
   viewModel.LifeCycleObserver(
     onCreate = { viewModel.setup(item) }
   )
@@ -97,22 +112,21 @@ fun DetailScreen(
   ManageTopBar(viewModel)
 
   if (LocalConfiguration.current.isPhoneLandscape) {
-    LandscapeScreen(item, pages, navigator)
+    LandscapeScreen(item, page, pages) { page = it }
   } else {
-    PortraitScreen(item, pages, navigator)
+    PortraitScreen(item, page, pages) { page = it }
   }
 }
 
 @Composable
 private fun PortraitScreen(
   item: ItemBundle,
+  page: DetailPage,
   pages: List<DetailPage>,
-  navigator: MainComposeNavigator,
+  onPageChange: (DetailPage) -> Unit
 ) {
-  var page by remember(pages) { mutableStateOf(pages.first()) }
-
   Scaffold(
-    topBar = { StandardTopBar() },
+    topBar = { StandardTopBar(false) },
     bottomBar = {
       if (pages.size > 1) {
         NavigationBar(
@@ -122,7 +136,7 @@ private fun PortraitScreen(
           pages.forEach {
             SuplaNavigationBarItem(
               selected = page == it,
-              onClick = { page = it },
+              onClick = { onPageChange(it) },
               icon = { it.item.Icon(page == it) },
               label = { NavigationBarLabel(it.item.stringRes) }
             )
@@ -132,11 +146,7 @@ private fun PortraitScreen(
     }
   ) { paddings ->
     CompositionLocalProvider(LocalScaffoldPadding provides paddings) {
-      Content(
-        item = item,
-        page = page,
-        navigator = navigator
-      )
+      Content(item, page)
     }
   }
 }
@@ -144,22 +154,19 @@ private fun PortraitScreen(
 @Composable
 private fun LandscapeScreen(
   item: ItemBundle,
+  page: DetailPage,
   pages: List<DetailPage>,
-  navigator: MainComposeNavigator
+  onPageChange: (DetailPage) -> Unit
 ) {
-  var page by remember(pages) { mutableStateOf(pages.first()) }
-
   Row {
     Scaffold(
-      topBar = { StandardTopBar() },
+      topBar = { StandardTopBar(pages.size == 1) },
       modifier = Modifier.weight(1f)
     ) { paddings ->
-      CompositionLocalProvider(LocalScaffoldPadding provides paddings) {
-        Content(
-          item = item,
-          page = page,
-          navigator = navigator
-        )
+      CompositionLocalProvider(
+        LocalScaffoldPadding provides (paddings.withRightPanel().takeIf { pages.size > 1 } ?: paddings)
+      ) {
+        Content(item, page)
       }
     }
 
@@ -167,7 +174,8 @@ private fun LandscapeScreen(
       NavigationRail(
         modifier = Modifier
           .fillMaxHeight()
-          .border(1.dp, MaterialTheme.colorScheme.outline)
+          .border(1.dp, MaterialTheme.colorScheme.outline),
+        windowInsets = WindowInsets.navigationBars
       ) {
         Column(
           modifier = Modifier.fillMaxHeight(),
@@ -176,7 +184,7 @@ private fun LandscapeScreen(
           pages.forEach {
             SuplaRailItem(
               selected = page == it,
-              onClick = { page = it },
+              onClick = { onPageChange(it) },
               icon = { it.item.Icon(page == it) },
               label = { NavigationBarLabel(it.item.stringRes) }
             )
@@ -188,16 +196,12 @@ private fun LandscapeScreen(
 }
 
 @Composable
-private fun Content(
-  item: ItemBundle,
-  page: DetailPage,
-  navigator: MainComposeNavigator
-) =
+private fun Content(item: ItemBundle, page: DetailPage) =
   when (page) {
     DetailPage.SWITCH -> SwitchGeneralScreen(item)
     DetailPage.SWITCH_TIMER -> SwitchTimerScreen(item)
     DetailPage.THERMOSTAT -> ThermostatGeneralScreen(item)
-    DetailPage.THERMOSTAT_LIST -> ThermostatSlavesListScreen(item, navigator)
+    DetailPage.THERMOSTAT_LIST -> ThermostatSlavesListScreen(item)
     DetailPage.SCHEDULE -> ThermostatScheduleScreen(item)
     DetailPage.THERMOSTAT_HISTORY -> ThermostatHistoryScreen(item)
     DetailPage.THERMOSTAT_TIMER -> ThermostatTimerScreen(item)
@@ -208,30 +212,30 @@ private fun Content(
     DetailPage.THERMOMETER_HISTORY -> ThermometerHistoryScreen(item)
     DetailPage.HUMIDITY_HISTORY -> HumidityHistoryScreen(item)
     DetailPage.GPM_HISTORY -> GpmHistoryScreen(item)
-    DetailPage.ROLLER_SHUTTER -> RollerShutterScreen(item, navigator)
-    DetailPage.ROOF_WINDOW -> RoofWindowScreen(item, navigator)
-    DetailPage.FACADE_BLINDS -> FacadeBlindsScreen(item, navigator)
-    DetailPage.TERRACE_AWNING -> TerraceAwningScreen(item, navigator)
-    DetailPage.PROJECTOR_SCREEN -> ProjectorScreenScreen(item, navigator)
-    DetailPage.CURTAIN -> CurtainScreen(item, navigator)
-    DetailPage.VERTICAL_BLIND -> VerticalBlindsScreen(item, navigator)
-    DetailPage.GARAGE_DOOR_ROLLER -> GarageDoorScreen(item, navigator)
+    DetailPage.ROLLER_SHUTTER -> RollerShutterScreen(item)
+    DetailPage.ROOF_WINDOW -> RoofWindowScreen(item)
+    DetailPage.FACADE_BLINDS -> FacadeBlindsScreen(item)
+    DetailPage.TERRACE_AWNING -> TerraceAwningScreen(item)
+    DetailPage.PROJECTOR_SCREEN -> ProjectorScreenScreen(item)
+    DetailPage.CURTAIN -> CurtainScreen(item)
+    DetailPage.VERTICAL_BLIND -> VerticalBlindsScreen(item)
+    DetailPage.GARAGE_DOOR_ROLLER -> GarageDoorScreen(item)
     DetailPage.EM_GENERAL -> ElectricityMeterGeneralScreen(item)
     DetailPage.EM_HISTORY -> ElectricityMeterHistoryScreen(item)
     DetailPage.EM_SETTINGS -> ElectricityMeterSettingsScreen(item)
     DetailPage.CONTAINER_GENERAL -> ContainerGeneralScreen(item)
-    DetailPage.IC_GENERAL -> ImpulseCounterGeneralScreen(item, navigator)
+    DetailPage.IC_GENERAL -> ImpulseCounterGeneralScreen(item)
     DetailPage.IC_HISTORY -> ImpulseCounterHistoryScreen(item)
-    DetailPage.IC_OCR -> CounterPhotoScreen(item.remoteId, navigator)
+    DetailPage.IC_OCR -> CounterPhotoScreen(item.remoteId)
     DetailPage.IC_SETTINGS -> ImpulseCounterSettingsScreen(item)
     DetailPage.VALVE_GENERAL -> ValveGeneralScreen(item)
     DetailPage.GATE_GENERAL -> GateGeneralScreen(item)
     DetailPage.RGB -> RgbDetailScreen(item)
-    DetailPage.DIMMER -> DimmerDetailScreen(item, navigator)
+    DetailPage.DIMMER -> DimmerDetailScreen(item)
     DetailPage.DIMMER_CCT -> DimmerCctDetailScreen(item)
   }
 
-private fun handleEvent(event: DetailViewEvent, navigator: MainComposeNavigator) =
+private fun handleEvent(event: DetailViewEvent, navigator: MainComposeNavigator?) =
   when (event) {
-    DetailViewEvent.Close -> navigator.back()
+    DetailViewEvent.Close -> navigator?.back()
   }

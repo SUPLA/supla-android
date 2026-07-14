@@ -33,6 +33,7 @@ import org.supla.android.lib.actions.SubjectType
 import org.supla.android.main.topbar.TopBarSearchData
 import org.supla.android.main.topbar.TopBarSearchEvent
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.lists.BaseListViewModel
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.lists.sceneItem
@@ -56,9 +57,11 @@ class SceneListViewModel @Inject constructor(
   private val sceneRepository: SceneRepository,
   loadActiveProfileUrlUseCase: LoadActiveProfileUrlUseCase,
   updateEventsManager: UpdateEventsManager,
+  vibrationHelper: VibrationHelper,
   schedulers: SuplaSchedulers,
   dateProvider: DateProvider,
 ) : BaseListViewModel<SceneListViewState, SceneListViewEvent>(
+  vibrationHelper,
   dateProvider,
   schedulers,
   SceneListViewState(),

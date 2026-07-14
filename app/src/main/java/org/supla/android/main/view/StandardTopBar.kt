@@ -17,17 +17,24 @@ package org.supla.android.main.view
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.view.Surface
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.add
+import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
@@ -54,8 +61,22 @@ import org.supla.android.ui.views.texts.HeadlineSmall
 import org.supla.core.shared.infrastructure.localizedString
 
 @Composable
-fun StandardTopBar() {
-  TopBarSurface {
+fun StandardTopBar(useNavigationBarPadding: Boolean) {
+  val rotation = LocalView.current.display?.rotation
+  val navigationBarInsets = WindowInsets.navigationBars
+  val cameraInsets = WindowInsets.displayCutout
+  val insets =
+    when {
+      (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270) && useNavigationBarPadding -> navigationBarInsets.add(
+        cameraInsets
+      )
+      rotation == Surface.ROTATION_90 -> cameraInsets
+      rotation == Surface.ROTATION_270 -> navigationBarInsets
+      else -> null
+    }
+  val modifier = insets?.let { Modifier.windowInsetsPadding(it) } ?: Modifier
+
+  TopBarSurface(modifier = modifier) {
     val topBarController = LocalTopBarController.current
     val topBarState = topBarController.state
     val searchState = topBarState.search
@@ -169,7 +190,7 @@ private fun Preview() {
         title = localizedString(R.string.app_name),
         action = TopBarAction(TopBarIcon.OpenSettings)
       ) {
-        StandardTopBar()
+        StandardTopBar(false)
       }
 
       MockedTopBarController(
@@ -180,7 +201,7 @@ private fun Preview() {
         ),
         action = TopBarAction(TopBarIcon.OpenSettings)
       ) {
-        StandardTopBar()
+        StandardTopBar(false)
       }
 
       MockedTopBarController(
@@ -190,7 +211,7 @@ private fun Preview() {
         ),
         action = TopBarAction(TopBarIcon.OpenSettings)
       ) {
-        StandardTopBar()
+        StandardTopBar(false)
       }
 
       MockedTopBarController(
@@ -199,7 +220,7 @@ private fun Preview() {
           observer = {}
         )
       ) {
-        StandardTopBar()
+        StandardTopBar(false)
       }
 
       MockedTopBarController(
@@ -208,7 +229,7 @@ private fun Preview() {
           observer = {}
         )
       ) {
-        StandardTopBar()
+        StandardTopBar(false)
       }
     }
   }

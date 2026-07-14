@@ -152,8 +152,8 @@ class ChannelToListItemMapper @Inject constructor(
       processing = false,
       estimatedTimerEndDate = channelWithChildren.channel.channelExtendedValueEntity?.getSuplaValue()?.TimerStateValue?.countdownEndsAt,
       infoSupported = channelWithChildren.showInfo,
-      leftButtonString = localizedString(getChannelActionStringUseCase.leftButton(channelWithChildren.function)),
-      rightButtonString = localizedString(getChannelActionStringUseCase.rightButton(channelWithChildren.function)),
+      leftButtonString = getChannelActionStringUseCase.leftButton(channelWithChildren.function)?.let { localizedString(it) },
+      rightButtonString = getChannelActionStringUseCase.rightButton(channelWithChildren.function)?.let { localizedString(it) },
       secondIcon = getChannelIconUseCase(channelWithChildren, IconType.SECOND),
       secondValue = getChannelValueStringUseCase.valueOrNull(channelWithChildren, ListSecondValue, withUnit = false)
     )

@@ -19,15 +19,16 @@ package org.supla.android.features.details.impulsecounter.counterphoto
 
 import androidx.compose.runtime.Composable
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import org.supla.android.main.LocalNavigator
 import org.supla.android.main.MainComposeNavigator
 import org.supla.android.main.ViewModelHost
 
 @Composable
 fun CounterPhotoScreen(
   remoteId: Int,
-  navigator: MainComposeNavigator,
   viewModel: CounterPhotoViewModel = hiltViewModel()
 ) {
+  val navigator = LocalNavigator.current
   ViewModelHost(
     viewModel = viewModel,
     onStart = {
@@ -44,8 +45,8 @@ fun CounterPhotoScreen(
   }
 }
 
-private fun handleEvent(event: CounterPhotoViewEvent, navigator: MainComposeNavigator) {
+private fun handleEvent(event: CounterPhotoViewEvent, navigator: MainComposeNavigator?) {
   when (event) {
-    is CounterPhotoViewEvent.OpenUrl -> navigator.navigateToWeb(event.url)
+    is CounterPhotoViewEvent.OpenUrl -> navigator?.navigateToWeb(event.url)
   }
 }
