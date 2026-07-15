@@ -87,7 +87,7 @@ fun ChannelListScreen(
       handler = viewModel::handle
     )
     viewModel.Content(
-      state = state,
+      list = viewModel.list,
       dragEnabled = viewModel.searchData.query.isEmpty(),
       modifier = modifier
     )
@@ -138,11 +138,11 @@ private fun handleCaptionChangeEvents(event: CaptionChangeViewEvent, viewModel: 
 
 @Composable
 private fun ChannelListScope.Content(
-  state: ChannelListViewState,
   dragEnabled: Boolean,
+  list: List<ListItem>,
   modifier: Modifier = Modifier
 ) {
-  if (state.channels.isNullOrEmpty()) {
+  if (list.isEmpty()) {
     Box(
       modifier = modifier
         .fillMaxSize()
@@ -152,7 +152,7 @@ private fun ChannelListScope.Content(
     }
   } else {
     ListView(
-      items = state.channels,
+      items = list,
       dragEnabled = dragEnabled,
       modifier = modifier
     )
@@ -200,7 +200,7 @@ val previewScope = object : ChannelListScope {
 private fun PreviewEmpty() {
   SuplaTheme {
     previewScope.Content(
-      state = ChannelListViewState(),
+      list = emptyList(),
       dragEnabled = false
     )
   }
@@ -212,37 +212,35 @@ private fun PreviewList() {
   SuplaTheme {
     CompositionLocalProvider(LocalApplicationPreferences provides ApplicationPreferences(LocalContext.current)) {
       previewScope.Content(
-        state = ChannelListViewState(
-          channels = listOf(
-            ListItem.LocationItem(1, 1L, "Leaving Room", false),
-            ListItem.DefaultItem(
-              remoteId = 1,
-              profileId = 1L,
-              function = SuplaFunction.GENERAL_PURPOSE_MEASUREMENT,
-              locationCaption = "",
-              locationId = 1,
-              status = ListItemStatus.Channel(ListOnlineState.ONLINE),
-              captionProvider = LocalizedString.Constant("Distance sensor"),
-              userCaption = "",
-              icon = ImageId(R.drawable.fnc_distance),
-              value = "123 m",
-              issues = ListItemIssues.empty,
-              processing = false
-            ),
-            ListItem.DefaultItem(
-              remoteId = 1,
-              profileId = 1L,
-              function = SuplaFunction.GENERAL_PURPOSE_MEASUREMENT,
-              locationCaption = "",
-              locationId = 1,
-              status = ListItemStatus.Channel(ListOnlineState.ONLINE),
-              captionProvider = LocalizedString.Constant("Rain sensor"),
-              userCaption = "",
-              icon = ImageId(R.drawable.fnc_rain),
-              value = "123 m",
-              issues = ListItemIssues.empty,
-              processing = false
-            )
+        list = listOf(
+          ListItem.LocationItem(1, 1L, "Leaving Room", false),
+          ListItem.DefaultItem(
+            remoteId = 1,
+            profileId = 1L,
+            function = SuplaFunction.GENERAL_PURPOSE_MEASUREMENT,
+            locationCaption = "",
+            locationId = 1,
+            status = ListItemStatus.Channel(ListOnlineState.ONLINE),
+            captionProvider = LocalizedString.Constant("Distance sensor"),
+            userCaption = "",
+            icon = ImageId(R.drawable.fnc_distance),
+            value = "123 m",
+            issues = ListItemIssues.empty,
+            processing = false
+          ),
+          ListItem.DefaultItem(
+            remoteId = 1,
+            profileId = 1L,
+            function = SuplaFunction.GENERAL_PURPOSE_MEASUREMENT,
+            locationCaption = "",
+            locationId = 1,
+            status = ListItemStatus.Channel(ListOnlineState.ONLINE),
+            captionProvider = LocalizedString.Constant("Rain sensor"),
+            userCaption = "",
+            icon = ImageId(R.drawable.fnc_rain),
+            value = "123 m",
+            issues = ListItemIssues.empty,
+            processing = false
           )
         ),
         dragEnabled = false

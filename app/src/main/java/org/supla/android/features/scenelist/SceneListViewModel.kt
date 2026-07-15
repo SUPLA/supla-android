@@ -64,7 +64,7 @@ class SceneListViewModel @Inject constructor(
   vibrationHelper,
   dateProvider,
   schedulers,
-  SceneListViewState(),
+  SceneListViewState,
   loadActiveProfileUrlUseCase
 ),
   SceneListScope {
@@ -78,13 +78,12 @@ class SceneListViewModel @Inject constructor(
     observeUpdates(updateEventsManager.observeScenesUpdate())
 
     updateEventsManager.observeAllScenes()
-      .attach()
+      .attachSilent()
       .flatMapMaybe { sceneRepository.findSceneData(it) }
       .map { it.sceneItem(getSceneIconUseCase) }
       .subscribeBy(
-        onNext = { listItem ->
-          updateState { it.copy(scenes = it.scenes?.replace(listItem)) }
-        }
+        onNext = { updateItem(it) },
+        onError = defaultErrorHandler("init()")
       )
       .disposeBySelf()
   }
@@ -98,7 +97,7 @@ class SceneListViewModel @Inject constructor(
     createProfileScenesListUseCase(searchData.query)
       .attach()
       .subscribeBy(
-        onNext = { updateState { state -> state.copy(scenes = it) } },
+        onNext = { updateItems(it) },
         onError = defaultErrorHandler("loadScenes()")
       )
       .disposeBySelf()
@@ -128,33 +127,25 @@ class SceneListViewModel @Inject constructor(
   }
 
   override fun moveItems(from: Int, to: Int): Boolean {
-    var result = false
-    updateState {
-      val scenes = it.scenes?.toMutableList() ?: return@updateState it
-      val firstItem = scenes.getOrNull(from) as? ListItem.SceneItem ?: return@updateState it
-      val secondItem = scenes.getOrNull(to) as? ListItem.SceneItem ?: return@updateState it
+    val firstItem = list.getOrNull(from) as? ListItem.SceneItem ?: return false
+    val secondItem = list.getOrNull(to) as? ListItem.SceneItem ?: return false
 
-      if (firstItem.locationCaption == secondItem.locationCaption) {
-        result = true
-        scenes.add(to, scenes.removeAt(from))
-        it.copy(scenes = scenes)
-      } else {
-        it
-      }
+    if (firstItem.locationCaption != secondItem.locationCaption) {
+      return false
     }
 
-    return result
+    listState.add(to, listState.removeAt(from))
+    return true
   }
 
   override fun onDragStopped(remoteId: Int) {
-    val scenes = currentState().scenes ?: return
     viewModelScope.launch {
       val reorderedScenes = schedulers.io {
-        reorderScenesUseCase(scenes, remoteId)
+        reorderScenesUseCase(list, remoteId)
         createProfileScenesListUseCase().awaitFirst()
       }
 
-      updateState { it.copy(scenes = reorderedScenes) }
+      updateItems(reorderedScenes)
     }
   }
 
@@ -163,7 +154,7 @@ class SceneListViewModel @Inject constructor(
       .andThen(createProfileScenesListUseCase(searchData.query))
       .attach()
       .subscribeBy(
-        onNext = { updateState { state -> state.copy(scenes = it) } },
+        onNext = { updateItems(it) },
         onError = defaultErrorHandler("onLocationClick($remoteId)")
       )
       .disposeBySelf()
@@ -188,15 +179,4 @@ sealed class SceneListViewEvent : ViewEvent {
   data class NavigateToPrivateCloud(val url: Uri) : SceneListViewEvent()
 }
 
-data class SceneListViewState(
-  val scenes: List<ListItem>? = null
-) : ViewState()
-
-private fun List<ListItem>.replace(item: ListItem): List<ListItem> =
-  map {
-    if (it is ListItem.SceneItem && it.remoteId == item.remoteId) {
-      item
-    } else {
-      it
-    }
-  }
+data object SceneListViewState : ViewState()
