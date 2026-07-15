@@ -100,8 +100,6 @@ public class SuplaApp extends Application
     notificationsHelper.registerForToken();
     ProcessLifecycleOwner.get().getLifecycle().addObserver(appLifecycleObserver);
 
-    SuplaFormatter.sharedFormatter();
-
     AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     WorkManager.initialize(this, new Builder().setWorkerFactory(workerFactory).build());
     Utils.init(this);

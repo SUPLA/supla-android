@@ -90,13 +90,12 @@ class GroupListViewModel @Inject constructor(
     observeUpdates(updateEventsManager.observeGroupsUpdate())
 
     updateEventsManager.observeAllGroups()
-      .attach()
+      .attachSilent()
       .flatMapMaybe { findGroupByRemoteIdUseCase(it) }
       .map { groupToListItemMapper(it) }
       .subscribeBy(
-        onNext = { listItem ->
-          updateState { it.copy(groups = it.groups?.replace(listItem)) }
-        }
+        onNext = { updateItem(it) },
+        onError = defaultErrorHandler("init()")
       )
       .disposeBySelf()
   }
@@ -110,7 +109,7 @@ class GroupListViewModel @Inject constructor(
     createProfileGroupsListUseCase(searchData.query)
       .attach()
       .subscribeBy(
-        onNext = { updateState { state -> state.copy(groups = it) } },
+        onNext = { updateItems(it) },
         onError = defaultErrorHandler("loadGroups()")
       )
       .disposeBySelf()
@@ -193,33 +192,25 @@ class GroupListViewModel @Inject constructor(
   }
 
   override fun moveItems(from: Int, to: Int): Boolean {
-    var result = false
-    updateState {
-      val groups = it.groups?.toMutableList() ?: return@updateState it
-      val firstItem = groups.getOrNull(from) as? ListItem.DefaultItem ?: return@updateState it
-      val secondItem = groups.getOrNull(to) as? ListItem.DefaultItem ?: return@updateState it
+    val firstItem = list.getOrNull(from) as? ListItem.DefaultItem ?: return false
+    val secondItem = list.getOrNull(to) as? ListItem.DefaultItem ?: return false
 
-      if (firstItem.locationCaption == secondItem.locationCaption) {
-        result = true
-        groups.add(to, groups.removeAt(from))
-        it.copy(groups = groups)
-      } else {
-        it
-      }
+    if (firstItem.locationCaption != secondItem.locationCaption) {
+      return false
     }
 
-    return result
+    listState.add(to, listState.removeAt(from))
+    return true
   }
 
   override fun onDragStopped(remoteId: Int) {
-    val groups = currentState().groups ?: return
     viewModelScope.launch {
       val reorderedGroups = schedulers.io {
-        reorderGroupsUseCase(groups, remoteId)
+        reorderGroupsUseCase(list, remoteId)
         createProfileGroupsListUseCase().awaitFirst()
       }
 
-      updateState { it.copy(groups = reorderedGroups) }
+      updateItems(reorderedGroups)
     }
   }
 
@@ -228,7 +219,7 @@ class GroupListViewModel @Inject constructor(
       .andThen(createProfileGroupsListUseCase(searchData.query))
       .attach()
       .subscribeBy(
-        onNext = { updateState { state -> state.copy(groups = it) } },
+        onNext = { updateItems(it) },
         onError = defaultErrorHandler("onLocationClick($remoteId)")
       )
       .disposeBySelf()
@@ -268,15 +259,5 @@ sealed class GroupListViewEvent : ViewEvent {
 }
 
 data class GroupListViewState(
-  val groups: List<ListItem>? = null,
   val actionAlertDialogState: ActionAlertDialogState? = null
 ) : ViewState()
-
-private fun List<ListItem>.replace(item: ListItem): List<ListItem> =
-  map {
-    if (it is ListItem.GroupItem && it.remoteId == item.remoteId) {
-      item
-    } else {
-      it
-    }
-  }

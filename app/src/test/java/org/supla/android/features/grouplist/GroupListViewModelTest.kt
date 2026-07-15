@@ -145,22 +145,19 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   @Test
   fun `should load groups`() {
     // given
-    val list = listOf(mockk<ListItem.DefaultItem>())
+    val item = mockk<ListItem.DefaultItem>()
+    val list = listOf(item)
     every { createProfileGroupsListUseCase.invoke() } returns Observable.just(list)
 
     // when
     viewModel.loadGroups()
 
     // then
-    val state = GroupListViewState()
-    Assertions.assertThat(states).containsExactly(
-      state.copy(groups = list)
-    )
-    Assertions.assertThat(events).isEmpty()
+    assertThat(viewModel.list).containsExactly(item)
+    assertThat(states).isEmpty()
+    assertThat(events).isEmpty()
 
-    verify {
-      createProfileGroupsListUseCase.invoke()
-    }
+    verify { createProfileGroupsListUseCase.invoke() }
     confirmVerified(
       createProfileGroupsListUseCase,
       provideGroupDetailTypeUseCase,
@@ -178,18 +175,17 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     // given
     val locationId = 123
     every { toggleLocationUseCase(locationId, CollapsedFlag.GROUP) } returns Completable.complete()
-    val list = listOf(mockk<ListItem.DefaultItem>())
+    val item = mockk<ListItem.DefaultItem>()
+    val list = listOf(item)
     every { createProfileGroupsListUseCase() } returns Observable.just(list)
 
     // when
     viewModel.onLocationClick(locationId)
 
     // then
-    val state = GroupListViewState()
-    Assertions.assertThat(states).containsExactly(
-      state.copy(groups = list)
-    )
-    Assertions.assertThat(events).isEmpty()
+    assertThat(viewModel.list).containsExactly(item)
+    assertThat(states).isEmpty()
+    assertThat(events).isEmpty()
 
     verify {
       createProfileGroupsListUseCase.invoke()
@@ -219,18 +215,18 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       every { locationCaption } returns "1"
     }
     val items = listOf(firstItem, secondItem, thirdItem)
-    viewModel.setState(GroupListViewState(groups = items))
+    every { createProfileGroupsListUseCase() } returns Observable.just(items)
 
     // when
+    viewModel.loadGroups()
     viewModel.moveItems(0, 2)
 
     // then
-    assertThat(states).containsExactly(
-      GroupListViewState(groups = listOf(firstItem, secondItem, thirdItem)),
-      GroupListViewState(groups = listOf(secondItem, thirdItem, firstItem))
-    )
-    Assertions.assertThat(events).isEmpty()
+    assertThat(viewModel.list).containsExactly(secondItem, thirdItem, firstItem)
+    assertThat(states).isEmpty()
+    assertThat(events).isEmpty()
 
+    verify { createProfileGroupsListUseCase.invoke() }
     confirmVerified(
       createProfileGroupsListUseCase,
       provideGroupDetailTypeUseCase,
@@ -256,16 +252,18 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       every { locationCaption } returns "2"
     }
     val items = listOf(firstItem, secondItem, thirdItem)
-    viewModel.setState(GroupListViewState(groups = items))
+    every { createProfileGroupsListUseCase() } returns Observable.just(items)
 
     // when
+    viewModel.loadGroups()
     viewModel.moveItems(0, 2)
 
     // then
-    assertThat(states).containsExactly(
-      GroupListViewState(groups = listOf(firstItem, secondItem, thirdItem)),
-    )
-    Assertions.assertThat(events).isEmpty()
+    assertThat(viewModel.list).containsExactly(firstItem, secondItem, thirdItem)
+    assertThat(states).isEmpty()
+    assertThat(events).isEmpty()
+
+    verify { createProfileGroupsListUseCase.invoke() }
 
     confirmVerified(
       createProfileGroupsListUseCase,
@@ -290,17 +288,18 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       every { locationCaption } returns "1"
     }
     val items = listOf(firstItem, secondItem, thirdItem)
-    viewModel.setState(GroupListViewState(groups = items))
+    every { createProfileGroupsListUseCase() } returns Observable.just(items)
 
     // when
+    viewModel.loadGroups()
     viewModel.moveItems(2, 0)
 
     // then
-    assertThat(states).containsExactly(
-      GroupListViewState(groups = listOf(firstItem, secondItem, thirdItem)),
-    )
-    Assertions.assertThat(events).isEmpty()
+    assertThat(viewModel.list).containsExactly(firstItem, secondItem, thirdItem)
+    assertThat(states).isEmpty()
+    assertThat(events).isEmpty()
 
+    verify { createProfileGroupsListUseCase.invoke() }
     confirmVerified(
       createProfileGroupsListUseCase,
       provideGroupDetailTypeUseCase,
@@ -467,22 +466,19 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   @Test
   fun `should reload list on update`() {
     // given
-    val list = listOf(mockk<ListItem.DefaultItem>())
+    val item = mockk<ListItem.DefaultItem>()
+    val list = listOf(item)
     every { createProfileGroupsListUseCase.invoke() } returns Observable.just(list)
 
     // when
     listsEventsSubject.onNext(Any())
 
     // then
-    val state = GroupListViewState()
-    Assertions.assertThat(states).containsExactly(
-      state.copy(groups = list)
-    )
-    Assertions.assertThat(events).isEmpty()
+    assertThat(viewModel.list).containsExactly(item)
+    assertThat(states).isEmpty()
+    assertThat(events).isEmpty()
 
-    verify {
-      createProfileGroupsListUseCase.invoke()
-    }
+    verify { createProfileGroupsListUseCase.invoke() }
     confirmVerified(
       createProfileGroupsListUseCase,
       provideGroupDetailTypeUseCase,
@@ -498,7 +494,8 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   fun `should set filter text and reload groups`() {
     // given
     val filterText = "kitchen"
-    val list = listOf(mockk<ListItem.DefaultItem>())
+    val item = mockk<ListItem.DefaultItem>()
+    val list = listOf(item)
     every { createProfileGroupsListUseCase(filterText) } returns Observable.just(list)
 
     // when
@@ -506,9 +503,8 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
 
     // then
     assertThat(viewModel.searchData.query).isEqualTo(filterText)
-    assertThat(states).containsExactly(
-      GroupListViewState(groups = list)
-    )
+    assertThat(viewModel.list).containsExactly(item)
+    assertThat(states).isEmpty()
     assertThat(events).isEmpty()
 
     verify { createProfileGroupsListUseCase(filterText) }
@@ -704,22 +700,20 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     }
     val groups = listOf<ListItem>(firstItem, secondItem)
     val reorderedGroups = listOf<ListItem>(secondItem, firstItem)
-    coEvery { reorderGroupsUseCase(groups, remoteId) } returns Unit
-    every { createProfileGroupsListUseCase() } returns Observable.just(reorderedGroups)
-    viewModel.setState(GroupListViewState(groups = groups))
-    states.clear()
+    coEvery { reorderGroupsUseCase(match { it.toList() == groups }, remoteId) } returns Unit
+    every { createProfileGroupsListUseCase() } returnsMany listOf(Observable.just(groups), Observable.just(reorderedGroups))
 
     // when
+    viewModel.loadGroups()
     viewModel.onDragStopped(remoteId)
 
     // then
-    assertThat(states).containsExactly(
-      GroupListViewState(groups = reorderedGroups)
-    )
+    assertThat(viewModel.list).containsExactly(secondItem, firstItem)
+    assertThat(states).isEmpty()
     assertThat(events).isEmpty()
 
-    coVerify { reorderGroupsUseCase(groups, remoteId) }
-    verify { createProfileGroupsListUseCase() }
+    coVerify { reorderGroupsUseCase(any(), remoteId) }
+    verify(exactly = 2) { createProfileGroupsListUseCase() }
     confirmVerified(
       createProfileGroupsListUseCase,
       provideGroupDetailTypeUseCase,

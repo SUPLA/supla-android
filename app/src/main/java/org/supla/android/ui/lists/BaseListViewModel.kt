@@ -17,6 +17,7 @@ package org.supla.android.ui.lists
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.compose.runtime.mutableStateListOf
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.ui.BaseViewModel
@@ -29,6 +30,7 @@ import org.supla.android.tools.VibrationHelper
 import org.supla.android.usecases.profile.CloudUrl
 import org.supla.android.usecases.profile.LoadActiveProfileUrlUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
+import timber.log.Timber
 
 private const val CLICK_EVENT_DELAY_MS = 250
 
@@ -42,11 +44,30 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
 
   protected var lastItemOpenTime: Long = 0
 
+  protected val listState = mutableStateListOf<ListItem>()
+  val list: List<ListItem> = listState
+
   open fun onDragStarted(remoteId: Int) {
     vibrationHelper.vibrate()
   }
 
   protected abstract fun reloadList()
+
+  protected fun updateItem(item: ListItem) {
+    try {
+      val index = list.indexOfFirst { it is ListItem.DefaultItem && it.remoteId == item.remoteId }
+      if (index >= 0 && listState[index] != item) {
+        listState[index] = item
+      }
+    } catch (ex: Exception) {
+      Timber.e(ex, "Item update failed! (id: `${item.remoteId}`)")
+    }
+  }
+
+  protected fun updateItems(items: List<ListItem>) {
+    listState.clear()
+    listState.addAll(items)
+  }
 
   protected fun observeUpdates(updatesObservable: Observable<Any>) {
     updatesObservable

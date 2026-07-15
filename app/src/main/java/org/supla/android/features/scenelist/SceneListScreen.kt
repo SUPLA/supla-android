@@ -61,14 +61,14 @@ fun SceneListScreen(
   ViewModelHostBase(
     viewModel = viewModel,
     eventHandler = { handleSceneEvents(it, navigator, captionChangeViewModel) }
-  ) { state ->
+  ) {
     RegisterTopBarSearch(
       data = viewModel.searchData,
       handler = viewModel::handle
     )
 
     viewModel.Content(
-      state = state,
+      scenes = viewModel.list,
       dragEnabled = viewModel.searchData.query.isEmpty()
     )
   }
@@ -102,10 +102,10 @@ private fun handleCaptionChangeEvents(event: CaptionChangeViewEvent, viewModel: 
 
 @Composable
 private fun SceneListScope.Content(
-  state: SceneListViewState,
+  scenes: List<ListItem>,
   dragEnabled: Boolean
 ) {
-  if (state.scenes.isNullOrEmpty()) {
+  if (scenes.isEmpty()) {
     Box(
       modifier = Modifier
         .fillMaxSize()
@@ -115,7 +115,7 @@ private fun SceneListScope.Content(
     }
   } else {
     ListView(
-      items = state.scenes,
+      items = scenes,
       dragEnabled = dragEnabled
     )
   }
@@ -157,7 +157,7 @@ val previewScope = object : SceneListScope {
 private fun PreviewEmpty() {
   SuplaTheme {
     previewScope.Content(
-      state = SceneListViewState(),
+      scenes = emptyList(),
       dragEnabled = false
     )
   }

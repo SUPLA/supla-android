@@ -141,17 +141,16 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   @Test
   fun `should load channels`() {
     // given
-    val list = listOf(mockk<ListItem.DefaultItem>())
+    val item = mockk<ListItem.DefaultItem>()
+    val list = listOf(item)
     every { createProfileChannelsListUseCase() } returns Observable.just(list)
 
     // when
     viewModel.loadChannels()
 
     // then
-    val state = ChannelListViewState()
-    assertThat(states).containsExactly(
-      state.copy(channels = list)
-    )
+    assertThat(viewModel.list).containsExactly(item)
+    assertThat(states).isEmpty()
     assertThat(events).isEmpty()
 
     verify { createProfileChannelsListUseCase() }
@@ -163,17 +162,16 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // given
     val locationId = 123
     every { toggleLocationUseCase(locationId, CollapsedFlag.CHANNEL) } returns Completable.complete()
-    val list = listOf(mockk<ListItem.DefaultItem>())
+    val item = mockk<ListItem.DefaultItem>()
+    val list = listOf(item)
     every { createProfileChannelsListUseCase() } returns Observable.just(list)
 
     // when
     viewModel.onLocationClick(locationId)
 
     // then
-    val state = ChannelListViewState()
-    assertThat(states).containsExactly(
-      state.copy(channels = list)
-    )
+    assertThat(viewModel.list).containsExactly(item)
+    assertThat(states).isEmpty()
     assertThat(events).isEmpty()
 
     verify {
@@ -196,18 +194,18 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       every { locationCaption } returns "1"
     }
     val items = listOf(firstItem, secondItem, thirdItem)
-    viewModel.setState(ChannelListViewState(channels = items))
+    every { createProfileChannelsListUseCase() } returns Observable.just(items)
 
     // when
+    viewModel.loadChannels()
     viewModel.moveItems(0, 2)
 
     // then
-    assertThat(states).containsExactly(
-      ChannelListViewState(channels = listOf(firstItem, secondItem, thirdItem)),
-      ChannelListViewState(channels = listOf(secondItem, thirdItem, firstItem))
-    )
+    assertThat(viewModel.list).containsExactly(secondItem, thirdItem, firstItem)
+    assertThat(states).isEmpty()
     assertThat(events).isEmpty()
 
+    verify { createProfileChannelsListUseCase.invoke() }
     confirmDependenciesVerified()
   }
 
@@ -224,17 +222,18 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       every { locationCaption } returns "2"
     }
     val items = listOf(firstItem, secondItem, thirdItem)
-    viewModel.setState(ChannelListViewState(channels = items))
+    every { createProfileChannelsListUseCase() } returns Observable.just(items)
 
     // when
+    viewModel.loadChannels()
     viewModel.moveItems(0, 2)
 
     // then
-    assertThat(states).containsExactly(
-      ChannelListViewState(channels = listOf(firstItem, secondItem, thirdItem)),
-    )
+    assertThat(viewModel.list).containsExactly(firstItem, secondItem, thirdItem)
+    assertThat(states).isEmpty()
     assertThat(events).isEmpty()
 
+    verify { createProfileChannelsListUseCase.invoke() }
     confirmDependenciesVerified()
   }
 
@@ -249,17 +248,18 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       every { locationCaption } returns "1"
     }
     val items = listOf(firstItem, secondItem, thirdItem)
-    viewModel.setState(ChannelListViewState(channels = items))
+    every { createProfileChannelsListUseCase() } returns Observable.just(items)
 
     // when
+    viewModel.loadChannels()
     viewModel.moveItems(2, 0)
 
     // then
-    assertThat(states).containsExactly(
-      ChannelListViewState(channels = listOf(firstItem, secondItem, thirdItem)),
-    )
+    assertThat(viewModel.list).containsExactly(firstItem, secondItem, thirdItem)
+    assertThat(states).isEmpty()
     assertThat(events).isEmpty()
 
+    verify { createProfileChannelsListUseCase.invoke() }
     confirmDependenciesVerified()
   }
 
@@ -451,18 +451,18 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   @Test
   fun `should reload list on update`() {
     // given
-    val list = listOf(mockk<ListItem.DefaultItem>())
+    val item = mockk<ListItem.DefaultItem>()
+    val list = listOf(item)
     every { createProfileChannelsListUseCase() } returns Observable.just(list)
 
     // when
     listsEventsSubject.onNext(Any())
 
     // then
-    val state = ChannelListViewState()
-    assertThat(states).containsExactly(
-      state.copy(channels = list)
-    )
+    assertThat(viewModel.list).containsExactly(item)
+    assertThat(states).isEmpty()
     assertThat(events).isEmpty()
+
     verify { createProfileChannelsListUseCase() }
     confirmDependenciesVerified()
   }
@@ -471,7 +471,8 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   fun `should set filter text and reload channels`() {
     // given
     val filterText = "kitchen"
-    val list = listOf(mockk<ListItem.DefaultItem>())
+    val item = mockk<ListItem.DefaultItem>()
+    val list = listOf(item)
     every { createProfileChannelsListUseCase(filterString = filterText) } returns Observable.just(list)
 
     // when
@@ -479,9 +480,8 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
 
     // then
     assertThat(viewModel.searchData.query).isEqualTo(filterText)
-    assertThat(states).containsExactly(
-      ChannelListViewState(channels = list)
-    )
+    assertThat(viewModel.list).containsExactly(item)
+    assertThat(states).isEmpty()
     assertThat(events).isEmpty()
 
     verify { createProfileChannelsListUseCase(filterString = filterText) }
@@ -622,22 +622,21 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     }
     val channels = listOf<ListItem>(firstItem, secondItem)
     val reorderedChannels = listOf<ListItem>(secondItem, firstItem)
-    coEvery { reorderChannelsUseCase(channels, remoteId) } returns Unit
-    every { createProfileChannelsListUseCase() } returns Observable.just(reorderedChannels)
-    viewModel.setState(ChannelListViewState(channels = channels))
-    states.clear()
+    coEvery { reorderChannelsUseCase(match { it.toList() == channels }, remoteId) } returns Unit
+    every { createProfileChannelsListUseCase() } returnsMany
+      listOf(Observable.just(channels), Observable.just(reorderedChannels))
 
     // when
+    viewModel.loadChannels()
     viewModel.onDragStopped(remoteId)
 
     // then
-    assertThat(states).containsExactly(
-      ChannelListViewState(channels = reorderedChannels)
-    )
+    assertThat(viewModel.list).containsExactly(secondItem, firstItem)
+    assertThat(states).isEmpty()
     assertThat(events).isEmpty()
 
-    coVerify { reorderChannelsUseCase(channels, remoteId) }
-    verify { createProfileChannelsListUseCase() }
+    coVerify { reorderChannelsUseCase(any(), remoteId) }
+    verify(exactly = 2) { createProfileChannelsListUseCase() }
     confirmDependenciesVerified()
   }
 

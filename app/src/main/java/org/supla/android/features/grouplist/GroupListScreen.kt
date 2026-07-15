@@ -71,7 +71,7 @@ fun GroupListScreen(
     )
 
     viewModel.Content(
-      state = state,
+      groups = viewModel.list,
       dragEnabled = viewModel.searchData.query.isEmpty()
     )
 
@@ -110,10 +110,10 @@ private fun handleCaptionChangeEvents(event: CaptionChangeViewEvent, viewModel: 
 
 @Composable
 private fun GroupListScope.Content(
-  state: GroupListViewState,
+  groups: List<ListItem>,
   dragEnabled: Boolean
 ) {
-  if (state.groups.isNullOrEmpty()) {
+  if (groups.isEmpty()) {
     Box(
       modifier = Modifier
         .fillMaxSize()
@@ -123,7 +123,7 @@ private fun GroupListScope.Content(
     }
   } else {
     ListView(
-      items = state.groups,
+      items = groups,
       dragEnabled = dragEnabled
     )
   }
@@ -165,7 +165,7 @@ val previewScope = object : GroupListScope {
 private fun PreviewEmpty() {
   SuplaTheme {
     previewScope.Content(
-      state = GroupListViewState(),
+      groups = emptyList(),
       dragEnabled = false
     )
   }

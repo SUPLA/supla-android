@@ -86,13 +86,12 @@ class ChannelListViewModel @Inject constructor(
     observeUpdates(updateEventsManager.observeChannelsUpdate())
 
     updateEventsManager.observeAllChannels()
-      .attach()
+      .attachSilent()
       .flatMapMaybe { readChannelWithChildrenUseCase(it) }
       .map { channelToListItemMapper(it) }
       .subscribeBy(
-        onNext = { listItem ->
-          updateState { it.copy(channels = it.channels?.replace(listItem)) }
-        }
+        onNext = { updateItem(it) },
+        onError = defaultErrorHandler("init()")
       )
       .disposeBySelf()
   }
@@ -110,7 +109,7 @@ class ChannelListViewModel @Inject constructor(
     createProfileChannelsListUseCase(filterString = searchData.query)
       .attach()
       .subscribeBy(
-        onNext = { updateState { state -> state.copy(channels = it) } },
+        onNext = { updateItems(it) },
         onError = defaultErrorHandler("loadChannels()")
       )
       .disposeBySelf()
@@ -181,33 +180,25 @@ class ChannelListViewModel @Inject constructor(
   }
 
   override fun moveItems(from: Int, to: Int): Boolean {
-    var result = false
-    updateState {
-      val channels = it.channels?.toMutableList() ?: return@updateState it
-      val firstItem = channels.getOrNull(from) as? ListItem.DefaultItem ?: return@updateState it
-      val secondItem = channels.getOrNull(to) as? ListItem.DefaultItem ?: return@updateState it
+    val firstItem = list.getOrNull(from) as? ListItem.DefaultItem ?: return false
+    val secondItem = list.getOrNull(to) as? ListItem.DefaultItem ?: return false
 
-      if (firstItem.locationCaption == secondItem.locationCaption) {
-        result = true
-        channels.add(to, channels.removeAt(from))
-        it.copy(channels = channels)
-      } else {
-        it
-      }
+    if (firstItem.locationCaption != secondItem.locationCaption) {
+      return false
     }
 
-    return result
+    listState.add(to, listState.removeAt(from))
+    return true
   }
 
   override fun onDragStopped(remoteId: Int) {
-    val channels = currentState().channels ?: return
     viewModelScope.launch {
       val reorderedChannels = schedulers.io {
-        reorderChannelsUseCase(channels, remoteId)
+        reorderChannelsUseCase(list, remoteId)
         createProfileChannelsListUseCase().awaitFirst()
       }
 
-      updateState { it.copy(channels = reorderedChannels) }
+      updateItems(reorderedChannels)
     }
   }
 
@@ -216,7 +207,7 @@ class ChannelListViewModel @Inject constructor(
       .andThen(createProfileChannelsListUseCase(filterString = searchData.query))
       .attach()
       .subscribeBy(
-        onNext = { updateState { state -> state.copy(channels = it) } },
+        onNext = { updateItems(it) },
         onError = defaultErrorHandler("onLocationClick($remoteId)")
       )
       .disposeBySelf()
@@ -269,15 +260,5 @@ sealed class ChannelListViewEvent : ViewEvent {
 }
 
 data class ChannelListViewState(
-  val channels: List<ListItem>? = null,
   val actionAlertDialogState: ActionAlertDialogState? = null
 ) : ViewState()
-
-private fun List<ListItem>.replace(item: ListItem): List<ListItem> =
-  map {
-    if (it is ListItem.DefaultItem && it.remoteId == item.remoteId) {
-      item
-    } else {
-      it
-    }
-  }

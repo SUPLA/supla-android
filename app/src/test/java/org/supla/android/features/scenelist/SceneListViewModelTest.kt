@@ -122,20 +122,19 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
   @Test
   fun `should load scenes`() {
     // given
-    val items: List<ListItem.SceneItem> = listOf(mockk())
+    val item = mockk<ListItem.SceneItem>()
+    val items = listOf(item)
     every { createProfileScenesListUseCase() } returns Observable.just(items)
 
     // when
     viewModel.loadScenes()
 
     // then
-    val state = SceneListViewState()
-    Assertions.assertThat(states).containsExactly(
-      state.copy(scenes = items)
-    )
-    Assertions.assertThat(events).isEmpty()
-    verify { createProfileScenesListUseCase() }
-    confirmVerified(createProfileScenesListUseCase)
+    assertThat(viewModel.list).containsExactly(item)
+    assertThat(states).isEmpty()
+    assertThat(events).isEmpty()
+
+    verify { createProfileScenesListUseCase.invoke() }
     confirmDependencies()
   }
 
@@ -152,18 +151,18 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
       every { locationCaption } returns "1"
     }
     val scenes = listOf(firstItem, secondItem, thirdItem)
-    viewModel.setState(SceneListViewState(scenes = scenes))
+    every { createProfileScenesListUseCase() } returns Observable.just(scenes)
 
     // when
+    viewModel.loadScenes()
     viewModel.moveItems(0, 2)
 
     // then
-    assertThat(states).containsExactly(
-      SceneListViewState(scenes = listOf(firstItem, secondItem, thirdItem)),
-      SceneListViewState(scenes = listOf(secondItem, thirdItem, firstItem))
-    )
-    Assertions.assertThat(events).isEmpty()
+    assertThat(viewModel.list).containsExactly(secondItem, thirdItem, firstItem)
+    assertThat(states).isEmpty()
+    assertThat(events).isEmpty()
 
+    verify { createProfileScenesListUseCase.invoke() }
     confirmDependencies()
   }
 
@@ -180,17 +179,18 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
       every { locationCaption } returns "2"
     }
     val scenes = listOf(firstItem, secondItem, thirdItem)
-    viewModel.setState(SceneListViewState(scenes = scenes))
+    every { createProfileScenesListUseCase() } returns Observable.just(scenes)
 
     // when
+    viewModel.loadScenes()
     viewModel.moveItems(0, 2)
 
     // then
-    assertThat(states).containsExactly(
-      SceneListViewState(scenes = listOf(firstItem, secondItem, thirdItem)),
-    )
-    Assertions.assertThat(events).isEmpty()
+    assertThat(viewModel.list).containsExactly(firstItem, secondItem, thirdItem)
+    assertThat(states).isEmpty()
+    assertThat(events).isEmpty()
 
+    verify { createProfileScenesListUseCase.invoke() }
     confirmDependencies()
   }
 
@@ -205,17 +205,18 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
       every { locationCaption } returns "1"
     }
     val scenes = listOf(firstItem, secondItem, thirdItem)
-    viewModel.setState(SceneListViewState(scenes = scenes))
+    every { createProfileScenesListUseCase() } returns Observable.just(scenes)
 
     // when
+    viewModel.loadScenes()
     viewModel.moveItems(2, 0)
 
     // then
-    assertThat(states).containsExactly(
-      SceneListViewState(scenes = listOf(firstItem, secondItem, thirdItem)),
-    )
-    Assertions.assertThat(events).isEmpty()
+    assertThat(viewModel.list).containsExactly(firstItem, secondItem, thirdItem)
+    assertThat(states).isEmpty()
+    assertThat(events).isEmpty()
 
+    verify { createProfileScenesListUseCase.invoke() }
     confirmDependencies()
   }
 
@@ -224,41 +225,39 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
     // given
     val locationId = 1
     every { toggleLocationUseCase(locationId, CollapsedFlag.SCENE) } returns Completable.complete()
-    val list = listOf<ListItem.SceneItem>(mockk())
+    val item = mockk<ListItem.SceneItem>()
+    val list = listOf(item)
     every { createProfileScenesListUseCase() } returns Observable.just(list)
 
     // when
     viewModel.onLocationClick(locationId)
 
     // then
-    val state = SceneListViewState()
-    Assertions.assertThat(states).containsExactly(
-      state.copy(scenes = list)
-    )
+    assertThat(viewModel.list).containsExactly(item)
+    Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).isEmpty()
+
     verify { toggleLocationUseCase(locationId, CollapsedFlag.SCENE) }
     verify { createProfileScenesListUseCase() }
-    confirmVerified(toggleLocationUseCase, createProfileScenesListUseCase)
     confirmDependencies()
   }
 
   @Test
   fun `should reload list on update`() {
     // given
-    val list = listOf<ListItem.SceneItem>(mockk())
+    val item = mockk<ListItem.SceneItem>()
+    val list = listOf(item)
     every { createProfileScenesListUseCase() } returns Observable.just(list)
 
     // when
     listsEventsSubject.onNext(Any())
 
     // then
-    val state = SceneListViewState()
-    Assertions.assertThat(states).containsExactly(
-      state.copy(scenes = list)
-    )
+    assertThat(viewModel.list).containsExactly(item)
+    Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).isEmpty()
+
     verify { createProfileScenesListUseCase() }
-    confirmVerified(createProfileScenesListUseCase)
     confirmDependencies()
   }
 
@@ -266,7 +265,8 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
   fun `should set filter text and reload scenes`() {
     // given
     val filterText = "kitchen"
-    val list = listOf(mockk<ListItem.SceneItem>())
+    val item = mockk<ListItem.SceneItem>()
+    val list = listOf(item)
     every { createProfileScenesListUseCase(filterText) } returns Observable.just(list)
 
     // when
@@ -274,13 +274,11 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
 
     // then
     assertThat(viewModel.searchData.query).isEqualTo(filterText)
-    assertThat(states).containsExactly(
-      SceneListViewState(scenes = list)
-    )
-    assertThat(events).isEmpty()
+    assertThat(viewModel.list).containsExactly(item)
+    Assertions.assertThat(states).isEmpty()
+    Assertions.assertThat(events).isEmpty()
 
     verify { createProfileScenesListUseCase(filterText) }
-    confirmVerified(createProfileScenesListUseCase)
     confirmDependencies()
   }
 
@@ -332,22 +330,20 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
     }
     val scenes = listOf<ListItem>(firstItem, secondItem)
     val reorderedScenes = listOf<ListItem>(secondItem, firstItem)
-    coEvery { reorderScenesUseCase(scenes, remoteId) } returns Unit
-    every { createProfileScenesListUseCase() } returns Observable.just(reorderedScenes)
-    viewModel.setState(SceneListViewState(scenes = scenes))
-    states.clear()
+    coEvery { reorderScenesUseCase(match { it.toList() == scenes }, remoteId) } returns Unit
+    every { createProfileScenesListUseCase() } returnsMany listOf(Observable.just(scenes), Observable.just(reorderedScenes))
 
     // when
+    viewModel.loadScenes()
     viewModel.onDragStopped(remoteId)
 
     // then
-    assertThat(states).containsExactly(
-      SceneListViewState(scenes = reorderedScenes)
-    )
+    assertThat(viewModel.list).containsExactly(secondItem, firstItem)
+    assertThat(states).isEmpty()
     assertThat(events).isEmpty()
 
-    coVerify { reorderScenesUseCase(scenes, remoteId) }
-    verify { createProfileScenesListUseCase() }
+    coVerify { reorderScenesUseCase(any(), remoteId) }
+    verify(exactly = 2) { createProfileScenesListUseCase() }
     confirmVerified(createProfileScenesListUseCase, reorderScenesUseCase)
     confirmDependencies()
   }
