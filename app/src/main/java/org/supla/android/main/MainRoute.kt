@@ -71,7 +71,7 @@ sealed interface MainRoute : NavKey {
 
   @Serializable
   data object DeviceCatalog : MainRoute {
-    override val screenTakeoverAllowed: Boolean = true
+    override val screenTakeoverAllowed: Boolean = false
   }
 
   @Serializable

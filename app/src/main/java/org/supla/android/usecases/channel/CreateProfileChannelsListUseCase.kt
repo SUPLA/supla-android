@@ -99,7 +99,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
           }
 
           location.let { locationEntity ->
-            if (!locationEntity.isCollapsed(CollapsedFlag.CHANNEL)) {
+            if (!locationEntity.isCollapsed(CollapsedFlag.CHANNEL) || filterString.isNotEmpty()) {
               channels.add(channelToListItemMapper(channelWithChildren(it, childrenMap)))
             }
           }

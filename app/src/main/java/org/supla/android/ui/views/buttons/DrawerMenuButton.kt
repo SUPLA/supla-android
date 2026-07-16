@@ -20,6 +20,7 @@ package org.supla.android.ui.views.buttons
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -35,6 +36,7 @@ fun DrawerMenuButton(
     icon = Icons.Default.Menu,
     onClick = onClick,
     contentDescription = stringResource(R.string.general_open_drawer),
-    modifier = modifier.size(40.dp)
+    modifier = modifier.size(40.dp),
+    tint = MaterialTheme.colorScheme.onPrimaryContainer
   )
 }

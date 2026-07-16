@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package org.supla.android.main.view
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
@@ -18,6 +20,7 @@ package org.supla.android.main.view
  */
 
 import android.view.Surface
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,11 +28,19 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -61,104 +72,83 @@ import org.supla.android.ui.views.texts.HeadlineSmall
 import org.supla.core.shared.infrastructure.localizedString
 
 @Composable
-fun StandardTopBar(useNavigationBarPadding: Boolean) {
+fun StandardTopBar(
+  useNavigationBarPadding: Boolean,
+  scrollBehavior: TopAppBarScrollBehavior? = null
+) {
   val rotation = LocalView.current.display?.rotation
   val navigationBarInsets = WindowInsets.navigationBars
   val cameraInsets = WindowInsets.displayCutout
   val insets =
     when {
-      (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270) && useNavigationBarPadding -> navigationBarInsets.add(
-        cameraInsets
-      )
+      (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270) && useNavigationBarPadding ->
+        navigationBarInsets.add(cameraInsets)
       rotation == Surface.ROTATION_90 -> cameraInsets
       rotation == Surface.ROTATION_270 -> navigationBarInsets
       else -> null
     }
   val modifier = insets?.let { Modifier.windowInsetsPadding(it) } ?: Modifier
 
-  TopBarSurface(modifier = modifier) {
-    val topBarController = LocalTopBarController.current
-    val topBarState = topBarController.state
-    val searchState = topBarState.search
+  val topBarController = LocalTopBarController.current
+  val topBarState = topBarController.state
+  val searchState = topBarState.search
 
-    if (searchState != null && searchState.data.visible) {
-      SearchContent(searchState, topBarState, topBarController)
-    } else {
-      TitleContent(topBarState, topBarController)
-    }
-  }
-}
-
-@Composable
-private fun SearchContent(
-  searchState: TopBarSearchState,
-  topBarState: TopBarState,
-  topBarController: TopBarController
-) {
-  val navigator = LocalNavigator.current
-  Row(verticalAlignment = Alignment.CenterVertically) {
-    NavigatorIcon(
-      navigator = navigator,
-      topBarState = topBarState,
-      onSearchValue = topBarController::updateSearchValue
-    )
-
-    TopBarSearchField(
-      searchText = searchState.data.query,
-      modifier = Modifier.weight(1f)
-    )
-
-    topBarState.action?.Icon()
-  }
-}
-
-@Composable
-private fun TitleContent(
-  topBarState: TopBarState,
-  topBarController: TopBarController
-) {
-  val navigator = LocalNavigator.current
-  Box {
-    NavigatorIcon(
-      navigator = navigator,
-      topBarState = topBarState,
-      onSearchValue = topBarController::updateSearchValue,
-      modifier = Modifier.align(Alignment.CenterStart)
-    )
-
-    HeadlineSmall(
-      text = topBarState.title(),
-      modifier = Modifier
-        .align(Alignment.Center)
-        .padding(horizontal = if (topBarState.search == null) 48.dp else 88.dp),
-      maxLines = 1
-    )
-
-    topBarState.search?.let {
-      IconButton(
-        R.drawable.ic_search,
-        onClick = { topBarController.setSearchVisible(true) },
-        contentDescription = stringResource(R.string.general_search),
-        modifier = Modifier
-          .align(Alignment.CenterEnd)
-          .padding(end = if (topBarState.action == null) 0.dp else 40.dp)
-          .size(40.dp)
-      )
-    }
-
-    topBarState.action?.Icon(modifier = Modifier.align(Alignment.CenterEnd))
-  }
+  CenterAlignedTopAppBar(
+    modifier = modifier,
+    navigationIcon = {
+      NavigatorIcon()
+    },
+    title = {
+      if (searchState != null && searchState.data.visible) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+          TopBarSearchField(
+            searchText = searchState.data.query,
+            modifier = Modifier.weight(1f)
+          )
+        }
+      } else {
+        HeadlineSmall(
+          text = stringResource(R.string.app_name),
+          maxLines = 1,
+          color = MaterialTheme.colorScheme.onPrimaryContainer
+        )
+      }
+    },
+    actions = {
+      if (searchState != null && !searchState.data.visible) {
+        IconButton(
+          R.drawable.ic_search,
+          onClick = { topBarController.setSearchVisible(true) },
+          contentDescription = stringResource(R.string.general_search),
+          modifier = Modifier
+            .size(40.dp),
+          tint = MaterialTheme.colorScheme.onPrimaryContainer
+        )
+      }
+      topBarState.action?.Icon()
+    },
+    colors = TopAppBarDefaults.topAppBarColors(
+      containerColor = MaterialTheme.colorScheme.primaryContainer,
+      scrolledContainerColor = MaterialTheme.colorScheme.primaryContainer
+    ),
+    scrollBehavior = scrollBehavior
+  )
 }
 
 @Composable
 private fun NavigatorIcon(
-  navigator: MainComposeNavigator?,
-  topBarState: TopBarState,
-  onSearchValue: (String) -> Unit,
   modifier: Modifier = Modifier
 ) {
-  when (topBarState.navigationType) {
-    NavigationType.DRAWER -> {
+  val topBarController = LocalTopBarController.current
+  val topBarState = topBarController.state
+  val navigator = LocalNavigator.current
+  when {
+    topBarController.searchActive ->
+      DrawerBackButton(
+        onClick = { topBarController.setSearchVisible(false) },
+        modifier = modifier
+      )
+    topBarState.navigationType == NavigationType.DRAWER -> {
       val scope = rememberCoroutineScope()
       val drawerState = LocalDrawerState.current
       DrawerMenuButton(
@@ -166,18 +156,18 @@ private fun NavigatorIcon(
         modifier = modifier
       )
     }
-    NavigationType.BACK ->
+    topBarState.navigationType == NavigationType.BACK ->
       DrawerBackButton(
         onClick = {
           if (topBarState.inSearch) {
-            onSearchValue("")
+            topBarController.updateSearchValue("")
           } else {
             navigator?.back()
           }
         },
         modifier = modifier
       )
-    NavigationType.NONE -> {}
+    topBarState.navigationType == NavigationType.NONE -> {}
   }
 }
 

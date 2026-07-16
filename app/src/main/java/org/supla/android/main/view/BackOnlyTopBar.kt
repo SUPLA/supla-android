@@ -48,8 +48,7 @@ fun BackOnlyTopBar(
   ) {
     DrawerBackButton(
       onClick = onBackClick,
-      modifier = Modifier.align(Alignment.CenterStart),
-      tint = MaterialTheme.colorScheme.onPrimaryContainer
+      modifier = Modifier.align(Alignment.CenterStart)
     )
 
     HeadlineSmall(

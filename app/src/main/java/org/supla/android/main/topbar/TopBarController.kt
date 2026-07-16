@@ -38,6 +38,12 @@ class TopBarController(initialState: TopBarState = TopBarState()) {
 
   private var owner: TopBarOwner? = null
 
+  val searchActive: Boolean
+    get() = state.search?.data?.visible ?: false
+
+  val searchFilterSet: Boolean
+    get() = state.search?.data?.query?.isNotEmpty() ?: false
+
   suspend fun emit(event: TopBarEvent) {
     _events.emit(event)
   }
@@ -88,7 +94,8 @@ class TopBarController(initialState: TopBarState = TopBarState()) {
 
   fun setSearchVisible(visible: Boolean) {
     state.search?.let { searchState ->
-      state = state.copy(search = searchState.copy(data = searchState.data.copy(visible = visible)))
+      state = state.copy(search = searchState.copy(data = searchState.data.copy(visible = visible, query = "")))
+      searchState.observer(TopBarSearchEvent.QueryChange(""))
       searchState.observer(TopBarSearchEvent.VisibilityChange(visible))
     }
   }

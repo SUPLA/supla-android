@@ -48,10 +48,12 @@ fun NotificationsLogScreen(
   val snackbarActionLabel = stringResource(R.string.cancel)
 
   BackHandler {
-    if (viewModel.searchData.query.isEmpty()) {
-      navigator.back()
-    } else {
+    if (viewModel.searchData.query.isNotEmpty()) {
       topBarController.updateSearchValue("")
+    } else if (viewModel.searchData.visible) {
+      topBarController.setSearchVisible(false)
+    } else {
+      navigator.back()
     }
   }
 

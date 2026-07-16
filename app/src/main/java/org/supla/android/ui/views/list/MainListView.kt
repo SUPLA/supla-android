@@ -17,10 +17,15 @@ package org.supla.android.ui.views.list
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.content.Context
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -29,12 +34,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.distinctUntilChanged
 import org.supla.android.R
+import org.supla.android.main.scaffold.screenPaddings
 import org.supla.android.main.scaffold.screenUnderTopBarPaddings
-import org.supla.android.main.scaffold.topSearchBarPaddings
+import org.supla.android.main.topbar.LocalTopBarController
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.lists.LocalSlideableController
 import org.supla.android.ui.lists.SlideableListEvent
@@ -46,7 +52,6 @@ import org.supla.android.ui.views.list.listitem.IconValueListItemView
 import org.supla.android.ui.views.list.listitem.LocationListItemView
 import org.supla.android.ui.views.list.listitem.SceneListItemView
 import org.supla.android.ui.views.list.listitem.ThermostatListItemView
-import org.supla.core.shared.data.model.lists.ListItemIssues
 import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.infrastructure.localizedString
 import sh.calvin.reorderable.ReorderableCollectionItemScope
@@ -70,22 +75,46 @@ interface MainListScope {
 }
 
 @Composable
-fun MainListScope.ListView(
+fun MainListScope.Content(
   items: List<ListItem>,
-  dragEnabled: Boolean,
+  listState: LazyListState,
+  modifier: Modifier = Modifier,
+  emptyContent: @Composable BoxScope.() -> Unit = {}
+) {
+  if (items.isEmpty()) {
+    Box(
+      modifier = Modifier
+        .fillMaxSize()
+        .screenUnderTopBarPaddings()
+    ) {
+      emptyContent()
+    }
+  } else {
+    ListView(
+      items = items,
+      listState = listState,
+      modifier = modifier
+    )
+  }
+}
+
+@Composable
+private fun MainListScope.ListView(
+  items: List<ListItem>,
+  listState: LazyListState,
   modifier: Modifier = Modifier
 ) {
   val offsets = remember { mutableStateMapOf<Int, Float>() }
-  val lazyListState = rememberLazyListState()
   val reorderableLazyListState = rememberReorderableLazyListState(
-    lazyListState = lazyListState
+    lazyListState = listState
   ) { from, to ->
     moveItems(from.index, to.index)
   }
 
+  // LaunchedEffect below is used to hide list item buttons
   val slideableController = LocalSlideableController.current
-  LaunchedEffect(lazyListState) {
-    snapshotFlow { lazyListState.isScrollInProgress }
+  LaunchedEffect(listState) {
+    snapshotFlow { listState.isScrollInProgress }
       .distinctUntilChanged()
       .collect {
         if (it) {
@@ -96,15 +125,16 @@ fun MainListScope.ListView(
   }
 
   LazyColumn(
-    state = lazyListState,
+    state = listState,
     modifier = modifier
-      .screenUnderTopBarPaddings()
-      .background(MaterialTheme.colorScheme.surface)
+      .screenPaddings()
+      .background(MaterialTheme.colorScheme.outline),
+    verticalArrangement = Arrangement.spacedBy(1.dp)
   ) {
-    itemsIndexed(
+    items(
       items = items,
-      key = { _, item -> item.key }
-    ) { index, item ->
+      key = { item -> item.key }
+    ) { item ->
       ReorderableItem(
         state = reorderableLazyListState,
         key = item.key,
@@ -113,53 +143,30 @@ fun MainListScope.ListView(
       ) { isDragging ->
         when (item) {
           is ListItem.DefaultItem -> {
-            val context = LocalContext.current
             DefaultItemView(
               item = item,
               offsets = offsets,
               isDragging = isDragging,
-              dragEnabled = dragEnabled,
-              onLeftButtonClick = { onLeftButtonClick(item.remoteId) },
-              onRightButtonClick = { onRightButtonClick(item.remoteId) },
-              onDragStarted = { onDragStarted(item.remoteId) },
-              onDragStopped = { onDragStopped(item.remoteId) },
-              onInfoClick = { onInfoClick(item.remoteId) },
-              onIssueClick = { onIssueClick(item.issues.message(context)) },
-              onItemClick = { onItemClick(item.remoteId) },
-              onTitleLongClick = { onTitleLongClick(item) }
+              dragEnabled = !LocalTopBarController.current.searchFilterSet,
+              listScope = this@ListView
             )
           }
           is ListItem.LocationItem ->
             LocationListItemView(
               caption = item.userCaption,
               collapsed = item.collapsed,
+              inSearch = LocalTopBarController.current.searchFilterSet,
               onClick = { onLocationClick(item.remoteId) },
-              onLongClick = { onLocationLongClick(item) },
-              modifier = if (index == 0) Modifier.topSearchBarPaddings() else Modifier
+              onLongClick = { onLocationLongClick(item) }
             )
           is ListItem.SceneItem ->
-            SlideableListItem(
-              objectId = item.remoteId,
-              initialOffset = offsets[item.remoteId] ?: 0f,
-              onOffsetChanged = {
-                offsets.clear()
-                offsets[item.remoteId] = it
-              },
+            SceneItemView(
+              item = item,
+              offsets = offsets,
               isDragging = isDragging,
-              dragEnabled = dragEnabled,
-              onLeftButtonClick = { onLeftButtonClick(item.remoteId) },
-              onRightButtonClick = { onRightButtonClick(item.remoteId) },
-              onDragStarted = { onDragStarted(item.remoteId) },
-              onDragStopped = { onDragStopped(item.remoteId) },
-              leftButtonString = item.status.online.forTrue { localizedString(R.string.btn_abort) },
-              rightButtonString = item.status.online.forTrue { localizedString(R.string.btn_execute) }
-            ) {
-              SceneListItemView(
-                data = item,
-                onItemClick = { onItemClick(item.remoteId) },
-                onTitleLongClick = { onTitleLongClick(item) }
-              )
-            }
+              dragEnabled = !LocalTopBarController.current.searchFilterSet,
+              listScope = this@ListView
+            )
         }
       }
     }
@@ -172,14 +179,7 @@ fun ReorderableCollectionItemScope.DefaultItemView(
   offsets: SnapshotStateMap<Int, Float>,
   isDragging: Boolean,
   dragEnabled: Boolean,
-  onLeftButtonClick: () -> Unit = {},
-  onRightButtonClick: () -> Unit = {},
-  onDragStarted: (Offset) -> Unit = {},
-  onDragStopped: () -> Unit = {},
-  onInfoClick: () -> Unit = {},
-  onIssueClick: (ListItemIssues) -> Unit = {},
-  onItemClick: () -> Unit = {},
-  onTitleLongClick: () -> Unit = {},
+  listScope: MainListScope
 ) {
   SlideableListItem(
     objectId = item.remoteId,
@@ -190,46 +190,91 @@ fun ReorderableCollectionItemScope.DefaultItemView(
     },
     isDragging = isDragging,
     dragEnabled = dragEnabled,
-    onLeftButtonClick = onLeftButtonClick,
-    onRightButtonClick = onRightButtonClick,
-    onDragStarted = onDragStarted,
-    onDragStopped = onDragStopped,
+    onLeftButtonClick = { listScope.onLeftButtonClick(item.remoteId) },
+    onRightButtonClick = { listScope.onRightButtonClick(item.remoteId) },
+    onDragStarted = { listScope.onDragStarted(item.remoteId) },
+    onDragStopped = { listScope.onDragStopped(item.remoteId) },
     leftButtonString = item.status.online.forTrue { item.leftButtonString },
     rightButtonString = item.status.online.forTrue { item.rightButtonString }
   ) {
+    val context = LocalContext.current
     when (item) {
-      is ListItem.HvacThermostatItem ->
-        ThermostatListItemView(
-          data = item,
-          onInfoClick = onInfoClick,
-          onIssueClick = onIssueClick,
-          onItemClick = onItemClick,
-          onTitleLongClick = onTitleLongClick
-        )
-      is ListItem.HeatpolThermostatItem ->
-        HeatpolThermostatListItemView(
-          data = item,
-          onInfoClick = onInfoClick,
-          onIssueClick = onIssueClick,
-          onItemClick = onItemClick,
-          onTitleLongClick = onTitleLongClick
-        )
-      is ListItem.DoubleValueItem ->
-        DoubleIconValueListItemView(
-          data = item,
-          onInfoClick = onInfoClick,
-          onIssueClick = onIssueClick,
-          onItemClick = onItemClick,
-          onTitleLongClick = onTitleLongClick
-        )
-      is ListItem.DefaultItem ->
-        IconValueListItemView(
-          data = item,
-          onInfoClick = onInfoClick,
-          onIssueClick = onIssueClick,
-          onItemClick = onItemClick,
-          onTitleLongClick = onTitleLongClick
-        )
+      is ListItem.HvacThermostatItem -> listScope.ThermostatListItemView(item, context)
+      is ListItem.HeatpolThermostatItem -> listScope.HeatpolThermostatListItemView(item, context)
+      is ListItem.DoubleValueItem -> listScope.DoubleIconValueListItemView(item, context)
+      is ListItem.DefaultItem -> listScope.IconValueListItemView(item, context)
     }
+  }
+}
+
+@Composable
+fun MainListScope.ThermostatListItemView(item: ListItem.HvacThermostatItem, context: Context) =
+  ThermostatListItemView(
+    data = item,
+    onInfoClick = { onInfoClick(item.remoteId) },
+    onIssueClick = { onIssueClick(it.message(context)) },
+    onItemClick = { onItemClick(item.remoteId) },
+    onTitleLongClick = { onTitleLongClick(item) }
+  )
+
+@Composable
+fun MainListScope.HeatpolThermostatListItemView(item: ListItem.HeatpolThermostatItem, context: Context) =
+  HeatpolThermostatListItemView(
+    data = item,
+    onInfoClick = { onInfoClick(item.remoteId) },
+    onIssueClick = { onIssueClick(it.message(context)) },
+    onItemClick = { onItemClick(item.remoteId) },
+    onTitleLongClick = { onTitleLongClick(item) }
+  )
+
+@Composable
+fun MainListScope.DoubleIconValueListItemView(item: ListItem.DoubleValueItem, context: Context) =
+  DoubleIconValueListItemView(
+    data = item,
+    onInfoClick = { onInfoClick(item.remoteId) },
+    onIssueClick = { onIssueClick(it.message(context)) },
+    onItemClick = { onItemClick(item.remoteId) },
+    onTitleLongClick = { onTitleLongClick(item) }
+  )
+
+@Composable
+fun MainListScope.IconValueListItemView(item: ListItem.DefaultItem, context: Context) =
+  IconValueListItemView(
+    data = item,
+    onInfoClick = { onInfoClick(item.remoteId) },
+    onIssueClick = { onIssueClick(it.message(context)) },
+    onItemClick = { onItemClick(item.remoteId) },
+    onTitleLongClick = { onTitleLongClick(item) }
+  )
+
+@Composable
+fun ReorderableCollectionItemScope.SceneItemView(
+  item: ListItem.SceneItem,
+  offsets: SnapshotStateMap<Int, Float>,
+  isDragging: Boolean,
+  dragEnabled: Boolean,
+  listScope: MainListScope
+) {
+  SlideableListItem(
+    objectId = item.remoteId,
+    initialOffset = offsets[item.remoteId] ?: 0f,
+    onOffsetChanged = {
+      offsets.clear()
+      offsets[item.remoteId] = it
+    },
+    isDragging = isDragging,
+    dragEnabled = dragEnabled,
+    onLeftButtonClick = { listScope.onLeftButtonClick(item.remoteId) },
+    onRightButtonClick = { listScope.onRightButtonClick(item.remoteId) },
+    onDragStarted = { listScope.onDragStarted(item.remoteId) },
+    onDragStopped = { listScope.onDragStopped(item.remoteId) },
+    leftButtonString = item.status.online.forTrue { localizedString(R.string.btn_abort) },
+    rightButtonString = item.status.online.forTrue { localizedString(R.string.btn_execute) }
+  ) {
+    SceneListItemView(
+      data = item,
+      onItemClick = { listScope.onItemClick(item.remoteId) },
+      onTitleLongClick = { listScope.onTitleLongClick(item) }
+    )
   }
 }

@@ -24,25 +24,26 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.tools.SuplaPreview
-import org.supla.android.ui.views.Image
-import org.supla.android.ui.views.Separator
-import org.supla.android.ui.views.texts.HeadlineMedium
+import org.supla.android.ui.views.texts.BodyLarge
 
 @Composable
 fun LocationListItemView(
   caption: String,
   collapsed: Boolean,
+  inSearch: Boolean,
   modifier: Modifier = Modifier,
   onClick: () -> Unit = {},
   onLongClick: () -> Unit = {}
@@ -54,28 +55,30 @@ fun LocationListItemView(
         .height(dimensionResource(R.dimen.channel_section_height))
         .background(MaterialTheme.colorScheme.surfaceVariant)
         .combinedClickable(
+          enabled = !inSearch,
           onClick = onClick,
           onLongClick = onLongClick
         )
         .padding(horizontal = Distance.default),
       verticalAlignment = Alignment.CenterVertically
     ) {
-      HeadlineMedium(
+      BodyLarge(
         text = caption,
         color = MaterialTheme.colorScheme.onBackground,
         maxLines = 1,
-        modifier = Modifier.weight(1f)
+        modifier = Modifier.weight(1f),
+        textAlign = TextAlign.Start
       )
-      if (collapsed) {
-        Image(
-          drawableId = R.drawable.collapsed,
-          modifier = Modifier
-            .width(25.dp)
-            .height(15.dp)
+
+      if (!inSearch) {
+        Icon(
+          painter = painterResource(id = R.drawable.ic_arrow_right),
+          contentDescription = null,
+          modifier = Modifier.rotate(if (collapsed) 90f else 270f),
+          tint = MaterialTheme.colorScheme.primary
         )
       }
     }
-    Separator()
   }
 }
 
@@ -84,8 +87,9 @@ fun LocationListItemView(
 private fun Preview() {
   SuplaTheme {
     Column {
-      LocationListItemView(caption = "Leaving Room", collapsed = true)
-      LocationListItemView(caption = "Sleeping Room", collapsed = false)
+      LocationListItemView(caption = "Leaving Room", collapsed = true, inSearch = false)
+      LocationListItemView(caption = "Sleeping Room", collapsed = false, inSearch = false)
+      LocationListItemView(caption = "Sleeping Room", collapsed = false, inSearch = true)
     }
   }
 }

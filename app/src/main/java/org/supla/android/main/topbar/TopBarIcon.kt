@@ -23,6 +23,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -76,11 +77,7 @@ private fun TopBarAction.DeleteChartHistory(
   Box(modifier = modifier) {
     var menuExpanded by remember { mutableStateOf(false) }
 
-    IconButton(
-      icon = Icons.Default.MoreVert,
-      onClick = { menuExpanded = true },
-      modifier = modifier.size(40.dp)
-    )
+    MoreIcon { menuExpanded = true }
 
     DropdownMenu(
       expanded = menuExpanded,
@@ -104,11 +101,7 @@ private fun TopBarAction.DeleteNotifications(
   Box(modifier = modifier) {
     var menuExpanded by remember { mutableStateOf(false) }
 
-    IconButton(
-      icon = Icons.Default.MoreVert,
-      onClick = { menuExpanded = true },
-      modifier = modifier.size(40.dp)
-    )
+    MoreIcon { menuExpanded = true }
 
     DropdownMenu(
       expanded = menuExpanded,
@@ -141,6 +134,16 @@ private fun TopBarAction.SingleIcon(
     icon = icon.iconRes!!,
     onClick = { handlers[icon.event::class]?.invoke() },
     contentDescription = icon.descriptionRes?.let { stringResource(it) },
-    modifier = modifier.size(40.dp)
+    modifier = modifier.size(40.dp),
+    tint = MaterialTheme.colorScheme.onPrimaryContainer
   )
 }
+
+@Composable
+private fun MoreIcon(onClick: () -> Unit) =
+  IconButton(
+    icon = Icons.Default.MoreVert,
+    onClick = onClick,
+    modifier = Modifier.size(40.dp),
+    tint = MaterialTheme.colorScheme.onPrimaryContainer
+  )

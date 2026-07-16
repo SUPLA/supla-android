@@ -142,8 +142,6 @@ fun ListItemScaffold(
         .padding(horizontal = Distance.default, vertical = Distance.small.times(scale).div(LocalDensity.current.fontScale))
         .align(Alignment.BottomCenter)
     )
-
-    Separator(modifier = Modifier.align(Alignment.BottomCenter))
   }
 }
 

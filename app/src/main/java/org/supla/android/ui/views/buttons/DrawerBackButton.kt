@@ -31,7 +31,7 @@ import org.supla.android.R
 @Composable
 fun DrawerBackButton(
   modifier: Modifier = Modifier,
-  tint: Color = MaterialTheme.colorScheme.primary,
+  tint: Color = MaterialTheme.colorScheme.onPrimaryContainer,
   onClick: () -> Unit
 ) {
   IconButton(

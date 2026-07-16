@@ -19,16 +19,21 @@ package org.supla.android.main.view
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.foundation.border
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.DrawerDefaults
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -40,12 +45,18 @@ import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.PermanentDrawerSheet
 import androidx.compose.material3.PermanentNavigationDrawer
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -56,6 +67,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.supla.android.R
 import org.supla.android.core.branding.Configuration.Menu
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.storage.LocalApplicationPreferences
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
@@ -64,7 +76,9 @@ import org.supla.android.main.ListTab
 import org.supla.android.main.LocalNavigator
 import org.supla.android.main.MainRoute
 import org.supla.android.tools.SuplaPreview
+import org.supla.android.ui.views.buttons.DrawerBackButton
 import org.supla.android.ui.views.buttons.TextButton
+import org.supla.android.ui.views.texts.HeadlineSmall
 
 @Composable
 fun MainDrawer(
@@ -77,16 +91,16 @@ fun MainDrawer(
     drawerState = requireNotNull(LocalDrawerState.current),
     drawerContent = {
       ModalDrawerSheet(
-        modifier = Modifier
-          .width(300.dp)
-          .border(1.dp, MaterialTheme.colorScheme.outline),
         drawerContainerColor = MaterialTheme.colorScheme.surface,
         drawerContentColor = MaterialTheme.colorScheme.onSurface,
-        drawerTonalElevation = 0.dp
+        drawerTonalElevation = 0.dp,
+        drawerShape = RectangleShape,
+        windowInsets = DrawerDefaults.windowInsets.exclude(WindowInsets.statusBars)
       ) {
         DrawerContent(developerOptionsVisibleFlow, zWaveVisibleFlow, zWaveOpenCallback)
       }
     },
+    scrimColor = colorResource(R.color.info_scrim),
     content = content
   )
 
@@ -100,7 +114,6 @@ fun PermanentMainDrawer(
   PermanentNavigationDrawer(
     drawerContent = {
       PermanentDrawerSheet(
-        modifier = Modifier.width(300.dp),
         drawerContainerColor = MaterialTheme.colorScheme.surface,
         drawerContentColor = MaterialTheme.colorScheme.onSurface,
         drawerTonalElevation = 0.dp
@@ -121,16 +134,30 @@ private fun DrawerContent(
   Column(
     modifier = Modifier.verticalScroll(rememberScrollState())
   ) {
-    Text(
-      text = stringResource(R.string.app_name),
-      style = MaterialTheme.typography.headlineMedium,
-      color = MaterialTheme.colorScheme.primary,
-      modifier = Modifier.padding(vertical = Distance.small, horizontal = Distance.default)
-    )
+    Box(
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(bottom = Distance.tiny)
+        .background(MaterialTheme.colorScheme.primaryContainer)
+        .statusBarsPadding()
+        .height(TopAppBarDefaults.TopAppBarExpandedHeight)
+    ) {
+      val drawerState = LocalDrawerState.current
+      val scope = rememberCoroutineScope()
+      DrawerBackButton(
+        modifier = Modifier.align(Alignment.CenterStart),
+        onClick = { scope.launch { drawerState?.close() } }
+      )
+      HeadlineSmall(
+        text = stringResource(R.string.app_name),
+        color = MaterialTheme.colorScheme.onPrimaryContainer,
+        modifier = Modifier.align(Alignment.Center)
+      )
+    }
+
     if (!LocalApplicationPreferences.current.isShowBottomMenu) {
       val tabController = LocalMainListTabController.current
       val selectedTab = tabController.tab
-      HorizontalDivider(modifier = Modifier.padding(bottom = Distance.small))
       DrawerItem(
         iconRes = R.drawable.navbar_channels,
         labelRes = R.string.navbar_channels,
@@ -149,10 +176,22 @@ private fun DrawerContent(
         selected = selectedTab == ListTab.SCENES,
         onNavigate = { tabController.changeTab(ListTab.SCENES) },
       )
+      HorizontalDivider(modifier = Modifier.padding(top = Distance.small, bottom = Distance.tiny))
     }
-    HorizontalDivider(modifier = Modifier.padding(top = Distance.small, bottom = Distance.tiny))
 
     val navigator = LocalNavigator.current
+    DrawerItem(
+      iconRes = R.drawable.ic_menu_profiles,
+      labelRes = R.string.profile_plural,
+      onNavigate = { navigator?.navigateToProfiles() }
+    )
+    DrawerItem(
+      iconRes = R.drawable.ic_menu_settings,
+      labelRes = R.string.settings,
+      onNavigate = { navigator?.navigateTo(MainRoute.Settings) }
+    )
+    HorizontalDivider(modifier = Modifier.padding(top = Distance.small, bottom = Distance.tiny))
+
     DrawerItem(
       iconRes = R.drawable.ic_menu_add_device,
       labelRes = R.string.add_device,
@@ -178,17 +217,6 @@ private fun DrawerContent(
       iconRes = R.drawable.ic_notification,
       labelRes = R.string.menu_notifications,
       onNavigate = { navigator?.navigateTo(MainRoute.NotificationsLog) }
-    )
-    HorizontalDivider(modifier = Modifier.padding(top = Distance.small, bottom = Distance.tiny))
-    DrawerItem(
-      iconRes = R.drawable.ic_menu_profiles,
-      labelRes = R.string.profile_plural,
-      onNavigate = { navigator?.navigateToProfiles() }
-    )
-    DrawerItem(
-      iconRes = R.drawable.ic_menu_settings,
-      labelRes = R.string.settings,
-      onNavigate = { navigator?.navigateTo(MainRoute.Settings) }
     )
     HorizontalDivider(modifier = Modifier.padding(top = Distance.small, bottom = Distance.tiny))
     DrawerItem(
@@ -221,7 +249,9 @@ private fun DrawerContent(
     }
 
     Row(
-      modifier = Modifier.fillMaxWidth(),
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(top = Distance.small),
       horizontalArrangement = Arrangement.Center
     ) {
       TextButton(
@@ -249,7 +279,9 @@ private fun DrawerItem(
       onNavigate()
       drawerState?.let { scope.launch { it.close() } }
     },
-    modifier = Modifier.padding(start = Distance.small, top = 4.dp, end = Distance.small),
+    modifier = Modifier
+      .padding(start = Distance.small, top = 4.dp, end = Distance.small)
+      .height(48.dp),
     colors = NavigationDrawerItemDefaults.colors(
       selectedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
       selectedIconColor = MaterialTheme.colorScheme.onSurface,
@@ -273,12 +305,15 @@ private fun DrawerLabel(@StringRes stringRes: Int) =
 @Composable
 private fun Preview() {
   SuplaTheme {
-    Column(modifier = Modifier.systemBarsPadding()) {
-      DrawerContent(
-        developerOptionsVisibleFlow = MutableStateFlow(true),
-        zWaveVisibleFlow = MutableStateFlow(false),
-        zWaveOpenCallback = {}
-      )
+    val context = LocalContext.current
+    CompositionLocalProvider(LocalApplicationPreferences provides ApplicationPreferences(context)) {
+      Column {
+        DrawerContent(
+          developerOptionsVisibleFlow = MutableStateFlow(true),
+          zWaveVisibleFlow = MutableStateFlow(false),
+          zWaveOpenCallback = {}
+        )
+      }
     }
   }
 }

@@ -17,20 +17,21 @@ package org.supla.android.main.view
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
+import org.supla.android.core.ui.theme.Distance
 import org.supla.android.main.topbar.LocalTopBarController
 import org.supla.android.ui.views.buttons.IconButton
+import org.supla.android.ui.views.forms.TextField
 
 @Composable
 fun TopBarSearchField(
@@ -39,38 +40,33 @@ fun TopBarSearchField(
 ) {
   val topBarController = LocalTopBarController.current
 
-  OutlinedTextField(
+  TextField(
     value = searchText,
     onValueChange = topBarController::updateSearchValue,
-    modifier = modifier,
+    modifier = modifier.height(40.dp),
     placeholder = {
       Text(
         text = stringResource(R.string.toolbar_search_hint),
         style = MaterialTheme.typography.bodyLarge,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        color = MaterialTheme.colorScheme.onSurface,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis
       )
     },
-    singleLine = true,
-    colors = OutlinedTextFieldDefaults.colors(
-      focusedBorderColor = Color.Transparent,
-      disabledBorderColor = Color.Transparent,
-      unfocusedBorderColor = Color.Transparent
-    )
-  )
-
-  IconButton(
-    icon = R.drawable.ic_close,
-    onClick = {
-      if (searchText.isEmpty()) {
-        topBarController.setSearchVisible(false)
-      } else {
-        topBarController.updateSearchValue("")
+    trailingIcon = {
+      if (searchText.isNotEmpty()) {
+        IconButton(
+          icon = R.drawable.ic_close,
+          onClick = { topBarController.updateSearchValue("") },
+          contentDescription = stringResource(R.string.general_clear_search),
+          modifier = Modifier.size(40.dp),
+          iconSize = 16.dp,
+          tint = MaterialTheme.colorScheme.onBackground
+        )
       }
     },
-    contentDescription = stringResource(R.string.general_clear_search),
-    modifier = Modifier.size(40.dp),
-    iconSize = 16.dp
+    singleLine = true,
+    textStyle = MaterialTheme.typography.bodyLarge,
+    contentPadding = PaddingValues(horizontal = Distance.small, vertical = 4.dp)
   )
 }
