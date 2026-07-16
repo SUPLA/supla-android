@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package org.supla.android.features.main
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
@@ -23,6 +25,8 @@ import android.view.Surface
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.core.AnimationSpec
+import androidx.compose.animation.core.DecayAnimationSpec
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,15 +36,29 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.DrawerState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.TopAppBarState
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -48,6 +66,7 @@ import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import kotlinx.coroutines.launch
 import org.supla.android.R
 import org.supla.android.core.storage.LocalApplicationPreferences
 import org.supla.android.features.channellist.ChannelListScreen
@@ -60,6 +79,7 @@ import org.supla.android.main.LocalNavigator
 import org.supla.android.main.MainComposeNavigator
 import org.supla.android.main.scaffold.LocalScaffoldPadding
 import org.supla.android.main.scaffold.withRightPanel
+import org.supla.android.main.topbar.LocalTopBarController
 import org.supla.android.main.topbar.NavigationType
 import org.supla.android.main.topbar.TopBarIcon
 import org.supla.android.main.topbar.TopBarState
@@ -128,19 +148,22 @@ fun MainListScreen(
 private fun PortraitPhoneView(
   viewModel: MainListViewModel
 ) {
+  val scrollBehavior = rememberSimultaneousEnterAlwaysScrollBehavior()
+
   MainDrawer(
     developerOptionsVisibleFlow = viewModel.developerOptionsVisible,
     zWaveVisibleFlow = viewModel.zWaveAvailable,
     zWaveOpenCallback = { viewModel.showAuthorizationDialog(AuthorizationReason.ZWaveWizard) }
   ) {
     Scaffold(
-      topBar = { StandardTopBar(false) },
+      modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+      topBar = { StandardTopBar(false, scrollBehavior) },
       bottomBar = {
         if (LocalApplicationPreferences.current.isShowBottomMenu) {
           BottomNavigationBar()
         }
       }
-    ) { CommonContent(it) }
+    ) { CommonContent(it, scrollBehavior) }
   }
 }
 
@@ -148,6 +171,7 @@ private fun PortraitPhoneView(
 private fun LandscapePhoneView(
   viewModel: MainListViewModel
 ) {
+  val scrollBehavior = rememberSimultaneousEnterAlwaysScrollBehavior()
   MainDrawer(
     developerOptionsVisibleFlow = viewModel.developerOptionsVisible,
     zWaveVisibleFlow = viewModel.zWaveAvailable,
@@ -155,9 +179,11 @@ private fun LandscapePhoneView(
   ) {
     Row {
       Scaffold(
-        topBar = { StandardTopBar(false) },
-        modifier = Modifier.weight(1f)
-      ) { CommonContent(it.withRightPanel()) }
+        modifier = Modifier
+          .nestedScroll(scrollBehavior.nestedScrollConnection)
+          .weight(1f),
+        topBar = { StandardTopBar(false, scrollBehavior) }
+      ) { CommonContent(it.withRightPanel(), scrollBehavior) }
       if (LocalApplicationPreferences.current.isShowBottomMenu) {
         RightNavigationRail()
       }
@@ -186,23 +212,42 @@ private fun WideView(
 }
 
 @Composable
-private fun CommonContent(paddings: PaddingValues) {
+private fun CommonContent(
+  paddings: PaddingValues,
+  scrollBehavior: TopAppBarScrollBehavior? = null
+) {
+  val topBarController = LocalTopBarController.current
   val tabController = LocalMainListTabController.current
   val selectedTab = tabController.tab
   val navigator = LocalNavigator.current
+  val drawerState = LocalDrawerState.current
+  val scope = rememberCoroutineScope()
+
   BackHandler {
-    if (selectedTab != ListTab.CHANNELS) {
+    if (drawerState?.isOpen == true) {
+      scope.launch { drawerState.close() }
+    } else if (topBarController.searchActive) {
+      topBarController.setSearchVisible(false)
+    } else if (selectedTab != ListTab.CHANNELS) {
       tabController.changeTab(ListTab.CHANNELS)
     } else {
       navigator?.back()
     }
   }
 
+  LaunchedEffect(scrollBehavior, selectedTab) {
+    scrollBehavior?.state?.heightOffset = 0f
+  }
+
+  val channelListState = rememberLazyListState()
+  val groupListState = rememberLazyListState()
+  val sceneListState = rememberLazyListState()
+
   CompositionLocalProvider(LocalScaffoldPadding provides paddings) {
     when (selectedTab) {
-      ListTab.CHANNELS -> ChannelListScreen()
-      ListTab.GROUPS -> GroupListScreen()
-      ListTab.SCENES -> SceneListScreen()
+      ListTab.CHANNELS -> ChannelListScreen(channelListState)
+      ListTab.GROUPS -> GroupListScreen(groupListState)
+      ListTab.SCENES -> SceneListScreen(sceneListState)
     }
   }
 }
@@ -244,13 +289,12 @@ private fun RightNavigationRail() =
     modifier = Modifier
       .fillMaxHeight()
       .border(1.dp, MaterialTheme.colorScheme.outline),
-    windowInsets = if (LocalView.current.display?.rotation ==
-      Surface.ROTATION_90
-    ) {
-      WindowInsets.navigationBars
-    } else {
-      WindowInsets.displayCutout
-    }
+    windowInsets =
+      if (LocalView.current.display?.rotation == Surface.ROTATION_90) {
+        WindowInsets.navigationBars
+      } else {
+        WindowInsets.displayCutout
+      }
   ) {
     val tabController = LocalMainListTabController.current
     val selectedTab = tabController.tab
@@ -305,6 +349,52 @@ private fun NotificationInfo(viewModel: MainListViewModel) {
       }
     }
   )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun rememberSimultaneousEnterAlwaysScrollBehavior(
+  state: TopAppBarState = rememberTopAppBarState(),
+  canScroll: () -> Boolean = { true }
+): TopAppBarScrollBehavior {
+  val currentCanScroll by rememberUpdatedState(canScroll)
+
+  return remember(state) {
+    object : TopAppBarScrollBehavior {
+
+      override val state: TopAppBarState = state
+
+      override val isPinned: Boolean = false
+
+      override val snapAnimationSpec: AnimationSpec<Float>? = null
+
+      override val flingAnimationSpec: DecayAnimationSpec<Float>? = null
+
+      override val nestedScrollConnection =
+        object : NestedScrollConnection {
+
+          override fun onPreScroll(
+            available: Offset,
+            source: NestedScrollSource
+          ): Offset {
+            if (!currentCanScroll()) {
+              return Offset.Zero
+            }
+
+            state.heightOffset =
+              (state.heightOffset + available.y)
+                .coerceIn(
+                  minimumValue = state.heightOffsetLimit,
+                  maximumValue = 0f
+                )
+
+            // TopAppBar reaguje na scroll,
+            // ale lista dostaje całą deltę.
+            return Offset.Zero
+          }
+        }
+    }
+  }
 }
 
 private fun handleEvent(event: MainListViewEvent, navigator: MainComposeNavigator) {

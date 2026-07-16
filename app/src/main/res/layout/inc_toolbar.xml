@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
 
   <merge>
 
@@ -14,7 +15,8 @@
         android:id="@+id/supla_toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_bar_height"
-        android:theme="@style/SuplaToolbarStyle">
+        android:theme="@style/SuplaToolbarStyle"
+        app:buttonGravity="center_vertical">
 
         <TextView
           android:id="@+id/supla_toolbar_title"

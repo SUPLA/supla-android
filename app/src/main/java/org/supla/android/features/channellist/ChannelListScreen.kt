@@ -18,11 +18,12 @@ package org.supla.android.features.channellist
  */
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
@@ -49,15 +50,14 @@ import org.supla.android.main.MainRoute.AddWizard
 import org.supla.android.main.MainRoute.DeviceCatalog
 import org.supla.android.main.MainRoute.StandardDetail
 import org.supla.android.main.ViewModelHostBase
-import org.supla.android.main.scaffold.screenUnderTopBarPaddings
 import org.supla.android.main.topbar.RegisterTopBarSearch
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.lists.ListOnlineState
 import org.supla.android.ui.views.EmptyListInfoView
 import org.supla.android.ui.views.buttons.OutlinedButton
+import org.supla.android.ui.views.list.Content
 import org.supla.android.ui.views.list.ListItemStatus
-import org.supla.android.ui.views.list.ListView
 import org.supla.android.ui.views.list.MainListScope
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.data.model.lists.ListItemIssues
@@ -71,6 +71,7 @@ interface ChannelListScope : MainListScope {
 
 @Composable
 fun ChannelListScreen(
+  listState: LazyListState,
   modifier: Modifier = Modifier,
   viewModel: ChannelListViewModel = hiltViewModel(),
   captionChangeViewModel: CaptionChangeViewModel = hiltViewModel(),
@@ -86,10 +87,12 @@ fun ChannelListScreen(
       data = viewModel.searchData,
       handler = viewModel::handle
     )
+
     viewModel.Content(
-      list = viewModel.list,
-      dragEnabled = viewModel.searchData.query.isEmpty(),
-      modifier = modifier
+      items = viewModel.list,
+      listState = listState,
+      modifier = modifier,
+      emptyContent = { EmptyContent(viewModel) }
     )
 
     state.actionAlertDialogState?.View(
@@ -137,47 +140,25 @@ private fun handleCaptionChangeEvents(event: CaptionChangeViewEvent, viewModel: 
 }
 
 @Composable
-private fun ChannelListScope.Content(
-  dragEnabled: Boolean,
-  list: List<ListItem>,
-  modifier: Modifier = Modifier
-) {
-  if (list.isEmpty()) {
-    Box(
-      modifier = modifier
-        .fillMaxSize()
-        .screenUnderTopBarPaddings()
-    ) {
-      EmptyContent(modifier = Modifier.align(Alignment.Center))
-    }
-  } else {
-    ListView(
-      items = list,
-      dragEnabled = dragEnabled,
-      modifier = modifier
-    )
-  }
-}
-
-@Composable
-private fun ChannelListScope.EmptyContent(
-  modifier: Modifier = Modifier,
-) {
+private fun BoxScope.EmptyContent(viewModel: ChannelListViewModel) {
   Column(
-    modifier = modifier,
+    modifier = Modifier.align(Alignment.Center),
     verticalArrangement = Arrangement.spacedBy(Distance.small),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
     EmptyListInfoView()
-    Spacer(modifier = Modifier.height(Distance.small))
-    OutlinedButton(
-      text = stringResource(R.string.menu_device_catalog),
-      onClick = { onDeviceCatalogClick() }
-    )
-    OutlinedButton(
-      text = stringResource(R.string.add_device),
-      onClick = { onAddDeviceClick() }
-    )
+
+    if (viewModel.searchData.query.isEmpty()) {
+      Spacer(modifier = Modifier.height(Distance.small))
+      OutlinedButton(
+        text = stringResource(R.string.menu_device_catalog),
+        onClick = viewModel::onDeviceCatalogClick
+      )
+      OutlinedButton(
+        text = stringResource(R.string.add_device),
+        onClick = viewModel::onAddDeviceClick
+      )
+    }
   }
 }
 
@@ -200,8 +181,8 @@ val previewScope = object : ChannelListScope {
 private fun PreviewEmpty() {
   SuplaTheme {
     previewScope.Content(
-      list = emptyList(),
-      dragEnabled = false
+      items = emptyList(),
+      listState = rememberLazyListState()
     )
   }
 }
@@ -212,7 +193,7 @@ private fun PreviewList() {
   SuplaTheme {
     CompositionLocalProvider(LocalApplicationPreferences provides ApplicationPreferences(LocalContext.current)) {
       previewScope.Content(
-        list = listOf(
+        items = listOf(
           ListItem.LocationItem(1, 1L, "Leaving Room", false),
           ListItem.DefaultItem(
             remoteId = 1,
@@ -243,7 +224,7 @@ private fun PreviewList() {
             processing = false
           )
         ),
-        dragEnabled = false
+        listState = rememberLazyListState()
       )
     }
   }

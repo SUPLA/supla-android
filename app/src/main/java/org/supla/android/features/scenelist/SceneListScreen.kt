@@ -18,11 +18,12 @@ package org.supla.android.features.scenelist
  */
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,13 +38,12 @@ import org.supla.android.features.captionchangedialog.View
 import org.supla.android.main.LocalNavigator
 import org.supla.android.main.MainComposeNavigator
 import org.supla.android.main.ViewModelHostBase
-import org.supla.android.main.scaffold.screenUnderTopBarPaddings
 import org.supla.android.main.topbar.RegisterTopBarSearch
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.views.EmptyListInfoView
 import org.supla.android.ui.views.buttons.OutlinedButton
-import org.supla.android.ui.views.list.ListView
+import org.supla.android.ui.views.list.Content
 import org.supla.android.ui.views.list.MainListScope
 import org.supla.core.shared.extensions.forTrue
 
@@ -53,6 +53,7 @@ interface SceneListScope : MainListScope {
 
 @Composable
 fun SceneListScreen(
+  listState: LazyListState,
   viewModel: SceneListViewModel = hiltViewModel(),
   captionChangeViewModel: CaptionChangeViewModel = hiltViewModel()
 ) {
@@ -68,8 +69,9 @@ fun SceneListScreen(
     )
 
     viewModel.Content(
-      scenes = viewModel.list,
-      dragEnabled = viewModel.searchData.query.isEmpty()
+      items = viewModel.list,
+      listState = listState,
+      emptyContent = { EmptyContent(viewModel) }
     )
   }
 
@@ -101,41 +103,21 @@ private fun handleCaptionChangeEvents(event: CaptionChangeViewEvent, viewModel: 
 }
 
 @Composable
-private fun SceneListScope.Content(
-  scenes: List<ListItem>,
-  dragEnabled: Boolean
-) {
-  if (scenes.isEmpty()) {
-    Box(
-      modifier = Modifier
-        .fillMaxSize()
-        .screenUnderTopBarPaddings()
-    ) {
-      EmptyContent(modifier = Modifier.align(Alignment.Center))
-    }
-  } else {
-    ListView(
-      items = scenes,
-      dragEnabled = dragEnabled
-    )
-  }
-}
-
-@Composable
-private fun SceneListScope.EmptyContent(
-  modifier: Modifier = Modifier,
-) {
+private fun BoxScope.EmptyContent(viewModel: SceneListViewModel) {
   Column(
-    modifier = modifier,
+    modifier = Modifier.align(Alignment.Center),
     verticalArrangement = Arrangement.spacedBy(Distance.small),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
     EmptyListInfoView()
-    Spacer(modifier = Modifier.height(Distance.small))
-    OutlinedButton(
-      text = stringResource(R.string.scenes_empty_list_button),
-      onClick = { onAddGroupClick() }
-    )
+
+    if (viewModel.searchData.query.isEmpty()) {
+      Spacer(modifier = Modifier.height(Distance.small))
+      OutlinedButton(
+        text = stringResource(R.string.scenes_empty_list_button),
+        onClick = viewModel::onAddGroupClick
+      )
+    }
   }
 }
 
@@ -157,8 +139,8 @@ val previewScope = object : SceneListScope {
 private fun PreviewEmpty() {
   SuplaTheme {
     previewScope.Content(
-      scenes = emptyList(),
-      dragEnabled = false
+      items = emptyList(),
+      listState = rememberLazyListState()
     )
   }
 }

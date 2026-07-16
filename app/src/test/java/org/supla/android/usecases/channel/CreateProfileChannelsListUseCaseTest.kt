@@ -136,21 +136,23 @@ class CreateProfileChannelsListUseCaseTest {
     testObserver.assertComplete()
     val list = testObserver.values()[0]
 
-    assertThat(list).hasSize(6)
+    assertThat(list).hasSize(7)
     assertThat(list[0]).isInstanceOf(ListItem.LocationItem::class.java)
     assertThat(list[1]).isInstanceOf(ListItem.DefaultItem::class.java)
     assertThat(list[2]).isInstanceOf(ListItem.DefaultItem::class.java)
     assertThat(list[3]).isInstanceOf(ListItem.LocationItem::class.java)
-    assertThat(list[4]).isInstanceOf(ListItem.LocationItem::class.java)
-    assertThat(list[5]).isInstanceOf(ListItem.DefaultItem::class.java)
+    assertThat(list[4]).isInstanceOf(ListItem.DefaultItem::class.java)
+    assertThat(list[5]).isInstanceOf(ListItem.LocationItem::class.java)
+    assertThat(list[6]).isInstanceOf(ListItem.DefaultItem::class.java)
 
     assertThat((list[1] as ListItem.DefaultItem).remoteId).isEqualTo(101)
     assertThat((list[2] as ListItem.DefaultItem).remoteId).isEqualTo(102)
-    assertThat((list[5] as ListItem.DefaultItem).remoteId).isEqualTo(104)
+    assertThat((list[4] as ListItem.DefaultItem).remoteId).isEqualTo(103)
+    assertThat((list[6] as ListItem.DefaultItem).remoteId).isEqualTo(104)
 
     assertThat((list[0] as ListItem.LocationItem).userCaption).isEqualTo("12")
     assertThat((list[3] as ListItem.LocationItem).userCaption).isEqualTo("32")
-    assertThat((list[4] as ListItem.LocationItem).userCaption).isEqualTo("42")
+    assertThat((list[5] as ListItem.LocationItem).userCaption).isEqualTo("42")
   }
 
   @Test
