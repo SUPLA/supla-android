@@ -17,7 +17,10 @@ package org.supla.android.ui.lists
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.ui.BaseViewModel
@@ -44,6 +47,9 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
 
   protected var lastItemOpenTime: Long = 0
 
+  var listLoaded by mutableStateOf(false)
+    private set
+
   protected val listState = mutableStateListOf<ListItem>()
   val list: List<ListItem> = listState
 
@@ -53,9 +59,17 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
 
   protected abstract fun reloadList()
 
-  protected fun updateItem(item: ListItem) {
+  protected fun updateDefaultItem(item: ListItem) {
+    updateItem(item) { it is ListItem.DefaultItem }
+  }
+
+  protected fun updateSceneItem(item: ListItem) {
+    updateItem(item) { it is ListItem.SceneItem }
+  }
+
+  private fun updateItem(item: ListItem, matcher: (ListItem) -> Boolean) {
     try {
-      val index = list.indexOfFirst { it is ListItem.DefaultItem && it.remoteId == item.remoteId }
+      val index = listState.indexOfFirst { matcher(it) && it.remoteId == item.remoteId }
       if (index >= 0 && listState[index] != item) {
         listState[index] = item
       }
@@ -65,6 +79,10 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
   }
 
   protected fun updateItems(items: List<ListItem>) {
+    if (!listLoaded) {
+      listLoaded = true
+    }
+
     listState.clear()
     listState.addAll(items)
   }

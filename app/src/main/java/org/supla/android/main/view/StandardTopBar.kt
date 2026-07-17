@@ -20,31 +20,29 @@ package org.supla.android.main.view
  */
 
 import android.view.Surface
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.displayCutout
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -53,17 +51,14 @@ import org.supla.android.R
 import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.main.LocalNavigator
-import org.supla.android.main.MainComposeNavigator
 import org.supla.android.main.topbar.Icon
 import org.supla.android.main.topbar.LocalTopBarController
 import org.supla.android.main.topbar.MockedTopBarController
 import org.supla.android.main.topbar.NavigationType
 import org.supla.android.main.topbar.TopBarAction
-import org.supla.android.main.topbar.TopBarController
 import org.supla.android.main.topbar.TopBarIcon
 import org.supla.android.main.topbar.TopBarSearchData
 import org.supla.android.main.topbar.TopBarSearchState
-import org.supla.android.main.topbar.TopBarState
 import org.supla.android.tools.SuplaComponentPreview
 import org.supla.android.ui.views.buttons.DrawerBackButton
 import org.supla.android.ui.views.buttons.DrawerMenuButton
@@ -92,6 +87,13 @@ fun StandardTopBar(
   val topBarController = LocalTopBarController.current
   val topBarState = topBarController.state
   val searchState = topBarState.search
+  val focusRequester = remember { FocusRequester() }
+
+  LaunchedEffect(searchState?.data?.visible) {
+    if (searchState?.data?.visible == true) {
+      focusRequester.requestFocus()
+    }
+  }
 
   CenterAlignedTopAppBar(
     modifier = modifier,
@@ -103,14 +105,20 @@ fun StandardTopBar(
         Row(verticalAlignment = Alignment.CenterVertically) {
           TopBarSearchField(
             searchText = searchState.data.query,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+              .weight(1f)
+              .focusRequester(focusRequester)
           )
         }
       } else {
         HeadlineSmall(
-          text = stringResource(R.string.app_name),
+          text = topBarState.title(),
           maxLines = 1,
-          color = MaterialTheme.colorScheme.onPrimaryContainer
+          color = MaterialTheme.colorScheme.onPrimaryContainer,
+          modifier = Modifier.clickable(
+            enabled = searchState != null,
+            onClick = { topBarController.setSearchVisible(true) }
+          )
         )
       }
     },

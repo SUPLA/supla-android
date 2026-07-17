@@ -76,12 +76,12 @@ interface MainListScope {
 
 @Composable
 fun MainListScope.Content(
-  items: List<ListItem>,
+  items: List<ListItem>?,
   listState: LazyListState,
   modifier: Modifier = Modifier,
   emptyContent: @Composable BoxScope.() -> Unit = {}
 ) {
-  if (items.isEmpty()) {
+  if (items?.isEmpty() == true) {
     Box(
       modifier = Modifier
         .fillMaxSize()
@@ -89,7 +89,7 @@ fun MainListScope.Content(
     ) {
       emptyContent()
     }
-  } else {
+  } else if (items != null) {
     ListView(
       items = items,
       listState = listState,

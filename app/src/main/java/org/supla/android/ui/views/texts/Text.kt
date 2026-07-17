@@ -94,14 +94,16 @@ fun HeadlineSmall(
   modifier: Modifier = Modifier,
   color: Color = MaterialTheme.colorScheme.onSurface,
   maxLines: Int = Int.MAX_VALUE,
-  overflow: TextOverflow = TextOverflow.Ellipsis
+  overflow: TextOverflow = TextOverflow.Ellipsis,
+  textAlign: TextAlign? = null
 ) =
   HeadlineSmall(
     text = stringResource(stringRes),
     color = color,
     modifier = modifier,
     maxLines = maxLines,
-    overflow = overflow
+    overflow = overflow,
+    textAlign = textAlign
   )
 
 @Composable
@@ -110,7 +112,8 @@ fun HeadlineSmall(
   modifier: Modifier = Modifier,
   color: Color = MaterialTheme.colorScheme.onSurface,
   maxLines: Int = Int.MAX_VALUE,
-  overflow: TextOverflow = TextOverflow.Ellipsis
+  overflow: TextOverflow = TextOverflow.Ellipsis,
+  textAlign: TextAlign? = null
 ) =
   Text(
     text = text,
@@ -118,7 +121,8 @@ fun HeadlineSmall(
     color = color,
     modifier = modifier,
     maxLines = maxLines,
-    overflow = overflow
+    overflow = overflow,
+    textAlign = textAlign
   )
 
 @Composable

@@ -22,7 +22,7 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -37,7 +37,7 @@ import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.tools.SuplaPreview
-import org.supla.android.ui.views.texts.BodyLarge
+import org.supla.android.ui.views.texts.HeadlineSmall
 
 @Composable
 fun LocationListItemView(
@@ -52,7 +52,7 @@ fun LocationListItemView(
     Row(
       modifier = modifier
         .fillMaxWidth()
-        .height(dimensionResource(R.dimen.channel_section_height))
+        .heightIn(min = dimensionResource(R.dimen.channel_section_height))
         .background(MaterialTheme.colorScheme.surfaceVariant)
         .combinedClickable(
           enabled = !inSearch,
@@ -62,7 +62,7 @@ fun LocationListItemView(
         .padding(horizontal = Distance.default),
       verticalAlignment = Alignment.CenterVertically
     ) {
-      BodyLarge(
+      HeadlineSmall(
         text = caption,
         color = MaterialTheme.colorScheme.onBackground,
         maxLines = 1,

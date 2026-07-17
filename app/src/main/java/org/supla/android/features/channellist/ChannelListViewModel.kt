@@ -90,7 +90,7 @@ class ChannelListViewModel @Inject constructor(
       .flatMapMaybe { readChannelWithChildrenUseCase(it) }
       .map { channelToListItemMapper(it) }
       .subscribeBy(
-        onNext = { updateItem(it) },
+        onNext = { updateDefaultItem(it) },
         onError = defaultErrorHandler("init()")
       )
       .disposeBySelf()

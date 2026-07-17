@@ -38,6 +38,7 @@ import org.supla.android.ui.dialogs.Dialog
 import org.supla.android.ui.dialogs.DialogHeader
 import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.Separator
+import org.supla.android.ui.views.SeparatorStyle
 import org.supla.android.ui.views.texts.BodyMedium
 
 data class ProfileSelectionDialogState(
@@ -62,6 +63,7 @@ fun ProfileSelectionDialog(
     DialogHeader(title = stringResource(R.string.profile_select_active))
 
     for (profile in profiles) {
+      Separator(style = SeparatorStyle.OUTLINE)
       Row(
         modifier = Modifier
           .clickable(onClick = { onProfileSelected(profile.id) })
@@ -86,7 +88,6 @@ fun ProfileSelectionDialog(
           )
         }
       }
-      Separator()
     }
 
     Spacer(modifier = Modifier.height(Distance.small))

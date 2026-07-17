@@ -17,6 +17,10 @@ package org.supla.android.main.view
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.rememberDrawerState
@@ -24,10 +28,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.metadata
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import org.supla.android.features.about.AboutScreen
@@ -78,27 +84,27 @@ fun MainComposeNavHost(
         entryProvider {
           entry<MainRoute.Status> { EmptyScreenScaffold { StatusScreen(navigator) } }
           entry<MainRoute.List> { MainListScreen(drawerState, navigator) }
-          entry<MainRoute.UnlockApp> { EmptyScreenScaffold { LockScreen(it.unlockAction, navigator) } }
-          entry<MainRoute.Unlock> { BackScaffold { LockScreen(it.unlockAction, navigator) } }
-          entry<MainRoute.StandardDetail> { DetailScreen(it.item, it.pages) }
-          entry<MainRoute.Settings> { BackScaffold { SettingsScreen() } }
-          entry<MainRoute.AddWizard> { AddWizardScreen(navigator) }
-          entry<MainRoute.DeviceCatalog> { BackScaffold { DeviceCatalogScreen() } }
-          entry<MainRoute.NotificationsLog> { BackScaffold { NotificationsLogScreen(navigator) } }
-          entry<MainRoute.About> { BackScaffold { AboutScreen(navigator) } }
-          entry<MainRoute.DeveloperInfo> { BackScaffold { DeveloperInfoScreen() } }
-          entry<MainRoute.LocationReorder> { BackScaffold { LocationReorderScreen() } }
-          entry<MainRoute.AndroidAutoItems> { BackScaffold { AndroidAutoItemsScreen(navigator) } }
-          entry<MainRoute.AddAndroidAutoItem> { BackScaffold { AddAndroidAutoItemScreen(navigator, it.id) } }
-          entry<MainRoute.NfcTagList> { BackScaffold { NfcTagListScreen(navigator) } }
-          entry<MainRoute.NfcTagDetail> { BackScaffold { NfcTagDetailScreen(it.id, navigator) } }
-          entry<MainRoute.AddNfcTag> { BackScaffold { AddNfcTagScreen(navigator) } }
-          entry<MainRoute.EditNfcTag> { EditNfcTagScreen(it.id, it.newItemData, navigator) }
-          entry<MainRoute.LockNfcTag> { BackScaffold { LockNfcTagScreen(it.id, navigator) } }
-          entry<MainRoute.PinSetup> { BackScaffold { PinSetupScreen(it.lockScreenScope, navigator) } }
-          entry<MainRoute.CounterPhoto> { BackScaffold { CounterPhotoScreen(it.remoteId) } }
-          entry<MainRoute.LegacyDimmerSettings> { BackScaffold { LegacyDimmerSettingsScreen(it.item, navigator) } }
-          entry<MainRoute.LegacyDetail> { BackScaffold { LegacyDetailScreen(it, navigator) } }
+          fadedEntry<MainRoute.UnlockApp> { EmptyScreenScaffold { LockScreen(it.unlockAction, navigator) } }
+          fadedEntry<MainRoute.Unlock> { BackScaffold { LockScreen(it.unlockAction, navigator) } }
+          fadedEntry<MainRoute.StandardDetail> { DetailScreen(it.item, it.pages) }
+          fadedEntry<MainRoute.Settings> { BackScaffold { SettingsScreen() } }
+          fadedEntry<MainRoute.AddWizard> { AddWizardScreen(navigator) }
+          fadedEntry<MainRoute.DeviceCatalog> { BackScaffold { DeviceCatalogScreen() } }
+          fadedEntry<MainRoute.NotificationsLog> { BackScaffold { NotificationsLogScreen(navigator) } }
+          fadedEntry<MainRoute.About> { BackScaffold { AboutScreen(navigator) } }
+          fadedEntry<MainRoute.DeveloperInfo> { BackScaffold { DeveloperInfoScreen() } }
+          fadedEntry<MainRoute.LocationReorder> { BackScaffold { LocationReorderScreen() } }
+          fadedEntry<MainRoute.AndroidAutoItems> { BackScaffold { AndroidAutoItemsScreen(navigator) } }
+          fadedEntry<MainRoute.AddAndroidAutoItem> { BackScaffold { AddAndroidAutoItemScreen(navigator, it.id) } }
+          fadedEntry<MainRoute.NfcTagList> { BackScaffold { NfcTagListScreen(navigator) } }
+          fadedEntry<MainRoute.NfcTagDetail> { BackScaffold { NfcTagDetailScreen(it.id, navigator) } }
+          fadedEntry<MainRoute.AddNfcTag> { BackScaffold { AddNfcTagScreen(navigator) } }
+          fadedEntry<MainRoute.EditNfcTag> { EditNfcTagScreen(it.id, it.newItemData, navigator) }
+          fadedEntry<MainRoute.LockNfcTag> { BackScaffold { LockNfcTagScreen(it.id, navigator) } }
+          fadedEntry<MainRoute.PinSetup> { BackScaffold { PinSetupScreen(it.lockScreenScope, navigator) } }
+          fadedEntry<MainRoute.CounterPhoto> { BackScaffold { CounterPhotoScreen(it.remoteId) } }
+          fadedEntry<MainRoute.LegacyDimmerSettings> { BackScaffold { LegacyDimmerSettingsScreen(it.item, navigator) } }
+          fadedEntry<MainRoute.LegacyDetail> { BackScaffold { LegacyDetailScreen(it, navigator) } }
         }
       )
     )
@@ -110,9 +116,42 @@ fun <T : Any> topBarEntryProvider(
 ): (T) -> NavEntry<T> = { key ->
   val entry = base(key)
 
-  NavEntry(key) {
+  NavEntry(
+    key = key,
+    metadata = entry.metadata
+  ) {
     CompositionLocalProvider(LocalTopBarScreenKey provides key) {
       entry.Content()
     }
   }
 }
+
+private inline fun <reified K : NavKey> EntryProviderScope<NavKey>.fadedEntry(
+  noinline clazzContentKey: (key: @JvmSuppressWildcards K) -> Any = { it.toString() },
+  noinline content: @Composable (K) -> Unit,
+) {
+  addEntryProvider(K::class, clazzContentKey, { fadeTransitionMetadata() }, content)
+}
+
+private fun fadeTransitionMetadata(): Map<String, Any> =
+  metadata {
+    put(NavDisplay.TransitionKey) {
+      slideInHorizontally(
+        initialOffsetX = { width -> width },
+        animationSpec = tween(250)
+      ) togetherWith slideOutHorizontally(
+        targetOffsetX = { width -> -width },
+        animationSpec = tween(250)
+      )
+    }
+
+    put(NavDisplay.PopTransitionKey) {
+      slideInHorizontally(
+        initialOffsetX = { width -> -width },
+        animationSpec = tween(250)
+      ) togetherWith slideOutHorizontally(
+        targetOffsetX = { width -> width },
+        animationSpec = tween(250)
+      )
+    }
+  }

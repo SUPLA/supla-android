@@ -82,7 +82,7 @@ class SceneListViewModel @Inject constructor(
       .flatMapMaybe { sceneRepository.findSceneData(it) }
       .map { it.sceneItem(getSceneIconUseCase) }
       .subscribeBy(
-        onNext = { updateItem(it) },
+        onNext = { updateSceneItem(it) },
         onError = defaultErrorHandler("init()")
       )
       .disposeBySelf()

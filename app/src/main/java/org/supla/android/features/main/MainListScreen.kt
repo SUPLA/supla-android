@@ -25,8 +25,6 @@ import android.view.Surface
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.core.AnimationSpec
-import androidx.compose.animation.core.DecayAnimationSpec
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -36,6 +34,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -44,20 +43,14 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarScrollBehavior
-import androidx.compose.material3.TopAppBarState
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -148,7 +141,10 @@ fun MainListScreen(
 private fun PortraitPhoneView(
   viewModel: MainListViewModel
 ) {
-  val scrollBehavior = rememberSimultaneousEnterAlwaysScrollBehavior()
+  val topBarCanScroll = remember { mutableStateOf(false) }
+  val scrollBehavior = rememberSimultaneousEnterAlwaysScrollBehavior(
+    canScroll = { topBarCanScroll.value }
+  )
 
   MainDrawer(
     developerOptionsVisibleFlow = viewModel.developerOptionsVisible,
@@ -163,7 +159,7 @@ private fun PortraitPhoneView(
           BottomNavigationBar()
         }
       }
-    ) { CommonContent(it, scrollBehavior) }
+    ) { CommonContent(it, scrollBehavior) { canScroll -> topBarCanScroll.value = canScroll } }
   }
 }
 
@@ -171,7 +167,10 @@ private fun PortraitPhoneView(
 private fun LandscapePhoneView(
   viewModel: MainListViewModel
 ) {
-  val scrollBehavior = rememberSimultaneousEnterAlwaysScrollBehavior()
+  val topBarCanScroll = remember { mutableStateOf(false) }
+  val scrollBehavior = rememberSimultaneousEnterAlwaysScrollBehavior(
+    canScroll = { topBarCanScroll.value }
+  )
   MainDrawer(
     developerOptionsVisibleFlow = viewModel.developerOptionsVisible,
     zWaveVisibleFlow = viewModel.zWaveAvailable,
@@ -183,7 +182,7 @@ private fun LandscapePhoneView(
           .nestedScroll(scrollBehavior.nestedScrollConnection)
           .weight(1f),
         topBar = { StandardTopBar(false, scrollBehavior) }
-      ) { CommonContent(it.withRightPanel(), scrollBehavior) }
+      ) { CommonContent(it.withRightPanel(), scrollBehavior) { canScroll -> topBarCanScroll.value = canScroll } }
       if (LocalApplicationPreferences.current.isShowBottomMenu) {
         RightNavigationRail()
       }
@@ -214,7 +213,8 @@ private fun WideView(
 @Composable
 private fun CommonContent(
   paddings: PaddingValues,
-  scrollBehavior: TopAppBarScrollBehavior? = null
+  scrollBehavior: TopAppBarScrollBehavior? = null,
+  onTopBarCanScrollChanged: ((Boolean) -> Unit)? = null
 ) {
   val topBarController = LocalTopBarController.current
   val tabController = LocalMainListTabController.current
@@ -242,6 +242,19 @@ private fun CommonContent(
   val channelListState = rememberLazyListState()
   val groupListState = rememberLazyListState()
   val sceneListState = rememberLazyListState()
+  val selectedListState = when (selectedTab) {
+    ListTab.CHANNELS -> channelListState
+    ListTab.GROUPS -> groupListState
+    ListTab.SCENES -> sceneListState
+  }
+  val selectedListCanScroll = selectedListState.canScroll()
+
+  LaunchedEffect(scrollBehavior, selectedListCanScroll) {
+    onTopBarCanScrollChanged?.invoke(selectedListCanScroll)
+    if (!selectedListCanScroll) {
+      scrollBehavior?.state?.heightOffset = 0f
+    }
+  }
 
   CompositionLocalProvider(LocalScaffoldPadding provides paddings) {
     when (selectedTab) {
@@ -251,6 +264,9 @@ private fun CommonContent(
     }
   }
 }
+
+private fun LazyListState.canScroll(): Boolean =
+  canScrollBackward || canScrollForward
 
 @Composable
 private fun BottomNavigationBar() =
@@ -349,52 +365,6 @@ private fun NotificationInfo(viewModel: MainListViewModel) {
       }
     }
   )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun rememberSimultaneousEnterAlwaysScrollBehavior(
-  state: TopAppBarState = rememberTopAppBarState(),
-  canScroll: () -> Boolean = { true }
-): TopAppBarScrollBehavior {
-  val currentCanScroll by rememberUpdatedState(canScroll)
-
-  return remember(state) {
-    object : TopAppBarScrollBehavior {
-
-      override val state: TopAppBarState = state
-
-      override val isPinned: Boolean = false
-
-      override val snapAnimationSpec: AnimationSpec<Float>? = null
-
-      override val flingAnimationSpec: DecayAnimationSpec<Float>? = null
-
-      override val nestedScrollConnection =
-        object : NestedScrollConnection {
-
-          override fun onPreScroll(
-            available: Offset,
-            source: NestedScrollSource
-          ): Offset {
-            if (!currentCanScroll()) {
-              return Offset.Zero
-            }
-
-            state.heightOffset =
-              (state.heightOffset + available.y)
-                .coerceIn(
-                  minimumValue = state.heightOffsetLimit,
-                  maximumValue = 0f
-                )
-
-            // TopAppBar reaguje na scroll,
-            // ale lista dostaje całą deltę.
-            return Offset.Zero
-          }
-        }
-    }
-  }
 }
 
 private fun handleEvent(event: MainListViewEvent, navigator: MainComposeNavigator) {
