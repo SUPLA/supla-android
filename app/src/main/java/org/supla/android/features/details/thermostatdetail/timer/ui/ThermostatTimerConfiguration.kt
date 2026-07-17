@@ -83,6 +83,7 @@ import org.supla.android.ui.views.buttons.OutlinedButton
 import org.supla.android.ui.views.buttons.TextButton
 import org.supla.android.ui.views.forms.DatePicker
 import org.supla.android.ui.views.forms.NumberPicker
+import org.supla.android.ui.views.forms.NumberPickerHighlight
 import org.supla.android.ui.views.forms.TextField
 import org.supla.android.ui.views.slider.ThermostatThumb
 import org.supla.android.ui.views.thermostat.TemperatureControlButton
@@ -443,16 +444,7 @@ private fun CaptionText(text: String, modifier: Modifier = Modifier) =
 @Composable
 fun ThermostatTimerConfigurationScope.TimerSelectorCounter(state: TimerDetailViewState, modifier: Modifier = Modifier) {
   Box(modifier = modifier) {
-    Box(
-      modifier = Modifier
-        .height(40.dp)
-        .fillMaxWidth()
-        .background(
-          color = colorResource(id = R.color.gray_lighter),
-          shape = RoundedCornerShape(dimensionResource(id = R.dimen.radius_default))
-        )
-        .align(Alignment.Center)
-    )
+    NumberPickerHighlight()
     Row(
       horizontalArrangement = Arrangement.spacedBy(Distance.default),
       modifier = Modifier.clip(RectangleShape)

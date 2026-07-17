@@ -90,7 +90,7 @@ fun SwitchGeneralScope.View(
       )
       state.channelIssues?.let { ChannelIssuesView(it, modifier = Modifier.padding(top = Distance.default)) }
     } else if (state.deviceStateData != null) {
-      DeviceState(data = state.deviceStateData)
+      DeviceState(data = state.deviceStateData, modifier = Modifier.padding(vertical = Distance.vertical))
       state.channelIssues?.let { ChannelIssuesView(it) }
       Spacer(modifier = Modifier.weight(1f))
     } else {

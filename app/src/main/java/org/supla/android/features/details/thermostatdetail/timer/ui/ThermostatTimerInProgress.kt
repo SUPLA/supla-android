@@ -54,9 +54,9 @@ import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.extensions.shift
 import org.supla.android.features.details.thermostatdetail.timer.SetpointTemperature
 import org.supla.android.features.details.thermostatdetail.timer.TimerDetailViewState
-import org.supla.android.features.details.thermostatdetail.ui.TimerHeader
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.tools.SuplaPreviewLandscape
+import org.supla.android.ui.views.DeviceState
 import org.supla.android.ui.views.TimerProgressView
 import org.supla.android.ui.views.buttons.TextButton
 import org.supla.android.ui.views.buttons.supla.SuplaButton
@@ -91,10 +91,9 @@ private fun ThermostatTimerInProgressScope.Landscape(state: TimerDetailViewState
       verticalArrangement = Arrangement.SpaceEvenly,
       modifier = Modifier.fillMaxHeight().weight(1f)
     ) {
-      TimerHeader(
-        state = state,
-        modifier = Modifier
-          .padding(top = Distance.default)
+      DeviceState(
+        data = state.deviceState,
+        modifier = Modifier.padding(top = Distance.default)
       )
       EditTimeButton { editTimer() }
     }
@@ -113,8 +112,8 @@ private fun ThermostatTimerInProgressScope.Portrait(state: TimerDetailViewState)
       .fillMaxHeight()
       .background(MaterialTheme.colorScheme.background)
   ) {
-    TimerHeader(
-      state = state,
+    DeviceState(
+      data = state.deviceState,
       modifier = Modifier
         .align(Alignment.TopCenter)
         .padding(top = Distance.default)

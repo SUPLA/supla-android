@@ -145,7 +145,7 @@ private fun DimmerDetailScope.Landscape(
     Column(
       modifier = Modifier.weight(1f)
     ) {
-      state.deviceStateData?.let { DeviceState(data = it) }
+      state.deviceStateData?.let { DeviceState(data = it, modifier = Modifier.padding(vertical = Distance.vertical)) }
       state.channelIssues?.let { issues -> ChannelIssuesView(issues) }
 
       brightnessBox(state.value, Modifier)

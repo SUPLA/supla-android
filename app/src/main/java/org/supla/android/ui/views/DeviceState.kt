@@ -20,7 +20,6 @@ package org.supla.android.ui.views
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -28,7 +27,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
@@ -38,31 +39,34 @@ import org.supla.core.shared.infrastructure.LocalizedString
 data class DeviceStateData(
   val label: LocalizedString,
   val icon: ImageId?,
-  val value: LocalizedString
+  val value: LocalizedString,
+  val iconTint: Int? = null,
+  val iconSize: Dp = 24.dp
 )
 
 @Composable
-fun DeviceState(data: DeviceStateData) {
+fun DeviceState(
+  data: DeviceStateData,
+  modifier: Modifier = Modifier
+) {
   DeviceState(
     stateLabel = data.label(LocalContext.current),
     icon = data.icon,
     stateValue = data.value(LocalContext.current),
-    modifier = Modifier.padding(vertical = Distance.vertical)
+    modifier = modifier,
+    iconTint = data.iconTint
   )
 }
 
 @Composable
-fun DeviceState(data: DeviceStateData, modifier: Modifier) {
-  DeviceState(
-    stateLabel = data.label(LocalContext.current),
-    icon = data.icon,
-    stateValue = data.value(LocalContext.current),
-    modifier = modifier
-  )
-}
-
-@Composable
-fun DeviceState(stateLabel: String, icon: ImageId?, stateValue: String, modifier: Modifier = Modifier) =
+fun DeviceState(
+  stateLabel: String,
+  icon: ImageId?,
+  stateValue: String,
+  modifier: Modifier = Modifier,
+  iconTint: Int? = null,
+  iconSize: Dp = 24.dp
+) =
   Row(
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.spacedBy(Distance.tiny),
@@ -74,11 +78,12 @@ fun DeviceState(stateLabel: String, icon: ImageId?, stateValue: String, modifier
       style = MaterialTheme.typography.bodyMedium,
       color = MaterialTheme.colorScheme.onSurfaceVariant
     )
-    icon?.let {
+    icon?.let { icon ->
       Image(
-        imageId = it,
+        imageId = icon,
         contentDescription = null,
-        modifier = Modifier.size(25.dp)
+        modifier = Modifier.size(iconSize),
+        tint = iconTint?.let { colorResource(it) }
       )
     }
     Text(
