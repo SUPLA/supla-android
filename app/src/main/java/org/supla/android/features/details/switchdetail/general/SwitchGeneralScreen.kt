@@ -39,7 +39,10 @@ fun SwitchGeneralScreen(
 ) {
   ViewModelHost(
     viewModel = viewModel,
-    onCreate = { viewModel.onViewCreated(item.remoteId) },
+    onCreate = {
+      viewModel.onViewCreated(item.remoteId)
+      viewModel.loadData(item.remoteId, item.itemType)
+    },
     onResume = { viewModel.loadData(item.remoteId, item.itemType) }
   ) { state ->
     viewModel.View(

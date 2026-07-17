@@ -79,7 +79,7 @@ fun GateGeneralScope.View(
 ) {
   Column {
     state.deviceStateData?.let {
-      DeviceState(data = it)
+      DeviceState(data = it, modifier = Modifier.padding(vertical = Distance.vertical))
       state.channelIssues?.let { issues -> ChannelIssuesView(issues) }
       Spacer(modifier = Modifier.weight(1f))
     }

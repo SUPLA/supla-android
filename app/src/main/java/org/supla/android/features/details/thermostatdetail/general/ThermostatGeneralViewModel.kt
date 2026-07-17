@@ -17,6 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import androidx.compose.ui.unit.dp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -49,9 +50,10 @@ import org.supla.android.features.details.thermostatdetail.general.data.SensorIs
 import org.supla.android.features.details.thermostatdetail.general.data.ThermostatProgramInfo
 import org.supla.android.features.details.thermostatdetail.general.data.build
 import org.supla.android.features.details.thermostatdetail.general.ui.ThermostatGeneralViewProxy
-import org.supla.android.features.details.thermostatdetail.ui.TimerHeaderState
+import org.supla.android.features.details.thermostatdetail.ui.TimerHeaderHelper
 import org.supla.android.images.ImageId
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.ui.views.DeviceStateData
 import org.supla.android.usecases.channel.GetChannelValueUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -697,7 +699,7 @@ data class ThermostatGeneralViewState(
   val loadingState: LoadingTimeoutManager.LoadingState = LoadingTimeoutManager.LoadingState(),
   val lastInteractionTime: Long? = null,
   val changing: Boolean = false
-) : ViewState(), TimerHeaderState {
+) : ViewState() {
 
   val setpointHeatTemperaturePercentage: Float?
     get() {
@@ -757,21 +759,18 @@ data class ThermostatGeneralViewState(
       return false
     }
 
-  override val endDateText: LocalizedString
-    get() = TimerHeaderState.endDateText(viewModelState?.timerEndDate)
-
-  override val currentStateIcon: Int?
-    get() = TimerHeaderState.currentStateIcon(viewModelState?.mode)
-
-  override val currentStateIconColor: Int
-    get() = TimerHeaderState.currentStateIconColor(viewModelState?.mode)
-
-  override val currentStateValue: LocalizedString =
-    TimerHeaderState.currentStateValue(
-      viewModelState?.mode,
-      viewModelState?.setpointHeatTemperature,
-      viewModelState?.setpointCoolTemperature,
-      thermometerValueFormatter
+  val deviceState: DeviceStateData
+    get() = DeviceStateData(
+      label = TimerHeaderHelper.endDateText(viewModelState?.timerEndDate),
+      icon = TimerHeaderHelper.currentStateIcon(viewModelState?.mode)?.let { ImageId(it) },
+      value = TimerHeaderHelper.currentStateValue(
+        viewModelState?.mode,
+        viewModelState?.setpointHeatTemperature,
+        viewModelState?.setpointCoolTemperature,
+        thermometerValueFormatter
+      ),
+      iconTint = TimerHeaderHelper.currentStateIconColor(viewModelState?.mode),
+      iconSize = 16.dp
     )
 }
 

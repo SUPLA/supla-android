@@ -290,11 +290,11 @@ private fun RightNavigationRail() =
       .fillMaxHeight()
       .border(1.dp, MaterialTheme.colorScheme.outline),
     windowInsets =
-      if (LocalView.current.display?.rotation == Surface.ROTATION_90) {
-        WindowInsets.navigationBars
-      } else {
-        WindowInsets.displayCutout
-      }
+    if (LocalView.current.display?.rotation == Surface.ROTATION_90) {
+      WindowInsets.navigationBars
+    } else {
+      WindowInsets.displayCutout
+    }
   ) {
     val tabController = LocalMainListTabController.current
     val selectedTab = tabController.tab

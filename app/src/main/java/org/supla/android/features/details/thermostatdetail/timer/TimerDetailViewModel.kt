@@ -19,6 +19,7 @@ package org.supla.android.features.details.thermostatdetail.timer
 
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import androidx.compose.ui.unit.dp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
@@ -56,9 +57,11 @@ import org.supla.android.extensions.shift
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.extensions.yearNo
 import org.supla.android.features.details.thermostatdetail.timer.ui.ThermostatTimerViewScope
-import org.supla.android.features.details.thermostatdetail.ui.TimerHeaderState
+import org.supla.android.features.details.thermostatdetail.ui.TimerHeaderHelper
+import org.supla.android.images.ImageId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.ui.views.DeviceStateData
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.client.ExecuteThermostatActionUseCase
 import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
@@ -438,7 +441,7 @@ data class TimerDetailViewState(
   // In progress state
   val timerEndDate: Date? = null
 
-) : ViewState(), TimerHeaderState {
+) : ViewState() {
 
   // Temperature
   val temperaturesRange: ClosedFloatingPointRange<Float>
@@ -505,21 +508,18 @@ data class TimerDetailViewState(
       }
     }
 
-  override val endDateText: LocalizedString
-    get() = TimerHeaderState.endDateText(timerEndDate)
-
-  override val currentStateIcon: Int?
-    get() = TimerHeaderState.currentStateIcon(currentMode)
-
-  override val currentStateIconColor: Int
-    get() = TimerHeaderState.currentStateIconColor(currentMode)
-
-  override val currentStateValue: LocalizedString =
-    TimerHeaderState.currentStateValue(
-      currentMode,
-      temperature?.setpointHeat,
-      temperature?.setpointCool,
-      thermometerValueFormatter
+  val deviceState: DeviceStateData
+    get() = DeviceStateData(
+      label = TimerHeaderHelper.endDateText(timerEndDate),
+      icon = TimerHeaderHelper.currentStateIcon(currentMode)?.let { ImageId(it) },
+      value = TimerHeaderHelper.currentStateValue(
+        currentMode,
+        temperature?.setpointHeat,
+        temperature?.setpointCool,
+        thermometerValueFormatter
+      ),
+      iconTint = TimerHeaderHelper.currentStateIconColor(currentMode),
+      iconSize = 16.dp
     )
 
   val startEnabled: Boolean =

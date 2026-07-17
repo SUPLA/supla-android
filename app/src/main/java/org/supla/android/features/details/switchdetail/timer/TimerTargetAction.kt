@@ -17,32 +17,26 @@ package org.supla.android.features.details.switchdetail.timer
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.widget.Toast
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.supla.android.R
-import org.supla.android.features.details.detailbase.base.ItemBundle
-import org.supla.android.main.ViewModelHost
+import org.supla.android.ui.views.SegmentedComponentItem
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 
-@Composable
-fun SwitchTimerScreen(
-  item: ItemBundle,
-  viewModel: TimersDetailViewModel = hiltViewModel()
-) {
-  val context = LocalContext.current
+enum class TimerTargetAction(val id: Int, labelRes: Int) : SegmentedComponentItem {
+  TURN_ON(0, R.string.details_timer_turn_on_for),
+  TURN_OFF(1, R.string.details_timer_turn_off_for);
 
-  ViewModelHost(
-    viewModel = viewModel,
-    eventHandler = {
-      when (it) {
-        TimersDetailViewEvent.ShowInvalidTimeToast ->
-          Toast.makeText(context, R.string.details_timer_wrong_time, Toast.LENGTH_LONG).show()
+  override val label: LocalizedString = localizedString(labelRes)
+
+  companion object {
+    fun from(id: Int): TimerTargetAction? {
+      for (action in entries) {
+        if (action.id == id) {
+          return action
+        }
       }
-    },
-    onCreate = { viewModel.onViewCreated(item.remoteId) },
-    onResume = { viewModel.loadData() }
-  ) { state ->
-    viewModel.TimerDetailView(state)
+
+      return null
+    }
   }
 }

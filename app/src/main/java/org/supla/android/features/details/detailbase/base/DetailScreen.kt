@@ -182,11 +182,11 @@ private fun LandscapeScreen(
           .fillMaxHeight()
           .border(1.dp, MaterialTheme.colorScheme.outline),
         windowInsets =
-          if (LocalView.current.display?.rotation == Surface.ROTATION_90) {
-            WindowInsets.navigationBars
-          } else {
-            WindowInsets.displayCutout
-          }
+        if (LocalView.current.display?.rotation == Surface.ROTATION_90) {
+          WindowInsets.navigationBars
+        } else {
+          WindowInsets.displayCutout
+        }
       ) {
         Column(
           modifier = Modifier.fillMaxHeight(),

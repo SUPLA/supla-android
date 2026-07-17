@@ -65,9 +65,9 @@ import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.features.details.thermostatdetail.general.ThermostatGeneralViewState
 import org.supla.android.features.details.thermostatdetail.general.data.ThermostatProgramInfo
 import org.supla.android.features.details.thermostatdetail.ui.ThermometersValues
-import org.supla.android.features.details.thermostatdetail.ui.TimerHeader
 import org.supla.android.images.ImageId
 import org.supla.android.ui.lists.data.warning
+import org.supla.android.ui.views.DeviceState
 import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.LoadingScrim
 import org.supla.android.ui.views.buttons.supla.SuplaButton
@@ -152,8 +152,8 @@ private fun ThermostatView(viewState: ThermostatGeneralViewState, viewProxy: The
       Column {
         if (viewState.isOff.not() && viewState.isAutoFunction && !viewState.programmedModeActive) {
           if (viewState.viewModelState?.timerEndDate != null) {
-            TimerHeader(
-              state = viewState,
+            DeviceState(
+              data = viewState.deviceState,
               modifier = Modifier
                 .fillMaxWidth()
                 .height(80.dp)
@@ -164,8 +164,8 @@ private fun ThermostatView(viewState: ThermostatGeneralViewState, viewProxy: The
         } else if (viewState.sensorIssue != null) {
           SensorIssueView(sensorIssue = viewState.sensorIssue)
         } else if (viewState.isOffline.not() && viewState.viewModelState?.timerEndDate != null) {
-          TimerHeader(
-            state = viewState,
+          DeviceState(
+            data = viewState.deviceState,
             modifier = Modifier
               .fillMaxWidth()
               .height(80.dp)
