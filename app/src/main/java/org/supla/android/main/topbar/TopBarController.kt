@@ -42,7 +42,7 @@ class TopBarController(initialState: TopBarState = TopBarState()) {
     get() = state.search?.data?.visible ?: false
 
   val searchFilterSet: Boolean
-    get() = state.search?.data?.query?.isNotEmpty() ?: false
+    get() = state.search?.data?.query?.let { it.length > 1 } ?: false
 
   suspend fun emit(event: TopBarEvent) {
     _events.emit(event)

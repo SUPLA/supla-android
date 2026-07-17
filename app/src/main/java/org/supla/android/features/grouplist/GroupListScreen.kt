@@ -72,7 +72,7 @@ fun GroupListScreen(
     )
 
     viewModel.Content(
-      items = viewModel.list,
+      items = viewModel.listLoaded.forTrue { viewModel.list },
       listState = listState,
       emptyContent = { EmptyContent(viewModel) }
     )

@@ -46,7 +46,7 @@ class CreateProfileGroupsListUseCase @Inject constructor(
         }
 
         location.let { locationEntity ->
-          if (!locationEntity.isCollapsed(CollapsedFlag.GROUP) || filterString.isNotEmpty()) {
+          if (!locationEntity.isCollapsed(CollapsedFlag.GROUP) || filterString.length > 1) {
             groups.add(groupToListItemMapper(it))
           }
         }

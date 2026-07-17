@@ -101,7 +101,7 @@ class MainComposeNavigator @Inject constructor() {
         it.putExtra(NavigationActivity.INTENT_SENDER, NavigationActivity.INTENT_SENDER_MAIN)
       }
       startActivity(intent)
-      (this as? Activity)?.overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+      (this as? Activity)?.overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out)
     }
   }
 

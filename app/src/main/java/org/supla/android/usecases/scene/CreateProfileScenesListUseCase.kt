@@ -57,7 +57,7 @@ class CreateProfileScenesListUseCase @Inject constructor(
         }
 
         location.let { locationEntity ->
-          if (!locationEntity.isCollapsed(CollapsedFlag.SCENE) || filterString.isNotEmpty()) {
+          if (!locationEntity.isCollapsed(CollapsedFlag.SCENE) || filterString.length > 1) {
             result.add(it.sceneItem(getSceneIconUseCase))
           }
         }

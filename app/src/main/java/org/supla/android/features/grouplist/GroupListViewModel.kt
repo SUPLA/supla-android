@@ -94,7 +94,7 @@ class GroupListViewModel @Inject constructor(
       .flatMapMaybe { findGroupByRemoteIdUseCase(it) }
       .map { groupToListItemMapper(it) }
       .subscribeBy(
-        onNext = { updateItem(it) },
+        onNext = { updateDefaultItem(it) },
         onError = defaultErrorHandler("init()")
       )
       .disposeBySelf()
