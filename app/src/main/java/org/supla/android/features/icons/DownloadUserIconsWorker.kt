@@ -33,7 +33,6 @@ class DownloadUserIconsWorker @AssistedInject constructor(
   private val suplaCloudServiceProvider: SuplaCloudService.Provider,
   private val userIconRepository: RoomUserIconRepository,
   private val profileRepository: ProfileRepository,
-  private val widgetManager: WidgetManager,
   @Assisted appContext: Context,
   @Assisted workerParameters: WorkerParameters
 ) : CoroutineWorker(appContext, workerParameters) {

@@ -28,6 +28,7 @@ import org.supla.android.data.source.ProfileRepository
 import org.supla.android.db.DbHelper
 import org.supla.android.db.room.app.AppDatabase
 import org.supla.android.db.room.measurements.MeasurementsDatabase
+import org.supla.android.usecases.icon.LoadUserIconsIntoCacheUseCase
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -36,14 +37,15 @@ private const val INITIALIZATION_MIN_TIME_MS = 500
 
 @Singleton
 class InitializationUseCase @Inject constructor(
-  private val stateHolder: SuplaClientStateHolder,
-  private val appDatabase: AppDatabase,
+  private val loadUserIconsIntoCacheUseCase: LoadUserIconsIntoCacheUseCase,
   private val measurementsDatabase: MeasurementsDatabase,
-  private val profileRepository: ProfileRepository,
   private val encryptedPreferences: EncryptedPreferences,
-  private val dateProvider: DateProvider,
+  private val profileRepository: ProfileRepository,
+  private val buildConfigProxy: BuildConfigProxy,
   private val threadHandler: ThreadHandler,
-  private val buildConfigProxy: BuildConfigProxy
+  private val dateProvider: DateProvider,
+  private val stateHolder: SuplaClientStateHolder,
+  private val appDatabase: AppDatabase
 ) {
   operator fun invoke(context: Context) {
     val initializationStartTime = dateProvider.currentTimestamp()
@@ -76,6 +78,10 @@ class InitializationUseCase @Inject constructor(
       } catch (_: Exception) {
         // Nothing to do
       }
+    }
+
+    if (profileFound) {
+      loadUserIconsIntoCacheUseCase.invoke().blockingAwait()
     }
 
     // Go to next state

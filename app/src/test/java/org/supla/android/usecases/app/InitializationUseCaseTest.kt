@@ -26,6 +26,7 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import io.mockk.verify
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import org.assertj.core.api.Assertions
 import org.junit.Before
@@ -40,8 +41,12 @@ import org.supla.android.data.source.ProfileRepository
 import org.supla.android.db.DbHelper
 import org.supla.android.db.room.app.AppDatabase
 import org.supla.android.db.room.measurements.MeasurementsDatabase
+import org.supla.android.usecases.icon.LoadUserIconsIntoCacheUseCase
 
 class InitializationUseCaseTest {
+
+  @MockK
+  private lateinit var loadUserIconsIntoCacheUseCase: LoadUserIconsIntoCacheUseCase
 
   @MockK
   private lateinit var stateHolder: SuplaClientStateHolder
@@ -86,6 +91,7 @@ class InitializationUseCaseTest {
     every { encryptedPreferences.lockScreenSettings } returns mockk { every { pinForAppRequired } returns true }
     every { threadHandler.sleep(any()) } answers {}
     every { stateHolder.handleEvent(SuplaClientEvent.Lock) } answers {}
+    every { loadUserIconsIntoCacheUseCase.invoke() } returns Completable.complete()
 
     // when
     useCase.invoke(context)
@@ -112,6 +118,7 @@ class InitializationUseCaseTest {
     every { threadHandler.sleep(any()) } answers {}
     every { stateHolder.handleEvent(SuplaClientEvent.Initialized) } answers {}
     every { buildConfigProxy.debug } returns false
+    every { loadUserIconsIntoCacheUseCase.invoke() } returns Completable.complete()
 
     // when
     useCase.invoke(context)
