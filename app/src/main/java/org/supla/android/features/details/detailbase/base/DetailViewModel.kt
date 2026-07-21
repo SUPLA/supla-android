@@ -23,6 +23,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx3.awaitFirst
 import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
 import org.supla.android.core.shared.shareable
+import org.supla.android.core.storage.RuntimeStateHolder
 import org.supla.android.core.ui.EventBasedViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.model.general.ChannelDataBase
@@ -41,6 +42,7 @@ import javax.inject.Inject
 class DetailViewModel @Inject constructor(
   suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper,
   private val channelGroupRepository: ChannelGroupRepository,
+  private val runtimeStateHolder: RuntimeStateHolder,
   private val getCaptionUseCase: GetCaptionUseCase,
   private val channelRepository: ChannelRepository,
   private val schedulers: SuplaSchedulers
@@ -58,6 +60,21 @@ class DetailViewModel @Inject constructor(
   fun setup(item: ItemBundle) {
     this.item = item
     loadData()
+  }
+
+  fun firstPage(channelId: Int, pages: List<DetailPage>): DetailPage {
+    val pageIdx = runtimeStateHolder.getDetailOpenedPage(channelId)
+
+    return if (pageIdx >= 0 && pageIdx < pages.size) {
+      pages[pageIdx]
+    } else {
+      pages.first()
+    }
+  }
+
+  fun onPageChanged(newPage: DetailPage, pages: List<DetailPage>): DetailPage {
+    runtimeStateHolder.setDetailOpenedPage(item.remoteId, pages.indexOf(newPage))
+    return newPage
   }
 
   override fun handleSuplaMessage(message: SuplaClientMessage) {
