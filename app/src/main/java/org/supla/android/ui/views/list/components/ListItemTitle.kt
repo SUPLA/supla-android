@@ -19,15 +19,12 @@ package org.supla.android.ui.views.list.components
 
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.style.TextOverflow
 import org.supla.android.core.ui.theme.listItemCaption
-import org.supla.android.main.topbar.LocalTopBarController
-import org.supla.android.main.topbar.searchable
-import org.supla.android.ui.views.texts.buildHighlightedText
+import org.supla.android.ui.views.texts.HighlightedTextBySearch
 
 @Composable
 fun ListItemTitle(
@@ -38,32 +35,16 @@ fun ListItemTitle(
   scale: Float = 1f,
   maxLines: Int = 1
 ) {
-  val searchedText = LocalTopBarController.current.state.search?.data?.query
   val textSize = MaterialTheme.typography.listItemCaption().fontSize.times(java.lang.Float.max(scale, 1f))
-
-  if (searchedText?.searchable == true) {
-    Text(
-      text = buildHighlightedText(text, searchedText),
-      style = MaterialTheme.typography.listItemCaption(),
-      modifier = modifier
-        .pointerInput(onLongClick, onItemClick) {
-          detectTapGestures(onLongPress = { onLongClick() }, onTap = { onItemClick() })
-        },
-      maxLines = maxLines,
-      overflow = TextOverflow.Ellipsis,
-      fontSize = textSize
-    )
-  } else {
-    Text(
-      text = text,
-      style = MaterialTheme.typography.listItemCaption(),
-      modifier = modifier
-        .pointerInput(onLongClick, onItemClick) {
-          detectTapGestures(onLongPress = { onLongClick() }, onTap = { onItemClick() })
-        },
-      maxLines = maxLines,
-      overflow = TextOverflow.Ellipsis,
-      fontSize = textSize
-    )
-  }
+  HighlightedTextBySearch(
+    text = text,
+    style = MaterialTheme.typography.listItemCaption(),
+    modifier = modifier
+      .pointerInput(onLongClick, onItemClick) {
+        detectTapGestures(onLongPress = { onLongClick() }, onTap = { onItemClick() })
+      },
+    maxLines = maxLines,
+    overflow = TextOverflow.Ellipsis,
+    fontSize = textSize
+  )
 }

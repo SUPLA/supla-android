@@ -26,7 +26,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,10 +37,8 @@ import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.main.topbar.LocalTopBarController
-import org.supla.android.main.topbar.searchable
 import org.supla.android.tools.SuplaPreview
-import org.supla.android.ui.views.texts.HeadlineSmall
-import org.supla.android.ui.views.texts.buildHighlightedText
+import org.supla.android.ui.views.texts.HighlightedTextBySearch
 
 @Composable
 fun LocationListItemView(
@@ -66,25 +63,14 @@ fun LocationListItemView(
         .padding(horizontal = Distance.default),
       verticalAlignment = Alignment.CenterVertically
     ) {
-      val searchedText = LocalTopBarController.current.state.search?.data?.query
-      if (searchedText?.searchable == true) {
-        Text(
-          text = buildHighlightedText(caption, searchedText),
-          color = MaterialTheme.colorScheme.onBackground,
-          style = MaterialTheme.typography.headlineSmall,
-          maxLines = 1,
-          modifier = Modifier.weight(1f),
-          textAlign = TextAlign.Start
-        )
-      } else {
-        HeadlineSmall(
-          text = caption,
-          color = MaterialTheme.colorScheme.onBackground,
-          maxLines = 1,
-          modifier = Modifier.weight(1f),
-          textAlign = TextAlign.Start
-        )
-      }
+      HighlightedTextBySearch(
+        text = caption,
+        color = MaterialTheme.colorScheme.onBackground,
+        style = MaterialTheme.typography.headlineSmall,
+        maxLines = 1,
+        modifier = Modifier.weight(1f),
+        textAlign = TextAlign.Start
+      )
 
       if (!inSearch) {
         Icon(
