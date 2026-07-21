@@ -28,6 +28,7 @@ import org.supla.android.data.source.local.entity.NotificationEntity
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.main.topbar.TopBarSearchData
 import org.supla.android.main.topbar.TopBarSearchEvent
+import org.supla.android.main.topbar.searchable
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.notifications.DeleteNotificationUseCase
 import org.supla.android.usecases.notifications.DeleteNotificationsUseCase
@@ -72,7 +73,7 @@ class NotificationsLogViewModel @Inject constructor(
   }
 
   fun loadAll() {
-    if (searchData.query.length > 1) {
+    if (searchData.query.searchable) {
       loadAllNotificationsUseCase(searchData.query)
     } else {
       loadAllNotificationsUseCase()
