@@ -158,14 +158,6 @@ public class SuplaConst {
   public static final int SUPLA_CHANNELTYPE_IMPULSE_COUNTER = 5010;
   public static final int SUPLA_CHANNELTYPE_BRIDGE = 8000;
 
-  public static final long SUPLA_CHANNEL_FLAG_ZWAVE_BRIDGE = 0x0001;
-  public static final long SUPLA_CHANNEL_FLAG_IR_BRIDGE = 0x0002;
-  public static final long SUPLA_CHANNEL_FLAG_RF_BRIDGE = 0x0004;
-
-  public static final long SUPLA_CHANNEL_FLAG_CHART_TYPE_BAR = 0x0010;
-  public static final long SUPLA_CHANNEL_FLAG_CHART_DS_TYPE_DIFFERENTAL = 0x0020;
-  public static final long SUPLA_CHANNEL_FLAG_CHART_INTERPOLATE_MEASUREMENTS = 0x0040;
-
   public static final int SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK = 10;
   public static final int SUPLA_EVENT_CONTROLLINGTHEGATE = 20;
   public static final int SUPLA_EVENT_CONTROLLINGTHEGARAGEDOOR = 30;

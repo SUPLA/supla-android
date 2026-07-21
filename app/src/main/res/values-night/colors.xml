@@ -82,4 +82,8 @@
 
     <!-- Other -->
     <color name="vl_infotext">#808080</color>
+
+    <!-- event notifications -->
+    <color name="notification_bg">#665000</color>
+    <color name="notification_overlay">#4A3B06</color>
 </resources>

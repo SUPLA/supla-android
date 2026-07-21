@@ -49,6 +49,7 @@ import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.data.source.local.entity.UserIconEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.remote.channel.FLAG_ZWAVE_BRIDGE
 import org.supla.android.data.source.remote.channel.ONLINE_BUT_NOT_AVAILABLE
 import org.supla.android.lib.SuplaConst
 import org.supla.core.shared.data.model.general.SuplaFunction
@@ -93,7 +94,7 @@ interface ChannelDao {
       WHERE channel.${COLUMN_PROFILE_ID} = ${ProfileEntity.SUBQUERY_ACTIVE}
         AND channel.${COLUMN_TYPE} = ${SuplaConst.SUPLA_CHANNELTYPE_BRIDGE}
         AND channel.${COLUMN_VISIBLE} > 0
-        AND (channel.${COLUMN_FLAGS} & ${SuplaConst.SUPLA_CHANNEL_FLAG_ZWAVE_BRIDGE}) > 0
+        AND (channel.${COLUMN_FLAGS} & ${FLAG_ZWAVE_BRIDGE}) > 0
     )
   """
   )
@@ -137,7 +138,7 @@ interface ChannelDao {
     WHERE channel.${COLUMN_PROFILE_ID} = ${ProfileEntity.SUBQUERY_ACTIVE}
       AND channel.${COLUMN_TYPE} = ${SuplaConst.SUPLA_CHANNELTYPE_BRIDGE}
       AND channel.${COLUMN_VISIBLE} > 0
-      AND (channel.${COLUMN_FLAGS} & ${SuplaConst.SUPLA_CHANNEL_FLAG_ZWAVE_BRIDGE}) > 0
+      AND (channel.${COLUMN_FLAGS} & ${FLAG_ZWAVE_BRIDGE}) > 0
     ORDER BY
       channel.${COLUMN_DEVICE_ID},
       channel.${COLUMN_ID}

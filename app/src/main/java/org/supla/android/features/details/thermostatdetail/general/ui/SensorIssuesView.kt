@@ -62,9 +62,8 @@ fun SensorIssueView(sensorIssue: SensorIssue) {
         Image(
           imageId = imageId,
           contentDescription = null,
-          modifier = Modifier
-            .size(dimensionResource(id = R.dimen.icon_big_size))
-            .align(Alignment.TopCenter)
+          modifier = Modifier.align(Alignment.TopCenter),
+          size = dimensionResource(id = R.dimen.icon_big_size)
         )
         if (sensorIssue.showSensorIcon) {
           Image(

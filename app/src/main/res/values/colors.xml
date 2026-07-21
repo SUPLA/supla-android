@@ -92,10 +92,11 @@
     <color name="impulse_counter_ocr_result_processing">#777</color>
     <color name="impulse_counter_ocr_result_warning">#F0AD4E</color>
 
-    <!-- new color definitions end here -->
+    <!-- event notifications -->
+    <color name="notification_bg">#FEEB87</color>
+    <color name="notification_overlay">#FFF7D6</color>
 
-    <color name="menuseparator">#fafbfc</color>
-    <color name="notification_bg">#fee700</color>
+    <!-- new color definitions end here -->
 
     <color name="phase1">@color/chart_pie_15</color>
     <color name="phase2">@color/chart_pie_16</color>

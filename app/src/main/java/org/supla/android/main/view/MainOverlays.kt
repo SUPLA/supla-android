@@ -24,12 +24,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import org.supla.android.ui.extensions.ifTrue
 import org.supla.android.ui.views.LoadingScrim
 
 @Composable
-fun LoadingOverlay(
+fun MainOverlays(
+  notificationState: EventNotificationState? = null,
+  onEventRemoved: () -> Unit = {},
   content: @Composable () -> Unit
 ) {
   Box(
@@ -37,6 +40,13 @@ fun LoadingOverlay(
   ) {
     content()
     LoadingOverlayScrim()
+    notificationState?.let {
+      EventNotificationOverlay(
+        state = it,
+        modifier = Modifier.align(Alignment.BottomCenter),
+        onEventRemoved = onEventRemoved
+      )
+    }
   }
 }
 

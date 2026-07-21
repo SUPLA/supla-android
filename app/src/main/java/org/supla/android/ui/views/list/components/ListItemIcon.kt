@@ -17,12 +17,11 @@ package org.supla.android.ui.views.list.components
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.unit.DpSize
 import org.supla.android.R
 import org.supla.android.images.ImageId
 import org.supla.android.ui.views.Image
@@ -31,10 +30,12 @@ import org.supla.android.ui.views.Image
 fun ListItemIcon(imageId: ImageId, scale: Float, modifier: Modifier = Modifier) {
   Image(
     imageId = imageId,
+    size = DpSize(
+      width = dimensionResource(id = R.dimen.channel_img_width).times(scale),
+      height = dimensionResource(id = R.dimen.channel_img_height).times(scale)
+    ),
     contentDescription = null,
     alignment = Alignment.Center,
     modifier = modifier
-      .width(dimensionResource(id = R.dimen.channel_img_width).times(scale))
-      .height(dimensionResource(id = R.dimen.channel_img_height).times(scale)),
   )
 }

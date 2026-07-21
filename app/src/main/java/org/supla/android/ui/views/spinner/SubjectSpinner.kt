@@ -125,7 +125,7 @@ private fun SpinnerListLabelItem(item: SubjectSpinnerItem) =
 private fun SpinnerListSubjectItem(item: SubjectSpinnerItem) =
   Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Distance.tiny)) {
     item.icon?.let {
-      Image(it, modifier = Modifier.size(dimensionResource(R.dimen.icon_default_size)))
+      Image(it)
     }
     Text(
       text = item.label(LocalContext.current),

@@ -82,8 +82,8 @@ fun DeviceState(
       Image(
         imageId = icon,
         contentDescription = null,
-        modifier = Modifier.size(iconSize),
-        tint = iconTint?.let { colorResource(it) }
+        tint = iconTint?.let { colorResource(it) },
+        size = iconSize
       )
     }
     Text(

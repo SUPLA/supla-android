@@ -108,9 +108,7 @@ fun SuplaButton(
       imageId = icon ?: ImageId(R.drawable.ic_unknown_channel),
       contentDescription = null,
       alignment = Alignment.Center,
-      modifier = Modifier
-        .size(dimensionResource(id = R.dimen.icon_default_size))
-        .align(Alignment.Center)
+      modifier = Modifier.align(Alignment.Center)
     )
   }
 }

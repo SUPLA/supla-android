@@ -22,6 +22,7 @@ import android.nfc.Tag
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
@@ -61,6 +62,8 @@ class MainActivity : FragmentActivity(), NfcHost, ToolbarVisibilityController {
 
   @Inject
   lateinit var applicationPreferences: ApplicationPreferences
+
+  private val viewModel: MainViewModel by viewModels()
 
   private val disposables = CompositeDisposable()
   private val nfcAdapter: NfcAdapter? by lazy { NfcAdapter.getDefaultAdapter(this) }
@@ -117,7 +120,12 @@ class MainActivity : FragmentActivity(), NfcHost, ToolbarVisibilityController {
       LocalNavigator provides navigator
     ) {
       SuplaTheme {
-        MainComposeNavHost(backStack, navigator)
+        MainComposeNavHost(
+          backStack = backStack,
+          navigator = navigator,
+          notificationState = viewModel.eventNotificationState,
+          onEventRemoved = viewModel::hideNotification
+        )
       }
     }
   }

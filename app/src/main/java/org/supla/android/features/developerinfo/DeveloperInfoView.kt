@@ -59,7 +59,8 @@ data class DeveloperInfoViewState(
   val debugLoggingFilter: String = "",
   val debugLogSize: String? = null,
   val suplaTableDetails: List<TableDetail> = emptyList(),
-  val measurementTableDetails: List<TableDetail> = emptyList()
+  val measurementTableDetails: List<TableDetail> = emptyList(),
+  val zwaveAvailable: Boolean = false
 )
 
 interface DeveloperInfoScope {
@@ -71,6 +72,8 @@ interface DeveloperInfoScope {
   fun deleteLogFile()
   fun refreshLogFileSize()
   fun sendTestNotification()
+  fun sendChannelEvent()
+  fun sendZwaveErrorEvent()
   fun exportSuplaDatabase()
   fun exportMeasurementsDatabase()
   fun showLoading()
@@ -166,6 +169,22 @@ fun DeveloperInfoScope.View(
         Toast.makeText(context, "Loading shown for 5 seconds", Toast.LENGTH_SHORT).show()
       }
     )
+    Button(
+      text = "Show channel event",
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = Distance.default),
+      onClick = { sendChannelEvent() }
+    )
+    if (viewState.zwaveAvailable) {
+      Button(
+        text = "Show Z-Wave error event",
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(horizontal = Distance.default),
+        onClick = { sendZwaveErrorEvent() }
+      )
+    }
 
     HeaderLarge(
       text = stringResource(R.string.developer_info_database_section),
@@ -234,6 +253,8 @@ val previewScope = object : DeveloperInfoScope {
   override fun deleteLogFile() {}
   override fun refreshLogFileSize() {}
   override fun sendTestNotification() {}
+  override fun sendChannelEvent() {}
+  override fun sendZwaveErrorEvent() {}
   override fun exportSuplaDatabase() {}
   override fun exportMeasurementsDatabase() {}
   override fun showLoading() {}

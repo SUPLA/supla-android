@@ -183,8 +183,8 @@ private fun SlaveRow(
             SetpointIndicator(indicatorIcon = slave.indicatorIcon.resource, scale = scale)
             slave.subValue?.let { SetpointText(subValue = it, scale = scale) }
           }
-          slave.pumpSwitchIcon?.let { Image(imageId = it, modifier = Modifier.size(dimensionResource(id = R.dimen.icon_default_size))) }
-          slave.sourceSwitchIcon?.let { Image(imageId = it, modifier = Modifier.size(dimensionResource(id = R.dimen.icon_default_size))) }
+          slave.pumpSwitchIcon?.let { Image(imageId = it, size = dimensionResource(id = R.dimen.icon_default_size)) }
+          slave.sourceSwitchIcon?.let { Image(imageId = it, size = dimensionResource(id = R.dimen.icon_default_size)) }
         }
         ListItemTitle(
           text = slave.caption(LocalContext.current),
