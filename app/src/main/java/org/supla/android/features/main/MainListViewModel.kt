@@ -79,14 +79,6 @@ class MainListViewModel @Inject constructor(
   val profileSelectionState: StateFlow<ProfileSelectionDialogState?> = profileSelectionStateFlow
 
   override fun onViewCreated() {
-    viewModelScope.launch {
-      val zWaveAvailable = withContext(Dispatchers.IO) {
-        runCatching { channelRepository.isZWaveBridgeChannelAvailable().await() }.getOrNull() ?: false
-      }
-      zWaveAvailableFlow.tryEmit(zWaveAvailable)
-      developerOptionsVisibleFlow.tryEmit(encryptedPreferences.devModeActive)
-    }
-
     if (VERSION.SDK_INT >= VERSION_CODES.TIRAMISU) {
       showNotificationInfoFlow.tryEmit(applicationPreferences.isNotificationsPopupDisplayed.not())
     }
@@ -94,6 +86,11 @@ class MainListViewModel @Inject constructor(
 
   override fun onStart() {
     viewModelScope.launch {
+      val zWaveAvailable = withContext(Dispatchers.IO) {
+        runCatching { channelRepository.isZWaveBridgeChannelAvailable().await() }.getOrNull() ?: false
+      }
+      zWaveAvailableFlow.tryEmit(zWaveAvailable)
+
       developerOptionsVisibleFlow.tryEmit(encryptedPreferences.devModeActive)
     }
   }
@@ -109,6 +106,7 @@ class MainListViewModel @Inject constructor(
 
   override fun onAuthorized(reason: AuthorizationReason) {
     if (reason == AuthorizationReason.ZWaveWizard) {
+      closeAuthorizationDialog()
       sendEvent(MainListViewEvent.OpenZWaveWizard)
     }
   }

@@ -250,17 +250,15 @@ private fun ThermostatIndicators(viewState: ThermostatGeneralViewState) {
   viewState.pumpSwitchIcon?.let {
     Image(
       imageId = it,
-      modifier = Modifier
-        .size(32.dp)
-        .layoutId(Constraints.PUMP_ICON)
+      modifier = Modifier.layoutId(Constraints.PUMP_ICON),
+      size = 32.dp
     )
   }
   viewState.heatOrColdSourceSwitchIcon?.let {
     Image(
       imageId = it,
-      modifier = Modifier
-        .size(32.dp)
-        .layoutId(Constraints.SOURCE_ICON)
+      modifier = Modifier.layoutId(Constraints.SOURCE_ICON),
+      size = 32.dp
     )
   }
 }

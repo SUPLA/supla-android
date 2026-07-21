@@ -42,6 +42,7 @@ import org.supla.android.data.model.chart.ChannelChartSets
 import org.supla.android.data.model.chart.ChartDataAggregation
 import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.HistoryDataSet
+import org.supla.android.extensions.asSize
 import org.supla.android.images.ImageId
 import org.supla.android.tools.SuplaComponentPreview
 import org.supla.android.ui.views.Image
@@ -278,7 +279,7 @@ private fun DataSetIcon(imageId: ImageId, @DimenRes iconSize: Int?) =
     imageId = imageId,
     contentDescription = null,
     alignment = Alignment.Center,
-    modifier = Modifier.size(dimensionResource(id = iconSize ?: R.dimen.button_small_height))
+    size = dimensionResource(id = iconSize ?: R.dimen.button_small_height).asSize()
   )
 
 @Composable

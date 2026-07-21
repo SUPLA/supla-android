@@ -150,6 +150,43 @@ fun LabelLarge(
   )
 
 @Composable
+fun LabelMedium(
+  @StringRes stringRes: Int,
+  modifier: Modifier = Modifier,
+  color: Color = MaterialTheme.colorScheme.onSurface,
+  textAlign: TextAlign? = null,
+  overflow: TextOverflow = TextOverflow.Ellipsis,
+  maxLines: Int = Int.MAX_VALUE
+) =
+  LabelMedium(
+    text = stringResource(id = stringRes),
+    modifier = modifier,
+    color = color,
+    textAlign = textAlign,
+    overflow = overflow,
+    maxLines = maxLines
+  )
+
+@Composable
+fun LabelMedium(
+  text: String,
+  modifier: Modifier = Modifier,
+  color: Color = MaterialTheme.colorScheme.onSurface,
+  textAlign: TextAlign? = null,
+  overflow: TextOverflow = TextOverflow.Ellipsis,
+  maxLines: Int = Int.MAX_VALUE
+) =
+  Text(
+    text = text,
+    style = MaterialTheme.typography.labelMedium,
+    color = color,
+    textAlign = textAlign,
+    modifier = modifier,
+    overflow = overflow,
+    maxLines = maxLines
+  )
+
+@Composable
 fun TitleLarge(
   @StringRes stringRes: Int,
   modifier: Modifier = Modifier,
@@ -297,8 +334,22 @@ fun BodySmall(
   color: Color = MaterialTheme.colorScheme.onSurface,
   textAlign: TextAlign = TextAlign.Center
 ) =
+  BodySmall(
+    text = stringResource(stringRes),
+    modifier = modifier,
+    color = color,
+    textAlign = textAlign
+  )
+
+@Composable
+fun BodySmall(
+  text: String,
+  modifier: Modifier = Modifier,
+  color: Color = MaterialTheme.colorScheme.onSurface,
+  textAlign: TextAlign = TextAlign.Center
+) =
   Text(
-    text = stringResource(id = stringRes),
+    text = text,
     style = MaterialTheme.typography.bodySmall,
     color = color,
     textAlign = textAlign,

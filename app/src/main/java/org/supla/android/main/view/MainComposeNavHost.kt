@@ -68,10 +68,15 @@ import org.supla.android.main.topbar.LocalTopBarScreenKey
 fun MainComposeNavHost(
   backStack: NavBackStack<NavKey>,
   navigator: MainComposeNavigator,
+  notificationState: EventNotificationState? = null,
+  onEventRemoved: () -> Unit = {},
 ) {
   val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
-  LoadingOverlay {
+  MainOverlays(
+    notificationState = notificationState,
+    onEventRemoved = onEventRemoved
+  ) {
     NavDisplay(
       backStack = backStack,
       modifier = Modifier.fillMaxSize(),

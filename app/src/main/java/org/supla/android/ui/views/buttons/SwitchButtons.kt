@@ -196,8 +196,7 @@ fun SwitchButton(
         Image(
           imageId = it,
           contentDescription = null,
-          alignment = Alignment.Center,
-          modifier = Modifier.size(dimensionResource(id = R.dimen.icon_default_size)),
+          alignment = Alignment.Center
         )
       }
       text?.let {

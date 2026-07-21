@@ -17,6 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,7 +27,11 @@ import androidx.compose.ui.graphics.DefaultAlpha
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpSize
+import org.supla.android.R
 import org.supla.android.images.ImageCache
 import org.supla.android.images.ImageId
 
@@ -53,13 +58,34 @@ fun Image(
   alignment: Alignment = Alignment.Center,
   contentScale: ContentScale = ContentScale.Fit,
   contentDescription: String? = null,
+  tint: Color? = null,
+  size: Dp = dimensionResource(R.dimen.icon_default_size)
+) =
+  Image(
+    imageId = imageId,
+    modifier = modifier,
+    alignment = alignment,
+    contentScale = contentScale,
+    contentDescription = contentDescription,
+    tint = tint,
+    size = DpSize(size, size)
+  )
+
+@Composable
+fun Image(
+  imageId: ImageId,
+  size: DpSize,
+  modifier: Modifier = Modifier,
+  alignment: Alignment = Alignment.Center,
+  contentScale: ContentScale = ContentScale.Fit,
+  contentDescription: String? = null,
   tint: Color? = null
 ) {
   if (imageId.userImage) {
     androidx.compose.foundation.Image(
       bitmap = ImageCache.getUserImageBitmap(LocalContext.current, imageId).asImageBitmap(),
       contentDescription = contentDescription,
-      modifier = modifier,
+      modifier = modifier.size(size),
       alignment = alignment,
       contentScale = contentScale,
       colorFilter = tint?.let { ColorFilter.tint(it) }
@@ -68,7 +94,7 @@ fun Image(
     androidx.compose.foundation.Image(
       painter = painterResource(id = imageId.id),
       contentDescription = contentDescription,
-      modifier = modifier,
+      modifier = modifier.size(size),
       alignment = alignment,
       contentScale = contentScale,
       colorFilter = tint?.let { ColorFilter.tint(it) }

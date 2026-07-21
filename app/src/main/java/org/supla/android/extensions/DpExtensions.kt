@@ -20,7 +20,10 @@ package org.supla.android.extensions
 import android.content.res.Resources
 import android.util.TypedValue
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpSize
 
 fun Dp.toPx(): Float {
   return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, Resources.getSystem().displayMetrics)
 }
+
+fun Dp.asSize(): DpSize = DpSize(this, this)
