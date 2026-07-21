@@ -274,7 +274,6 @@ private fun LazyListState.canScroll(): Boolean =
 @Composable
 private fun BottomNavigationBar() =
   ResizeableNavigationBar(
-    minHeight = dimensionResource(R.dimen.bottom_bar_height),
     modifier = Modifier.border(1.dp, MaterialTheme.colorScheme.outline),
   ) {
     val tabController = LocalMainListTabController.current

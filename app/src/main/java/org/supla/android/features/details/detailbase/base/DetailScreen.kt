@@ -33,6 +33,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.ResizeableNavigationBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -135,9 +136,8 @@ private fun PortraitScreen(
     topBar = { StandardTopBar(false) },
     bottomBar = {
       if (pages.size > 1) {
-        NavigationBar(
-          modifier = Modifier
-            .border(1.dp, MaterialTheme.colorScheme.outline),
+        ResizeableNavigationBar(
+          modifier = Modifier.border(1.dp, MaterialTheme.colorScheme.outline),
         ) {
           pages.forEach {
             SuplaNavigationBarItem(
