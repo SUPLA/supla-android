@@ -359,4 +359,4 @@ private val IndicatorHorizontalPadding: Dp =
       NavigationBarVerticalItemTokens.IconSize
     ) / 2
 
-private val IndicatorVerticalPadding: Dp = 8.dp
+private val IndicatorVerticalPadding: Dp = 9.dp
