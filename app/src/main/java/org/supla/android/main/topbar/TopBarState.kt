@@ -77,3 +77,6 @@ class TopBarActionBuilder {
     handlers[T::class] = handler
   }
 }
+
+val String.searchable: Boolean
+  get() = length > 1

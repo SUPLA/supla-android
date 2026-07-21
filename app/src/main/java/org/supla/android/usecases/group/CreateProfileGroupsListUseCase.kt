@@ -7,6 +7,7 @@ import org.supla.android.core.shared.invoke
 import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.shareable
+import org.supla.android.main.topbar.searchable
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.lists.locationItem
 import org.supla.android.usecases.location.CollapsedFlag
@@ -27,9 +28,11 @@ class CreateProfileGroupsListUseCase @Inject constructor(
 
       var location: LocationEntity? = null
       entities.forEach {
-        if (filterString.length > 1) {
+        if (filterString.searchable) {
           val caption = getCaptionUseCase.invoke(it.shareable)(context)
-          if (!caption.contains(filterString, ignoreCase = true)) {
+          val captionContains = caption.contains(filterString, ignoreCase = true)
+          val locationContains = it.locationEntity.caption.contains(filterString, ignoreCase = true)
+          if (!captionContains && !locationContains) {
             // Skip filtered out channels
             return@forEach
           }
@@ -46,7 +49,7 @@ class CreateProfileGroupsListUseCase @Inject constructor(
         }
 
         location.let { locationEntity ->
-          if (!locationEntity.isCollapsed(CollapsedFlag.GROUP) || filterString.length > 1) {
+          if (!locationEntity.isCollapsed(CollapsedFlag.GROUP) || filterString.searchable) {
             groups.add(groupToListItemMapper(it))
           }
         }

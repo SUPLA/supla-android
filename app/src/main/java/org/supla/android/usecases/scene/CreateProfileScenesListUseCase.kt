@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.SceneRepository
 import org.supla.android.data.source.local.entity.LocationEntity
+import org.supla.android.main.topbar.searchable
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.lists.locationItem
 import org.supla.android.ui.lists.sceneItem
@@ -39,8 +40,10 @@ class CreateProfileScenesListUseCase @Inject constructor(
 
       var location: LocationEntity? = null
       entities.forEach {
-        if (filterString.length > 1) {
-          if (!it.sceneEntity.caption.contains(filterString, ignoreCase = true)) {
+        if (filterString.searchable) {
+          val captionContains = it.sceneEntity.caption.contains(filterString, ignoreCase = true)
+          val locationContains = it.locationEntity.caption.contains(filterString, ignoreCase = true)
+          if (!captionContains && !locationContains) {
             // Skip filtered out channels
             return@forEach
           }
@@ -57,7 +60,7 @@ class CreateProfileScenesListUseCase @Inject constructor(
         }
 
         location.let { locationEntity ->
-          if (!locationEntity.isCollapsed(CollapsedFlag.SCENE) || filterString.length > 1) {
+          if (!locationEntity.isCollapsed(CollapsedFlag.SCENE) || filterString.searchable) {
             result.add(it.sceneItem(getSceneIconUseCase))
           }
         }
