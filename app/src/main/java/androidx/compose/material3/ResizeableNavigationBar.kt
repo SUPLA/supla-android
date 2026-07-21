@@ -11,13 +11,15 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.Dp
+import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 
 @Composable
 fun ResizeableNavigationBar(
-  minHeight: Dp,
   modifier: Modifier = Modifier,
+  minHeight: Dp = dimensionResource(R.dimen.bottom_bar_height),
   content: @Composable RowScope.() -> Unit,
 ) {
   Surface(
