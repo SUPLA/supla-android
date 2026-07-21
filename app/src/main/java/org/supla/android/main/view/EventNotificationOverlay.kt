@@ -20,6 +20,7 @@ package org.supla.android.main.view
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
@@ -36,7 +37,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -51,9 +51,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
@@ -91,9 +89,9 @@ fun EventNotificationOverlay(
   onEventRemoved: () -> Unit = {}
 ) {
   Surface(
-    color = colorResource(R.color.notification_bg),
+    color = MaterialTheme.colorScheme.surface,
     shape = RoundedCornerShape(dimensionResource(R.dimen.radius_default)),
-    shadowElevation = dimensionResource(R.dimen.custom_shadow_height),
+    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
     modifier = modifier
       .fillMaxWidth()
       .swipeToRemove(onRemoved = onEventRemoved)
@@ -110,7 +108,7 @@ fun EventNotificationOverlay(
           verticalAlignment = Alignment.CenterVertically,
           horizontalArrangement = Arrangement.spacedBy(Distance.tiny)
         ) {
-          IconBox { Image(imageId = state.subjectIcon) }
+          Image(imageId = state.subjectIcon)
           LabelMedium(
             text = state.subjectName(),
             modifier = Modifier.weight(1f),
@@ -143,7 +141,7 @@ private fun BoxScope.TimerProgressView(state: EventNotificationState) {
 
   Box(
     modifier = Modifier
-      .height(2.dp)
+      .height(3.dp) // One dp is covered by border
       .fillMaxWidth(progress.value)
       .align(Alignment.BottomStart)
       .background(
@@ -185,16 +183,6 @@ private fun Modifier.swipeToRemove(
       }
     )
 }
-
-@Composable
-private fun IconBox(content: @Composable BoxScope.() -> Unit) =
-  Box(
-    modifier = Modifier
-      .size(40.dp)
-      .background(Color(0xFFFFF7D6), shape = RoundedCornerShape(dimensionResource(R.dimen.radius_small))),
-    contentAlignment = Alignment.Center,
-    content = content
-  )
 
 @Composable
 @SuplaPreview
