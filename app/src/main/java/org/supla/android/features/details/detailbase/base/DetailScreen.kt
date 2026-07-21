@@ -20,7 +20,6 @@ package org.supla.android.features.details.detailbase.base
  */
 
 import android.view.Surface
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -31,7 +30,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.ResizeableNavigationBar
 import androidx.compose.material3.Scaffold
@@ -101,15 +99,7 @@ fun DetailScreen(
   viewModel: DetailViewModel = hiltViewModel()
 ) {
   val navigator = LocalNavigator.current
-
-  var page by remember(pages) { mutableStateOf(pages.first()) }
-  BackHandler {
-    if (page == pages.first()) {
-      navigator?.back()
-    } else {
-      page = pages.first()
-    }
-  }
+  var page by remember(pages) { mutableStateOf(viewModel.firstPage(item.remoteId, pages)) }
 
   viewModel.LifeCycleObserver(
     onCreate = { viewModel.setup(item) }
@@ -119,9 +109,9 @@ fun DetailScreen(
   ManageTopBar(viewModel)
 
   if (LocalConfiguration.current.isPhoneLandscape) {
-    LandscapeScreen(item, page, pages) { page = it }
+    LandscapeScreen(item, page, pages) { page = viewModel.onPageChanged(it, pages) }
   } else {
-    PortraitScreen(item, page, pages) { page = it }
+    PortraitScreen(item, page, pages) { page = viewModel.onPageChanged(it, pages) }
   }
 }
 
