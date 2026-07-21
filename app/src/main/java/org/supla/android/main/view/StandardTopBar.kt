@@ -22,6 +22,7 @@ package org.supla.android.main.view
 import android.view.Surface
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
@@ -44,11 +45,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.supla.android.R
 import org.supla.android.core.shared.invoke
+import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.main.LocalNavigator
 import org.supla.android.main.topbar.Icon
@@ -97,6 +100,7 @@ fun StandardTopBar(
 
   CenterAlignedTopAppBar(
     modifier = modifier,
+    expandedHeight = dimensionResource(R.dimen.top_bar_height),
     navigationIcon = {
       NavigatorIcon()
     },
@@ -183,7 +187,10 @@ private fun NavigatorIcon(
 @Composable
 private fun Preview() {
   SuplaTheme {
-    Column(Modifier.background(MaterialTheme.colorScheme.outline)) {
+    Column(
+      modifier = Modifier.background(MaterialTheme.colorScheme.outline),
+      verticalArrangement = Arrangement.spacedBy(Distance.tiny)
+    ) {
       MockedTopBarController(
         title = localizedString(R.string.app_name),
         action = TopBarAction(TopBarIcon.OpenSettings)

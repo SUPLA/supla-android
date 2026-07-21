@@ -31,6 +31,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.navigationBars
@@ -56,6 +57,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -271,7 +273,9 @@ private fun LazyListState.canScroll(): Boolean =
 @Composable
 private fun BottomNavigationBar() =
   NavigationBar(
-    modifier = Modifier.border(1.dp, MaterialTheme.colorScheme.outline),
+    modifier = Modifier
+      .defaultMinSize(minHeight = dimensionResource(R.dimen.bottom_bar_height))
+      .border(1.dp, MaterialTheme.colorScheme.outline),
   ) {
     val tabController = LocalMainListTabController.current
     val selectedTab = tabController.tab

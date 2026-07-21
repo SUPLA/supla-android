@@ -20,7 +20,6 @@ package org.supla.android.cfg
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -46,7 +45,6 @@ import org.supla.android.data.ValuesFormatter
 import org.supla.android.databinding.ActivityCfgBinding
 import org.supla.android.extensions.setStatusBarColor
 import org.supla.android.extensions.setupOrientationLock
-import org.supla.android.extensions.toPx
 import org.supla.android.features.createaccount.CreateAccountFragment
 import org.supla.android.navigator.CfgActivityNavigator
 import org.supla.android.ui.AppBar
@@ -136,7 +134,7 @@ class CfgActivity : BaseActivity() {
     ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.nav_area)) { view, insets ->
       val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
 
-      val appBarHeight = TopAppBarDefaults.TopAppBarExpandedHeight.toPx().roundToInt()
+      val appBarHeight = resources.getDimension(R.dimen.top_bar_height).roundToInt()
       binding.incToolbar.appBarLayout.setPadding(0, bars.top, 0, 0)
       binding.incToolbar.suplaToolbar.layoutParams.height = appBarHeight
       binding.navHostContainer.layoutParams = (binding.navHostContainer.layoutParams as CoordinatorLayout.LayoutParams)

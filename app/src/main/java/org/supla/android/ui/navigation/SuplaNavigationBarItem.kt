@@ -21,8 +21,8 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.ResizeableNavigationBarItem
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -56,7 +56,7 @@ fun RowScope.SuplaNavigationBarItem(
   clearAction: Boolean = true
 ) {
   val topBarController = LocalTopBarController.current
-  NavigationBarItem(
+  ResizeableNavigationBarItem(
     selected = selected,
     onClick = {
       clearAction.forTrue { topBarController.setAction(null) }

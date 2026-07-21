@@ -45,7 +45,6 @@ import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.PermanentDrawerSheet
 import androidx.compose.material3.PermanentNavigationDrawer
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
@@ -57,6 +56,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -140,7 +140,7 @@ private fun DrawerContent(
         .padding(bottom = Distance.tiny)
         .background(MaterialTheme.colorScheme.primaryContainer)
         .statusBarsPadding()
-        .height(TopAppBarDefaults.TopAppBarExpandedHeight)
+        .height(dimensionResource(R.dimen.top_bar_height))
     ) {
       val drawerState = LocalDrawerState.current
       val scope = rememberCoroutineScope()
