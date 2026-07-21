@@ -31,7 +31,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.navigationBars
@@ -40,8 +39,8 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.ResizeableNavigationBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -144,8 +143,9 @@ private fun PortraitPhoneView(
   viewModel: MainListViewModel
 ) {
   val topBarCanScroll = remember { mutableStateOf(false) }
+  val topBarController = LocalTopBarController.current
   val scrollBehavior = rememberSimultaneousEnterAlwaysScrollBehavior(
-    canScroll = { topBarCanScroll.value }
+    canScroll = { topBarCanScroll.value && !topBarController.searchActive }
   )
 
   MainDrawer(
@@ -170,8 +170,9 @@ private fun LandscapePhoneView(
   viewModel: MainListViewModel
 ) {
   val topBarCanScroll = remember { mutableStateOf(false) }
+  val topBarController = LocalTopBarController.current
   val scrollBehavior = rememberSimultaneousEnterAlwaysScrollBehavior(
-    canScroll = { topBarCanScroll.value }
+    canScroll = { topBarCanScroll.value && !topBarController.searchActive }
   )
   MainDrawer(
     developerOptionsVisibleFlow = viewModel.developerOptionsVisible,
@@ -272,10 +273,9 @@ private fun LazyListState.canScroll(): Boolean =
 
 @Composable
 private fun BottomNavigationBar() =
-  NavigationBar(
-    modifier = Modifier
-      .defaultMinSize(minHeight = dimensionResource(R.dimen.bottom_bar_height))
-      .border(1.dp, MaterialTheme.colorScheme.outline),
+  ResizeableNavigationBar(
+    minHeight = dimensionResource(R.dimen.bottom_bar_height),
+    modifier = Modifier.border(1.dp, MaterialTheme.colorScheme.outline),
   ) {
     val tabController = LocalMainListTabController.current
     val selectedTab = tabController.tab
