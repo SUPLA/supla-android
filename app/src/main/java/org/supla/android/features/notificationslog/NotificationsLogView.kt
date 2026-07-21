@@ -54,6 +54,7 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.source.local.entity.NotificationEntity
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.dialogs.AlertDialog
+import org.supla.android.ui.views.texts.HighlightedTextBySearch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -131,7 +132,7 @@ private fun NotificationRow(entity: NotificationEntity) {
           style = MaterialTheme.typography.bodySmall,
           fontWeight = FontWeight.SemiBold
         )
-        Text(
+        HighlightedTextBySearch(
           text = entity.profileName,
           style = MaterialTheme.typography.bodySmall,
           modifier = Modifier.padding(end = Distance.tiny)
@@ -147,12 +148,12 @@ private fun NotificationRow(entity: NotificationEntity) {
         style = MaterialTheme.typography.bodySmall
       )
     }
-    Text(
+    HighlightedTextBySearch(
       text = entity.title,
       style = MaterialTheme.typography.headlineSmall,
       modifier = Modifier.padding(start = Distance.default, end = Distance.default)
     )
-    Text(
+    HighlightedTextBySearch(
       text = entity.message,
       style = MaterialTheme.typography.bodyMedium,
       modifier = Modifier.padding(start = Distance.default, top = Distance.tiny, end = Distance.default, bottom = Distance.small)
