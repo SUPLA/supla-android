@@ -23,8 +23,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
@@ -36,13 +43,29 @@ import org.supla.android.ui.views.forms.TextField
 @Composable
 fun TopBarSearchField(
   searchText: String,
+  selectionResetKey: Any?,
   modifier: Modifier = Modifier
 ) {
   val topBarController = LocalTopBarController.current
+  var textFieldValue by remember { mutableStateOf(searchText.textFieldValueAtEnd()) }
+  var currentSelectionResetKey by remember { mutableStateOf(selectionResetKey) }
+
+  // Used to position cursor at the end after changing a tab in main list screen
+  LaunchedEffect(searchText, selectionResetKey) {
+    if (textFieldValue.text != searchText || currentSelectionResetKey != selectionResetKey) {
+      textFieldValue = searchText.textFieldValueAtEnd()
+    }
+    currentSelectionResetKey = selectionResetKey
+  }
 
   TextField(
-    value = searchText,
-    onValueChange = topBarController::updateSearchValue,
+    value = textFieldValue,
+    onValueChange = { value ->
+      textFieldValue = value
+      if (value.text != searchText) {
+        topBarController.updateSearchValue(value.text)
+      }
+    },
     modifier = modifier.height(40.dp),
     placeholder = {
       Text(
@@ -70,3 +93,6 @@ fun TopBarSearchField(
     contentPadding = PaddingValues(horizontal = Distance.small, vertical = 4.dp)
   )
 }
+
+private fun String.textFieldValueAtEnd() =
+  TextFieldValue(text = this, selection = TextRange(length))
