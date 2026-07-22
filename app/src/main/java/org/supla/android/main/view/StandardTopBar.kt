@@ -109,6 +109,7 @@ fun StandardTopBar(
         Row(verticalAlignment = Alignment.CenterVertically) {
           TopBarSearchField(
             searchText = searchState.data.query,
+            selectionResetKey = searchState.observer,
             modifier = Modifier
               .weight(1f)
               .focusRequester(focusRequester)
