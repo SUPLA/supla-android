@@ -19,18 +19,10 @@ package org.supla.android.features.details.detailbase.base
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.view.Surface
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.displayCutout
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.ResizeableNavigationBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -41,7 +33,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.supla.android.features.details.containerdetail.general.ContainerGeneralScreen
@@ -84,11 +75,12 @@ import org.supla.android.main.LifeCycleObserver
 import org.supla.android.main.LocalNavigator
 import org.supla.android.main.MainComposeNavigator
 import org.supla.android.main.scaffold.LocalScaffoldPadding
-import org.supla.android.main.scaffold.withRightPanel
+import org.supla.android.main.scaffold.withLeftPanel
 import org.supla.android.main.topbar.ManageTopBar
 import org.supla.android.main.view.NavigationBarLabel
 import org.supla.android.main.view.StandardTopBar
 import org.supla.android.ui.extensions.isPhoneLandscape
+import org.supla.android.ui.navigation.LeftNavigationRail
 import org.supla.android.ui.navigation.SuplaNavigationBarItem
 import org.supla.android.ui.navigation.SuplaRailItem
 
@@ -154,47 +146,38 @@ private fun LandscapeScreen(
   pages: List<DetailPage>,
   onPageChange: (DetailPage) -> Unit
 ) {
-  Row {
-    Scaffold(
-      topBar = { StandardTopBar(pages.size == 1) },
-      modifier = Modifier.weight(1f)
-    ) { paddings ->
-      CompositionLocalProvider(
-        LocalScaffoldPadding provides (paddings.withRightPanel().takeIf { pages.size > 1 } ?: paddings)
-      ) {
-        Content(item, page)
+  Scaffold(
+    topBar = { StandardTopBar(pages.size == 1) }
+  ) {
+    val paddings = if (pages.size > 1) it.withLeftPanel() else it
+    Row {
+      if (pages.size > 1) {
+        DetailScreenNavigationRail(
+          page = page,
+          pages = pages,
+          onPageChange = onPageChange
+        )
       }
-    }
 
-    if (pages.size > 1) {
-      NavigationRail(
-        modifier = Modifier
-          .fillMaxHeight()
-          .border(1.dp, MaterialTheme.colorScheme.outline),
-        windowInsets =
-        if (LocalView.current.display?.rotation == Surface.ROTATION_90) {
-          WindowInsets.navigationBars
-        } else {
-          WindowInsets.displayCutout
-        }
-      ) {
-        Column(
-          modifier = Modifier.fillMaxHeight(),
-          verticalArrangement = Arrangement.SpaceEvenly
-        ) {
-          pages.forEach {
-            SuplaRailItem(
-              selected = page == it,
-              onClick = { onPageChange(it) },
-              icon = { it.item.Icon(page == it) },
-              label = { NavigationBarLabel(it.item.stringRes) }
-            )
-          }
-        }
+      CompositionLocalProvider(LocalScaffoldPadding provides paddings) {
+        Content(item, page)
       }
     }
   }
 }
+
+@Composable
+private fun DetailScreenNavigationRail(page: DetailPage, pages: List<DetailPage>, onPageChange: (DetailPage) -> Unit) =
+  LeftNavigationRail {
+    pages.forEach {
+      SuplaRailItem(
+        selected = page == it,
+        onClick = { onPageChange(it) },
+        icon = { it.item.Icon(page == it) },
+        label = { NavigationBarLabel(it.item.stringRes) }
+      )
+    }
+  }
 
 @Composable
 private fun Content(item: ItemBundle, page: DetailPage) =

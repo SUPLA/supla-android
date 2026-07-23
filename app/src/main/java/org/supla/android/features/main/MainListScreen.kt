@@ -21,25 +21,17 @@ package org.supla.android.features.main
 
 import android.Manifest
 import android.os.Build
-import android.view.Surface
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.displayCutout
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.ResizeableNavigationBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -54,9 +46,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.LocalWindowInfo
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -72,7 +62,7 @@ import org.supla.android.main.ListTab
 import org.supla.android.main.LocalNavigator
 import org.supla.android.main.MainComposeNavigator
 import org.supla.android.main.scaffold.LocalScaffoldPadding
-import org.supla.android.main.scaffold.withRightPanel
+import org.supla.android.main.scaffold.withLeftPanel
 import org.supla.android.main.topbar.LocalTopBarController
 import org.supla.android.main.topbar.NavigationType
 import org.supla.android.main.topbar.TopBarIcon
@@ -89,6 +79,7 @@ import org.supla.android.ui.dialogs.AuthorizationDialog
 import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.ui.extensions.ifTrue
 import org.supla.android.ui.extensions.isPhoneLandscape
+import org.supla.android.ui.navigation.LeftNavigationRail
 import org.supla.android.ui.navigation.SuplaNavigationBarItem
 import org.supla.android.ui.navigation.SuplaRailItem
 import org.supla.core.shared.infrastructure.localizedString
@@ -179,15 +170,16 @@ private fun LandscapePhoneView(
     zWaveVisibleFlow = viewModel.zWaveAvailable,
     zWaveOpenCallback = { viewModel.showAuthorizationDialog(AuthorizationReason.ZWaveWizard) }
   ) {
-    Row {
-      Scaffold(
-        modifier = Modifier
-          .nestedScroll(scrollBehavior.nestedScrollConnection)
-          .weight(1f),
-        topBar = { StandardTopBar(false, scrollBehavior) }
-      ) { CommonContent(it.withRightPanel(), scrollBehavior) { canScroll -> topBarCanScroll.value = canScroll } }
-      if (LocalApplicationPreferences.current.isShowBottomMenu) {
-        RightNavigationRail()
+    Scaffold(
+      modifier = Modifier
+        .nestedScroll(scrollBehavior.nestedScrollConnection),
+      topBar = { StandardTopBar(false, scrollBehavior) }
+    ) {
+      Row {
+        if (LocalApplicationPreferences.current.isShowBottomMenu) {
+          MainScreenNavigationRail()
+        }
+        CommonContent(it.withLeftPanel(), scrollBehavior) { canScroll -> topBarCanScroll.value = canScroll }
       }
     }
   }
@@ -303,47 +295,32 @@ private fun BottomNavigationBar() =
   }
 
 @Composable
-private fun RightNavigationRail() =
-  NavigationRail(
-    modifier = Modifier
-      .fillMaxHeight()
-      .border(1.dp, MaterialTheme.colorScheme.outline),
-    windowInsets =
-    if (LocalView.current.display?.rotation == Surface.ROTATION_90) {
-      WindowInsets.navigationBars
-    } else {
-      WindowInsets.displayCutout
-    }
-  ) {
+private fun MainScreenNavigationRail() =
+  LeftNavigationRail {
     val tabController = LocalMainListTabController.current
     val selectedTab = tabController.tab
 
-    Column(
-      modifier = Modifier.fillMaxHeight(),
-      verticalArrangement = Arrangement.SpaceEvenly
-    ) {
-      SuplaRailItem(
-        selected = selectedTab == ListTab.CHANNELS,
-        onClick = { tabController.changeTab(ListTab.CHANNELS) },
-        iconRes = R.drawable.navbar_channels,
-        label = ::ChannelListLabel,
-        iconDescription = stringResource(R.string.navbar_channels)
-      )
-      SuplaRailItem(
-        selected = selectedTab == ListTab.GROUPS,
-        onClick = { tabController.changeTab(ListTab.GROUPS) },
-        iconRes = R.drawable.navbar_groups,
-        label = ::GroupListLabel,
-        iconDescription = stringResource(R.string.navbar_groups)
-      )
-      SuplaRailItem(
-        selected = selectedTab == ListTab.SCENES,
-        onClick = { tabController.changeTab(ListTab.SCENES) },
-        iconRes = R.drawable.navbar_scenes,
-        label = ::SceneListLabel,
-        iconDescription = stringResource(R.string.navbar_scenes)
-      )
-    }
+    SuplaRailItem(
+      selected = selectedTab == ListTab.CHANNELS,
+      onClick = { tabController.changeTab(ListTab.CHANNELS) },
+      iconRes = R.drawable.navbar_channels,
+      label = ::ChannelListLabel,
+      iconDescription = stringResource(R.string.navbar_channels)
+    )
+    SuplaRailItem(
+      selected = selectedTab == ListTab.GROUPS,
+      onClick = { tabController.changeTab(ListTab.GROUPS) },
+      iconRes = R.drawable.navbar_groups,
+      label = ::GroupListLabel,
+      iconDescription = stringResource(R.string.navbar_groups)
+    )
+    SuplaRailItem(
+      selected = selectedTab == ListTab.SCENES,
+      onClick = { tabController.changeTab(ListTab.SCENES) },
+      iconRes = R.drawable.navbar_scenes,
+      label = ::SceneListLabel,
+      iconDescription = stringResource(R.string.navbar_scenes)
+    )
   }
 
 @Composable

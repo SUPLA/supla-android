@@ -41,7 +41,12 @@ fun SuplaRailItem(
   SuplaRailItem(
     selected = selected,
     onClick = onClick,
-    icon = { Icon(painter = painterResource(iconRes), iconDescription) },
+    icon = {
+      Icon(
+        painter = painterResource(iconRes),
+        contentDescription = iconDescription
+      )
+    },
     label = label,
     clearAction = clearAction
   )
