@@ -64,3 +64,15 @@ fun PaddingValues.withRightPanel(): PaddingValues {
     bottom = calculateBottomPadding()
   )
 }
+
+@Composable
+fun PaddingValues.withLeftPanel(): PaddingValues {
+  val layoutDirection = LocalLayoutDirection.current
+
+  return PaddingValues(
+    start = 0.dp,
+    top = calculateTopPadding(),
+    end = calculateEndPadding(layoutDirection),
+    bottom = calculateBottomPadding()
+  )
+}

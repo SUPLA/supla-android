@@ -32,7 +32,7 @@ interface ToolbarVisibilityController {
   fun setToolbarVisible(visibility: ToolbarVisibility)
 
   data class ToolbarVisibility(
-    @param:ColorRes val toolbarColorRes: Int = R.color.background,
+    @param:ColorRes val toolbarColorRes: Int = R.color.primary,
     @param:ColorRes val navigationBarColorRes: Int = R.color.surface,
     val isLight: Boolean = true
   )

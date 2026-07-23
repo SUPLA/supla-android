@@ -44,6 +44,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -59,6 +60,7 @@ import org.supla.android.main.topbar.LocalTopBarController
 import org.supla.android.main.topbar.MockedTopBarController
 import org.supla.android.main.topbar.NavigationType
 import org.supla.android.main.topbar.TopBarAction
+import org.supla.android.main.topbar.TopBarController
 import org.supla.android.main.topbar.TopBarIcon
 import org.supla.android.main.topbar.TopBarSearchData
 import org.supla.android.main.topbar.TopBarSearchState
@@ -129,14 +131,7 @@ fun StandardTopBar(
     },
     actions = {
       if (searchState != null && !searchState.data.visible) {
-        IconButton(
-          R.drawable.ic_search,
-          onClick = { topBarController.setSearchVisible(true) },
-          contentDescription = stringResource(R.string.general_search),
-          modifier = Modifier
-            .size(40.dp),
-          tint = MaterialTheme.colorScheme.onPrimaryContainer
-        )
+        SearchIcon(topBarController)
       }
       topBarState.action?.Icon()
     },
@@ -145,6 +140,21 @@ fun StandardTopBar(
       scrolledContainerColor = MaterialTheme.colorScheme.primaryContainer
     ),
     scrollBehavior = scrollBehavior
+  )
+}
+
+@Composable
+private fun SearchIcon(
+  topBarController: TopBarController,
+  tint: Color = MaterialTheme.colorScheme.onPrimaryContainer
+) {
+  IconButton(
+    R.drawable.ic_search,
+    onClick = { topBarController.setSearchVisible(true) },
+    contentDescription = stringResource(R.string.general_search),
+    modifier = Modifier
+      .size(40.dp),
+    tint = tint
   )
 }
 
