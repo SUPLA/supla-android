@@ -22,6 +22,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -128,6 +129,7 @@ private fun MainListScope.ListView(
     state = listState,
     modifier = modifier
       .screenPaddings()
+      .fillMaxHeight()
       .background(MaterialTheme.colorScheme.outline),
     verticalArrangement = Arrangement.spacedBy(1.dp)
   ) {

@@ -43,7 +43,7 @@ fun BackScaffold(
   val useNavigationBarPadding = LocalConfiguration.current.isPhoneLandscape
 
   Scaffold(
-    topBar = { StandardTopBar(useNavigationBarPadding) },
+    topBar = { StandardTopBar() },
     snackbarHost = { SnackbarHost(snackbarController.state) }
   ) { paddings ->
     CompositionLocalProvider(LocalScaffoldPadding provides paddings) {

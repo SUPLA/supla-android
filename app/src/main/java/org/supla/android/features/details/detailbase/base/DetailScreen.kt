@@ -115,7 +115,7 @@ private fun PortraitScreen(
   onPageChange: (DetailPage) -> Unit
 ) {
   Scaffold(
-    topBar = { StandardTopBar(false) },
+    topBar = { StandardTopBar() },
     bottomBar = {
       if (pages.size > 1) {
         ResizeableNavigationBar(
@@ -147,7 +147,7 @@ private fun LandscapeScreen(
   onPageChange: (DetailPage) -> Unit
 ) {
   Scaffold(
-    topBar = { StandardTopBar(pages.size == 1) }
+    topBar = { StandardTopBar() }
   ) {
     val paddings = if (pages.size > 1) it.withLeftPanel() else it
     Row {

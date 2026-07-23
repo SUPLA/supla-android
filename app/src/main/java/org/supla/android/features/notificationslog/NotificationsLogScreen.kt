@@ -18,6 +18,7 @@ package org.supla.android.features.notificationslog
  */
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -76,7 +77,8 @@ fun NotificationsLogScreen(
           scope.launch {
             val result = snackbarController.state.showSnackbar(
               message = snackbarMessage,
-              actionLabel = snackbarActionLabel
+              actionLabel = snackbarActionLabel,
+              duration = SnackbarDuration.Long
             )
 
             when (result) {

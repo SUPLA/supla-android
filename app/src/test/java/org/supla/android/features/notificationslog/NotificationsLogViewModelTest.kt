@@ -18,10 +18,12 @@ package org.supla.android.features.notificationslog
  */
 
 import io.mockk.MockKAnnotations
+import io.mockk.Runs
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
+import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable
@@ -96,7 +98,7 @@ class NotificationsLogViewModelTest : BaseViewModelTest<NotificationsLogViewStat
     val entityId = 123L
     val entity = mockk<NotificationEntity> { every { id } returns entityId }
     val list = listOf(entity)
-    every { loadAllNotificationsUseCase.invoke() } returns Observable.just(list)
+    every { loadAllNotificationsUseCase.observe() } returns Observable.just(list)
 
     // when
     viewModel.onViewCreated()
@@ -147,7 +149,7 @@ class NotificationsLogViewModelTest : BaseViewModelTest<NotificationsLogViewStat
       every { id } returns notificationId
     }
 
-    every { loadAllNotificationsUseCase.invoke() } returns Observable.just(listOf(entity))
+    every { loadAllNotificationsUseCase.observe() } returns Observable.just(listOf(entity))
     every { deleteNotificationUseCase.invoke(notificationId) } returns Completable.complete()
 
     // when
@@ -162,7 +164,7 @@ class NotificationsLogViewModelTest : BaseViewModelTest<NotificationsLogViewStat
     assertThat(events).containsExactly(NotificationsLogViewEvent.ShowDeleteNotification(notificationId))
 
     verify {
-      loadAllNotificationsUseCase.invoke()
+      loadAllNotificationsUseCase.observe()
       deleteNotificationUseCase.invoke(notificationId)
     }
     confirmVerified(loadAllNotificationsUseCase, deleteNotificationsUseCase)
@@ -172,53 +174,13 @@ class NotificationsLogViewModelTest : BaseViewModelTest<NotificationsLogViewStat
   fun `should call filtered use case when query length greater than 2 and filter changed`() {
     // given
     val searchText = "abc"
-    every { loadAllNotificationsUseCase.invoke(searchText) } returns Observable.just(emptyList())
+    every { loadAllNotificationsUseCase.filter(searchText) } just Runs
 
     // when
     viewModel.handle(TopBarSearchEvent.QueryChange(searchText))
 
     // then
-    verify(exactly = 1) { loadAllNotificationsUseCase(searchText) }
-    confirmVerified(loadAllNotificationsUseCase)
-  }
-
-  @Test
-  fun `should call loadAll when filter length after trim is less than or equal to 2 and previous filter existed`() {
-    // given
-    val firstSearch = "abcd"
-    val secondSearch = "a"
-    every { loadAllNotificationsUseCase.invoke(firstSearch) } returns Observable.just(emptyList())
-    every { loadAllNotificationsUseCase.invoke() } returns Observable.just(emptyList())
-
-    // when
-    viewModel.handle(TopBarSearchEvent.QueryChange(firstSearch))
-    viewModel.handle(TopBarSearchEvent.QueryChange(secondSearch))
-
-    // then
-    verify {
-      loadAllNotificationsUseCase(firstSearch)
-      loadAllNotificationsUseCase()
-    }
-    confirmVerified(loadAllNotificationsUseCase)
-  }
-
-  @Test
-  fun `should call filtered use case again when filter changes`() {
-    // given
-    val firstSearch = "abc"
-    val secondSearch = "abcd"
-    every { loadAllNotificationsUseCase.invoke(firstSearch) } returns Observable.just(emptyList())
-    every { loadAllNotificationsUseCase.invoke(secondSearch) } returns Observable.just(emptyList())
-
-    // when
-    viewModel.handle(TopBarSearchEvent.QueryChange(firstSearch))
-    viewModel.handle(TopBarSearchEvent.QueryChange(secondSearch))
-
-    // then
-    verify {
-      loadAllNotificationsUseCase(firstSearch)
-      loadAllNotificationsUseCase(secondSearch)
-    }
+    verify(exactly = 1) { loadAllNotificationsUseCase.filter(searchText) }
     confirmVerified(loadAllNotificationsUseCase)
   }
 }

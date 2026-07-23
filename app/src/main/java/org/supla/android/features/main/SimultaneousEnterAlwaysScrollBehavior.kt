@@ -61,7 +61,8 @@ fun rememberSimultaneousEnterAlwaysScrollBehavior(
             available: Offset,
             source: NestedScrollSource
           ): Offset {
-            if (!currentCanScroll()) {
+            val expandingCollapsedTopBar = available.y > 0f && state.heightOffset < 0f
+            if (!currentCanScroll() && !expandingCollapsedTopBar) {
               return Offset.Zero
             }
 
@@ -78,7 +79,7 @@ fun rememberSimultaneousEnterAlwaysScrollBehavior(
             consumed: Velocity,
             available: Velocity
           ): Velocity {
-            if (currentCanScroll()) {
+            if (currentCanScroll() || state.heightOffset < 0f) {
               state.snapToNearestEdge()
             }
             return Velocity.Zero

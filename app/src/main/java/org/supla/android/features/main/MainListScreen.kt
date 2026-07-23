@@ -27,20 +27,15 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ResizeableNavigationBar
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -133,10 +128,9 @@ fun MainListScreen(
 private fun PortraitPhoneView(
   viewModel: MainListViewModel
 ) {
-  val topBarCanScroll = remember { mutableStateOf(false) }
   val topBarController = LocalTopBarController.current
   val scrollBehavior = rememberSimultaneousEnterAlwaysScrollBehavior(
-    canScroll = { topBarCanScroll.value && !topBarController.searchActive }
+    canScroll = { !topBarController.searchActive }
   )
 
   MainDrawer(
@@ -146,13 +140,13 @@ private fun PortraitPhoneView(
   ) {
     Scaffold(
       modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-      topBar = { StandardTopBar(false, scrollBehavior) },
+      topBar = { StandardTopBar(scrollBehavior) },
       bottomBar = {
         if (LocalApplicationPreferences.current.isShowBottomMenu) {
           BottomNavigationBar()
         }
       }
-    ) { CommonContent(it, scrollBehavior) { canScroll -> topBarCanScroll.value = canScroll } }
+    ) { CommonContent(it) }
   }
 }
 
@@ -160,10 +154,9 @@ private fun PortraitPhoneView(
 private fun LandscapePhoneView(
   viewModel: MainListViewModel
 ) {
-  val topBarCanScroll = remember { mutableStateOf(false) }
   val topBarController = LocalTopBarController.current
   val scrollBehavior = rememberSimultaneousEnterAlwaysScrollBehavior(
-    canScroll = { topBarCanScroll.value && !topBarController.searchActive }
+    canScroll = { !topBarController.searchActive }
   )
   MainDrawer(
     developerOptionsVisibleFlow = viewModel.developerOptionsVisible,
@@ -173,13 +166,13 @@ private fun LandscapePhoneView(
     Scaffold(
       modifier = Modifier
         .nestedScroll(scrollBehavior.nestedScrollConnection),
-      topBar = { StandardTopBar(false, scrollBehavior) }
+      topBar = { StandardTopBar(scrollBehavior) }
     ) {
       Row {
         if (LocalApplicationPreferences.current.isShowBottomMenu) {
           MainScreenNavigationRail()
         }
-        CommonContent(it.withLeftPanel(), scrollBehavior) { canScroll -> topBarCanScroll.value = canScroll }
+        CommonContent(it.withLeftPanel())
       }
     }
   }
@@ -195,7 +188,7 @@ private fun WideView(
     zWaveOpenCallback = { viewModel.showAuthorizationDialog(AuthorizationReason.ZWaveWizard) }
   ) {
     Scaffold(
-      topBar = { StandardTopBar(false) },
+      topBar = { StandardTopBar() },
       bottomBar = {
         if (LocalApplicationPreferences.current.isShowBottomMenu) {
           BottomNavigationBar()
@@ -206,11 +199,7 @@ private fun WideView(
 }
 
 @Composable
-private fun CommonContent(
-  paddings: PaddingValues,
-  scrollBehavior: TopAppBarScrollBehavior? = null,
-  onTopBarCanScrollChanged: ((Boolean) -> Unit)? = null
-) {
+private fun CommonContent(paddings: PaddingValues) {
   val topBarController = LocalTopBarController.current
   val tabController = LocalMainListTabController.current
   val selectedTab = tabController.tab
@@ -230,26 +219,9 @@ private fun CommonContent(
     }
   }
 
-  LaunchedEffect(scrollBehavior, selectedTab) {
-    scrollBehavior?.state?.heightOffset = 0f
-  }
-
   val channelListState = rememberLazyListState()
   val groupListState = rememberLazyListState()
   val sceneListState = rememberLazyListState()
-  val selectedListState = when (selectedTab) {
-    ListTab.CHANNELS -> channelListState
-    ListTab.GROUPS -> groupListState
-    ListTab.SCENES -> sceneListState
-  }
-  val selectedListCanScroll = selectedListState.canScroll()
-
-  LaunchedEffect(scrollBehavior, selectedListCanScroll) {
-    onTopBarCanScrollChanged?.invoke(selectedListCanScroll)
-    if (!selectedListCanScroll) {
-      scrollBehavior?.state?.heightOffset = 0f
-    }
-  }
 
   CompositionLocalProvider(LocalScaffoldPadding provides paddings) {
     when (selectedTab) {
@@ -259,9 +231,6 @@ private fun CommonContent(
     }
   }
 }
-
-private fun LazyListState.canScroll(): Boolean =
-  canScrollBackward || canScrollForward
 
 @Composable
 private fun BottomNavigationBar() =
