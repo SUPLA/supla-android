@@ -20,13 +20,16 @@ package org.supla.android.features.nfc.add
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import org.supla.android.R
@@ -34,7 +37,9 @@ import org.supla.android.core.ui.ViewState
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.tools.SuplaPreview
+import org.supla.android.tools.SuplaPreviewLandscape
 import org.supla.android.ui.dialogs.DialogWithIcon
+import org.supla.android.ui.extensions.isPhoneLandscape
 import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.forms.InfoMessage
 import org.supla.android.ui.views.icons.Warning
@@ -64,21 +69,10 @@ fun AddNfcTagScope.View(viewState: AddNfcTagViewState) =
       .padding(Distance.default)
       .fillMaxSize(),
   ) {
-    Column(
-      horizontalAlignment = Alignment.CenterHorizontally,
-      verticalArrangement = Arrangement.spacedBy(Distance.default)
-    ) {
-      Image(
-        drawableId = R.drawable.image_scan_nfc,
-        modifier = Modifier
-          .fillMaxWidth()
-          .aspectRatio(1f)
-      )
-      TitleMedium(
-        stringRes = R.string.add_nfc_scanning_hint,
-        textAlign = TextAlign.Center
-      )
-      InfoMessage(stringResource(R.string.add_nfc_override_warning))
+    if (LocalConfiguration.current.isPhoneLandscape) {
+      LandscapeView()
+    } else {
+      PortraitView()
     }
 
     viewState.dialog?.let {
@@ -88,6 +82,54 @@ fun AddNfcTagScope.View(viewState: AddNfcTagViewState) =
       }
     }
   }
+
+@Composable
+private fun PortraitView() {
+  Column(
+    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.spacedBy(Distance.default)
+  ) {
+    Image(
+      drawableId = R.drawable.image_scan_nfc,
+      modifier = Modifier
+        .fillMaxWidth()
+        .aspectRatio(1f)
+    )
+    TitleMedium(
+      stringRes = R.string.add_nfc_scanning_hint,
+      textAlign = TextAlign.Center
+    )
+    InfoMessage(stringResource(R.string.add_nfc_override_warning))
+  }
+}
+
+@Composable
+private fun LandscapeView() {
+  Row(
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.spacedBy(Distance.default)
+  ) {
+    Image(
+      drawableId = R.drawable.image_scan_nfc,
+      modifier = Modifier
+        .aspectRatio(1f)
+        .weight(1f)
+        .fillMaxHeight()
+        .padding(bottom = Distance.default, start = Distance.default, top = Distance.default)
+    )
+    Column(
+      modifier = Modifier.weight(1f).fillMaxHeight(),
+      verticalArrangement = Arrangement.SpaceEvenly,
+      horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+      TitleMedium(
+        stringRes = R.string.add_nfc_scanning_hint,
+        textAlign = TextAlign.Center
+      )
+      InfoMessage(stringResource(R.string.add_nfc_override_warning))
+    }
+  }
+}
 
 @Composable
 private fun AddNfcTagScope.ErrorDialog(error: TagOperationError) =
@@ -120,6 +162,7 @@ private val previewScope = object : AddNfcTagScope {
 }
 
 @SuplaPreview
+@SuplaPreviewLandscape
 @Composable
 private fun PreviewTagConfiguration() {
   SuplaTheme {
