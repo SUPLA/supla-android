@@ -58,7 +58,12 @@ class NotificationsLogViewModel @Inject constructor(
     private set
 
   override fun onViewCreated() {
-    loadAll()
+    loadAllNotificationsUseCase.observe()
+      .attach()
+      .subscribeBy(
+        onNext = this::setItems,
+      )
+      .disposeBySelf()
   }
 
   override fun delete(entity: NotificationEntity) {
@@ -72,22 +77,12 @@ class NotificationsLogViewModel @Inject constructor(
     invalidateItems()
   }
 
-  fun loadAll() {
-    if (searchData.query.searchable) {
-      loadAllNotificationsUseCase(searchData.query)
-    } else {
-      loadAllNotificationsUseCase()
-    }
-      .attach()
-      .subscribeBy(
-        onNext = this::setItems
-      )
-      .disposeBySelf()
-  }
-
   fun handle(event: TopBarSearchEvent) {
     searchData = searchData.handle(event)
-    loadAll()
+
+    if (event is TopBarSearchEvent.QueryChange) {
+      loadAllNotificationsUseCase.filter(event.query)
+    }
   }
 
   fun cancelDeletion(id: Long) {

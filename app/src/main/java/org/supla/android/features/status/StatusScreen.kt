@@ -31,6 +31,7 @@ fun StatusScreen(
 ) {
   ViewModelHost(
     viewModel = viewModel,
+    darkStatusBarIcons = true,
     eventHandler = { event ->
       when (event) {
         StatusViewEvent.NavigateToMain -> navigator.replaceTop(MainRoute.List)

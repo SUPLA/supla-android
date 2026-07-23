@@ -25,6 +25,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -95,7 +97,9 @@ fun MainDrawer(
         drawerContentColor = MaterialTheme.colorScheme.onSurface,
         drawerTonalElevation = 0.dp,
         drawerShape = RectangleShape,
-        windowInsets = DrawerDefaults.windowInsets.exclude(WindowInsets.statusBars)
+        windowInsets = DrawerDefaults.windowInsets
+          .exclude(WindowInsets.statusBars)
+          .exclude(WindowInsets.displayCutout)
       ) {
         DrawerContent(developerOptionsVisibleFlow, zWaveVisibleFlow, zWaveOpenCallback)
       }
@@ -143,7 +147,9 @@ private fun DrawerContent(
       val drawerState = LocalDrawerState.current
       val scope = rememberCoroutineScope()
       DrawerBackButton(
-        modifier = Modifier.align(Alignment.CenterStart),
+        modifier = Modifier
+          .align(Alignment.CenterStart)
+          .displayCutoutPadding(),
         onClick = { scope.launch { drawerState?.close() } }
       )
       HeadlineSmall(
@@ -153,7 +159,11 @@ private fun DrawerContent(
       )
     }
 
-    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+    Column(
+      modifier = Modifier
+        .displayCutoutPadding()
+        .verticalScroll(rememberScrollState())
+    ) {
       if (!LocalApplicationPreferences.current.isShowBottomMenu) {
         val tabController = LocalMainListTabController.current
         val selectedTab = tabController.tab

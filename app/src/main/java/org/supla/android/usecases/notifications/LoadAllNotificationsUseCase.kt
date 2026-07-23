@@ -18,8 +18,10 @@ package org.supla.android.usecases.notifications
  */
 
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import org.supla.android.data.source.NotificationRepository
 import org.supla.android.data.source.local.entity.NotificationEntity
+import org.supla.android.main.topbar.searchable
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -28,10 +30,26 @@ class LoadAllNotificationsUseCase @Inject constructor(
   private val notificationRepository: NotificationRepository
 ) {
 
-  operator fun invoke(filterString: String? = null): Observable<List<NotificationEntity>> =
-    if (filterString != null) {
-      notificationRepository.loadAllNotifications(filterString)
-    } else {
-      notificationRepository.loadAllNotifications()
+  private val filterSubject = BehaviorSubject.create<String>().apply { onNext("") }
+
+  fun observe(): Observable<List<NotificationEntity>> =
+    Observable.combineLatest(
+      notificationRepository.loadAllNotifications(),
+      filterSubject
+    ) { notifications, filter ->
+      if (filter.searchable) {
+        notifications.filter {
+          it.title.contains(filter, ignoreCase = true) ||
+            it.message.contains(filter, ignoreCase = true) ||
+            it.profileName?.contains(filter, ignoreCase = true) == true
+        }
+      } else {
+        notifications
+      }
     }
+      .doOnTerminate { filterSubject.onNext("") }
+
+  fun filter(string: String) {
+    filterSubject.onNext(string)
+  }
 }
