@@ -26,6 +26,7 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.EntryProviderScope
@@ -126,7 +127,11 @@ fun <T : Any> topBarEntryProvider(
     key = key,
     metadata = entry.metadata
   ) {
-    CompositionLocalProvider(LocalScreenKey provides key) {
+    val visibilityController = remember(key) { ViewComponentsVisibilityController() }
+    CompositionLocalProvider(
+      LocalScreenKey provides key,
+      LocalViewComponentsVisibilityController provides visibilityController
+    ) {
       StatusBarAppearance()
       entry.Content()
     }

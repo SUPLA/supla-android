@@ -22,8 +22,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationRail
 import androidx.compose.runtime.Composable
@@ -42,7 +45,7 @@ fun LeftNavigationRail(
       .border(1.dp, MaterialTheme.colorScheme.outline),
   ) {
     Column(
-      modifier = Modifier.fillMaxHeight(),
+      modifier = Modifier.fillMaxHeight().windowInsetsPadding(WindowInsets.displayCutout),
     ) {
       Spacer(modifier = Modifier.height(dimensionResource(R.dimen.top_bar_height)))
 

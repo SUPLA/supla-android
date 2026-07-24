@@ -54,18 +54,6 @@ fun Modifier.topSearchBarPaddings(): Modifier {
 }
 
 @Composable
-fun PaddingValues.withRightPanel(): PaddingValues {
-  val layoutDirection = LocalLayoutDirection.current
-
-  return PaddingValues(
-    start = calculateStartPadding(layoutDirection),
-    top = calculateTopPadding(),
-    end = 0.dp,
-    bottom = calculateBottomPadding()
-  )
-}
-
-@Composable
 fun PaddingValues.withLeftPanel(): PaddingValues {
   val layoutDirection = LocalLayoutDirection.current
 
