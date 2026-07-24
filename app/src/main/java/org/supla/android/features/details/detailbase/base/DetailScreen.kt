@@ -21,6 +21,8 @@ package org.supla.android.features.details.detailbase.base
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ResizeableNavigationBar
@@ -78,6 +80,7 @@ import org.supla.android.main.scaffold.LocalScaffoldPadding
 import org.supla.android.main.scaffold.withLeftPanel
 import org.supla.android.main.topbar.ManageTopBar
 import org.supla.android.main.view.NavigationBarLabel
+import org.supla.android.main.view.SetDetailRailVisible
 import org.supla.android.main.view.StandardTopBar
 import org.supla.android.ui.extensions.isPhoneLandscape
 import org.supla.android.ui.navigation.LeftNavigationRail
@@ -147,8 +150,11 @@ private fun LandscapeScreen(
   onPageChange: (DetailPage) -> Unit
 ) {
   Scaffold(
-    topBar = { StandardTopBar() }
+    topBar = { StandardTopBar() },
+    contentWindowInsets = WindowInsets.systemBars
   ) {
+    SetDetailRailVisible(pages.size > 1)
+
     val paddings = if (pages.size > 1) it.withLeftPanel() else it
     Row {
       if (pages.size > 1) {
