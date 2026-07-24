@@ -35,7 +35,7 @@ fun ManageTopBar(
 ) {
   val scope = rememberCoroutineScope()
   val controller = LocalTopBarController.current
-  val screenKey = LocalTopBarScreenKey.current
+  val screenKey = LocalScreenKey.current
   val owner = remember(screenKey) { TopBarOwner(screenKey) }
 
   if (state != null) {

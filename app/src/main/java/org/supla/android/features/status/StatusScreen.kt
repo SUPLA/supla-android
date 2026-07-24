@@ -22,6 +22,8 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.supla.android.main.MainComposeNavigator
 import org.supla.android.main.MainRoute
 import org.supla.android.main.ViewModelHost
+import org.supla.android.main.topbar.SetStatusBarContentColor
+import org.supla.android.main.topbar.StatusBarContentColor
 import org.supla.android.ui.dialogs.AuthorizationDialog
 
 @Composable
@@ -31,7 +33,6 @@ fun StatusScreen(
 ) {
   ViewModelHost(
     viewModel = viewModel,
-    darkStatusBarIcons = true,
     eventHandler = { event ->
       when (event) {
         StatusViewEvent.NavigateToMain -> navigator.replaceTop(MainRoute.List)
@@ -39,6 +40,8 @@ fun StatusScreen(
       }
     }
   ) { viewState ->
+    SetStatusBarContentColor(StatusBarContentColor.DARK)
+
     viewState.authorizationDialogState?.let {
       viewModel.AuthorizationDialog(state = it)
     }

@@ -108,7 +108,7 @@ data class TopBarOwner(
 
 private val DefaultTopBarController = TopBarController()
 val LocalTopBarController = staticCompositionLocalOf { DefaultTopBarController }
-val LocalTopBarScreenKey = staticCompositionLocalOf<Any> { error("LocalTopBarScreenKey not provided!") }
+val LocalScreenKey = staticCompositionLocalOf<Any> { error("LocalTopBarScreenKey not provided!") }
 
 /**
  * Prepared for previews.
