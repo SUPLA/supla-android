@@ -33,6 +33,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ResizeableNavigationBar
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
@@ -129,9 +130,10 @@ private fun PortraitPhoneView(
   viewModel: MainListViewModel
 ) {
   val topBarController = LocalTopBarController.current
-  val scrollBehavior = rememberSimultaneousEnterAlwaysScrollBehavior(
+  val scrollBehaviors = rememberMainListScrollBehaviors(
     canScroll = { !topBarController.searchActive }
   )
+  val scrollBehavior = scrollBehaviors[LocalMainListTabController.current.tab]
 
   MainDrawer(
     developerOptionsVisibleFlow = viewModel.developerOptionsVisible,
@@ -155,9 +157,11 @@ private fun LandscapePhoneView(
   viewModel: MainListViewModel
 ) {
   val topBarController = LocalTopBarController.current
-  val scrollBehavior = rememberSimultaneousEnterAlwaysScrollBehavior(
+  val scrollBehaviors = rememberMainListScrollBehaviors(
     canScroll = { !topBarController.searchActive }
   )
+  val scrollBehavior = scrollBehaviors[LocalMainListTabController.current.tab]
+
   MainDrawer(
     developerOptionsVisibleFlow = viewModel.developerOptionsVisible,
     zWaveVisibleFlow = viewModel.zWaveAvailable,
@@ -176,6 +180,29 @@ private fun LandscapePhoneView(
       }
     }
   }
+}
+
+@Composable
+private fun rememberMainListScrollBehaviors(
+  canScroll: () -> Boolean
+) =
+  MainListScrollBehaviors(
+    channels = rememberSimultaneousEnterAlwaysScrollBehavior(canScroll = canScroll),
+    groups = rememberSimultaneousEnterAlwaysScrollBehavior(canScroll = canScroll),
+    scenes = rememberSimultaneousEnterAlwaysScrollBehavior(canScroll = canScroll)
+  )
+
+private data class MainListScrollBehaviors(
+  val channels: TopAppBarScrollBehavior,
+  val groups: TopAppBarScrollBehavior,
+  val scenes: TopAppBarScrollBehavior
+) {
+  operator fun get(tab: ListTab): TopAppBarScrollBehavior =
+    when (tab) {
+      ListTab.CHANNELS -> channels
+      ListTab.GROUPS -> groups
+      ListTab.SCENES -> scenes
+    }
 }
 
 @Composable
