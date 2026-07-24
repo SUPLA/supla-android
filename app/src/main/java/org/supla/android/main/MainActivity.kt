@@ -30,24 +30,21 @@ import androidx.fragment.app.FragmentActivity
 import androidx.navigation3.runtime.rememberNavBackStack
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import org.supla.android.R
 import org.supla.android.core.networking.suplaclient.SuplaClientState
 import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.storage.LocalApplicationPreferences
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.extensions.setStatusBarColor
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.lockscreen.UnlockAction
 import org.supla.android.features.nfc.NfcHost
 import org.supla.android.main.view.MainComposeNavHost
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.ui.ToolbarVisibilityController
 import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : FragmentActivity(), NfcHost, ToolbarVisibilityController {
+class MainActivity : FragmentActivity(), NfcHost {
   // FragmentActivity used because of hosting legacy fragment
   // When last fragment replaced with compose can be changed to ComponentActivity
 
@@ -71,7 +68,6 @@ class MainActivity : FragmentActivity(), NfcHost, ToolbarVisibilityController {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    setStatusBarColor(R.color.background, R.color.background, true)
     enableEdgeToEdge()
 
     setContent {
@@ -150,9 +146,5 @@ class MainActivity : FragmentActivity(), NfcHost, ToolbarVisibilityController {
           }
         )
     )
-  }
-
-  override fun setToolbarVisible(visibility: ToolbarVisibilityController.ToolbarVisibility) {
-    setStatusBarColor(visibility.toolbarColorRes, visibility.navigationBarColorRes, visibility.isLight)
   }
 }

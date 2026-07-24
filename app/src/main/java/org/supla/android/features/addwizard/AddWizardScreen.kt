@@ -33,7 +33,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import org.supla.android.R
 import org.supla.android.extensions.allGranted
 import org.supla.android.extensions.applicationName
 import org.supla.android.extensions.findActivity
@@ -44,7 +43,6 @@ import org.supla.android.main.ViewModelHostBase
 import org.supla.android.main.scaffold.LocalScaffoldPadding
 import org.supla.android.main.scaffold.screenPaddings
 import org.supla.android.main.view.BackOnlyTopBar
-import org.supla.android.ui.SystemBarsColors
 import org.supla.android.ui.dialogs.AuthorizationDialog
 
 @Composable
@@ -52,12 +50,6 @@ fun AddWizardScreen(
   navigator: MainComposeNavigator,
   viewModel: AddWizardViewModel = hiltViewModel()
 ) {
-  SystemBarsColors(
-    toolbarColorRes = R.color.primary_container,
-    navigationBarColorRes = R.color.primary_container,
-    isLight = false
-  )
-
   Scaffold(
     topBar = {
       BackOnlyTopBar { viewModel.onClose() }

@@ -62,7 +62,8 @@ import org.supla.android.main.MainComposeNavigator
 import org.supla.android.main.MainRoute
 import org.supla.android.main.scaffold.BackScaffold
 import org.supla.android.main.scaffold.EmptyScreenScaffold
-import org.supla.android.main.topbar.LocalTopBarScreenKey
+import org.supla.android.main.topbar.LocalScreenKey
+import org.supla.android.main.topbar.StatusBarAppearance
 
 @Composable
 fun MainComposeNavHost(
@@ -125,7 +126,8 @@ fun <T : Any> topBarEntryProvider(
     key = key,
     metadata = entry.metadata
   ) {
-    CompositionLocalProvider(LocalTopBarScreenKey provides key) {
+    CompositionLocalProvider(LocalScreenKey provides key) {
+      StatusBarAppearance()
       entry.Content()
     }
   }

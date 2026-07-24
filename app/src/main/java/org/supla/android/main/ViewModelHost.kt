@@ -17,7 +17,6 @@ package org.supla.android.main
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -30,8 +29,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalView
-import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -50,7 +47,6 @@ import org.supla.android.main.view.LocalLoadingController
 fun <S : ViewState, E : ViewEvent> ViewModelHost(
   viewModel: BaseViewModel<S, E>,
   topBarState: TopBarState? = null,
-  darkStatusBarIcons: Boolean = false,
   eventHandler: (E) -> Unit = {},
   onCreate: () -> Unit = {},
   onResume: () -> Unit = {},
@@ -61,7 +57,6 @@ fun <S : ViewState, E : ViewEvent> ViewModelHost(
   ViewModelHostBase(
     viewModel = viewModel,
     topBarState = topBarState,
-    darkStatusBarIcons = darkStatusBarIcons,
     eventHandler = eventHandler,
     onCreate = onCreate,
     onResume = onResume,
@@ -83,7 +78,6 @@ fun <S : ViewState, E : ViewEvent> ViewModelHost(
 fun <S : ViewState, E : ViewEvent> ViewModelHostBase(
   viewModel: BaseViewModel<S, E>,
   topBarState: TopBarState? = null,
-  darkStatusBarIcons: Boolean = false,
   eventHandler: (E) -> Unit = {},
   onCreate: () -> Unit = {},
   onResume: () -> Unit = {},
@@ -94,7 +88,6 @@ fun <S : ViewState, E : ViewEvent> ViewModelHostBase(
   EventBasedViewModelHost(
     viewModel = viewModel,
     topBarState = topBarState,
-    darkStatusBarIcons = darkStatusBarIcons,
     eventHandler = eventHandler,
     onCreate = onCreate,
     onResume = onResume,
@@ -122,7 +115,6 @@ private fun LoadingHost(viewModel: BaseViewModel<*, *>) {
 fun <E : ViewEvent> EventBasedViewModelHost(
   viewModel: EventBasedViewModel<E>,
   topBarState: TopBarState? = null,
-  darkStatusBarIcons: Boolean = false,
   eventHandler: (E) -> Unit = {},
   onCreate: () -> Unit = {},
   onResume: () -> Unit = {},
@@ -140,8 +132,6 @@ fun <E : ViewEvent> EventBasedViewModelHost(
   EventHandler(viewModel, eventHandler)
 
   ManageTopBar(viewModel, topBarState)
-
-  StatusBarAppearance(darkIcons = darkStatusBarIcons)
 
   content()
 }
@@ -188,17 +178,5 @@ fun EventBasedViewModel<out ViewEvent>.LifeCycleObserver(
     }
     lifecycleOwner.lifecycle.addObserver(observer)
     onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
-  }
-}
-
-@Composable
-fun StatusBarAppearance(darkIcons: Boolean) {
-  val view = LocalView.current
-
-  DisposableEffect(view, darkIcons) {
-    val window = (view.context as Activity).window
-    WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkIcons
-
-    onDispose { }
   }
 }

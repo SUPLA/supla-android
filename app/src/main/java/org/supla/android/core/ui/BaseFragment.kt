@@ -31,7 +31,6 @@ import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.lib.AndroidSuplaClientMessageHandler
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.LoadableContent
-import org.supla.android.ui.ToolbarVisibilityController
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessageHandler
 import java.io.Serializable
@@ -71,7 +70,6 @@ abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayo
     lifecycleScope.launchWhenStarted { viewModel.getViewState().collect { state -> handleViewState(state) } }
 
     viewModel.onViewCreated()
-    (activity as? ToolbarVisibilityController)?.setToolbarVisible(getToolbarVisibility())
   }
 
   @CallSuper
@@ -104,9 +102,6 @@ abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayo
 
   protected open fun onSuplaMessage(message: SuplaClientMessage) {
   }
-
-  protected open fun getToolbarVisibility(): ToolbarVisibilityController.ToolbarVisibility =
-    ToolbarVisibilityController.ToolbarVisibility()
 
   protected fun <T : Serializable> requireSerializable(key: String, clazz: Class<T>): T {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
