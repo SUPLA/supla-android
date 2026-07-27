@@ -22,6 +22,7 @@ import android.content.Context
 import android.content.pm.ServiceInfo
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -48,9 +49,12 @@ import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
 import timber.log.Timber
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 private const val INTERNAL_ERROR = -10
 private const val ARG_WIDGET_ACTION = "ARG_WIDGET_ACTION"
+private const val NETWORK_WAIT_TIMEOUT_SECONDS = 10L
 
 abstract class WidgetCommandWorkerBase(
   private val widgetConfigurationUpdater: WidgetConfigurationUpdater,
@@ -94,7 +98,7 @@ abstract class WidgetCommandWorkerBase(
   protected abstract fun valueWithUnit(): Boolean
 
   private fun performUpdate(widgetIds: IntArray, isManualUpdate: Boolean): Result {
-    if (!isNetworkAvailable()) {
+    if (!ensureNetworkAvailable()) {
       Timber.d("Widget update skipped because of unavailable network (widgetIds: $widgetIds)")
       if (isManualUpdate) {
         showToastLong(R.string.widget_command_no_connection)
@@ -169,7 +173,7 @@ abstract class WidgetCommandWorkerBase(
     }
     setForegroundAsync(createForegroundInfo(configuration.caption))
 
-    if (!isNetworkAvailable()) {
+    if (!ensureNetworkAvailable()) {
       showToastLong(R.string.widget_command_no_connection)
       return Result.failure()
     }
@@ -324,8 +328,41 @@ abstract class WidgetCommandWorkerBase(
     val network = connectivityManager.activeNetwork ?: return false
     val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
 
-    return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
-      capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+    return capabilities.hasValidatedInternet()
+  }
+
+  private fun ensureNetworkAvailable(): Boolean {
+    if (isNetworkAvailable()) {
+      return true
+    }
+
+    val connectivityManager = applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val latch = CountDownLatch(1)
+    val callback = object : ConnectivityManager.NetworkCallback() {
+      override fun onCapabilitiesChanged(network: android.net.Network, networkCapabilities: NetworkCapabilities) {
+        if (networkCapabilities.hasValidatedInternet()) {
+          latch.countDown()
+        }
+      }
+    }
+    val request = NetworkRequest.Builder()
+      .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+      .build()
+
+    return try {
+      Timber.d("Requesting network for widget command worker")
+      connectivityManager.requestNetwork(request, callback)
+      latch.await(NETWORK_WAIT_TIMEOUT_SECONDS, TimeUnit.SECONDS) || isNetworkAvailable()
+    } catch (exception: RuntimeException) {
+      Timber.w(exception, "Could not request network for widget command worker")
+      isNetworkAvailable()
+    } finally {
+      try {
+        connectivityManager.unregisterNetworkCallback(callback)
+      } catch (exception: RuntimeException) {
+        Timber.d(exception, "Network callback already unregistered")
+      }
+    }
   }
 
   private fun getBrightness(actionId: ActionId?): Short =
@@ -360,6 +397,10 @@ abstract class WidgetCommandWorkerBase(
         .build()
   }
 }
+
+private fun NetworkCapabilities.hasValidatedInternet(): Boolean =
+  hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+    hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
 
 private sealed interface WorkResult {
   data object Success : WorkResult
