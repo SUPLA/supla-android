@@ -19,10 +19,9 @@ package org.supla.android.widget.onoff
 
 import android.content.Context
 import androidx.hilt.work.HiltWorker
-import androidx.work.Constraints
 import androidx.work.ExistingWorkPolicy
-import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -67,10 +66,6 @@ class OnOffWidgetCommandWorker @AssistedInject constructor(
   override fun valueWithUnit(): Boolean = true
 
   companion object {
-    val constraint = Constraints.Builder()
-      .setRequiredNetworkType(NetworkType.CONNECTED)
-      .build()
-
     fun enqueue(widgetIds: IntArray, widgetAction: WidgetAction, workManagerProxy: WorkManagerProxy) {
       val workName = getWorkId(WORK_ID_PREFIX, widgetIds)
       Timber.d("Enqueueing on off widget command worker $workName")
@@ -78,7 +73,7 @@ class OnOffWidgetCommandWorker @AssistedInject constructor(
 
       val widgetsWork = OneTimeWorkRequestBuilder<OnOffWidgetCommandWorker>()
         .setInputData(inputData)
-        .setConstraints(constraint)
+        .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
         .build()
 
       // Work for widget ID is unique, so no other worker for the same ID will be started
