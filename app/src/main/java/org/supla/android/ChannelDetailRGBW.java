@@ -58,7 +58,8 @@ public class ChannelDetailRGBW extends DetailLayout {
 
   private void setupDimmerCalibrationTool() {
     if (getChannelBase() instanceof Channel c) {
-      if (c.getManufacturerID() == SuplaConst.SUPLA_MFR_DOYLETRATT && (c.getProductID() == 1 || c.getProductID() == 10)) {
+      if (c.getManufacturerID() == SuplaConst.SUPLA_MFR_DOYLETRATT
+          && (c.getProductID() == 1 || c.getProductID() == 10)) {
         if (dimmerCalibrationTool == null
             || !(dimmerCalibrationTool instanceof VLCalibrationTool)) {
           dimmerCalibrationTool = new VLCalibrationTool(this, mainNavigator);

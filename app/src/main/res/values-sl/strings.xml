@@ -650,6 +650,9 @@
   <string name="channel_battery_level_with_info">Raven baterije (%1$d - %2$s): %3$d%%</string>
   <string name="channel_btn_stop">Ustavi</string>
   <string name="android_auto_action">Dejanje: %1$s</string>
+  <string name="android_auto_empty_header">Zahtevana je konfiguracija</string>
+  <string name="android_auto_empty_refresh">Osveži</string>
+  <string name="android_auto_empty_message">Android Auto v aplikaciji SUPLA nastavite le, ko je avto parkiran.</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Če imate QR kodo, uporabite skener. Za naprave brez QR kode pritisnite <b>Naprej</b> za nadaljevanje.]]></string>
   <string name="add_wizard_network_name">Ime omrežja</string>
   <string name="add_wizard_step_2_search_network">Iskanje omrežja</string>

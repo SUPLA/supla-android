@@ -20,12 +20,12 @@ package org.supla.android.events
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.RoomSceneRepository
 import org.supla.android.data.source.local.entity.SceneEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.db.Channel
 import org.supla.android.db.ChannelGroup
 import org.supla.android.usecases.channel.ChannelToRootRelationHolderUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
@@ -46,6 +46,8 @@ class UpdateEventsManager @Inject constructor(
   private val channelUpdatesSubject: BehaviorSubject<Any> = BehaviorSubject.create()
   private val groupUpdatesSubject: BehaviorSubject<Any> = BehaviorSubject.create()
   private val sceneUpdatesSubject: BehaviorSubject<Any> = BehaviorSubject.create()
+
+  private val androidAutoReloadSubject = PublishSubject.create<Unit>()
 
   @Synchronized
   fun cleanup() {
@@ -105,6 +107,12 @@ class UpdateEventsManager @Inject constructor(
   fun observeChannelsUpdate(): Observable<Any> = channelUpdatesSubject.hide().debounce(200, TimeUnit.MILLISECONDS)
   fun observeGroupsUpdate(): Observable<Any> = groupUpdatesSubject.hide().debounce(200, TimeUnit.MILLISECONDS)
   fun observeScenesUpdate(): Observable<Any> = sceneUpdatesSubject.hide().debounce(200, TimeUnit.MILLISECONDS)
+
+  fun updateAndroidAuto() {
+    androidAutoReloadSubject.onNext(Unit)
+  }
+
+  fun observeAndroidAutoUpdates(): Observable<Unit> = androidAutoReloadSubject.hide()
 
   private fun getSubjectForScene(sceneId: Int): Subject<State> {
     return getSubject(sceneId, IdType.SCENE) {

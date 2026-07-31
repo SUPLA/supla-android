@@ -30,6 +30,7 @@ import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.RoomSceneRepository
 import org.supla.android.data.source.local.entity.AndroidAutoItemEntity
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
@@ -53,6 +54,7 @@ class AddAndroidAutoItemViewModel @Inject constructor(
   private val channelGroupRepository: ChannelGroupRepository,
   override val getChannelIconUseCase: GetChannelIconUseCase,
   override val getSceneIconUseCase: GetSceneIconUseCase,
+  private val updateEventsManager: UpdateEventsManager,
   override val getCaptionUseCase: GetCaptionUseCase,
   private val sceneRepository: RoomSceneRepository,
   schedulers: SuplaSchedulers
@@ -238,6 +240,7 @@ class AddAndroidAutoItemViewModel @Inject constructor(
       .attach()
       .subscribeBy(
         onComplete = {
+          updateEventsManager.updateAndroidAuto()
           sendEvent(AddAndroidAutoItemViewEvent.Close)
         }
       )
@@ -255,6 +258,7 @@ class AddAndroidAutoItemViewModel @Inject constructor(
       .attach()
       .subscribeBy(
         onComplete = {
+          updateEventsManager.updateAndroidAuto()
           sendEvent(AddAndroidAutoItemViewEvent.Close)
         }
       )

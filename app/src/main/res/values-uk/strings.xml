@@ -626,6 +626,9 @@
   <string name="channel_battery_level_with_info">Рівень заряду батареї (%1$d - %2$s): %3$d%%</string>
   <string name="channel_btn_stop">Зупинити</string>
   <string name="android_auto_action">Подія: %1$s</string>
+  <string name="android_auto_empty_header">Потрібна конфігурація</string>
+  <string name="android_auto_empty_refresh">Оновити</string>
+  <string name="android_auto_empty_message">Налаштовуйте Android Auto в додатку SUPLA лише тоді, коли автомобіль припаркований.</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Якщо у вас є QR-код, скористайтеся сканером. Для пристроїв без QR-коду натисніть <b>Далі</b>, щоб продовжити.]]></string>
   <string name="add_wizard_network_name">Назва мережі</string>
   <string name="add_wizard_step_2_search_network">Шукати мережу</string>

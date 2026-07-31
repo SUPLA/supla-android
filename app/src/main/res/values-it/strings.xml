@@ -675,6 +675,9 @@
   </plurals>
   <string name="channel_btn_stop">Fermare</string>
   <string name="android_auto_action">Azione: %1$s</string>
+  <string name="android_auto_empty_header">Configurazione richiesta</string>
+  <string name="android_auto_empty_refresh">Aggiorna</string>
+  <string name="android_auto_empty_message">Configura Android Auto nell\'app SUPLA solo quando l\'auto è parcheggiata.</string>
   <string name="add_wizard_network_name">Nome rete</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Se hai un codice QR, usa lo scanner. Per i dispositivi senza codice QR, premi <b>Avanti</b> per continuare.]]></string>
   <string name="add_wizard_step_2_search_network">Cerca rete</string>

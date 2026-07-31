@@ -24,6 +24,7 @@ import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.AndroidAutoItemRepository
 import org.supla.android.data.source.local.entity.complex.AndroidAutoDataEntity
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -35,6 +36,7 @@ class AndroidAutoItemsViewModel @Inject constructor(
   private val androidAutoItemRepository: AndroidAutoItemRepository,
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val getSceneIconUseCase: GetSceneIconUseCase,
+  private val updateEventsManager: UpdateEventsManager,
   private val preferences: Preferences,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<AndroidAutoItemsViewModelState, AndroidAutoItemsViewEvent>(AndroidAutoItemsViewModelState(), schedulers),
@@ -79,7 +81,10 @@ class AndroidAutoItemsViewModel @Inject constructor(
   override fun onMoveFinished() {
     androidAutoItemRepository.setItemsOrder(currentState().viewState.items.map { it.id })
       .attach()
-      .subscribeBy(onError = defaultErrorHandler("onMoveFinished"))
+      .subscribeBy(
+        onComplete = { updateEventsManager.updateAndroidAuto() },
+        onError = defaultErrorHandler("onMoveFinished")
+      )
       .disposeBySelf()
   }
 

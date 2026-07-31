@@ -18,11 +18,12 @@ package org.supla.android.automotive.screen
  */
 
 import android.graphics.drawable.Icon
+import androidx.annotation.StringRes
 import androidx.car.app.CarContext
 import androidx.car.app.Screen
+import androidx.car.app.model.Action
 import androidx.car.app.model.CarColor.PRIMARY
 import androidx.car.app.model.CarIcon
-import androidx.car.app.model.CarText
 import androidx.car.app.model.GridItem
 import androidx.car.app.model.GridTemplate
 import androidx.car.app.model.Header
@@ -54,6 +55,7 @@ import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import timber.log.Timber
+import kotlin.time.Duration.Companion.seconds
 
 class MainScreen(
   private val androidAutoItemRepository: AndroidAutoItemRepository,
@@ -97,9 +99,13 @@ class MainScreen(
       updateEventsManager.observeScenesUpdate()
         .subscribeOn(schedulers.io)
         .observeOn(schedulers.ui)
-        .subscribe {
-          load()
-        }
+        .subscribe { load() }
+    )
+    disposables.add(
+      updateEventsManager.observeAndroidAutoUpdates()
+        .subscribeOn(schedulers.io)
+        .observeOn(schedulers.ui)
+        .subscribe { load() }
     )
   }
 
@@ -123,19 +129,31 @@ class MainScreen(
   override fun onGetTemplate(): Template =
     if (state.loading) {
       GridTemplate.Builder()
-        .setHeader(Header.Builder().setTitle(CarText.create(carContext.getString(R.string.app_name))).build())
+        .setHeader(createHeader(R.string.app_name).build())
         .setLoading(true)
         .build()
     } else if (state.items.isEmpty()) {
-      MessageTemplate.Builder(CarText.create(carContext.getString(R.string.android_auto_empty)))
-        .setHeader(Header.Builder().setTitle(CarText.create(carContext.getString(R.string.app_name))).build())
+      MessageTemplate.Builder(carContext.getString(R.string.android_auto_empty_message))
+        .setIcon(CarIcon.ALERT)
+        .setHeader(createHeader(R.string.android_auto_empty_header).build())
+        .addAction(
+          Action.Builder()
+            .setTitle(carContext.getString(R.string.android_auto_empty_refresh))
+            .setOnClickListener { load() }
+            .build()
+        )
         .build()
     } else {
       GridTemplate.Builder()
-        .setHeader(Header.Builder().setTitle(CarText.create(carContext.getString(R.string.app_name))).build())
+        .setHeader(createHeader(R.string.app_name).build())
         .setSingleList(getGridList())
         .build()
     }
+
+  private fun createHeader(@StringRes titleRes: Int) =
+    Header.Builder()
+      .setTitle(carContext.getString(titleRes))
+      .setStartHeaderAction(Action.APP_ICON)
 
   private fun getGridList(): ItemList {
     val list = ItemList.Builder()
@@ -198,7 +216,7 @@ class MainScreen(
 
         invalidate()
 
-        delay(5000)
+        delay(5.seconds)
 
         state.executing.remove(item.androidAutoItemEntity.id)
         state.errors.remove(item.androidAutoItemEntity.id)

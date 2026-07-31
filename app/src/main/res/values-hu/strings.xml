@@ -652,6 +652,9 @@
   <string name="channel_battery_level_with_info">Az akkumulátor töltöttségi szintje (%1$d - %2$s): %3$d%%</string>
   <string name="channel_btn_stop">Állj</string>
   <string name="android_auto_action">Akció: %1$s</string>
+  <string name="android_auto_empty_header">Konfiguráció szükséges</string>
+  <string name="android_auto_empty_refresh">Frissítés</string>
+  <string name="android_auto_empty_message">Az Android Auto-t a SUPLA alkalmazásban csak akkor állítsa be, amikor az autó parkol.</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Ha van QR-kódja, használja a szkennert. QR-kód nélküli eszközök esetén nyomja meg a <b>Tovább</b> gombot a folytatáshoz.]]></string>
   <string name="add_wizard_network_name">Hálózat neve</string>
   <string name="add_wizard_step_2_search_network">Hálózat keresése</string>

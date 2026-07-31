@@ -757,7 +757,9 @@
   <string name="android_auto_add" translatable="false">Add Android Auto item</string>
   <string name="channel_btn_stop">Stop</string>
   <string name="android_auto_action">Action: %1$s</string>
-  <string name="android_auto_empty" translatable="false">Android Auto not configured. Go to Supla App -> Settings -> Android Auto and prepare configuration.</string>
+  <string name="android_auto_empty_header">Configuration required</string>
+  <string name="android_auto_empty_message">Set up Android Auto in the SUPLA app\n when it is safe.</string>
+  <string name="android_auto_empty_refresh">Refresh</string>
   <string name="android_auto_executing" translatable="false">Executing…</string>
   <string name="android_auto_delete_title" translatable="false">Deleting item</string>
   <string name="android_auto_delete_message" translatable="false">Do you want to continue?</string>

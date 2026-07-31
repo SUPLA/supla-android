@@ -653,6 +653,9 @@
   <string name="channel_battery_level_with_info">Úroveň batérie (%1$d - %2$s): %3$d%%</string>
   <string name="channel_btn_stop">Zastaviť</string>
   <string name="android_auto_action">Činnosť: %1$s</string>
+  <string name="android_auto_empty_header">Vyžaduje sa konfigurácia</string>
+  <string name="android_auto_empty_refresh">Obnoviť</string>
+  <string name="android_auto_empty_message">Nastavte Android Auto v aplikácii SUPLA len vtedy, keď je auto zaparkované.</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Ak máte QR kód, použite skener. Pre zariadenia bez QR kódu stlačte <b>Ďalej</b> pre pokračovanie.]]></string>
   <string name="add_wizard_network_name">Názov siete</string>
   <string name="add_wizard_step_2_search_network">Vyhľadať sieť</string>

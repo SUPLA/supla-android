@@ -630,6 +630,9 @@
   <string name="channel_battery_level_with_info">Baterijos lygis (%1$d - %2$s): %3$d%%</string>
   <string name="channel_btn_stop">Sustabdyti</string>
   <string name="android_auto_action">Veiksmas: %1$s</string>
+  <string name="android_auto_empty_header">Reikalinga konfigūracija</string>
+  <string name="android_auto_empty_refresh">Atnaujinti</string>
+  <string name="android_auto_empty_message">Konfigūruokite „Android Auto“ SUPLA programėlėje tik tada, kai automobilis yra pastatytas.</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Jei turite QR kodą, naudokite skaitytuvą. Įrenginiams be QR kodo, paspauskite <b>Kitas</b>, kad tęstumėte.]]></string>
   <string name="add_wizard_network_name">Tinklo pavadinimas</string>
   <string name="add_wizard_step_2_search_network">Ieškoti tinklo</string>
