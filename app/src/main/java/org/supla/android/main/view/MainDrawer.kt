@@ -17,6 +17,7 @@ package org.supla.android.main.view
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.view.Surface
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
@@ -57,7 +58,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -78,6 +81,7 @@ import org.supla.android.main.ListTab
 import org.supla.android.main.LocalNavigator
 import org.supla.android.main.MainRoute
 import org.supla.android.tools.SuplaPreview
+import org.supla.android.ui.extensions.isPhoneLandscape
 import org.supla.android.ui.views.buttons.DrawerBackButton
 import org.supla.android.ui.views.buttons.TextButton
 import org.supla.android.ui.views.texts.HeadlineSmall
@@ -159,9 +163,16 @@ private fun DrawerContent(
       )
     }
 
+    val showCutout = LocalView.current.display?.rotation == Surface.ROTATION_90
     Column(
       modifier = Modifier
-        .displayCutoutPadding()
+        .let {
+          if (showCutout) {
+            it.displayCutoutPadding()
+          } else {
+            it
+          }
+        }
         .verticalScroll(rememberScrollState())
     ) {
       if (!LocalApplicationPreferences.current.isShowBottomMenu) {
