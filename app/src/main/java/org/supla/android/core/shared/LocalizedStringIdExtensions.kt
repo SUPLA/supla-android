@@ -127,10 +127,18 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.ADD_WIZARD_RESULT_FAILED -> R.string.wizard_result_failed
     LocalizedStringId.ADD_WIZARD_RECONNECT_TIMEOUT -> R.string.wizard_reconnect_timeout
     LocalizedStringId.ADD_WIZARD_DEVICE_TEMPORARILY_LOCKED -> R.string.add_wizard_device_temporarily_locked
+    LocalizedStringId.ADD_WIZARD_CERTIFICATE_ERROR_UNTRUSTED -> R.string.wizard_result_certificate_untrusted
+    LocalizedStringId.ADD_WIZARD_CERTIFICATE_ERROR_EXPIRED -> R.string.wizard_result_certificate_expired
+    LocalizedStringId.ADD_WIZARD_CERTIFICATE_ERROR_NOT_YET_VALID -> R.string.wizard_result_certificate_not_yet_valid
+    LocalizedStringId.ADD_WIZARD_CERTIFICATE_ERROR_REVOKED -> R.string.wizard_result_certificate_revoked
+    LocalizedStringId.ADD_WIZARD_CERTIFICATE_ERROR_HOST_MISMATCH -> R.string.wizard_result_certificate_host_mismatch
+    LocalizedStringId.ADD_WIZARD_CERTIFICATE_ERROR_PIN_MISMATCH -> R.string.wizard_result_certificate_pin_mismatch
+    LocalizedStringId.ADD_WIZARD_CERTIFICATE_ERROR_UNSUPPORTED_SECURITY -> R.string.wizard_result_certificate_unsupported_security
     LocalizedStringId.ADD_WIZARD_STATE_PREPARING -> R.string.wizard_state_preparing
     LocalizedStringId.ADD_WIZARD_STATE_CONNECTING -> R.string.wizard_state_connecting
     LocalizedStringId.ADD_WIZARD_STATE_CONFIGURING -> R.string.wizard_state_configuring
     LocalizedStringId.ADD_WIZARD_STATE_FINISHING -> R.string.wizard_state_finishing
+    LocalizedStringId.ADD_WIZARD_CERTIFICATE_ERROR_DIFFERENT_NAMES -> R.string.wizard_result_certificate_different_names
     LocalizedStringId.CHANNEL_STATE_UPTIME -> R.string.channel_state_uptime
     LocalizedStringId.CHANNEL_STATE_BATTERY_POWERED -> R.string.channel_state_battery_powered
     LocalizedStringId.CHANNEL_STATE_MAINS_POWERED -> R.string.channel_state_main_powered

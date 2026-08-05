@@ -845,4 +845,12 @@
   <string name="details_em_on_list_balance">Metode for energibalansering</string>
   <string name="details_em_on_list_value">Dataområde</string>
   <string name="details_em_on_list">Visning i kanallisten</string>
+  <string name="wizard_result_certificate_untrusted">Enhetens sertifikat er ikke klarert. Kontroller at du kobler til riktig enhet og at programvaren er oppdatert.</string>
+  <string name="wizard_result_certificate_expired">Enhetens sertifikat er utløpt. Oppdater enhetens programvare eller kontakt brukerstøtte. Kontroller også at dato og klokkeslett på telefonen er riktig.</string>
+  <string name="wizard_result_certificate_not_yet_valid">Enhetens sertifikat er ikke gyldig ennå. Kontroller dato og klokkeslett på telefonen og enheten, og prøv igjen.</string>
+  <string name="wizard_result_certificate_revoked">Enhetens sertifikat er tilbakekalt. Av sikkerhetsgrunner kan forbindelsen ikke opprettes. Oppdater enhetens programvare eller kontakt brukerstøtte.</string>
+  <string name="wizard_result_certificate_host_mismatch">Sertifikatet samsvarer ikke med denne enheten. Kontroller at appen kobler til riktig enhet.</string>
+  <string name="wizard_result_certificate_pin_mismatch">Enhetens sertifikat er forskjellig fra det forventede. Oppdater appen og enhetens programvare, og prøv igjen.</string>
+  <string name="wizard_result_certificate_unsupported_security">Enheten bruker sikkerhetsinnstillinger som ikke støttes. Oppdater enhetens programvare og prøv igjen.</string>
+  <string name="wizard_result_certificate_different_names">Enheten har feil sertifikat - navnene samsvarer ikke (sertifikat: %1$s, enhet: %2$s)</string>
 </resources>

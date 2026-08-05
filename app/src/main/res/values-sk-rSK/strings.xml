@@ -850,4 +850,12 @@
   <string name="details_em_on_list_balance">Metóda bilancovania energie</string>
   <string name="details_em_on_list_value">Rozsah dát</string>
   <string name="details_em_on_list">Zobrazenie v zozname kanálov</string>
+  <string name="wizard_result_certificate_untrusted">Certifikát zariadenia nie je dôveryhodný. Uistite sa, že sa pripájate k správnemu zariadeniu a že jeho softvér je aktuálny.</string>
+  <string name="wizard_result_certificate_expired">Platnosť certifikátu zariadenia vypršala. Aktualizujte softvér zariadenia alebo kontaktujte podporu. Skontrolujte tiež, či je v telefóne správny dátum a čas.</string>
+  <string name="wizard_result_certificate_not_yet_valid">Certifikát zariadenia ešte nie je platný. Skontrolujte dátum a čas v telefóne a zariadení a skúste to znova.</string>
+  <string name="wizard_result_certificate_revoked">Certifikát zariadenia bol odvolaný. Z bezpečnostných dôvodov nie je možné nadviazať spojenie. Aktualizujte softvér zariadenia alebo kontaktujte podporu.</string>
+  <string name="wizard_result_certificate_host_mismatch">Certifikát nezodpovedá tomuto zariadeniu. Uistite sa, že sa aplikácia pripája k správnemu zariadeniu.</string>
+  <string name="wizard_result_certificate_pin_mismatch">Certifikát zariadenia sa líši od očakávaného. Aktualizujte aplikáciu aj softvér zariadenia a skúste to znova.</string>
+  <string name="wizard_result_certificate_unsupported_security">Zariadenie používa nepodporované nastavenia zabezpečenia. Aktualizujte softvér zariadenia a skúste to znova.</string>
+  <string name="wizard_result_certificate_different_names">Zariadenie má nesprávny certifikát - názvy sa nezhodujú (certifikát: %1$s, zariadenie: %2$s)</string>
 </resources>

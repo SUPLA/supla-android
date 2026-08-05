@@ -835,4 +835,12 @@
   <string name="details_em_on_list_balance">Método de balanceamento de energia</string>
   <string name="details_em_on_list_value">Intervalo de dados</string>
   <string name="details_em_on_list">Exibição na lista de canais</string>
+  <string name="wizard_result_certificate_untrusted">O certificado do dispositivo não é confiável. Certifique-se de que está se conectando ao dispositivo correto e de que o software dele está atualizado.</string>
+  <string name="wizard_result_certificate_expired">O certificado do dispositivo expirou. Atualize o software do dispositivo ou entre em contato com o suporte. Verifique também se a data e a hora do telefone estão corretas.</string>
+  <string name="wizard_result_certificate_not_yet_valid">O certificado do dispositivo ainda não é válido. Verifique a data e a hora no telefone e no dispositivo e tente novamente.</string>
+  <string name="wizard_result_certificate_revoked">O certificado do dispositivo foi revogado. Por motivos de segurança, a conexão não pode ser estabelecida. Atualize o software do dispositivo ou entre em contato com o suporte.</string>
+  <string name="wizard_result_certificate_host_mismatch">O certificado não corresponde a este dispositivo. Certifique-se de que o aplicativo está se conectando ao dispositivo correto.</string>
+  <string name="wizard_result_certificate_pin_mismatch">O certificado do dispositivo é diferente do esperado. Atualize o aplicativo e o software do dispositivo e tente novamente.</string>
+  <string name="wizard_result_certificate_unsupported_security">O dispositivo usa configurações de segurança não compatíveis. Atualize o software do dispositivo e tente novamente.</string>
+  <string name="wizard_result_certificate_different_names">O dispositivo tem um certificado incorreto - os nomes não correspondem (certificado: %1$s, dispositivo: %2$s)</string>
 </resources>

@@ -905,4 +905,12 @@
   <string name="details_em_on_list_balance">Methode zur Energiebilanzierung</string>
   <string name="details_em_on_list_value">Datenbereich</string>
   <string name="details_em_on_list">Anzeige in der Kanalliste</string>
+  <string name="wizard_result_certificate_untrusted">Das Zertifikat des Geräts ist nicht vertrauenswürdig. Stellen Sie sicher, dass Sie eine Verbindung mit dem richtigen Gerät herstellen und dass dessen Software aktuell ist.</string>
+  <string name="wizard_result_certificate_expired">Das Zertifikat des Geräts ist abgelaufen. Aktualisieren Sie die Gerätesoftware oder kontaktieren Sie den Support. Prüfen Sie auch, ob Datum und Uhrzeit auf dem Telefon korrekt sind.</string>
+  <string name="wizard_result_certificate_not_yet_valid">Das Zertifikat des Geräts ist noch nicht gültig. Prüfen Sie Datum und Uhrzeit auf dem Telefon und dem Gerät und versuchen Sie es erneut.</string>
+  <string name="wizard_result_certificate_revoked">Das Zertifikat des Geräts wurde widerrufen. Aus Sicherheitsgründen kann keine Verbindung hergestellt werden. Aktualisieren Sie die Gerätesoftware oder kontaktieren Sie den Support.</string>
+  <string name="wizard_result_certificate_host_mismatch">Das Zertifikat passt nicht zu diesem Gerät. Stellen Sie sicher, dass die App eine Verbindung mit dem richtigen Gerät herstellt.</string>
+  <string name="wizard_result_certificate_pin_mismatch">Das Zertifikat des Geräts unterscheidet sich vom erwarteten Zertifikat. Aktualisieren Sie die App und die Gerätesoftware und versuchen Sie es erneut.</string>
+  <string name="wizard_result_certificate_unsupported_security">Das Gerät verwendet nicht unterstützte Sicherheitseinstellungen. Aktualisieren Sie die Gerätesoftware und versuchen Sie es erneut.</string>
+  <string name="wizard_result_certificate_different_names">Das Gerät hat ein falsches Zertifikat - die Namen stimmen nicht überein (Zertifikat: %1$s, Gerät: %2$s)</string>
 </resources>

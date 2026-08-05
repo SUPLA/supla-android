@@ -929,4 +929,12 @@
   <string name="details_em_on_list_balance">Enerji balanslama üsulu</string>
   <string name="details_em_on_list_value">Məlumat aralığı</string>
   <string name="details_em_on_list">Kanallar siyahısında göstərmə</string>
+  <string name="wizard_result_certificate_untrusted">Cihaz sertifikatına etibar edilmir. Düzgün cihaza qoşulduğunuzdan və onun proqram təminatının aktual olduğundan əmin olun.</string>
+  <string name="wizard_result_certificate_expired">Cihaz sertifikatının müddəti bitib. Cihazın proqram təminatını yeniləyin və ya dəstək xidməti ilə əlaqə saxlayın. Telefonda tarix və saatın düzgün olduğunu da yoxlayın.</string>
+  <string name="wizard_result_certificate_not_yet_valid">Cihaz sertifikatı hələ etibarlı deyil. Telefonda və cihazda tarix və saatı yoxlayın, sonra yenidən cəhd edin.</string>
+  <string name="wizard_result_certificate_revoked">Cihaz sertifikatı ləğv edilib. Təhlükəsizlik səbəbi ilə bağlantı qurula bilmir. Cihazın proqram təminatını yeniləyin və ya dəstək xidməti ilə əlaqə saxlayın.</string>
+  <string name="wizard_result_certificate_host_mismatch">Sertifikat bu cihaza uyğun deyil. Tətbiqin düzgün cihaza qoşulduğundan əmin olun.</string>
+  <string name="wizard_result_certificate_pin_mismatch">Cihaz sertifikatı gözləniləndən fərqlidir. Tətbiqi və cihazın proqram təminatını yeniləyin, sonra yenidən cəhd edin.</string>
+  <string name="wizard_result_certificate_unsupported_security">Cihaz dəstəklənməyən təhlükəsizlik parametrlərindən istifadə edir. Cihazın proqram təminatını yeniləyin və yenidən cəhd edin.</string>
+  <string name="wizard_result_certificate_different_names">Cihazın sertifikatı yanlışdır - adlar eyni deyil (sertifikat: %1$s, cihaz: %2$s)</string>
 </resources>

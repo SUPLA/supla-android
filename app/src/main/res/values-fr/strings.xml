@@ -833,4 +833,12 @@
   <string name="details_em_on_list_balance">Méthode d’équilibrage énergétique</string>
   <string name="details_em_on_list_value">Plage de données</string>
   <string name="details_em_on_list">Affichage dans la liste des canaux</string>
+  <string name="wizard_result_certificate_untrusted">Le certificat du dispositif n’est pas approuvé. Assurez-vous de vous connecter au bon dispositif et que son logiciel est à jour.</string>
+  <string name="wizard_result_certificate_expired">Le certificat du dispositif a expiré. Mettez à jour le logiciel du dispositif ou contactez l’assistance. Vérifiez aussi que la date et l’heure du téléphone sont correctes.</string>
+  <string name="wizard_result_certificate_not_yet_valid">Le certificat du dispositif n’est pas encore valide. Vérifiez la date et l’heure du téléphone et du dispositif, puis réessayez.</string>
+  <string name="wizard_result_certificate_revoked">Le certificat du dispositif a été révoqué. Pour des raisons de sécurité, la connexion ne peut pas être établie. Mettez à jour le logiciel du dispositif ou contactez l’assistance.</string>
+  <string name="wizard_result_certificate_host_mismatch">Le certificat ne correspond pas à ce dispositif. Assurez-vous que l’application se connecte au bon dispositif.</string>
+  <string name="wizard_result_certificate_pin_mismatch">Le certificat du dispositif diffère de celui attendu. Mettez à jour l’application et le logiciel du dispositif, puis réessayez.</string>
+  <string name="wizard_result_certificate_unsupported_security">Le dispositif utilise des paramètres de sécurité non pris en charge. Mettez à jour le logiciel du dispositif et réessayez.</string>
+  <string name="wizard_result_certificate_different_names">Le dispositif possède un certificat incorrect - les noms ne correspondent pas (certificat : %1$s, dispositif : %2$s)</string>
 </resources>

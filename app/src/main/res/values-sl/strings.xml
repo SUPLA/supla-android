@@ -849,4 +849,12 @@
   <string name="details_em_on_list_balance">Metoda uravnoteženja energije</string>
   <string name="details_em_on_list_value">Obseg podatkov</string>
   <string name="details_em_on_list">Prikaz na seznamu kanalov</string>
+  <string name="wizard_result_certificate_untrusted">Potrdilo naprave ni zaupanja vredno. Preverite, ali se povezujete s pravo napravo in ali je njena programska oprema posodobljena.</string>
+  <string name="wizard_result_certificate_expired">Potrdilo naprave je poteklo. Posodobite programsko opremo naprave ali se obrnite na podporo. Preverite tudi, ali sta datum in ura v telefonu pravilna.</string>
+  <string name="wizard_result_certificate_not_yet_valid">Potrdilo naprave še ni veljavno. Preverite datum in uro v telefonu ter napravi, nato poskusite znova.</string>
+  <string name="wizard_result_certificate_revoked">Potrdilo naprave je bilo preklicano. Iz varnostnih razlogov povezave ni mogoče vzpostaviti. Posodobite programsko opremo naprave ali se obrnite na podporo.</string>
+  <string name="wizard_result_certificate_host_mismatch">Potrdilo se ne ujema s to napravo. Preverite, ali se aplikacija povezuje s pravo napravo.</string>
+  <string name="wizard_result_certificate_pin_mismatch">Potrdilo naprave se razlikuje od pričakovanega. Posodobite aplikacijo in programsko opremo naprave, nato poskusite znova.</string>
+  <string name="wizard_result_certificate_unsupported_security">Naprava uporablja nepodprte varnostne nastavitve. Posodobite programsko opremo naprave in poskusite znova.</string>
+  <string name="wizard_result_certificate_different_names">Naprava ima napačno potrdilo - imena se ne ujemajo (potrdilo: %1$s, naprava: %2$s)</string>
 </resources>

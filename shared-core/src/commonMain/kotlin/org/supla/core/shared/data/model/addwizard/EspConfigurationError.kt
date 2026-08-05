@@ -49,4 +49,57 @@ sealed class EspConfigurationError(
   data object Reconnect : EspConfigurationError(message = localizedString(LocalizedStringId.ADD_WIZARD_RECONNECT_TIMEOUT))
   data class Combined(override val messages: List<LocalizedString>) : EspConfigurationError(messages)
   data object TemporarilyLocked : EspConfigurationError(message = localizedString(LocalizedStringId.ADD_WIZARD_DEVICE_TEMPORARILY_LOCKED))
+  data class CertificateError(val type: CertificateErrorType) : EspConfigurationError(type.localizedMessage)
+}
+
+sealed class CertificateErrorType(
+  open val message: String,
+  open val localizedMessage: LocalizedString
+) {
+  data object UntrustedCertificate : CertificateErrorType(
+    message = "Untrusted certificate",
+    localizedMessage = localizedString(LocalizedStringId.ADD_WIZARD_CERTIFICATE_ERROR_UNTRUSTED)
+  )
+
+  data object CertificateExpired : CertificateErrorType(
+    message = "Certificate expired",
+    localizedMessage = localizedString(LocalizedStringId.ADD_WIZARD_CERTIFICATE_ERROR_EXPIRED)
+  )
+
+  data object CertificateNotYetValid : CertificateErrorType(
+    message = "Certificate not yet valid",
+    localizedMessage = localizedString(LocalizedStringId.ADD_WIZARD_CERTIFICATE_ERROR_NOT_YET_VALID)
+  )
+
+  data object CertificateRevoked : CertificateErrorType(
+    message = "Certificate revoked",
+    localizedMessage = localizedString(LocalizedStringId.ADD_WIZARD_CERTIFICATE_ERROR_REVOKED)
+  )
+
+  data object CertificateHostMismatch : CertificateErrorType(
+    message = "Certificate host mismatch",
+    localizedMessage = localizedString(LocalizedStringId.ADD_WIZARD_CERTIFICATE_ERROR_HOST_MISMATCH)
+  )
+
+  data object CertificatePinMismatch : CertificateErrorType(
+    message = "Certificate pin mismatch",
+    localizedMessage = localizedString(LocalizedStringId.ADD_WIZARD_CERTIFICATE_ERROR_PIN_MISMATCH)
+  )
+
+  data object UnsupportedSecurity : CertificateErrorType(
+    message = "Unsupported security",
+    localizedMessage = localizedString(LocalizedStringId.ADD_WIZARD_CERTIFICATE_ERROR_UNSUPPORTED_SECURITY)
+  )
+
+  data class DifferentCommonNames(
+    val certificateName: String?,
+    val headerName: String?
+  ) : CertificateErrorType(
+    message = "Different common names (certificate `$certificateName`, response `$headerName`)",
+    localizedMessage = localizedString(
+      id = LocalizedStringId.ADD_WIZARD_CERTIFICATE_ERROR_DIFFERENT_NAMES,
+      arg1 = certificateName ?: "<null>",
+      arg2 = headerName ?: "<null>"
+    )
+  )
 }

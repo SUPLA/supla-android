@@ -846,4 +846,12 @@
   <string name="details_em_on_list_balance">Methode voor energiebalancering</string>
   <string name="details_em_on_list_value">Gegevensbereik</string>
   <string name="details_em_on_list">Weergave in de kanalenlijst</string>
+  <string name="wizard_result_certificate_untrusted">Het certificaat van het apparaat wordt niet vertrouwd. Controleer of u verbinding maakt met het juiste apparaat en of de software up-to-date is.</string>
+  <string name="wizard_result_certificate_expired">Het certificaat van het apparaat is verlopen. Werk de apparaatsoftware bij of neem contact op met ondersteuning. Controleer ook of de datum en tijd op de telefoon juist zijn.</string>
+  <string name="wizard_result_certificate_not_yet_valid">Het certificaat van het apparaat is nog niet geldig. Controleer de datum en tijd op de telefoon en het apparaat en probeer het opnieuw.</string>
+  <string name="wizard_result_certificate_revoked">Het certificaat van het apparaat is ingetrokken. Om veiligheidsredenen kan de verbinding niet worden gemaakt. Werk de apparaatsoftware bij of neem contact op met ondersteuning.</string>
+  <string name="wizard_result_certificate_host_mismatch">Het certificaat komt niet overeen met dit apparaat. Controleer of de app verbinding maakt met het juiste apparaat.</string>
+  <string name="wizard_result_certificate_pin_mismatch">Het certificaat van het apparaat wijkt af van het verwachte certificaat. Werk de app en de apparaatsoftware bij en probeer het opnieuw.</string>
+  <string name="wizard_result_certificate_unsupported_security">Het apparaat gebruikt beveiligingsinstellingen die niet worden ondersteund. Werk de apparaatsoftware bij en probeer het opnieuw.</string>
+  <string name="wizard_result_certificate_different_names">Het apparaat heeft een onjuist certificaat - de namen komen niet overeen (certificaat: %1$s, apparaat: %2$s)</string>
 </resources>

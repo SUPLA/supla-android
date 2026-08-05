@@ -19,7 +19,8 @@ package org.supla.android.data.source.remote.esp
 
 import okhttp3.Interceptor
 import okhttp3.Response
-import java.io.IOException
+import okio.IOException
+import org.supla.core.shared.data.model.addwizard.CertificateErrorType
 import java.security.cert.X509Certificate
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -37,7 +38,7 @@ class EspCommonNameValidationInterceptor @Inject constructor(
       if (commonNameHeader != null && commonNameCertificate != null && commonNameHeader == commonNameCertificate) {
         response
       } else {
-        throw IOException("Different common names (certificate `$commonNameCertificate`, response `$commonNameHeader`)")
+        throw IOException(SuplaCertificateException(CertificateErrorType.DifferentCommonNames(commonNameCertificate, commonNameHeader)))
       }
     } else {
       chain.proceed(chain.request())
@@ -62,3 +63,5 @@ class EspCommonNameValidationInterceptor @Inject constructor(
     return matchResult?.groups?.get(1)?.value
   }
 }
+
+class SuplaCertificateException(val type: CertificateErrorType) : Exception(type.message)

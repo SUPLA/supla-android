@@ -845,4 +845,12 @@
   <string name="details_em_on_list_balance">Energiamérlegelési módszer</string>
   <string name="details_em_on_list_value">Adattartomány</string>
   <string name="details_em_on_list">Megjelenítés a csatornalistában</string>
+  <string name="wizard_result_certificate_untrusted">Az eszköz tanúsítványa nem megbízható. Győződjön meg arról, hogy a megfelelő eszközhöz csatlakozik, és hogy annak szoftvere naprakész.</string>
+  <string name="wizard_result_certificate_expired">Az eszköz tanúsítványa lejárt. Frissítse az eszköz szoftverét, vagy lépjen kapcsolatba a támogatással. Ellenőrizze azt is, hogy a telefon dátuma és ideje helyes-e.</string>
+  <string name="wizard_result_certificate_not_yet_valid">Az eszköz tanúsítványa még nem érvényes. Ellenőrizze a dátumot és az időt a telefonon és az eszközön, majd próbálja újra.</string>
+  <string name="wizard_result_certificate_revoked">Az eszköz tanúsítványát visszavonták. Biztonsági okokból a kapcsolat nem hozható létre. Frissítse az eszköz szoftverét, vagy lépjen kapcsolatba a támogatással.</string>
+  <string name="wizard_result_certificate_host_mismatch">A tanúsítvány nem illik ehhez az eszközhöz. Győződjön meg arról, hogy az alkalmazás a megfelelő eszközhöz csatlakozik.</string>
+  <string name="wizard_result_certificate_pin_mismatch">Az eszköz tanúsítványa eltér a várt tanúsítványtól. Frissítse az alkalmazást és az eszköz szoftverét, majd próbálja újra.</string>
+  <string name="wizard_result_certificate_unsupported_security">Az eszköz nem támogatott biztonsági beállításokat használ. Frissítse az eszköz szoftverét, majd próbálja újra.</string>
+  <string name="wizard_result_certificate_different_names">Az eszköz tanúsítványa hibás - a nevek nem egyeznek (tanúsítvány: %1$s, eszköz: %2$s)</string>
 </resources>
