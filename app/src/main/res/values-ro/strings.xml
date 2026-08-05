@@ -850,4 +850,12 @@
   <string name="details_em_on_list_balance">Metodă de echilibrare a energiei</string>
   <string name="details_em_on_list_value">Interval de date</string>
   <string name="details_em_on_list">Afișare în lista canalelor</string>
+  <string name="wizard_result_certificate_untrusted">Certificatul dispozitivului nu este de încredere. Asigurați-vă că vă conectați la dispozitivul corect și că software-ul acestuia este actualizat.</string>
+  <string name="wizard_result_certificate_expired">Certificatul dispozitivului a expirat. Actualizați software-ul dispozitivului sau contactați asistența. Verificați și dacă data și ora de pe telefon sunt corecte.</string>
+  <string name="wizard_result_certificate_not_yet_valid">Certificatul dispozitivului nu este încă valabil. Verificați data și ora pe telefon și pe dispozitiv, apoi încercați din nou.</string>
+  <string name="wizard_result_certificate_revoked">Certificatul dispozitivului a fost revocat. Din motive de securitate, conexiunea nu poate fi stabilită. Actualizați software-ul dispozitivului sau contactați asistența.</string>
+  <string name="wizard_result_certificate_host_mismatch">Certificatul nu se potrivește cu acest dispozitiv. Asigurați-vă că aplicația se conectează la dispozitivul corect.</string>
+  <string name="wizard_result_certificate_pin_mismatch">Certificatul dispozitivului diferă de cel așteptat. Actualizați aplicația și software-ul dispozitivului, apoi încercați din nou.</string>
+  <string name="wizard_result_certificate_unsupported_security">Dispozitivul utilizează setări de securitate neacceptate. Actualizați software-ul dispozitivului și încercați din nou.</string>
+  <string name="wizard_result_certificate_different_names">Dispozitivul are un certificat incorect - numele nu se potrivesc (certificat: %1$s, dispozitiv: %2$s)</string>
 </resources>

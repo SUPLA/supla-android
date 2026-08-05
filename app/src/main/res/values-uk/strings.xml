@@ -825,4 +825,12 @@
   <string name="details_em_on_list_balance">Метод балансування енергії</string>
   <string name="details_em_on_list_value">Діапазон даних</string>
   <string name="details_em_on_list">Відображення у списку каналів</string>
+  <string name="wizard_result_certificate_untrusted">Сертифікат пристрою не є довіреним. Переконайтеся, що ви підключаєтеся до правильного пристрою і що його програмне забезпечення оновлене.</string>
+  <string name="wizard_result_certificate_expired">Термін дії сертифіката пристрою закінчився. Оновіть програмне забезпечення пристрою або зверніться до служби підтримки. Також перевірте, чи правильно встановлені дата й час на телефоні.</string>
+  <string name="wizard_result_certificate_not_yet_valid">Сертифікат пристрою ще не дійсний. Перевірте дату й час на телефоні та пристрої, а потім спробуйте ще раз.</string>
+  <string name="wizard_result_certificate_revoked">Сертифікат пристрою було відкликано. З міркувань безпеки з’єднання неможливо встановити. Оновіть програмне забезпечення пристрою або зверніться до служби підтримки.</string>
+  <string name="wizard_result_certificate_host_mismatch">Сертифікат не відповідає цьому пристрою. Переконайтеся, що застосунок підключається до правильного пристрою.</string>
+  <string name="wizard_result_certificate_pin_mismatch">Сертифікат пристрою відрізняється від очікуваного. Оновіть застосунок і програмне забезпечення пристрою, а потім спробуйте ще раз.</string>
+  <string name="wizard_result_certificate_unsupported_security">Пристрій використовує непідтримувані налаштування безпеки. Оновіть програмне забезпечення пристрою і спробуйте ще раз.</string>
+  <string name="wizard_result_certificate_different_names">Пристрій має неправильний сертифікат - імена не збігаються (сертифікат: %1$s, пристрій: %2$s)</string>
 </resources>

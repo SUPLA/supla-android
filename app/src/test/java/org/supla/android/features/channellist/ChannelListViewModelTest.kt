@@ -66,6 +66,7 @@ import org.supla.android.usecases.channel.ReorderChannelsUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.details.ProvideChannelDetailTypeUseCase
 import org.supla.android.usecases.details.StandardDetailType
+import org.supla.android.usecases.list.TriggerLogHistoryDownloadUseCase
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
@@ -108,11 +109,15 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   private lateinit var vibrationHelper: VibrationHelper
 
   @MockK
+  private lateinit var triggerLogHistoryDownloadUseCase: TriggerLogHistoryDownloadUseCase
+
+  @MockK
   override lateinit var schedulers: SuplaSchedulers
 
   override val viewModel: ChannelListViewModel by lazy {
     ChannelListViewModel(
       createProfileChannelsListUseCase,
+      triggerLogHistoryDownloadUseCase,
       provideChannelDetailTypeUseCase,
       readChannelWithChildrenUseCase,
       executeSimpleActionUseCase,

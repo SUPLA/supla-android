@@ -827,4 +827,12 @@
   <string name="details_em_on_list_balance">Energijos balansavimo metodas</string>
   <string name="details_em_on_list_value">Duomenų diapazonas</string>
   <string name="details_em_on_list">Rodymas kanalų sąraše</string>
+  <string name="wizard_result_certificate_untrusted">Įrenginio sertifikatas nėra patikimas. Įsitikinkite, kad jungiatės prie tinkamo įrenginio ir kad jo programinė įranga yra atnaujinta.</string>
+  <string name="wizard_result_certificate_expired">Įrenginio sertifikato galiojimas baigėsi. Atnaujinkite įrenginio programinę įrangą arba susisiekite su pagalba. Taip pat patikrinkite, ar telefone teisinga data ir laikas.</string>
+  <string name="wizard_result_certificate_not_yet_valid">Įrenginio sertifikatas dar negalioja. Patikrinkite datą ir laiką telefone bei įrenginyje, tada bandykite dar kartą.</string>
+  <string name="wizard_result_certificate_revoked">Įrenginio sertifikatas buvo atšauktas. Saugumo sumetimais ryšio užmegzti negalima. Atnaujinkite įrenginio programinę įrangą arba susisiekite su pagalba.</string>
+  <string name="wizard_result_certificate_host_mismatch">Sertifikatas neatitinka šio įrenginio. Įsitikinkite, kad programa jungiasi prie tinkamo įrenginio.</string>
+  <string name="wizard_result_certificate_pin_mismatch">Įrenginio sertifikatas skiriasi nuo tikėtino. Atnaujinkite programą ir įrenginio programinę įrangą, tada bandykite dar kartą.</string>
+  <string name="wizard_result_certificate_unsupported_security">Įrenginys naudoja nepalaikomus saugumo nustatymus. Atnaujinkite įrenginio programinę įrangą ir bandykite dar kartą.</string>
+  <string name="wizard_result_certificate_different_names">Įrenginio sertifikatas neteisingas - pavadinimai nesutampa (sertifikatas: %1$s, įrenginys: %2$s)</string>
 </resources>

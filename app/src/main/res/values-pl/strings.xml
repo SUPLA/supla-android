@@ -937,4 +937,12 @@
   <string name="details_recuperator_empty_house">Pusty dom</string>
   <string name="profile_selected">Wybrany profil</string>
   <string name="general_clear_search">Wyczyść wyszukiwanie</string>
+  <string name="wizard_result_certificate_untrusted">Certyfikat urządzenia nie jest zaufany. Upewnij się, że łączysz się z właściwym urządzeniem i że jego oprogramowanie jest aktualne.</string>
+  <string name="wizard_result_certificate_expired">Certyfikat urządzenia wygasł. Zaktualizuj oprogramowanie urządzenia lub skontaktuj się z pomocą techniczną. Sprawdź też, czy data i godzina w telefonie są prawidłowe.</string>
+  <string name="wizard_result_certificate_not_yet_valid">Certyfikat urządzenia nie jest jeszcze ważny. Sprawdź datę i godzinę w telefonie oraz urządzeniu, a następnie spróbuj ponownie.</string>
+  <string name="wizard_result_certificate_revoked">Certyfikat urządzenia został unieważniony. Ze względów bezpieczeństwa nie można nawiązać połączenia. Zaktualizuj oprogramowanie urządzenia lub skontaktuj się z pomocą techniczną.</string>
+  <string name="wizard_result_certificate_host_mismatch">Certyfikat nie pasuje do tego urządzenia. Upewnij się, że aplikacja łączy się z właściwym urządzeniem.</string>
+  <string name="wizard_result_certificate_pin_mismatch">Certyfikat urządzenia różni się od oczekiwanego. Zaktualizuj aplikację i oprogramowanie urządzenia, a następnie spróbuj ponownie.</string>
+  <string name="wizard_result_certificate_unsupported_security">Urządzenie używa nieobsługiwanych zabezpieczeń. Zaktualizuj oprogramowanie urządzenia i spróbuj ponownie.</string>
+  <string name="wizard_result_certificate_different_names">Urządzenie ma nieprawidłowy certyfikat — nazwa jest nieprawidłowa (certyfikat: %1$s, urządzenie: %2$s)</string>
 </resources>

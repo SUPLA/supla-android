@@ -483,6 +483,8 @@ class AddWizardViewModel @Inject constructor(
           configurationStateHolder.handleEvent(SetupNeeded)
         ConfigureEspUseCase.Result.TemporarilyLocked ->
           configurationStateHolder.handleEvent(EspConfigurationFailure(EspConfigurationError.TemporarilyLocked))
+        is ConfigureEspUseCase.Result.CertificateError ->
+          configurationStateHolder.handleEvent(EspConfigurationFailure(EspConfigurationError.CertificateError(result.type)))
         is ConfigureEspUseCase.Result.Success -> {
           updateState { it.copy(espConfigResult = result.result) }
           configurationStateHolder.handleEvent(EspConfigured)

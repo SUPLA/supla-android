@@ -842,4 +842,12 @@
   <string name="details_em_on_list_balance">Μέθοδος εξισορρόπησης ενέργειας</string>
   <string name="details_em_on_list_value">Εύρος δεδομένων</string>
   <string name="details_em_on_list">Εμφάνιση στη λίστα καναλιών</string>
+  <string name="wizard_result_certificate_untrusted">Το πιστοποιητικό της συσκευής δεν είναι αξιόπιστο. Βεβαιωθείτε ότι συνδέεστε στη σωστή συσκευή και ότι το λογισμικό της είναι ενημερωμένο.</string>
+  <string name="wizard_result_certificate_expired">Το πιστοποιητικό της συσκευής έχει λήξει. Ενημερώστε το λογισμικό της συσκευής ή επικοινωνήστε με την υποστήριξη. Ελέγξτε επίσης ότι η ημερομηνία και η ώρα στο τηλέφωνο είναι σωστές.</string>
+  <string name="wizard_result_certificate_not_yet_valid">Το πιστοποιητικό της συσκευής δεν είναι ακόμη έγκυρο. Ελέγξτε την ημερομηνία και την ώρα στο τηλέφωνο και στη συσκευή και δοκιμάστε ξανά.</string>
+  <string name="wizard_result_certificate_revoked">Το πιστοποιητικό της συσκευής έχει ανακληθεί. Για λόγους ασφαλείας δεν είναι δυνατή η σύνδεση. Ενημερώστε το λογισμικό της συσκευής ή επικοινωνήστε με την υποστήριξη.</string>
+  <string name="wizard_result_certificate_host_mismatch">Το πιστοποιητικό δεν ταιριάζει με αυτήν τη συσκευή. Βεβαιωθείτε ότι η εφαρμογή συνδέεται στη σωστή συσκευή.</string>
+  <string name="wizard_result_certificate_pin_mismatch">Το πιστοποιητικό της συσκευής διαφέρει από το αναμενόμενο. Ενημερώστε την εφαρμογή και το λογισμικό της συσκευής και δοκιμάστε ξανά.</string>
+  <string name="wizard_result_certificate_unsupported_security">Η συσκευή χρησιμοποιεί μη υποστηριζόμενες ρυθμίσεις ασφαλείας. Ενημερώστε το λογισμικό της συσκευής και δοκιμάστε ξανά.</string>
+  <string name="wizard_result_certificate_different_names">Η συσκευή έχει λανθασμένο πιστοποιητικό - τα ονόματα δεν ταιριάζουν (πιστοποιητικό: %1$s, συσκευή: %2$s)</string>
 </resources>

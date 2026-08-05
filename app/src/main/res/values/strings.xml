@@ -961,4 +961,12 @@
   <string name="general_clear_search">Clear search</string>
   <string name="general_open_drawer">Open menu</string>
   <string name="general_back">Back</string>
+  <string name="wizard_result_certificate_untrusted">The device certificate is not trusted. Make sure you are connecting to the right device and that its software is up to date.</string>
+  <string name="wizard_result_certificate_expired">The device certificate has expired. Update the device software or contact support. Also check that the date and time on your phone are correct.</string>
+  <string name="wizard_result_certificate_not_yet_valid">The device certificate is not valid yet. Check the date and time on your phone and device, then try again.</string>
+  <string name="wizard_result_certificate_revoked">The device certificate has been revoked. For security reasons, the connection cannot be established. Update the device software or contact support.</string>
+  <string name="wizard_result_certificate_host_mismatch">The certificate does not match this device. Make sure the app is connecting to the correct device.</string>
+  <string name="wizard_result_certificate_pin_mismatch">The device certificate differs from the expected one. Update the app and device software, then try again.</string>
+  <string name="wizard_result_certificate_unsupported_security">The device uses unsupported security settings. Update the device software and try again.</string>
+  <string name="wizard_result_certificate_different_names">Device has wrong certificate - names are not equal (certificate: %1$s, device: %2$s)</string>
 </resources>
