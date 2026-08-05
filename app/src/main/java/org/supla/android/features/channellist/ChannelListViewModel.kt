@@ -19,6 +19,9 @@ package org.supla.android.features.channellist
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx3.awaitFirst
 import org.supla.android.R
@@ -51,13 +54,16 @@ import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideChannelDetailTypeUseCase
 import org.supla.android.usecases.details.StandardDetailType
+import org.supla.android.usecases.list.TriggerLogHistoryDownloadUseCase
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class ChannelListViewModel @Inject constructor(
   private val createProfileChannelsListUseCase: CreateProfileChannelsListUseCase,
+  private val triggerLogHistoryDownloadUseCase: TriggerLogHistoryDownloadUseCase,
   private val provideChannelDetailTypeUseCase: ProvideChannelDetailTypeUseCase,
   private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   private val executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
@@ -82,6 +88,8 @@ class ChannelListViewModel @Inject constructor(
   var searchData: TopBarSearchData = TopBarSearchData()
     private set
 
+  private var downloadJob: Job? = null
+
   init {
     observeUpdates(updateEventsManager.observeChannelsUpdate())
 
@@ -103,6 +111,11 @@ class ChannelListViewModel @Inject constructor(
 
   override fun onStart() {
     loadChannels()
+    startLogHistoryDownload()
+  }
+
+  override fun onStop() {
+    stopLogHistoryDownload()
   }
 
   fun loadChannels() {
@@ -113,6 +126,22 @@ class ChannelListViewModel @Inject constructor(
         onError = defaultErrorHandler("loadChannels()")
       )
       .disposeBySelf()
+  }
+
+  fun startLogHistoryDownload() {
+    if (downloadJob?.isActive == true) return
+
+    downloadJob = viewModelScope.launch {
+      while (isActive) {
+        triggerLogHistoryDownloadUseCase()
+        delay(15.seconds)
+      }
+    }
+  }
+
+  fun stopLogHistoryDownload() {
+    downloadJob?.cancel()
+    downloadJob = null
   }
 
   fun performAction(channelId: Int, buttonType: ButtonType) {
