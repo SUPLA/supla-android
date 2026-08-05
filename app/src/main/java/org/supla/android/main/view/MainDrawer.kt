@@ -21,19 +21,24 @@ import android.view.Surface
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DrawerDefaults
@@ -52,14 +57,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -81,10 +92,12 @@ import org.supla.android.main.ListTab
 import org.supla.android.main.LocalNavigator
 import org.supla.android.main.MainRoute
 import org.supla.android.tools.SuplaPreview
-import org.supla.android.ui.extensions.isPhoneLandscape
+import org.supla.android.ui.extensions.ifFalse
 import org.supla.android.ui.views.buttons.DrawerBackButton
 import org.supla.android.ui.views.buttons.TextButton
 import org.supla.android.ui.views.texts.HeadlineSmall
+import org.supla.core.shared.extensions.forFalse
+import org.supla.core.shared.extensions.forTrue
 
 @Composable
 fun MainDrawer(
@@ -105,7 +118,7 @@ fun MainDrawer(
           .exclude(WindowInsets.statusBars)
           .exclude(WindowInsets.displayCutout)
       ) {
-        DrawerContent(developerOptionsVisibleFlow, zWaveVisibleFlow, zWaveOpenCallback)
+        DrawerContent(modal = true, developerOptionsVisibleFlow, zWaveVisibleFlow, zWaveOpenCallback)
       }
     },
     scrimColor = Color.Black.copy(alpha = 0.32f),
@@ -118,28 +131,99 @@ fun PermanentMainDrawer(
   zWaveVisibleFlow: StateFlow<Boolean>,
   zWaveOpenCallback: () -> Unit,
   content: @Composable (() -> Unit)
-) =
+) {
+  var iconsOnly by rememberSaveable { mutableStateOf(false) }
+
+  val outlineColor = MaterialTheme.colorScheme.outline
+  val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+  val topBarHeight = dimensionResource(R.dimen.top_bar_height)
+  val cutoutSize = WindowInsets.displayCutout.asPaddingValues().calculateStartPadding(LocalLayoutDirection.current)
+
   PermanentNavigationDrawer(
     drawerContent = {
       PermanentDrawerSheet(
+        modifier = Modifier
+          .let { iconsOnly.forTrue { it.width(100.dp + cutoutSize) } ?: it }
+          .drawWithContent {
+            drawContent()
+            val strokeWidth = 1.dp.toPx()
+            val x = size.width - strokeWidth / 2
+            drawLine(
+              color = outlineColor,
+              start = Offset(x, statusBarHeight.toPx() + topBarHeight.toPx()),
+              end = Offset(x, size.height),
+              strokeWidth = strokeWidth
+            )
+          },
         drawerContainerColor = MaterialTheme.colorScheme.surface,
         drawerContentColor = MaterialTheme.colorScheme.onSurface,
-        drawerTonalElevation = 0.dp
+        drawerTonalElevation = 0.dp,
+        windowInsets = DrawerDefaults.windowInsets.exclude(WindowInsets.statusBars)
       ) {
-        DrawerContent(developerOptionsVisibleFlow, zWaveVisibleFlow, zWaveOpenCallback)
+        if (iconsOnly) {
+          Column {
+            DrawerContent(
+              modal = false,
+              developerOptionsVisibleFlow,
+              zWaveVisibleFlow,
+              zWaveOpenCallback,
+              modifier = Modifier.weight(1f),
+              iconsOnly = iconsOnly
+            )
+
+            Icon(
+              painter = painterResource(R.drawable.ic_double_arrow_right),
+              contentDescription = null,
+              modifier = Modifier
+                .padding(horizontal = 19.dp)
+                .clickable(onClick = { iconsOnly = !iconsOnly })
+                .padding(Distance.small)
+                .size(dimensionResource(R.dimen.icon_small_size))
+                .rotate(if (iconsOnly) 0f else 180f),
+              tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+          }
+        } else {
+          Box {
+            DrawerContent(
+              modal = false,
+              developerOptionsVisibleFlow,
+              zWaveVisibleFlow,
+              zWaveOpenCallback,
+              iconsOnly = iconsOnly
+            )
+
+            Icon(
+              painter = painterResource(R.drawable.ic_double_arrow_right),
+              contentDescription = null,
+              modifier = Modifier
+                .padding(horizontal = 19.dp)
+                .clickable(onClick = { iconsOnly = !iconsOnly })
+                .padding(Distance.small)
+                .size(dimensionResource(R.dimen.icon_small_size))
+                .rotate(if (iconsOnly) 0f else 180f)
+                .align(Alignment.BottomEnd),
+              tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+          }
+        }
       }
     },
     content = content
   )
+}
 
 @Composable
 @Suppress("SimplifyBooleanWithConstants")
 private fun DrawerContent(
+  modal: Boolean,
   developerOptionsVisibleFlow: StateFlow<Boolean>,
   zWaveVisibleFlow: StateFlow<Boolean>,
-  zWaveOpenCallback: () -> Unit
+  zWaveOpenCallback: () -> Unit,
+  modifier: Modifier = Modifier,
+  iconsOnly: Boolean = false
 ) {
-  Column {
+  Column(modifier = modifier) {
     Box(
       modifier = Modifier
         .fillMaxWidth()
@@ -148,19 +232,21 @@ private fun DrawerContent(
         .statusBarsPadding()
         .height(dimensionResource(R.dimen.top_bar_height))
     ) {
-      val drawerState = LocalDrawerState.current
-      val scope = rememberCoroutineScope()
-      DrawerBackButton(
-        modifier = Modifier
-          .align(Alignment.CenterStart)
-          .displayCutoutPadding(),
-        onClick = { scope.launch { drawerState?.close() } }
-      )
-      HeadlineSmall(
-        text = stringResource(R.string.app_name),
-        color = MaterialTheme.colorScheme.onPrimaryContainer,
-        modifier = Modifier.align(Alignment.Center)
-      )
+      if (modal) {
+        val drawerState = LocalDrawerState.current
+        val scope = rememberCoroutineScope()
+        DrawerBackButton(
+          modifier = Modifier
+            .align(Alignment.CenterStart)
+            .displayCutoutPadding(),
+          onClick = { scope.launch { drawerState?.close() } }
+        )
+        HeadlineSmall(
+          text = stringResource(R.string.app_name),
+          color = MaterialTheme.colorScheme.onPrimaryContainer,
+          modifier = Modifier.align(Alignment.Center)
+        )
+      }
     }
 
     val showCutout = LocalView.current.display?.rotation == Surface.ROTATION_90
@@ -180,19 +266,19 @@ private fun DrawerContent(
         val selectedTab = tabController.tab
         DrawerItem(
           iconRes = R.drawable.navbar_channels,
-          labelRes = R.string.navbar_channels,
+          labelRes = iconsOnly.forFalse { R.string.navbar_channels },
           selected = selectedTab == ListTab.CHANNELS,
           onNavigate = { tabController.changeTab(ListTab.CHANNELS) },
         )
         DrawerItem(
           iconRes = R.drawable.navbar_groups,
-          labelRes = R.string.navbar_groups,
+          labelRes = iconsOnly.forFalse { R.string.navbar_groups },
           selected = selectedTab == ListTab.GROUPS,
           onNavigate = { tabController.changeTab(ListTab.GROUPS) },
         )
         DrawerItem(
           iconRes = R.drawable.navbar_scenes,
-          labelRes = R.string.navbar_scenes,
+          labelRes = iconsOnly.forFalse { R.string.navbar_scenes },
           selected = selectedTab == ListTab.SCENES,
           onNavigate = { tabController.changeTab(ListTab.SCENES) },
         )
@@ -202,19 +288,19 @@ private fun DrawerContent(
       val navigator = LocalNavigator.current
       DrawerItem(
         iconRes = R.drawable.ic_menu_profiles,
-        labelRes = R.string.profile_plural,
+        labelRes = iconsOnly.forFalse { R.string.profile_plural },
         onNavigate = { navigator?.navigateToProfiles() }
       )
       DrawerItem(
         iconRes = R.drawable.ic_menu_settings,
-        labelRes = R.string.settings,
+        labelRes = iconsOnly.forFalse { R.string.settings },
         onNavigate = { navigator?.navigateTo(MainRoute.Settings) }
       )
       HorizontalDivider(modifier = Modifier.padding(top = Distance.small, bottom = Distance.tiny))
 
       DrawerItem(
         iconRes = R.drawable.ic_menu_add_device,
-        labelRes = R.string.add_device,
+        labelRes = iconsOnly.forFalse { R.string.add_device },
         onNavigate = { navigator?.navigateTo(MainRoute.AddWizard) }
       )
 
@@ -222,40 +308,40 @@ private fun DrawerContent(
       if (Menu.Z_WAVE_OPTION_VISIBLE && zWaveVisible) {
         DrawerItem(
           iconRes = R.drawable.ic_menu_z_wave,
-          labelRes = R.string.z_wave,
+          labelRes = iconsOnly.forFalse { R.string.z_wave },
           onNavigate = zWaveOpenCallback
         )
       }
       if (Menu.DEVICES_OPTION_VISIBLE) {
         DrawerItem(
           iconRes = R.drawable.ic_menu_device_catalog,
-          labelRes = R.string.menu_device_catalog,
+          labelRes = iconsOnly.forFalse { R.string.menu_device_catalog },
           onNavigate = { navigator?.navigateTo(MainRoute.DeviceCatalog) }
         )
       }
       DrawerItem(
         iconRes = R.drawable.ic_notification,
-        labelRes = R.string.menu_notifications,
+        labelRes = iconsOnly.forFalse { R.string.menu_notifications },
         onNavigate = { navigator?.navigateTo(MainRoute.NotificationsLog) }
       )
       HorizontalDivider(modifier = Modifier.padding(top = Distance.small, bottom = Distance.tiny))
       DrawerItem(
         iconRes = R.drawable.ic_menu_cloud,
-        labelRes = R.string.supla_cloud,
+        labelRes = iconsOnly.forFalse { R.string.supla_cloud },
         onNavigate = { navigator?.navigateToCloudExternal() }
       )
       if (Menu.HELP_OPTION_VISIBLE) {
         val url = stringResource(R.string.forumpage_url)
         DrawerItem(
           iconRes = R.drawable.ic_menu_help,
-          labelRes = R.string.help,
+          labelRes = iconsOnly.forFalse { R.string.help },
           onNavigate = { navigator?.navigateToWeb(url.toUri()) }
         )
       }
       if (Menu.ABOUT_OPTION_VISIBLE) {
         DrawerItem(
           iconRes = R.drawable.ic_menu_about,
-          labelRes = R.string.about,
+          labelRes = iconsOnly.forFalse { R.string.about },
           onNavigate = { navigator?.navigateTo(MainRoute.About) }
         )
       }
@@ -263,21 +349,23 @@ private fun DrawerContent(
       if (developerOptionsVisible) {
         DrawerItem(
           iconRes = R.drawable.ic_dev_option,
-          labelRes = R.string.developer_option,
+          labelRes = iconsOnly.forFalse { R.string.developer_option },
           onNavigate = { navigator?.navigateTo(MainRoute.DeveloperInfo) }
         )
       }
 
-      Row(
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(top = Distance.small),
-        horizontalArrangement = Arrangement.Center
-      ) {
-        TextButton(
-          text = stringResource(R.string.homepage),
-          onClick = { navigator?.navigateToSuplaOrgExternal() }
-        )
+      iconsOnly.ifFalse {
+        Row(
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = Distance.small),
+          horizontalArrangement = Arrangement.Center
+        ) {
+          TextButton(
+            text = stringResource(R.string.homepage),
+            onClick = { navigator?.navigateToSuplaOrgExternal() }
+          )
+        }
       }
     }
   }
@@ -286,7 +374,7 @@ private fun DrawerContent(
 @Composable
 private fun DrawerItem(
   @DrawableRes iconRes: Int,
-  @StringRes labelRes: Int,
+  @StringRes labelRes: Int?,
   selected: Boolean = false,
   onNavigate: () -> Unit,
 ) {
@@ -294,7 +382,7 @@ private fun DrawerItem(
   val drawerState = LocalDrawerState.current
   NavigationDrawerItem(
     icon = { Icon(painterResource(iconRes), null) },
-    label = { DrawerLabel(labelRes) },
+    label = { labelRes?.let { DrawerLabel(it) } },
     selected = selected,
     onClick = {
       onNavigate()
@@ -330,6 +418,7 @@ private fun Preview() {
     CompositionLocalProvider(LocalApplicationPreferences provides ApplicationPreferences(context)) {
       Column {
         DrawerContent(
+          modal = true,
           developerOptionsVisibleFlow = MutableStateFlow(true),
           zWaveVisibleFlow = MutableStateFlow(false),
           zWaveOpenCallback = {}

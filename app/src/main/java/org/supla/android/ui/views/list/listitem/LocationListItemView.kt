@@ -36,8 +36,9 @@ import androidx.compose.ui.text.style.TextAlign
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.main.topbar.LocalTopBarController
 import org.supla.android.tools.SuplaPreview
+import org.supla.android.ui.views.Separator
+import org.supla.android.ui.views.SeparatorStyle
 import org.supla.android.ui.views.texts.HighlightedTextBySearch
 
 @Composable
@@ -81,6 +82,8 @@ fun LocationListItemView(
         )
       }
     }
+
+    Separator(style = SeparatorStyle.LIST)
   }
 }
 

@@ -24,7 +24,6 @@ import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -38,7 +37,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -221,7 +222,7 @@ private fun WideView(
           BottomNavigationBar()
         }
       }
-    ) { CommonContent(it) }
+    ) { CommonContent(it.withLeftPanel()) }
   }
 }
 
@@ -260,9 +261,20 @@ private fun CommonContent(paddings: PaddingValues) {
 }
 
 @Composable
-private fun BottomNavigationBar() =
+private fun BottomNavigationBar() {
+  val outlineColor = MaterialTheme.colorScheme.outline
+
   ResizeableNavigationBar(
-    modifier = Modifier.border(1.dp, MaterialTheme.colorScheme.outline),
+    modifier = Modifier.drawWithContent {
+      drawContent()
+      val strokeWidth = 1.dp.toPx()
+      drawLine(
+        color = outlineColor,
+        start = Offset(0f, strokeWidth / 2),
+        end = Offset(size.width, strokeWidth / 2),
+        strokeWidth = strokeWidth
+      )
+    },
   ) {
     val tabController = LocalMainListTabController.current
     val selectedTab = tabController.tab
@@ -289,6 +301,7 @@ private fun BottomNavigationBar() =
       iconDescription = stringResource(R.string.navbar_scenes)
     )
   }
+}
 
 @Composable
 private fun MainScreenNavigationRail() =

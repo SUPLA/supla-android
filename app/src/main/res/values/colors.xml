@@ -23,6 +23,7 @@
     <color name="disabled">#B4B7BA</color>
     <color name="disabledOverlay">#DDFFFFFF</color>
     <color name="separator">#AAAAAA</color>
+    <color name="list_separator">@color/outline</color>
     <color name="highlight_color">#1F767880</color>
     <color name="old_switch_track">#42221f1f</color>
     <color name="supla_button_background_outside">#F4F4F4</color>
