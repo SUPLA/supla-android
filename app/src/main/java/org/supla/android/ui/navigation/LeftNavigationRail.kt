@@ -17,7 +17,6 @@ package org.supla.android.ui.navigation
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -30,7 +29,9 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationRail
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
@@ -38,11 +39,23 @@ import org.supla.android.R
 @Composable
 fun LeftNavigationRail(
   content: @Composable ColumnScope.() -> Unit
-) =
+) {
+  val outlineColor = MaterialTheme.colorScheme.outline
+
   NavigationRail(
     modifier = Modifier
       .fillMaxHeight()
-      .border(1.dp, MaterialTheme.colorScheme.outline),
+      .drawWithContent {
+        drawContent()
+        val strokeWidth = 1.dp.toPx()
+        val x = size.width - strokeWidth / 2
+        drawLine(
+          color = outlineColor,
+          start = Offset(x, 0f),
+          end = Offset(x, size.height),
+          strokeWidth = strokeWidth
+        )
+      },
   ) {
     Column(
       modifier = Modifier.fillMaxHeight().windowInsetsPadding(WindowInsets.displayCutout),
@@ -57,3 +70,4 @@ fun LeftNavigationRail(
       }
     }
   }
+}

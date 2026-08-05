@@ -18,8 +18,6 @@ package org.supla.android.ui.views.list
  */
 
 import android.content.Context
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -27,7 +25,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateMapOf
@@ -36,7 +33,6 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.distinctUntilChanged
 import org.supla.android.R
 import org.supla.android.main.scaffold.screenPaddings
@@ -130,8 +126,6 @@ private fun MainListScope.ListView(
     modifier = modifier
       .screenPaddings()
       .fillMaxHeight()
-      .background(MaterialTheme.colorScheme.outline),
-    verticalArrangement = Arrangement.spacedBy(1.dp)
   ) {
     items(
       items = items,

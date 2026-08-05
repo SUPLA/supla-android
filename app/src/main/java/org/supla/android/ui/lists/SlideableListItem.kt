@@ -56,6 +56,8 @@ import org.supla.android.R
 import org.supla.android.core.shared.invoke
 import org.supla.android.core.storage.LocalApplicationPreferences
 import org.supla.android.extensions.isNotNull
+import org.supla.android.ui.views.Separator
+import org.supla.android.ui.views.SeparatorStyle
 import org.supla.android.ui.views.texts.LabelLarge
 import org.supla.core.shared.infrastructure.LocalizedString
 import sh.calvin.reorderable.ReorderableCollectionItemScope
@@ -167,6 +169,8 @@ fun ReorderableCollectionItemScope.SlideableListItem(
       contentAlignment = Alignment.Center,
       content = content
     )
+
+    Separator(modifier = Modifier.align(Alignment.BottomCenter), style = SeparatorStyle.LIST)
   }
 }
 
