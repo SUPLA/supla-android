@@ -69,7 +69,6 @@ import org.supla.android.main.view.ChannelListLabel
 import org.supla.android.main.view.GroupListLabel
 import org.supla.android.main.view.LocalDrawerState
 import org.supla.android.main.view.MainDrawer
-import org.supla.android.main.view.PermanentMainDrawer
 import org.supla.android.main.view.SceneListLabel
 import org.supla.android.main.view.StandardTopBar
 import org.supla.android.ui.dialogs.AuthorizationDialog
@@ -94,14 +93,12 @@ fun MainListScreen(
       viewModel = viewModel,
       topBarState = TopBarState(
         title = localizedString(R.string.app_name),
-        navigationType = if (wideScreen) NavigationType.NONE else NavigationType.DRAWER,
+        navigationType = NavigationType.DRAWER,
         action = topBarAction(TopBarIcon.Profiles, viewModel::showProfilesPopup)
       ),
       eventHandler = { handleEvent(it, navigator) }
     ) {
-      if (wideScreen) {
-        WideView(viewModel)
-      } else if (LocalConfiguration.current.isPhoneLandscape) {
+      if (wideScreen || LocalConfiguration.current.isPhoneLandscape) {
         LandscapePhoneView(viewModel)
       } else {
         PortraitPhoneView(viewModel)
@@ -204,26 +201,6 @@ private data class MainListScrollBehaviors(
       ListTab.GROUPS -> groups
       ListTab.SCENES -> scenes
     }
-}
-
-@Composable
-private fun WideView(
-  viewModel: MainListViewModel
-) {
-  PermanentMainDrawer(
-    developerOptionsVisibleFlow = viewModel.developerOptionsVisible,
-    zWaveVisibleFlow = viewModel.zWaveAvailable,
-    zWaveOpenCallback = { viewModel.showAuthorizationDialog(AuthorizationReason.ZWaveWizard) }
-  ) {
-    Scaffold(
-      topBar = { StandardTopBar() },
-      bottomBar = {
-        if (LocalApplicationPreferences.current.isShowBottomMenu) {
-          BottomNavigationBar()
-        }
-      }
-    ) { CommonContent(it.withLeftPanel()) }
-  }
 }
 
 @Composable

@@ -58,7 +58,7 @@ fun LeftNavigationRail(
       },
   ) {
     Column(
-      modifier = Modifier.fillMaxHeight().windowInsetsPadding(WindowInsets.displayCutout),
+      modifier = Modifier.fillMaxHeight(),
     ) {
       Spacer(modifier = Modifier.height(dimensionResource(R.dimen.top_bar_height)))
 
