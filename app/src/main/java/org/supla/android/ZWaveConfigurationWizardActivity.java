@@ -990,7 +990,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
     }
 
     setBtnNextPreloaderVisible(false);
-    showMain(this);
+    finish();
   }
 
   private void showError(String message, int iconResId) {

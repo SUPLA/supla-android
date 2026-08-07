@@ -84,14 +84,14 @@ public class VLCalibrationTool extends DimmerCalibrationTool
   @Override
   protected void onSavePositiveClick(DialogInterface dialog) {
     super.onSavePositiveClick(dialog);
-    mainNavigator.back();
+    close();
   }
 
   @Override
   protected void onSaveNegativeClick(DialogInterface dialog) {
     super.onSaveNegativeClick(dialog);
     calCfgConfigComplete(false);
-    mainNavigator.back();
+    close();
   }
 
   private void stopConfigurationRetryTimer() {
@@ -145,7 +145,7 @@ public class VLCalibrationTool extends DimmerCalibrationTool
         }
         break;
       case VL_MSG_CONFIG_COMPLETE:
-        mainNavigator.back();
+        close();
     }
   }
 

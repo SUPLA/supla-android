@@ -19,6 +19,7 @@ package org.supla.android.main.view
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -143,6 +144,7 @@ private fun NavigatorIcon(
   val topBarController = LocalTopBarController.current
   val topBarState = topBarController.state
   val navigator = LocalNavigator.current
+  val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
   when {
     topBarController.searchActive ->
       DrawerBackButton(
@@ -163,7 +165,7 @@ private fun NavigatorIcon(
           if (topBarState.inSearch) {
             topBarController.updateSearchValue("")
           } else {
-            navigator?.back()
+            backDispatcher?.onBackPressed() ?: navigator?.back()
           }
         },
         modifier = modifier

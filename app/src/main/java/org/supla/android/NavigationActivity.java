@@ -19,8 +19,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,16 +36,6 @@ public class NavigationActivity extends BaseActivity {
   private RelativeLayout RootLayout;
   private RelativeLayout ContentLayout;
   private ViewGroup Content;
-
-  public static void showMain(Activity sender) {
-    Intent i = new Intent(sender.getBaseContext(), org.supla.android.main.MainActivity.class);
-    i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-    i.putExtra(INTENT_SENDER, "");
-
-    sender.startActivity(i);
-
-    sender.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-  }
 
   @Override
   protected void onPause() {

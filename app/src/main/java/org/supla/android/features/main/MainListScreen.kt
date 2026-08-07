@@ -239,20 +239,7 @@ private fun CommonContent(paddings: PaddingValues) {
 
 @Composable
 private fun BottomNavigationBar() {
-  val outlineColor = MaterialTheme.colorScheme.outline
-
-  ResizeableNavigationBar(
-    modifier = Modifier.drawWithContent {
-      drawContent()
-      val strokeWidth = 1.dp.toPx()
-      drawLine(
-        color = outlineColor,
-        start = Offset(0f, strokeWidth / 2),
-        end = Offset(size.width, strokeWidth / 2),
-        strokeWidth = strokeWidth
-      )
-    },
-  ) {
+  ResizeableNavigationBar {
     val tabController = LocalMainListTabController.current
     val selectedTab = tabController.tab
 
