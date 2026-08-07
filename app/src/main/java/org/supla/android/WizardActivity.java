@@ -25,6 +25,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -62,7 +65,33 @@ public abstract class WizardActivity extends NavigationActivity implements View.
     mBtnNextLeftPart.setOnClickListener(this);
 
     mContent = findViewById(R.id.wizard_content);
+    setupSystemBarInsets();
     setBtnNextEnabled(false);
+  }
+
+  private void setupSystemBarInsets() {
+    View navigation = findViewById(R.id.wizard_navigation);
+    int initialHeight = navigation.getLayoutParams().height;
+    int initialPaddingLeft = navigation.getPaddingLeft();
+    int initialPaddingTop = navigation.getPaddingTop();
+    int initialPaddingRight = navigation.getPaddingRight();
+    int initialPaddingBottom = navigation.getPaddingBottom();
+
+    ViewCompat.setOnApplyWindowInsetsListener(
+        navigation,
+        (view, insets) -> {
+          Insets bars = insets.getInsets(WindowInsetsCompat.Type.navigationBars());
+          ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+          layoutParams.height = initialHeight + bars.bottom;
+          view.setLayoutParams(layoutParams);
+          view.setPadding(
+              initialPaddingLeft,
+              initialPaddingTop,
+              initialPaddingRight,
+              initialPaddingBottom + bars.bottom);
+          return insets;
+        });
+    ViewCompat.requestApplyInsets(navigation);
   }
 
   @Override

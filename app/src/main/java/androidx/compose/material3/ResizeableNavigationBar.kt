@@ -11,26 +11,41 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 
 @Composable
 fun ResizeableNavigationBar(
-  modifier: Modifier = Modifier,
   minHeight: Dp = dimensionResource(R.dimen.bottom_bar_height),
   content: @Composable RowScope.() -> Unit,
 ) {
+  val outlineColor = MaterialTheme.colorScheme.outline
+
   Surface(
     color = MaterialTheme.colorScheme.surface,
     contentColor = MaterialTheme.colorScheme.onSurface,
     tonalElevation = NavigationBarDefaults.Elevation,
-    modifier = modifier,
+    modifier = Modifier
+      .drawWithContent {
+        drawContent()
+        val strokeWidth = 1.dp.toPx()
+        drawLine(
+          color = outlineColor,
+          start = Offset(0f, strokeWidth / 2),
+          end = Offset(size.width, strokeWidth / 2),
+          strokeWidth = strokeWidth
+        )
+      },
   ) {
     Row(
       modifier =
-      Modifier.fillMaxWidth()
+      Modifier
+        .fillMaxWidth()
         .windowInsetsPadding(NavigationBarDefaults.windowInsets)
         .defaultMinSize(minHeight = minHeight)
         .selectableGroup(),

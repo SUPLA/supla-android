@@ -121,9 +121,7 @@ private fun PortraitScreen(
     topBar = { StandardTopBar() },
     bottomBar = {
       if (pages.size > 1) {
-        ResizeableNavigationBar(
-          modifier = Modifier.border(1.dp, MaterialTheme.colorScheme.outline),
-        ) {
+        ResizeableNavigationBar {
           pages.forEach {
             SuplaNavigationBarItem(
               selected = page == it,

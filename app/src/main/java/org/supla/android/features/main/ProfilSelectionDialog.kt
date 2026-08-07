@@ -63,7 +63,7 @@ fun ProfileSelectionDialog(
     DialogHeader(title = stringResource(R.string.profile_select_active))
 
     for (profile in profiles) {
-      Separator(style = SeparatorStyle.OUTLINE)
+      Separator(style = SeparatorStyle.LIST)
       Row(
         modifier = Modifier
           .clickable(onClick = { onProfileSelected(profile.id) })

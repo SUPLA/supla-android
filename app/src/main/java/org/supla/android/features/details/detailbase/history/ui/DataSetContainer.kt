@@ -76,9 +76,9 @@ fun DataSetContainerRow(
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
+      data.icon?.let { DataSetIcon(it, null) }
       data.dataSets.forEach { set ->
         DataSetItemsRow(
-          channelIcon = data.icon,
           label = set.label,
           active = set.active,
           historyEnabled = showHistory,
@@ -142,7 +142,6 @@ fun DataSetContainerColumn(
 
 @Composable
 private fun DataSetItemsRow(
-  channelIcon: ImageId?,
   label: HistoryDataSet.Label,
   active: Boolean,
   historyEnabled: Boolean,
@@ -167,7 +166,6 @@ private fun DataSetItemsRow(
       }
 
   ) {
-    channelIcon?.let { DataSetIcon(it, null) }
     when (label) {
       is HistoryDataSet.Label.Single -> DataSetItem(
         value = label.value,
