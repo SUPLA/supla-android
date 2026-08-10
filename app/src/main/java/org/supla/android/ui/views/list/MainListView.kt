@@ -26,11 +26,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
-import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -40,7 +39,7 @@ import org.supla.android.main.scaffold.screenUnderTopBarPaddings
 import org.supla.android.main.topbar.LocalTopBarController
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.lists.LocalSlideableController
-import org.supla.android.ui.lists.SlideableListEvent
+import org.supla.android.ui.lists.SlideableController
 import org.supla.android.ui.lists.SlideableListItem
 import org.supla.android.ui.lists.message
 import org.supla.android.ui.views.list.listitem.DoubleIconValueListItemView
@@ -101,7 +100,7 @@ private fun MainListScope.ListView(
   listState: LazyListState,
   modifier: Modifier = Modifier
 ) {
-  val offsets = remember { mutableStateMapOf<Int, Float>() }
+  val slideableController = remember { SlideableController() }
   val reorderableLazyListState = rememberReorderableLazyListState(
     lazyListState = listState
   ) { from, to ->
@@ -109,60 +108,58 @@ private fun MainListScope.ListView(
   }
 
   // LaunchedEffect below is used to hide list item buttons
-  val slideableController = LocalSlideableController.current
   LaunchedEffect(listState) {
     snapshotFlow { listState.isScrollInProgress }
       .distinctUntilChanged()
       .collect {
         if (it) {
-          offsets.clear()
-          slideableController.emit(SlideableListEvent.ScrollStarted)
+          slideableController.emitScrollStarted()
         }
       }
   }
 
-  LazyColumn(
-    state = listState,
-    modifier = modifier
-      .screenPaddings()
-      .fillMaxHeight()
-  ) {
-    items(
-      items = items,
-      key = { item -> item.key }
-    ) { item ->
-      ReorderableItem(
-        state = reorderableLazyListState,
-        key = item.key,
-        enabled = item.draggable,
-        animateItemModifier = Modifier
-      ) { isDragging ->
-        when (item) {
-          is ListItem.DefaultItem -> {
-            DefaultItemView(
-              item = item,
-              offsets = offsets,
-              isDragging = isDragging,
-              dragEnabled = !LocalTopBarController.current.searchFilterSet,
-              listScope = this@ListView
-            )
+  CompositionLocalProvider(LocalSlideableController provides slideableController) {
+    LazyColumn(
+      state = listState,
+      modifier = modifier
+        .screenPaddings()
+        .fillMaxHeight()
+    ) {
+      items(
+        items = items,
+        key = { item -> item.key }
+      ) { item ->
+        ReorderableItem(
+          state = reorderableLazyListState,
+          key = item.key,
+          enabled = item.draggable,
+          animateItemModifier = Modifier
+        ) { isDragging ->
+          when (item) {
+            is ListItem.DefaultItem -> {
+              DefaultItemView(
+                item = item,
+                isDragging = isDragging,
+                dragEnabled = !LocalTopBarController.current.searchFilterSet,
+                listScope = this@ListView
+              )
+            }
+            is ListItem.LocationItem ->
+              LocationListItemView(
+                caption = item.userCaption,
+                collapsed = item.collapsed,
+                inSearch = LocalTopBarController.current.searchFilterSet,
+                onClick = { onLocationClick(item.remoteId) },
+                onLongClick = { onLocationLongClick(item) }
+              )
+            is ListItem.SceneItem ->
+              SceneItemView(
+                item = item,
+                isDragging = isDragging,
+                dragEnabled = !LocalTopBarController.current.searchFilterSet,
+                listScope = this@ListView
+              )
           }
-          is ListItem.LocationItem ->
-            LocationListItemView(
-              caption = item.userCaption,
-              collapsed = item.collapsed,
-              inSearch = LocalTopBarController.current.searchFilterSet,
-              onClick = { onLocationClick(item.remoteId) },
-              onLongClick = { onLocationLongClick(item) }
-            )
-          is ListItem.SceneItem ->
-            SceneItemView(
-              item = item,
-              offsets = offsets,
-              isDragging = isDragging,
-              dragEnabled = !LocalTopBarController.current.searchFilterSet,
-              listScope = this@ListView
-            )
         }
       }
     }
@@ -172,18 +169,12 @@ private fun MainListScope.ListView(
 @Composable
 fun ReorderableCollectionItemScope.DefaultItemView(
   item: ListItem.DefaultItem,
-  offsets: SnapshotStateMap<Int, Float>,
   isDragging: Boolean,
   dragEnabled: Boolean,
   listScope: MainListScope
 ) {
   SlideableListItem(
     objectId = item.remoteId,
-    initialOffset = offsets[item.remoteId] ?: 0f,
-    onOffsetChanged = {
-      offsets.clear()
-      offsets[item.remoteId] = it
-    },
     isDragging = isDragging,
     dragEnabled = dragEnabled,
     onLeftButtonClick = { listScope.onLeftButtonClick(item.remoteId) },
@@ -246,18 +237,12 @@ fun MainListScope.IconValueListItemView(item: ListItem.DefaultItem, context: Con
 @Composable
 fun ReorderableCollectionItemScope.SceneItemView(
   item: ListItem.SceneItem,
-  offsets: SnapshotStateMap<Int, Float>,
   isDragging: Boolean,
   dragEnabled: Boolean,
   listScope: MainListScope
 ) {
   SlideableListItem(
     objectId = item.remoteId,
-    initialOffset = offsets[item.remoteId] ?: 0f,
-    onOffsetChanged = {
-      offsets.clear()
-      offsets[item.remoteId] = it
-    },
     isDragging = isDragging,
     dragEnabled = dragEnabled,
     onLeftButtonClick = { listScope.onLeftButtonClick(item.remoteId) },
