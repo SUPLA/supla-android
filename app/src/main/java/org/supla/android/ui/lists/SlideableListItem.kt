@@ -35,8 +35,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -66,8 +69,6 @@ import kotlin.math.roundToInt
 @Composable
 fun ReorderableCollectionItemScope.SlideableListItem(
   objectId: Int,
-  initialOffset: Float,
-  onOffsetChanged: (Float) -> Unit,
   isDragging: Boolean,
   dragEnabled: Boolean,
   modifier: Modifier = Modifier,
@@ -81,34 +82,41 @@ fun ReorderableCollectionItemScope.SlideableListItem(
 ) {
   val scope = rememberCoroutineScope()
   val density = LocalDensity.current
-  val offset = remember { Animatable(initialOffset) }
+  val offset = remember(objectId) { Animatable(0f) }
   val actionWidth = dimensionResource(R.dimen.channel_layout_button_width)
   val actionWidthPx = with(density) { actionWidth.toPx() }
   val thresholdPx = actionWidthPx * 0.35f
+  val controller = LocalSlideableController.current
 
   val dragState = rememberDraggableState { delta ->
-    val minOffset = if (rightButtonString.isNotNull) -actionWidthPx else 0f
-    val maxOffset = if (leftButtonString.isNotNull) actionWidthPx else 0f
-    scope.launch {
-      offset.snapTo((offset.value + delta).coerceIn(minOffset, maxOffset))
+    if (controller.isDragActive(objectId)) {
+      val minOffset = if (rightButtonString.isNotNull) -actionWidthPx else 0f
+      val maxOffset = if (leftButtonString.isNotNull) actionWidthPx else 0f
+      scope.launch {
+        offset.snapTo((offset.value + delta).coerceIn(minOffset, maxOffset))
+      }
     }
   }
 
-  val controller = LocalSlideableController.current
   val preferences = LocalApplicationPreferences.current
   LaunchedEffect(objectId) {
     controller.events.collect {
-      when (it) {
-        SlideableListEvent.ScrollStarted -> offset.animateTo(0f)
-        SlideableListEvent.ListButtonClick ->
-          if (preferences.isButtonAutohide) {
-            offset.animateTo(0f)
-            onOffsetChanged(0f) // Needed because button click is handled only internally inside SlideableListItem
-          }
-        is SlideableListEvent.DragStarted ->
-          if (it.objectId != objectId) {
+      try {
+        when (it) {
+          SlideableListEvent.ScrollStarted -> {
             offset.animateTo(0f)
           }
+          SlideableListEvent.ListButtonClick ->
+            if (preferences.isButtonAutohide) {
+              offset.animateTo(0f)
+            }
+          is SlideableListEvent.DragStarted ->
+            if (it.objectId != objectId) {
+              offset.animateTo(0f)
+            }
+        }
+      } catch (_: Exception) {
+        // Do nothing, just watch for next events
       }
     }
   }
@@ -127,7 +135,7 @@ fun ReorderableCollectionItemScope.SlideableListItem(
       ActionPane(
         onClick = {
           onLeftButtonClick()
-          scope.launch { controller.emit(SlideableListEvent.ListButtonClick) }
+          scope.launch { controller.emitListButtonClick() }
         },
         modifier = Modifier.align(Alignment.CenterStart),
         transformation = { it.leftButtonTransformation(if (offset.value > 0) offset.value else 0f, actionWidthPx) },
@@ -139,7 +147,7 @@ fun ReorderableCollectionItemScope.SlideableListItem(
       ActionPane(
         onClick = {
           onRightButtonClick()
-          scope.launch { controller.emit(SlideableListEvent.ListButtonClick) }
+          scope.launch { controller.emitListButtonClick() }
         },
         modifier = Modifier.align(Alignment.CenterEnd),
         transformation = { it.rightButtonTransformation(if (offset.value < 0) offset.value else 0f, actionWidthPx) },
@@ -149,20 +157,25 @@ fun ReorderableCollectionItemScope.SlideableListItem(
 
     Box(
       modifier = Modifier
-        .offset(x = with(density) { offset.value.toDp() })
+        .offset { IntOffset(offset.value.roundToInt(), 0) }
         .draggable(
           orientation = Orientation.Horizontal,
+          enabled = controller.canDrag(objectId),
           state = dragState,
-          onDragStarted = { controller.emit(SlideableListEvent.DragStarted(objectId)) },
+          onDragStarted = { controller.startDragging(objectId) },
           onDragStopped = {
             scope.launch {
-              val target = when {
-                offset.value > thresholdPx && leftButtonString.isNotNull -> actionWidthPx
-                offset.value < -thresholdPx && rightButtonString.isNotNull -> -actionWidthPx
-                else -> 0f
+              try {
+                val target = when {
+                  !controller.isDragActive(objectId) -> 0f
+                  offset.value > thresholdPx && leftButtonString.isNotNull -> actionWidthPx
+                  offset.value < -thresholdPx && rightButtonString.isNotNull -> -actionWidthPx
+                  else -> 0f
+                }
+                offset.animateTo(target, animationSpec = tween(durationMillis = 180))
+              } finally {
+                controller.stopDragging(objectId)
               }
-              offset.animateTo(target, animationSpec = tween(durationMillis = 180))
-              onOffsetChanged(target)
             }
           }
         ),
@@ -240,9 +253,39 @@ fun Modifier.rightButtonTransformation(
 class SlideableController {
   private val _events = MutableSharedFlow<SlideableListEvent>()
   val events = _events.asSharedFlow()
+  private var activeDragObjectId: Int? by mutableStateOf(null)
 
-  suspend fun emit(event: SlideableListEvent) {
-    _events.emit(event)
+  fun canDrag(objectId: Int): Boolean =
+    activeDragObjectId == null || activeDragObjectId == objectId
+
+  fun isDragActive(objectId: Int): Boolean =
+    activeDragObjectId == objectId
+
+  suspend fun startDragging(objectId: Int): Boolean {
+    if (!canDrag(objectId)) {
+      return false
+    }
+
+    activeDragObjectId = objectId
+    _events.emit(SlideableListEvent.DragStarted(objectId))
+
+    return true
+  }
+
+  fun stopDragging(objectId: Int) {
+    if (activeDragObjectId == objectId) {
+      activeDragObjectId = null
+    }
+  }
+
+  suspend fun emitListButtonClick() {
+    activeDragObjectId = null
+    _events.emit(SlideableListEvent.ListButtonClick)
+  }
+
+  suspend fun emitScrollStarted() {
+    activeDragObjectId = null
+    _events.emit(SlideableListEvent.ScrollStarted)
   }
 }
 

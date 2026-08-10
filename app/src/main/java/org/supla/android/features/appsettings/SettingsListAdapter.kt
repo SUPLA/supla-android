@@ -128,6 +128,7 @@ sealed class SettingItem(val viewResource: Int) {
     override fun bind(holder: SettingItemViewHolder<*>) {
       (holder.binding as LiSettingsSwitchBinding).apply {
         settingsSwitchLabel.setText(R.string.cfg_button_autohide)
+        settingsSwitch.isEnabled = true
         settingsSwitch.isChecked = active
         settingsSwitch.setOnCheckedChangeListener { _, allowed -> callback(allowed) }
       }
@@ -141,6 +142,7 @@ sealed class SettingItem(val viewResource: Int) {
     override fun bind(holder: SettingItemViewHolder<*>) {
       (holder.binding as LiSettingsSwitchBinding).apply {
         settingsSwitchLabel.setText(R.string.show_channel_info)
+        settingsSwitch.isEnabled = true
         settingsSwitch.isChecked = visible
         settingsSwitch.setOnCheckedChangeListener { _, allowed -> callback(allowed) }
       }
@@ -172,6 +174,7 @@ sealed class SettingItem(val viewResource: Int) {
     override fun bind(holder: SettingItemViewHolder<*>) {
       (holder.binding as LiSettingsSwitchBinding).apply {
         settingsSwitchLabel.setText(R.string.settings_show_bottom_menu)
+        settingsSwitch.isEnabled = true
         settingsSwitch.isChecked = visible
         settingsSwitch.setOnCheckedChangeListener { _, allowed -> callback(allowed) }
       }
@@ -185,6 +188,7 @@ sealed class SettingItem(val viewResource: Int) {
     override fun bind(holder: SettingItemViewHolder<*>) {
       (holder.binding as LiSettingsSwitchBinding).apply {
         settingsSwitchLabel.setText(R.string.settings_show_unavailable_channels)
+        settingsSwitch.isEnabled = true
         settingsSwitch.isChecked = hidden
         settingsSwitch.setOnCheckedChangeListener { _, allowed -> callback(allowed) }
       }

@@ -166,4 +166,14 @@ private fun fadeTransitionMetadata(): Map<String, Any> =
         animationSpec = tween(250)
       )
     }
+
+    put(NavDisplay.PredictivePopTransitionKey) {
+      slideInHorizontally(
+        initialOffsetX = { width -> -width },
+        animationSpec = tween(250)
+      ) togetherWith slideOutHorizontally(
+        targetOffsetX = { width -> width },
+        animationSpec = tween(250)
+      )
+    }
   }
