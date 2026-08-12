@@ -33,6 +33,7 @@ import org.supla.android.R
 import org.supla.android.ZWaveConfigurationWizardActivity
 import org.supla.android.cfg.CfgActivity
 import org.supla.android.extensions.findActivity
+import timber.log.Timber
 import java.lang.ref.WeakReference
 import javax.inject.Inject
 
@@ -156,8 +157,13 @@ class MainComposeNavigator @Inject constructor() {
     }
   }
 
-  fun bind(activity: Activity, backStack: NavBackStack<NavKey>) {
+  fun setActivity(activity: MainActivity) {
+    Timber.d("Setting activity context")
     this.activityContext = WeakReference(activity)
+  }
+
+  fun bind(backStack: NavBackStack<NavKey>) {
+    Timber.d("Setting navigation back stack")
     this.backStack.value = backStack
   }
 
@@ -168,7 +174,11 @@ class MainComposeNavigator @Inject constructor() {
   }
 
   fun withContext(runnable: Context.() -> Unit) {
-    activityContext.get()?.let { runnable.invoke(it) }
+    try {
+      activityContext.get()?.let { runnable.invoke(it) }
+    } catch (ex: Exception) {
+      Timber.e(ex, "Could not perform action because of missing activity context")
+    }
   }
 }
 
