@@ -67,6 +67,7 @@ class MainActivity : FragmentActivity(), NfcHost {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    navigator.setActivity(this@MainActivity)
 
     enableEdgeToEdge()
 
@@ -107,7 +108,7 @@ class MainActivity : FragmentActivity(), NfcHost {
     val backStack = rememberNavBackStack(MainRoute.Status)
 
     DisposableEffect(backStack) {
-      navigator.bind(this@MainActivity, backStack)
+      navigator.bind(backStack)
       onDispose { navigator.unbind(backStack) }
     }
 
