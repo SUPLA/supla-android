@@ -43,7 +43,7 @@ class DownloadUserIconsWorker @AssistedInject constructor(
       return Result.retry()
     }
     val profile = profileRepository.findActiveProfileKtx()
-    if (profile == null || profile.id == null) {
+    if (profile == null) {
       Timber.i("No profile found - skipping")
       return Result.success()
     }

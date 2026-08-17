@@ -9,5 +9,5 @@ data class UserIconDto(
   val imagesDark: List<String>?
 ) {
   fun image(index: Int): ByteArray? = images.getOrNull(index)?.let { Base64.decode(it) }
-  fun imageDark(index: Int): ByteArray? = images.getOrNull(index)?.let { Base64.decode(it) }
+  fun imageDark(index: Int): ByteArray? = imagesDark?.getOrNull(index)?.let { Base64.decode(it) }
 }

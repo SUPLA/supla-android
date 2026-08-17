@@ -1,4 +1,4 @@
-package org.supla.android.images
+package org.supla.android.db.room.app.migrations
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,18 +17,16 @@ package org.supla.android.images
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import javax.inject.Inject
-import javax.inject.Singleton
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
+import org.supla.android.data.source.local.entity.UserIconEntity
+import org.supla.android.db.room.SqlExecutor
 
-@Singleton
-class ImageCacheProxy @Inject constructor() {
-  fun addImage(imageId: ImageId, image: ByteArray): Boolean =
-    ImageCache.addImage(imageId, image)
+val MIGRATION_48_49: Migration = object : Migration(48, 49), SqlExecutor {
 
-  fun bitmapExists(imageId: ImageId): Boolean =
-    ImageCache.bitmapExists(imageId)
-
-  fun size(): Int = ImageCache.size()
-
-  fun sum(): Int = ImageCache.sum()
+  override fun migrate(db: SupportSQLiteDatabase) {
+    // Because of invalid saving of night mode user icons, we need to delete all and download all of them again
+    // Download is triggered always on app start
+    execSQL(db, "DELETE FROM ${UserIconEntity.TABLE_NAME}")
+  }
 }
