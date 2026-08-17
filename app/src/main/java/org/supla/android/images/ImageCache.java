@@ -33,46 +33,6 @@ public class ImageCache {
 
   private static final LinkedHashMap<ImageId, Bitmap> map = new LinkedHashMap<>();
 
-  public static synchronized Bitmap getBitmap(Context context, ImageId imgId) {
-    if (imgId == null) {
-      return null;
-    }
-
-    Configuration configuration = context.getResources().getConfiguration();
-    boolean nightMode =
-        (configuration.uiMode & Configuration.UI_MODE_NIGHT_MASK)
-            == Configuration.UI_MODE_NIGHT_YES;
-    imgId.setNightMode(nightMode);
-
-    if (imgId.getUserImage() && nightMode && !map.containsKey(imgId)) {
-      // If there is no user image for night mode, use the default
-      imgId.setNightMode(false);
-    }
-
-    Bitmap result = map.get(imgId);
-    if (result == null && !imgId.getUserImage()) {
-      result = BitmapFactory.decodeResource(context.getResources(), imgId.getId());
-      if (result != null) {
-        map.put(imgId, result);
-      } else {
-        Drawable drw = ContextCompat.getDrawable(context, imgId.getId());
-        if (drw != null) {
-          Bitmap bmp =
-              Bitmap.createBitmap(
-                  drw.getIntrinsicWidth(), drw.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-
-          Canvas canvas = new Canvas(bmp);
-          drw.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-          drw.draw(canvas);
-          result = bmp;
-          map.put(imgId, result);
-        }
-      }
-    }
-
-    return result;
-  }
-
   public static Bitmap getUserImageBitmap(Context context, ImageId imgId) {
     if (imgId == null || !imgId.getUserImage()) {
       return null;

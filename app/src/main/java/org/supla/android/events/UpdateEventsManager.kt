@@ -119,14 +119,10 @@ class UpdateEventsManager @Inject constructor(
       .flatMap { readChannelWithChildrenUseCase(channelId).toObservable() }
   }
 
-  fun observeChannelEvents(channelId: Int): Observable<State> = getSubjectForChannel(channelId).hide()
-
   fun observeGroup(groupId: Int): Observable<ChannelGroup> {
     return getSubjectForChannelGroup(groupId).hide()
       .flatMapMaybe { channelGroupRepository.findGroupDataEntity(groupId).map { it.getLegacyGroup() }.firstElement() }
   }
-
-  fun observeGroupEvents(groupId: Int): Observable<State> = getSubjectForChannelGroup(groupId).hide()
 
   fun observeChannelsUpdate(): Observable<Any> = channelUpdatesSubject.hide().debounce(200, TimeUnit.MILLISECONDS)
   fun observeGroupsUpdate(): Observable<Any> = groupUpdatesSubject.hide().debounce(200, TimeUnit.MILLISECONDS)
