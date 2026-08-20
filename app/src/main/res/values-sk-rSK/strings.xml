@@ -34,6 +34,9 @@
   <string name="channel_caption_thermometer">Teplomer</string>
   <string name="channel_caption_humidity">Vlhkosť</string>
   <string name="channel_caption_humidityandtemperature">Teplota a vlhkosť</string>
+  <string name="channel_caption_smoke_sensor">Snímač dymu</string>
+  <string name="channel_caption_carbon_monoxide_sensor">Snímač oxidu uhoľnatého</string>
+  <string name="channel_caption_gas_sensor">Snímač plynu</string>
   <string name="channel_caption_windsensor">Rýchlosť vetra</string>
   <string name="channel_caption_pressuresensor">Snímač tlaku</string>
   <string name="channel_caption_rainsensor">Meranie zrážok</string>

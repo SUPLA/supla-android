@@ -273,7 +273,10 @@ interface SubjectItemConversionScope {
       SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH,
       SuplaFunction.MOTION_SENSOR,
       SuplaFunction.BINARY_SENSOR,
-      SuplaFunction.NONE -> emptyList()
+      SuplaFunction.NONE,
+      SuplaFunction.SMOKE_SENSOR,
+      SuplaFunction.CARBON_MONOXIDE_SENSOR,
+      SuplaFunction.GAS_SENSOR -> emptyList()
       SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
       SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK -> listOf(ActionId.OPEN)
       SuplaFunction.CONTROLLING_THE_GATE,

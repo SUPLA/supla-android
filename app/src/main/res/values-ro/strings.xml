@@ -33,6 +33,9 @@
   <string name="channel_caption_thermometer">Termometru</string>
   <string name="channel_caption_humidity">Umiditate</string>
   <string name="channel_caption_humidityandtemperature">Temperatură și umiditate</string>
+  <string name="channel_caption_smoke_sensor">Senzor de fum</string>
+  <string name="channel_caption_carbon_monoxide_sensor">Senzor de monoxid de carbon</string>
+  <string name="channel_caption_gas_sensor">Senzor de gaz</string>
   <string name="channel_caption_windsensor">Viteza vântului</string>
   <string name="channel_caption_pressuresensor">Senzor de presiune</string>
   <string name="channel_caption_rainsensor">Măsurarea precipitațiilor</string>

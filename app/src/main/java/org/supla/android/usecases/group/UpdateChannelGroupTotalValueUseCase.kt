@@ -172,7 +172,10 @@ private fun ChannelGroupEntity.getGroupValue(value: ChannelValueEntity): GroupVa
     SuplaFunction.CONTAINER_LEVEL_SENSOR,
     SuplaFunction.FLOOD_SENSOR,
     SuplaFunction.MOTION_SENSOR,
-    SuplaFunction.BINARY_SENSOR -> null
+    SuplaFunction.BINARY_SENSOR,
+    SuplaFunction.SMOKE_SENSOR,
+    SuplaFunction.CARBON_MONOXIDE_SENSOR,
+    SuplaFunction.GAS_SENSOR -> null
   }
 }
 

@@ -34,6 +34,9 @@
   <string name="channel_caption_thermometer">Termometer</string>
   <string name="channel_caption_humidity">Vlažnost</string>
   <string name="channel_caption_humidityandtemperature">Temperatura in vlažnost</string>
+  <string name="channel_caption_smoke_sensor">Senzor dima</string>
+  <string name="channel_caption_carbon_monoxide_sensor">Senzor ogljikovega monoksida</string>
+  <string name="channel_caption_gas_sensor">Senzor plina</string>
   <string name="channel_caption_windsensor">Hitrost vetra</string>
   <string name="channel_caption_pressuresensor">Tlačni senzor</string>
   <string name="channel_caption_rainsensor">Merjenje padavin</string>
