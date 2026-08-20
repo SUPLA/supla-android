@@ -34,6 +34,9 @@
   <string name="channel_caption_thermometer">Θερμόμετρο</string>
   <string name="channel_caption_humidity">Υγρασία</string>
   <string name="channel_caption_humidityandtemperature">Θερμοκρασία και υγρασία</string>
+  <string name="channel_caption_smoke_sensor">Αισθητήρας καπνού</string>
+  <string name="channel_caption_carbon_monoxide_sensor">Αισθητήρας μονοξειδίου του άνθρακα</string>
+  <string name="channel_caption_gas_sensor">Αισθητήρας αερίου</string>
   <string name="channel_caption_windsensor">Ταχύτητα αέρα</string>
   <string name="channel_caption_pressuresensor">Αισθητήρας πίεσης</string>
   <string name="channel_caption_rainsensor">Μέτρηση βροχοπτώσεων</string>

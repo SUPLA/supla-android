@@ -118,6 +118,9 @@ class GetChannelStateUseCase @Inject constructor(
       SuplaFunction.FLOOD_SENSOR,
       SuplaFunction.MOTION_SENSOR,
       SuplaFunction.BINARY_SENSOR,
+      SuplaFunction.SMOKE_SENSOR,
+      SuplaFunction.CARBON_MONOXIDE_SENSOR,
+      SuplaFunction.GAS_SENSOR,
       SuplaFunction.HVAC_HRV -> getOnOff(value.isClosed)
       SuplaFunction.DIMMER, SuplaFunction.DIMMER_CCT -> getOnOff(value.brightness > 0)
       SuplaFunction.RGB_LIGHTING -> getOnOff(value.colorBrightness > 0)
@@ -243,6 +246,9 @@ class GetChannelStateUseCase @Inject constructor(
         SuplaFunction.FLOOD_SENSOR,
         SuplaFunction.MOTION_SENSOR,
         SuplaFunction.BINARY_SENSOR,
+        SuplaFunction.SMOKE_SENSOR,
+        SuplaFunction.CARBON_MONOXIDE_SENSOR,
+        SuplaFunction.GAS_SENSOR,
         SuplaFunction.HVAC_HRV -> ChannelState.Default(ChannelState.Value.OFF)
         SuplaFunction.DIMMER_AND_RGB_LIGHTING,
         SuplaFunction.DIMMER_CCT_AND_RGB ->
@@ -339,6 +345,9 @@ class GetChannelStateUseCase @Inject constructor(
         SuplaFunction.FLOOD_SENSOR,
         SuplaFunction.MOTION_SENSOR,
         SuplaFunction.BINARY_SENSOR,
+        SuplaFunction.SMOKE_SENSOR,
+        SuplaFunction.CARBON_MONOXIDE_SENSOR,
+        SuplaFunction.GAS_SENSOR,
         SuplaFunction.HVAC_HRV ->
           if (actionId == ActionId.TURN_OFF) {
             ChannelState.Default(ChannelState.Value.OFF)

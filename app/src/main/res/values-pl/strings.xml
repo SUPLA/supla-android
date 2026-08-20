@@ -52,6 +52,9 @@
   <string name="channel_caption_thermometer">Termometr</string>
   <string name="channel_caption_humidity">Wilgotność</string>
   <string name="channel_caption_humidityandtemperature">Temperatura i wilgotność</string>
+  <string name="channel_caption_smoke_sensor">Czujnik dymu</string>
+  <string name="channel_caption_carbon_monoxide_sensor">Czujnik tlenku węgla</string>
+  <string name="channel_caption_gas_sensor">Czujnik gazu</string>
   <string name="channel_caption_windsensor">Prędkość wiatru</string>
   <string name="channel_caption_pressuresensor">Czujnik ciśnienia</string>
   <string name="channel_caption_rainsensor">Pomiar opadów</string>

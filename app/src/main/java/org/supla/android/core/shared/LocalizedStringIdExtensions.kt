@@ -92,6 +92,9 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.CHANNEL_CAPTION_UNKNOWN -> R.string.channel_not_supported
     LocalizedStringId.CHANNEL_CAPTION_MOTION_SENSOR -> R.string.channel_caption_motion_sensor
     LocalizedStringId.CHANNEL_CAPTION_BINARY_SENSOR -> R.string.channel_caption_binary_sensor
+    LocalizedStringId.CHANNEL_CAPTION_SMOKE_SENSOR -> R.string.channel_caption_smoke_sensor
+    LocalizedStringId.CHANNEL_CAPTION_CARBON_MONOXIDE_SENSOR -> R.string.channel_caption_carbon_monoxide_sensor
+    LocalizedStringId.CHANNEL_CAPTION_GAS_SENSOR -> R.string.channel_caption_gas_sensor
     LocalizedStringId.CHANNEL_STATUS_AWAITING -> R.string.channel_status_awaiting
     LocalizedStringId.CHANNEL_STATUS_UPDATING -> R.string.channel_status_updating
     LocalizedStringId.CHANNEL_STATUS_NOT_AVAILABLE -> R.string.channel_not_available

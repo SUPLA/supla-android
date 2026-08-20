@@ -91,7 +91,10 @@ enum class SuplaFunction(val value: Int) {
   CONTAINER_LEVEL_SENSOR(990),
   FLOOD_SENSOR(1000),
   MOTION_SENSOR(1010),
-  BINARY_SENSOR(1020);
+  BINARY_SENSOR(1020),
+  SMOKE_SENSOR(1030),
+  CARBON_MONOXIDE_SENSOR(1040),
+  GAS_SENSOR(1050);
 
   companion object {
     fun from(value: Int): SuplaFunction {

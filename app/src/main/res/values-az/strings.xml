@@ -48,6 +48,9 @@
   <string name="channel_caption_thermometer">Termometr</string>
   <string name="channel_caption_humidity">Rütubət</string>
   <string name="channel_caption_humidityandtemperature">Temperatur və rütubət</string>
+  <string name="channel_caption_smoke_sensor">Tüstü sensoru</string>
+  <string name="channel_caption_carbon_monoxide_sensor">Dəm qazı sensoru</string>
+  <string name="channel_caption_gas_sensor">Qaz sensoru</string>
   <string name="channel_caption_windsensor">Külək sensoru</string>
   <string name="channel_caption_pressuresensor">Təzyiq sensoru</string>
   <string name="channel_caption_rainsensor">Yağış sensoru</string>

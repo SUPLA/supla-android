@@ -20,6 +20,7 @@ package org.supla.core.shared.usecase.channel
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_ALARM_ARMAMENT_SENSOR
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_BINARY_SENSOR
+import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_CARBON_MONOXIDE_SENSOR
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_CONTAINER
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_CONTAINER_LEVEL_SENSOR
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_CONTROLLING_THE_DOOR_LOCK
@@ -37,6 +38,7 @@ import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_DI
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_DISTANCE_SENSOR
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_ELECTRICITY_METER
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_FLOOD_SENSOR
+import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_GAS_SENSOR
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_GENERAL_PURPOSE_MEASUREMENT
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_GENERAL_PURPOSE_METER
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_HEAT_OR_COLD_SOURCE_SWITCH
@@ -66,6 +68,7 @@ import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_RA
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_RGB_LIGHTING
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_ROLLER_GARAGE_DOOR
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_SEPTIC_TANK
+import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_SMOKE_SENSOR
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_STAIRCASE_TIMER
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_TERRACE_AWNING
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_THERMOMETER
@@ -153,5 +156,8 @@ class GetChannelDefaultCaptionUseCase {
       SuplaFunction.NOTIFICATION,
       SuplaFunction.WEATHER_STATION,
       SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL -> localizedString(CHANNEL_CAPTION_UNKNOWN)
+      SuplaFunction.SMOKE_SENSOR -> localizedString(CHANNEL_CAPTION_SMOKE_SENSOR)
+      SuplaFunction.CARBON_MONOXIDE_SENSOR -> localizedString(CHANNEL_CAPTION_CARBON_MONOXIDE_SENSOR)
+      SuplaFunction.GAS_SENSOR -> localizedString(CHANNEL_CAPTION_GAS_SENSOR)
     }
 }

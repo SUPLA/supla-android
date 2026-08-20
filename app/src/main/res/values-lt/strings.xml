@@ -31,6 +31,9 @@
   <string name="channel_caption_thermometer">Termometras</string>
   <string name="channel_caption_humidity">Drėgmė</string>
   <string name="channel_caption_humidityandtemperature">Temperatūra ir drėgmė</string>
+  <string name="channel_caption_smoke_sensor">Dūmų jutiklis</string>
+  <string name="channel_caption_carbon_monoxide_sensor">Anglies monoksido jutiklis</string>
+  <string name="channel_caption_gas_sensor">Dujų jutiklis</string>
   <string name="channel_caption_dimmer">Dimmer</string>
   <string name="channel_caption_rgblighting">RGB apšvietimas</string>
   <string name="channel_caption_dimmerandrgblighting">Šviesos srauto reguliatorius ir RGB apšvietimas</string>

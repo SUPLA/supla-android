@@ -34,6 +34,9 @@
   <string name="channel_caption_thermometer">Thermometer</string>
   <string name="channel_caption_humidity">Feuchtigkeitssensor</string>
   <string name="channel_caption_humidityandtemperature">Temperatur- und Feuchtigkeitssensor</string>
+  <string name="channel_caption_smoke_sensor">Rauchsensor</string>
+  <string name="channel_caption_carbon_monoxide_sensor">Kohlenmonoxidsensor</string>
+  <string name="channel_caption_gas_sensor">Gassensor</string>
   <string name="channel_caption_dimmer">Helligkeitsregler</string>
   <string name="channel_caption_rgblighting">RGB- Beleuchtungskontroller</string>
   <string name="channel_caption_dimmerandrgblighting">Helligkeitsregler und RGB-Beleuchtungskontroller</string>

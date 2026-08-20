@@ -34,6 +34,9 @@
   <string name="channel_caption_thermometer">Termometer</string>
   <string name="channel_caption_humidity">Fuktighet</string>
   <string name="channel_caption_humidityandtemperature">Temperatur og fuktighet</string>
+  <string name="channel_caption_smoke_sensor">Røyksensor</string>
+  <string name="channel_caption_carbon_monoxide_sensor">Karbonmonoksidsensor</string>
+  <string name="channel_caption_gas_sensor">Gassensor</string>
   <string name="channel_caption_windsensor">Vindhastighet</string>
   <string name="channel_caption_pressuresensor">Trykksensor</string>
   <string name="channel_caption_rainsensor">Nedbørsmåling</string>

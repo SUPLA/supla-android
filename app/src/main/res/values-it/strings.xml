@@ -34,6 +34,9 @@
   <string name="channel_caption_thermometer">Termometro</string>
   <string name="channel_caption_humidity">Umidità</string>
   <string name="channel_caption_humidityandtemperature">Temperatura e umidità</string>
+  <string name="channel_caption_smoke_sensor">Sensore di fumo</string>
+  <string name="channel_caption_carbon_monoxide_sensor">Sensore di monossido di carbonio</string>
+  <string name="channel_caption_gas_sensor">Sensore di gas</string>
   <string name="channel_caption_dimmer">Varialuce</string>
   <string name="channel_caption_rgblighting">Illuminazione RGB</string>
   <string name="channel_caption_dimmerandrgblighting">Varialuce e illuminazione RGB</string>

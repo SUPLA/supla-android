@@ -34,6 +34,9 @@
   <string name="channel_caption_thermometer">Hőmérő</string>
   <string name="channel_caption_humidity">Nedvességtartalom</string>
   <string name="channel_caption_humidityandtemperature">Hőmérséklet és páratartalom</string>
+  <string name="channel_caption_smoke_sensor">Füstérzékelő</string>
+  <string name="channel_caption_carbon_monoxide_sensor">Szén-monoxid-érzékelő</string>
+  <string name="channel_caption_gas_sensor">Gázérzékelő</string>
   <string name="channel_caption_windsensor">Szélsebesség</string>
   <string name="channel_caption_pressuresensor">Nyomásérzékelő</string>
   <string name="channel_caption_rainsensor">Csapadék mérése</string>

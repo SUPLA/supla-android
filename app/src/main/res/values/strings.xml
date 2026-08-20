@@ -969,4 +969,7 @@
   <string name="wizard_result_certificate_pin_mismatch">The device certificate differs from the expected one. Update the app and device software, then try again.</string>
   <string name="wizard_result_certificate_unsupported_security">The device uses unsupported security settings. Update the device software and try again.</string>
   <string name="wizard_result_certificate_different_names">Device has wrong certificate - names are not equal (certificate: %1$s, device: %2$s)</string>
+  <string name="channel_caption_smoke_sensor">Smoke sensor</string>
+  <string name="channel_caption_carbon_monoxide_sensor">Carbon monoxide sensor</string>
+  <string name="channel_caption_gas_sensor">Gas sensor</string>
 </resources>

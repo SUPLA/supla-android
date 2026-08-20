@@ -41,6 +41,9 @@
   <string name="channel_caption_thermometer">Термометр</string>
   <string name="channel_caption_humidity">Вологість</string>
   <string name="channel_caption_humidityandtemperature">Температура і вологість</string>
+  <string name="channel_caption_smoke_sensor">Датчик диму</string>
+  <string name="channel_caption_carbon_monoxide_sensor">Датчик чадного газу</string>
+  <string name="channel_caption_gas_sensor">Датчик газу</string>
   <string name="channel_caption_windsensor">Швидкість вітру</string>
   <string name="channel_caption_pressuresensor">Датчик тиску</string>
   <string name="channel_caption_rainsensor">Вимірювання опадів</string>

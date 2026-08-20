@@ -34,6 +34,9 @@
   <string name="channel_caption_thermometer">Thermometer</string>
   <string name="channel_caption_humidity">Vochtigheid</string>
   <string name="channel_caption_humidityandtemperature">Temperatuur en luchtvochtigheid</string>
+  <string name="channel_caption_smoke_sensor">Rooksensor</string>
+  <string name="channel_caption_carbon_monoxide_sensor">Koolmonoxidesensor</string>
+  <string name="channel_caption_gas_sensor">Gassensor</string>
   <string name="channel_caption_windsensor">Windsnelheid</string>
   <string name="channel_caption_pressuresensor">Druksensor</string>
   <string name="channel_caption_rainsensor">Neerslag meting</string>
