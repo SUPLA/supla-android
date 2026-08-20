@@ -23,6 +23,7 @@ import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.model.general.IconType
 import org.supla.android.usecases.icon.producers.AlarmArmamentSensorIconResourceProducer
 import org.supla.android.usecases.icon.producers.BinarySensorIconResourceProducer
+import org.supla.android.usecases.icon.producers.CarbonMonoxideSensorIconResourceProducer
 import org.supla.android.usecases.icon.producers.ContainerIconResourceProducer
 import org.supla.android.usecases.icon.producers.ContainerLevelSensorIconResourceProducer
 import org.supla.android.usecases.icon.producers.CurtainIconResourceProducer
@@ -38,6 +39,7 @@ import org.supla.android.usecases.icon.producers.FacadeBlindIconResourceProducer
 import org.supla.android.usecases.icon.producers.FloodSensorIconResourceProducer
 import org.supla.android.usecases.icon.producers.GarageDoorIconResourceProducer
 import org.supla.android.usecases.icon.producers.GarageDoorRollerIconResourceProducer
+import org.supla.android.usecases.icon.producers.GasSensorIconResourceProducer
 import org.supla.android.usecases.icon.producers.GateIconResourceProducer
 import org.supla.android.usecases.icon.producers.GatewayIconResourceProducer
 import org.supla.android.usecases.icon.producers.GeneralPurposeMeasurementIconResourceProducer
@@ -56,6 +58,7 @@ import org.supla.android.usecases.icon.producers.RgbLightingIconResourceProducer
 import org.supla.android.usecases.icon.producers.RollerShutterIconResourceProducer
 import org.supla.android.usecases.icon.producers.RoofWindowIconResourceProducer
 import org.supla.android.usecases.icon.producers.SepticTankIconResourceProducer
+import org.supla.android.usecases.icon.producers.SmokeSensorIconResourceProducer
 import org.supla.android.usecases.icon.producers.StaircaseTimerIconResourceProducer
 import org.supla.android.usecases.icon.producers.StaticIconResourceProducer
 import org.supla.android.usecases.icon.producers.TerraceAwningIconResourceProducer
@@ -130,7 +133,10 @@ class GetDefaultIconResourceUseCase @Inject constructor() {
     SepticTankIconResourceProducer,
     ContainerLevelSensorIconResourceProducer,
     MotionSensorIconResourceProducer,
-    BinarySensorIconResourceProducer
+    BinarySensorIconResourceProducer,
+    SmokeSensorIconResourceProducer,
+    CarbonMonoxideSensorIconResourceProducer,
+    GasSensorIconResourceProducer
   )
 
   @DrawableRes

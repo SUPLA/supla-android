@@ -32,6 +32,9 @@
   <string name="channel_caption_thermometer">Teploměr</string>
   <string name="channel_caption_humidity">Vlhkost</string>
   <string name="channel_caption_humidityandtemperature">Teplota a vlhkost</string>
+  <string name="channel_caption_smoke_sensor">Snímač kouře</string>
+  <string name="channel_caption_carbon_monoxide_sensor">Snímač oxidu uhelnatého</string>
+  <string name="channel_caption_gas_sensor">Snímač plynu</string>
   <string name="channel_caption_dimmer">Reostat</string>
   <string name="channel_caption_rgblighting">Osvětlení RGB</string>
   <string name="channel_caption_dimmerandrgblighting">Reostat a osvětlení RGB</string>

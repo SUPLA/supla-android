@@ -99,6 +99,9 @@ abstract class BaseDetailTypeProviderUseCase {
     SuplaFunction.FLOOD_SENSOR,
     SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS,
     SuplaFunction.MOTION_SENSOR,
-    SuplaFunction.BINARY_SENSOR -> null
+    SuplaFunction.BINARY_SENSOR,
+    SuplaFunction.SMOKE_SENSOR,
+    SuplaFunction.CARBON_MONOXIDE_SENSOR,
+    SuplaFunction.GAS_SENSOR -> null
   }
 }
