@@ -1,4 +1,4 @@
-package org.supla.android.main.scaffold
+package org.supla.android.main.topbar
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,22 +17,28 @@ package org.supla.android.main.scaffold
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import org.supla.android.main.topbar.SetStatusBarContentColor
-import org.supla.android.main.topbar.StatusBarContentColor
+import androidx.compose.runtime.remember
+import androidx.navigation3.runtime.NavEntry
+import org.supla.android.main.view.LocalViewComponentsVisibilityController
+import org.supla.android.main.view.ViewComponentsVisibilityController
 
-@Composable
-fun EmptyScreenScaffold(
-  content: @Composable () -> Unit
-) {
-  SetStatusBarContentColor(StatusBarContentColor.DARK)
-  Scaffold(
-    content = { paddings ->
-      CompositionLocalProvider(LocalScaffoldPadding provides paddings) {
-        content()
-      }
+fun <T : Any> topBarEntryProvider(
+  base: (T) -> NavEntry<T>
+): (T) -> NavEntry<T> = { key ->
+  val entry = base(key)
+
+  NavEntry(
+    key = key,
+    metadata = entry.metadata
+  ) {
+    val visibilityController = remember(key) { ViewComponentsVisibilityController() }
+    CompositionLocalProvider(
+      LocalScreenKey provides key,
+      LocalViewComponentsVisibilityController provides visibilityController
+    ) {
+      StatusBarAppearance()
+      entry.Content()
     }
-  )
+  }
 }
