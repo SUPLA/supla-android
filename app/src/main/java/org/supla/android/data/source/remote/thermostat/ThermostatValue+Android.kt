@@ -33,8 +33,8 @@ fun ThermostatValue.getIndicatorIcon() = when {
 }
 
 fun ThermostatValue.getSetpointText(formatter: ValueFormatter): String {
-  val temperatureMin = formatter.format(setpointTemperatureHeat, ValueFormat.WithoutUnit)
-  val temperatureMax = formatter.format(setpointTemperatureCool, ValueFormat.WithoutUnit)
+  val temperatureMin = formatter.format(setpointTemperatureHeat, ValueFormat.TemperatureWithDegree)
+  val temperatureMax = formatter.format(setpointTemperatureCool, ValueFormat.TemperatureWithDegree)
   return when {
     status.offline -> ""
     mode == SuplaHvacMode.COOL -> temperatureMax
