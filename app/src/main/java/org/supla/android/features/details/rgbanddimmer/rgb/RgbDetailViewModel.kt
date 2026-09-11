@@ -57,7 +57,7 @@ import org.supla.android.features.details.rgbanddimmer.rgb.model.RgbValue
 import org.supla.android.features.details.rgbanddimmer.rgb.ui.ColorDialogState
 import org.supla.android.features.details.rgbanddimmer.rgb.ui.RgbDetailScope
 import org.supla.android.images.ImageId
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.views.DeviceStateData
 import org.supla.android.ui.views.buttons.SwitchButtonState
 import org.supla.android.usecases.channel.GetChannelStateUseCase
@@ -88,8 +88,8 @@ class RgbDetailViewModel @Inject constructor(
   private val loadingTimeoutManager: LoadingTimeoutManager,
   private val colorListRepository: ColorListRepository,
   private val dateProvider: DateProvider,
-  schedulers: SuplaSchedulers
-) : BaseViewModel<RgbDetailModelState, RgbDetailViewEvent>(RgbDetailModelState(), schedulers), RgbDetailScope {
+  threading: SuplaThreading
+) : BaseViewModel<RgbDetailModelState, RgbDetailViewEvent>(RgbDetailModelState(), threading), RgbDetailScope {
 
   private val updateSubject: BehaviorSubject<Int> = BehaviorSubject.createDefault(0)
 

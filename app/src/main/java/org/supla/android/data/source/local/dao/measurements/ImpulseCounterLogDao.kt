@@ -28,6 +28,7 @@ import io.reactivex.rxjava3.core.Single
 import org.supla.android.data.source.GroupingStringMigratorDao
 import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity
 import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity.Companion.ALL_COLUMNS
+import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity.Companion.COLUMN_CALCULATED_VALUE
 import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity.Companion.COLUMN_CHANNEL_ID
 import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity.Companion.COLUMN_GROUPING_STRING
 import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity.Companion.COLUMN_ID
@@ -81,19 +82,37 @@ interface ImpulseCounterLogDao : GroupingStringMigratorDao {
   )
   fun findMeasurements(channelId: Int, profileId: Long): Observable<List<ImpulseCounterLogEntity>>
 
+  @Query(
+    """
+      SELECT COALESCE(SUM($COLUMN_CALCULATED_VALUE), 0) FROM $TABLE_NAME
+      WHERE channelid = :channelId AND profileid = :profileId
+    """
+  )
+  fun findCalculatedValueSum(channelId: Int, profileId: Long): Observable<Float>
+
+  @Query(
+    """
+      SELECT COALESCE(SUM($COLUMN_CALCULATED_VALUE), 0) FROM $TABLE_NAME
+      WHERE channelid = :channelId AND profileid = :profileId AND date >= :startDate AND date <= :endDate
+    """
+  )
+  fun findCalculatedValueSum(channelId: Int, profileId: Long, startDate: Long, endDate: Long): Observable<Float>
+
   @Query("SELECT COUNT($COLUMN_ID) FROM $TABLE_NAME")
   fun count(): Observable<Int>
 
   @Query(
     """
-      SELECT COUNT($COLUMN_GROUPING_STRING) 
-      FROM $TABLE_NAME 
-      WHERE $COLUMN_CHANNEL_ID = :remoteId 
-        AND $COLUMN_PROFILE_ID = :profileId 
-        AND $COLUMN_GROUPING_STRING = ''
+    SELECT EXISTS(
+        SELECT 1
+        FROM $TABLE_NAME
+        WHERE $COLUMN_CHANNEL_ID = :remoteId
+          AND $COLUMN_PROFILE_ID = :profileId
+          AND $COLUMN_GROUPING_STRING = ''
+    )
     """
   )
-  override fun emptyGroupingStringCount(remoteId: Int, profileId: Long): Single<Int>
+  override fun hasEmptyGroupingString(remoteId: Int, profileId: Long): Single<Boolean>
 
   @Query(
     """

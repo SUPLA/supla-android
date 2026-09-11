@@ -38,7 +38,7 @@ import org.supla.android.features.profileslist.ProfilesListState
 import org.supla.android.features.profileslist.ProfilesListViewEvent
 import org.supla.android.features.profileslist.ProfilesListViewModel
 import org.supla.android.features.profileslist.ProfilesListViewState
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.lock.GetLockScreenSettingUseCase
 import org.supla.android.usecases.profile.ActivateProfileUseCase
 import org.supla.android.usecases.profile.ReadAllProfilesUseCase
@@ -57,7 +57,7 @@ class ProfilesViewModelTest : BaseViewModelTest<ProfilesListState, ProfilesListV
   private lateinit var profileRepository: ProfileRepository
 
   @MockK
-  override lateinit var schedulers: SuplaSchedulers
+  override lateinit var threading: SuplaThreading
 
   @InjectMockKs
   override lateinit var viewModel: ProfilesListViewModel

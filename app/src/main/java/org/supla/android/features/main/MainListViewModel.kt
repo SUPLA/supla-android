@@ -38,7 +38,7 @@ import org.supla.android.core.ui.EventBasedViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.ProfileRepository
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModelScope
@@ -54,7 +54,7 @@ class MainListViewModel @Inject constructor(
   override val profileRepository: ProfileRepository,
   override val authorizeUseCase: AuthorizeUseCase,
   override val loginUseCase: LoginUseCase,
-  override val schedulers: SuplaSchedulers,
+  override val threading: SuplaThreading,
   private val activateProfileUseCase: ActivateProfileUseCase,
   private val applicationPreferences: ApplicationPreferences,
   private val readAllProfilesUseCase: ReadAllProfilesUseCase,
@@ -138,7 +138,7 @@ class MainListViewModel @Inject constructor(
 
   fun showProfilesPopup() {
     viewModelScope.launch {
-      val profiles = schedulers.io {
+      val profiles = threading.io {
         readAllProfilesUseCase().awaitFirst()
           .map { ProfileVo(it.id, it.name, it.active) }
       }
@@ -155,7 +155,7 @@ class MainListViewModel @Inject constructor(
 
   fun onProfileSelected(id: Long) {
     viewModelScope.launch {
-      schedulers.io {
+      threading.io {
         activateProfileUseCase(id, force = false).await()
       }
       profileSelectionStateFlow.tryEmit(null)

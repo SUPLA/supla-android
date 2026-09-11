@@ -49,9 +49,9 @@ import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
-import org.supla.android.di.CoroutineDispatchers
 import org.supla.android.lib.SuplaClient
 import org.supla.android.lib.singlecall.SingleCall
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.client.DisconnectUseCase
 import org.supla.android.widget.WidgetManager
 
@@ -90,7 +90,7 @@ class DeleteProfileUseCaseTest {
   private lateinit var suplaAppProvider: SuplaAppProvider
 
   @MockK
-  private lateinit var dispatchers: CoroutineDispatchers
+  private lateinit var threading: SuplaThreading
 
   @MockK
   private lateinit var widgetManager: WidgetManager
@@ -120,7 +120,9 @@ class DeleteProfileUseCaseTest {
       every { registerPushNotificationClientToken(SuplaClient.SUPLA_APP_ID, "", profile) } just Runs
     }
     every { singleCallProvider.provide(profileId) } returns singleCall
-    every { dispatchers.io() } returns UnconfinedTestDispatcher()
+    every { threading.dispatchers } returns mockk {
+      every { io } returns UnconfinedTestDispatcher()
+    }
     coEvery { encryptedPreferences.removeProfileCredentials(profileId) } just Runs
 
     // when
@@ -165,7 +167,9 @@ class DeleteProfileUseCaseTest {
       every { registerPushNotificationClientToken(SuplaClient.SUPLA_APP_ID, "", profile) } just Runs
     }
     every { singleCallProvider.provide(profileId) } returns singleCall
-    every { dispatchers.io() } returns UnconfinedTestDispatcher()
+    every { threading.dispatchers } returns mockk {
+      every { io } returns UnconfinedTestDispatcher()
+    }
     coEvery { encryptedPreferences.removeProfileCredentials(profileId) } just Runs
 
     // when
@@ -218,7 +222,9 @@ class DeleteProfileUseCaseTest {
     every { suplaApp.SuplaClientInitIfNeed(any()) } returns null
     every { suplaAppProvider.provide() } returns suplaApp
 
-    every { dispatchers.io() } returns UnconfinedTestDispatcher()
+    every { threading.dispatchers } returns mockk {
+      every { io } returns UnconfinedTestDispatcher()
+    }
     coEvery { encryptedPreferences.removeProfileCredentials(profileId) } just Runs
 
     // when

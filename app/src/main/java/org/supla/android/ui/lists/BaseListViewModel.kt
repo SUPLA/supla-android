@@ -28,7 +28,7 @@ import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.extensions.subscribeBy
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.usecases.profile.CloudUrl
 import org.supla.android.usecases.profile.LoadActiveProfileUrlUseCase
@@ -40,10 +40,10 @@ private const val CLICK_EVENT_DELAY_MS = 250
 abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
   private val vibrationHelper: VibrationHelper,
   private val dateProvider: DateProvider,
-  schedulers: SuplaSchedulers,
+  threading: SuplaThreading,
   defaultState: S,
   private val loadActiveProfileUrlUseCase: LoadActiveProfileUrlUseCase? = null,
-) : BaseViewModel<S, E>(defaultState, schedulers) {
+) : BaseViewModel<S, E>(defaultState, threading) {
 
   protected var lastItemOpenTime: Long = 0
 

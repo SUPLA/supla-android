@@ -52,7 +52,7 @@ import org.supla.android.extensions.ucFirst
 import org.supla.android.images.ImageCache
 import org.supla.android.lib.actions.ActionParameters
 import org.supla.android.lib.singlecall.SingleCall
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import timber.log.Timber
@@ -63,8 +63,8 @@ class MainScreen(
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val getSceneIconUseCase: GetSceneIconUseCase,
   private val singleCallProvider: SingleCallProvider,
-  private val schedulers: SuplaSchedulers,
   private val preferences: ApplicationPreferences,
+  private val threading: SuplaThreading,
   updateEventsManager: UpdateEventsManager,
   dateProvider: DateProvider,
   carContext: CarContext
@@ -98,14 +98,14 @@ class MainScreen(
 
     disposables.add(
       updateEventsManager.observeScenesUpdate()
-        .subscribeOn(schedulers.io)
-        .observeOn(schedulers.ui)
+        .subscribeOn(threading.schedulers.io)
+        .observeOn(threading.schedulers.ui)
         .subscribe { load() }
     )
     disposables.add(
       updateEventsManager.observeAndroidAutoUpdates()
-        .subscribeOn(schedulers.io)
-        .observeOn(schedulers.ui)
+        .subscribeOn(threading.schedulers.io)
+        .observeOn(threading.schedulers.ui)
         .subscribe { load() }
     )
   }
@@ -115,8 +115,8 @@ class MainScreen(
     invalidate()
     disposables.add(
       androidAutoItemRepository.findAll().firstOrError()
-        .subscribeOn(schedulers.io)
-        .observeOn(schedulers.ui)
+        .subscribeOn(threading.schedulers.io)
+        .observeOn(threading.schedulers.ui)
         .subscribeBy(
           onSuccess = { items ->
             state.items = items

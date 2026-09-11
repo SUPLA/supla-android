@@ -52,7 +52,7 @@ import org.supla.android.features.details.thermostatdetail.general.data.build
 import org.supla.android.features.details.thermostatdetail.general.ui.ThermostatGeneralViewProxy
 import org.supla.android.features.details.thermostatdetail.ui.TimerHeaderHelper
 import org.supla.android.images.ImageId
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.views.DeviceStateData
 import org.supla.android.usecases.channel.GetChannelValueUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
@@ -96,10 +96,10 @@ class ThermostatGeneralViewModel @Inject constructor(
   private val suplaClientProvider: SuplaClientProvider,
   private val dateProvider: DateProvider,
   @param:Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter,
-  schedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) : BaseViewModel<ThermostatGeneralViewState, ThermostatGeneralViewEvent>(
   ThermostatGeneralViewState(thermometerValueFormatter),
-  schedulers
+  threading
 ),
   ThermostatGeneralViewProxy {
 
@@ -138,7 +138,7 @@ class ThermostatGeneralViewModel @Inject constructor(
         isSlaveThermostat = isSlave
       )
     }
-      .debounce(50, TimeUnit.MILLISECONDS, schedulers.computation)
+      .debounce(50, TimeUnit.MILLISECONDS, this@ThermostatGeneralViewModel.threading.schedulers.computation)
       .attachSilent()
       .subscribeBy(
         onNext = { handleData(it) },

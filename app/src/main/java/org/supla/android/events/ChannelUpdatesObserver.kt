@@ -20,13 +20,13 @@ package org.supla.android.events
 import io.reactivex.rxjava3.disposables.Disposable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.extensions.subscribeBy
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 
 interface ChannelUpdatesObserver {
 
   val updateEventsManager: UpdateEventsManager
 
-  val schedulers: SuplaSchedulers
+  val threading: SuplaThreading
 
   fun onChannelUpdate(channelWithChildren: ChannelWithChildren)
 
@@ -35,8 +35,8 @@ interface ChannelUpdatesObserver {
   fun observe(remoteId: Int) {
     handle(
       updateEventsManager.observeChannelWithChildren(remoteId)
-        .subscribeOn(schedulers.io)
-        .observeOn(schedulers.ui)
+        .subscribeOn(threading.schedulers.io)
+        .observeOn(threading.schedulers.ui)
         .subscribeBy(onNext = this::onChannelUpdate)
     )
   }

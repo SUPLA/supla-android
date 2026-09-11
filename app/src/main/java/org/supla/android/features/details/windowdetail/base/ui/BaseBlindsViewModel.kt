@@ -34,7 +34,7 @@ import org.supla.android.features.details.windowdetail.base.data.ShadingBlindWin
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.data.facadeblinds.FacadeBlindWindowState
 import org.supla.android.lib.actions.ActionId
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.channel.ObserveChannelWithChildrenUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.CallSuplaClientOperationUseCase
@@ -68,7 +68,7 @@ abstract class BaseBlindsViewModel<S : BaseBlindsViewModelState>(
   loginUseCase: LoginUseCase,
   authorizeUseCase: AuthorizeUseCase,
   defaultState: S,
-  schedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) : BaseWindowViewModel<S>(
   executeShadingSystemActionUseCase,
   executeSimpleActionUseCase,
@@ -83,7 +83,7 @@ abstract class BaseBlindsViewModel<S : BaseBlindsViewModelState>(
   loginUseCase,
   authorizeUseCase,
   defaultState,
-  schedulers
+  threading
 ) {
 
   protected abstract fun updateWindowState(state: S, position: WindowGroupedValue, tilt: Float?, markers: List<ShadingBlindMarker>): S

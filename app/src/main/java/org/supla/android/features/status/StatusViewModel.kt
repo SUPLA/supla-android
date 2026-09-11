@@ -32,7 +32,7 @@ import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.lib.SuplaConst.SUPLA_RESULT_HOST_NOT_FOUND
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
@@ -53,10 +53,10 @@ class StatusViewModel @Inject constructor(
   override val profileRepository: ProfileRepository,
   override val loginUseCase: LoginUseCase,
   override val authorizeUseCase: AuthorizeUseCase,
-  override val schedulers: SuplaSchedulers
+  override val threading: SuplaThreading
 ) : BaseViewModel<StatusViewState, StatusViewEvent>(
   defaultState = StatusViewState(),
-  schedulers = schedulers
+  threading = threading
 ),
   StatusViewScope,
   BaseAuthorizationViewModelScope {

@@ -27,7 +27,7 @@ import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.data.model.settings.ProfileCredentials
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
-import org.supla.android.di.CoroutineDispatchers
+import org.supla.android.tools.SuplaThreading
 import org.supla.core.shared.extensions.forTrue
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -38,7 +38,7 @@ class SaveProfileUseCase @Inject constructor(
   private val encryptedPreferences: EncryptedPreferences,
   private val profileRepository: ProfileRepository,
   @param:ApplicationContext private val context: Context,
-  private val dispatchers: CoroutineDispatchers
+  private val threading: SuplaThreading
 ) {
 
   operator fun invoke(profileDto: ProfileDto): Single<Result> =
@@ -67,7 +67,7 @@ class SaveProfileUseCase @Inject constructor(
   }
 
   private fun update(profileDto: ProfileDto, originalProfile: ProfileEntity): Single<Result> =
-    rxSingle(dispatchers.io()) { encryptedPreferences.getProfileCredentials(profileDto.id) }
+    rxSingle(threading.dispatchers.io) { encryptedPreferences.getProfileCredentials(profileDto.id) }
       .flatMap { credentials ->
         val profileEntity = profileDto.entity
 
@@ -135,7 +135,7 @@ class SaveProfileUseCase @Inject constructor(
     copy(serverForEmail = if (isEmailWithAutoDetect) "" else serverForEmail)
 
   private fun updateAccessIdPassword(profileId: Long, accessIdPassword: String, credentials: ProfileCredentials? = null) =
-    rxSingle(dispatchers.io()) {
+    rxSingle(threading.dispatchers.io) {
       val credentials = credentials ?: encryptedPreferences.getProfileCredentials(profileId)
       if (accessIdPassword != credentials.accessIdPassword) {
         encryptedPreferences.setProfileCredentials(

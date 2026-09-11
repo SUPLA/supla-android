@@ -30,7 +30,7 @@ import org.supla.android.extensions.monthStart
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterGeneralStateHandler
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterState
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.channel.measurements.ElectricityMeasurements
@@ -48,10 +48,10 @@ class ElectricityMeterGeneralViewModel @Inject constructor(
   private val dateProvider: DateProvider,
   private val preferences: ApplicationPreferences,
   suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper,
-  schedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) : BaseViewModel<ElectricityMeterGeneralViewModelState, ElectricityMeterGeneralViewEvent>(
   ElectricityMeterGeneralViewModelState(),
-  schedulers
+  threading
 ) {
 
   init {

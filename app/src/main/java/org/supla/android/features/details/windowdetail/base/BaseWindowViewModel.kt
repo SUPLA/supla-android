@@ -40,7 +40,7 @@ import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemActi
 import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemPositionPresentation
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
 import org.supla.android.lib.actions.ActionId
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
@@ -75,10 +75,10 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
   override val loginUseCase: LoginUseCase,
   override val authorizeUseCase: AuthorizeUseCase,
   defaultState: S,
-  override val schedulers: SuplaSchedulers
+  override val threading: SuplaThreading
 ) : BaseViewModel<S, BaseWindowViewEvent>(
   defaultState,
-  schedulers
+  threading
 ),
   BaseAuthorizationViewModelScope {
 

@@ -24,7 +24,7 @@ import org.supla.android.data.source.NfcTagRepository
 import org.supla.android.data.source.SceneRepository
 import org.supla.android.features.nfc.shared.edit.BaseEditNfcTagViewModel
 import org.supla.android.features.nfc.shared.edit.EditNfcTagViewEvent
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ReadAllChannelsWithChildrenUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -42,7 +42,7 @@ class ConfigureActionViewModel @Inject constructor(
   sceneRepository: SceneRepository,
   nfcCallRepository: NfcCallRepository,
   nfcTagRepository: NfcTagRepository,
-  schedulers: SuplaSchedulers,
+  threading: SuplaThreading,
   override val getChannelIconUseCase: GetChannelIconUseCase,
   override val getSceneIconUseCase: GetSceneIconUseCase,
   override val getCaptionUseCase: GetCaptionUseCase
@@ -57,7 +57,7 @@ class ConfigureActionViewModel @Inject constructor(
   getChannelIconUseCase,
   getSceneIconUseCase,
   getCaptionUseCase,
-  schedulers
+  threading
 ),
   ConfigureActionScreenScope {
   override fun onClose() {

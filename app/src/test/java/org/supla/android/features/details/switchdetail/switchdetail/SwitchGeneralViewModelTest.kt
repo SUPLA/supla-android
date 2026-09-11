@@ -52,7 +52,7 @@ import org.supla.android.features.details.switchdetail.general.SwitchGeneralView
 import org.supla.android.images.ImageId
 import org.supla.android.lib.SuplaChannelExtendedValue
 import org.supla.android.testhelpers.extensions.mockShareable
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.GetChannelStateUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
@@ -122,7 +122,7 @@ class SwitchGeneralViewModelTest :
   private lateinit var suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper
 
   @MockK
-  override lateinit var schedulers: SuplaSchedulers
+  override lateinit var threading: SuplaThreading
 
   @InjectMockKs
   override lateinit var viewModel: SwitchGeneralViewModel

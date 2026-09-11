@@ -59,6 +59,7 @@ import org.supla.android.db.room.measurements.migrations.MEASUREMENTS_DB_MIGRATI
 import org.supla.android.db.room.measurements.migrations.MEASUREMENTS_DB_MIGRATION_35_36
 import org.supla.android.db.room.measurements.migrations.MeasurementsDbMigration29to30
 import org.supla.android.db.room.measurements.migrations.MeasurementsDbMigration36to37
+import java.util.concurrent.Executor
 import javax.inject.Singleton
 
 @Module
@@ -70,12 +71,16 @@ class DatabaseModule {
   fun provideAppDatabase(
     @ApplicationContext context: Context,
     callback: AppDatabaseCallback,
+    @AppDbQueryExecutor queryExecutor: Executor,
+    @AppDbTransactionExecutor transactionExecutor: Executor,
     migration25to26: Migration25to26,
     migration26to27: Migration26to27,
     migration27to28: Migration27to28,
     migration47to48: Migration47to48
   ) =
     Room.databaseBuilder(context, AppDatabase::class.java, AppDatabase.NAME)
+      .setQueryExecutor(queryExecutor)
+      .setTransactionExecutor(transactionExecutor)
       .let {
         if (!BuildConfig.DEBUG) {
           // Destructive migration should be activated only in production. For development, we need to know about all migration failures
@@ -208,9 +213,13 @@ class DatabaseModule {
   @Singleton
   fun provideMeasurementsDatabase(
     @ApplicationContext context: Context,
+    @MeasurementsDbQueryExecutor queryExecutor: Executor,
+    @MeasurementsDbTransactionExecutor transactionExecutor: Executor,
     migration29to30: MeasurementsDbMigration29to30
   ) =
     Room.databaseBuilder(context, MeasurementsDatabase::class.java, MeasurementsDatabase.NAME)
+      .setQueryExecutor(queryExecutor)
+      .setTransactionExecutor(transactionExecutor)
       .let {
         if (!BuildConfig.DEBUG) {
           // Destructive migration should be activated only in production. For the development we need to know about all migration failures

@@ -44,9 +44,9 @@ import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.data.model.settings.ProfileCredentials
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
-import org.supla.android.di.CoroutineDispatchers
 import org.supla.android.testhelpers.extensions.mock
 import org.supla.android.testhelpers.extensions.mockWithEmail
+import org.supla.android.tools.SuplaThreading
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SaveProfileUseCaseTest {
@@ -67,7 +67,7 @@ class SaveProfileUseCaseTest {
   private lateinit var context: Context
 
   @MockK
-  private lateinit var dispatchers: CoroutineDispatchers
+  private lateinit var threading: SuplaThreading
 
   @InjectMockKs
   private lateinit var useCase: SaveProfileUseCase
@@ -75,7 +75,9 @@ class SaveProfileUseCaseTest {
   @Before
   fun setUp() {
     MockKAnnotations.init(this)
-    every { dispatchers.io() } returns UnconfinedTestDispatcher()
+    every { threading.dispatchers } returns mockk {
+      every { io } returns UnconfinedTestDispatcher()
+    }
   }
 
   @Test

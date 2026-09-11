@@ -26,7 +26,7 @@ import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.lockscreen.UnlockAction
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.lock.GetLockScreenSettingUseCase
 import org.supla.android.usecases.profile.ActivateProfileUseCase
 import org.supla.android.usecases.profile.ReadAllProfilesUseCase
@@ -38,8 +38,8 @@ class ProfilesListViewModel @Inject constructor(
   private val readAllProfilesUseCase: ReadAllProfilesUseCase,
   private val activateProfileUseCase: ActivateProfileUseCase,
   private val profileRepository: ProfileRepository,
-  schedulers: SuplaSchedulers
-) : BaseViewModel<ProfilesListState, ProfilesListViewEvent>(ProfilesListState(), schedulers), ProfilesListScope {
+  threading: SuplaThreading
+) : BaseViewModel<ProfilesListState, ProfilesListViewEvent>(ProfilesListState(), threading), ProfilesListScope {
 
   override fun onViewCreated() {
     readAllProfilesUseCase()

@@ -27,7 +27,7 @@ import org.supla.android.data.source.AndroidAutoItemRepository
 import org.supla.android.data.source.local.entity.complex.AndroidAutoDataEntity
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.subscribeBy
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import javax.inject.Inject
@@ -39,10 +39,10 @@ class AndroidAutoItemsViewModel @Inject constructor(
   private val getSceneIconUseCase: GetSceneIconUseCase,
   private val updateEventsManager: UpdateEventsManager,
   private val preferences: ApplicationPreferences,
-  schedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) : BaseViewModel<AndroidAutoItemsViewModelState, AndroidAutoItemsViewEvent>(
   defaultState = AndroidAutoItemsViewModelState(),
-  schedulers = schedulers,
+  threading = threading,
   titleRes = R.string.settings_android_auto_label
 ),
   AndroidAutoItemsViewScope {

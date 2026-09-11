@@ -39,7 +39,7 @@ import org.supla.android.events.OnlineEventsManager
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.lib.SuplaChannelState
 import org.supla.android.lib.toEntity
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
@@ -71,11 +71,11 @@ class StateDialogViewModel @Inject constructor(
   override val profileRepository: ProfileRepository,
   override val authorizeUseCase: AuthorizeUseCase,
   override val loginUseCase: LoginUseCase,
-  override val schedulers: SuplaSchedulers,
+  override val threading: SuplaThreading,
   suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper
 ) : BaseViewModel<StateDialogViewModelState, StateDialogViewEvent>(
   defaultState = StateDialogViewModelState(),
-  schedulers = schedulers
+  threading = threading
 ),
   StateDialogScope,
   LifespanDialogScope,

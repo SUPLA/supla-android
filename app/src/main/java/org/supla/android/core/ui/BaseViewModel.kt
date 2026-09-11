@@ -33,7 +33,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import org.supla.android.extensions.subscribeBy
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 import timber.log.Timber
@@ -44,14 +44,14 @@ interface BaseViewProxy<S : ViewState> {
 
 abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
   defaultState: S,
-  protected open val schedulers: SuplaSchedulers,
+  protected open val threading: SuplaThreading,
   defaultTitle: LocalizedString = LocalizedString.Empty,
   manageScreenTitle: Boolean = false
 ) : EventBasedViewModel<E>(defaultTitle, manageScreenTitle) {
 
-  constructor(defaultState: S, schedulers: SuplaSchedulers, @StringRes titleRes: Int) : this(
+  constructor(defaultState: S, threading: SuplaThreading, @StringRes titleRes: Int) : this(
     defaultState = defaultState,
-    schedulers = schedulers,
+    threading = threading,
     defaultTitle = localizedString(titleRes),
     manageScreenTitle = true
   )
@@ -133,16 +133,16 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
   fun <T : Any> Maybe<T>.attachSilent(): Maybe<T> {
     val calledAt = findStackEntryString(Thread.currentThread().stackTrace)
 
-    return subscribeOn(schedulers.io)
-      .observeOn(schedulers.ui)
+    return subscribeOn(threading.schedulers.io)
+      .observeOn(threading.schedulers.ui)
       .doOnError { Timber.e(it, errorMessage("Maybe", calledAt, it.message)) }
   }
 
   fun Completable.attach(): Completable {
     val calledAt = findStackEntryString(Thread.currentThread().stackTrace)
 
-    return subscribeOn(schedulers.io)
-      .observeOn(schedulers.ui)
+    return subscribeOn(threading.schedulers.io)
+      .observeOn(threading.schedulers.ui)
       .doOnError { Timber.e(it, errorMessage("Completable", calledAt, it.message)) }
       .doOnSubscribe { loadingState.tryEmit(true) }
       .doOnTerminate { loadingState.tryEmit(false) }
@@ -151,16 +151,16 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
   fun Completable.attachSilent(): Completable {
     val calledAt = findStackEntryString(Thread.currentThread().stackTrace)
 
-    return subscribeOn(schedulers.io)
-      .observeOn(schedulers.ui)
+    return subscribeOn(threading.schedulers.io)
+      .observeOn(threading.schedulers.ui)
       .doOnError { Timber.e(it, errorMessage("Completable", calledAt, it.message)) }
   }
 
   fun <T : Any> Single<T>.attach(): Single<T> {
     val calledAt = findStackEntryString(Thread.currentThread().stackTrace)
 
-    return subscribeOn(schedulers.io)
-      .observeOn(schedulers.ui)
+    return subscribeOn(threading.schedulers.io)
+      .observeOn(threading.schedulers.ui)
       .doOnError { Timber.e(it, errorMessage("Single", calledAt, it.message)) }
       .doOnSubscribe { loadingState.tryEmit(true) }
       .doOnTerminate { loadingState.tryEmit(false) }
@@ -169,8 +169,8 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
   fun <T : Any> Single<T>.attachSilent(): Single<T> {
     val calledAt = findStackEntryString(Thread.currentThread().stackTrace)
 
-    return subscribeOn(schedulers.io)
-      .observeOn(schedulers.ui)
+    return subscribeOn(threading.schedulers.io)
+      .observeOn(threading.schedulers.ui)
       .doOnError { Timber.e(it, errorMessage("Maybe", calledAt, it.message)) }
   }
 
@@ -184,8 +184,8 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
   fun <T : Any> Observable<T>.attachSilent(): Observable<T> {
     val calledAt = findStackEntryString(Thread.currentThread().stackTrace)
 
-    return subscribeOn(schedulers.io)
-      .observeOn(schedulers.ui)
+    return subscribeOn(threading.schedulers.io)
+      .observeOn(threading.schedulers.ui)
       .doOnError { Timber.e(it, errorMessage("Observable", calledAt, it.message)) }
   }
 

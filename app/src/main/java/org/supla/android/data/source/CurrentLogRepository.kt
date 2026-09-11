@@ -90,8 +90,8 @@ class CurrentLogRepository @Inject constructor(
       profileId = profileId
     )
 
-  override fun findCountWithoutGroupingString(remoteId: Int, profileId: Long): Single<Int> =
-    currentLogDao.emptyGroupingStringCount(remoteId, profileId)
+  override fun hasEmptyGroupingString(remoteId: Int, profileId: Long): Single<Boolean> =
+    currentLogDao.hasEmptyGroupingString(remoteId, profileId)
 
   override fun count(): Observable<Int> = currentLogDao.count()
 

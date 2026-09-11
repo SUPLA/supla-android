@@ -81,7 +81,7 @@ class DownloadTemperatureAndHumidityLogUseCaseTest {
 
     every { temperatureAndHumidityLogRepository.findCount(remoteId, profileId) } returns Maybe.just(50)
     every { temperatureAndHumidityLogRepository.insert(any()) } returns Completable.complete()
-    every { temperatureAndHumidityLogRepository.findCountWithoutGroupingString(remoteId, profileId) } returns Single.just(0)
+    every { temperatureAndHumidityLogRepository.hasEmptyGroupingString(remoteId, profileId) } returns Single.just(false)
     mockEntityMapping(remoteId, profileId)
 
     // when
@@ -101,7 +101,7 @@ class DownloadTemperatureAndHumidityLogUseCaseTest {
       temperatureAndHumidityLogRepository.getMeasurements(cloudService, remoteId, measurementDate.toTimestamp())
       temperatureAndHumidityLogRepository.map(any(), eq("2023110103003"), eq(remoteId), eq(profileId))
       temperatureAndHumidityLogRepository.insert(capture(captor))
-      temperatureAndHumidityLogRepository.findCountWithoutGroupingString(remoteId, profileId)
+      temperatureAndHumidityLogRepository.hasEmptyGroupingString(remoteId, profileId)
     }
 
     val result = captor.captured
@@ -133,7 +133,7 @@ class DownloadTemperatureAndHumidityLogUseCaseTest {
 
     every { temperatureAndHumidityLogRepository.findCount(remoteId, profileId) } returns Maybe.just(0)
     every { temperatureAndHumidityLogRepository.insert(any()) } returns Completable.complete()
-    every { temperatureAndHumidityLogRepository.findCountWithoutGroupingString(remoteId, profileId) } returns Single.just(0)
+    every { temperatureAndHumidityLogRepository.hasEmptyGroupingString(remoteId, profileId) } returns Single.just(false)
     mockEntityMapping(remoteId, profileId)
 
     // when
@@ -153,7 +153,7 @@ class DownloadTemperatureAndHumidityLogUseCaseTest {
       temperatureAndHumidityLogRepository.getMeasurements(cloudService, remoteId, measurementDate.toTimestamp())
       temperatureAndHumidityLogRepository.map(any(), eq("2023110103003"), eq(remoteId), eq(profileId))
       temperatureAndHumidityLogRepository.insert(capture(captor))
-      temperatureAndHumidityLogRepository.findCountWithoutGroupingString(remoteId, profileId)
+      temperatureAndHumidityLogRepository.hasEmptyGroupingString(remoteId, profileId)
     }
 
     val result = captor.captured
@@ -261,7 +261,7 @@ class DownloadTemperatureAndHumidityLogUseCaseTest {
     every { temperatureAndHumidityLogRepository.findMinTimestamp(remoteId, profileId) } returns
       Single.just(date(2023, 10, 1).time)
     every { temperatureAndHumidityLogRepository.findCount(remoteId, profileId) } returns Maybe.just(100)
-    every { temperatureAndHumidityLogRepository.findCountWithoutGroupingString(remoteId, profileId) } returns Single.just(0)
+    every { temperatureAndHumidityLogRepository.hasEmptyGroupingString(remoteId, profileId) } returns Single.just(false)
 
     // when
     val testObserver = useCase.loadMeasurements(remoteId, profileId).test()
@@ -274,7 +274,7 @@ class DownloadTemperatureAndHumidityLogUseCaseTest {
       temperatureAndHumidityLogRepository.findMinTimestamp(remoteId, profileId)
       temperatureAndHumidityLogRepository.findCount(remoteId, profileId)
       temperatureAndHumidityLogRepository.getInitialMeasurements(cloudService, remoteId)
-      temperatureAndHumidityLogRepository.findCountWithoutGroupingString(remoteId, profileId)
+      temperatureAndHumidityLogRepository.hasEmptyGroupingString(remoteId, profileId)
     }
 
     confirmVerified(suplaCloudServiceProvider, temperatureAndHumidityLogRepository)
@@ -303,7 +303,7 @@ class DownloadTemperatureAndHumidityLogUseCaseTest {
     every { temperatureAndHumidityLogRepository.delete(remoteId, profileId) } returns Completable.complete()
     every { temperatureAndHumidityLogRepository.findCount(remoteId, profileId) } returns Maybe.just(50)
     every { temperatureAndHumidityLogRepository.insert(any()) } returns Completable.complete()
-    every { temperatureAndHumidityLogRepository.findCountWithoutGroupingString(remoteId, profileId) } returns Single.just(0)
+    every { temperatureAndHumidityLogRepository.hasEmptyGroupingString(remoteId, profileId) } returns Single.just(false)
     mockEntityMapping(remoteId, profileId)
 
     // when
@@ -324,7 +324,7 @@ class DownloadTemperatureAndHumidityLogUseCaseTest {
       temperatureAndHumidityLogRepository.getMeasurements(cloudService, remoteId, lastDbDate.toTimestamp())
       temperatureAndHumidityLogRepository.getMeasurements(cloudService, remoteId, measurementDate.toTimestamp())
       temperatureAndHumidityLogRepository.insert(capture(captor))
-      temperatureAndHumidityLogRepository.findCountWithoutGroupingString(remoteId, profileId)
+      temperatureAndHumidityLogRepository.hasEmptyGroupingString(remoteId, profileId)
     }
 
     val result = captor.captured

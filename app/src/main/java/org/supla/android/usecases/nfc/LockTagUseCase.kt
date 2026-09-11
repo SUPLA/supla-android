@@ -23,7 +23,7 @@ import org.supla.android.core.infrastructure.nfc.tagUuid
 import org.supla.android.core.infrastructure.nfc.uriFromUriRecord
 import org.supla.android.core.infrastructure.nfc.uuidFromMimeRecord
 import org.supla.android.data.source.NfcTagRepository
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -31,7 +31,7 @@ import javax.inject.Singleton
 @Singleton
 class LockTagUseCase @Inject constructor(
   private val nfcTagRepository: NfcTagRepository,
-  private val schedulers: SuplaSchedulers
+  private val threading: SuplaThreading
 ) {
   suspend operator fun invoke(tag: Tag, tagId: Long): Result {
     val tagEntity = nfcTagRepository.findById(tagId)
@@ -42,7 +42,7 @@ class LockTagUseCase @Inject constructor(
 
     val ndef = Ndef.get(tag)
     if (ndef != null) {
-      return schedulers.io {
+      return threading.io {
         val result = handleNdef(ndef, tagEntity.uuid)
         if (result is Success) {
           // Update tag readOnly flag after successful lock

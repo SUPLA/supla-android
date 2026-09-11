@@ -30,7 +30,7 @@ import org.supla.android.features.details.windowdetail.base.data.ProjectorScreen
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemPositionPresentation
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.usecases.channel.ObserveChannelWithChildrenUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
@@ -58,7 +58,7 @@ class ProjectorScreenViewModel @Inject constructor(
   profileRepository: ProfileRepository,
   loginUseCase: LoginUseCase,
   authorizeUseCase: AuthorizeUseCase,
-  schedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) : BaseWindowViewModel<ProjectorScreenViewModelState>(
   executeShadingSystemActionUseCase,
   executeSimpleActionUseCase,
@@ -73,7 +73,7 @@ class ProjectorScreenViewModel @Inject constructor(
   loginUseCase,
   authorizeUseCase,
   ProjectorScreenViewModelState(),
-  schedulers
+  threading
 ) {
 
   override fun updatePosition(state: ProjectorScreenViewModelState, position: Float) =

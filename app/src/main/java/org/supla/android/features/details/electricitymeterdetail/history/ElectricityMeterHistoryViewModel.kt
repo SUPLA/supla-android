@@ -55,7 +55,7 @@ import org.supla.android.features.details.detailbase.history.HistoryDetailViewSt
 import org.supla.android.features.details.detailbase.history.ui.ChartDataSelectionDialogState
 import org.supla.android.features.details.detailbase.history.ui.CheckboxItem
 import org.supla.android.lib.SuplaChannelElectricityMeterValue
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.views.spinner.SpinnerItem
 import org.supla.android.usecases.channel.DeleteChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
@@ -88,8 +88,8 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
   readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   groupingStringMigrationUseCase: GroupingStringMigrationUseCase,
   profileRepository: ProfileRepository,
-  schedulers: SuplaSchedulers,
-  dateProvider: DateProvider
+  dateProvider: DateProvider,
+  threading: SuplaThreading
 ) : BaseHistoryDetailViewModel(
   deleteChannelMeasurementsUseCase,
   readChannelWithChildrenUseCase,
@@ -97,7 +97,7 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
   profileRepository,
   userStateHolder,
   dateProvider,
-  schedulers
+  threading
 ) {
 
   private var downloadEventsDisposable: Disposable? = null

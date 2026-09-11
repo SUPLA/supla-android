@@ -28,8 +28,8 @@ import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
-import org.supla.android.di.CoroutineDispatchers
 import org.supla.android.lib.SuplaClient
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.client.DisconnectUseCase
 import org.supla.android.widget.WidgetManager
 import timber.log.Timber
@@ -47,8 +47,8 @@ class DeleteProfileUseCase @Inject constructor(
   private val singleCallProvider: SingleCallProvider,
   private val disconnectUseCase: DisconnectUseCase,
   private val suplaAppProvider: SuplaAppProvider,
-  private val dispatchers: CoroutineDispatchers,
-  private val widgetManager: WidgetManager
+  private val widgetManager: WidgetManager,
+  private val threading: SuplaThreading
 ) {
 
   operator fun invoke(profileEntity: ProfileEntity): Completable =
@@ -94,7 +94,7 @@ class DeleteProfileUseCase @Inject constructor(
       }
       widgetManager.onProfileRemoved(profileEntity.id)
     }
-      .andThen(rxCompletable(dispatchers.io()) { encryptedPreferences.removeProfileCredentials(profileEntity.id) })
+      .andThen(rxCompletable(threading.dispatchers.io) { encryptedPreferences.removeProfileCredentials(profileEntity.id) })
       .andThen(profileRepository.deleteProfile(profileEntity))
       .let { completable ->
         profileEntity.id.let { deleteProfileRelatedDataUseCase(it).andThen(completable) }

@@ -34,7 +34,7 @@ import org.junit.Test
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.data.source.local.entity.NotificationEntity
 import org.supla.android.main.topbar.TopBarSearchEvent
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.notifications.DeleteNotificationUseCase
 import org.supla.android.usecases.notifications.DeleteNotificationsUseCase
 import org.supla.android.usecases.notifications.LoadAllNotificationsUseCase
@@ -53,7 +53,7 @@ class NotificationsLogViewModelTest : BaseViewModelTest<NotificationsLogViewStat
   private lateinit var deleteNotificationsUseCase: DeleteNotificationsUseCase
 
   @MockK
-  override lateinit var schedulers: SuplaSchedulers
+  override lateinit var threading: SuplaThreading
 
   @InjectMockKs
   override lateinit var viewModel: NotificationsLogViewModel

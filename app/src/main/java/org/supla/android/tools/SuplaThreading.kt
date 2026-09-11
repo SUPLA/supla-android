@@ -17,24 +17,57 @@ package org.supla.android.tools
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.os.Process
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExecutorCoroutineDispatcher
+import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.withContext
+import java.util.concurrent.Executors
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SuplaSchedulers @Inject constructor() {
+class SuplaThreading @Inject constructor() {
+  val schedulers: SuplaRxSchedulers
+    get() = SuplaRxSchedulers
+
+  val dispatchers: SuplaCoroutineDispatchers
+    get() = SuplaCoroutineDispatchers
+
+  suspend fun <T> io(block: suspend CoroutineScope.() -> T): T = withContext(dispatchers.io, block)
+  suspend fun <T> ui(block: suspend CoroutineScope.() -> T): T = withContext(dispatchers.main, block)
+  suspend fun <T> low(block: suspend CoroutineScope.() -> T): T = withContext(dispatchers.low, block)
+}
+
+object SuplaCoroutineDispatchers {
+  val io: CoroutineDispatcher
+    get() = Dispatchers.IO
+
+  val main: CoroutineDispatcher
+    get() = Dispatchers.Main
+
+  val low: CoroutineDispatcher
+    field: ExecutorCoroutineDispatcher = Executors.newSingleThreadExecutor { task ->
+      Thread(
+        {
+          Process.setThreadPriority(Process.THREAD_PRIORITY_LOWEST)
+          task.run()
+        },
+        "LowPriorityDispatcher"
+      )
+    }.asCoroutineDispatcher()
+}
+
+object SuplaRxSchedulers {
   val io: Scheduler
     get() = Schedulers.io()
   val ui: Scheduler
     get() = AndroidSchedulers.mainThread()
   val computation: Scheduler
     get() = Schedulers.computation()
-
-  suspend fun <T> io(block: suspend CoroutineScope.() -> T): T = withContext(Dispatchers.IO, block)
-  suspend fun <T> ui(block: suspend CoroutineScope.() -> T): T = withContext(Dispatchers.Main, block)
 }

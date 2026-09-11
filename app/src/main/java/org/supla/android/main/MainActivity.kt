@@ -39,7 +39,7 @@ import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.lockscreen.UnlockAction
 import org.supla.android.features.nfc.NfcHost
 import org.supla.android.main.view.MainComposeNavHost
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -55,7 +55,7 @@ class MainActivity : FragmentActivity(), NfcHost {
   lateinit var suplaClientStateHolder: SuplaClientStateHolder
 
   @Inject
-  lateinit var suplaSchedulers: SuplaSchedulers
+  lateinit var threading: SuplaThreading
 
   @Inject
   lateinit var applicationPreferences: ApplicationPreferences
@@ -130,7 +130,7 @@ class MainActivity : FragmentActivity(), NfcHost {
   private fun handleState() {
     disposables.add(
       suplaClientStateHolder.state()
-        .observeOn(suplaSchedulers.ui)
+        .observeOn(threading.schedulers.ui)
         .subscribeBy(
           onNext = {
             Timber.d("Got state $it")

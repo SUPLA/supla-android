@@ -21,7 +21,7 @@ import android.annotation.SuppressLint
 import io.reactivex.rxjava3.core.Completable
 import org.supla.android.core.networking.suplaclient.DelayedCommandSubject
 import org.supla.android.lib.actions.SubjectType
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.client.ExecuteThermostatActionUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -30,8 +30,8 @@ import javax.inject.Singleton
 @Singleton
 class DelayedThermostatActionSubject @Inject constructor(
   private val executeThermostatActionUseCase: ExecuteThermostatActionUseCase,
-  schedulers: SuplaSchedulers
-) : DelayedCommandSubject<ThermostatGeneralViewModelState>(schedulers) {
+  threading: SuplaThreading
+) : DelayedCommandSubject<ThermostatGeneralViewModelState>(threading) {
 
   override fun execute(state: ThermostatGeneralViewModelState): Completable =
     executeThermostatActionUseCase.invoke(

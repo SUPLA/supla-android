@@ -67,8 +67,8 @@ abstract class BaseViewModelTest<S : ViewState, E : ViewEvent, VM : BaseViewMode
 
     when (mockSchedulers) {
       MockSchedulers.MOCKK -> {
-        every { schedulers.io } returns Schedulers.trampoline()
-        every { schedulers.ui } returns Schedulers.trampoline()
+        every { threading.schedulers.io } returns Schedulers.trampoline()
+        every { threading.schedulers.ui } returns Schedulers.trampoline()
       }
       MockSchedulers.NONE -> {} // No mocks
     }
@@ -83,11 +83,15 @@ abstract class BaseViewModelTest<S : ViewState, E : ViewEvent, VM : BaseViewMode
       .launchIn(CoroutineScope(mainDispatcherRule?.testDispatcher ?: UnconfinedTestDispatcher(TestCoroutineScheduler())))
 
     if (mainDispatcherRule.isNotNull) {
-      coEvery { schedulers.io<Any?>(any()) } answers {
+      coEvery { threading.io<Any?>(any()) } answers {
         val block = arg<suspend CoroutineScope.() -> Any?>(0)
         kotlinx.coroutines.runBlocking { block(this) }
       }
-      coEvery { schedulers.ui<Any?>(any()) } answers {
+      coEvery { threading.ui<Any?>(any()) } answers {
+        val block = arg<suspend CoroutineScope.() -> Any?>(0)
+        kotlinx.coroutines.runBlocking { block(this) }
+      }
+      coEvery { threading.low<Any?>(any()) } answers {
         val block = arg<suspend CoroutineScope.() -> Any?>(0)
         kotlinx.coroutines.runBlocking { block(this) }
       }

@@ -79,7 +79,7 @@ class DownloadTemperatureLogUseCaseTest {
 
     every { temperatureLogRepository.findCount(remoteId, profileId) } returns Maybe.just(50)
     every { temperatureLogRepository.insert(any()) } returns Completable.complete()
-    every { temperatureLogRepository.findCountWithoutGroupingString(remoteId, profileId) } returns Single.just(0)
+    every { temperatureLogRepository.hasEmptyGroupingString(remoteId, profileId) } returns Single.just(false)
     mockEntityMapping(remoteId, profileId)
 
     // when
@@ -99,7 +99,7 @@ class DownloadTemperatureLogUseCaseTest {
       temperatureLogRepository.getMeasurements(cloudService, remoteId, measurementDate.toTimestamp())
       temperatureLogRepository.map(any(), eq("2023110103003"), eq(remoteId), eq(profileId))
       temperatureLogRepository.insert(capture(captor))
-      temperatureLogRepository.findCountWithoutGroupingString(remoteId, profileId)
+      temperatureLogRepository.hasEmptyGroupingString(remoteId, profileId)
     }
 
     val result = captor.captured
@@ -208,7 +208,7 @@ class DownloadTemperatureLogUseCaseTest {
 
     every { temperatureLogRepository.findMinTimestamp(remoteId, profileId) } returns Single.just(date(2023, 10, 1).time)
     every { temperatureLogRepository.findCount(remoteId, profileId) } returns Maybe.just(100)
-    every { temperatureLogRepository.findCountWithoutGroupingString(remoteId, profileId) } returns Single.just(0)
+    every { temperatureLogRepository.hasEmptyGroupingString(remoteId, profileId) } returns Single.just(false)
 
     // when
     val testObserver = useCase.loadMeasurements(remoteId, profileId).test()
@@ -221,7 +221,7 @@ class DownloadTemperatureLogUseCaseTest {
       temperatureLogRepository.findMinTimestamp(remoteId, profileId)
       temperatureLogRepository.findCount(remoteId, profileId)
       temperatureLogRepository.getInitialMeasurements(cloudService, remoteId)
-      temperatureLogRepository.findCountWithoutGroupingString(remoteId, profileId)
+      temperatureLogRepository.hasEmptyGroupingString(remoteId, profileId)
     }
 
     confirmVerified(suplaCloudServiceProvider, temperatureLogRepository)
@@ -249,7 +249,7 @@ class DownloadTemperatureLogUseCaseTest {
     every { temperatureLogRepository.delete(remoteId, profileId) } returns Completable.complete()
     every { temperatureLogRepository.findCount(remoteId, profileId) } returns Maybe.just(50)
     every { temperatureLogRepository.insert(any()) } returns Completable.complete()
-    every { temperatureLogRepository.findCountWithoutGroupingString(remoteId, profileId) } returns Single.just(0)
+    every { temperatureLogRepository.hasEmptyGroupingString(remoteId, profileId) } returns Single.just(false)
     mockEntityMapping(remoteId, profileId)
 
     // when
@@ -270,7 +270,7 @@ class DownloadTemperatureLogUseCaseTest {
       temperatureLogRepository.getMeasurements(cloudService, remoteId, lastDbDate.toTimestamp())
       temperatureLogRepository.getMeasurements(cloudService, remoteId, measurementDate.toTimestamp())
       temperatureLogRepository.insert(capture(captor))
-      temperatureLogRepository.findCountWithoutGroupingString(remoteId, profileId)
+      temperatureLogRepository.hasEmptyGroupingString(remoteId, profileId)
     }
 
     val result = captor.captured

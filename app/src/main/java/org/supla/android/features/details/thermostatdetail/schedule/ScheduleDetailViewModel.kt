@@ -49,7 +49,7 @@ import org.supla.android.features.details.thermostatdetail.schedule.extensions.v
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxKey
 import org.supla.core.shared.extensions.forFalse
 import org.supla.core.shared.extensions.guardLet
@@ -73,8 +73,8 @@ class ScheduleDetailViewModel @Inject constructor(
   private val suplaClientProvider: SuplaClientProvider,
   private val dateProvider: DateProvider,
   @param:Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter,
-  schedulers: SuplaSchedulers
-) : BaseViewModel<ScheduleDetailViewState, ScheduleDetailViewEvent>(ScheduleDetailViewState(), schedulers), ScheduleDetailViewScope {
+  threading: SuplaThreading
+) : BaseViewModel<ScheduleDetailViewState, ScheduleDetailViewEvent>(ScheduleDetailViewState(), threading), ScheduleDetailViewScope {
 
   private val updateSubject = PublishSubject.create<Int>()
 

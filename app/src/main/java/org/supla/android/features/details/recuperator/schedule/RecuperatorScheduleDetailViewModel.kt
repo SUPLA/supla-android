@@ -20,15 +20,15 @@ package org.supla.android.features.details.recuperator.schedule
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import javax.inject.Inject
 
 @HiltViewModel
 class RecuperatorScheduleDetailViewModel @Inject constructor(
-  schedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) : BaseViewModel<RecuperatorScheduleDetailViewState, RecuperatorScheduleDetailViewEvent>(
   RecuperatorScheduleDetailViewState(),
-  schedulers
+  threading
 ),
   RecuperatorScheduleDetailViewScope
 

@@ -34,7 +34,7 @@ import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.main.topbar.TopBarSearchData
 import org.supla.android.main.topbar.TopBarSearchEvent
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.dialogs.ActionAlertDialogState
 import org.supla.android.ui.dialogs.dialogState
@@ -71,11 +71,11 @@ class GroupListViewModel @Inject constructor(
   updateEventsManager: UpdateEventsManager,
   vibrationHelper: VibrationHelper,
   dateProvider: DateProvider,
-  schedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) : BaseListViewModel<GroupListViewState, GroupListViewEvent>(
   vibrationHelper,
   dateProvider,
-  schedulers,
+  threading,
   GroupListViewState(),
   loadActiveProfileUrlUseCase
 ),
@@ -205,7 +205,7 @@ class GroupListViewModel @Inject constructor(
 
   override fun onDragStopped(remoteId: Int) {
     viewModelScope.launch {
-      val reorderedGroups = schedulers.io {
+      val reorderedGroups = this@GroupListViewModel.threading.io {
         reorderGroupsUseCase(list, remoteId)
         createProfileGroupsListUseCase().awaitFirst()
       }

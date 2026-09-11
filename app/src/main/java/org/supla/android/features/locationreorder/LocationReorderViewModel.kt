@@ -27,7 +27,7 @@ import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.LocationRepository
 import org.supla.android.data.source.local.entity.LocationEntity
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import javax.inject.Inject
 
 data class LocationReorderViewState(
@@ -42,17 +42,17 @@ interface LocationReorderScope {
 @HiltViewModel
 class LocationReorderViewModel @Inject constructor(
   private val locationRepository: LocationRepository,
-  schedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) : BaseViewModel<LocationReorderViewState, ViewEvent>(
   defaultState = LocationReorderViewState(),
-  schedulers = schedulers,
+  threading = threading,
   titleRes = R.string.location_ordering
 ),
   LocationReorderScope {
 
   override fun onViewCreated() {
     viewModelScope.launch {
-      val locations = schedulers.io { locationRepository.getAllLocations() }
+      val locations = this@LocationReorderViewModel.threading.io { locationRepository.getAllLocations() }
       updateState { it.copy(locations = locations) }
     }
   }

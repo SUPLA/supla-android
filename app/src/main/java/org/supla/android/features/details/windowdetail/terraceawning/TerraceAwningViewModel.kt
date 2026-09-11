@@ -30,7 +30,7 @@ import org.supla.android.features.details.windowdetail.base.data.TerraceAwningSt
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemPositionPresentation
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.usecases.channel.ObserveChannelWithChildrenUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
@@ -58,7 +58,7 @@ class TerraceAwningViewModel @Inject constructor(
   profileRepository: ProfileRepository,
   loginUseCase: LoginUseCase,
   authorizeUseCase: AuthorizeUseCase,
-  schedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) : BaseWindowViewModel<TerraceAwningViewModelState>(
   executeShadingSystemActionUseCase,
   executeSimpleActionUseCase,
@@ -73,7 +73,7 @@ class TerraceAwningViewModel @Inject constructor(
   loginUseCase,
   authorizeUseCase,
   TerraceAwningViewModelState(),
-  schedulers
+  threading
 ) {
 
   override fun updatePosition(state: TerraceAwningViewModelState, position: Float) =

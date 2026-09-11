@@ -32,7 +32,7 @@ import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.main.topbar.TopBarSearchData
 import org.supla.android.main.topbar.TopBarSearchEvent
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.lists.BaseListViewModel
 import org.supla.android.ui.lists.ListItem
@@ -58,12 +58,12 @@ class SceneListViewModel @Inject constructor(
   loadActiveProfileUrlUseCase: LoadActiveProfileUrlUseCase,
   updateEventsManager: UpdateEventsManager,
   vibrationHelper: VibrationHelper,
-  schedulers: SuplaSchedulers,
+  threading: SuplaThreading,
   dateProvider: DateProvider,
 ) : BaseListViewModel<SceneListViewState, SceneListViewEvent>(
   vibrationHelper,
   dateProvider,
-  schedulers,
+  threading,
   SceneListViewState,
   loadActiveProfileUrlUseCase
 ),
@@ -140,7 +140,7 @@ class SceneListViewModel @Inject constructor(
 
   override fun onDragStopped(remoteId: Int) {
     viewModelScope.launch {
-      val reorderedScenes = schedulers.io {
+      val reorderedScenes = this@SceneListViewModel.threading.io {
         reorderScenesUseCase(list, remoteId)
         createProfileScenesListUseCase().awaitFirst()
       }
