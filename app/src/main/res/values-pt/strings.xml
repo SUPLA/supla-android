@@ -643,6 +643,11 @@
   <string name="settings_battery_level_warning">Alerta de bateria fraca</string>
   <string name="channel_battery_level">Nível de bateria: %1$d%%</string>
   <string name="channel_battery_level_with_info">Nível de bateria (%1$d - %2$s): %3$d%%</string>
+  <string name="battery_state">Estado da bateria</string>
+  <string name="channel_battery_low">Nível de bateria baixo</string>
+  <string name="channel_battery_low_with_info">Nível de bateria baixo (%1$d - %2$s)</string>
+  <string name="channel_battery_state_low_value">baixo</string>
+  <string name="channel_battery_state_normal_value">normal</string>
   <string name="channel_btn_stop">Parar</string>
   <string name="android_auto_action">Acção: %1$s</string>
   <string name="android_auto_empty_header">Configuração necessária</string>

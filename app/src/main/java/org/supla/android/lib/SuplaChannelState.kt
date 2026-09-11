@@ -24,6 +24,7 @@ fun SuplaChannelState.toEntity(profileId: Long): ChannelStateEntity {
     batteryHealth = batteryHealth,
     batteryLevel = batteryLevel,
     batteryPowered = batteryPowered,
+    batteryState = batteryState,
     bridgeNodeOnline = bridgeNodeOnline,
     bridgeNodeSignalStrength = bridgeNodeSignalStrength,
     connectionUptime = connectionUptime,

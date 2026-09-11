@@ -98,6 +98,8 @@ abstract class WidgetCommandWorkerBase(
   protected abstract fun valueWithUnit(): Boolean
 
   private fun performUpdate(widgetIds: IntArray, isManualUpdate: Boolean): Result {
+    isManualUpdate.forTrue { vibrationHelper.vibrate() }
+
     if (!ensureNetworkAvailable()) {
       Timber.d("Widget update skipped because of unavailable network (widgetIds: $widgetIds)")
       if (isManualUpdate) {
@@ -137,10 +139,6 @@ abstract class WidgetCommandWorkerBase(
 
       result = result.accumulate(updateResult.toWorkResult)
       sendWidgetRedrawAction(widgetId)
-    }
-
-    if (result is WorkResult.Success && isManualUpdate) {
-      vibrationHelper.vibrate()
     }
 
     Timber.i("Widget update finished with result: $result")

@@ -634,6 +634,11 @@
   <string name="settings_battery_level_warning">Upozornění na slabou baterii</string>
   <string name="channel_battery_level">Stav baterie: %1$d%%</string>
   <string name="channel_battery_level_with_info">Stav baterie (%1$d - %2$s): %3$d%%</string>
+  <string name="battery_state">Stav baterie</string>
+  <string name="channel_battery_low">Nízký stav baterie</string>
+  <string name="channel_battery_low_with_info">Nízký stav baterie (%1$d - %2$s)</string>
+  <string name="channel_battery_state_low_value">nízký</string>
+  <string name="channel_battery_state_normal_value">normální</string>
   <string name="channel_btn_stop">Zastavit</string>
   <string name="android_auto_action">Akce: %1$s</string>
   <string name="android_auto_empty_header">Vyžadována konfigurace</string>

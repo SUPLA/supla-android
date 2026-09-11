@@ -653,6 +653,11 @@
   <string name="settings_battery_level_warning">Alacsony akkumulátor figyelmeztetés</string>
   <string name="channel_battery_level">Az akkumulátor töltöttségi szintje: %1$d%%</string>
   <string name="channel_battery_level_with_info">Az akkumulátor töltöttségi szintje (%1$d - %2$s): %3$d%%</string>
+  <string name="battery_state">Akkumulátor állapota</string>
+  <string name="channel_battery_low">Az akkumulátor töltöttségi szintje alacsony</string>
+  <string name="channel_battery_low_with_info">Az akkumulátor töltöttségi szintje alacsony (%1$d - %2$s)</string>
+  <string name="channel_battery_state_low_value">alacsony</string>
+  <string name="channel_battery_state_normal_value">normál</string>
   <string name="channel_btn_stop">Állj</string>
   <string name="android_auto_action">Akció: %1$s</string>
   <string name="android_auto_empty_header">Konfiguráció szükséges</string>

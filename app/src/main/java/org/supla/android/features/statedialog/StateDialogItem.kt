@@ -22,6 +22,7 @@ import org.supla.android.lib.SuplaChannelStatePrintable
 import org.supla.android.lib.batteryHealthString
 import org.supla.android.lib.batteryLevelString
 import org.supla.android.lib.batteryPoweredString
+import org.supla.android.lib.batteryStateString
 import org.supla.android.lib.bridgeNodeOnlineString
 import org.supla.android.lib.bridgeNodeSignalStrengthString
 import org.supla.android.lib.channelIdString
@@ -40,6 +41,7 @@ enum class StateDialogItem(val captionResource: Int) {
   IP_ADDRESS(R.string.IP),
   MAC_ADDRESS(R.string.MAC),
   BATTERY_LEVEL(R.string.battery_level),
+  BATTERY_STATE(R.string.battery_state),
   POWER_SUPPLY(R.string.state_power_supply),
   WIFI_RSSI(R.string.wifi_rssi),
   WIFI_SIGNAL(R.string.wifi_signal_strength),
@@ -59,6 +61,7 @@ enum class StateDialogItem(val captionResource: Int) {
       IP_ADDRESS -> { state -> state.ipV4?.let { LocalizedString.Constant(it) } }
       MAC_ADDRESS -> { state -> state.macAddress?.let { LocalizedString.Constant(it) } }
       BATTERY_LEVEL -> { state -> state.batteryLevelString }
+      BATTERY_STATE -> { state -> state.batteryStateString }
       POWER_SUPPLY -> { state -> state.batteryPoweredString }
       WIFI_RSSI -> { state -> state.wifiRssiString }
       WIFI_SIGNAL -> { state -> state.wifiSignalStrengthString }

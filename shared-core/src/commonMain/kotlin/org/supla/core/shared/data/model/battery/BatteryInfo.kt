@@ -17,8 +17,30 @@ package org.supla.core.shared.data.model.battery
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.core.shared.infrastructure.logging.Logger
+
 data class BatteryInfo(
   val batteryPowered: Boolean?,
   val level: Int?,
-  val health: Int?
+  val health: Int?,
+  val state: BatteryState?
 )
+
+enum class BatteryState(val value: Int) {
+  NORMAL(0), LOW(1);
+
+  companion object {
+    const val TAG = "BatteryState"
+
+    fun from(value: Int): BatteryState {
+      for (state in BatteryState.entries) {
+        if (value == state.value) {
+          return state
+        }
+      }
+
+      Logger.e(TAG, "No BatteryState entry found for $value, returning BatteryState.NORMAL!")
+      return NORMAL
+    }
+  }
+}

@@ -684,6 +684,11 @@
   <string name="settings_battery_level_warning">Sygnalizacja słabej baterii</string>
   <string name="channel_battery_level">Poziom baterii: %1$d%%</string>
   <string name="channel_battery_level_with_info">Poziom baterii (%1$d - %2$s): %3$d%%</string>
+  <string name="battery_state">Stan baterii</string>
+  <string name="channel_battery_low">Niski poziom baterii</string>
+  <string name="channel_battery_low_with_info">Niski poziom baterii (%1$d - %2$s)</string>
+  <string name="channel_battery_state_low_value">niski</string>
+  <string name="channel_battery_state_normal_value">normalny</string>
   <string name="counter_photo_counter_area">Obszar licznika</string>
   <string name="counter_photo_original_photo">Zdjęcie oryginalne</string>
   <string name="counter_photo_settings">Konfiguracja w Cloud</string>

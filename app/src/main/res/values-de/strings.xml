@@ -633,6 +633,11 @@
   <string name="settings_battery_level_warning">Batteriestandswarnung</string>
   <string name="channel_battery_level">Batteriefüllstand: %1$d%%</string>
   <string name="channel_battery_level_with_info">Batteriefüllstand (%1$d - %2$s): %3$d%%</string>
+  <string name="battery_state">Batteriezustand</string>
+  <string name="channel_battery_low">Batteriestand niedrig</string>
+  <string name="channel_battery_low_with_info">Batteriestand niedrig (%1$d - %2$s)</string>
+  <string name="channel_battery_state_low_value">niedrig</string>
+  <string name="channel_battery_state_normal_value">normal</string>
   <string name="counter_photo_counter_area">Zählerbereich</string>
   <string name="counter_photo_original_photo">Originalbild</string>
   <string name="counter_photo_settings">Cloudkonfiguration</string>
