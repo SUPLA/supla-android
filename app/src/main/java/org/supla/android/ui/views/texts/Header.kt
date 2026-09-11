@@ -38,7 +38,7 @@ fun Header(
   onClose: () -> Unit = {}
 ) =
   Row(
-    verticalAlignment = Alignment.Bottom,
+    verticalAlignment = Alignment.CenterVertically,
     modifier = modifier
   ) {
     Text(

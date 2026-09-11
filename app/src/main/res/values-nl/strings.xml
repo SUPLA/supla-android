@@ -654,6 +654,11 @@
   <string name="settings_battery_level_warning">Waarschuwing lage batterij</string>
   <string name="channel_battery_level">Batterijniveau: %1$d%%</string>
   <string name="channel_battery_level_with_info">Batterijniveau (%1$d - %2$s): %3$d%%</string>
+  <string name="battery_state">Batterijstatus</string>
+  <string name="channel_battery_low">Batterijniveau laag</string>
+  <string name="channel_battery_low_with_info">Batterijniveau laag (%1$d - %2$s)</string>
+  <string name="channel_battery_state_low_value">laag</string>
+  <string name="channel_battery_state_normal_value">normaal</string>
   <string name="channel_btn_stop">Stoppen</string>
   <string name="android_auto_action">Actie: %1$s</string>
   <string name="android_auto_empty_header">Configuratie vereist</string>

@@ -677,6 +677,11 @@
   <string name="settings_battery_level_warning" translatable="false">Aşağı batareya xəbərdarlığı</string>
   <string name="channel_battery_level">Batareya səviyyəsi: %1$d%%</string>
   <string name="channel_battery_level_with_info">Batareya səviyyəsi (%1$d - %2$s): %3$d%%</string>
+  <string name="battery_state">Batareya vəziyyəti</string>
+  <string name="channel_battery_low">Batareya səviyyəsi aşağıdır</string>
+  <string name="channel_battery_low_with_info">Batareya səviyyəsi aşağıdır (%1$d - %2$s)</string>
+  <string name="channel_battery_state_low_value">aşağı</string>
+  <string name="channel_battery_state_normal_value">normal</string>
   <string name="counter_photo_counter_area" translatable="false">Sayğac sahəsi</string>
   <string name="counter_photo_original_photo" translatable="false">Orijinal foto</string>
   <string name="counter_photo_settings" translatable="false">Bulud konfiqurasiyası</string>

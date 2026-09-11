@@ -631,6 +631,11 @@
   <string name="settings_battery_level_warning">Silpnos baterijos įspėjimas</string>
   <string name="channel_battery_level">Baterijos lygis: %1$d%%</string>
   <string name="channel_battery_level_with_info">Baterijos lygis (%1$d - %2$s): %3$d%%</string>
+  <string name="battery_state">Baterijos būsena</string>
+  <string name="channel_battery_low">Žemas baterijos lygis</string>
+  <string name="channel_battery_low_with_info">Žemas baterijos lygis (%1$d - %2$s)</string>
+  <string name="channel_battery_state_low_value">žema</string>
+  <string name="channel_battery_state_normal_value">normali</string>
   <string name="channel_btn_stop">Sustabdyti</string>
   <string name="android_auto_action">Veiksmas: %1$s</string>
   <string name="android_auto_empty_header">Reikalinga konfigūracija</string>

@@ -642,6 +642,11 @@
   <string name="settings_battery_level_warning">Allarme batteria scarica</string>
   <string name="channel_battery_level">Livello batteria: %1$d%%</string>
   <string name="channel_battery_level_with_info">Livello batteria (%1$d - %2$s): %3$d%%</string>
+  <string name="battery_state">Stato batteria</string>
+  <string name="channel_battery_low">Livello batteria basso</string>
+  <string name="channel_battery_low_with_info">Livello batteria basso (%1$d - %2$s)</string>
+  <string name="channel_battery_state_low_value">basso</string>
+  <string name="channel_battery_state_normal_value">normale</string>
   <string name="details_em_reverse_reactive_energy_short">Reattiva restituita</string>
   <string name="details_em_energy_label">Energia</string>
   <string name="channel_btn_shut">Chiudi</string>

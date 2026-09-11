@@ -18,6 +18,7 @@ package org.supla.android.lib
  */
 
 import kotlinx.serialization.Serializable
+import org.supla.core.shared.data.model.battery.BatteryState
 import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.extensions.ipV4String
 import org.supla.core.shared.extensions.toHex
@@ -31,6 +32,7 @@ data class SuplaChannelState(
   val rawMacAddress: ByteArray,
   val rawBatteryLevel: Byte,
   val rawBatteryPowered: Byte,
+  val rawBatterState: Byte,
   val rawWifiRssi: Byte,
   val rawWifiSignalStrength: Byte,
   val rawBridgeNodeOnline: Byte,
@@ -54,6 +56,9 @@ data class SuplaChannelState(
 
   val batteryPowered: Boolean?
     get() = hasField(FIELD_BATTERYPOWERED).forTrue { rawBatteryPowered > 0 }
+
+  val batteryState: BatteryState?
+    get() = hasField(FIELD_BATTERY_STATE).forTrue { BatteryState.from(rawBatterState.toInt()) }
 
   val wifiRssi: Int?
     get() = hasField(FIELD_WIFIRSSI).forTrue { rawWifiRssi.toInt() }
@@ -113,6 +118,8 @@ data class SuplaChannelState(
     get() = connectionUptime
   override val batteryHealthForPrintable: Int?
     get() = batteryHealth
+  override val batteryStateForPrintable: BatteryState?
+    get() = batteryState
   override val lastConnectionResetCauseForPrintable: Int?
     get() = lastConnectionResetCause
   override val switchCycleCountForPrintable: Int?
@@ -142,6 +149,7 @@ data class SuplaChannelState(
     const val FIELD_LIGHTSOURCELIFESPAN: Int = 0x1000
     const val FIELD_LIGHTSOURCELIFEOPERATINGTIME: Int = 0x2000
     const val FIELD_SWITCH_CYCLE_COUNT: Int = 0x8000
+    const val FIELD_BATTERY_STATE: Int = 0x20000
   }
 
   override fun equals(other: Any?): Boolean {
@@ -155,6 +163,7 @@ data class SuplaChannelState(
     if (rawDefaultIconField != other.rawDefaultIconField) return false
     if (rawIpv4 != other.rawIpv4) return false
     if (rawBatteryLevel != other.rawBatteryLevel) return false
+    if (rawBatteryPowered != other.rawBatteryPowered) return false
     if (rawBatteryPowered != other.rawBatteryPowered) return false
     if (rawWifiRssi != other.rawWifiRssi) return false
     if (rawWifiSignalStrength != other.rawWifiSignalStrength) return false

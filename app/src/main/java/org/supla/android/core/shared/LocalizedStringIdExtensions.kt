@@ -100,6 +100,10 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.CHANNEL_STATUS_NOT_AVAILABLE -> R.string.channel_not_available
     LocalizedStringId.CHANNEL_BATTERY_LEVEL -> R.string.channel_battery_level
     LocalizedStringId.CHANNEL_BATTERY_LEVEL_WITH_INFO -> R.string.channel_battery_level_with_info
+    LocalizedStringId.CHANNEL_BATTERY_LOW -> R.string.channel_battery_low
+    LocalizedStringId.CHANNEL_BATTERY_LOW_WITH_INFO -> R.string.channel_battery_low_with_info
+    LocalizedStringId.CHANNEL_STATE_BATTERY_LOW_VALUE -> R.string.channel_battery_state_low_value
+    LocalizedStringId.CHANNEL_STATE_BATTERY_NORMAL_VALUE -> R.string.channel_battery_state_normal_value
     LocalizedStringId.MOTOR_PROBLEM -> R.string.motor_problem
     LocalizedStringId.CALIBRATION_LOST -> R.string.calibration_lost
     LocalizedStringId.CALIBRATION_FAILED -> R.string.calibration_failed

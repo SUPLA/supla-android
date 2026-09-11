@@ -24,6 +24,7 @@ import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
+import org.supla.core.shared.data.model.battery.BatteryState
 import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.data.model.general.SuplaFunction
 import java.time.LocalDateTime
@@ -31,6 +32,9 @@ import java.time.ZoneOffset
 import java.util.Date
 
 class AppDatabaseConverters {
+
+  // ChannelRelationType
+
   @TypeConverter
   fun channelRelationTypeFromInt(value: Int?): ChannelRelationType? {
     return value?.let { ChannelRelationType.from(it.toShort()) }
@@ -40,6 +44,8 @@ class AppDatabaseConverters {
   fun intFromChannelRelationType(value: ChannelRelationType?): Int? {
     return value?.value?.toInt()
   }
+
+  // ChannelConfigType
 
   @TypeConverter
   fun channelConfigTypeToInt(config: ChannelConfigType?): Int? {
@@ -51,6 +57,8 @@ class AppDatabaseConverters {
     return config?.let { ChannelConfigType.from(it) }
   }
 
+  // Date
+
   @TypeConverter
   fun dateToLong(value: Date): Long {
     return value.time
@@ -60,6 +68,8 @@ class AppDatabaseConverters {
   fun longToDate(value: Long): Date {
     return Date(value)
   }
+
+  // LocalDateTime
 
   @TypeConverter
   fun dateTimeToLong(value: LocalDateTime): Long {
@@ -71,6 +81,8 @@ class AppDatabaseConverters {
     return LocalDateTime.ofEpochSecond(value, 0, ZoneOffset.UTC)
   }
 
+  // SuplaFunction
+
   @TypeConverter
   fun suplaFunctionToInt(suplaFunction: SuplaFunction?): Int? =
     suplaFunction?.value
@@ -78,6 +90,8 @@ class AppDatabaseConverters {
   @TypeConverter
   fun intToSuplaChannelFunction(value: Int?): SuplaFunction? =
     value?.let { SuplaFunction.from(it) }
+
+  // SuplaChannelAvailabilityStatus
 
   @TypeConverter
   fun suplaStatusToInt(status: SuplaChannelAvailabilityStatus): Int =
@@ -87,11 +101,15 @@ class AppDatabaseConverters {
   fun intToSuplaStatus(value: Int): SuplaChannelAvailabilityStatus =
     SuplaChannelAvailabilityStatus.from(value)
 
+  // SubjectType
+
   @TypeConverter
   fun subjectTypeToInt(subjectType: SubjectType): Int = subjectType.value
 
   @TypeConverter
   fun intToSubjectType(value: Int): SubjectType = SubjectType.from(value)
+
+  // ActionId
 
   @TypeConverter
   fun actionIdToInt(actionId: ActionId): Int = actionId.value
@@ -99,15 +117,31 @@ class AppDatabaseConverters {
   @TypeConverter
   fun intToActionId(value: Int): ActionId = ActionId.from(value)
 
+  // ColorEntityType
+
   @TypeConverter
   fun colorEntityTypeToInt(colorEntityType: ColorEntityType): Int = colorEntityType.value
 
   @TypeConverter
   fun intToColorEntityType(value: Int): ColorEntityType = ColorEntityType.from(value)
 
+  // NfcCallResult
+
   @TypeConverter
   fun nfcCallResultToInt(result: NfcCallResult): Int = result.value
 
   @TypeConverter
   fun intToNfcCallResult(value: Int): NfcCallResult = NfcCallResult.from(value)
+
+  // BatteryState
+
+  @TypeConverter
+  fun batteryStateToInt(state: BatteryState?): Int? {
+    return state?.value
+  }
+
+  @TypeConverter
+  fun intToBatteryState(state: Int?): BatteryState? {
+    return state?.let { BatteryState.from(it) }
+  }
 }

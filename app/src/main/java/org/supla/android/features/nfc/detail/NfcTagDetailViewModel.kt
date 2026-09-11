@@ -59,7 +59,9 @@ class NfcTagDetailViewModel @Inject constructor(
   override fun onStart() {
     viewModelScope.launch {
       val tagData = this@NfcTagDetailViewModel.threading.io { nfcTagRepository.findByIdWithDependencies(itemId) } ?: return@launch
-      val readingItems = this@NfcTagDetailViewModel.threading.io { nfcCallRepository.findLastForId(tagData.tagEntity.id).map { it.toReadingItem } }
+      val readingItems = this@NfcTagDetailViewModel.threading.io {
+        nfcCallRepository.findLastForId(tagData.tagEntity.id).map { it.toReadingItem }
+      }
       val profiles = this@NfcTagDetailViewModel.threading.io { profileRepository.findAllProfilesKtx() }
       val profileName = profiles.firstOrNull { it.id == tagData.tagEntity.profileId }?.name
 

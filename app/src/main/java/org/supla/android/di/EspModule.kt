@@ -77,7 +77,7 @@ class EspModule {
           it
         }
       }
-      .hostnameVerifier { hostname, session ->
+      .hostnameVerifier { hostname, _ ->
         Timber.d("Verifying host name $hostname")
         true
       }

@@ -655,6 +655,11 @@
   <string name="settings_battery_level_warning">Alertă baterie descărcată</string>
   <string name="channel_battery_level">Nivelul bateriei: %1$d%%</string>
   <string name="channel_battery_level_with_info">Nivelul bateriei (%1$d - %2$s): %3$d%%</string>
+  <string name="battery_state">Starea bateriei</string>
+  <string name="channel_battery_low">Nivelul bateriei este scăzut</string>
+  <string name="channel_battery_low_with_info">Nivelul bateriei este scăzut (%1$d - %2$s)</string>
+  <string name="channel_battery_state_low_value">scăzut</string>
+  <string name="channel_battery_state_normal_value">normal</string>
   <string name="channel_btn_stop">Oprește</string>
   <string name="android_auto_action">Acțiune: %1$s</string>
   <string name="android_auto_empty_header">Configurare necesară</string>

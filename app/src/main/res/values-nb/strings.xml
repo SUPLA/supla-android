@@ -653,6 +653,11 @@
   <string name="settings_battery_level_warning">Varsel om lavt batteri</string>
   <string name="channel_battery_level">Batterinivå: %1$d%%</string>
   <string name="channel_battery_level_with_info">Batterinivå (%1$d - %2$s): %3$d%%</string>
+  <string name="battery_state">Batteristatus</string>
+  <string name="channel_battery_low">Lavt batterinivå</string>
+  <string name="channel_battery_low_with_info">Lavt batterinivå (%1$d - %2$s)</string>
+  <string name="channel_battery_state_low_value">lav</string>
+  <string name="channel_battery_state_normal_value">normal</string>
   <string name="channel_btn_stop">Stopp</string>
   <string name="android_auto_action">Handling: %1$s</string>
   <string name="android_auto_empty_header">Konfigurasjon kreves</string>
