@@ -39,7 +39,7 @@ import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.lockscreen.UnlockAction
 import org.supla.android.model.general.appCompatDelegateValue
 import org.supla.android.model.general.modeManagerValue
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.core.shared.data.model.export.NightModeSetting
 import org.supla.core.shared.data.model.thermometer.TemperatureUnit
 import javax.inject.Inject
@@ -51,10 +51,10 @@ class SettingsViewModel @Inject constructor(
   private val permissionsHelper: PermissionsHelper,
   private val modeManager: UiModeManager,
   private val encryptedPreferences: EncryptedPreferences,
-  schedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) : BaseViewModel<SettingsViewState, SettingsViewEvent>(
   defaultState = SettingsViewState(),
-  schedulers = schedulers,
+  threading = threading,
   titleRes = R.string.settings
 ) {
 

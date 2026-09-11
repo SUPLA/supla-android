@@ -27,7 +27,7 @@ import org.supla.android.data.source.NfcTagRepository
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.NfcCallEntity
 import org.supla.android.extensions.toLocalDateTime
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import javax.inject.Inject
 
@@ -37,8 +37,8 @@ class NfcTagDetailViewModel @Inject constructor(
   private val getCaptionUseCase: GetCaptionUseCase,
   private val nfcCallRepository: NfcCallRepository,
   private val nfcTagRepository: NfcTagRepository,
-  schedulers: SuplaSchedulers
-) : BaseViewModel<NfcTagDetailViewState, NfcTagDetailViewEvent>(NfcTagDetailViewState(), schedulers), NfcTagDetailViewScope {
+  threading: SuplaThreading
+) : BaseViewModel<NfcTagDetailViewState, NfcTagDetailViewEvent>(NfcTagDetailViewState(), threading), NfcTagDetailViewScope {
 
   private var itemId: Long = 0
 
@@ -58,9 +58,9 @@ class NfcTagDetailViewModel @Inject constructor(
 
   override fun onStart() {
     viewModelScope.launch {
-      val tagData = schedulers.io { nfcTagRepository.findByIdWithDependencies(itemId) } ?: return@launch
-      val readingItems = schedulers.io { nfcCallRepository.findLastForId(tagData.tagEntity.id).map { it.toReadingItem } }
-      val profiles = schedulers.io { profileRepository.findAllProfilesKtx() }
+      val tagData = this@NfcTagDetailViewModel.threading.io { nfcTagRepository.findByIdWithDependencies(itemId) } ?: return@launch
+      val readingItems = this@NfcTagDetailViewModel.threading.io { nfcCallRepository.findLastForId(tagData.tagEntity.id).map { it.toReadingItem } }
+      val profiles = this@NfcTagDetailViewModel.threading.io { profileRepository.findAllProfilesKtx() }
       val profileName = profiles.firstOrNull { it.id == tagData.tagEntity.profileId }?.name
 
       setScreenTitle(tagData.tagEntity.name)

@@ -28,8 +28,7 @@ import org.supla.android.data.source.local.entity.NotificationEntity
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.main.topbar.TopBarSearchData
 import org.supla.android.main.topbar.TopBarSearchEvent
-import org.supla.android.main.topbar.searchable
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.notifications.DeleteNotificationUseCase
 import org.supla.android.usecases.notifications.DeleteNotificationsUseCase
 import org.supla.android.usecases.notifications.LoadAllNotificationsUseCase
@@ -44,10 +43,10 @@ class NotificationsLogViewModel @Inject constructor(
   private val loadAllNotificationsUseCase: LoadAllNotificationsUseCase,
   private val deleteNotificationsUseCase: DeleteNotificationsUseCase,
   private val deleteNotificationUseCase: DeleteNotificationUseCase,
-  schedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) : BaseViewModel<NotificationsLogViewState, NotificationsLogViewEvent>(
   defaultState = NotificationsLogViewState(),
-  schedulers = schedulers,
+  threading = threading,
   titleRes = R.string.menu_notifications
 ),
   NotificationsLogViewScope {

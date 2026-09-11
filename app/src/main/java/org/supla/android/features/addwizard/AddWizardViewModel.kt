@@ -62,7 +62,7 @@ import org.supla.android.features.addwizard.view.components.DeviceParameter
 import org.supla.android.features.addwizard.view.dialogs.ProvidePasswordState
 import org.supla.android.features.addwizard.view.dialogs.SetPasswordState
 import org.supla.android.features.addwizard.view.dialogs.WiFiListDialogState
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
@@ -128,10 +128,10 @@ class AddWizardViewModel @Inject constructor(
   override val profileRepository: ProfileRepository,
   override val authorizeUseCase: AuthorizeUseCase,
   override val loginUseCase: LoginUseCase,
-  override val schedulers: SuplaSchedulers
+  override val threading: SuplaThreading
 ) : BaseViewModel<AddWizardViewModelState, AddWizardViewEvent>(
   AddWizardViewModelState(),
-  schedulers
+  threading
 ),
   BaseAuthorizationViewModelScope,
   AddWizardScope,

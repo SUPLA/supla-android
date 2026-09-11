@@ -80,8 +80,8 @@ class GeneralPurposeMeterLogRepository @Inject constructor(
   override fun map(entry: GeneralPurposeMeter, groupingString: String, remoteId: Int, profileId: Long) =
     GeneralPurposeMeterEntity.create(entry = entry, groupingString = groupingString, channelId = remoteId, profileId = profileId)
 
-  override fun findCountWithoutGroupingString(remoteId: Int, profileId: Long): Single<Int> =
-    generalPurposeMeterLogDao.emptyGroupingStringCount(remoteId, profileId)
+  override fun hasEmptyGroupingString(remoteId: Int, profileId: Long): Single<Boolean> =
+    generalPurposeMeterLogDao.hasEmptyGroupingString(remoteId, profileId)
 
   override fun count(): Observable<Int> = generalPurposeMeterLogDao.count()
 

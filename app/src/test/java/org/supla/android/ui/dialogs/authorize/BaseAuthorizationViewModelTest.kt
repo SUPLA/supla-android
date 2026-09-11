@@ -45,7 +45,7 @@ import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.extensions.isNull
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.usecases.client.AuthorizationException
@@ -73,7 +73,7 @@ class BaseAuthorizationViewModelTest : CoroutineTest {
   private lateinit var authorizeUseCase: AuthorizeUseCase
 
   @MockK
-  override lateinit var schedulers: SuplaSchedulers
+  override lateinit var threading: SuplaThreading
 
   private val testScope = TestScope()
 
@@ -436,7 +436,7 @@ class TestAuthorizationViewModel(
   override val profileRepository: ProfileRepository,
   override val loginUseCase: LoginUseCase,
   override val authorizeUseCase: AuthorizeUseCase,
-  override val schedulers: SuplaSchedulers,
+  override val threading: SuplaThreading,
   private val testScope: TestScope
 ) : BaseAuthorizationViewModelScope {
 

@@ -27,7 +27,7 @@ import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.extensions.subscribeBy
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.AuthorizationReason
@@ -49,10 +49,10 @@ class CaptionChangeViewModel @Inject constructor(
   override val suplaClientProvider: SuplaClientProvider,
   override val authorizeUseCase: AuthorizeUseCase,
   override val loginUseCase: LoginUseCase,
-  override val schedulers: SuplaSchedulers
+  override val threading: SuplaThreading
 ) : BaseViewModel<CaptionChangeViewModelState, CaptionChangeViewEvent>(
   CaptionChangeViewModelState(),
-  schedulers
+  threading
 ),
   CaptionChangeDialogScope,
   BaseAuthorizationViewModelScope {

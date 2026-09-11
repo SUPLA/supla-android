@@ -26,7 +26,7 @@ import org.supla.android.R
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.source.NfcTagRepository
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.nfc.LockTagUseCase
 import timber.log.Timber
 import javax.inject.Inject
@@ -35,10 +35,10 @@ import javax.inject.Inject
 class LockTagViewModel @Inject constructor(
   private val nfcTagRepository: NfcTagRepository,
   private val lockTagUseCase: LockTagUseCase,
-  schedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) : BaseViewModel<LockTagViewState, LockTagViewEvent>(
   defaultState = LockTagViewState(),
-  schedulers = schedulers,
+  threading = threading,
   titleRes = R.string.nfc_lock_tag_label
 ),
   LockTagViewScope {

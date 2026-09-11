@@ -48,6 +48,12 @@ class ImpulseCounterLogRepository @Inject constructor(
   fun findMeasurements(remoteId: Int, profileId: Long): Observable<List<ImpulseCounterLogEntity>> =
     impulseCounterLogDao.findMeasurements(remoteId, profileId)
 
+  fun findCalculatedValueSum(remoteId: Int, profileId: Long, startDate: Date, endDate: Date): Observable<Float> =
+    impulseCounterLogDao.findCalculatedValueSum(remoteId, profileId, startDate.time, endDate.time)
+
+  fun findCalculatedValueSum(remoteId: Int, profileId: Long): Observable<Float> =
+    impulseCounterLogDao.findCalculatedValueSum(remoteId, profileId)
+
   override fun getInitialMeasurements(cloudService: SuplaCloudService, remoteId: Int): Response<List<ImpulseCounterMeasurement>> =
     cloudService.getInitialImpulseCounterMeasurements(remoteId).execute()
 
@@ -83,8 +89,8 @@ class ImpulseCounterLogRepository @Inject constructor(
   override fun map(entry: ImpulseCounterMeasurement, groupingString: String, remoteId: Int, profileId: Long) =
     ImpulseCounterLogEntity.create(entry = entry, groupingString = groupingString, channelId = remoteId, profileId = profileId)
 
-  override fun findCountWithoutGroupingString(remoteId: Int, profileId: Long): Single<Int> =
-    impulseCounterLogDao.emptyGroupingStringCount(remoteId, profileId)
+  override fun hasEmptyGroupingString(remoteId: Int, profileId: Long): Single<Boolean> =
+    impulseCounterLogDao.hasEmptyGroupingString(remoteId, profileId)
 
   override fun count(): Observable<Int> = impulseCounterLogDao.count()
 

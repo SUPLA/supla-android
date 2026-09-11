@@ -48,7 +48,7 @@ import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.details.detailbase.history.BaseHistoryDetailViewModel
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.channel.DeleteChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.LoadChannelMeasurementsDataRangeUseCase
@@ -77,7 +77,7 @@ class GpmHistoryDetailViewModel @Inject constructor(
   groupingStringMigrationUseCase: GroupingStringMigrationUseCase,
   profileRepository: ProfileRepository,
   userStateHolder: UserStateHolder,
-  schedulers: SuplaSchedulers,
+  threading: SuplaThreading,
   dateProvider: DateProvider
 ) : BaseHistoryDetailViewModel(
   deleteChannelMeasurementsUseCase,
@@ -86,7 +86,7 @@ class GpmHistoryDetailViewModel @Inject constructor(
   profileRepository,
   userStateHolder,
   dateProvider,
-  schedulers
+  threading
 ) {
 
   init {

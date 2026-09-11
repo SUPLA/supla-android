@@ -44,7 +44,7 @@ import org.supla.android.data.source.remote.SuplaEventType
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.db.room.measurements.MeasurementsDatabase
 import org.supla.android.extensions.subscribeBy
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.db.MakeAnonymizedDatabaseCopyUseCase
 import org.supla.android.usecases.developerinfo.LoadDatabaseDetailsUseCase
 import org.supla.android.usecases.developerinfo.TableDetail
@@ -69,10 +69,10 @@ class DeveloperInfoViewModel @Inject constructor(
   private val workManagerProxy: WorkManagerProxy,
   private val fileUtils: FileUtils,
   @param:ApplicationContext private val context: Context,
-  suplaSchedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) : BaseViewModel<DeveloperInfoViewModelState, DeveloperInfoViewEvent>(
   defaultState = DeveloperInfoViewModelState(),
-  schedulers = suplaSchedulers,
+  threading = threading,
   titleRes = R.string.developer_option
 ),
   DeveloperInfoScope {

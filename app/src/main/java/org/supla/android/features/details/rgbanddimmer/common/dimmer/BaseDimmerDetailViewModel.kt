@@ -48,7 +48,7 @@ import org.supla.android.features.details.rgbanddimmer.common.cctValues
 import org.supla.android.features.details.rgbanddimmer.common.dimmerValues
 import org.supla.android.images.ImageId
 import org.supla.android.lib.SuplaConst
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.views.DeviceStateData
 import org.supla.android.ui.views.buttons.SwitchButtonState
 import org.supla.android.usecases.channel.GetChannelStateUseCase
@@ -77,8 +77,8 @@ abstract class BaseDimmerDetailViewModel(
   private val colorListRepository: ColorListRepository,
   private val userStateHolder: UserStateHolder,
   private val dateProvider: DateProvider,
-  schedulers: SuplaSchedulers
-) : BaseViewModel<DimmerDetailModelState, DimmerDetailViewEvent>(DimmerDetailModelState(), schedulers), DimmerDetailScope {
+  threading: SuplaThreading
+) : BaseViewModel<DimmerDetailModelState, DimmerDetailViewEvent>(DimmerDetailModelState(), threading), DimmerDetailScope {
 
   protected val updateSubject: BehaviorSubject<Int> = BehaviorSubject.createDefault(0)
 

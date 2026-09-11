@@ -23,7 +23,7 @@ import org.supla.android.R
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.ProfileRepository
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.dialogs.AuthorizationDialogScope
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.AuthorizationReason
@@ -40,7 +40,7 @@ interface BaseAuthorizationViewModelScope : AuthorizationDialogScope {
   val profileRepository: ProfileRepository
   val loginUseCase: LoginUseCase
   val authorizeUseCase: AuthorizeUseCase
-  val schedulers: SuplaSchedulers
+  val threading: SuplaThreading
 
   fun updateAuthorizationDialogState(updater: (AuthorizationDialogState?) -> AuthorizationDialogState?)
 
@@ -80,7 +80,7 @@ interface BaseAuthorizationViewModelScope : AuthorizationDialogScope {
     }
 
     launch {
-      val profile = schedulers.io {
+      val profile = threading.io {
         runCatching { profileRepository.findActiveProfile().await() }.getOrNull()
       } ?: return@launch
 
@@ -106,7 +106,7 @@ interface BaseAuthorizationViewModelScope : AuthorizationDialogScope {
     launch {
       try {
         updateAuthorizationDialogState { it?.copy(processing = true) }
-        val result = schedulers.io { authorizeUseCase(userName, password).await() }
+        val result = threading.io { authorizeUseCase(userName, password).await() }
         updateAuthorizationDialogState { it?.copy(processing = false) }
 
         // Success
@@ -133,7 +133,7 @@ interface BaseAuthorizationViewModelScope : AuthorizationDialogScope {
     launch {
       try {
         updateAuthorizationDialogState { it?.copy(processing = true) }
-        val result = schedulers.io { loginUseCase(userName, password).await() }
+        val result = threading.io { loginUseCase(userName, password).await() }
         updateAuthorizationDialogState { it?.copy(processing = false) }
 
         // Success

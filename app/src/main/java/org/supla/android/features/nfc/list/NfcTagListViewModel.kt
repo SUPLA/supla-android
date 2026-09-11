@@ -29,7 +29,7 @@ import org.supla.android.data.source.NfcTagRepository
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.complex.NfcTagDataEntity
 import org.supla.android.lib.actions.SubjectType
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.core.shared.extensions.forFalse
@@ -43,10 +43,10 @@ class NfcTagListViewModel @Inject constructor(
   private val profileRepository: ProfileRepository,
   private val getCaptionUseCase: GetCaptionUseCase,
   private val nfcTagRepository: NfcTagRepository,
-  schedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) : BaseViewModel<NfcTagListViewModelState, NfcTagListViewEvent>(
   defaultState = NfcTagListViewModelState(),
-  schedulers = schedulers,
+  threading = threading,
   titleRes = R.string.nfc_list_title
 ),
   NfcTagListScope {

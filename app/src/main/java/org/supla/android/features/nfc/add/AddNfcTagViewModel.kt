@@ -27,7 +27,7 @@ import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.source.NfcTagRepository
 import org.supla.android.features.nfc.edit.NewItemData
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.nfc.PrepareNfcTagUseCase
 import timber.log.Timber
 import javax.inject.Inject
@@ -36,10 +36,10 @@ import javax.inject.Inject
 class AddNfcTagViewModel @Inject constructor(
   private val prepareNfcTagUseCase: PrepareNfcTagUseCase,
   private val nfcTagRepository: NfcTagRepository,
-  schedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) : BaseViewModel<AddNfcTagViewState, AddNfcTagViewEvent>(
   defaultState = AddNfcTagViewState(),
-  schedulers = schedulers,
+  threading = threading,
   titleRes = R.string.menu_nfc
 ),
   AddNfcTagScope {

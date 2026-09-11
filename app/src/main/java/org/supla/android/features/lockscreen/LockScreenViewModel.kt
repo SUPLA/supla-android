@@ -26,7 +26,7 @@ import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.extensions.subscribeBy
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.views.forms.PIN_LENGTH
 import org.supla.android.usecases.lock.CheckPinUseCase
 import org.supla.core.shared.infrastructure.localizedString
@@ -39,10 +39,10 @@ class LockScreenViewModel @Inject constructor(
   private val encryptedPreferences: EncryptedPreferences,
   private val dateProvider: DateProvider,
   private val checkPinUseCase: CheckPinUseCase,
-  suplaSchedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) : BaseViewModel<LockScreenViewModelState, LockScreenViewEvent>(
   defaultState = LockScreenViewModelState(),
-  schedulers = suplaSchedulers,
+  threading = threading,
   titleRes = R.string.pin_setup_title
 ) {
 

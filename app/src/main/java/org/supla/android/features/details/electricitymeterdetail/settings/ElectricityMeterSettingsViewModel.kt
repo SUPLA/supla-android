@@ -34,7 +34,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.Electricity
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 import org.supla.android.extensions.subscribeBy
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.list.RefreshElectricityMeterAggregatedValueUseCase
 import org.supla.core.shared.extensions.forTrue
@@ -49,10 +49,10 @@ class ElectricityMeterSettingsViewModel @Inject constructor(
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   private val getCaptionUseCase: GetCaptionUseCase,
   private val userStateHolder: UserStateHolder,
-  schedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) : BaseViewModel<ElectricityMeterSettingsViewState, ElectricityMeterSettingsViewEvent>(
   ElectricityMeterSettingsViewState(),
-  schedulers
+  threading
 ),
   ElectricityMeterSettingsScope {
 
@@ -98,7 +98,7 @@ class ElectricityMeterSettingsViewModel @Inject constructor(
     }
 
     viewModelScope.launch {
-      schedulers.io {
+      this@ElectricityMeterSettingsViewModel.threading.io {
         refreshElectricityMeterAggregatedValueUseCase(profileId, remoteId)
       }
     }
@@ -127,7 +127,7 @@ class ElectricityMeterSettingsViewModel @Inject constructor(
     }
 
     viewModelScope.launch {
-      schedulers.io {
+      this@ElectricityMeterSettingsViewModel.threading.io {
         refreshElectricityMeterAggregatedValueUseCase(profileId, remoteId)
       }
     }
@@ -146,7 +146,7 @@ class ElectricityMeterSettingsViewModel @Inject constructor(
     }
 
     viewModelScope.launch {
-      schedulers.io {
+      this@ElectricityMeterSettingsViewModel.threading.io {
         refreshElectricityMeterAggregatedValueUseCase(profileId, remoteId)
       }
     }

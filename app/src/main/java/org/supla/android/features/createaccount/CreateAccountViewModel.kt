@@ -26,7 +26,7 @@ import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.deleteaccountweb.DeleteAccountWebFragment
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.client.ReconnectUseCase
 import org.supla.android.usecases.profile.DeleteProfileUseCase
 import org.supla.android.usecases.profile.LoadProfileWithCredentialsUseCase
@@ -42,8 +42,8 @@ class CreateAccountViewModel @Inject constructor(
   private val saveProfileUseCase: SaveProfileUseCase,
   private val profileRepository: ProfileRepository,
   private val reconnectUseCase: ReconnectUseCase,
-  schedulers: SuplaSchedulers
-) : BaseViewModel<CreateAccountViewState, CreateAccountViewEvent>(CreateAccountViewState(), schedulers) {
+  threading: SuplaThreading
+) : BaseViewModel<CreateAccountViewState, CreateAccountViewEvent>(CreateAccountViewState(), threading) {
 
   fun loadProfile(profileId: Long?) {
     profileRepository.findAllProfiles()
@@ -62,8 +62,8 @@ class CreateAccountViewModel @Inject constructor(
 
     if (profileId != null) {
       viewModelScope.launch {
-        schedulers.io { loadProfileWithCredentialsUseCase(profileId) }?.let {
-          schedulers.ui { onProfileLoaded(it) }
+        this@CreateAccountViewModel.threading.io { loadProfileWithCredentialsUseCase(profileId) }?.let {
+          this@CreateAccountViewModel.threading.ui { onProfileLoaded(it) }
         }
       }
     }

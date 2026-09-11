@@ -24,14 +24,14 @@ import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
 import org.supla.android.core.BaseViewModelTest
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 
 class CreateAccountWebViewModelTest : BaseViewModelTest<CreateAccountWebViewState, CreateAccountWebViewEvent, CreateAccountWebViewModel>(
   mockSchedulers = MockSchedulers.NONE
 ) {
 
   @MockK
-  override lateinit var schedulers: SuplaSchedulers
+  override lateinit var threading: SuplaThreading
 
   @InjectMockKs
   override lateinit var viewModel: CreateAccountWebViewModel

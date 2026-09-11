@@ -44,7 +44,7 @@ import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_BAD_CREDENTIALS
 import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_REGISTRATION_DISABLED
 import org.supla.android.lib.SuplaRegisterError
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.DisconnectUseCase
@@ -76,7 +76,7 @@ class StatusViewModelTest : BaseViewModelTest<StatusViewState, StatusViewEvent, 
   private lateinit var authorizeUseCase: AuthorizeUseCase
 
   @MockK
-  override lateinit var schedulers: SuplaSchedulers
+  override lateinit var threading: SuplaThreading
 
   @InjectMockKs
   override lateinit var viewModel: StatusViewModel

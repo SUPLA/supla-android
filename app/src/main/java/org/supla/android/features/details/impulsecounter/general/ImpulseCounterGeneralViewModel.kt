@@ -34,7 +34,7 @@ import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.details.detailbase.impulsecounter.ImpulseCounterGeneralStateHandler
 import org.supla.android.features.details.detailbase.impulsecounter.ImpulseCounterState
 import org.supla.android.features.details.impulsecounter.counterphoto.DownloadPhotoWorker
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.channel.measurements.ImpulseCounterMeasurements
@@ -54,10 +54,10 @@ class ImpulseCounterGeneralViewModel @Inject constructor(
   private val workManagerProxy: WorkManagerProxy,
   private val dateProvider: DateProvider,
   suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper,
-  schedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) : BaseViewModel<ImpulseCounterGeneralViewModelState, ImpulseCounterGeneralViewEvent>(
   ImpulseCounterGeneralViewModelState(),
-  schedulers
+  threading
 ) {
 
   init {

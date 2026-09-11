@@ -36,7 +36,7 @@ import org.supla.android.core.MainDispatcherRule
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.source.LocationRepository
 import org.supla.android.data.source.local.entity.LocationEntity
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 
 class LocationReorderViewModelTest :
   BaseViewModelTest<LocationReorderViewState, ViewEvent, LocationReorderViewModel>(MockSchedulers.MOCKK) {
@@ -48,7 +48,7 @@ class LocationReorderViewModelTest :
   private lateinit var locationRepository: LocationRepository
 
   @MockK
-  override lateinit var schedulers: SuplaSchedulers
+  override lateinit var threading: SuplaThreading
 
   @InjectMockKs
   override lateinit var viewModel: LocationReorderViewModel

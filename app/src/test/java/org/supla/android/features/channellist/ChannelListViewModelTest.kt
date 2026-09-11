@@ -52,7 +52,7 @@ import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.main.topbar.TopBarSearchEvent
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.dialogs.ActionAlertDialogState
 import org.supla.android.ui.lists.ListItem
@@ -112,7 +112,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   private lateinit var triggerLogHistoryDownloadUseCase: TriggerLogHistoryDownloadUseCase
 
   @MockK
-  override lateinit var schedulers: SuplaSchedulers
+  override lateinit var threading: SuplaThreading
 
   override val viewModel: ChannelListViewModel by lazy {
     ChannelListViewModel(
@@ -128,7 +128,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       updateEventsManager,
       vibrationHelper,
       dateProvider,
-      schedulers
+      threading
     )
   }
 

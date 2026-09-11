@@ -71,14 +71,16 @@ interface TemperatureLogDao : GroupingStringMigratorDao {
 
   @Query(
     """
-      SELECT COUNT($COLUMN_GROUPING_STRING) 
-      FROM $TABLE_NAME 
-      WHERE $COLUMN_CHANNEL_ID = :remoteId 
-        AND $COLUMN_PROFILEID = :profileId 
-        AND $COLUMN_GROUPING_STRING = ''
+    SELECT EXISTS(
+        SELECT 1
+        FROM $TABLE_NAME
+        WHERE $COLUMN_CHANNEL_ID = :remoteId
+          AND $COLUMN_PROFILEID = :profileId
+          AND $COLUMN_GROUPING_STRING = ''
+    )
     """
   )
-  override fun emptyGroupingStringCount(remoteId: Int, profileId: Long): Single<Int>
+  override fun hasEmptyGroupingString(remoteId: Int, profileId: Long): Single<Boolean>
 
   @Query(
     """

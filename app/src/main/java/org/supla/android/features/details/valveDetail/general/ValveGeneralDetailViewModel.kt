@@ -34,7 +34,7 @@ import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.lists.sensordata.RelatedChannelData
 import org.supla.android.ui.views.buttons.SwitchButtonState
@@ -60,13 +60,12 @@ class ValveGeneralDetailViewModel @Inject constructor(
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val channelActionUseCase: ChannelActionUseCase,
   private val getCaptionUseCase: GetCaptionUseCase,
-  private val vibrationHelper: VibrationHelper,
   private val preferences: ApplicationPreferences,
   override val updateEventsManager: UpdateEventsManager,
-  override val schedulers: SuplaSchedulers
+  override val threading: SuplaThreading
 ) : BaseViewModel<ValveGeneralDetailViewModeState, ValveGeneralDetailViewEvent>(
   ValveGeneralDetailViewModeState(),
-  schedulers
+  threading
 ),
   ChannelUpdatesObserver {
 

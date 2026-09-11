@@ -39,7 +39,7 @@ import org.supla.android.features.details.detailbase.electricitymeter.Electricit
 import org.supla.android.features.details.detailbase.impulsecounter.ImpulseCounterGeneralStateHandler
 import org.supla.android.features.details.detailbase.impulsecounter.ImpulseCounterState
 import org.supla.android.lib.actions.ActionId
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.lists.sensordata.RelatedChannelData
 import org.supla.android.ui.views.DeviceStateData
 import org.supla.android.ui.views.buttons.SwitchButtonState
@@ -86,8 +86,8 @@ class SwitchGeneralViewModel @Inject constructor(
   override val getChannelIconUseCase: GetChannelIconUseCase,
   override val getCaptionUseCase: GetCaptionUseCase,
   suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper,
-  schedulers: SuplaSchedulers
-) : BaseViewModel<SwitchGeneralViewState, SwitchGeneralViewEvent>(SwitchGeneralViewState(), schedulers),
+  threading: SuplaThreading
+) : BaseViewModel<SwitchGeneralViewState, SwitchGeneralViewEvent>(SwitchGeneralViewState(), threading),
   SwitchGeneralScope,
   ChannelGroupRelationDataEntityConvertible {
 

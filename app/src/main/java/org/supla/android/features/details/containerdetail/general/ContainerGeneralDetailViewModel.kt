@@ -44,7 +44,7 @@ import org.supla.android.features.details.containerdetail.general.ui.ContainerTy
 import org.supla.android.features.details.containerdetail.general.ui.ControlLevel
 import org.supla.android.features.details.containerdetail.general.ui.ErrorLevel
 import org.supla.android.features.details.containerdetail.general.ui.WarningLevel
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.AuthorizationReason
@@ -80,14 +80,14 @@ class ContainerGeneralDetailViewModel @Inject constructor(
   private val vibrationHelper: VibrationHelper,
   private val preferences: ApplicationPreferences,
   override val updateEventsManager: UpdateEventsManager,
-  override val schedulers: SuplaSchedulers,
   override val suplaClientProvider: SuplaClientProvider,
   override val profileRepository: ProfileRepository,
   override val authorizeUseCase: AuthorizeUseCase,
-  override val loginUseCase: LoginUseCase
+  override val loginUseCase: LoginUseCase,
+  override val threading: SuplaThreading
 ) : BaseViewModel<ContainerGeneralDetailViewModeState, ContainerGeneralDetailViewEvent>(
   ContainerGeneralDetailViewModeState(),
-  schedulers
+  threading
 ),
   BaseAuthorizationViewModelScope,
   ContainerGeneralDetailViewScope,

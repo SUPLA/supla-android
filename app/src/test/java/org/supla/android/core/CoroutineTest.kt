@@ -21,20 +21,20 @@ import androidx.annotation.CallSuper
 import io.mockk.coEvery
 import kotlinx.coroutines.CoroutineScope
 import org.supla.android.extensions.isNotNull
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 
 interface CoroutineTest {
   val mainDispatcherRule: MainDispatcherRule?
-  val schedulers: SuplaSchedulers
+  val threading: SuplaThreading
 
   @CallSuper
   fun setUp() {
     if (mainDispatcherRule.isNotNull) {
-      coEvery { schedulers.io<Any?>(any()) } answers {
+      coEvery { threading.io<Any?>(any()) } answers {
         val block = arg<suspend CoroutineScope.() -> Any?>(0)
         kotlinx.coroutines.runBlocking { block(this) }
       }
-      coEvery { schedulers.ui<Any?>(any()) } answers {
+      coEvery { threading.ui<Any?>(any()) } answers {
         val block = arg<suspend CoroutineScope.() -> Any?>(0)
         kotlinx.coroutines.runBlocking { block(this) }
       }

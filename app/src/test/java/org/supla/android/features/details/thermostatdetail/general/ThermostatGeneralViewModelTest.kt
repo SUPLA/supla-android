@@ -58,7 +58,7 @@ import org.supla.android.extensions.shift
 import org.supla.android.lib.SuplaChannelExtendedValue
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.SuplaTimerState
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.channel.GetChannelValueUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -110,7 +110,7 @@ class ThermostatGeneralViewModelTest :
   lateinit var getChannelIconUseCase: GetChannelIconUseCase
 
   @MockK
-  override lateinit var schedulers: SuplaSchedulers
+  override lateinit var threading: SuplaThreading
 
   @MockK
   lateinit var checkIsSlaveThermostatUseCase: CheckIsSlaveThermostatUseCase
@@ -128,7 +128,7 @@ class ThermostatGeneralViewModelTest :
   override fun setUp() {
     MockKAnnotations.init(this)
     super.setUp()
-    every { schedulers.computation } returns testScheduler
+    every { threading.schedulers.computation } returns testScheduler
   }
 
   @Test

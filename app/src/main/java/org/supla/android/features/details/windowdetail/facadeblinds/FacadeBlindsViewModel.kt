@@ -32,7 +32,7 @@ import org.supla.android.features.details.windowdetail.base.data.facadeblinds.Fa
 import org.supla.android.features.details.windowdetail.base.ui.BaseBlindsViewModel
 import org.supla.android.features.details.windowdetail.base.ui.BaseBlindsViewModelState
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.usecases.channel.ObserveChannelWithChildrenUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
@@ -63,7 +63,7 @@ class FacadeBlindsViewModel @Inject constructor(
   profileRepository: ProfileRepository,
   loginUseCase: LoginUseCase,
   authorizeUseCase: AuthorizeUseCase,
-  schedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) : BaseBlindsViewModel<FacadeBlindsViewModelState>(
   channelConfigEventsManager,
   executeShadingSystemActionUseCase,
@@ -80,7 +80,7 @@ class FacadeBlindsViewModel @Inject constructor(
   loginUseCase,
   authorizeUseCase,
   FacadeBlindsViewModelState(),
-  schedulers
+  threading
 ) {
 
   override fun updatePosition(state: FacadeBlindsViewModelState, position: Float) =

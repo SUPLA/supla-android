@@ -33,7 +33,7 @@ import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ReadAllChannelsWithChildrenUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -56,8 +56,8 @@ class AddAndroidAutoItemViewModel @Inject constructor(
   private val updateEventsManager: UpdateEventsManager,
   override val getCaptionUseCase: GetCaptionUseCase,
   private val sceneRepository: SceneRepository,
-  schedulers: SuplaSchedulers
-) : BaseViewModel<AddAndroidAutoItemViewModelState, AddAndroidAutoItemViewEvent>(AddAndroidAutoItemViewModelState(), schedulers),
+  threading: SuplaThreading
+) : BaseViewModel<AddAndroidAutoItemViewModelState, AddAndroidAutoItemViewEvent>(AddAndroidAutoItemViewModelState(), threading),
   AddAndroidAutoItemScope,
   SubjectItemConversionScope {
 

@@ -30,7 +30,7 @@ import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStat
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.lib.actions.ActionId
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.views.DeviceStateData
 import org.supla.android.ui.views.buttons.SwitchButtonState
 import org.supla.android.usecases.channel.GetChannelStateUseCase
@@ -57,8 +57,8 @@ class GateGeneralViewModel @Inject constructor(
   override val getChannelIconUseCase: GetChannelIconUseCase,
   override val getCaptionUseCase: GetCaptionUseCase,
   private val preferences: ApplicationPreferences,
-  schedulers: SuplaSchedulers
-) : BaseViewModel<GateGeneralModelState, GateGeneralViewEvent>(GateGeneralModelState(), schedulers),
+  threading: SuplaThreading
+) : BaseViewModel<GateGeneralModelState, GateGeneralViewEvent>(GateGeneralModelState(), threading),
   GateGeneralScope,
   ChannelGroupRelationDataEntityConvertible {
 

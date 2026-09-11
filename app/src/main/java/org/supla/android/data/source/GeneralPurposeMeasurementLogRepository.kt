@@ -96,8 +96,8 @@ class GeneralPurposeMeasurementLogRepository @Inject constructor(
       profileId = profileId
     )
 
-  override fun findCountWithoutGroupingString(remoteId: Int, profileId: Long): Single<Int> =
-    generalPurposeMeasurementLogDao.emptyGroupingStringCount(remoteId, profileId)
+  override fun hasEmptyGroupingString(remoteId: Int, profileId: Long): Single<Boolean> =
+    generalPurposeMeasurementLogDao.hasEmptyGroupingString(remoteId, profileId)
 
   override fun count(): Observable<Int> = generalPurposeMeasurementLogDao.count()
 

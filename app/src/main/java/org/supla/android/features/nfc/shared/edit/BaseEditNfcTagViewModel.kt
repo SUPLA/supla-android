@@ -35,7 +35,7 @@ import org.supla.android.data.source.local.entity.NfcTagEntity
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ReadAllChannelsWithChildrenUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -57,11 +57,11 @@ open class BaseEditNfcTagViewModel(
   override val getChannelIconUseCase: GetChannelIconUseCase,
   override val getSceneIconUseCase: GetSceneIconUseCase,
   override val getCaptionUseCase: GetCaptionUseCase,
-  schedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) :
   BaseViewModel<EditNfcTagViewState, EditNfcTagViewEvent>(
     defaultState = EditNfcTagViewState(),
-    schedulers = schedulers,
+    threading = threading,
     manageScreenTitle = true
   ),
   SubjectItemConversionScope {
@@ -190,7 +190,7 @@ open class BaseEditNfcTagViewModel(
     name: String = "",
     id: Long? = null
   ) {
-    val profiles = schedulers.io { runCatching { readAllProfilesUseCase().blockingFirst() }.getOrNull() }
+    val profiles = this@BaseEditNfcTagViewModel.threading.io { runCatching { readAllProfilesUseCase().blockingFirst() }.getOrNull() }
     if (profiles == null) {
       Timber.w("Something wrong - no profiles found")
       sendEvent(EditNfcTagViewEvent.Close)
@@ -199,7 +199,7 @@ open class BaseEditNfcTagViewModel(
     val profileId = profileId ?: profiles.firstOrNull { it.active }?.id
     val subjectType = subjectType ?: SubjectType.CHANNEL
 
-    val subjects = schedulers.io {
+    val subjects = this@BaseEditNfcTagViewModel.threading.io {
       profileId?.let { runCatching { getSubjectsSource(it, subjectType).blockingGet() }.getOrNull() } ?: emptyList()
     }
     val subjectsList = subjects.asSingleSelectionList(subjectType, subjectId)

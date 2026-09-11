@@ -33,7 +33,7 @@ import org.supla.android.features.details.windowdetail.base.ui.BaseBlindsViewMod
 import org.supla.android.features.details.windowdetail.base.ui.BaseBlindsViewModelState
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
 import org.supla.android.features.details.windowdetail.base.ui.windowview.ShadingSystemOrientation
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.usecases.channel.ObserveChannelWithChildrenUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
@@ -64,7 +64,7 @@ class VerticalBlindsViewModel @Inject constructor(
   profileRepository: ProfileRepository,
   loginUseCase: LoginUseCase,
   authorizeUseCase: AuthorizeUseCase,
-  schedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) : BaseBlindsViewModel<VerticalBlindsViewModelState>(
   channelConfigEventsManager,
   executeShadingSystemActionUseCase,
@@ -81,7 +81,7 @@ class VerticalBlindsViewModel @Inject constructor(
   loginUseCase,
   authorizeUseCase,
   VerticalBlindsViewModelState(),
-  schedulers
+  threading
 ) {
 
   override fun updatePosition(state: VerticalBlindsViewModelState, position: Float) =

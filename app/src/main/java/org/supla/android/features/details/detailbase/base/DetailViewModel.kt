@@ -32,7 +32,7 @@ import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.data.source.runtime.ItemType
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 import org.supla.core.shared.usecase.GetCaptionUseCase
@@ -45,7 +45,7 @@ class DetailViewModel @Inject constructor(
   private val runtimeStateHolder: RuntimeStateHolder,
   private val getCaptionUseCase: GetCaptionUseCase,
   private val channelRepository: ChannelRepository,
-  private val schedulers: SuplaSchedulers
+  private val threading: SuplaThreading
 ) : EventBasedViewModel<DetailViewEvent>(manageScreenTitle = true) {
 
   init {
@@ -85,7 +85,7 @@ class DetailViewModel @Inject constructor(
 
   private fun loadData() {
     viewModelScope.launch {
-      val data = schedulers.io {
+      val data = threading.io {
         runCatching {
           when (item.itemType) {
             ItemType.CHANNEL -> channelRepository.findChannelDataEntity(item.remoteId)

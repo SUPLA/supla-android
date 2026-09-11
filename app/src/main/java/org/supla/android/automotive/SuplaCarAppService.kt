@@ -29,7 +29,7 @@ import org.supla.android.core.infrastructure.suplaclient.SingleCallProvider
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.AndroidAutoItemRepository
 import org.supla.android.events.UpdateEventsManager
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import javax.inject.Inject
@@ -41,7 +41,7 @@ class SuplaCarAppService : CarAppService() {
   lateinit var updateEventsManager: UpdateEventsManager
 
   @Inject
-  lateinit var schedulers: SuplaSchedulers
+  lateinit var threading: SuplaThreading
 
   @Inject
   lateinit var getSceneIconUseCase: GetSceneIconUseCase
@@ -72,7 +72,7 @@ class SuplaCarAppService : CarAppService() {
       getSceneIconUseCase,
       updateEventsManager,
       singleCallProvider,
-      schedulers,
+      threading,
       dateProvider,
       preferences
     )
@@ -85,7 +85,7 @@ class SuplaSession(
   private val getSceneIconUseCase: GetSceneIconUseCase,
   private val updateEventsManager: UpdateEventsManager,
   private val singleCallProvider: SingleCallProvider,
-  private val schedulers: SuplaSchedulers,
+  private val threading: SuplaThreading,
   private val dateProvider: DateProvider,
   private val preferences: ApplicationPreferences,
 ) : Session() {
@@ -97,7 +97,7 @@ class SuplaSession(
       updateEventsManager = updateEventsManager,
       getSceneIconUseCase = getSceneIconUseCase,
       singleCallProvider = singleCallProvider,
-      schedulers = schedulers,
+      threading = threading,
       carContext = carContext,
       dateProvider = dateProvider,
       preferences = preferences

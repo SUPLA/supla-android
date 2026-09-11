@@ -33,7 +33,7 @@ import org.supla.android.core.infrastructure.ShaHashHelper
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.data.model.general.LockScreenScope
 import org.supla.android.data.model.general.LockScreenSettings
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 
 class PinSetupViewModelTest : BaseViewModelTest<PinSetupViewModelState, PinSetupViewEvent, PinSetupViewModel>(
   mockSchedulers = MockSchedulers.MOCKK
@@ -49,7 +49,7 @@ class PinSetupViewModelTest : BaseViewModelTest<PinSetupViewModelState, PinSetup
   private lateinit var biometricUtils: BiometricUtils
 
   @MockK
-  override lateinit var schedulers: SuplaSchedulers
+  override lateinit var threading: SuplaThreading
 
   @InjectMockKs
   override lateinit var viewModel: PinSetupViewModel

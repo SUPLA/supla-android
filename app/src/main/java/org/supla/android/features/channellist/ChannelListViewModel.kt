@@ -37,7 +37,7 @@ import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.main.topbar.TopBarSearchData
 import org.supla.android.main.topbar.TopBarSearchEvent
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.dialogs.ActionAlertDialogState
 import org.supla.android.ui.dialogs.dialogState
@@ -74,11 +74,11 @@ class ChannelListViewModel @Inject constructor(
   updateEventsManager: UpdateEventsManager,
   vibrationHelper: VibrationHelper,
   dateProvider: DateProvider,
-  schedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) : BaseListViewModel<ChannelListViewState, ChannelListViewEvent>(
   vibrationHelper,
   dateProvider,
-  schedulers,
+  threading,
   ChannelListViewState()
 ),
   ChannelListScope {
@@ -131,10 +131,11 @@ class ChannelListViewModel @Inject constructor(
   fun startLogHistoryDownload() {
     if (downloadJob?.isActive == true) return
 
-    downloadJob = viewModelScope.launch {
+    downloadJob = viewModelScope.launch(threading.dispatchers.io) {
+      delay(5.seconds)
       while (isActive) {
         triggerLogHistoryDownloadUseCase()
-        delay(15.seconds)
+        delay(30.seconds)
       }
     }
   }
@@ -222,7 +223,7 @@ class ChannelListViewModel @Inject constructor(
 
   override fun onDragStopped(remoteId: Int) {
     viewModelScope.launch {
-      val reorderedChannels = schedulers.io {
+      val reorderedChannels = threading.io {
         reorderChannelsUseCase(list, remoteId)
         createProfileChannelsListUseCase().awaitFirst()
       }

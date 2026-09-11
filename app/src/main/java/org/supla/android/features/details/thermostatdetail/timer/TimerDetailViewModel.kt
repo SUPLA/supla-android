@@ -60,7 +60,7 @@ import org.supla.android.features.details.thermostatdetail.timer.ui.ThermostatTi
 import org.supla.android.features.details.thermostatdetail.ui.TimerHeaderHelper
 import org.supla.android.images.ImageId
 import org.supla.android.lib.actions.SubjectType
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.views.DeviceStateData
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.client.ExecuteThermostatActionUseCase
@@ -86,8 +86,8 @@ class TimerDetailViewModel @Inject constructor(
   private val dateProvider: DateProvider,
   @param:Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter,
   suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper,
-  schedulers: SuplaSchedulers
-) : BaseViewModel<TimerDetailViewState, TimerDetailViewEvent>(TimerDetailViewState(thermometerValueFormatter), schedulers),
+  threading: SuplaThreading
+) : BaseViewModel<TimerDetailViewState, TimerDetailViewEvent>(TimerDetailViewState(thermometerValueFormatter), threading),
   ThermostatTimerViewScope {
 
   private var remoteId = 0

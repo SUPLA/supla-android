@@ -44,7 +44,7 @@ import org.supla.android.events.UpdateEventsManager
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.main.topbar.TopBarSearchEvent
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
@@ -91,7 +91,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
   private lateinit var vibrationHelper: VibrationHelper
 
   @MockK
-  override lateinit var schedulers: SuplaSchedulers
+  override lateinit var threading: SuplaThreading
 
   override val viewModel: SceneListViewModel by lazy {
     SceneListViewModel(
@@ -104,7 +104,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
       loadActiveProfileUrlUseCase,
       updateEventsManager,
       vibrationHelper,
-      schedulers,
+      threading,
       dateProvider
     )
   }

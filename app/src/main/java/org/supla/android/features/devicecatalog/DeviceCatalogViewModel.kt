@@ -24,15 +24,15 @@ import org.supla.android.R
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.features.webcontent.WebContentViewModel
 import org.supla.android.features.webcontent.WebContentViewState
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import javax.inject.Inject
 
 @HiltViewModel
 class DeviceCatalogViewModel @Inject constructor(
-  schedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) : WebContentViewModel<DeviceCatalogViewState, DeviceCatalogViewEvent>(
   defaultState = DeviceCatalogViewState(),
-  schedulers = schedulers,
+  threading = threading,
   defaultTitle = R.string.menu_device_catalog
 ) {
 

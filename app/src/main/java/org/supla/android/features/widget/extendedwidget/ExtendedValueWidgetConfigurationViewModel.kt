@@ -41,7 +41,7 @@ import org.supla.android.features.widget.shared.WidgetConfigurationViewModelStat
 import org.supla.android.features.widget.shared.subjectdetail.SubjectDetail
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ReadAllChannelsWithChildrenUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -66,7 +66,7 @@ class ExtendedValueWidgetConfigurationViewModel @Inject constructor(
   channelGroupRepository: ChannelGroupRepository,
   sceneRepository: SceneRepository,
   powerManager: PowerManager,
-  schedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) : BaseWidgetViewModel(
   readAllChannelsWithChildrenUseCase,
   getChannelValueStringUseCase,
@@ -77,7 +77,7 @@ class ExtendedValueWidgetConfigurationViewModel @Inject constructor(
   sceneRepository,
   powerManager,
   context,
-  schedulers
+  threading
 ),
   WidgetConfigurationScope,
   SubjectItemConversionScope {

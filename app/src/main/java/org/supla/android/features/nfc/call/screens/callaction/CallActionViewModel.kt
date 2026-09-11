@@ -34,7 +34,7 @@ import org.supla.android.data.source.local.entity.NfcTagEntity
 import org.supla.android.data.source.local.entity.complex.NfcTagDataEntity
 import org.supla.android.lib.actions.ActionParameters
 import org.supla.android.lib.singlecall.SingleCall
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import timber.log.Timber
 import javax.inject.Inject
@@ -50,8 +50,8 @@ class CallActionViewModel @Inject constructor(
   private val nfcTagRepository: NfcTagRepository,
   private val dateProvider: DateProvider,
   private val uriProxy: UriProxy,
-  schedulers: SuplaSchedulers,
-) : BaseViewModel<CallActionScreenState, CallActionViewEvent>(CallActionScreenState(), schedulers), CallActionScreenScope {
+  threading: SuplaThreading,
+) : BaseViewModel<CallActionScreenState, CallActionViewEvent>(CallActionScreenState(), threading), CallActionScreenScope {
 
   private var readOnly: Boolean = false
 
@@ -109,7 +109,7 @@ class CallActionViewModel @Inject constructor(
     setState(TagProcessingStep.Processing)
 
     val currentTime = dateProvider.currentTimestamp()
-    val tag = schedulers.io { nfcTagRepository.findByUuidWithDependencies(tagUuid) }
+    val tag = this@CallActionViewModel.threading.io { nfcTagRepository.findByUuidWithDependencies(tagUuid) }
     updateState { it.copy(tagData = tag?.tagData) }
 
     if (tag == null) {
@@ -125,7 +125,7 @@ class CallActionViewModel @Inject constructor(
     }
 
     val singleCall = singleCallProvider.provide(configuration.profileId)
-    val result = schedulers.io { singleCall.executeAction(configuration.actionParameters) }
+    val result = this@CallActionViewModel.threading.io { singleCall.executeAction(configuration.actionParameters) }
     nfcCallRepository.insert(tag.tagEntity.id, result.toNfcCallResult)
 
     delayIfNeeded(currentTime)

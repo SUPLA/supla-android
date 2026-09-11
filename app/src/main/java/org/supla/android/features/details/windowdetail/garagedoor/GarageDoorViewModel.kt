@@ -29,7 +29,7 @@ import org.supla.android.features.details.windowdetail.base.BaseWindowViewModelS
 import org.supla.android.features.details.windowdetail.base.data.GarageDoorState
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.usecases.channel.ObserveChannelWithChildrenUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
@@ -57,7 +57,7 @@ class GarageDoorViewModel @Inject constructor(
   profileRepository: ProfileRepository,
   loginUseCase: LoginUseCase,
   authorizeUseCase: AuthorizeUseCase,
-  schedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) : BaseWindowViewModel<GarageDoorViewModelState>(
   executeShadingSystemActionUseCase,
   executeSimpleActionUseCase,
@@ -72,7 +72,7 @@ class GarageDoorViewModel @Inject constructor(
   loginUseCase,
   authorizeUseCase,
   GarageDoorViewModelState(),
-  schedulers
+  threading
 ) {
 
   override fun updatePosition(state: GarageDoorViewModelState, position: Float) =

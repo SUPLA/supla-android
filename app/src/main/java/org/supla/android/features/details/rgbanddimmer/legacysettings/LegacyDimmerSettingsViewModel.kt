@@ -24,14 +24,14 @@ import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.extensions.subscribeBy
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import javax.inject.Inject
 
 @HiltViewModel
 class LegacyDimmerSettingsViewModel @Inject constructor(
   private val channelRepository: ChannelRepository,
-  schedulers: SuplaSchedulers
-) : BaseViewModel<LegacyDimmerSettingsViewState, LegacyDimmerSettingsViewEvent>(LegacyDimmerSettingsViewState(), schedulers) {
+  threading: SuplaThreading
+) : BaseViewModel<LegacyDimmerSettingsViewState, LegacyDimmerSettingsViewEvent>(LegacyDimmerSettingsViewState(), threading) {
 
   fun loadData(remoteId: Int) {
     channelRepository.findChannelDataEntity(remoteId)

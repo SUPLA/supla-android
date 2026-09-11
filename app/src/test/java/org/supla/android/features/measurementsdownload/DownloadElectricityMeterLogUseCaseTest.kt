@@ -84,7 +84,7 @@ class DownloadElectricityMeterLogUseCaseTest {
       Single.error(EmptyResultSetException(""))
     every { electricityMeterLogRepository.findOldestEntity(remoteId, profileId) } returns Maybe.empty()
     every { electricityMeterLogRepository.findCount(remoteId, profileId) } returns Maybe.just(0)
-    every { electricityMeterLogRepository.findCountWithoutGroupingString(remoteId, profileId) } returns Single.just(0)
+    every { electricityMeterLogRepository.hasEmptyGroupingString(remoteId, profileId) } returns Single.just(false)
     every { electricityMeterLogRepository.insert(any()) } returns Completable.complete()
     every { electricityMeterLogRepository.getMeasurements(cloudService, remoteId, 0) } returns
       Observable.just(
@@ -110,7 +110,7 @@ class DownloadElectricityMeterLogUseCaseTest {
       electricityMeterLogRepository.findMinTimestamp(remoteId, profileId)
       electricityMeterLogRepository.findOldestEntity(remoteId, profileId)
       electricityMeterLogRepository.findCount(remoteId, profileId)
-      electricityMeterLogRepository.findCountWithoutGroupingString(remoteId, profileId)
+      electricityMeterLogRepository.hasEmptyGroupingString(remoteId, profileId)
       electricityMeterLogRepository.getInitialMeasurements(cloudService, remoteId)
       electricityMeterLogRepository.getMeasurements(cloudService, remoteId, 0)
       electricityMeterLogRepository.getMeasurements(cloudService, remoteId, fourthMeasurementDate.toTimestamp())

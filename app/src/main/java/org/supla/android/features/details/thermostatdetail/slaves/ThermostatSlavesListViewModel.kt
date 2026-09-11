@@ -35,7 +35,7 @@ import org.supla.android.di.FORMATTER_THERMOMETER
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.details.detailbase.base.DetailPage
 import org.supla.android.features.details.detailbase.base.ItemBundle
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -59,10 +59,10 @@ class ThermostatSlavesListViewModel @Inject constructor(
   private val preferences: ApplicationPreferences,
   val getCaptionUseCase: GetCaptionUseCase,
   val dateProvider: DateProvider,
-  schedulers: SuplaSchedulers,
+  threading: SuplaThreading,
 ) : BaseViewModel<ThermostatSlavesListViewModelState, ThermostatSlavesListViewEvent>(
   ThermostatSlavesListViewModelState(),
-  schedulers
+  threading
 ),
   ThermostatSlavesListScope {
 

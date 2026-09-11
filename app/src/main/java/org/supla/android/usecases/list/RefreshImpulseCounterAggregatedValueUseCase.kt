@@ -63,20 +63,13 @@ class RefreshImpulseCounterAggregatedValueUseCase @Inject constructor(
     val entriesStartDate = settings.showOnList.aggregationStartDate(dateProvider.currentDateTime)?.toEpochSecond()
     val entriesProviderQuery =
       if (entriesStartDate == null) {
-        impulseCounterLogRepository.findMeasurements(remoteId, profileId)
+        impulseCounterLogRepository.findCalculatedValueSum(remoteId, profileId)
       } else {
-        impulseCounterLogRepository.findMeasurements(remoteId, profileId, Date(entriesStartDate * 1000), currentDate)
+        impulseCounterLogRepository.findCalculatedValueSum(remoteId, profileId, Date(entriesStartDate * 1000), currentDate)
       }
 
-    val entries: List<ImpulseCounterLogEntity>? = entriesProviderQuery.awaitFirstOrNull()
-    if (entries.isNullOrEmpty()) {
-      Timber.i("No entries found")
-      channelValueRepository.updateAggregatedValue(profileId, remoteId, NO_VALUE_TEXT)
-      return
-    }
-
     val unit = channelExtendedValueRepository.findBy(profileId, remoteId)?.getSuplaValue()?.ImpulseCounterValue?.unit
-    val aggregatedValue = entries.fold(0f) { acc, entity -> acc + entity.calculatedValue }
+    val aggregatedValue = entriesProviderQuery.awaitFirstOrNull()
     val formatted = formatter.format(aggregatedValue, withUnit(unit, showNoValueText = false))
 
     Timber.d("Aggregated value set to $formatted")

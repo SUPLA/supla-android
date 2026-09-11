@@ -27,7 +27,7 @@ import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.LockScreenScope
 import org.supla.android.data.model.general.LockScreenSettings
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.views.forms.PIN_LENGTH
 import timber.log.Timber
 import javax.inject.Inject
@@ -37,10 +37,10 @@ class PinSetupViewModel @Inject constructor(
   private val encryptedPreferences: EncryptedPreferences,
   private val shaHashHelper: ShaHashHelper,
   private val biometricUtils: BiometricUtils,
-  suplaSchedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) : BaseViewModel<PinSetupViewModelState, PinSetupViewEvent>(
   defaultState = PinSetupViewModelState(),
-  schedulers = suplaSchedulers,
+  threading = threading,
   titleRes = R.string.pin_setup_title
 ) {
 
