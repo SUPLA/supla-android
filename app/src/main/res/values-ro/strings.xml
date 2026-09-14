@@ -95,7 +95,7 @@
 
   <string name="add_wizard_step_3_message_3"><![CDATA[Apăsați butonul<b>START</b>pentru a începe configurarea.]]></string>
 
-  <string name="wizard_no_internetwifi">Înainte de a începe, conectați-vă la Internet printr-o rețea Wi-Fi, careva fi folosită și de dispozitivele de acționare pentru a se conecta la server.</string>
+  <string name="wizard_no_internetwifi">Înainte de a începe, asigurați-vă că Wi-Fi este activat.</string>
   <string name="wizard_wifi_error">Rețeaua Wi-Fi este dezactivată sau identificatorul sau numele acesteia nu poate fi citit!</string>
   <string name="wizard_location_error">Pentru funcționarea corectă al asistentului de adăugare, serviciul de localizare trebuie să fie activat pe acest dispozitiv. Accesați setările sistemului, apoi selectați opțiunea „Locație” și vă asigurați că este pornită.</string>
   <string name="wizard_scan_timeout">Timpul de așteptare pentru finalizarea căutării rețelei Wi-Fi a fost depășit!</string>

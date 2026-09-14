@@ -134,7 +134,7 @@
   <string name="add_wizard_remember_passwd">Şifrəni yadda saxla</string>
   <string name="add_wizard_step_3_message_3"><![CDATA[Konfiqurasiyaya başlamaq üçün <b>BAŞLAT</b>-a basın.]]></string>
 
-  <string name="wizard_no_internetwifi">Başlamazdan əvvəl, serverə qoşularkən I/O cihazının da istifadə etdiyi Wi-Fi ilə İnternet bağlantınızı qurun.</string>
+  <string name="wizard_no_internetwifi">Başlamazdan əvvəl Wi-Fi-nin aktiv olduğuna əmin olun.</string>
   <string name="wizard_wifi_error">Wi-Fi şəbəkəsi deaktivdir və ya onun identifikatorunu və ya adını oxumaq mümkün deyil!</string>
   <string name="wizard_location_error">Add Device Wizard düzgün işləməsi üçün, bu cihazda Yer xidməti aktiv olmalıdır. Sistem tənzimləmələrinə gedin, sonra „Yer” seçin və onun aktiv olduğundan əmin olun.</string>
   <string name="wizard_scan_timeout">Wi-Fi şəbəkə skanlamasının vaxt limiti bitdi!</string>

@@ -18,8 +18,7 @@ package org.supla.android.features.addwizard
  */
 
 import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
+import android.net.wifi.WifiManager
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -172,7 +171,7 @@ class AddWizardViewModel @Inject constructor(
 
   override fun onViewCreated() {
     configurationStateHolder = AndroidEspConfigurationStateHolder(this)
-    if (hasWiFiConnection().not()) {
+    if (isWiFiDisabled()) {
       updateState { it.openOnly(screen = AddWizardScreen.Message.NoWifi) }
     } else if (hasLocationEnabled().not()) {
       updateState { it.openOnly(screen = AddWizardScreen.Message.LocationDisabled) }
@@ -275,7 +274,7 @@ class AddWizardViewModel @Inject constructor(
       AddWizardScreen.Welcome -> welcomeNextStep()
       is AddWizardScreen.NetworkSelection -> networkSelectionNextStep()
       AddWizardScreen.Configuration -> {
-        if (!hasWiFiConnection()) {
+        if (isWiFiDisabled()) {
           updateState { it.navigateTo(screen = AddWizardScreen.Message.NoWifi) }
         } else if (!hasLocationEnabled()) {
           updateState { it.navigateTo(screen = AddWizardScreen.Message.LocationDisabled) }
@@ -577,11 +576,9 @@ class AddWizardViewModel @Inject constructor(
     espConfigurationSession.reset()
   }
 
-  private fun hasWiFiConnection(): Boolean {
-    val connectivityManager = context.getSystemService(ConnectivityManager::class.java)
-    val activeNetwork = connectivityManager.activeNetwork ?: return false
-    val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
-    return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+  private fun isWiFiDisabled(): Boolean {
+    val wifiManager = context.getSystemService(WifiManager::class.java)
+    return !wifiManager.isWifiEnabled
   }
 
   private fun hasLocationEnabled(): Boolean = checkLocationEnabledUseCase()
@@ -597,16 +594,16 @@ class AddWizardViewModel @Inject constructor(
       val currentNetwork = currentWifiNetworkInfoProvider.provide()
         ?.let { if (it.networkType == CurrentWifiNetworkInfoProvider.NetworkType.TYPE_2_4_GHZ) it else null }
 
-      updateState {
-        it.navigateTo(screen = AddWizardScreen.NetworkSelection)
+      updateState { state ->
+        state.navigateTo(screen = AddWizardScreen.NetworkSelection)
           .copy(
-            networkSelectionState = it.networkSelectionState ?: AddWizardNetworkSelectionState(
+            networkSelectionState = state.networkSelectionState ?: AddWizardNetworkSelectionState(
               networkName = networkName ?: currentNetwork?.ssid ?: "",
               networkPassword = networkName.isNotNull.forTrue { encryptedPreferences.wizardWifiPassword } ?: "",
               rememberPassword = networkName.isNotNull && networkPassword.isNotNull,
               error = false,
             ),
-            networkId = currentNetwork?.networkId
+            networkId = currentNetwork?.networkId?.let { if (it == -1) null else it }
           )
       }
     }
