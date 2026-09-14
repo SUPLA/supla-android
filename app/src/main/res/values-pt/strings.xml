@@ -100,7 +100,7 @@
   <string name="wizard_result_compat_error">O dispositivo que conectou não é compatível com este assistente!</string>
   <string name="add_wizard_step_1_welcome">Bem-vindo ao assistente para adicionar dispositivos que lhe permitirá adicionar novos dispositivos ao sistema de maneira simples e rápida.</string>
   <string name="device_reg_request_timeout">O tempo-limite de informação sobre a disponibilidade do registo dos dispositivos foi excedido!</string>
-  <string name="wizard_no_internetwifi">Antes de iniciar, conecte-se à Internet através da rede Wi-Fi que também será utilizada por um atuador para se conectar ao servidor.</string>
+  <string name="wizard_no_internetwifi">Antes de iniciar, certifique-se de que o Wi-Fi está ativado.</string>
   <string name="wizard_not_enought_permissions">A aplicação não dispõe de poderes suficientes. Vá para a gestão das aplicações nas configurações do sistema. A seguir, encontre a aplicação %1$s e ative todos os poderes requeridos por ela.</string>
   <string name="help">Ajuda</string>
   <string name="channel_caption_staircasetimer">Comutador de escada</string>

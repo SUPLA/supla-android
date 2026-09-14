@@ -96,7 +96,7 @@
 
   <string name="add_wizard_step_3_message_3"><![CDATA[A konfiguráció elindításához nyomja meg a <b> START </b> gombot.]]></string>
 
-  <string name="wizard_no_internetwifi">Mielőtt elkezdené, csatlakozzon az internethez egy WiFi-hálózaton keresztül, amelyet a végrehajtó eszközök is használnak a szerverhez történő csatlakozáshoz.</string>
+  <string name="wizard_no_internetwifi">Mielőtt elkezdené, győződjön meg arról, hogy a Wi-Fi be van kapcsolva.</string>
   <string name="wizard_wifi_error">A Wi-Fi hálózat ki van kapcsolva, vagy az azonosítója vagy a neve nem olvasható!</string>
   <string name="wizard_location_error">Ahhoz, hogy a hozzáadási varázsló megfelelően működjön, engedélyezni kell a helyinformációt ezen az eszközön. Lépjen a rendszerbeállításokba, majd válassza a „Helyinformáció” lehetőséget, és győződjön meg róla, hogy engedélyezve van.</string>
   <string name="wizard_scan_timeout">A Wi-Fi halózat keresése a várakozási időt túllépte!</string>

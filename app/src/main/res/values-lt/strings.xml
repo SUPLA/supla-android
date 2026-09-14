@@ -77,7 +77,7 @@
   <string name="start">STARTAS</string>
   <string name="add_wizard_remember_passwd">Išsaugoti slaptažodį</string>
   <string name="add_wizard_step_3_message_3"><![CDATA[Paspauskite mygtuką <b>START</b>, kad pradėti konfigūravimą.]]></string>
-  <string name="wizard_no_internetwifi">Prieš pradedami prisijunkite prie interneto Wi-Fi tinklo pagalba, kurį taip pat naudos vykdomasis įrenginys prisijungimui prie serverio.</string>
+  <string name="wizard_no_internetwifi">Prieš pradėdami įsitikinkite, kad Wi-Fi įjungtas.</string>
   <string name="wizard_wifi_error">Wi-Fi tinklas yra išjungtas arba negalima atpažinti jo identifikatoriaus arba pavadinimo!</string>
   <string name="wizard_location_error">Kad pridėjimo vedlys veiktų tinkamai, šiame įrenginyje turi būti įjungta Vietos paslauga. Eikite į sistemos nustatymus, tada pasirinkite „Vieta“ ir įsitikinkite, kad įjungta.</string>
   <string name="wizard_scan_timeout">Viršytas Wi-Fi tinklo paieškos pabaigimo laukimo laikas!</string>

@@ -93,7 +93,7 @@
 
   <string name="add_wizard_step_3_message_3"><![CDATA[Pritisnite tipko <b>START</b> da začnete konfiguracijo.]]></string>
 
-  <string name="wizard_no_internetwifi">Preden začnete, se povežite z internetom prek omrežja Wi-Fi, ki ga bodo tudi izvršne naprave uporabile za povezavo s strežnikom.</string>
+  <string name="wizard_no_internetwifi">Preden začnete, se prepričajte, da je Wi-Fi vklopljen.</string>
   <string name="wizard_wifi_error">Omrežje Wi-Fi je izklopljeno ali njegovega identifikatorja ali imena ni mogoče prebrati!</string>
   <string name="wizard_location_error">Za pravilno delovanje čarovnika za dodajanje mora biti v tej napravi omogočena storitev lokacije. Pojdite v sistemske nastavitve, nato izberite »Lokacija« in se prepričajte, da je ta vklopljena.</string>
   <string name="wizard_scan_timeout">Čakalna doba za dokončanje iskanja Wi-Fi je prekoračena!</string>

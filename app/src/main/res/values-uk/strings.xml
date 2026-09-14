@@ -102,7 +102,7 @@
   <string name="next">Далі</string>
   <string name="add_wizard_step_3_message_3"><![CDATA[Натисніть кнопку <b>СТАРТ</b>, щоб почати налаштування.]]></string>
   <string name="add_wizard_step_1_continue"><![CDATA[Натисніть <b>Далі</b>, щоб продовжити.]]></string>
-  <string name="wizard_no_internetwifi">Перш ніж почати, підключіться до Інтернету через Wi-Fi, який також використовуватиметься виконуючими пристроями для підключення до сервера.</string>
+  <string name="wizard_no_internetwifi">Перш ніж почати, переконайтеся, що Wi-Fi увімкнено.</string>
   <string name="wizard_wifi_error">Wi-Fi вимкнено або не може прочитати свій ідентифікатор чи назву!</string>
   <string name="wizard_location_error">Для коректної роботи майстра додавання повинна бути ввімкнена функція Місцезнаходження на цьому пристрої. Перейдіть до налаштувань системи, оберіть опцію "Місцезнаходження" та переконайтеся, що вона увімкнена.</string>
   <string name="wizard_scan_timeout">Минув час очікування завершення сканування мережі Wi-Fi!</string>
