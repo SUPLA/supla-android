@@ -84,19 +84,25 @@ interface ImpulseCounterLogDao : GroupingStringMigratorDao {
 
   @Query(
     """
-      SELECT COALESCE(SUM($COLUMN_CALCULATED_VALUE), 0) FROM $TABLE_NAME
+      SELECT 
+        COUNT($COLUMN_ID) as count, 
+        COALESCE(SUM($COLUMN_CALCULATED_VALUE), 0) as value 
+      FROM $TABLE_NAME
       WHERE channelid = :channelId AND profileid = :profileId
     """
   )
-  fun findCalculatedValueSum(channelId: Int, profileId: Long): Observable<Float>
+  fun findCalculatedValueSum(channelId: Int, profileId: Long): Observable<ImpulseCounterCalculatedValueSum>
 
   @Query(
     """
-      SELECT COALESCE(SUM($COLUMN_CALCULATED_VALUE), 0) FROM $TABLE_NAME
+      SELECT 
+        COUNT($COLUMN_ID) as count, 
+        COALESCE(SUM($COLUMN_CALCULATED_VALUE), 0) as value 
+      FROM $TABLE_NAME
       WHERE channelid = :channelId AND profileid = :profileId AND date >= :startDate AND date <= :endDate
     """
   )
-  fun findCalculatedValueSum(channelId: Int, profileId: Long, startDate: Long, endDate: Long): Observable<Float>
+  fun findCalculatedValueSum(channelId: Int, profileId: Long, startDate: Long, endDate: Long): Observable<ImpulseCounterCalculatedValueSum>
 
   @Query("SELECT COUNT($COLUMN_ID) FROM $TABLE_NAME")
   fun count(): Observable<Int>
@@ -138,3 +144,8 @@ interface ImpulseCounterLogDao : GroupingStringMigratorDao {
   @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_PROFILE_ID = :profileId")
   fun deleteByProfile(profileId: Long): Completable
 }
+
+data class ImpulseCounterCalculatedValueSum(
+  val count: Int,
+  val value: Float
+)

@@ -21,6 +21,7 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
+import org.supla.android.data.source.local.dao.measurements.ImpulseCounterCalculatedValueSum
 import org.supla.android.data.source.local.dao.measurements.ImpulseCounterLogDao
 import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity
 import org.supla.android.data.source.remote.rest.SuplaCloudService
@@ -48,10 +49,10 @@ class ImpulseCounterLogRepository @Inject constructor(
   fun findMeasurements(remoteId: Int, profileId: Long): Observable<List<ImpulseCounterLogEntity>> =
     impulseCounterLogDao.findMeasurements(remoteId, profileId)
 
-  fun findCalculatedValueSum(remoteId: Int, profileId: Long, startDate: Date, endDate: Date): Observable<Float> =
+  fun findCalculatedValueSum(remoteId: Int, profileId: Long, startDate: Date, endDate: Date): Observable<ImpulseCounterCalculatedValueSum> =
     impulseCounterLogDao.findCalculatedValueSum(remoteId, profileId, startDate.time, endDate.time)
 
-  fun findCalculatedValueSum(remoteId: Int, profileId: Long): Observable<Float> =
+  fun findCalculatedValueSum(remoteId: Int, profileId: Long): Observable<ImpulseCounterCalculatedValueSum> =
     impulseCounterLogDao.findCalculatedValueSum(remoteId, profileId)
 
   override fun getInitialMeasurements(cloudService: SuplaCloudService, remoteId: Int): Response<List<ImpulseCounterMeasurement>> =

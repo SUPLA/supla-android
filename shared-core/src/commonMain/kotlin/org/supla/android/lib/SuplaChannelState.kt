@@ -163,7 +163,7 @@ data class SuplaChannelState(
     if (rawDefaultIconField != other.rawDefaultIconField) return false
     if (rawIpv4 != other.rawIpv4) return false
     if (rawBatteryLevel != other.rawBatteryLevel) return false
-    if (rawBatteryPowered != other.rawBatteryPowered) return false
+    if (rawBatterState != other.rawBatterState) return false
     if (rawBatteryPowered != other.rawBatteryPowered) return false
     if (rawWifiRssi != other.rawWifiRssi) return false
     if (rawWifiSignalStrength != other.rawWifiSignalStrength) return false
