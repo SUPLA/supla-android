@@ -229,6 +229,7 @@ fun Modifier.leftButtonTransformation(
   return this
     .offset { IntOffset(x = offsetX.roundToInt(), y = 0) }
     .graphicsLayer {
+      alpha = if (offset > 0f) 1f else 0f
       rotationY = rotation
     }
 }
@@ -247,7 +248,10 @@ fun Modifier.rightButtonTransformation(
 
   return this
     .offset { IntOffset(x = offsetX.roundToInt(), y = 0) }
-    .graphicsLayer { rotationY = rotation }
+    .graphicsLayer {
+      alpha = if (offset < 0f) 1f else 0f
+      rotationY = rotation
+    }
 }
 
 class SlideableController {
