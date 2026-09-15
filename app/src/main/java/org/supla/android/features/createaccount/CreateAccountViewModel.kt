@@ -23,14 +23,13 @@ import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.launch
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.data.source.ProfileRepository
-import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.deleteaccountweb.DeleteAccountWebFragment
 import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.client.ReconnectUseCase
-import org.supla.android.usecases.profile.DeleteProfileUseCase
 import org.supla.android.usecases.profile.LoadProfileWithCredentialsUseCase
 import org.supla.android.usecases.profile.ProfileDto
+import org.supla.android.usecases.profile.ProfileSessionManager
 import org.supla.android.usecases.profile.ProfileWithCredentials
 import org.supla.android.usecases.profile.SaveProfileUseCase
 import javax.inject.Inject
@@ -38,7 +37,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateAccountViewModel @Inject constructor(
   private val loadProfileWithCredentialsUseCase: LoadProfileWithCredentialsUseCase,
-  private val deleteProfileUseCase: DeleteProfileUseCase,
+  private val profileSessionManager: ProfileSessionManager,
   private val saveProfileUseCase: SaveProfileUseCase,
   private val profileRepository: ProfileRepository,
   private val reconnectUseCase: ReconnectUseCase,
@@ -192,56 +191,51 @@ class CreateAccountViewModel @Inject constructor(
 
   fun deleteProfile(profileId: Long?) {
     profileId?.let { id ->
-      profileRepository.findProfile(id)
-        .flatMap(this::deleteAndGetReturnInfo)
-        .attachLoadable()
-        .subscribeBy(
-          onSuccess = {
-            if (it.noAccountsRegistered) {
-              sendEvent(CreateAccountViewEvent.RestartFlow)
-            } else {
-              sendEvent(CreateAccountViewEvent.Close)
-            }
-          },
-          onError = { sendEvent(CreateAccountViewEvent.ShowRemovalFailureDialog) }
-        )
+      setLoading(true)
+      profileSessionManager.deleteProfile(
+        id = id,
+        onSuccess = {
+          setLoading(false)
+          if (it.noAccountsRegistered) {
+            sendEvent(CreateAccountViewEvent.RestartFlow)
+          } else {
+            sendEvent(CreateAccountViewEvent.Close)
+          }
+        },
+        onError = {
+          setLoading(false)
+          sendEvent(CreateAccountViewEvent.ShowRemovalFailureDialog)
+        }
+      )
     }
   }
 
   fun deleteProfileWithCloud(profileId: Long?) {
     profileId?.let { id ->
-      profileRepository.findProfile(id)
-        .flatMap(this::deleteAndGetReturnInfo)
-        .attach()
-        .subscribeBy(
-          onSuccess = {
-            val destination = if (it.noAccountsRegistered) {
-              DeleteAccountWebFragment.EndDestination.RESTART
-            } else {
-              DeleteAccountWebFragment.EndDestination.CLOSE
-            }
+      setLoading(true)
+      profileSessionManager.deleteProfile(
+        id = id,
+        onSuccess = {
+          setLoading(false)
+          val destination = if (it.noAccountsRegistered) {
+            DeleteAccountWebFragment.EndDestination.RESTART
+          } else {
+            DeleteAccountWebFragment.EndDestination.CLOSE
+          }
 
-            sendEvent(CreateAccountViewEvent.NavigateToWebRemoval(it.serverAddress, destination))
-          },
-          onError = { sendEvent(CreateAccountViewEvent.ShowRemovalFailureDialog) }
-        )
+          sendEvent(CreateAccountViewEvent.NavigateToWebRemoval(it.serverAddress, destination))
+        },
+        onError = {
+          setLoading(false)
+          sendEvent(CreateAccountViewEvent.ShowRemovalFailureDialog)
+        }
+      )
     }
   }
-
-  private fun deleteAndGetReturnInfo(profile: ProfileEntity): Single<RemovalBackInfo> =
-    deleteProfileUseCase(profile)
-      .andThen(profileRepository.findAllProfiles())
-      .map { RemovalBackInfo(profile.serverForCurrentAuthMethod, it.isEmpty()) }
-      .firstOrError()
 
   private fun Int.toAccessIdentifierString(): String = if (this == 0) {
     ""
   } else {
     this.toString()
   }
-
-  private data class RemovalBackInfo(
-    val serverAddress: String?,
-    val noAccountsRegistered: Boolean
-  )
 }

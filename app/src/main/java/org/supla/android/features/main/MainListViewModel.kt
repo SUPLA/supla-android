@@ -44,7 +44,7 @@ import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModelScope
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.LoginUseCase
-import org.supla.android.usecases.profile.ActivateProfileUseCase
+import org.supla.android.usecases.profile.ProfileSessionManager
 import org.supla.android.usecases.profile.ReadAllProfilesUseCase
 import javax.inject.Inject
 
@@ -55,9 +55,9 @@ class MainListViewModel @Inject constructor(
   override val authorizeUseCase: AuthorizeUseCase,
   override val loginUseCase: LoginUseCase,
   override val threading: SuplaThreading,
-  private val activateProfileUseCase: ActivateProfileUseCase,
   private val applicationPreferences: ApplicationPreferences,
   private val readAllProfilesUseCase: ReadAllProfilesUseCase,
+  private val profileSessionManager: ProfileSessionManager,
   private val encryptedPreferences: EncryptedPreferences,
   private val notificationsHelper: NotificationsHelper,
   private val channelRepository: ChannelRepository
@@ -154,12 +154,11 @@ class MainListViewModel @Inject constructor(
   }
 
   fun onProfileSelected(id: Long) {
-    viewModelScope.launch {
-      threading.io {
-        activateProfileUseCase(id, force = false).await()
-      }
-      profileSelectionStateFlow.tryEmit(null)
-    }
+    profileSessionManager.activateProfile(
+      id = id,
+      force = false,
+      onComplete = { profileSelectionStateFlow.tryEmit(null) }
+    )
   }
 }
 

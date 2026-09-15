@@ -24,7 +24,6 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import io.mockk.verify
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -40,7 +39,7 @@ import org.supla.android.features.profileslist.ProfilesListViewModel
 import org.supla.android.features.profileslist.ProfilesListViewState
 import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.lock.GetLockScreenSettingUseCase
-import org.supla.android.usecases.profile.ActivateProfileUseCase
+import org.supla.android.usecases.profile.ProfileSessionManager
 import org.supla.android.usecases.profile.ReadAllProfilesUseCase
 
 class ProfilesViewModelTest : BaseViewModelTest<ProfilesListState, ProfilesListViewEvent, ProfilesListViewModel>(MockSchedulers.MOCKK) {
@@ -48,7 +47,7 @@ class ProfilesViewModelTest : BaseViewModelTest<ProfilesListState, ProfilesListV
   private lateinit var readAllProfilesUseCase: ReadAllProfilesUseCase
 
   @MockK
-  private lateinit var activateProfileUseCase: ActivateProfileUseCase
+  private lateinit var profileSessionManager: ProfileSessionManager
 
   @MockK
   private lateinit var getLockScreenSettingUseCase: GetLockScreenSettingUseCase
@@ -84,7 +83,7 @@ class ProfilesViewModelTest : BaseViewModelTest<ProfilesListState, ProfilesListV
     verify {
       readAllProfilesUseCase.invoke()
     }
-    confirmVerified(readAllProfilesUseCase, activateProfileUseCase)
+    confirmVerified(readAllProfilesUseCase, profileSessionManager)
   }
 
   @Test
@@ -95,7 +94,11 @@ class ProfilesViewModelTest : BaseViewModelTest<ProfilesListState, ProfilesListV
       every { id } returns profileId
       every { active } returns false
     }
-    every { activateProfileUseCase.invoke(profileId, force = true) } returns Completable.complete()
+    every {
+      profileSessionManager.activateProfile(profileId, force = true, any(), any())
+    } answers {
+      thirdArg<() -> Unit>().invoke()
+    }
 
     // when
     viewModel.onProfileSelected(profile)
@@ -105,9 +108,9 @@ class ProfilesViewModelTest : BaseViewModelTest<ProfilesListState, ProfilesListV
     assertThat(events).containsExactly(ProfilesListViewEvent.Finish)
 
     verify {
-      activateProfileUseCase.invoke(profileId, force = true)
+      profileSessionManager.activateProfile(profileId, force = true, any(), any())
     }
-    confirmVerified(readAllProfilesUseCase, activateProfileUseCase)
+    confirmVerified(readAllProfilesUseCase, profileSessionManager)
   }
 
   @Test
