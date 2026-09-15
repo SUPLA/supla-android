@@ -70,7 +70,12 @@ class RefreshImpulseCounterAggregatedValueUseCase @Inject constructor(
 
     val unit = channelExtendedValueRepository.findBy(profileId, remoteId)?.getSuplaValue()?.ImpulseCounterValue?.unit
     val aggregatedValue = entriesProviderQuery.awaitFirstOrNull()
-    val formatted = formatter.format(aggregatedValue, withUnit(unit, showNoValueText = false))
+    val formatted =
+      if (aggregatedValue == null || aggregatedValue.count == 0) {
+        NO_VALUE_TEXT
+      } else {
+        formatter.format(aggregatedValue.value, withUnit(unit, showNoValueText = false))
+      }
 
     Timber.d("Aggregated value set to $formatted")
     channelValueRepository.updateAggregatedValue(profileId, remoteId, formatted)
