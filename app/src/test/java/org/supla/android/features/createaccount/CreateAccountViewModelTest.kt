@@ -28,9 +28,9 @@ import org.supla.android.testhelpers.extensions.mock
 import org.supla.android.testhelpers.extensions.mockWithEmail
 import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.client.ReconnectUseCase
-import org.supla.android.usecases.profile.DeleteProfileUseCase
 import org.supla.android.usecases.profile.LoadProfileWithCredentialsUseCase
 import org.supla.android.usecases.profile.ProfileDto
+import org.supla.android.usecases.profile.ProfileSessionManager
 import org.supla.android.usecases.profile.ProfileWithCredentials
 import org.supla.android.usecases.profile.SaveProfileUseCase
 
@@ -52,7 +52,7 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
   private lateinit var saveProfileUseCase: SaveProfileUseCase
 
   @MockK
-  private lateinit var deleteProfileUseCase: DeleteProfileUseCase
+  private lateinit var profileSessionManager: ProfileSessionManager
 
   @MockK
   private lateinit var profileRepository: ProfileRepository
@@ -497,22 +497,25 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
 
   @Test
   fun `should delete profile and close fragment`() {
-    every { profileRepository.findAllProfiles() } returns Observable.just(listOf(mockk()))
-    localDeleteTest(ProfileEntity.mockWithEmail(), CreateAccountViewEvent.Close)
+    localDeleteTest(noAccountsRegistered = false, CreateAccountViewEvent.Close)
   }
 
   @Test
   fun `should delete profile and restart`() {
-    every { profileRepository.findAllProfiles() } returns Observable.just(listOf())
-    localDeleteTest(ProfileEntity.mockWithEmail(), CreateAccountViewEvent.RestartFlow)
+    localDeleteTest(noAccountsRegistered = true, CreateAccountViewEvent.RestartFlow)
   }
 
-  private fun localDeleteTest(profile: ProfileEntity, event: CreateAccountViewEvent) {
+  private fun localDeleteTest(noAccountsRegistered: Boolean, event: CreateAccountViewEvent) {
     // given
     val profileId = 123L
-    val profileWithId = profile.copy(id = profileId)
-    every { profileRepository.findProfile(profileId) } returns Single.just(profileWithId)
-    every { deleteProfileUseCase(profileWithId) } returns Completable.complete()
+    every { profileSessionManager.deleteProfile(profileId, any(), any()) } answers {
+      secondArg<(ProfileSessionManager.RemovalResult) -> Unit>().invoke(
+        ProfileSessionManager.RemovalResult(
+          serverAddress = "",
+          noAccountsRegistered = noAccountsRegistered
+        )
+      )
+    }
 
     // when
     viewModel.deleteProfile(profileId)
@@ -521,15 +524,15 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
     assertThat(states).hasSize(2) // because of loading flag change
     assertThat(events).containsExactly(event)
 
-    verify { deleteProfileUseCase(profileWithId) }
+    verify { profileSessionManager.deleteProfile(profileId, any(), any()) }
   }
 
   @Test
   fun `should delete profile and navigate to web removal`() {
-    every { profileRepository.findAllProfiles() } returns Observable.just(listOf(mockk()))
     val serverAddress = "beta-cloud.supla.org"
     localAndWebDeleteTest(
-      ProfileEntity.mockWithEmail(serverForEmail = serverAddress),
+      serverAddress = serverAddress,
+      noAccountsRegistered = false,
       CreateAccountViewEvent.NavigateToWebRemoval(
         serverAddress,
         DeleteAccountWebFragment.EndDestination.CLOSE
@@ -539,9 +542,9 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
 
   @Test
   fun `should delete profile and navigate to web removal with restart`() {
-    every { profileRepository.findAllProfiles() } returns Observable.just(listOf())
     localAndWebDeleteTest(
-      ProfileEntity.mockWithEmail(),
+      serverAddress = "",
+      noAccountsRegistered = true,
       CreateAccountViewEvent.NavigateToWebRemoval(
         serverAddress = "",
         DeleteAccountWebFragment.EndDestination.RESTART
@@ -549,19 +552,28 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
     )
   }
 
-  private fun localAndWebDeleteTest(profile: ProfileEntity, event: CreateAccountViewEvent) {
+  private fun localAndWebDeleteTest(serverAddress: String, noAccountsRegistered: Boolean, event: CreateAccountViewEvent) {
     // given
     val profileId = 123L
-    val profileWithId = profile.copy(id = profileId)
-    every { profileRepository.findProfile(profileId) } returns Single.just(profileWithId)
-    every { deleteProfileUseCase(profileWithId) } returns Completable.complete()
+    every { profileSessionManager.deleteProfile(profileId, any(), any()) } answers {
+      secondArg<(ProfileSessionManager.RemovalResult) -> Unit>().invoke(
+        ProfileSessionManager.RemovalResult(
+          serverAddress = serverAddress,
+          noAccountsRegistered = noAccountsRegistered
+        )
+      )
+    }
 
     // when
     viewModel.deleteProfileWithCloud(profileId)
 
     // then
-    assertThat(states).isEmpty()
+    val state = CreateAccountViewState()
+    assertThat(states).containsExactly(
+      state.copy(loading = true),
+      state.copy(loading = false)
+    )
     assertThat(events).containsExactly(event)
-    verify { deleteProfileUseCase(profileWithId) }
+    verify { profileSessionManager.deleteProfile(profileId, any(), any()) }
   }
 }

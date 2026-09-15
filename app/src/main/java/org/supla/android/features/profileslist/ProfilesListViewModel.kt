@@ -28,7 +28,7 @@ import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.lockscreen.UnlockAction
 import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.lock.GetLockScreenSettingUseCase
-import org.supla.android.usecases.profile.ActivateProfileUseCase
+import org.supla.android.usecases.profile.ProfileSessionManager
 import org.supla.android.usecases.profile.ReadAllProfilesUseCase
 import javax.inject.Inject
 
@@ -36,7 +36,7 @@ import javax.inject.Inject
 class ProfilesListViewModel @Inject constructor(
   private val getLockScreenSettingUseCase: GetLockScreenSettingUseCase,
   private val readAllProfilesUseCase: ReadAllProfilesUseCase,
-  private val activateProfileUseCase: ActivateProfileUseCase,
+  private val profileSessionManager: ProfileSessionManager,
   private val profileRepository: ProfileRepository,
   threading: SuplaThreading
 ) : BaseViewModel<ProfilesListState, ProfilesListViewEvent>(ProfilesListState(), threading), ProfilesListScope {
@@ -67,13 +67,12 @@ class ProfilesListViewModel @Inject constructor(
   }
 
   override fun onProfileSelected(profile: ProfileEntity) {
-    activateProfileUseCase(profile.id!!, force = true)
-      .attach()
-      .subscribeBy(
-        onComplete = { sendEvent(ProfilesListViewEvent.Finish) },
-        onError = defaultErrorHandler("activateProfile")
-      )
-      .disposeBySelf()
+    profileSessionManager.activateProfile(
+      id = profile.id,
+      force = true,
+      onComplete = { sendEvent(ProfilesListViewEvent.Finish) },
+      onError = defaultErrorHandler("activateProfile")
+    )
   }
 
   override fun onAddAccount() {
