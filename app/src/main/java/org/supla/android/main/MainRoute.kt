@@ -51,12 +51,12 @@ sealed interface MainRoute : NavKey {
 
   @Serializable
   data class UnlockApp(val unlockAction: UnlockAction) : MainRoute {
-    override val screenTakeoverAllowed: Boolean = true
+    override val screenTakeoverAllowed: Boolean = false
   }
 
   @Serializable
   data class Unlock(val unlockAction: UnlockAction) : MainRoute {
-    override val screenTakeoverAllowed: Boolean = true
+    override val screenTakeoverAllowed: Boolean = false
   }
 
   @Serializable
@@ -76,12 +76,12 @@ sealed interface MainRoute : NavKey {
 
   @Serializable
   data object NotificationsLog : MainRoute {
-    override val screenTakeoverAllowed: Boolean = true
+    override val screenTakeoverAllowed: Boolean = false
   }
 
   @Serializable
   data object About : MainRoute {
-    override val screenTakeoverAllowed: Boolean = true
+    override val screenTakeoverAllowed: Boolean = false
   }
 
   @Serializable

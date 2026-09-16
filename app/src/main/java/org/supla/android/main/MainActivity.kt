@@ -27,6 +27,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation3.runtime.rememberNavBackStack
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -76,16 +79,6 @@ class MainActivity : FragmentActivity(), NfcHost {
     }
   }
 
-  override fun onStart() {
-    super.onStart()
-    handleState()
-  }
-
-  override fun onStop() {
-    disposables.clear()
-    super.onStop()
-  }
-
   override fun enableNfcReader(intentHandler: (Tag) -> Unit) {
     Timber.d("Enable NFC dispatch")
 
@@ -106,10 +99,26 @@ class MainActivity : FragmentActivity(), NfcHost {
   @Composable
   private fun MainContent() {
     val backStack = rememberNavBackStack(MainRoute.Status)
+    val lifecycleOwner = LocalLifecycleOwner.current
 
-    DisposableEffect(backStack) {
+    DisposableEffect(lifecycleOwner, backStack) {
       navigator.bind(backStack)
-      onDispose { navigator.unbind(backStack) }
+
+      val observer = LifecycleEventObserver { _, event ->
+        when (event) {
+          Lifecycle.Event.ON_START -> handleState()
+          Lifecycle.Event.ON_STOP -> disposables.clear()
+          else -> {}
+        }
+      }
+
+      lifecycleOwner.lifecycle.addObserver(observer)
+
+      onDispose {
+        lifecycleOwner.lifecycle.removeObserver(observer)
+        disposables.clear()
+        navigator.unbind(backStack)
+      }
     }
 
     CompositionLocalProvider(

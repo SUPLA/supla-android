@@ -32,7 +32,11 @@ enum class BatteryState(val value: Int) {
   companion object {
     const val TAG = "BatteryState"
 
-    fun from(value: Int): BatteryState {
+    fun from(value: Int?): BatteryState? {
+      if (value == null) {
+        return null
+      }
+
       for (state in BatteryState.entries) {
         if (value == state.value) {
           return state
