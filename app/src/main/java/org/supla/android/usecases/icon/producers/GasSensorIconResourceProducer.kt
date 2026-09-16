@@ -24,7 +24,7 @@ import org.supla.core.shared.data.model.general.SuplaFunction
 
 object GasSensorIconResourceProducer : IconResourceProducer {
   override fun accepts(function: SuplaFunction): Boolean =
-    function == SuplaFunction.BINARY_SENSOR
+    function == SuplaFunction.GAS_SENSOR
 
   override fun produce(data: IconData): Int =
     data.stateIcon(R.drawable.fnc_binary_sensor_5_on, R.drawable.fnc_binary_sensor_5_off)

@@ -124,15 +124,9 @@ private fun handleEvent(
         UnlockAction.TurnOffPin,
         UnlockAction.ConfirmAuthorizeAccounts,
         UnlockAction.ConfirmAuthorizeApplication -> navigator.back()
-        UnlockAction.AuthorizeAccountsCreate -> {
-          // TODO: Not implemented yet - handled by fragment
-          // configNavigator.back()
-          // configNavigator.navigateTo(R.id.cfgNewProfile)
-        }
+        UnlockAction.AuthorizeAccountsCreate,
         is UnlockAction.AuthorizeAccountsEdit -> {
-          // TODO: Not implemented yet - handled by fragment
-          // configNavigator.back()
-          // configNavigator.navigateTo(R.id.cfgEditProfile, CreateAccountFragment.bundle(action.profileId))
+          // Handled by fragment (see LockScreenFragment)
         }
       }
     LockScreenViewEvent.ShowBiometricPrompt -> biometricLauncher()
