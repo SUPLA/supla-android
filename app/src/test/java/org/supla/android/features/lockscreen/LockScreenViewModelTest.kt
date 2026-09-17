@@ -159,7 +159,7 @@ class LockScreenViewModelTest : BaseViewModelTest<LockScreenViewModelState, Lock
       LockScreenViewModelState(loading = true),
       LockScreenViewModelState()
     )
-    assertThat(events).isEmpty()
+    assertThat(events).containsExactly(LockScreenViewEvent.Close)
     verify {
       checkPinUseCase.invoke(UnlockAction.AuthorizeApplication, CheckPinUseCase.PinAction.BiometricGranted)
     }
