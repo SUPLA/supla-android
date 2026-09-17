@@ -111,8 +111,8 @@ class LockScreenViewModel @Inject constructor(
       .subscribeBy(
         onSuccess = {
           when (it) {
-            CheckPinUseCase.Result.Unlocked -> sendEvent(LockScreenViewEvent.Close)
-            CheckPinUseCase.Result.UnlockedNoAccount -> {} // No action
+            CheckPinUseCase.Result.Unlocked,
+            CheckPinUseCase.Result.UnlockedNoAccount -> sendEvent(LockScreenViewEvent.Close)
             CheckPinUseCase.Result.Failure ->
               updateState { state ->
                 state.copy(
