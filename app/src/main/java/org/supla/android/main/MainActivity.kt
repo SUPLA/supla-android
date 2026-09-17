@@ -150,7 +150,7 @@ class MainActivity : FragmentActivity(), NfcHost {
               is SuplaClientState.Disconnecting,
               SuplaClientState.Locking,
               is SuplaClientState.Finished -> navigator.navigateToStatus()
-              SuplaClientState.Locked -> navigator.navigateTo(MainRoute.UnlockApp(UnlockAction.AuthorizeApplication))
+              SuplaClientState.Locked -> navigator.navigateToUnlockApp(UnlockAction.AuthorizeApplication)
               else -> {}
             }
           }

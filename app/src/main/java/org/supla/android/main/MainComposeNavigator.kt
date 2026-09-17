@@ -33,6 +33,7 @@ import org.supla.android.R
 import org.supla.android.ZWaveConfigurationWizardActivity
 import org.supla.android.cfg.CfgActivity
 import org.supla.android.extensions.findActivity
+import org.supla.android.features.lockscreen.UnlockAction
 import timber.log.Timber
 import java.lang.ref.WeakReference
 import javax.inject.Inject
@@ -54,6 +55,13 @@ class MainComposeNavigator @Inject constructor() {
 
   fun navigateTo(destination: NavKey) {
     backStack.value?.add(destination)
+  }
+
+  fun navigateToUnlockApp(unlockAction: UnlockAction) {
+    backStack.value?.apply {
+      removeAll { it is MainRoute.UnlockApp }
+      add(MainRoute.UnlockApp(unlockAction))
+    }
   }
 
   fun replaceTop(destination: NavKey) {
