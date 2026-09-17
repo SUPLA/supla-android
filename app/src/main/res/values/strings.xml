@@ -24,7 +24,7 @@
   <string name="beta_cloud_url" translatable="false">https://beta-cloud.supla.org</string>
   <string name="create_url">https://cloud.supla.org/register?lang=en</string>
   <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=en</string>
-  <string name="devices_list_url" translatable="false">https://www.supla.org/en/devices</string>
+  <string name="devices_list_url" translatable="false">https://supla.org/en/devices</string>
 
   <string name="version">version</string>
 
