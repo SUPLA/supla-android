@@ -25,8 +25,8 @@ android {
     applicationId = "org.supla.android"
     minSdk = libs.versions.minSdk.get().toInt()
     targetSdk = libs.versions.targetSdk.get().toInt()
-    versionCode = 335
-    versionName = "26.08"
+    versionCode = 337
+    versionName = "26.09"
 
     ndk {
       moduleName = "suplaclient"
