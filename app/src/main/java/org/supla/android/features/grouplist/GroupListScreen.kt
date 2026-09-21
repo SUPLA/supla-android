@@ -74,7 +74,12 @@ fun GroupListScreen(
     viewModel.Content(
       items = viewModel.listLoaded.forTrue { viewModel.list },
       listState = listState,
-      emptyContent = { EmptyContent(viewModel) }
+      emptyContent = {
+        EmptyContent(
+          searchIsEmpty = viewModel.searchData.query.isEmpty(),
+          onAddGroupClick = viewModel::onAddGroupClick
+        )
+      }
     )
 
     state.actionAlertDialogState?.View(
@@ -111,7 +116,10 @@ private fun handleCaptionChangeEvents(event: CaptionChangeViewEvent, viewModel: 
 }
 
 @Composable
-private fun BoxScope.EmptyContent(viewModel: GroupListViewModel) {
+private fun BoxScope.EmptyContent(
+  searchIsEmpty: Boolean,
+  onAddGroupClick: () -> Unit
+) {
   Column(
     modifier = Modifier.align(Alignment.Center),
     verticalArrangement = Arrangement.spacedBy(Distance.small),
@@ -119,11 +127,11 @@ private fun BoxScope.EmptyContent(viewModel: GroupListViewModel) {
   ) {
     EmptyListInfoView()
 
-    if (viewModel.searchData.query.isEmpty()) {
+    if (searchIsEmpty) {
       Spacer(modifier = Modifier.height(Distance.small))
       OutlinedButton(
         text = stringResource(R.string.groups_empty_list_button),
-        onClick = viewModel::onAddGroupClick
+        onClick = onAddGroupClick
       )
     }
   }
@@ -148,7 +156,8 @@ private fun PreviewEmpty() {
   SuplaTheme {
     previewScope.Content(
       items = emptyList(),
-      listState = rememberLazyListState()
+      listState = rememberLazyListState(),
+      emptyContent = { EmptyContent(true) {} }
     )
   }
 }

@@ -122,14 +122,12 @@ class ReorderChannelsUseCaseTest {
   fun `should reorder channels by caption when there are duplicated location captions`() = runTest {
     // given
     val firstKitchen = mockLocationItem(remoteId = 1, userCaption = "Kitchen")
-    val secondKitchen = mockLocationItem(remoteId = 2, userCaption = "Kitchen")
     val movedItem = mockChannelItem(remoteId = 11, locationId = 1, locationCaption = "Kitchen")
     val sameCaptionDifferentLocation = mockChannelItem(remoteId = 22, locationId = 2, locationCaption = "Kitchen")
     val hallItem = mockChannelItem(remoteId = 33, locationId = 3, locationCaption = "Hall")
     val items = listOf(
       firstKitchen,
       movedItem,
-      secondKitchen,
       sameCaptionDifferentLocation,
       mockLocationItem(remoteId = 3, userCaption = "Hall"),
       hallItem

@@ -28,6 +28,7 @@ import org.supla.core.shared.data.model.lists.ListItemIssues
 import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.GetChannelActionStringUseCase
+import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
 import org.supla.core.shared.usecase.channel.valueformatter.types.ValuePrecision
@@ -78,11 +79,15 @@ interface GroupToListItemMapper {
   private fun getThermostatValue(group: ChannelGroupDataEntity): String {
     val min = group.channelGroupEntity.groupTotalValues
       .mapNotNull { (it as? HeatpolThermostatGroupValue)?.measuredTemperature }
-      .min()
+      .minOrNull()
 
     val max = group.channelGroupEntity.groupTotalValues
       .mapNotNull { (it as? HeatpolThermostatGroupValue)?.measuredTemperature }
-      .max()
+      .maxOrNull()
+
+    if (min == null || max == null) {
+      return NO_VALUE_TEXT
+    }
 
     val format = ValueFormat.TemperatureWithDegree.copy(precision = ValueFormat.Precision.Custom(ValuePrecision.exact(1)))
     val minString = thermometerValueFormatter.format(min, format)
@@ -94,11 +99,15 @@ interface GroupToListItemMapper {
   private fun getThermostatSubValue(group: ChannelGroupDataEntity): String {
     val min = group.channelGroupEntity.groupTotalValues
       .mapNotNull { (it as? HeatpolThermostatGroupValue)?.presetTemperature }
-      .min()
+      .minOrNull()
 
     val max = group.channelGroupEntity.groupTotalValues
       .mapNotNull { (it as? HeatpolThermostatGroupValue)?.presetTemperature }
-      .max()
+      .maxOrNull()
+
+    if (min == null || max == null) {
+      return NO_VALUE_TEXT
+    }
 
     val format = ValueFormat.TemperatureWithDegree.copy(precision = ValueFormat.Precision.Custom(ValuePrecision.exact(1)))
     val minString = thermometerValueFormatter.format(min, format)

@@ -53,10 +53,8 @@ class ReorderChannelsUseCase @Inject constructor(
 
     val orderedChannels =
       if (useId) {
-        Log.d("!@#", "Used id")
         items.filterIsInstance<ListItem.DefaultItem>().filter { it.locationId == moved.locationId }
       } else {
-        Log.d("!@#", "Used caption")
         items.filterIsInstance<ListItem.DefaultItem>().filter { it.locationCaption == moved.locationCaption }
       }
 
