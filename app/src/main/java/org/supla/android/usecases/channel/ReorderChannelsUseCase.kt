@@ -17,6 +17,7 @@ package org.supla.android.usecases.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.util.Log
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.LocationRepository
 import org.supla.android.data.source.local.entity.custom.LocationSortingType
@@ -34,25 +35,38 @@ class ReorderChannelsUseCase @Inject constructor(
   suspend operator fun invoke(items: List<ListItem>, movedItemId: Int) {
     val moved = items.filterIsInstance<ListItem.DefaultItem>().firstOrNull { it.remoteId == movedItemId } ?: return
 
-    val locations = items.filterIsInstance<ListItem.LocationItem>().filter { it.userCaption == moved.locationCaption }
-    if (locations.isEmpty()) {
+    val allLocationsByCaption = items.filterIsInstance<ListItem.DefaultItem>()
+      .filter { it.locationCaption == moved.locationCaption }
+      .map { it.locationId }
+      .distinct()
+    val visibleLocationsByCaption = items.filterIsInstance<ListItem.LocationItem>().filter { it.userCaption == moved.locationCaption }
+
+    if (allLocationsByCaption.isEmpty()) {
       Timber.w("No location found, reorder stopped!")
       return
     }
 
     var useId = true
-    if (locations.size > 1) {
+    if (allLocationsByCaption.size > 1 && visibleLocationsByCaption.size == 1) {
       useId = false
     }
 
     val orderedChannels =
       if (useId) {
+        Log.d("!@#", "Used id")
         items.filterIsInstance<ListItem.DefaultItem>().filter { it.locationId == moved.locationId }
       } else {
+        Log.d("!@#", "Used caption")
         items.filterIsInstance<ListItem.DefaultItem>().filter { it.locationCaption == moved.locationCaption }
       }
 
-    val location = items.filterIsInstance<ListItem.LocationItem>().firstOrNull { it.remoteId == moved.locationId } ?: return
+    val location =
+      if (useId) {
+        items.filterIsInstance<ListItem.LocationItem>().firstOrNull { it.remoteId == moved.locationId }
+      } else {
+        items.filterIsInstance<ListItem.LocationItem>().firstOrNull { it.userCaption == moved.locationCaption }
+      } ?: return
+
     locationRepository.changeSortingType(location.remoteId, LocationSortingType.USER_DEFINED)
 
     var position = 1

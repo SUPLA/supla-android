@@ -31,6 +31,7 @@ import org.junit.Test
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.ChannelRelationRepository
 import org.supla.android.data.source.ChannelRepository
+import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
@@ -158,10 +159,10 @@ class CreateProfileChannelsListUseCaseTest {
   @Test
   fun `should merge location with same name into one`() {
     // given
-    val first = mockListEntity(11, 12)
-    val second = mockListEntity(21, 12)
-    val third = mockListEntity(31, 32, locationName = "12")
-    val fourth = mockListEntity(41, 42)
+    val first = mockListEntity(11, 12, locationSortOrder = 1, position = 1)
+    val second = mockListEntity(21, 12, locationSortOrder = 1, position = 3)
+    val third = mockListEntity(31, 32, locationName = "12", locationSortOrder = 2, position = 2)
+    val fourth = mockListEntity(41, 42, locationSortOrder = 3, position = 4)
 
     every { preferences.hideUnavailableChannels } returns true
     every { channelRepository.findListWithoutUnavailable() } returns Single.just(listOf(first, second, third, fourth))
@@ -183,8 +184,8 @@ class CreateProfileChannelsListUseCaseTest {
     assertThat(list[5]).isInstanceOf(ListItem.DefaultItem::class.java)
 
     assertThat((list[1] as ListItem.DefaultItem).remoteId).isEqualTo(11)
-    assertThat((list[2] as ListItem.DefaultItem).remoteId).isEqualTo(21)
-    assertThat((list[3] as ListItem.DefaultItem).remoteId).isEqualTo(31)
+    assertThat((list[2] as ListItem.DefaultItem).remoteId).isEqualTo(31)
+    assertThat((list[3] as ListItem.DefaultItem).remoteId).isEqualTo(21)
     assertThat((list[5] as ListItem.DefaultItem).remoteId).isEqualTo(41)
 
     assertThat((list[0] as ListItem.LocationItem).userCaption).isEqualTo("12")
@@ -233,30 +234,39 @@ class CreateProfileChannelsListUseCaseTest {
     locationRemoteId: Int,
     locationName: String = "$locationRemoteId",
     locationCollapsed: Boolean = false,
-  ): ChannelDataEntity = mockk {
-    every { remoteId } returns channelRemoteId
-    every { caption } returns "caption $channelRemoteId"
-    every { function } returns SuplaFunction.NONE
-    every { altIcon } returns 0
-    every { stateEntity } returns null
-    every { status } returns SuplaChannelAvailabilityStatus.ONLINE
-    every { locationEntity } returns mockk {
-      every { profileId } returns 1L
-      every { remoteId } returns locationRemoteId
-      every { caption } returns locationName
-      every { isCollapsed(CollapsedFlag.CHANNEL) } returns locationCollapsed
-    }
-    every { channelValueEntity } returns mockk {
-      every { getValueAsByteArray() } returns byteArrayOf()
-    }
+    locationSortOrder: Int = locationRemoteId,
+    position: Int = channelRemoteId,
+  ): ChannelDataEntity {
+    val channelEntityMock = mockk<ChannelEntity>()
+    every { channelEntityMock.position } returns position
 
-    val listItem: ListItem.DefaultItem = mockk {
+    return mockk {
       every { remoteId } returns channelRemoteId
-    }
+      every { caption } returns "caption $channelRemoteId"
+      every { function } returns SuplaFunction.NONE
+      every { altIcon } returns 0
+      every { stateEntity } returns null
+      every { status } returns SuplaChannelAvailabilityStatus.ONLINE
+      every { locationEntity } returns mockk {
+        every { profileId } returns 1L
+        every { remoteId } returns locationRemoteId
+        every { caption } returns locationName
+        every { sortOrder } returns locationSortOrder
+        every { isCollapsed(CollapsedFlag.CHANNEL) } returns locationCollapsed
+      }
+      every { channelEntity } returns channelEntityMock
+      every { channelValueEntity } returns mockk {
+        every { getValueAsByteArray() } returns byteArrayOf()
+      }
 
-    every { channelToListItemMapper.invoke(match { it.remoteId == channelRemoteId }) } returns
-      listItem
-    every { getCaptionUseCase.invoke(match { it.remoteId == channelRemoteId }) } returns
-      LocalizedString.Constant("caption $channelRemoteId")
+      val listItem: ListItem.DefaultItem = mockk {
+        every { remoteId } returns channelRemoteId
+      }
+
+      every { channelToListItemMapper.invoke(match { it.remoteId == channelRemoteId }) } returns
+        listItem
+      every { getCaptionUseCase.invoke(match { it.remoteId == channelRemoteId }) } returns
+        LocalizedString.Constant("caption $channelRemoteId")
+    }
   }
 }

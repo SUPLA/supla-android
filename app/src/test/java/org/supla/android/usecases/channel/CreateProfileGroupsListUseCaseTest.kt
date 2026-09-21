@@ -28,6 +28,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.supla.android.data.source.ChannelGroupRepository
+import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.ui.lists.ListItem
@@ -108,10 +109,10 @@ class CreateProfileGroupsListUseCaseTest {
     val secondLocationId = 2
     val thirdLocationId = 3
 
-    val firstGroup = mockGroupData(11, firstLocationId, "Location")
-    val secondGroup = mockGroupData(22, firstLocationId, "Location")
-    val thirdGroup = mockGroupData(33, secondLocationId, "Location")
-    val fourthGroup = mockGroupData(44, thirdLocationId)
+    val firstGroup = mockGroupData(11, firstLocationId, "Location", locationSortOrder = 1, position = 1)
+    val secondGroup = mockGroupData(22, firstLocationId, "Location", locationSortOrder = 1, position = 3)
+    val thirdGroup = mockGroupData(33, secondLocationId, "Location", locationSortOrder = 2, position = 2)
+    val fourthGroup = mockGroupData(44, thirdLocationId, locationSortOrder = 3, position = 4)
 
     every { channelGroupRepository.findList() } returns Single.just(listOf(firstGroup, secondGroup, thirdGroup, fourthGroup))
     every { groupToListItemMapper(firstGroup) } returns mockGroupItem(11)
@@ -135,8 +136,8 @@ class CreateProfileGroupsListUseCaseTest {
     assertThat(list[5]).isInstanceOf(ListItem.DefaultItem::class.java)
 
     assertThat((list[1] as ListItem.DefaultItem).remoteId).isEqualTo(11)
-    assertThat((list[2] as ListItem.DefaultItem).remoteId).isEqualTo(22)
-    assertThat((list[3] as ListItem.DefaultItem).remoteId).isEqualTo(33)
+    assertThat((list[2] as ListItem.DefaultItem).remoteId).isEqualTo(33)
+    assertThat((list[3] as ListItem.DefaultItem).remoteId).isEqualTo(22)
     assertThat((list[5] as ListItem.DefaultItem).remoteId).isEqualTo(44)
 
     assertThat((list[0] as ListItem.LocationItem).remoteId).isEqualTo(firstLocationId)
@@ -167,17 +168,23 @@ class CreateProfileGroupsListUseCaseTest {
     groupRemoteId: Int,
     locationRemoteId: Int,
     locationCaption: String = "",
-    locationCollapsed: Boolean = false
+    locationCollapsed: Boolean = false,
+    locationSortOrder: Int = locationRemoteId,
+    position: Int = groupRemoteId
   ): ChannelGroupDataEntity {
     val location: LocationEntity = mockk {
       every { profileId } returns 1L
       every { remoteId } returns locationRemoteId
       every { caption } returns locationCaption
+      every { sortOrder } returns locationSortOrder
       every { isCollapsed(CollapsedFlag.GROUP) } returns locationCollapsed
     }
 
     every { getCaptionUseCase.invoke(match { it.remoteId == groupRemoteId }) } returns
       LocalizedString.Constant("caption $groupRemoteId")
+
+    val channelGroupEntityMock = mockk<ChannelGroupEntity>()
+    every { channelGroupEntityMock.position } returns position
 
     return mockk {
       every { remoteId } returns groupRemoteId
@@ -186,6 +193,7 @@ class CreateProfileGroupsListUseCaseTest {
       every { getLegacyGroup() } returns mockk()
       every { locationId } returns locationRemoteId
       every { caption } returns "caption $groupRemoteId"
+      every { channelGroupEntity } returns channelGroupEntityMock
     }
   }
 

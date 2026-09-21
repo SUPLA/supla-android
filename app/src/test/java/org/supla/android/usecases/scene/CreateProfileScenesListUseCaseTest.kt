@@ -139,15 +139,15 @@ class CreateProfileScenesListUseCaseTest {
     val secondLocationId = 4
     val thirdLocationId = 8
 
-    val firstLocation = mockLocation(firstLocationId, "Test")
-    val secondLocation = mockLocation(secondLocationId, "Test")
-    val thirdLocation = mockLocation(thirdLocationId)
+    val firstLocation = mockLocation(firstLocationId, "Test", sortOrder = 1)
+    val secondLocation = mockLocation(secondLocationId, "Test", sortOrder = 2)
+    val thirdLocation = mockLocation(thirdLocationId, sortOrder = 3)
 
     val scenes = listOf(
-      mockScene(111, firstLocation),
-      mockScene(112, firstLocation),
-      mockScene(113, secondLocation),
-      mockScene(114, thirdLocation)
+      mockScene(111, firstLocation, sortOrder = 1),
+      mockScene(112, firstLocation, sortOrder = 3),
+      mockScene(113, secondLocation, sortOrder = 2),
+      mockScene(114, thirdLocation, sortOrder = 4)
     )
 
     every { sceneRepository.findList() } returns Single.just(scenes)
@@ -168,19 +168,20 @@ class CreateProfileScenesListUseCaseTest {
     assertThat(list[5]).isInstanceOf(ListItem.SceneItem::class.java)
 
     assertThat((list[1] as ListItem.SceneItem).remoteId).isEqualTo(111)
-    assertThat((list[2] as ListItem.SceneItem).remoteId).isEqualTo(112)
-    assertThat((list[3] as ListItem.SceneItem).remoteId).isEqualTo(113)
+    assertThat((list[2] as ListItem.SceneItem).remoteId).isEqualTo(113)
+    assertThat((list[3] as ListItem.SceneItem).remoteId).isEqualTo(112)
     assertThat((list[5] as ListItem.SceneItem).remoteId).isEqualTo(114)
 
     assertThat((list[0] as ListItem.LocationItem).remoteId).isEqualTo(firstLocationId)
     assertThat((list[4] as ListItem.LocationItem).remoteId).isEqualTo(thirdLocationId)
   }
 
-  private fun mockScene(remoteId: Int, locationEntity: LocationEntity): SceneDataEntity {
+  private fun mockScene(remoteId: Int, locationEntity: LocationEntity, sortOrder: Int = remoteId): SceneDataEntity {
     val sceneEntity: SceneEntity = mockk {
       every { profileId } returns "1"
       every { caption } returns "caption $remoteId"
       every { estimatedEndDate } returns null
+      every { this@mockk.sortOrder } returns sortOrder
     }
     val scene: SceneDataEntity = mockk()
     every { scene.remoteId } returns remoteId
@@ -192,11 +193,17 @@ class CreateProfileScenesListUseCaseTest {
     return scene
   }
 
-  private fun mockLocation(locationRemoteId: Int, name: String = "Location $locationRemoteId", collapsed: Boolean = false): LocationEntity {
+  private fun mockLocation(
+    locationRemoteId: Int,
+    name: String = "Location $locationRemoteId",
+    collapsed: Boolean = false,
+    sortOrder: Int = locationRemoteId
+  ): LocationEntity {
     val location: LocationEntity = mockk()
     every { location.profileId } returns 1L
     every { location.remoteId } returns locationRemoteId
     every { location.caption } returns name
+    every { location.sortOrder } returns sortOrder
     every { location.isCollapsed(CollapsedFlag.SCENE) } returns collapsed
     return location
   }

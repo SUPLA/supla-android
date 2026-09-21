@@ -25,7 +25,6 @@ import org.supla.android.core.shared.invoke
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.ChannelRelationRepository
 import org.supla.android.data.source.ChannelRepository
-import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.shareable
@@ -33,6 +32,7 @@ import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.main.topbar.searchable
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.lists.locationItem
+import org.supla.android.usecases.list.toLocationSections
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import java.util.LinkedList
@@ -67,7 +67,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
         val channels = mutableListOf<ListItem>()
 
         val channelsMap = mutableMapOf<Int, ChannelDataEntity>().also { map -> entities.forEach { map[it.remoteId] = it } }
-        val allChildrenIds = relationMap.flatMap { it.value }.map { it.channelId }
+        val allChildrenIds = relationMap.flatMap { it.value }.map { it.channelId }.toSet()
         val childrenMap = mutableMapOf<Int, List<ChannelChildEntity?>>().also { map ->
           relationMap.forEach { relation ->
             val childrenList = LinkedList<Int>()
@@ -75,45 +75,47 @@ class CreateProfileChannelsListUseCase @Inject constructor(
           }
         }
 
-        var location: LocationEntity? = null
-        entities.forEach {
-          if (allChildrenIds.contains(it.remoteId)) {
-            // Skip channels which have parent ID.
-            return@forEach
-          }
-          if (filterString.searchable) {
-            val caption = getCaptionUseCase.invoke(it.shareable)(context)
-            val captionContains = caption.contains(filterString, ignoreCase = true)
-            val locationContains = it.locationEntity.caption.contains(filterString, ignoreCase = true)
-            if (!captionContains && !locationContains) {
-              // Skip filtered out channels
+        entities
+          .toLocationSections(
+            locationOf = { it.locationEntity },
+            positionOf = { it.channelEntity.position }
+          )
+          .forEach { section ->
+            val visibleChannels = section.items.filter {
+              if (allChildrenIds.contains(it.remoteId)) {
+                // Skip channels which have parent ID.
+                return@filter false
+              }
+              if (!filterString.searchable) {
+                return@filter true
+              }
+
+              val caption = getCaptionUseCase.invoke(it.shareable)(context)
+              val captionContains = caption.contains(filterString, ignoreCase = true)
+              val locationContains = it.locationEntity.caption.contains(filterString, ignoreCase = true)
+              captionContains || locationContains
+            }
+
+            if (visibleChannels.isEmpty()) {
               return@forEach
             }
-          }
 
-          val currentLocation = location
-          if (currentLocation == null || currentLocation.remoteId != it.locationEntity.remoteId) {
-            val newLocation = it.locationEntity
+            val location = visibleChannels.minBy { it.locationEntity.sortOrder }.locationEntity
+            channels.add(location.locationItem(CollapsedFlag.CHANNEL))
 
-            if (currentLocation == null || newLocation.caption != currentLocation.caption) {
-              location = newLocation
-              channels.add(location.locationItem(CollapsedFlag.CHANNEL))
+            if (!location.isCollapsed(CollapsedFlag.CHANNEL) || filterString.searchable) {
+              visibleChannels.forEach {
+                channels.add(channelToListItemMapper(channelWithChildren(it, childrenMap)))
+              }
             }
           }
-
-          location.let { locationEntity ->
-            if (!locationEntity.isCollapsed(CollapsedFlag.CHANNEL) || filterString.searchable) {
-              channels.add(channelToListItemMapper(channelWithChildren(it, childrenMap)))
-            }
-          }
-        }
 
         channels.toList()
       }.toObservable()
 
   private fun channelWithChildren(
     channelData: ChannelDataEntity,
-    childrenMap: MutableMap<Int, List<ChannelChildEntity?>>
+    childrenMap: Map<Int, List<ChannelChildEntity?>>
   ): ChannelWithChildren {
     val children = mutableListOf<ChannelChildEntity>().apply {
       childrenMap[channelData.remoteId]?.filterIsInstance<ChannelChildEntity>()?.let { addAll(it) }
