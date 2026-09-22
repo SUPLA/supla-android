@@ -44,12 +44,14 @@ class UpdateSceneUseCase @Inject constructor(
     val scene = sceneRepository.findByRemoteIdKtx(suplaScene.id)
       ?: return insertScene(suplaScene)
 
+    val resetPosition = scene.locationId != suplaScene.locationId
     val updatedScene = scene.copy(
       visible = 1,
       locationId = suplaScene.locationId,
       altIcon = suplaScene.altIcon,
       userIcon = suplaScene.userIcon,
-      caption = suplaScene.caption
+      caption = suplaScene.caption,
+      sortOrder = if (resetPosition) 0 else scene.sortOrder
     )
 
     return if (scene == updatedScene) {

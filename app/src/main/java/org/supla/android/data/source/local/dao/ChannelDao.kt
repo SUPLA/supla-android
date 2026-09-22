@@ -21,6 +21,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
@@ -109,6 +110,24 @@ interface ChannelDao {
     """
   )
   suspend fun updatePosition(remoteId: Int, position: Int)
+
+  @Query(
+    """
+      UPDATE $TABLE_NAME
+      SET $COLUMN_POSITION = 0
+      WHERE $COLUMN_LOCATION_ID IN (:locationRemoteIds)
+        AND $COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
+    """
+  )
+  suspend fun resetPositions(locationRemoteIds: List<Int>)
+
+  @Transaction
+  suspend fun updatePositions(locationRemoteIds: List<Int>, orderedRemoteIds: List<Int>) {
+    resetPositions(locationRemoteIds)
+    orderedRemoteIds.forEachIndexed { index, remoteId ->
+      updatePosition(remoteId, index + 1)
+    }
+  }
 
   @Query(
     """
@@ -371,17 +390,6 @@ interface ChannelDao {
   """
   )
   fun findChannelDataEntity(channelRemoteId: Int): Observable<ChannelDataEntity>
-
-  @Query(
-    """
-    SELECT MAX($COLUMN_POSITION)
-    FROM $TABLE_NAME
-    WHERE $COLUMN_LOCATION_ID = :locationRemoteId
-      AND $COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
-    GROUP BY $COLUMN_LOCATION_ID
-  """
-  )
-  fun findMaxPositionInLocation(locationRemoteId: Int): Single<Int>
 
   @Query(
     """

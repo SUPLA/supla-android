@@ -44,7 +44,8 @@ class ChannelRepository @Inject constructor(
 
   fun findList() = channelDao.findList().firstOrError()
 
-  suspend fun updatePosition(remoteId: Int, position: Int) = channelDao.updatePosition(remoteId, position)
+  suspend fun updatePositions(locationRemoteIds: List<Int>, orderedRemoteIds: List<Int>) =
+    channelDao.updatePositions(locationRemoteIds, orderedRemoteIds)
 
   suspend fun findChannelsBy(profileId: Long, function: SuplaFunction) = channelDao.findChannelsBy(profileId, function)
 
@@ -74,8 +75,6 @@ class ChannelRepository @Inject constructor(
 
   suspend fun setChannelsVisible(change: VisibilityChange): Boolean =
     channelDao.setChannelsVisible(change.newVisibility, change.applyForVisibility) > 0
-
-  fun findMaxPositionInLocation(locationRemoteId: Int) = channelDao.findMaxPositionInLocation(locationRemoteId)
 
   fun findChannelsCount(profileId: Long) = channelDao.findChannelsCount(profileId)
 

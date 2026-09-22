@@ -50,7 +50,8 @@ class SceneRepository @Inject constructor(
 
   fun update(scenes: List<SceneEntity>) = sceneDao.update(scenes)
 
-  suspend fun updatePosition(remoteId: Int, position: Int) = sceneDao.updatePosition(remoteId, position)
+  suspend fun updatePositions(locationRemoteIds: List<Int>, orderedRemoteIds: List<Int>) =
+    sceneDao.updatePositions(locationRemoteIds, orderedRemoteIds)
 
   suspend fun setScenesVisible(change: VisibilityChange): Boolean =
     sceneDao.setScenesVisible(change.newVisibility, change.applyForVisibility) > 0

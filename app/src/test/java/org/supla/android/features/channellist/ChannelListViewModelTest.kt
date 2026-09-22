@@ -189,24 +189,19 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   @Test
   fun `should swap when items are in same location`() {
     // given
-    val firstItem: ListItem.DefaultItem = mockk {
-      every { locationCaption } returns "1"
-    }
-    val secondItem: ListItem.DefaultItem = mockk {
-      every { locationCaption } returns "1"
-    }
-    val thirdItem: ListItem.DefaultItem = mockk {
-      every { locationCaption } returns "1"
-    }
-    val items = listOf(firstItem, secondItem, thirdItem)
+    val header: ListItem.LocationItem = mockk()
+    val firstItem: ListItem.DefaultItem = mockk()
+    val secondItem: ListItem.DefaultItem = mockk()
+    val thirdItem: ListItem.DefaultItem = mockk()
+    val items = listOf(header, firstItem, secondItem, thirdItem)
     every { createProfileChannelsListUseCase() } returns Observable.just(items)
 
     // when
     viewModel.loadChannels()
-    viewModel.moveItems(0, 2)
+    viewModel.moveItems(1, 3)
 
     // then
-    assertThat(viewModel.list).containsExactly(secondItem, thirdItem, firstItem)
+    assertThat(viewModel.list).containsExactly(header, secondItem, thirdItem, firstItem)
     assertThat(states).isEmpty()
     assertThat(events).isEmpty()
 
@@ -217,24 +212,20 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   @Test
   fun `should not swap when items are in different location`() {
     // given
-    val firstItem: ListItem.DefaultItem = mockk {
-      every { locationCaption } returns "1"
-    }
-    val secondItem: ListItem.DefaultItem = mockk {
-      every { locationCaption } returns "1"
-    }
-    val thirdItem: ListItem.DefaultItem = mockk {
-      every { locationCaption } returns "2"
-    }
-    val items = listOf(firstItem, secondItem, thirdItem)
+    val firstHeader: ListItem.LocationItem = mockk()
+    val secondHeader: ListItem.LocationItem = mockk()
+    val firstItem: ListItem.DefaultItem = mockk()
+    val secondItem: ListItem.DefaultItem = mockk()
+    val thirdItem: ListItem.DefaultItem = mockk()
+    val items = listOf(firstHeader, firstItem, secondItem, secondHeader, thirdItem)
     every { createProfileChannelsListUseCase() } returns Observable.just(items)
 
     // when
     viewModel.loadChannels()
-    viewModel.moveItems(0, 2)
+    viewModel.moveItems(1, 4)
 
     // then
-    assertThat(viewModel.list).containsExactly(firstItem, secondItem, thirdItem)
+    assertThat(viewModel.list).containsExactly(firstHeader, firstItem, secondItem, secondHeader, thirdItem)
     assertThat(states).isEmpty()
     assertThat(events).isEmpty()
 

@@ -119,9 +119,35 @@ class UpdateSceneUseCaseTest {
       assertThat(userIcon).isEqualTo(suplaScene.userIcon)
       assertThat(caption).isEqualTo(suplaScene.caption)
       assertThat(visible).isEqualTo(1)
-      assertThat(sortOrder).isEqualTo(existingScene.sortOrder)
+      assertThat(sortOrder).isEqualTo(0)
       assertThat(profileId).isEqualTo(existingScene.profileId)
     }
+  }
+
+  @Test
+  fun `should preserve scene position when it becomes visible again`() {
+    val suplaScene = suplaScene(123, 456, "Kitchen")
+    val existingScene = sceneEntity(
+      remoteId = suplaScene.id,
+      locationId = suplaScene.locationId,
+      caption = suplaScene.caption,
+      visible = 0
+    )
+
+    coEvery { sceneRepository.findByRemoteIdKtx(suplaScene.id) } returns existingScene
+    coEvery { sceneRepository.update(any<SceneEntity>()) } just Runs
+
+    val result = useCase.invoke(suplaScene)
+
+    assertThat(result).isTrue()
+    val sceneSlot = slot<SceneEntity>()
+    coVerify {
+      sceneRepository.findByRemoteIdKtx(suplaScene.id)
+      sceneRepository.update(capture(sceneSlot))
+    }
+    assertThat(sceneSlot.captured.visible).isEqualTo(1)
+    assertThat(sceneSlot.captured.sortOrder).isEqualTo(existingScene.sortOrder)
+    confirmVerified(sceneRepository, profileRepository)
   }
 
   @Test

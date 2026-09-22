@@ -51,6 +51,7 @@ import org.supla.android.usecases.group.CreateProfileGroupsListUseCase
 import org.supla.android.usecases.group.GroupToListItemMapper
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.group.ReorderGroupsUseCase
+import org.supla.android.usecases.list.canMoveItemWithinSection
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 import org.supla.android.usecases.profile.CloudUrl
@@ -192,10 +193,7 @@ class GroupListViewModel @Inject constructor(
   }
 
   override fun moveItems(from: Int, to: Int): Boolean {
-    val firstItem = list.getOrNull(from) as? ListItem.DefaultItem ?: return false
-    val secondItem = list.getOrNull(to) as? ListItem.DefaultItem ?: return false
-
-    if (firstItem.locationCaption != secondItem.locationCaption) {
+    if (!list.canMoveItemWithinSection(from, to) { it is ListItem.DefaultItem }) {
       return false
     }
 

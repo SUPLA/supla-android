@@ -17,9 +17,7 @@ package org.supla.android.usecases.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.room.rxjava3.EmptyResultSetException
 import io.mockk.*
-import io.mockk.Called
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.reactivex.rxjava3.core.Completable
@@ -139,7 +137,7 @@ class UpdateChannelUseCaseTest {
   }
 
   @Test
-  fun `should insert channel when not exist and set position to last`() {
+  fun `should insert channel at position 0 regardless of location sorting`() {
     // given
     val locationRemoteId = 123
     val channelRemoteId = 234
@@ -158,7 +156,6 @@ class UpdateChannelUseCaseTest {
     every { channelRepository.findByRemoteId(channelRemoteId) } returns Maybe.empty()
     every { profileRepository.findActiveProfile() } returns Single.just(profileEntity)
     every { channelRepository.insert(any()) } returns Completable.complete()
-    every { channelRepository.findMaxPositionInLocation(locationRemoteId) } returns Single.just(5)
     every { requestChannelConfigUseCase.invoke(suplaChannel) } returns Completable.complete()
 
     // when
@@ -171,7 +168,6 @@ class UpdateChannelUseCaseTest {
     verify { locationRepository.findByRemoteId(locationRemoteId) }
     verify { channelRepository.findByRemoteId(channelRemoteId) }
     verify { profileRepository.findActiveProfile() }
-    verify { channelRepository.findMaxPositionInLocation(locationRemoteId) }
     verify { requestChannelConfigUseCase.invoke(suplaChannel) }
 
     val captor = slot<ChannelEntity>()
@@ -180,7 +176,7 @@ class UpdateChannelUseCaseTest {
       assertThat(remoteId).isEqualTo(channelRemoteId)
       assertThat(locationId).isEqualTo(locationRemoteId.toLong())
       assertThat(this.profileId).isEqualTo(profileId)
-      assertThat(position).isEqualTo(6)
+      assertThat(position).isEqualTo(0)
     }
 
     confirmVerified(locationRepository, channelRepository, profileRepository, requestChannelConfigUseCase)
@@ -201,6 +197,7 @@ class UpdateChannelUseCaseTest {
       every { locationId } returns locationRemoteId
       every { updatedBy(suplaChannel) } returns this
       every { position } returns 0
+      every { visible } returns 1
       every { profileId } returns 123
     }
 
@@ -227,7 +224,7 @@ class UpdateChannelUseCaseTest {
   }
 
   @Test
-  fun `should update channel when exist and set position to last`() {
+  fun `should reset channel position when moved to another location`() {
     // given
     val locationRemoteId = 123
     val channelRemoteId = 234
@@ -244,7 +241,7 @@ class UpdateChannelUseCaseTest {
       every { updatedBy(suplaChannel) } returns this
       every { position } returns 0
       every {
-        copy(id = 444, remoteId = channelRemoteId, caption = "", function = SuplaFunction.NONE, locationId = 333, position = 6)
+        copy(id = 444, remoteId = channelRemoteId, caption = "", function = SuplaFunction.NONE, locationId = 333, position = 0)
       } returns this
       every { id } returns 444
       every { caption } returns ""
@@ -260,7 +257,6 @@ class UpdateChannelUseCaseTest {
     every { locationRepository.findByRemoteId(locationRemoteId) } returns Maybe.just(locationEntity)
     every { channelRepository.findByRemoteId(channelRemoteId) } returns Maybe.just(channelEntity)
     every { channelRepository.update(channelEntity) } returns Completable.complete()
-    every { channelRepository.findMaxPositionInLocation(locationRemoteId) } returns Single.just(5)
     every { requestChannelConfigUseCase.invoke(suplaChannel) } returns Completable.complete()
 
     // when
@@ -274,10 +270,9 @@ class UpdateChannelUseCaseTest {
       locationRepository.findByRemoteId(locationRemoteId)
       channelRepository.findByRemoteId(channelRemoteId)
       channelRepository.update(channelEntity)
-      channelRepository.findMaxPositionInLocation(locationRemoteId)
       requestChannelConfigUseCase.invoke(suplaChannel)
       channelEntity.updatedBy(suplaChannel)
-      channelEntity.copy(id = 444, remoteId = channelRemoteId, locationId = 333, position = 6)
+      channelEntity.copy(id = 444, remoteId = channelRemoteId, locationId = 333, position = 0)
     }
 
     confirmVerified(locationRepository, channelRepository, profileRepository, requestChannelConfigUseCase)
@@ -339,7 +334,7 @@ class UpdateChannelUseCaseTest {
   }
 
   @Test
-  fun `should update channel when exist and set position to 0 when location sorting is user and no channel available`() {
+  fun `should reset channel position independently of location sorting`() {
     // given
     val locationRemoteId = 123
     val channelRemoteId = 234
@@ -356,7 +351,7 @@ class UpdateChannelUseCaseTest {
       every { updatedBy(suplaChannel) } returns this
       every { position } returns 5
       every {
-        copy(id = 444, remoteId = channelRemoteId, caption = "", function = SuplaFunction.NONE, locationId = 333, position = 1)
+        copy(id = 444, remoteId = channelRemoteId, caption = "", function = SuplaFunction.NONE, locationId = 333, position = 0)
       } returns this
       every { id } returns 444
       every { caption } returns ""
@@ -373,7 +368,6 @@ class UpdateChannelUseCaseTest {
     every { channelRepository.findByRemoteId(channelRemoteId) } returns Maybe.just(channelEntity)
     every { channelRepository.update(channelEntity) } returns Completable.complete()
     every { requestChannelConfigUseCase.invoke(suplaChannel) } returns Completable.complete()
-    every { channelRepository.findMaxPositionInLocation(locationRemoteId) } returns Single.error(EmptyResultSetException(""))
 
     // when
     val result = useCase.invoke(suplaChannel).test()
@@ -385,19 +379,18 @@ class UpdateChannelUseCaseTest {
     verify { locationRepository.findByRemoteId(locationRemoteId) }
     verify { channelRepository.findByRemoteId(channelRemoteId) }
     verify { channelRepository.update(channelEntity) }
-    verify { channelRepository.findMaxPositionInLocation(locationRemoteId) }
     verify { requestChannelConfigUseCase.invoke(suplaChannel) }
 
     verify {
       channelEntity.updatedBy(suplaChannel)
-      channelEntity.copy(id = 444, remoteId = channelRemoteId, locationId = 333, position = 1)
+      channelEntity.copy(id = 444, remoteId = channelRemoteId, locationId = 333, position = 0)
     }
 
     confirmVerified(locationRepository, channelRepository, profileRepository, requestChannelConfigUseCase)
   }
 
   @Test
-  fun `should update channel when exist is same but not visible`() {
+  fun `should preserve channel position when it becomes visible again`() {
     // given
     val locationRemoteId = 123
     val channelRemoteId = 234
@@ -411,7 +404,6 @@ class UpdateChannelUseCaseTest {
       every { visible } returns 0
       every { locationId } returns locationRemoteId
       every { updatedBy(suplaChannel) } returns this
-      every { position } returns 0
       every { profileId } returns 123
     }
 
@@ -487,6 +479,7 @@ class UpdateChannelUseCaseTest {
       every { locationId } returns locationRemoteId
       every { updatedBy(suplaChannel) } returns this
       every { position } returns 0
+      every { visible } returns 1
       every { profileId } returns channelProfileId
     }
     val widgetConfiguration: WidgetConfiguration = mockk {

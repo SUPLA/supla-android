@@ -19,6 +19,7 @@ package org.supla.android.usecases.group
 
 import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.ui.lists.ListItem
+import org.supla.android.usecases.list.findReorderableSectionItems
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -29,29 +30,15 @@ class ReorderGroupsUseCase @Inject constructor(
 ) {
 
   suspend operator fun invoke(items: List<ListItem>, movedItemId: Int) {
-    val moved = items.filterIsInstance<ListItem.GroupItem>().firstOrNull { it.remoteId == movedItemId } ?: return
-
-    val locations = items.filterIsInstance<ListItem.LocationItem>().filter { it.userCaption == moved.locationCaption }
-    if (locations.isEmpty()) {
-      Timber.w("No location found, reorder stopped!")
+    val sectionItems = items.findReorderableSectionItems(movedItemId) { it as? ListItem.DefaultItem }
+    if (sectionItems == null) {
+      Timber.w("No section found, group reorder stopped!")
       return
     }
 
-    var useId = true
-    if (locations.size > 1) {
-      useId = false
-    }
-
-    val orderedGroups =
-      if (useId) {
-        items.filterIsInstance<ListItem.GroupItem>().filter { it.locationId == moved.locationId }
-      } else {
-        items.filterIsInstance<ListItem.GroupItem>().filter { it.locationCaption == moved.locationCaption }
-      }
-
-    var position = 1
-    for (group in orderedGroups) {
-      channelGroupRepository.updatePosition(group.remoteId, position++)
-    }
+    channelGroupRepository.updatePositions(
+      locationRemoteIds = sectionItems.map { it.locationId }.distinct(),
+      orderedRemoteIds = sectionItems.map { it.remoteId }
+    )
   }
 }

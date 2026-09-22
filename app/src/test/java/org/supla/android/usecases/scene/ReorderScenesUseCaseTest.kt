@@ -6,15 +6,6 @@ package org.supla.android.usecases.scene
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or (at your option) any later version.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
 import io.mockk.MockKAnnotations
@@ -48,108 +39,60 @@ class ReorderScenesUseCaseTest {
 
   @Test
   fun `should do nothing when moved item is not a scene item`() = runTest {
-    // given
-    val items = listOf(
-      mockLocationItem(remoteId = 10, userCaption = "Kitchen"),
-      mockLocationItem(remoteId = 11, userCaption = "Hall")
-    )
+    useCase(listOf(mockLocationItem()), movedItemId = 123)
 
-    // when
-    useCase(items, movedItemId = 123)
-
-    // then
-    coVerify(exactly = 0) { sceneRepository.updatePosition(any(), any()) }
+    coVerify(exactly = 0) { sceneRepository.updatePositions(any(), any()) }
     confirmVerified(sceneRepository)
   }
 
   @Test
-  fun `should do nothing when matching location caption is missing`() = runTest {
-    // given
-    val movedItem = mockSceneItem(remoteId = 11, locationId = 1, locationCaption = "Kitchen")
-    val otherItem = mockSceneItem(remoteId = 22, locationId = 1, locationCaption = "Kitchen")
-    val items = listOf(
-      mockLocationItem(remoteId = 2, userCaption = "Hall"),
-      movedItem,
-      otherItem
-    )
+  fun `should do nothing when location header is missing`() = runTest {
+    useCase(listOf(mockSceneItem(11, 1), mockSceneItem(22, 1)), movedItemId = 11)
 
-    // when
-    useCase(items, movedItemId = 11)
-
-    // then
-    coVerify(exactly = 0) { sceneRepository.updatePosition(any(), any()) }
+    coVerify(exactly = 0) { sceneRepository.updatePositions(any(), any()) }
     confirmVerified(sceneRepository)
   }
 
   @Test
-  fun `should reorder scenes in moved item location`() = runTest {
-    // given
-    val movedItem = mockSceneItem(remoteId = 11, locationId = 1, locationCaption = "Kitchen")
-    val secondItem = mockSceneItem(remoteId = 22, locationId = 1, locationCaption = "Kitchen")
-    val otherLocationItem = mockSceneItem(remoteId = 33, locationId = 2, locationCaption = "Hall")
+  fun `should reorder all scenes in merged location section`() = runTest {
     val items = listOf(
-      mockLocationItem(remoteId = 1, userCaption = "Kitchen"),
-      movedItem,
-      secondItem,
-      mockLocationItem(remoteId = 2, userCaption = "Hall"),
-      otherLocationItem
+      mockLocationItem(),
+      mockSceneItem(22, 2),
+      mockSceneItem(11, 1),
+      mockSceneItem(33, 2),
+      mockLocationItem(),
+      mockSceneItem(44, 3)
     )
-    coEvery { sceneRepository.updatePosition(11, 1) } just Runs
-    coEvery { sceneRepository.updatePosition(22, 2) } just Runs
+    coEvery { sceneRepository.updatePositions(listOf(2, 1), listOf(22, 11, 33)) } just Runs
 
-    // when
     useCase(items, movedItemId = 11)
 
-    // then
-    coVerify {
-      sceneRepository.updatePosition(11, 1)
-      sceneRepository.updatePosition(22, 2)
-    }
-    coVerify(exactly = 0) { sceneRepository.updatePosition(33, any()) }
+    coVerify(exactly = 1) { sceneRepository.updatePositions(listOf(2, 1), listOf(22, 11, 33)) }
     confirmVerified(sceneRepository)
   }
 
   @Test
-  fun `should reorder scenes by caption when there are duplicated location captions`() = runTest {
-    // given
-    val firstKitchen = mockLocationItem(remoteId = 1, userCaption = "Kitchen")
-    val secondKitchen = mockLocationItem(remoteId = 2, userCaption = "Kitchen")
-    val movedItem = mockSceneItem(remoteId = 11, locationId = 1, locationCaption = "Kitchen")
-    val sameCaptionDifferentLocation = mockSceneItem(remoteId = 22, locationId = 2, locationCaption = "Kitchen")
-    val hallItem = mockSceneItem(remoteId = 33, locationId = 3, locationCaption = "Hall")
+  fun `should not include separate section with the same location caption`() = runTest {
     val items = listOf(
-      firstKitchen,
-      movedItem,
-      secondKitchen,
-      sameCaptionDifferentLocation,
-      mockLocationItem(remoteId = 3, userCaption = "Hall"),
-      hallItem
+      mockLocationItem("Kitchen"),
+      mockSceneItem(11, 1),
+      mockLocationItem("Kitchen"),
+      mockSceneItem(22, 2)
     )
-    coEvery { sceneRepository.updatePosition(11, 1) } just Runs
-    coEvery { sceneRepository.updatePosition(22, 2) } just Runs
+    coEvery { sceneRepository.updatePositions(listOf(1), listOf(11)) } just Runs
 
-    // when
     useCase(items, movedItemId = 11)
 
-    // then
-    coVerify {
-      sceneRepository.updatePosition(11, 1)
-      sceneRepository.updatePosition(22, 2)
-    }
-    coVerify(exactly = 0) { sceneRepository.updatePosition(33, any()) }
+    coVerify(exactly = 1) { sceneRepository.updatePositions(listOf(1), listOf(11)) }
     confirmVerified(sceneRepository)
   }
 
-  private fun mockSceneItem(remoteId: Int, locationId: Int, locationCaption: String): ListItem.SceneItem =
-    mockk {
-      every { this@mockk.remoteId } returns remoteId
-      every { this@mockk.locationId } returns locationId
-      every { this@mockk.locationCaption } returns locationCaption
-    }
+  private fun mockSceneItem(remoteId: Int, locationId: Int): ListItem.SceneItem = mockk {
+    every { this@mockk.remoteId } returns remoteId
+    every { this@mockk.locationId } returns locationId
+  }
 
-  private fun mockLocationItem(remoteId: Int, userCaption: String): ListItem.LocationItem =
-    mockk {
-      every { this@mockk.remoteId } returns remoteId
-      every { this@mockk.userCaption } returns userCaption
-    }
+  private fun mockLocationItem(userCaption: String = "Kitchen"): ListItem.LocationItem = mockk {
+    every { this@mockk.userCaption } returns userCaption
+  }
 }

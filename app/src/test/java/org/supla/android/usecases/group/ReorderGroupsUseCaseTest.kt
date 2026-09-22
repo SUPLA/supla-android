@@ -48,108 +48,60 @@ class ReorderGroupsUseCaseTest {
 
   @Test
   fun `should do nothing when moved item is not a group item`() = runTest {
-    // given
-    val items = listOf(
-      mockLocationItem(remoteId = 10, userCaption = "Kitchen"),
-      mockLocationItem(remoteId = 11, userCaption = "Hall")
-    )
+    useCase(listOf(mockLocationItem()), movedItemId = 123)
 
-    // when
-    useCase(items, movedItemId = 123)
-
-    // then
-    coVerify(exactly = 0) { channelGroupRepository.updatePosition(any(), any()) }
+    coVerify(exactly = 0) { channelGroupRepository.updatePositions(any(), any()) }
     confirmVerified(channelGroupRepository)
   }
 
   @Test
-  fun `should do nothing when matching location caption is missing`() = runTest {
-    // given
-    val movedItem = mockGroupItem(remoteId = 11, locationId = 1, locationCaption = "Kitchen")
-    val otherItem = mockGroupItem(remoteId = 22, locationId = 1, locationCaption = "Kitchen")
-    val items = listOf(
-      mockLocationItem(remoteId = 2, userCaption = "Hall"),
-      movedItem,
-      otherItem
-    )
+  fun `should do nothing when location header is missing`() = runTest {
+    useCase(listOf(mockGroupItem(11, 1), mockGroupItem(22, 1)), movedItemId = 11)
 
-    // when
-    useCase(items, movedItemId = 11)
-
-    // then
-    coVerify(exactly = 0) { channelGroupRepository.updatePosition(any(), any()) }
+    coVerify(exactly = 0) { channelGroupRepository.updatePositions(any(), any()) }
     confirmVerified(channelGroupRepository)
   }
 
   @Test
-  fun `should reorder groups in moved item location`() = runTest {
-    // given
-    val movedItem = mockGroupItem(remoteId = 11, locationId = 1, locationCaption = "Kitchen")
-    val secondItem = mockGroupItem(remoteId = 22, locationId = 1, locationCaption = "Kitchen")
-    val otherLocationItem = mockGroupItem(remoteId = 33, locationId = 2, locationCaption = "Hall")
+  fun `should reorder all groups in merged location section`() = runTest {
     val items = listOf(
-      mockLocationItem(remoteId = 1, userCaption = "Kitchen"),
-      movedItem,
-      secondItem,
-      mockLocationItem(remoteId = 2, userCaption = "Hall"),
-      otherLocationItem
+      mockLocationItem(),
+      mockGroupItem(22, 2),
+      mockGroupItem(11, 1),
+      mockGroupItem(33, 2),
+      mockLocationItem(),
+      mockGroupItem(44, 3)
     )
-    coEvery { channelGroupRepository.updatePosition(11, 1) } just Runs
-    coEvery { channelGroupRepository.updatePosition(22, 2) } just Runs
+    coEvery { channelGroupRepository.updatePositions(listOf(2, 1), listOf(22, 11, 33)) } just Runs
 
-    // when
     useCase(items, movedItemId = 11)
 
-    // then
-    coVerify {
-      channelGroupRepository.updatePosition(11, 1)
-      channelGroupRepository.updatePosition(22, 2)
-    }
-    coVerify(exactly = 0) { channelGroupRepository.updatePosition(33, any()) }
+    coVerify(exactly = 1) { channelGroupRepository.updatePositions(listOf(2, 1), listOf(22, 11, 33)) }
     confirmVerified(channelGroupRepository)
   }
 
   @Test
-  fun `should reorder groups by caption when there are duplicated location captions`() = runTest {
-    // given
-    val firstKitchen = mockLocationItem(remoteId = 1, userCaption = "Kitchen")
-    val secondKitchen = mockLocationItem(remoteId = 2, userCaption = "Kitchen")
-    val movedItem = mockGroupItem(remoteId = 11, locationId = 1, locationCaption = "Kitchen")
-    val sameCaptionDifferentLocation = mockGroupItem(remoteId = 22, locationId = 2, locationCaption = "Kitchen")
-    val hallItem = mockGroupItem(remoteId = 33, locationId = 3, locationCaption = "Hall")
+  fun `should not include separate section with the same location caption`() = runTest {
     val items = listOf(
-      firstKitchen,
-      movedItem,
-      secondKitchen,
-      sameCaptionDifferentLocation,
-      mockLocationItem(remoteId = 3, userCaption = "Hall"),
-      hallItem
+      mockLocationItem("Kitchen"),
+      mockGroupItem(11, 1),
+      mockLocationItem("Kitchen"),
+      mockGroupItem(22, 2)
     )
-    coEvery { channelGroupRepository.updatePosition(11, 1) } just Runs
-    coEvery { channelGroupRepository.updatePosition(22, 2) } just Runs
+    coEvery { channelGroupRepository.updatePositions(listOf(1), listOf(11)) } just Runs
 
-    // when
     useCase(items, movedItemId = 11)
 
-    // then
-    coVerify {
-      channelGroupRepository.updatePosition(11, 1)
-      channelGroupRepository.updatePosition(22, 2)
-    }
-    coVerify(exactly = 0) { channelGroupRepository.updatePosition(33, any()) }
+    coVerify(exactly = 1) { channelGroupRepository.updatePositions(listOf(1), listOf(11)) }
     confirmVerified(channelGroupRepository)
   }
 
-  private fun mockGroupItem(remoteId: Int, locationId: Int, locationCaption: String): ListItem.GroupItem =
-    mockk {
-      every { this@mockk.remoteId } returns remoteId
-      every { this@mockk.locationId } returns locationId
-      every { this@mockk.locationCaption } returns locationCaption
-    }
+  private fun mockGroupItem(remoteId: Int, locationId: Int): ListItem.GroupItem = mockk {
+    every { this@mockk.remoteId } returns remoteId
+    every { this@mockk.locationId } returns locationId
+  }
 
-  private fun mockLocationItem(remoteId: Int, userCaption: String): ListItem.LocationItem =
-    mockk {
-      every { this@mockk.remoteId } returns remoteId
-      every { this@mockk.userCaption } returns userCaption
-    }
+  private fun mockLocationItem(userCaption: String = "Kitchen"): ListItem.LocationItem = mockk {
+    every { this@mockk.userCaption } returns userCaption
+  }
 }

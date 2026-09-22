@@ -25,7 +25,6 @@ import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.LocationRepository
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
-import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.lib.SuplaChannelGroup
 import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
@@ -46,18 +45,13 @@ class UpdateChannelGroupUseCase @Inject constructor(
     }
 
   private suspend fun updateChannelGroup(suplaChannelGroup: SuplaChannelGroup): Boolean {
-    val location = locationRepository.findByRemoteId(suplaChannelGroup.LocationID).awaitSingleOrNull()
-      ?: return false
+    locationRepository.findByRemoteId(suplaChannelGroup.LocationID).awaitSingleOrNull() ?: return false
 
     val channelGroup = channelGroupRepository.findByRemoteId(suplaChannelGroup.Id).awaitSingleOrNull()
     return if (channelGroup == null) {
-      insertChannelGroup(location, suplaChannelGroup)
+      insertChannelGroup(suplaChannelGroup)
     } else if (channelGroup.differsFrom(suplaChannelGroup) || channelGroup.visible != 1) {
-      val position = if (channelGroup.locationId != suplaChannelGroup.LocationID) {
-        nextPosition(location.remoteId)
-      } else {
-        channelGroup.position
-      }
+      val position = if (channelGroup.locationId != suplaChannelGroup.LocationID) 0 else channelGroup.position
 
       channelGroupRepository.updateEntity(channelGroup.updatedBy(suplaChannelGroup, position))
       true
@@ -66,7 +60,7 @@ class UpdateChannelGroupUseCase @Inject constructor(
     }
   }
 
-  private suspend fun insertChannelGroup(location: LocationEntity, suplaChannelGroup: SuplaChannelGroup): Boolean {
+  private suspend fun insertChannelGroup(suplaChannelGroup: SuplaChannelGroup): Boolean {
     val profile = profileRepository.findActiveProfileKtx() ?: return false
 
     channelGroupRepository.insert(
@@ -82,16 +76,11 @@ class UpdateChannelGroupUseCase @Inject constructor(
         userIcon = suplaChannelGroup.UserIcon,
         flags = suplaChannelGroup.Flags,
         totalValue = null,
-        position = nextPosition(location.remoteId),
-        profileId = profile.id!!
+        position = 0,
+        profileId = profile.id
       )
     )
     return true
-  }
-
-  private suspend fun nextPosition(locationRemoteId: Int): Int {
-    val lastPosition = channelGroupRepository.findMaxPositionInLocation(locationRemoteId) ?: 0
-    return if (lastPosition == 0) 0 else lastPosition + 1
   }
 
   private fun ChannelGroupEntity.updatedBy(

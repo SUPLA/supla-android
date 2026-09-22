@@ -39,6 +39,7 @@ import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.lists.sceneItem
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
+import org.supla.android.usecases.list.canMoveItemWithinSection
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 import org.supla.android.usecases.profile.CloudUrl
@@ -127,10 +128,7 @@ class SceneListViewModel @Inject constructor(
   }
 
   override fun moveItems(from: Int, to: Int): Boolean {
-    val firstItem = list.getOrNull(from) as? ListItem.SceneItem ?: return false
-    val secondItem = list.getOrNull(to) as? ListItem.SceneItem ?: return false
-
-    if (firstItem.locationCaption != secondItem.locationCaption) {
+    if (!list.canMoveItemWithinSection(from, to) { it is ListItem.SceneItem }) {
       return false
     }
 

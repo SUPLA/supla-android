@@ -141,24 +141,19 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
   @Test
   fun `should update scenes order`() {
     // given
-    val firstItem: ListItem.SceneItem = mockk {
-      every { locationCaption } returns "1"
-    }
-    val secondItem: ListItem.SceneItem = mockk {
-      every { locationCaption } returns "1"
-    }
-    val thirdItem: ListItem.SceneItem = mockk {
-      every { locationCaption } returns "1"
-    }
-    val scenes = listOf(firstItem, secondItem, thirdItem)
+    val header: ListItem.LocationItem = mockk()
+    val firstItem: ListItem.SceneItem = mockk()
+    val secondItem: ListItem.SceneItem = mockk()
+    val thirdItem: ListItem.SceneItem = mockk()
+    val scenes = listOf(header, firstItem, secondItem, thirdItem)
     every { createProfileScenesListUseCase() } returns Observable.just(scenes)
 
     // when
     viewModel.loadScenes()
-    viewModel.moveItems(0, 2)
+    viewModel.moveItems(1, 3)
 
     // then
-    assertThat(viewModel.list).containsExactly(secondItem, thirdItem, firstItem)
+    assertThat(viewModel.list).containsExactly(header, secondItem, thirdItem, firstItem)
     assertThat(states).isEmpty()
     assertThat(events).isEmpty()
 
@@ -169,24 +164,20 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
   @Test
   fun `should not swap when items are in different location`() {
     // given
-    val firstItem: ListItem.SceneItem = mockk {
-      every { locationCaption } returns "1"
-    }
-    val secondItem: ListItem.SceneItem = mockk {
-      every { locationCaption } returns "1"
-    }
-    val thirdItem: ListItem.SceneItem = mockk {
-      every { locationCaption } returns "2"
-    }
-    val scenes = listOf(firstItem, secondItem, thirdItem)
+    val firstHeader: ListItem.LocationItem = mockk()
+    val secondHeader: ListItem.LocationItem = mockk()
+    val firstItem: ListItem.SceneItem = mockk()
+    val secondItem: ListItem.SceneItem = mockk()
+    val thirdItem: ListItem.SceneItem = mockk()
+    val scenes = listOf(firstHeader, firstItem, secondItem, secondHeader, thirdItem)
     every { createProfileScenesListUseCase() } returns Observable.just(scenes)
 
     // when
     viewModel.loadScenes()
-    viewModel.moveItems(0, 2)
+    viewModel.moveItems(1, 4)
 
     // then
-    assertThat(viewModel.list).containsExactly(firstItem, secondItem, thirdItem)
+    assertThat(viewModel.list).containsExactly(firstHeader, firstItem, secondItem, secondHeader, thirdItem)
     assertThat(states).isEmpty()
     assertThat(events).isEmpty()
 

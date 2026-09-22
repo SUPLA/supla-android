@@ -17,59 +17,28 @@ package org.supla.android.usecases.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.util.Log
 import org.supla.android.data.source.ChannelRepository
-import org.supla.android.data.source.LocationRepository
-import org.supla.android.data.source.local.entity.custom.LocationSortingType
 import org.supla.android.ui.lists.ListItem
+import org.supla.android.usecases.list.findReorderableSectionItems
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ReorderChannelsUseCase @Inject constructor(
-  private val channelRepository: ChannelRepository,
-  private val locationRepository: LocationRepository
+  private val channelRepository: ChannelRepository
 ) {
 
   suspend operator fun invoke(items: List<ListItem>, movedItemId: Int) {
-    val moved = items.filterIsInstance<ListItem.DefaultItem>().firstOrNull { it.remoteId == movedItemId } ?: return
-
-    val allLocationsByCaption = items.filterIsInstance<ListItem.DefaultItem>()
-      .filter { it.locationCaption == moved.locationCaption }
-      .map { it.locationId }
-      .distinct()
-    val visibleLocationsByCaption = items.filterIsInstance<ListItem.LocationItem>().filter { it.userCaption == moved.locationCaption }
-
-    if (allLocationsByCaption.isEmpty()) {
-      Timber.w("No location found, reorder stopped!")
+    val sectionItems = items.findReorderableSectionItems(movedItemId) { it as? ListItem.DefaultItem }
+    if (sectionItems == null) {
+      Timber.w("No section found, channel reorder stopped!")
       return
     }
 
-    var useId = true
-    if (allLocationsByCaption.size > 1 && visibleLocationsByCaption.size == 1) {
-      useId = false
-    }
-
-    val orderedChannels =
-      if (useId) {
-        items.filterIsInstance<ListItem.DefaultItem>().filter { it.locationId == moved.locationId }
-      } else {
-        items.filterIsInstance<ListItem.DefaultItem>().filter { it.locationCaption == moved.locationCaption }
-      }
-
-    val location =
-      if (useId) {
-        items.filterIsInstance<ListItem.LocationItem>().firstOrNull { it.remoteId == moved.locationId }
-      } else {
-        items.filterIsInstance<ListItem.LocationItem>().firstOrNull { it.userCaption == moved.locationCaption }
-      } ?: return
-
-    locationRepository.changeSortingType(location.remoteId, LocationSortingType.USER_DEFINED)
-
-    var position = 1
-    for (channel in orderedChannels) {
-      channelRepository.updatePosition(channel.remoteId, position++)
-    }
+    channelRepository.updatePositions(
+      locationRemoteIds = sectionItems.map { it.locationId }.distinct(),
+      orderedRemoteIds = sectionItems.map { it.remoteId }
+    )
   }
 }

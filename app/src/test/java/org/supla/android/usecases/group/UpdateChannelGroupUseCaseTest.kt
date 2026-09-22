@@ -68,7 +68,6 @@ class UpdateChannelGroupUseCaseTest {
     coEvery { locationRepository.findByRemoteId(123) } returns Maybe.just(location)
     coEvery { channelGroupRepository.findByRemoteId(234) } returns Maybe.empty()
     coEvery { profileRepository.findActiveProfileKtx() } returns profile
-    coEvery { channelGroupRepository.findMaxPositionInLocation(123) } returns null
     coEvery { channelGroupRepository.insert(any()) } returns Unit
 
     val result = useCase.invoke(suplaChannelGroup)
@@ -80,7 +79,6 @@ class UpdateChannelGroupUseCaseTest {
       locationRepository.findByRemoteId(123)
       channelGroupRepository.findByRemoteId(234)
       profileRepository.findActiveProfileKtx()
-      channelGroupRepository.findMaxPositionInLocation(123)
       channelGroupRepository.insert(capture(groupSlot))
     }
     confirmVerified(locationRepository, channelGroupRepository, profileRepository)
@@ -103,7 +101,7 @@ class UpdateChannelGroupUseCaseTest {
   }
 
   @Test
-  fun `should insert channel group on last position when positions defined`() {
+  fun `should insert channel group at position 0`() {
     val suplaChannelGroup = suplaChannelGroup(234, 123, "caption", 1, 2, 3, 4)
     val location = locationEntity(remoteId = 123)
     val profile = profileEntity(456)
@@ -111,7 +109,6 @@ class UpdateChannelGroupUseCaseTest {
     coEvery { locationRepository.findByRemoteId(123) } returns Maybe.just(location)
     coEvery { channelGroupRepository.findByRemoteId(234) } returns Maybe.empty()
     coEvery { profileRepository.findActiveProfileKtx() } returns profile
-    coEvery { channelGroupRepository.findMaxPositionInLocation(123) } returns 12
     coEvery { channelGroupRepository.insert(any()) } returns Unit
 
     val result = useCase.invoke(suplaChannelGroup)
@@ -120,10 +117,9 @@ class UpdateChannelGroupUseCaseTest {
 
     val groupSlot = slot<ChannelGroupEntity>()
     coVerify {
-      channelGroupRepository.findMaxPositionInLocation(123)
       channelGroupRepository.insert(capture(groupSlot))
     }
-    assertThat(groupSlot.captured.position).isEqualTo(13)
+    assertThat(groupSlot.captured.position).isEqualTo(0)
   }
 
   @Test
@@ -173,7 +169,6 @@ class UpdateChannelGroupUseCaseTest {
 
     coEvery { locationRepository.findByRemoteId(123) } returns Maybe.just(location)
     coEvery { channelGroupRepository.findByRemoteId(234) } returns Maybe.just(existing)
-    coEvery { channelGroupRepository.findMaxPositionInLocation(123) } returns 0
     coEvery { channelGroupRepository.updateEntity(any()) } returns Unit
 
     val result = useCase.invoke(suplaChannelGroup)
@@ -182,7 +177,6 @@ class UpdateChannelGroupUseCaseTest {
 
     val groupSlot = slot<ChannelGroupEntity>()
     coVerify {
-      channelGroupRepository.findMaxPositionInLocation(123)
       channelGroupRepository.updateEntity(capture(groupSlot))
     }
     assertThat(groupSlot.captured.locationId).isEqualTo(123)

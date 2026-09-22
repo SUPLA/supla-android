@@ -47,7 +47,8 @@ class ChannelGroupRepository @Inject constructor(
 
   fun update(groups: List<ChannelGroupEntity>) = channelGroupDao.update(groups)
 
-  suspend fun updatePosition(remoteId: Int, position: Int) = channelGroupDao.updatePosition(remoteId, position)
+  suspend fun updatePositions(locationRemoteIds: List<Int>, orderedRemoteIds: List<Int>) =
+    channelGroupDao.updatePositions(locationRemoteIds, orderedRemoteIds)
 
   suspend fun setChannelGroupsVisible(change: VisibilityChange): Boolean =
     channelGroupDao.setChannelGroupsVisible(change.newVisibility, change.applyForVisibility) > 0
@@ -55,8 +56,6 @@ class ChannelGroupRepository @Inject constructor(
   suspend fun insert(entity: ChannelGroupEntity) = channelGroupDao.insert(entity)
 
   suspend fun updateEntity(entity: ChannelGroupEntity) = channelGroupDao.update(entity)
-
-  suspend fun findMaxPositionInLocation(locationRemoteId: Int) = channelGroupDao.findMaxPositionInLocation(locationRemoteId)
 
   suspend fun findIconIdsToDownload(profileId: Long) = channelGroupDao.findIconIdsToDownload(profileId)
 

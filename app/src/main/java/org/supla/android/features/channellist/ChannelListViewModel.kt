@@ -55,6 +55,7 @@ import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideChannelDetailTypeUseCase
 import org.supla.android.usecases.details.StandardDetailType
 import org.supla.android.usecases.list.TriggerLogHistoryDownloadUseCase
+import org.supla.android.usecases.list.canMoveItemWithinSection
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 import javax.inject.Inject
@@ -210,10 +211,7 @@ class ChannelListViewModel @Inject constructor(
   }
 
   override fun moveItems(from: Int, to: Int): Boolean {
-    val firstItem = list.getOrNull(from) as? ListItem.DefaultItem ?: return false
-    val secondItem = list.getOrNull(to) as? ListItem.DefaultItem ?: return false
-
-    if (firstItem.locationCaption != secondItem.locationCaption) {
+    if (!list.canMoveItemWithinSection(from, to) { it is ListItem.DefaultItem }) {
       return false
     }
 

@@ -21,7 +21,6 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.dao.LocationDao
 import org.supla.android.data.source.local.entity.LocationEntity
-import org.supla.android.data.source.local.entity.custom.LocationSortingType
 import org.supla.android.usecases.captionchange.CaptionChangeUseCase
 import org.supla.android.usecases.developerinfo.CountProvider
 import org.supla.android.usecases.profile.DeleteProfileUseCase
@@ -38,8 +37,6 @@ class LocationRepository @Inject constructor(
   suspend fun insert(locationEntity: LocationEntity) = locationDao.insert(locationEntity)
 
   fun updateLocation(locationEntity: LocationEntity) = locationDao.updateLocation(locationEntity)
-
-  suspend fun changeSortingType(remoteId: Int, sortingType: LocationSortingType) = locationDao.changeSortingType(remoteId, sortingType)
 
   suspend fun getAllLocations(): List<LocationEntity> = locationDao.getLocations()
 
