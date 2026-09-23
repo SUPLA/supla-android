@@ -142,8 +142,8 @@ class ChannelListViewModel @Inject constructor(
   }
 
   fun stopLogHistoryDownload() {
-//    downloadJob?.cancel()
-//    downloadJob = null
+    downloadJob?.cancel()
+    downloadJob = null
   }
 
   fun performAction(channelId: Int, buttonType: ButtonType) {
