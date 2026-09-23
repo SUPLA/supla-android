@@ -17,27 +17,34 @@ package org.supla.android.usecases.group
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.core.shared.shareable
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.di.FORMATTER_THERMOMETER
 import org.supla.android.ui.lists.ListItem
+import org.supla.android.ui.views.list.ListItemStatus
+import org.supla.android.usecases.group.totalvalue.HeatpolThermostatGroupValue
 import org.supla.android.usecases.icon.GetChannelIconUseCase
-import org.supla.android.usecases.list.GroupToListItemMapper
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.data.model.lists.ListItemIssues
+import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.GetChannelActionStringUseCase
+import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
+import org.supla.core.shared.usecase.channel.valueformatter.types.ValuePrecision
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
 class GroupToListItemMapper @Inject constructor(
-  override val getGroupActivePercentageUseCase: GetGroupActivePercentageUseCase,
-  override val getChannelActionStringUseCase: GetChannelActionStringUseCase,
-  override val getChannelIconUseCase: GetChannelIconUseCase,
-  override val getCaptionUseCase: GetCaptionUseCase,
-  @param:Named(FORMATTER_THERMOMETER) override val thermometerValueFormatter: ValueFormatter
-) : GroupToListItemMapper {
+  private val getGroupActivePercentageUseCase: GetGroupActivePercentageUseCase,
+  private val getChannelActionStringUseCase: GetChannelActionStringUseCase,
+  private val getChannelIconUseCase: GetChannelIconUseCase,
+  private val getCaptionUseCase: GetCaptionUseCase,
+  @param:Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter
+) {
 
   operator fun invoke(group: ChannelGroupDataEntity): ListItem =
     when (group.function) {
@@ -116,4 +123,80 @@ class GroupToListItemMapper @Inject constructor(
       SuplaFunction.VERTICAL_BLIND,
       SuplaFunction.ROLLER_GARAGE_DOOR -> toIconValueItem(group)
     }
+
+  fun toIconValueItem(group: ChannelGroupDataEntity): ListItem.GroupItem =
+    ListItem.GroupItem(
+      remoteId = group.remoteId,
+      profileId = group.profileId,
+      function = group.function,
+      locationCaption = group.locationEntity.caption,
+      locationId = group.locationEntity.remoteId,
+      status = ListItemStatus.Group(
+        onlinePercentage = group.channelGroupEntity.onlinePercentage,
+        activePercentage = getGroupActivePercentageUseCase(group.channelGroupEntity).coerceIn(0, 100).div(100f)
+      ),
+      captionProvider = getCaptionUseCase(group.shareable),
+      userCaption = group.caption,
+      icon = getChannelIconUseCase(group),
+      leftButtonString = localizedString(getChannelActionStringUseCase.leftButton(group.function)),
+      rightButtonString = localizedString(getChannelActionStringUseCase.rightButton(group.function))
+    )
+
+  fun toHeatpolThermostatItem(group: ChannelGroupDataEntity): ListItem.HeatpolThermostatItem =
+    ListItem.HeatpolThermostatItem(
+      remoteId = group.remoteId,
+      profileId = group.profileId,
+      locationCaption = group.locationEntity.caption,
+      locationId = group.locationEntity.remoteId,
+      status = ListItemStatus.Group(
+        onlinePercentage = group.channelGroupEntity.onlinePercentage,
+        activePercentage = getGroupActivePercentageUseCase(group.channelGroupEntity).coerceIn(0, 100).div(100f)
+      ),
+      captionProvider = getCaptionUseCase(group.shareable),
+      userCaption = group.caption,
+      icon = getChannelIconUseCase(group),
+      value = getThermostatValue(group),
+      issues = ListItemIssues.empty,
+      subValue = getThermostatSubValue(group),
+    )
+
+  private fun getThermostatValue(group: ChannelGroupDataEntity): String {
+    val min = group.channelGroupEntity.groupTotalValues
+      .mapNotNull { (it as? HeatpolThermostatGroupValue)?.measuredTemperature }
+      .minOrNull()
+
+    val max = group.channelGroupEntity.groupTotalValues
+      .mapNotNull { (it as? HeatpolThermostatGroupValue)?.measuredTemperature }
+      .maxOrNull()
+
+    if (min == null || max == null) {
+      return NO_VALUE_TEXT
+    }
+
+    val format = ValueFormat.TemperatureWithDegree.copy(precision = ValueFormat.Precision.Custom(ValuePrecision.exact(1)))
+    val minString = thermometerValueFormatter.format(min, format)
+    val maxString = thermometerValueFormatter.format(max, format)
+
+    return "$minString - $maxString"
+  }
+
+  private fun getThermostatSubValue(group: ChannelGroupDataEntity): String {
+    val min = group.channelGroupEntity.groupTotalValues
+      .mapNotNull { (it as? HeatpolThermostatGroupValue)?.presetTemperature }
+      .minOrNull()
+
+    val max = group.channelGroupEntity.groupTotalValues
+      .mapNotNull { (it as? HeatpolThermostatGroupValue)?.presetTemperature }
+      .maxOrNull()
+
+    if (min == null || max == null) {
+      return NO_VALUE_TEXT
+    }
+
+    val format = ValueFormat.TemperatureWithDegree.copy(precision = ValueFormat.Precision.Custom(ValuePrecision.exact(1)))
+    val minString = thermometerValueFormatter.format(min, format)
+    val maxString = thermometerValueFormatter.format(max, format)
+
+    return "$minString - $maxString"
+  }
 }
