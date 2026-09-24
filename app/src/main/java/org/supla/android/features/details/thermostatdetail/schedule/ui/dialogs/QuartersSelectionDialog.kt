@@ -54,7 +54,6 @@ import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.features.details.thermostatdetail.schedule.data.QuartersSelectionData
 import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailProgramBox
-import org.supla.android.features.details.thermostatdetail.schedule.data.ThermostatScheduleDetailEntryBoxValue
 import org.supla.android.features.details.thermostatdetail.schedule.ui.components.ScheduleHourCaption
 import org.supla.android.features.details.thermostatdetail.schedule.ui.components.ScheduleProgramButton
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
@@ -66,6 +65,7 @@ import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.buttons.OutlinedButton
 import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxKey
 import org.supla.android.ui.views.schedule.colorRes
+import org.supla.android.ui.views.schedule.editor.ScheduleTableBox
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 
@@ -207,7 +207,7 @@ private fun Preview() {
     previewScope.QuartersDialog(
       QuartersSelectionData(
         ScheduleDetailEntryBoxKey(DayOfWeek.FRIDAY, 6),
-        ThermostatScheduleDetailEntryBoxValue(SuplaScheduleProgram.PROGRAM_1),
+        ScheduleTableBox(SuplaScheduleProgram.PROGRAM_1),
         SuplaScheduleProgram.PROGRAM_1
       ),
       programs,
