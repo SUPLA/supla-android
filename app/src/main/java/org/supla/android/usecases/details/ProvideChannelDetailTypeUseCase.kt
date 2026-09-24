@@ -40,6 +40,10 @@ class ProvideChannelDetailTypeUseCase @Inject constructor() : BaseDetailTypeProv
       SuplaFunction.STAIRCASE_TIMER,
       SuplaFunction.PUMP_SWITCH,
       SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH -> StandardDetailType(getSwitchDetailPages(channelWithChildren))
+      SuplaFunction.CONTROLLING_THE_GATE,
+      SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
+      SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
+      SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK -> StandardDetailType(getGateDetailPages(channelWithChildren))
       SuplaFunction.HVAC_THERMOSTAT,
       SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL -> StandardDetailType(getThermostatDetailPages(channelWithChildren))
       SuplaFunction.IC_ELECTRICITY_METER,
@@ -62,6 +66,9 @@ class ProvideChannelDetailTypeUseCase @Inject constructor() : BaseDetailTypeProv
 
   private fun getSwitchDetailPages(channelWithChildren: ChannelWithChildren): List<DetailPage> {
     val list = mutableListOf(DetailPage.SWITCH)
+    if (SuplaChannelFlag.WEEKLY_SCHEDULE inside channelWithChildren.flags) {
+      list.add(DetailPage.SWITCH_SCHEDULE)
+    }
     if (supportsTimer(channelWithChildren.channel)) {
       list.add(DetailPage.SWITCH_TIMER)
     }
@@ -83,6 +90,13 @@ class ProvideChannelDetailTypeUseCase @Inject constructor() : BaseDetailTypeProv
 
     return list
   }
+
+  private fun getGateDetailPages(channelWithChildren: ChannelWithChildren): List<DetailPage> =
+    mutableListOf(DetailPage.GATE_GENERAL).apply {
+      if (SuplaChannelFlag.WEEKLY_SCHEDULE inside channelWithChildren.flags) {
+        add(DetailPage.GATE_SCHEDULE)
+      }
+    }
 
   private fun getThermostatDetailPages(channelWithChildren: ChannelWithChildren): List<DetailPage> {
     val list = mutableListOf(DetailPage.THERMOSTAT)

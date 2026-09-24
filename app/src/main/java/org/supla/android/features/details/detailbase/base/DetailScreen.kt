@@ -19,12 +19,10 @@ package org.supla.android.features.details.detailbase.base
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ResizeableNavigationBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -33,15 +31,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.supla.android.features.details.containerdetail.general.ContainerGeneralScreen
 import org.supla.android.features.details.electricitymeterdetail.general.ElectricityMeterGeneralScreen
 import org.supla.android.features.details.electricitymeterdetail.history.ElectricityMeterHistoryScreen
 import org.supla.android.features.details.electricitymeterdetail.settings.ElectricityMeterSettingsScreen
 import org.supla.android.features.details.gatedetail.general.GateGeneralScreen
+import org.supla.android.features.details.gatedetail.schedule.GateScheduleScreen
 import org.supla.android.features.details.gpmdetail.history.GpmHistoryScreen
 import org.supla.android.features.details.humiditydetail.history.HumidityHistoryScreen
 import org.supla.android.features.details.impulsecounter.counterphoto.CounterPhotoScreen
@@ -55,6 +52,7 @@ import org.supla.android.features.details.rgbanddimmer.dimmer.DimmerDetailScreen
 import org.supla.android.features.details.rgbanddimmer.dimmercct.DimmerCctDetailScreen
 import org.supla.android.features.details.rgbanddimmer.rgb.RgbDetailScreen
 import org.supla.android.features.details.switchdetail.general.SwitchGeneralScreen
+import org.supla.android.features.details.switchdetail.schedule.SwitchScheduleScreen
 import org.supla.android.features.details.switchdetail.timer.SwitchTimerScreen
 import org.supla.android.features.details.thermometerdetail.history.ThermometerHistoryScreen
 import org.supla.android.features.details.thermostatdetail.general.ThermostatGeneralScreen
@@ -188,6 +186,7 @@ private fun Content(item: ItemBundle, page: DetailPage) =
   when (page) {
     DetailPage.SWITCH -> SwitchGeneralScreen(item)
     DetailPage.SWITCH_TIMER -> SwitchTimerScreen(item)
+    DetailPage.SWITCH_SCHEDULE -> SwitchScheduleScreen(item)
     DetailPage.THERMOSTAT -> ThermostatGeneralScreen(item)
     DetailPage.THERMOSTAT_LIST -> ThermostatSlavesListScreen(item)
     DetailPage.SCHEDULE -> ThermostatScheduleScreen(item)
@@ -218,6 +217,7 @@ private fun Content(item: ItemBundle, page: DetailPage) =
     DetailPage.IC_SETTINGS -> ImpulseCounterSettingsScreen(item)
     DetailPage.VALVE_GENERAL -> ValveGeneralScreen(item)
     DetailPage.GATE_GENERAL -> GateGeneralScreen(item)
+    DetailPage.GATE_SCHEDULE -> GateScheduleScreen(item)
     DetailPage.RGB -> RgbDetailScreen(item)
     DetailPage.DIMMER -> DimmerDetailScreen(item)
     DetailPage.DIMMER_CCT -> DimmerCctDetailScreen(item)

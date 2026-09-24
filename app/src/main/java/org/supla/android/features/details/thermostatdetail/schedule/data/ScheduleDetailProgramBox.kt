@@ -25,6 +25,7 @@ import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
+import org.supla.android.ui.views.schedule.editor.WeeklyScheduleProgram
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
@@ -34,13 +35,13 @@ import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
 data class ScheduleDetailProgramBox(
   val channelFunction: Int,
   val thermostatFunction: ThermostatSubfunction,
-  val program: SuplaScheduleProgram,
+  override val program: SuplaScheduleProgram,
   val mode: SuplaHvacMode,
   val setpointTemperatureHeat: Float?,
   val setpointTemperatureCool: Float?,
-  val label: LocalizedString,
-  @param:DrawableRes val iconRes: Int? = null
-) {
+  override val label: LocalizedString,
+  @param:DrawableRes override val iconRes: Int? = null
+) : WeeklyScheduleProgram {
 
   val modeForModify: SuplaHvacMode
     get() = if (mode == SuplaHvacMode.NOT_SET) {

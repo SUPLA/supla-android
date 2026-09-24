@@ -16,11 +16,10 @@ import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleEntry
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailProgramBox
-import org.supla.android.features.details.thermostatdetail.schedule.data.ThermostatScheduleDetailEntryBoxValue
-import org.supla.android.features.details.thermostatdetail.ui.OFF
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
 import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxKey
+import org.supla.android.ui.views.schedule.editor.ScheduleTableBox
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
@@ -66,8 +65,8 @@ class SuplaChannelWeeklyScheduleConfigExtensionsTest {
       ScheduleDetailEntryBoxKey(DayOfWeek.MONDAY, 9)
     )
     assertThat(map.values).containsExactly(
-      ThermostatScheduleDetailEntryBoxValue(SuplaScheduleProgram.PROGRAM_1),
-      ThermostatScheduleDetailEntryBoxValue(
+      ScheduleTableBox(SuplaScheduleProgram.PROGRAM_1),
+      ScheduleTableBox(
         SuplaScheduleProgram.PROGRAM_1,
         SuplaScheduleProgram.PROGRAM_2,
         SuplaScheduleProgram.PROGRAM_3,

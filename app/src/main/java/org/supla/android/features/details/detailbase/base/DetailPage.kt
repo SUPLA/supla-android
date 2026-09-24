@@ -31,6 +31,7 @@ enum class DetailPage(val item: DetailBottomItem) {
   // Switches
   SWITCH(DetailBottomItem.GENERAL),
   SWITCH_TIMER(DetailBottomItem.TIMER),
+  SWITCH_SCHEDULE(DetailBottomItem.SCHEDULE),
 
   // Thermostats
   THERMOSTAT(DetailBottomItem.GENERAL),
@@ -83,6 +84,7 @@ enum class DetailPage(val item: DetailBottomItem) {
 
   // Gate
   GATE_GENERAL(DetailBottomItem.GENERAL),
+  GATE_SCHEDULE(DetailBottomItem.SCHEDULE),
 
   // RGB and Dimmer
   RGB(DetailBottomItem.RGB),

@@ -1,4 +1,4 @@
-package org.supla.android.ui.views.schedule
+package org.supla.android.features.details.switchdetail.schedule
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,17 +17,16 @@ package org.supla.android.ui.views.schedule
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.data.source.local.calendar.DayOfWeek
+import androidx.compose.runtime.Composable
+import org.supla.android.ui.views.schedule.editor.WeeklyScheduleEditor
+import org.supla.android.ui.views.schedule.editor.WeeklyScheduleEditorScope
 
-@JvmInline
-value class ScheduleDetailEntryBoxKey private constructor(private val packed: Int) {
-  constructor(dayOfWeek: DayOfWeek, hour: Short) : this(dayOfWeek.day.times(100).plus(hour))
+interface SwitchScheduleScope : WeeklyScheduleEditorScope
 
-  val dayOfWeek: DayOfWeek
-    get() = DayOfWeek.from(packed.div(100))
-
-  val hour: Short
-    get() = packed.mod(100).toShort()
-
-  fun copy(): ScheduleDetailEntryBoxKey = ScheduleDetailEntryBoxKey(packed)
+@Composable
+fun SwitchScheduleScope.View(state: SwitchScheduleViewState) {
+  WeeklyScheduleEditor(
+    state = state.editorState,
+    loading = state.loadingState.loading
+  )
 }

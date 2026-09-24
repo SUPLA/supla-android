@@ -1,4 +1,4 @@
-package org.supla.android.ui.views.schedule
+package org.supla.android.ui.views.schedule.editor
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -32,6 +32,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -47,18 +49,35 @@ import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.source.local.calendar.DayOfWeek
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
-import org.supla.android.features.details.thermostatdetail.schedule.data.ThermostatScheduleDetailEntryBoxValue
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.tools.SuplaPreviewLandscape
 import org.supla.android.ui.ResourceCache
 import org.supla.android.ui.extensions.isPhoneLandscape
+import org.supla.android.ui.views.schedule.DrawableText
+import org.supla.android.ui.views.schedule.MotionEventStateHolder
+import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxKey
+import org.supla.android.ui.views.schedule.ScheduleInternalState
+import org.supla.android.ui.views.schedule.boxPadding
+import org.supla.android.ui.views.schedule.colorRes
+import org.supla.android.ui.views.schedule.rememberMutableScheduleSizeState
 
-const val ROWS_COUNT = 25
-val columnsCount = DayOfWeek.entries.size
-val boxPadding = 2.dp
+data class ScheduleTableBox(
+  val firstQuarterProgram: SuplaScheduleProgram,
+  val secondQuarterProgram: SuplaScheduleProgram,
+  val thirdQuarterProgram: SuplaScheduleProgram,
+  val fourthQuarterProgram: SuplaScheduleProgram
+) {
+  constructor(program: SuplaScheduleProgram) : this(program, program, program, program)
 
-data class ScheduleTableState<Value : ScheduleDetailEntryBoxValue>(
-  val schedule: Map<ScheduleDetailEntryBoxKey, Value> = emptyMap(),
+  val programs: List<SuplaScheduleProgram>
+    get() = listOf(firstQuarterProgram, secondQuarterProgram, thirdQuarterProgram, fourthQuarterProgram)
+
+  val singleProgram: SuplaScheduleProgram?
+    get() = firstQuarterProgram.takeIf { program -> programs.all { it == program } }
+}
+
+data class ScheduleTableState(
+  val schedule: Map<ScheduleDetailEntryBoxKey, ScheduleTableBox> = emptyMap(),
   val currentDayOfWeek: DayOfWeek? = null,
   val currentHour: Int? = null
 )
@@ -71,18 +90,23 @@ interface ScheduleTableScope {
 }
 
 @Composable
-fun <Value : ScheduleDetailEntryBoxValue> ScheduleTableScope.ScheduleTable(
-  state: ScheduleTableState<Value>,
+fun ScheduleTableScope.ScheduleTable(
+  state: ScheduleTableState,
   modifier: Modifier = Modifier,
   onBoxSizeChanged: ((Size) -> Unit)? = null
 ) {
-  val configuration = LocalConfiguration.current
-  val useLandscape = configuration.isPhoneLandscape
+  val useLandscape = LocalConfiguration.current.isPhoneLandscape
   val resources = LocalResources.current
   val resourceCache = remember { ResourceCache(resources) }
 
   val (viewSize, updateSize) = remember { mutableStateOf<IntSize?>(null) }
-  val internalState by rememberMutableScheduleSizeState(viewSize, state, useLandscape, onBoxSizeChanged)
+  val internalState by rememberMutableScheduleSizeState(
+    viewSize = viewSize,
+    currentDayOfWeek = state.currentDayOfWeek,
+    currentHour = state.currentHour,
+    useLandscape = useLandscape,
+    onBoxSizeChanged = onBoxSizeChanged
+  )
 
   ScheduleTableCanvas(
     internalState = internalState,
@@ -90,7 +114,7 @@ fun <Value : ScheduleDetailEntryBoxValue> ScheduleTableScope.ScheduleTable(
     updateSize = updateSize
   ) {
     if (internalState.viewSize == null) {
-      return@ScheduleTableCanvas // Skip drawing when view size is not set yet
+      return@ScheduleTableCanvas
     }
 
     if (useLandscape) {
@@ -106,7 +130,7 @@ fun <Value : ScheduleDetailEntryBoxValue> ScheduleTableScope.ScheduleTable(
 @Composable
 private fun ScheduleTableScope.ScheduleTableCanvas(
   internalState: ScheduleInternalState,
-  modifier: Modifier = Modifier,
+  modifier: Modifier,
   updateSize: (IntSize?) -> Unit,
   onDraw: DrawScope.() -> Unit
 ) {
@@ -141,6 +165,7 @@ private fun DrawScope.scheduleTableDaysLandscape(
   val halfHeight = internalState.gridSize.height.div(2)
   val halfWidth = internalState.gridSize.width.times(0.5f)
   var y = internalState.firstRowHeight + halfHeight
+
   for (day in internalState.days) {
     if (day.isCurrent) {
       drawCircle(
@@ -159,12 +184,13 @@ private fun DrawScope.scheduleTableDaysLandscape(
   }
 }
 
-private fun <Value : ScheduleDetailEntryBoxValue> DrawScope.scheduleTableBoxesLandscape(
+private fun DrawScope.scheduleTableBoxesLandscape(
   internalState: ScheduleInternalState,
-  state: ScheduleTableState<Value>,
+  state: ScheduleTableState,
   resourceCache: ResourceCache
 ) {
   var x = internalState.gridSize.width.times(1.5f)
+
   for (hour in internalState.hours) {
     if (hour.isCurrent) {
       internalState.boxPositions[ScheduleDetailEntryBoxKey(DayOfWeek.MONDAY, hour.value.toShort())]?.let {
@@ -185,7 +211,7 @@ private fun <Value : ScheduleDetailEntryBoxValue> DrawScope.scheduleTableBoxesLa
     )
     x += internalState.gridSize.width
 
-    drawBoxes(
+    drawScheduleTableBoxes(
       hour = hour,
       width = internalState.gridSize.width.div(2f),
       internalState = internalState,
@@ -201,8 +227,8 @@ private fun DrawScope.scheduleTableDaysPortrait(
 ) {
   val halfHeight = internalState.gridSize.height.div(2)
   val halfWidth = internalState.gridSize.width.times(0.5f)
-
   var x = internalState.firstColumnWidth + halfWidth
+
   for (day in internalState.days) {
     if (day.isCurrent) {
       drawRoundRect(
@@ -225,12 +251,13 @@ private fun DrawScope.scheduleTableDaysPortrait(
   }
 }
 
-private fun <Value : ScheduleDetailEntryBoxValue> DrawScope.scheduleTableBoxesPortrait(
+private fun DrawScope.scheduleTableBoxesPortrait(
   internalState: ScheduleInternalState,
-  state: ScheduleTableState<Value>,
-  resourceCache: ResourceCache,
+  state: ScheduleTableState,
+  resourceCache: ResourceCache
 ) {
   var y = internalState.gridSize.height.times(1.5f)
+
   for (hour in internalState.hours) {
     if (hour.isCurrent) {
       internalState.boxPositions[ScheduleDetailEntryBoxKey(DayOfWeek.MONDAY, hour.value.toShort())]?.let {
@@ -250,7 +277,7 @@ private fun <Value : ScheduleDetailEntryBoxValue> DrawScope.scheduleTableBoxesPo
     )
     y += internalState.gridSize.height
 
-    drawBoxes(
+    drawScheduleTableBoxes(
       hour = hour,
       width = internalState.gridSize.height.div(2f),
       internalState = internalState,
@@ -260,113 +287,127 @@ private fun <Value : ScheduleDetailEntryBoxValue> DrawScope.scheduleTableBoxesPo
   }
 }
 
-private fun DrawScope.drawBoxes(
+private fun DrawScope.drawScheduleTableBoxes(
   hour: DrawableText<Int>,
   width: Float,
   internalState: ScheduleInternalState,
-  state: ScheduleTableState<*>,
+  state: ScheduleTableState,
   resourceCache: ResourceCache
 ) {
   for (day in internalState.days) {
     val key = ScheduleDetailEntryBoxKey(day.value, hour.value.toShort())
-    val entryValue = state.schedule[key]
-    val entryPosition = internalState.boxPositions[key]
+    val box = state.schedule[key]
+    val position = internalState.boxPositions.getValue(key)
 
-    if (entryValue != null) {
-      entryValue.drawBox(
-        drawScope = this@drawBoxes,
-        topLeft = entryPosition!!,
+    if (box == null) {
+      drawRoundRect(
+        color = resourceCache.color(R.color.disabled),
+        topLeft = position,
         size = internalState.boxSize,
-        cornerRadius = internalState.cornerRadius,
-        resourceCache = resourceCache
+        cornerRadius = internalState.cornerRadius
       )
     } else {
-      drawDefaultBox(entryPosition!!, internalState.boxSize, internalState.cornerRadius, resourceCache.color(R.color.disabled))
+      drawScheduleTableBox(box, position, internalState, resourceCache)
     }
 
-    if (hour.value == (state.currentHour ?: false) && day.value == (state.currentDayOfWeek ?: false)) {
+    if (hour.value == state.currentHour && day.value == state.currentDayOfWeek) {
       internalState.path.reset()
-      internalState.path.moveTo(entryPosition.x + internalState.cornerRadius.x, entryPosition.y)
+      internalState.path.moveTo(position.x + internalState.cornerRadius.x, position.y)
       internalState.path.relativeLineTo(width - internalState.cornerRadius.x, 0f)
       internalState.path.relativeLineTo(-width, width)
       internalState.path.relativeLineTo(0f, -width + internalState.cornerRadius.x)
       internalState.path.close()
-
       drawPath(color = Color.Black, path = internalState.path)
     }
   }
 }
 
-private fun DrawScope.drawDefaultBox(
-  topLeft: Offset,
-  size: Size,
-  cornerRadius: CornerRadius,
-  color: Color
+private fun DrawScope.drawScheduleTableBox(
+  box: ScheduleTableBox,
+  position: Offset,
+  internalState: ScheduleInternalState,
+  resourceCache: ResourceCache
 ) {
-  drawRoundRect(
-    color = color,
-    topLeft = topLeft,
-    size = size,
-    cornerRadius = cornerRadius
-  )
+  if (box.singleProgram != null) {
+    drawRoundRect(
+      color = resourceCache.color(box.firstQuarterProgram.colorRes()),
+      topLeft = position,
+      size = internalState.boxSize,
+      cornerRadius = internalState.cornerRadius
+    )
+    return
+  }
+
+  val partWidth = internalState.boxSize.width.div(box.programs.size)
+  val partSize = Size(partWidth, internalState.boxSize.height)
+
+  box.programs.forEachIndexed { index, program ->
+    val partPosition = Offset(position.x.plus(partWidth.times(index)), position.y)
+    internalState.path.reset()
+    when (index) {
+      0 -> internalState.path.addRoundRect(
+        RoundRect(
+          rect = Rect(offset = partPosition, size = partSize),
+          topLeft = internalState.cornerRadius,
+          bottomLeft = internalState.cornerRadius
+        )
+      )
+      box.programs.lastIndex -> internalState.path.addRoundRect(
+        RoundRect(
+          rect = Rect(offset = partPosition, size = partSize),
+          topRight = internalState.cornerRadius,
+          bottomRight = internalState.cornerRadius
+        )
+      )
+      else -> internalState.path.addRect(Rect(offset = partPosition, size = partSize))
+    }
+    drawPath(path = internalState.path, color = resourceCache.color(program.colorRes()))
+  }
 }
 
-private val previewScope = object : ScheduleTableScope {
+private val previewScheduleTableScope = object : ScheduleTableScope {
   override fun onScheduleTableLongPress(key: ScheduleDetailEntryBoxKey?) {}
   override fun onScheduleTableTouched(key: ScheduleDetailEntryBoxKey) {}
   override fun onScheduleTableReload() {}
   override fun onScheduleTableInvalidate() {}
 }
 
+private val previewScheduleTableState = ScheduleTableState(
+  schedule = mapOf(
+    ScheduleDetailEntryBoxKey(DayOfWeek.TUESDAY, 3) to ScheduleTableBox(SuplaScheduleProgram.PROGRAM_4),
+    ScheduleDetailEntryBoxKey(DayOfWeek.THURSDAY, 5) to ScheduleTableBox(
+      firstQuarterProgram = SuplaScheduleProgram.PROGRAM_1,
+      secondQuarterProgram = SuplaScheduleProgram.PROGRAM_2,
+      thirdQuarterProgram = SuplaScheduleProgram.OFF,
+      fourthQuarterProgram = SuplaScheduleProgram.PROGRAM_3
+    )
+  ),
+  currentDayOfWeek = DayOfWeek.MONDAY,
+  currentHour = 12
+)
+
 @SuplaPreview
 @Composable
-private fun Preview() {
-  val schedule = mapOf(
-    ScheduleDetailEntryBoxKey(DayOfWeek.TUESDAY, 3) to ThermostatScheduleDetailEntryBoxValue(SuplaScheduleProgram.PROGRAM_4),
-    ScheduleDetailEntryBoxKey(DayOfWeek.THURSDAY, 5) to ThermostatScheduleDetailEntryBoxValue(
-      SuplaScheduleProgram.PROGRAM_1,
-      SuplaScheduleProgram.PROGRAM_2,
-      SuplaScheduleProgram.OFF,
-      SuplaScheduleProgram.PROGRAM_3
-    )
-  )
-
-  SuplaTheme {
-    Column(
-      verticalArrangement = Arrangement.spacedBy(1.dp),
-      modifier = Modifier.background(MaterialTheme.colorScheme.surface)
-    ) {
-      previewScope.ScheduleTable(
-        ScheduleTableState(schedule = schedule, currentDayOfWeek = DayOfWeek.MONDAY, currentHour = 12),
-        Modifier
-          .systemBarsPadding()
-          .fillMaxSize()
-      )
-    }
-  }
+private fun ScheduleTablePreview() {
+  ScheduleTablePreviewContent()
 }
 
 @SuplaPreviewLandscape
 @Composable
-private fun PreviewLandscape() {
-  val schedule = mapOf(
-    ScheduleDetailEntryBoxKey(DayOfWeek.TUESDAY, 3) to ThermostatScheduleDetailEntryBoxValue(SuplaScheduleProgram.PROGRAM_4),
-    ScheduleDetailEntryBoxKey(DayOfWeek.THURSDAY, 5) to ThermostatScheduleDetailEntryBoxValue(
-      SuplaScheduleProgram.PROGRAM_1,
-      SuplaScheduleProgram.PROGRAM_2,
-      SuplaScheduleProgram.OFF,
-      SuplaScheduleProgram.PROGRAM_3
-    )
-  )
+private fun ScheduleTableLandscapePreview() {
+  ScheduleTablePreviewContent()
+}
 
+@Composable
+private fun ScheduleTablePreviewContent() {
   SuplaTheme {
     Column(
       verticalArrangement = Arrangement.spacedBy(1.dp),
       modifier = Modifier.background(MaterialTheme.colorScheme.surface)
     ) {
-      previewScope.ScheduleTable(
-        ScheduleTableState(schedule = schedule, currentDayOfWeek = DayOfWeek.MONDAY, currentHour = 12),
-        Modifier
+      previewScheduleTableScope.ScheduleTable(
+        state = previewScheduleTableState,
+        modifier = Modifier
           .systemBarsPadding()
           .fillMaxSize()
       )

@@ -22,6 +22,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
+import org.supla.core.shared.data.model.function.relay.RelayMode
 import org.supla.core.shared.data.model.function.relay.RelayValue
 import org.supla.core.shared.data.model.function.relay.SuplaRelayFlag
 
@@ -37,6 +38,13 @@ class RelayValueTest {
     val value = RelayValue.from(status, bytes)
 
     // then
-    assertThat(value).isEqualTo(RelayValue(status = status, on = true, flags = listOf(SuplaRelayFlag.OVERCURRENT_RELAY_OFF)))
+    assertThat(value).isEqualTo(
+      RelayValue(
+        status = status,
+        on = true,
+        flags = listOf(SuplaRelayFlag.OVERCURRENT_RELAY_OFF),
+        mode = RelayMode.NOT_SET
+      )
+    )
   }
 }

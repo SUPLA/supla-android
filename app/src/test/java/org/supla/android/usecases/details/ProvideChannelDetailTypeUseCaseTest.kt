@@ -320,10 +320,21 @@ class ProvideChannelDetailTypeUseCaseTest {
 
   @Test
   fun `should provide detail for gate`() {
-    testDetailType(SuplaFunction.CONTROLLING_THE_GATE, StandardDetailType(listOf(DetailPage.GATE_GENERAL)))
-    testDetailType(SuplaFunction.CONTROLLING_THE_GARAGE_DOOR, StandardDetailType(listOf(DetailPage.GATE_GENERAL)))
-    testDetailType(SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK, StandardDetailType(listOf(DetailPage.GATE_GENERAL)))
-    testDetailType(SuplaFunction.CONTROLLING_THE_DOOR_LOCK, StandardDetailType(listOf(DetailPage.GATE_GENERAL)))
+    val withoutFlags: (ChannelDataEntity) -> Unit = { every { it.flags } returns 0 }
+    testDetailType(SuplaFunction.CONTROLLING_THE_GATE, StandardDetailType(listOf(DetailPage.GATE_GENERAL)), withoutFlags)
+    testDetailType(SuplaFunction.CONTROLLING_THE_GARAGE_DOOR, StandardDetailType(listOf(DetailPage.GATE_GENERAL)), withoutFlags)
+    testDetailType(SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK, StandardDetailType(listOf(DetailPage.GATE_GENERAL)), withoutFlags)
+    testDetailType(SuplaFunction.CONTROLLING_THE_DOOR_LOCK, StandardDetailType(listOf(DetailPage.GATE_GENERAL)), withoutFlags)
+  }
+
+  @Test
+  fun `should provide schedule detail for gate`() {
+    testDetailType(
+      SuplaFunction.CONTROLLING_THE_GATE,
+      StandardDetailType(listOf(DetailPage.GATE_GENERAL, DetailPage.GATE_SCHEDULE))
+    ) { channel ->
+      every { channel.flags } returns SuplaChannelFlag.WEEKLY_SCHEDULE.rawValue
+    }
   }
 
   @Test
