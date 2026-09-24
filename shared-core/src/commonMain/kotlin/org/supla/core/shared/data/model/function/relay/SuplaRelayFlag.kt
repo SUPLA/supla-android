@@ -18,7 +18,8 @@ package org.supla.core.shared.data.model.function.relay
  */
 
 enum class SuplaRelayFlag(val value: Int) {
-  OVERCURRENT_RELAY_OFF(1);
+  OVERCURRENT_RELAY_OFF(0x1),
+  WEEKLY_SCHEDULE_ENABLED(0x2);
 
   companion object {
     fun from(value: Int): List<SuplaRelayFlag> =
