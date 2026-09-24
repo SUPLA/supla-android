@@ -20,7 +20,6 @@ package org.supla.android.ui.views.buttons
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -28,13 +27,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.Measurable
+import androidx.compose.ui.layout.MeasureResult
+import androidx.compose.ui.layout.MeasureScope
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
-import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.extensions.disabledOverlay
 import org.supla.android.images.ImageId
@@ -109,45 +110,99 @@ fun SwitchButtons(
   }
 
 @Composable
-private fun SwitchButtonsLayout(
+fun SwitchButtonsLayout(
   modifier: Modifier = Modifier,
   content: @Composable () -> Unit
 ) {
   val defaultDistance = Distance.default
+  val smallDistance = Distance.small
   val configuration = LocalWindowInfo.current
   val screenWidth = with(LocalDensity.current) { configuration.containerSize.width.dp.toPx().toInt() }
-  val screenHeight = with(LocalDensity.current) { configuration.containerSize.height.dp.toPx().toInt() }
 
   Layout(modifier = modifier, content = content) { measurables, constraints ->
     val spacing = defaultDistance.toPx().toInt()
+    val smallSpacing = smallDistance.toPx().toInt()
     val buttonMaxWidth = 300.dp.toPx().toInt()
     val possibleWidth = min(constraints.maxWidth, screenWidth)
 
-    if (measurables.size == 1) {
-      val buttonWidth = min(possibleWidth, buttonMaxWidth)
-      val padding = possibleWidth.minus(buttonWidth).div(2)
-      val modifiedConstraint = constraints.copy(minWidth = buttonWidth, maxWidth = buttonWidth)
-      val placeable = measurables[0].measure(modifiedConstraint)
-
-      layout(possibleWidth, placeable.height) {
-        placeable.placeRelative(padding, 0)
-      }
-    } else if (measurables.size == 2) {
-      val buttonWidth = min(possibleWidth.minus(spacing).div(2), buttonMaxWidth)
-      val padding = possibleWidth.minus(buttonWidth.times(2).plus(spacing)).div(2)
-      val modifiedConstraint = constraints.copy(minWidth = buttonWidth, maxWidth = buttonWidth)
-      val placeable1 = measurables[0].measure(modifiedConstraint)
-      val placeable2 = measurables[1].measure(modifiedConstraint)
-
-      layout(possibleWidth, placeable1.height) {
-        placeable1.placeRelative(padding, 0)
-        placeable2.placeRelative(padding + buttonWidth + spacing, 0)
-      }
-    } else {
-      layout(constraints.minWidth, constraints.minHeight) {}
+    when (measurables.size) {
+      1 -> layoutSingleButton(measurables, constraints, possibleWidth, buttonMaxWidth)
+      2 -> layoutTwoButtons(measurables, constraints, possibleWidth, buttonMaxWidth, spacing)
+      3 -> layoutThreeButtons(measurables, constraints, possibleWidth, buttonMaxWidth, smallSpacing)
+      else -> layoutNoButtons(constraints)
     }
   }
 }
+
+private fun MeasureScope.layoutSingleButton(
+  measurables: List<Measurable>,
+  constraints: Constraints,
+  possibleWidth: Int,
+  buttonMaxWidth: Int
+): MeasureResult {
+  val buttonWidth = min(possibleWidth, buttonMaxWidth)
+  val padding = possibleWidth.minus(buttonWidth).div(2)
+  val modifiedConstraint = constraints.copy(minWidth = buttonWidth, maxWidth = buttonWidth)
+  val placeable = measurables[0].measure(modifiedConstraint)
+
+  return layout(possibleWidth, placeable.height) {
+    placeable.placeRelative(padding, 0)
+  }
+}
+
+private fun MeasureScope.layoutTwoButtons(
+  measurables: List<Measurable>,
+  constraints: Constraints,
+  possibleWidth: Int,
+  buttonMaxWidth: Int,
+  spacing: Int
+): MeasureResult {
+  val buttonWidth = min(possibleWidth.minus(spacing).div(2), buttonMaxWidth)
+  val padding = possibleWidth.minus(buttonWidth.times(2).plus(spacing)).div(2)
+  val modifiedConstraint = constraints.copy(minWidth = buttonWidth, maxWidth = buttonWidth)
+  val placeable1 = measurables[0].measure(modifiedConstraint)
+  val placeable2 = measurables[1].measure(modifiedConstraint)
+
+  return layout(possibleWidth, placeable1.height) {
+    placeable1.placeRelative(padding, 0)
+    placeable2.placeRelative(padding + buttonWidth + spacing, 0)
+  }
+}
+
+private fun MeasureScope.layoutThreeButtons(
+  measurables: List<Measurable>,
+  constraints: Constraints,
+  possibleWidth: Int,
+  buttonMaxWidth: Int,
+  spacing: Int
+): MeasureResult {
+  val availableButtonWidth = possibleWidth.minus(spacing.times(2)).coerceAtLeast(0)
+  val middleMaxWidth = min(availableButtonWidth.div(3), buttonMaxWidth)
+  val middleConstraint = constraints.copy(minWidth = 0, maxWidth = middleMaxWidth)
+  val placeable2 = measurables[1].measure(middleConstraint)
+  val buttonWidth = min(
+    possibleWidth.minus(placeable2.width).minus(spacing.times(2)).div(2).coerceAtLeast(0),
+    buttonMaxWidth
+  )
+  val sideConstraint = constraints.copy(minWidth = buttonWidth, maxWidth = buttonWidth)
+  val placeable1 = measurables[0].measure(sideConstraint)
+  val placeable3 = measurables[2].measure(sideConstraint)
+  val contentWidth = buttonWidth.times(2).plus(placeable2.width).plus(spacing.times(2))
+  val padding = possibleWidth.minus(contentWidth).div(2)
+  val height = maxOf(placeable1.height, placeable2.height, placeable3.height)
+
+  return layout(possibleWidth, height) {
+    placeable1.placeRelative(padding, 0)
+    placeable2.placeRelative(padding + buttonWidth + spacing, 0)
+    placeable3.placeRelative(
+      padding + buttonWidth + spacing + placeable2.width + spacing,
+      0
+    )
+  }
+}
+
+private fun MeasureScope.layoutNoButtons(constraints: Constraints): MeasureResult =
+  layout(constraints.minWidth, constraints.minHeight) {}
 
 @Composable
 fun SwitchIconButton(

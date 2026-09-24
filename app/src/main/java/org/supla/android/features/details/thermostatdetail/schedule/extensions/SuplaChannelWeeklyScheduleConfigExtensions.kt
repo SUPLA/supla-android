@@ -25,14 +25,14 @@ import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.data.source.remote.hvac.icon
 import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailProgramBox
-import org.supla.android.features.details.thermostatdetail.schedule.data.ThermostatScheduleDetailEntryBoxValue
 import org.supla.android.lib.SuplaConst
 import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxKey
+import org.supla.android.ui.views.schedule.editor.ScheduleTableBox
 import org.supla.core.shared.extensions.fromSuplaTemperature
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 
 fun SuplaChannelWeeklyScheduleConfig.viewScheduleBoxesMap() =
-  mutableMapOf<ScheduleDetailEntryBoxKey, ThermostatScheduleDetailEntryBoxValue>().apply {
+  mutableMapOf<ScheduleDetailEntryBoxKey, ScheduleTableBox>().apply {
     for (entry in schedule) {
       val key = ScheduleDetailEntryBoxKey(entry.dayOfWeek, entry.hour.toShort())
       if (containsKey(key)) {
@@ -44,7 +44,7 @@ fun SuplaChannelWeeklyScheduleConfig.viewScheduleBoxesMap() =
           QuarterOfHour.FOURTH -> value.copy(fourthQuarterProgram = entry.program)
         }
       } else {
-        val value = ThermostatScheduleDetailEntryBoxValue(SuplaScheduleProgram.OFF)
+        val value = ScheduleTableBox(SuplaScheduleProgram.OFF)
         this[key] = when (entry.quarterOfHour) {
           QuarterOfHour.FIRST -> value.copy(firstQuarterProgram = entry.program)
           QuarterOfHour.SECOND -> value.copy(secondQuarterProgram = entry.program)

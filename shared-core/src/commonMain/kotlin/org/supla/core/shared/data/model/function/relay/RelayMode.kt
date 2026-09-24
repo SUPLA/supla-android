@@ -1,4 +1,7 @@
-package org.supla.android.ui.views.schedule
+package org.supla.core.shared.data.model.function.relay
+
+import org.supla.core.shared.infrastructure.logging.Logger
+
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,17 +20,28 @@ package org.supla.android.ui.views.schedule
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.data.source.local.calendar.DayOfWeek
+enum class RelayMode(val value: Int) {
+  NOT_SET(0),
+  START_ON(1),
+  START_OFF(2),
+  FORCED_ON(3),
+  FORCED_OFF(4),
+  AUTOMATIC(5),
+  CMD_WEEKLY_SCHEDULE(6),
+  CMD_SWITCH_TO_MANUAL(7);
 
-@JvmInline
-value class ScheduleDetailEntryBoxKey private constructor(private val packed: Int) {
-  constructor(dayOfWeek: DayOfWeek, hour: Short) : this(dayOfWeek.day.times(100).plus(hour))
+  companion object {
+    const val TAG = "RelayMode"
 
-  val dayOfWeek: DayOfWeek
-    get() = DayOfWeek.from(packed.div(100))
+    fun from(value: Int): RelayMode {
+      for (mode in entries) {
+        if (mode.value == value) {
+          return mode
+        }
+      }
 
-  val hour: Short
-    get() = packed.mod(100).toShort()
-
-  fun copy(): ScheduleDetailEntryBoxKey = ScheduleDetailEntryBoxKey(packed)
+      Logger.w(TAG, "Unknown value: $value")
+      return NOT_SET
+    }
+  }
 }
