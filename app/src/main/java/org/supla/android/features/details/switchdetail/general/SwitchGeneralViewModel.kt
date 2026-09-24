@@ -29,7 +29,9 @@ import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.model.general.ChannelState
+import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.extensions.monthStart
@@ -56,6 +58,8 @@ import org.supla.android.usecases.group.ChannelGroupRelationDataEntityConvertibl
 import org.supla.android.usecases.group.GroupWithChannels
 import org.supla.android.usecases.group.ReadGroupWithChannelsUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.core.shared.data.model.function.relay.RelayMode
+import org.supla.core.shared.data.model.function.relay.RelayValue
 import org.supla.core.shared.data.model.function.relay.SuplaRelayFlag
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
@@ -149,6 +153,18 @@ class SwitchGeneralViewModel @Inject constructor(
     updateState { it.copy(electricityMeterState = it.electricityMeterState?.copy(showIntroduction = false)) }
   }
 
+  override fun onForce() {
+  }
+
+  override fun onManual() {
+  }
+
+  override fun onWeekly() {
+  }
+
+  override fun onAuto() {
+  }
+
   fun hideOvercurrentDialog() {
     updateState { it.copy(showOvercurrentDialog = false) }
   }
@@ -201,12 +217,14 @@ class SwitchGeneralViewModel @Inject constructor(
       }
       val showButtons = data.function.switchWithButtons
       val channelState = getChannelStateUseCase(data)
+      val value = data.channel.channelValueEntity.asRelayValue()
 
       state.copy(
         remoteId = data.remoteId,
         itemType = ItemType.CHANNEL,
-        online = data.status.online,
-        flags = data.channel.channelValueEntity.asRelayValue().flags,
+        leftButtonDisabled = data.status.offline,
+        rightButtonDisabled = data.status.offline,
+        flags = value.flags,
         initialDataLoadStarted = true,
         deviceStateData = DeviceStateData(
           label = getDeviceStateLabel(data),
@@ -234,6 +252,9 @@ class SwitchGeneralViewModel @Inject constructor(
         impulseCounterState = impulseCounterGeneralStateHandler
           .updateState(state.impulseCounterState, data, measurements)
           ?.copy(currentMonthDownloading = downloading),
+        forceSupported = data.channel.forceSupported,
+        forceActive = data.channel.forceActive,
+        operatingMode = OperatingMode(channelFlags = data.channel.flags, relayValue = value),
         scale = preferences.scale
       )
     }
@@ -311,7 +332,8 @@ class SwitchGeneralViewModel @Inject constructor(
       state.copy(
         remoteId = groupWithChannels.group.remoteId,
         itemType = ItemType.GROUP,
-        online = groupWithChannels.group.status.online,
+        leftButtonDisabled = groupWithChannels.group.status.offline,
+        rightButtonDisabled = groupWithChannels.group.status.offline,
         flags = emptyList(),
         initialDataLoadStarted = true,
         deviceStateData = null,
@@ -355,7 +377,6 @@ data class SwitchGeneralViewState(
   val remoteId: Int = 0,
   val itemType: ItemType = ItemType.CHANNEL,
   val initialDataLoadStarted: Boolean = false,
-  val online: Boolean? = null,
   val flags: List<SuplaRelayFlag> = emptyList(),
 
   val deviceStateData: DeviceStateData? = null,
@@ -368,8 +389,80 @@ data class SwitchGeneralViewState(
   val leftButtonState: SwitchButtonState? = null,
   val rightButtonState: SwitchButtonState? = null,
 
+  // Schedule extension
+  val leftButtonDisabled: Boolean = false,
+  val rightButtonDisabled: Boolean = false,
+  val forceSupported: Boolean = false,
+  val forceActive: Boolean = false,
+  val operatingMode: OperatingMode? = null,
+
   val scale: Float = 1f
 ) : ViewState()
+
+@JvmInline
+value class OperatingMode(val value: Int) {
+  val manualAllowed: Boolean
+    get() = value and MASK_MANUAL_ALLOWED == MASK_MANUAL_ALLOWED
+  val weeklyAllowed: Boolean
+    get() = value and MASK_WEEKLY_ALLOWED == MASK_WEEKLY_ALLOWED
+  val autoAllowed: Boolean
+    get() = value and MASK_AUTO_ALLOWED == MASK_AUTO_ALLOWED
+
+  val manualActive: Boolean
+    get() = value and MASK_MANUAL_ACTIVE == MASK_MANUAL_ACTIVE
+  val weeklyActive: Boolean
+    get() = value and MASK_WEEKLY_ACTIVE == MASK_WEEKLY_ACTIVE
+  val autoActive: Boolean
+    get() = value and MASK_AUTO_ACTIVE == MASK_AUTO_ACTIVE
+
+  companion object {
+    private const val MASK_MANUAL_ALLOWED = 0x01
+    private const val MASK_WEEKLY_ALLOWED = 0x02
+    private const val MASK_AUTO_ALLOWED = 0x04
+    private const val MASK_MANUAL_ACTIVE = 0x08
+    private const val MASK_WEEKLY_ACTIVE = 0x10
+    private const val MASK_AUTO_ACTIVE = 0x20
+
+    operator fun invoke(channelFlags: Long, relayValue: RelayValue): OperatingMode? {
+      val weeklyAllowed = SuplaChannelFlag.WEEKLY_SCHEDULE inside channelFlags
+      val autoAllowed = SuplaChannelFlag.RELAY_MODE_AUTOMATIC_SUPPORTED inside channelFlags
+
+      if (!weeklyAllowed && !autoAllowed) {
+        return null
+      }
+
+      val weeklyActive = relayValue.flags.contains(SuplaRelayFlag.WEEKLY_SCHEDULE_ENABLED)
+      val autoActive = relayValue.mode == RelayMode.AUTOMATIC && !weeklyActive
+
+      return OperatingMode(
+        value =
+        MASK_MANUAL_ALLOWED or
+          (if (weeklyAllowed) MASK_WEEKLY_ALLOWED else 0) or
+          (if (autoAllowed) MASK_AUTO_ALLOWED else 0) or
+          (if (!weeklyActive && !autoActive) MASK_MANUAL_ACTIVE else 0) or
+          (if (weeklyActive) MASK_WEEKLY_ACTIVE else 0) or
+          (if (autoActive) MASK_AUTO_ACTIVE else 0)
+      )
+    }
+
+    operator fun invoke(
+      manualAllowed: Boolean = false,
+      weeklyAllowed: Boolean = false,
+      autoAllowed: Boolean = false,
+      manualActive: Boolean = false,
+      weeklyActive: Boolean = false,
+      autoActive: Boolean = false
+    ) = OperatingMode(
+      value =
+      (if (manualAllowed) MASK_MANUAL_ALLOWED else 0) or
+        (if (weeklyAllowed) MASK_WEEKLY_ALLOWED else 0) or
+        (if (autoAllowed) MASK_AUTO_ALLOWED else 0) or
+        (if (manualActive) MASK_MANUAL_ACTIVE else 0) or
+        (if (weeklyActive) MASK_WEEKLY_ACTIVE else 0) or
+        (if (autoActive) MASK_AUTO_ACTIVE else 0)
+    )
+  }
+}
 
 private val SuplaFunction.switchWithButtons: Boolean
   get() = when (this) {
@@ -378,3 +471,10 @@ private val SuplaFunction.switchWithButtons: Boolean
     SuplaFunction.LIGHTSWITCH -> true
     else -> false
   }
+
+private val ChannelDataEntity.forceSupported: Boolean
+  get() = SuplaChannelFlag.RELAY_MODE_FORCED_SUPPORTED inside flags
+
+private val ChannelDataEntity.forceActive: Boolean
+  get() = forceSupported &&
+    (channelValueEntity.asRelayValue().mode == RelayMode.FORCED_ON || channelValueEntity.asRelayValue().mode == RelayMode.FORCED_OFF)
