@@ -31,10 +31,9 @@ import org.supla.android.extensions.toSuplaTemperature
 import org.supla.android.features.details.thermostatdetail.schedule.data.ProgramSettingsData
 import org.supla.android.features.details.thermostatdetail.schedule.data.QuartersSelectionData
 import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailProgramBox
-import org.supla.android.features.details.thermostatdetail.schedule.data.ThermostatScheduleDetailEntryBoxValue
 import org.supla.android.lib.SuplaConst
 import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxKey
-import org.supla.android.ui.views.schedule.ScheduleTableState
+import org.supla.android.ui.views.schedule.editor.WeeklyScheduleEditorState
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
@@ -53,9 +52,7 @@ data class ScheduleDetailViewState(
   val configTemperatureMin: Float = 0f,
   val configTemperatureMax: Float = 0f,
 
-  val activeProgram: SuplaScheduleProgram? = null,
-  val programs: List<ScheduleDetailProgramBox> = emptyList(),
-  val scheduleTableState: ScheduleTableState<ThermostatScheduleDetailEntryBoxValue> = ScheduleTableState(),
+  val editorState: WeeklyScheduleEditorState<ScheduleDetailProgramBox> = WeeklyScheduleEditorState(),
   val quarterSelection: QuartersSelectionData? = null,
   val programSettings: ProgramSettingsData? = null,
   val showHelp: Boolean = false,
@@ -64,19 +61,19 @@ data class ScheduleDetailViewState(
 
   fun quarterSelectionData(forKey: ScheduleDetailEntryBoxKey?): QuartersSelectionData? {
     val (key) = guardLet(forKey) { return null }
-    val (value) = guardLet(scheduleTableState.schedule[forKey]) { return null }
+    val (value) = guardLet(editorState.scheduleTableState.schedule[forKey]) { return null }
 
     return QuartersSelectionData(
       entryKey = key.copy(),
       entryValue = value.copy(),
-      activeProgram = activeProgram
+      activeProgram = editorState.activeProgram
     )
   }
 
   fun updatedPrograms(function: Int, thermometerValueFormatter: ValueFormatter): List<ScheduleDetailProgramBox> =
     programSettings?.let { programToUpdate ->
       mutableListOf<ScheduleDetailProgramBox>().apply {
-        for (program in programs) {
+        for (program in editorState.programs) {
           if (program.program == programToUpdate.program) {
             val icon = when (function) {
               SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL if program.mode == SuplaHvacMode.HEAT -> R.drawable.ic_heat
@@ -101,10 +98,10 @@ data class ScheduleDetailViewState(
           }
         }
       }
-    } ?: programs
+    } ?: editorState.programs
 
   fun suplaPrograms(): List<SuplaWeeklyScheduleProgram> = mutableListOf<SuplaWeeklyScheduleProgram>().apply {
-    for (program in programs) {
+    for (program in editorState.programs) {
       if (program.program == SuplaScheduleProgram.OFF) {
         continue
       }
@@ -120,7 +117,7 @@ data class ScheduleDetailViewState(
   }
 
   fun suplaSchedule(): List<SuplaWeeklyScheduleEntry> = mutableListOf<SuplaWeeklyScheduleEntry>().apply {
-    for (entry in scheduleTableState.schedule) {
+    for (entry in editorState.scheduleTableState.schedule) {
       add(SuplaWeeklyScheduleEntry(entry.key.dayOfWeek, entry.key.hour.toInt(), QuarterOfHour.FIRST, entry.value.firstQuarterProgram))
       add(SuplaWeeklyScheduleEntry(entry.key.dayOfWeek, entry.key.hour.toInt(), QuarterOfHour.SECOND, entry.value.secondQuarterProgram))
       add(SuplaWeeklyScheduleEntry(entry.key.dayOfWeek, entry.key.hour.toInt(), QuarterOfHour.THIRD, entry.value.thirdQuarterProgram))

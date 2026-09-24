@@ -43,7 +43,6 @@ import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.details.thermostatdetail.schedule.data.ProgramSettingsData
-import org.supla.android.features.details.thermostatdetail.schedule.data.ThermostatScheduleDetailEntryBoxValue
 import org.supla.android.features.details.thermostatdetail.schedule.extensions.viewProgramBoxesList
 import org.supla.android.features.details.thermostatdetail.schedule.extensions.viewScheduleBoxesMap
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
@@ -51,6 +50,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
 import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxKey
+import org.supla.android.ui.views.schedule.editor.ScheduleTableBox
 import org.supla.core.shared.extensions.forFalse
 import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.usecase.channel.valueformatter.DefaultValueFormatter
@@ -129,18 +129,18 @@ class ScheduleDetailViewModel @Inject constructor(
 
   override fun onScheduleTableTouched(key: ScheduleDetailEntryBoxKey) {
     currentState().let { state ->
-      if (state.activeProgram == null) {
-        return // No active program, so nothing to change.
-      }
+      val activeProgram = state.editorState.activeProgram ?: return // No active program, so nothing to change.
 
-      if (state.scheduleTableState.schedule[key] == null || state.scheduleTableState.schedule[key]?.program != state.activeProgram) {
+      if (state.editorState.scheduleTableState.schedule[key]?.singleProgram != activeProgram) {
         updateState { _ ->
           state.copy(
-            scheduleTableState = state.scheduleTableState.copy(
-              schedule = mutableMapOf<ScheduleDetailEntryBoxKey, ThermostatScheduleDetailEntryBoxValue>().also {
-                it.putAll(state.scheduleTableState.schedule)
-                it[key] = ThermostatScheduleDetailEntryBoxValue(singleProgram = state.activeProgram)
-              }
+            editorState = state.editorState.copy(
+              scheduleTableState = state.editorState.scheduleTableState.copy(
+                schedule = mutableMapOf<ScheduleDetailEntryBoxKey, ScheduleTableBox>().also {
+                  it.putAll(state.editorState.scheduleTableState.schedule)
+                  it[key] = ScheduleTableBox(activeProgram)
+                }
+              )
             ),
             changing = true,
             lastInteractionTime = System.currentTimeMillis()
@@ -156,9 +156,9 @@ class ScheduleDetailViewModel @Inject constructor(
     reloadConfig(currentState().remoteId)
   }
 
-  override fun changeProgram(program: SuplaScheduleProgram) {
+  override fun onScheduleProgramClick(program: SuplaScheduleProgram) {
     updateState {
-      it.copy(activeProgram = getProgramForChange(program, it))
+      it.copy(editorState = it.editorState.copy(activeProgram = getProgramForChange(program, it)))
     }
   }
 
@@ -174,7 +174,7 @@ class ScheduleDetailViewModel @Inject constructor(
     updateState {
       val newProgram = getProgramForChange(program, it)
       it.copy(
-        activeProgram = newProgram,
+        editorState = it.editorState.copy(activeProgram = newProgram),
         quarterSelection = it.quarterSelection?.copy(activeProgram = newProgram)
       )
     }
@@ -203,13 +203,15 @@ class ScheduleDetailViewModel @Inject constructor(
     updateState { state ->
       state.quarterSelection?.let { selection ->
         val newState = state.copy(
-          scheduleTableState = state.scheduleTableState.copy(
-            schedule = mutableMapOf<ScheduleDetailEntryBoxKey, ThermostatScheduleDetailEntryBoxValue>().also {
-              it.putAll(state.scheduleTableState.schedule)
-              it[selection.entryKey] = selection.entryValue
-            }
+          editorState = state.editorState.copy(
+            scheduleTableState = state.editorState.scheduleTableState.copy(
+              schedule = mutableMapOf<ScheduleDetailEntryBoxKey, ScheduleTableBox>().also {
+                it.putAll(state.editorState.scheduleTableState.schedule)
+                it[selection.entryKey] = selection.entryValue
+              }
+            ),
+            activeProgram = state.quarterSelection.activeProgram
           ),
-          activeProgram = state.quarterSelection.activeProgram,
           quarterSelection = null,
           lastInteractionTime = System.currentTimeMillis()
         )
@@ -221,7 +223,7 @@ class ScheduleDetailViewModel @Inject constructor(
     }
   }
 
-  override fun startProgramDialog(program: SuplaScheduleProgram) {
+  override fun onScheduleProgramLongClick(program: SuplaScheduleProgram) {
     if (program != SuplaScheduleProgram.OFF) {
       updateState { it.copy(programSettings = createProgramSettingData(it, program)) }
     }
@@ -234,8 +236,10 @@ class ScheduleDetailViewModel @Inject constructor(
   override fun onProgramSettingsSave() {
     updateState { state ->
       state.copy(
-        programs = state.updatedPrograms(state.channelFunction, thermometerValueFormatter),
-        activeProgram = state.programSettings?.program,
+        editorState = state.editorState.copy(
+          programs = state.updatedPrograms(state.channelFunction, thermometerValueFormatter),
+          activeProgram = state.programSettings?.program
+        ),
         programSettings = null,
         lastInteractionTime = System.currentTimeMillis()
       ).also {
@@ -307,11 +311,11 @@ class ScheduleDetailViewModel @Inject constructor(
   }
 
   private fun getProgramForChange(program: SuplaScheduleProgram, state: ScheduleDetailViewState): SuplaScheduleProgram? {
-    if (state.activeProgram == program) {
+    if (state.editorState.activeProgram == program) {
       return null // Deselect active program
     }
 
-    for (programConfiguration in state.programs) {
+    for (programConfiguration in state.editorState.programs) {
       if (programConfiguration.program == program && programConfiguration.mode == SuplaHvacMode.NOT_SET) {
         return null // Don't allow to set program with NOT_SET mode
       }
@@ -414,7 +418,7 @@ class ScheduleDetailViewModel @Inject constructor(
   }
 
   private fun createProgramSettingData(state: ScheduleDetailViewState, program: SuplaScheduleProgram): ProgramSettingsData? {
-    for (programBox in state.programs) {
+    for (programBox in state.editorState.programs) {
       if (programBox.program == program) {
         val heatTemperature = state.alignTemperature(programBox.setpointTemperatureHeat)
         val coolTemperature = state.alignTemperature(programBox.setpointTemperatureCool)
@@ -482,14 +486,16 @@ class ScheduleDetailViewModel @Inject constructor(
       it.copy(
         loadingState = it.loadingState.changingLoading(false, dateProvider),
         channelFunction = channelFunction,
-        scheduleTableState = it.scheduleTableState.copy(
-          schedule = data.weeklyScheduleConfig.viewScheduleBoxesMap(),
-          currentDayOfWeek = data.deviceConfig.isAutomaticTimeSyncDisabled()
-            .forFalse(DayOfWeek.from(calendar.get(Calendar.DAY_OF_WEEK) - 1)),
-          currentHour = data.deviceConfig.isAutomaticTimeSyncDisabled()
-            .forFalse(calendar.get(Calendar.HOUR_OF_DAY)),
+        editorState = it.editorState.copy(
+          scheduleTableState = it.editorState.scheduleTableState.copy(
+            schedule = data.weeklyScheduleConfig.viewScheduleBoxesMap(),
+            currentDayOfWeek = data.deviceConfig.isAutomaticTimeSyncDisabled()
+              .forFalse(DayOfWeek.from(calendar.get(Calendar.DAY_OF_WEEK) - 1)),
+            currentHour = data.deviceConfig.isAutomaticTimeSyncDisabled()
+              .forFalse(calendar.get(Calendar.HOUR_OF_DAY)),
+          ),
+          programs = data.weeklyScheduleConfig.viewProgramBoxesList(thermostatFunction, thermometerValueFormatter)
         ),
-        programs = data.weeklyScheduleConfig.viewProgramBoxesList(thermostatFunction, thermometerValueFormatter),
         configTemperatureMin = minTemperature,
         configTemperatureMax = maxTemperature,
         thermostatFunction = thermostatFunction

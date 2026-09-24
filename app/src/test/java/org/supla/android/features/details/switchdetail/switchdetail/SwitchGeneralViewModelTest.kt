@@ -62,6 +62,7 @@ import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.group.GroupWithChannels
 import org.supla.android.usecases.group.ReadGroupWithChannelsUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.core.shared.data.model.function.relay.RelayMode
 import org.supla.core.shared.data.model.function.relay.RelayValue
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.infrastructure.LocalizedString
@@ -165,7 +166,7 @@ class SwitchGeneralViewModelTest :
     assertThat(events).isEmpty()
     assertThat(states)
       .extracting(
-        { it.online },
+        { it.leftButtonDisabled },
         { it.deviceStateData?.label },
         { it.deviceStateData?.icon },
         { it.deviceStateData?.value },
@@ -175,7 +176,7 @@ class SwitchGeneralViewModelTest :
       )
       .containsExactly(
         tuple(
-          true,
+          false,
           localizedString(R.string.details_timer_state_label),
           stateIcon,
           localizedString(R.string.details_timer_device_on),
@@ -227,7 +228,7 @@ class SwitchGeneralViewModelTest :
     assertThat(events).isEmpty()
     assertThat(states)
       .extracting(
-        { it.online },
+        { it.leftButtonDisabled },
         { it.deviceStateData?.label },
         { it.deviceStateData?.icon },
         { it.deviceStateData?.value },
@@ -237,7 +238,7 @@ class SwitchGeneralViewModelTest :
       )
       .containsExactly(
         tuple(
-          true,
+          false,
           localizedString(R.string.details_timer_state_label),
           stateIcon,
           localizedString(R.string.details_timer_device_on),
@@ -292,7 +293,7 @@ class SwitchGeneralViewModelTest :
     assertThat(events).isEmpty()
     assertThat(states)
       .extracting(
-        { it.online },
+        { it.leftButtonDisabled },
         { it.deviceStateData?.label },
         { it.deviceStateData?.icon },
         { it.deviceStateData?.value },
@@ -302,7 +303,7 @@ class SwitchGeneralViewModelTest :
       )
       .containsExactly(
         tuple(
-          true,
+          false,
           null,
           null,
           null,
@@ -362,7 +363,7 @@ class SwitchGeneralViewModelTest :
     assertThat(events).isEmpty()
     assertThat(states)
       .extracting(
-        { it.online },
+        { it.leftButtonDisabled },
         { it.deviceStateData?.label },
         { it.deviceStateData?.icon },
         { it.deviceStateData?.value },
@@ -372,7 +373,7 @@ class SwitchGeneralViewModelTest :
       )
       .containsExactly(
         tuple(
-          true,
+          false,
           LocalizedString.WithResourceAndDate(R.string.details_timer_state_label_for_timer, 1000),
           stateIcon,
           localizedString(R.string.details_timer_device_on),
@@ -435,7 +436,7 @@ class SwitchGeneralViewModelTest :
     assertThat(events).isEmpty()
     assertThat(states)
       .extracting(
-        { it.online },
+        { it.leftButtonDisabled },
         { it.deviceStateData?.label },
         { it.deviceStateData?.icon },
         { it.deviceStateData?.value },
@@ -445,7 +446,7 @@ class SwitchGeneralViewModelTest :
       )
       .containsExactly(
         tuple(
-          true,
+          false,
           localizedString(R.string.details_timer_state_label),
           stateIcon,
           localizedString(R.string.details_timer_device_on),
@@ -486,8 +487,9 @@ class SwitchGeneralViewModelTest :
   private fun mockChannelData(remoteId: Int, function: SuplaFunction, estimatedEndDate: Date? = null): ChannelWithChildren {
     val channel: ChannelDataEntity = mockk {
       mockShareable(remoteId = remoteId, function = function)
+      every { flags } returns 0
       every { channelValueEntity } returns mockk {
-        every { asRelayValue() } returns RelayValue(SuplaChannelAvailabilityStatus.OFFLINE, false, emptyList())
+        every { asRelayValue() } returns RelayValue(SuplaChannelAvailabilityStatus.OFFLINE, false, emptyList(), RelayMode.NOT_SET)
         every { getValueAsByteArray() } returns byteArrayOf()
       }
       every { channelExtendedValueEntity } returns estimatedEndDate?.let { mockTimerState(estimatedEndDate) }
