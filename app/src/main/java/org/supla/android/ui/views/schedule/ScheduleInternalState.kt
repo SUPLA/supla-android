@@ -36,6 +36,10 @@ import org.supla.android.R
 import org.supla.android.data.source.local.calendar.DayOfWeek
 import org.supla.android.extensions.toPx
 
+private const val ROWS_COUNT = 25
+private val columnsCount = DayOfWeek.entries.size
+val boxPadding = 2.dp
+
 val boxSpacing = boxPadding.times(2)
 private val textPadding = 8.dp
 
@@ -55,7 +59,8 @@ data class ScheduleInternalState(
 @Composable
 fun rememberMutableScheduleSizeState(
   viewSize: IntSize?,
-  state: ScheduleTableState<*>,
+  currentDayOfWeek: DayOfWeek?,
+  currentHour: Int?,
   useLandscape: Boolean,
   onBoxSizeChanged: ((Size) -> Unit)?
 ): MutableState<ScheduleInternalState> {
@@ -63,12 +68,12 @@ fun rememberMutableScheduleSizeState(
   val textMeasurer = rememberTextMeasurer()
   val radiusSize = dimensionResource(id = R.dimen.radius_small).toPx()
 
-  return remember(viewSize, state.currentDayOfWeek, state.currentHour) {
+  return remember(viewSize, currentDayOfWeek, currentHour) {
     val boxPaddingPx = boxPadding.toPx()
     val textPaddingPx = textPadding.toPx()
 
-    val days = listOfDrawableDayOfWeek(context, textMeasurer, state.currentDayOfWeek)
-    val hours = listOfDrawableHour(textMeasurer, state.currentHour)
+    val days = listOfDrawableDayOfWeek(context, textMeasurer, currentDayOfWeek)
+    val hours = listOfDrawableHour(textMeasurer, currentHour)
 
     val firstRowHeight = days.first().textLayoutResult.size.height.plus(boxPaddingPx).plus(textPaddingPx)
     val firstColumnWidth = hours.first().textLayoutResult.size.width.plus(boxPaddingPx).plus(textPaddingPx)
