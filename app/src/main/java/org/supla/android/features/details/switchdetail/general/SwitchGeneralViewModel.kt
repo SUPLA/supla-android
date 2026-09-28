@@ -477,5 +477,7 @@ private val ChannelDataEntity.forceSupported: Boolean
 
 private val ChannelDataEntity.forceActive: Boolean
   get() = forceSupported &&
-    (channelValueEntity.asRelayValue().mode == SuplaRelayMode.FORCED_ON ||
-      channelValueEntity.asRelayValue().mode == SuplaRelayMode.FORCED_OFF)
+    (
+      channelValueEntity.asRelayValue().mode == SuplaRelayMode.FORCED_ON ||
+        channelValueEntity.asRelayValue().mode == SuplaRelayMode.FORCED_OFF
+      )

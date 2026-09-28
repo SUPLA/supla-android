@@ -1,4 +1,5 @@
-package org.supla.android.features.details.switchdetail.schedule
+package org.supla.android.ui.views.schedule.editor
+
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,20 +18,22 @@ package org.supla.android.features.details.switchdetail.schedule
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.compose.runtime.Composable
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import org.supla.android.features.details.detailbase.base.ItemBundle
-import org.supla.android.main.ViewModelHost
+import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
+import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxKey
 
-@Composable
-fun SwitchScheduleScreen(
-  item: ItemBundle,
-  viewModel: SwitchScheduleViewModel = hiltViewModel()
-) {
-  ViewModelHost(
-    viewModel = viewModel,
-    onCreate = { viewModel.observeConfig(item.remoteId, item.deviceId) }
-  ) {
-    viewModel.View(it)
-  }
+data class QuartersSelectionData(
+  val entryKey: ScheduleDetailEntryBoxKey,
+  val entryValue: ScheduleTableBox,
+  val activeProgram: SuplaScheduleProgram?
+)
+
+fun WeeklyScheduleEditorState<*>.quartersSelectionData(forKey: ScheduleDetailEntryBoxKey?): QuartersSelectionData? {
+  val key = forKey ?: return null
+  val value = scheduleTableState.schedule[key] ?: return null
+
+  return QuartersSelectionData(
+    entryKey = key.copy(),
+    entryValue = value.copy(),
+    activeProgram = activeProgram
+  )
 }
