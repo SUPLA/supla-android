@@ -32,6 +32,7 @@ import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
+import org.supla.android.data.source.remote.hvac.SuplaRelayMode
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.extensions.monthStart
@@ -58,7 +59,6 @@ import org.supla.android.usecases.group.ChannelGroupRelationDataEntityConvertibl
 import org.supla.android.usecases.group.GroupWithChannels
 import org.supla.android.usecases.group.ReadGroupWithChannelsUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
-import org.supla.core.shared.data.model.function.relay.RelayMode
 import org.supla.core.shared.data.model.function.relay.RelayValue
 import org.supla.core.shared.data.model.function.relay.SuplaRelayFlag
 import org.supla.core.shared.data.model.general.SuplaFunction
@@ -432,7 +432,7 @@ value class OperatingMode(val value: Int) {
       }
 
       val weeklyActive = relayValue.flags.contains(SuplaRelayFlag.WEEKLY_SCHEDULE_ENABLED)
-      val autoActive = relayValue.mode == RelayMode.AUTOMATIC && !weeklyActive
+      val autoActive = relayValue.mode == SuplaRelayMode.AUTOMATIC && !weeklyActive
 
       return OperatingMode(
         value =
@@ -477,4 +477,5 @@ private val ChannelDataEntity.forceSupported: Boolean
 
 private val ChannelDataEntity.forceActive: Boolean
   get() = forceSupported &&
-    (channelValueEntity.asRelayValue().mode == RelayMode.FORCED_ON || channelValueEntity.asRelayValue().mode == RelayMode.FORCED_OFF)
+    (channelValueEntity.asRelayValue().mode == SuplaRelayMode.FORCED_ON ||
+      channelValueEntity.asRelayValue().mode == SuplaRelayMode.FORCED_OFF)
