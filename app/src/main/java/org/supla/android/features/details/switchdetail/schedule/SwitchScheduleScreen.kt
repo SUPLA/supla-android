@@ -27,7 +27,10 @@ fun SwitchScheduleScreen(
   item: ItemBundle,
   viewModel: SwitchScheduleViewModel = hiltViewModel()
 ) {
-  ViewModelHost(viewModel = viewModel) { state ->
-    viewModel.View(state)
+  ViewModelHost(
+    viewModel = viewModel,
+    onCreate = { viewModel.observeConfig(item.remoteId, item.deviceId) }
+  ) {
+    viewModel.View(it)
   }
 }

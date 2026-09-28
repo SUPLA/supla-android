@@ -1,4 +1,4 @@
-package org.supla.android.features.details.thermostatdetail.schedule.extensions
+package org.supla.android.features.details.switchdetail.schedule.data
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,12 +17,22 @@ package org.supla.android.features.details.thermostatdetail.schedule.extensions
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.data.source.remote.hvac.SuplaRelayMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 
-fun SuplaScheduleProgram.number(): Int = when (this) {
-  SuplaScheduleProgram.PROGRAM_1 -> 1
-  SuplaScheduleProgram.PROGRAM_2 -> 2
-  SuplaScheduleProgram.PROGRAM_3 -> 3
-  SuplaScheduleProgram.PROGRAM_4 -> 4
-  else -> 0
+const val MAX_PROGRAM_DURATION_S = 65_535
+
+data class SwitchProgramSettingsData(
+  val program: SuplaScheduleProgram,
+  val modes: List<SuplaRelayMode>,
+  val selectedMode: SuplaRelayMode,
+  val relayModeDurationS: Int = 0,
+  val relayOppositeModeDurationS: Int = 0,
+  val relayModeDurationSString: String = relayModeDurationS.toString(),
+  val relayOppositeModeDurationSString: String = relayOppositeModeDurationS.toString()
+)
+
+enum class SwitchProgramDuration {
+  RELAY_MODE,
+  OPPOSITE_MODE
 }

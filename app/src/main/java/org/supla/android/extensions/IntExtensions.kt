@@ -44,17 +44,6 @@ val Int.minutesInHour
 val Int.secondsInMinute
   get() = this.mod(MINUTE_IN_SEC)
 
-val Int.ipV4String: String
-  get() =
-    String.format(
-      Locale.getDefault(),
-      "%d.%d.%d.%d",
-      (this and 0xff),
-      (this shr 8 and 0xff),
-      (this shr 16 and 0xff),
-      (this shr 24 and 0xff)
-    )
-
 fun Int.toGrayColor(): Color {
   val value = this.coerceIn(0, 100)
   val gray = (value * 255 / 100)
