@@ -78,6 +78,8 @@ enum class ActionId(val value: Int, val nameRes: Int?) : SpinnerItem {
   UP(170, R.string.channel_btn_reveal),
   DOWN(180, R.string.channel_btn_shut),
   SET_HVAC_PARAMETERS(230, null),
+  SWITCH_TO_PROGRAM_MODE(231, null),
+  SWITCH_TO_MANUAL_MODE(232, null),
   EXECUTE(3000, R.string.btn_execute),
   INTERRUPT(3001, R.string.btn_abort),
   INTERRUPT_AND_EXECUTE(3002, R.string.btn_abort_and_execute);

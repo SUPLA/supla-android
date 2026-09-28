@@ -1,6 +1,4 @@
-package org.supla.core.shared.data.model.function.relay
-
-import org.supla.core.shared.infrastructure.logging.Logger
+package org.supla.android.data.source.remote.hvac
 
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
@@ -20,28 +18,13 @@ import org.supla.core.shared.infrastructure.logging.Logger
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-enum class RelayMode(val value: Int) {
+enum class SuplaButtonMode(val value: Int) {
   NOT_SET(0),
-  START_ON(1),
-  START_OFF(2),
-  FORCED_ON(3),
-  FORCED_OFF(4),
-  AUTOMATIC(5),
-  CMD_WEEKLY_SCHEDULE(6),
-  CMD_SWITCH_TO_MANUAL(7);
+  LOCKED(1),
+  CMD_WEEKLY_SCHEDULE(4),
+  CMD_SWITCH_TO_MANUAL(5);
 
   companion object {
-    const val TAG = "RelayMode"
-
-    fun from(value: Int): RelayMode {
-      for (mode in entries) {
-        if (mode.value == value) {
-          return mode
-        }
-      }
-
-      Logger.w(TAG, "Unknown value: $value")
-      return NOT_SET
-    }
+    fun from(value: Int): SuplaButtonMode = entries.firstOrNull { it.value == value } ?: NOT_SET
   }
 }
