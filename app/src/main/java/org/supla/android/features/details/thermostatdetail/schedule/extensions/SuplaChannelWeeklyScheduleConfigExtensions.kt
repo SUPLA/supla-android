@@ -67,7 +67,7 @@ fun SuplaChannelWeeklyScheduleConfig.viewProgramBoxesList(subfunction: Thermosta
         channelFunction = func ?: 0,
         thermostatFunction = subfunction,
         program = program.program,
-        mode = program.mode,
+        mode = program.mode ?: SuplaHvacMode.NOT_SET,
         setpointTemperatureHeat = program.setpointTemperatureHeat?.fromSuplaTemperature(),
         setpointTemperatureCool = program.setpointTemperatureCool?.fromSuplaTemperature(),
         valueFormatter = valueFormatter,
