@@ -22,7 +22,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
-import org.supla.core.shared.data.model.function.relay.RelayMode
+import org.supla.android.data.source.remote.hvac.SuplaRelayMode
 import org.supla.core.shared.data.model.function.relay.RelayValue
 import org.supla.core.shared.data.model.function.relay.SuplaRelayFlag
 
@@ -32,7 +32,7 @@ class RelayValueTest {
   fun `should load relay value from byte array`() {
     // given
     val status = SuplaChannelAvailabilityStatus.ONLINE
-    val bytes = byteArrayOf(1, 1, 0)
+    val bytes = byteArrayOf(1, 1, 0, 0)
 
     // when
     val value = RelayValue.from(status, bytes)
@@ -43,7 +43,27 @@ class RelayValueTest {
         status = status,
         on = true,
         flags = listOf(SuplaRelayFlag.OVERCURRENT_RELAY_OFF),
-        mode = RelayMode.NOT_SET
+        mode = SuplaRelayMode.NOT_SET
+      )
+    )
+  }
+
+  @Test
+  fun `should load flags and relay mode from byte array`() {
+    // given
+    val status = SuplaChannelAvailabilityStatus.ONLINE
+    val bytes = byteArrayOf(1, 2, 0, 5)
+
+    // when
+    val value = RelayValue.from(status, bytes)
+
+    // then
+    assertThat(value).isEqualTo(
+      RelayValue(
+        status = status,
+        on = true,
+        flags = listOf(SuplaRelayFlag.WEEKLY_SCHEDULE_ENABLED),
+        mode = SuplaRelayMode.AUTOMATIC
       )
     )
   }
