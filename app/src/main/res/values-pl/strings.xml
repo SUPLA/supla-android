@@ -953,4 +953,18 @@
   <string name="wizard_result_certificate_pin_mismatch">Certyfikat urządzenia różni się od oczekiwanego. Zaktualizuj aplikację i oprogramowanie urządzenia, a następnie spróbuj ponownie.</string>
   <string name="wizard_result_certificate_unsupported_security">Urządzenie używa nieobsługiwanych zabezpieczeń. Zaktualizuj oprogramowanie urządzenia i spróbuj ponownie.</string>
   <string name="wizard_result_certificate_different_names">Urządzenie ma nieprawidłowy certyfikat — nazwa jest nieprawidłowa (certyfikat: %1$s, urządzenie: %2$s)</string>
+  <string name="schedule_program_default">Domyślny</string>
+  <string name="schedule_program_turn_on_seconds">Włącz %1$ds</string>
+  <string name="schedule_program_turn_off_seconds">Wyłącz %1$ds</string>
+  <string name="schedule_program_cycle">Cykl</string>
+  <string name="schedule_program_force_on">Wymuś ON</string>
+  <string name="schedule_program_force_off">Wymuś OFF</string>
+  <string name="switch_schedule_program_operation_type">Typ operacji</string>
+  <string name="switch_schedule_program_mode_start_on">Włącz raz</string>
+  <string name="switch_schedule_program_mode_start_off">Wyłącz raz</string>
+  <string name="switch_schedule_program_mode_forced_on">Wymuś włączenie</string>
+  <string name="switch_schedule_program_mode_forced_off">Wymuś wyłączenie</string>
+  <string name="switch_schedule_program_mode_automatic">Automatyczny</string>
+  <string name="switch_schedule_program_first_duration">Pierwszy czas trwania (%1$s)</string>
+  <string name="switch_schedule_program_second_duration">Drugi czas trwania (%1$s)</string>
 </resources>

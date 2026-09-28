@@ -977,4 +977,18 @@
   <string name="channel_caption_smoke_sensor">Smoke sensor</string>
   <string name="channel_caption_carbon_monoxide_sensor">Carbon monoxide sensor</string>
   <string name="channel_caption_gas_sensor">Gas sensor</string>
+  <string name="schedule_program_default">Default</string>
+  <string name="schedule_program_turn_on_seconds">Turn on %1$ds</string>
+  <string name="schedule_program_turn_off_seconds">Turn off %1$ds</string>
+  <string name="schedule_program_cycle">Cycle</string>
+  <string name="schedule_program_force_on">Force ON</string>
+  <string name="schedule_program_force_off">Force OFF</string>
+  <string name="switch_schedule_program_operation_type">Operation type</string>
+  <string name="switch_schedule_program_mode_start_on">Turn on once</string>
+  <string name="switch_schedule_program_mode_start_off">Turn off once</string>
+  <string name="switch_schedule_program_mode_forced_on">Forced on</string>
+  <string name="switch_schedule_program_mode_forced_off">Forced off</string>
+  <string name="switch_schedule_program_mode_automatic">Automatic</string>
+  <string name="switch_schedule_program_first_duration">First duration (%1$s)</string>
+  <string name="switch_schedule_program_second_duration">Second duration (%1$s)</string>
 </resources>
