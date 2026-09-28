@@ -29,13 +29,11 @@ import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.extensions.toSuplaTemperature
 import org.supla.android.features.details.thermostatdetail.schedule.data.ProgramSettingsData
-import org.supla.android.features.details.thermostatdetail.schedule.data.QuartersSelectionData
 import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailProgramBox
 import org.supla.android.lib.SuplaConst
-import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxKey
+import org.supla.android.ui.views.schedule.editor.QuartersSelectionData
 import org.supla.android.ui.views.schedule.editor.WeeklyScheduleEditorState
 import org.supla.core.shared.data.model.general.SuplaFunction
-import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 
 private const val DEFAULT_HEAT_TEMPERATURE = 21f
@@ -58,17 +56,6 @@ data class ScheduleDetailViewState(
   val showHelp: Boolean = false,
   override val sent: Boolean = false
 ) : ViewState(), DelayableState {
-
-  fun quarterSelectionData(forKey: ScheduleDetailEntryBoxKey?): QuartersSelectionData? {
-    val (key) = guardLet(forKey) { return null }
-    val (value) = guardLet(editorState.scheduleTableState.schedule[forKey]) { return null }
-
-    return QuartersSelectionData(
-      entryKey = key.copy(),
-      entryValue = value.copy(),
-      activeProgram = editorState.activeProgram
-    )
-  }
 
   fun updatedPrograms(function: Int, thermometerValueFormatter: ValueFormatter): List<ScheduleDetailProgramBox> =
     programSettings?.let { programToUpdate ->

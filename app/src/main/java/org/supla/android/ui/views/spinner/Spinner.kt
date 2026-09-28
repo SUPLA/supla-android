@@ -74,9 +74,8 @@ fun <T> Spinner(
   var selectedOptionText by remember(options) { mutableStateOf(firstOptionText) }
 
   Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
-    Text(
-      text = label.uppercase(),
-      style = MaterialTheme.typography.bodySmall,
+    Label(
+      text = label,
       modifier = Modifier.padding(horizontal = 12.dp),
       color = colorResource(id = R.color.on_surface_variant)
     )
@@ -116,9 +115,8 @@ fun <T : SpinnerItem> Spinner(
 
   Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
     options.label?.let {
-      Text(
-        text = stringResource(id = it).uppercase(),
-        style = MaterialTheme.typography.bodySmall,
+      Label(
+        text = stringResource(id = it),
         color = labelTextColor,
         modifier = Modifier.padding(horizontal = 12.dp),
       )

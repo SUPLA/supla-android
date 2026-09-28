@@ -18,7 +18,6 @@ package org.supla.android.features.details.thermostatdetail.schedule.extensions
  */
 
 import org.supla.android.R
-import org.supla.android.data.source.local.calendar.QuarterOfHour
 import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
@@ -26,34 +25,8 @@ import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.data.source.remote.hvac.icon
 import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailProgramBox
 import org.supla.android.lib.SuplaConst
-import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxKey
-import org.supla.android.ui.views.schedule.editor.ScheduleTableBox
 import org.supla.core.shared.extensions.fromSuplaTemperature
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
-
-fun SuplaChannelWeeklyScheduleConfig.viewScheduleBoxesMap() =
-  mutableMapOf<ScheduleDetailEntryBoxKey, ScheduleTableBox>().apply {
-    for (entry in schedule) {
-      val key = ScheduleDetailEntryBoxKey(entry.dayOfWeek, entry.hour.toShort())
-      if (containsKey(key)) {
-        val value = this[key]!!
-        this[key] = when (entry.quarterOfHour) {
-          QuarterOfHour.FIRST -> value.copy(firstQuarterProgram = entry.program)
-          QuarterOfHour.SECOND -> value.copy(secondQuarterProgram = entry.program)
-          QuarterOfHour.THIRD -> value.copy(thirdQuarterProgram = entry.program)
-          QuarterOfHour.FOURTH -> value.copy(fourthQuarterProgram = entry.program)
-        }
-      } else {
-        val value = ScheduleTableBox(SuplaScheduleProgram.OFF)
-        this[key] = when (entry.quarterOfHour) {
-          QuarterOfHour.FIRST -> value.copy(firstQuarterProgram = entry.program)
-          QuarterOfHour.SECOND -> value.copy(secondQuarterProgram = entry.program)
-          QuarterOfHour.THIRD -> value.copy(thirdQuarterProgram = entry.program)
-          QuarterOfHour.FOURTH -> value.copy(fourthQuarterProgram = entry.program)
-        }
-      }
-    }
-  }
 
 fun SuplaChannelWeeklyScheduleConfig.viewProgramBoxesList(subfunction: ThermostatSubfunction, valueFormatter: ValueFormatter) =
   mutableListOf<ScheduleDetailProgramBox>().apply {

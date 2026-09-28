@@ -26,7 +26,6 @@ import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.model.temperature.TemperatureCorrection
-import org.supla.android.data.source.local.calendar.DayOfWeek
 import org.supla.android.data.source.local.calendar.QuarterOfHour
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.ConfigResult
@@ -36,7 +35,6 @@ import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfi
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
-import org.supla.android.data.source.remote.isAutomaticTimeSyncDisabled
 import org.supla.android.di.FORMATTER_THERMOMETER
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DeviceConfigEventsManager
@@ -44,19 +42,18 @@ import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.details.thermostatdetail.schedule.data.ProgramSettingsData
 import org.supla.android.features.details.thermostatdetail.schedule.extensions.viewProgramBoxesList
-import org.supla.android.features.details.thermostatdetail.schedule.extensions.viewScheduleBoxesMap
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
 import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxKey
 import org.supla.android.ui.views.schedule.editor.ScheduleTableBox
-import org.supla.core.shared.extensions.forFalse
+import org.supla.android.ui.views.schedule.editor.quartersSelectionData
+import org.supla.android.ui.views.schedule.editor.viewScheduleTableState
 import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.usecase.channel.valueformatter.DefaultValueFormatter
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import timber.log.Timber
-import java.util.Calendar
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Named
@@ -163,7 +160,7 @@ class ScheduleDetailViewModel @Inject constructor(
   }
 
   override fun onScheduleTableLongPress(key: ScheduleDetailEntryBoxKey?) {
-    updateState { it.copy(quarterSelection = it.quarterSelectionData(key)) }
+    updateState { it.copy(quarterSelection = it.editorState.quartersSelectionData(key)) }
   }
 
   override fun onQuartersSelectionDismiss() {
@@ -468,8 +465,6 @@ class ScheduleDetailViewModel @Inject constructor(
       return
     }
 
-    val calendar = Calendar.getInstance()
-
     updateState {
       if (it.changing) {
         Timber.d("update skipped because of changing")
@@ -487,13 +482,7 @@ class ScheduleDetailViewModel @Inject constructor(
         loadingState = it.loadingState.changingLoading(false, dateProvider),
         channelFunction = channelFunction,
         editorState = it.editorState.copy(
-          scheduleTableState = it.editorState.scheduleTableState.copy(
-            schedule = data.weeklyScheduleConfig.viewScheduleBoxesMap(),
-            currentDayOfWeek = data.deviceConfig.isAutomaticTimeSyncDisabled()
-              .forFalse(DayOfWeek.from(calendar.get(Calendar.DAY_OF_WEEK) - 1)),
-            currentHour = data.deviceConfig.isAutomaticTimeSyncDisabled()
-              .forFalse(calendar.get(Calendar.HOUR_OF_DAY)),
-          ),
+          scheduleTableState = data.weeklyScheduleConfig.viewScheduleTableState(data.deviceConfig, dateProvider),
           programs = data.weeklyScheduleConfig.viewProgramBoxesList(thermostatFunction, thermometerValueFormatter)
         ),
         configTemperatureMin = minTemperature,
