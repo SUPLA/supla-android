@@ -1,4 +1,5 @@
-package org.supla.android.features.details.switchdetail.schedule
+package org.supla.android.features.details.switchdetail.schedule.extensions
+
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,20 +18,11 @@ package org.supla.android.features.details.switchdetail.schedule
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.compose.runtime.Composable
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import org.supla.android.features.details.detailbase.base.ItemBundle
-import org.supla.android.main.ViewModelHost
+import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
+import org.supla.android.features.details.switchdetail.schedule.data.SwitchScheduleProgram
 
-@Composable
-fun SwitchScheduleScreen(
-  item: ItemBundle,
-  viewModel: SwitchScheduleViewModel = hiltViewModel()
-) {
-  ViewModelHost(
-    viewModel = viewModel,
-    onCreate = { viewModel.observeConfig(item.remoteId, item.deviceId) }
-  ) {
-    viewModel.View(it)
-  }
-}
+fun SuplaChannelWeeklyScheduleConfig.viewProgramsList(): List<SwitchScheduleProgram> =
+  programConfigurations
+    .sortedBy { it.program.value }
+    .map { SwitchScheduleProgram(it) }
+    .plus(SwitchScheduleProgram.DEFAULT)

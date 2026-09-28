@@ -18,28 +18,21 @@ package org.supla.android.features.details.thermostatdetail.schedule.ui.dialogs
  */
 
 import androidx.annotation.StringRes
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
@@ -48,7 +41,7 @@ import org.supla.android.data.model.temperature.TemperatureCorrection
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.features.details.thermostatdetail.schedule.data.ProgramSettingsData
-import org.supla.android.features.details.thermostatdetail.schedule.extensions.number
+import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.dialogs.Dialog
 import org.supla.android.ui.dialogs.DialogButtonsRow
 import org.supla.android.ui.views.Separator
@@ -58,7 +51,7 @@ import org.supla.android.ui.views.buttons.MinusIconButton
 import org.supla.android.ui.views.buttons.OutlinedButton
 import org.supla.android.ui.views.buttons.PlusIconButton
 import org.supla.android.ui.views.forms.TextField
-import org.supla.android.ui.views.schedule.colorRes
+import org.supla.android.ui.views.schedule.ScheduleProgramDialogHeader
 import org.supla.android.ui.views.spinner.Spinner
 import org.supla.core.shared.data.model.thermometer.TemperatureUnit
 
@@ -74,7 +67,7 @@ fun ProgramSettingsScope.ProgramDialog(
   data: ProgramSettingsData
 ) {
   Dialog(onDismiss = { onProgramSettingsDismiss() }) {
-    DialogHeader(program = data.program)
+    ScheduleProgramDialogHeader(program = data.program)
     Separator(style = SeparatorStyle.LIGHT)
     if (data.modes.size > 1) {
       Spinner(
@@ -157,32 +150,6 @@ fun ProgramSettingsScope.ProgramDialog(
 }
 
 @Composable
-private fun DialogHeader(program: SuplaScheduleProgram) =
-  Row(
-    modifier = Modifier
-      .padding(all = dimensionResource(id = R.dimen.distance_default))
-      .fillMaxWidth(),
-    horizontalArrangement = Arrangement.spacedBy(8.dp),
-    verticalAlignment = Alignment.CenterVertically
-  ) {
-    ProgramIcon(program)
-    Text(
-      text = stringResource(id = R.string.schedule_detail_program_dialog_header, program.number()),
-      style = MaterialTheme.typography.headlineSmall,
-      textAlign = TextAlign.Center
-    )
-  }
-
-@Composable
-private fun ProgramIcon(program: SuplaScheduleProgram) =
-  Box(
-    modifier = Modifier
-      .size(16.dp)
-      .clip(RoundedCornerShape(8.dp))
-      .background(color = colorResource(id = program.colorRes()))
-  )
-
-@Composable
 private fun TemperatureControlRow(
   @StringRes headerTextRes: Int,
   temperature: String,
@@ -240,7 +207,7 @@ private val previewScope = object : ProgramSettingsScope {
   override fun onProgramSettingsSave() {}
 }
 
-@Preview
+@SuplaPreview
 @Composable
 private fun PreviewAuto() {
   Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -250,7 +217,7 @@ private fun PreviewAuto() {
   }
 }
 
-@Preview
+@SuplaPreview
 @Composable
 private fun PreviewHeat() {
   Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {

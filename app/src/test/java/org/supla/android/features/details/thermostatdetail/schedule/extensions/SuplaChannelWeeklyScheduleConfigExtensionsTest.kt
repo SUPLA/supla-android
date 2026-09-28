@@ -20,6 +20,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
 import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxKey
 import org.supla.android.ui.views.schedule.editor.ScheduleTableBox
+import org.supla.android.ui.views.schedule.editor.viewScheduleBoxesMap
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT

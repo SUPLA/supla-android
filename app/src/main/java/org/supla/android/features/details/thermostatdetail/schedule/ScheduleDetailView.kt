@@ -33,11 +33,11 @@ import org.supla.android.features.details.thermostatdetail.schedule.data.Schedul
 import org.supla.android.features.details.thermostatdetail.schedule.ui.components.ScheduleInfo
 import org.supla.android.features.details.thermostatdetail.schedule.ui.dialogs.ProgramDialog
 import org.supla.android.features.details.thermostatdetail.schedule.ui.dialogs.ProgramSettingsScope
-import org.supla.android.features.details.thermostatdetail.schedule.ui.dialogs.QuartersDialog
-import org.supla.android.features.details.thermostatdetail.schedule.ui.dialogs.QuartersSelectionDialogScope
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.tools.SuplaPreviewLandscape
 import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxKey
+import org.supla.android.ui.views.schedule.editor.QuartersDialog
+import org.supla.android.ui.views.schedule.editor.QuartersSelectionDialogScope
 import org.supla.android.ui.views.schedule.editor.ScheduleTableBox
 import org.supla.android.ui.views.schedule.editor.ScheduleTableState
 import org.supla.android.ui.views.schedule.editor.WeeklyScheduleEditor

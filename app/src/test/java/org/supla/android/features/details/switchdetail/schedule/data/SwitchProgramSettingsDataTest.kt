@@ -1,4 +1,4 @@
-package org.supla.android.features.details.thermostatdetail.schedule.data
+package org.supla.android.features.details.switchdetail.schedule.data
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,12 +17,24 @@ package org.supla.android.features.details.thermostatdetail.schedule.data
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.Test
+import org.supla.android.data.source.remote.hvac.SuplaRelayMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
-import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxKey
-import org.supla.android.ui.views.schedule.editor.ScheduleTableBox
 
-data class QuartersSelectionData(
-  val entryKey: ScheduleDetailEntryBoxKey,
-  val entryValue: ScheduleTableBox,
-  val activeProgram: SuplaScheduleProgram?
-)
+class SwitchProgramSettingsDataTest {
+
+  @Test
+  fun `should use zero when durations are not provided`() {
+    val data = SwitchProgramSettingsData(
+      program = SuplaScheduleProgram.PROGRAM_1,
+      modes = listOf(SuplaRelayMode.START_ON),
+      selectedMode = SuplaRelayMode.START_ON
+    )
+
+    assertThat(data.relayModeDurationS).isZero()
+    assertThat(data.relayOppositeModeDurationS).isZero()
+    assertThat(data.relayModeDurationSString).isEqualTo("0")
+    assertThat(data.relayOppositeModeDurationSString).isEqualTo("0")
+  }
+}
