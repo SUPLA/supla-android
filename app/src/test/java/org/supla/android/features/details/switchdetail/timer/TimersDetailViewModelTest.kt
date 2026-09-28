@@ -40,6 +40,7 @@ import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.LocationSortingType
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
+import org.supla.android.data.source.remote.hvac.SuplaRelayMode
 import org.supla.android.images.ImageId
 import org.supla.android.lib.SuplaChannelExtendedValue
 import org.supla.android.lib.SuplaTimerState
@@ -51,7 +52,6 @@ import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.client.StartTimerUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
-import org.supla.core.shared.data.model.function.relay.RelayMode
 import org.supla.core.shared.data.model.function.relay.RelayValue
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.infrastructure.LocalizedString
@@ -464,7 +464,7 @@ class TimersDetailViewModelTest : BaseViewModelTest<TimersDetailViewState, Timer
     return mockk {
       every { channelRemoteId } returns remoteId
       every { this@mockk.status } returns status
-      every { asRelayValue() } returns RelayValue(status, on, emptyList(), RelayMode.NOT_SET)
+      every { asRelayValue() } returns RelayValue(status, on, emptyList(), SuplaRelayMode.NOT_SET)
       every { isClosed() } returns on
     }
   }

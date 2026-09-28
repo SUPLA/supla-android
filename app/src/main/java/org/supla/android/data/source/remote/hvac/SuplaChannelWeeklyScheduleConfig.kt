@@ -31,9 +31,13 @@ enum class SuplaScheduleProgram(val value: Int) {
 
 data class SuplaWeeklyScheduleProgram( /* aka TWeeklyScheduleProgram */
   val program: SuplaScheduleProgram,
-  val mode: SuplaHvacMode,
+  val mode: SuplaHvacMode? = null,
   val setpointTemperatureHeat: Short? = null,
-  val setpointTemperatureCool: Short? = null
+  val setpointTemperatureCool: Short? = null,
+  val relayMode: SuplaRelayMode? = null,
+  val relayModeDurationS: Int? = null,
+  val relayOppositeModeDurationS: Int? = null,
+  val buttonMode: SuplaButtonMode? = null
 ) {
   companion object
 }

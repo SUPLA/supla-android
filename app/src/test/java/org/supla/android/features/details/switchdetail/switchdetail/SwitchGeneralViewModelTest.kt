@@ -42,6 +42,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
+import org.supla.android.data.source.remote.hvac.SuplaRelayMode
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterGeneralStateHandler
@@ -62,7 +63,6 @@ import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.group.GroupWithChannels
 import org.supla.android.usecases.group.ReadGroupWithChannelsUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
-import org.supla.core.shared.data.model.function.relay.RelayMode
 import org.supla.core.shared.data.model.function.relay.RelayValue
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.infrastructure.LocalizedString
@@ -489,7 +489,7 @@ class SwitchGeneralViewModelTest :
       mockShareable(remoteId = remoteId, function = function)
       every { flags } returns 0
       every { channelValueEntity } returns mockk {
-        every { asRelayValue() } returns RelayValue(SuplaChannelAvailabilityStatus.OFFLINE, false, emptyList(), RelayMode.NOT_SET)
+        every { asRelayValue() } returns RelayValue(SuplaChannelAvailabilityStatus.OFFLINE, false, emptyList(), SuplaRelayMode.NOT_SET)
         every { getValueAsByteArray() } returns byteArrayOf()
       }
       every { channelExtendedValueEntity } returns estimatedEndDate?.let { mockTimerState(estimatedEndDate) }

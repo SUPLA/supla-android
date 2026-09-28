@@ -18,27 +18,30 @@ package org.supla.core.shared.data.model.function.relay
  */
 
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
+import org.supla.android.data.source.remote.hvac.SuplaRelayMode
 
-private const val RELAY_VALUE_LENGTH = 3
+private const val RELAY_VALUE_LENGTH = 4
 
 data class RelayValue(
   val status: SuplaChannelAvailabilityStatus,
   val on: Boolean,
   val flags: List<SuplaRelayFlag>,
-  val mode: RelayMode
+  val mode: SuplaRelayMode
 ) {
 
   companion object {
     fun from(status: SuplaChannelAvailabilityStatus, bytes: ByteArray): RelayValue {
       if (bytes.size < RELAY_VALUE_LENGTH) {
-        return RelayValue(status, false, emptyList(), RelayMode.NOT_SET)
+        return RelayValue(status, false, emptyList(), SuplaRelayMode.NOT_SET)
       }
 
       return RelayValue(
         status = status,
         on = bytes[0] >= 1,
-        flags = SuplaRelayFlag.from(bytes[1].toInt()),
-        mode = RelayMode.from(bytes[2].toInt())
+        flags = SuplaRelayFlag.from(
+          (bytes[1].toInt() and 0xFF) or ((bytes[2].toInt() and 0xFF) shl 8)
+        ),
+        mode = SuplaRelayMode.from(bytes[3].toInt() and 0xFF)
       )
     }
   }
