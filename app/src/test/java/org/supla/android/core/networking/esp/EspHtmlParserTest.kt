@@ -36,6 +36,9 @@ class EspHtmlParserTest {
   private val testFileDiy: File?
     get() = javaClass.classLoader?.getResource("7.8.17.html")?.path?.let { File(it) }
 
+  private val testFileQuota: File?
+    get() = javaClass.classLoader?.getResource("config_mode_quota.html")?.path?.let { File(it) }
+
   @InjectMocks
   private lateinit var parser: EspHtmlParser
 
@@ -113,6 +116,26 @@ class EspHtmlParserTest {
     assertThat(result.deviceFirmwareVersion).isEqualTo("SuplaDevice GG v7.8.17")
     assertThat(result.deviceGUID).isEqualTo("C85A6230A251518F61CFDE8704B6A7D8")
     assertThat(result.deviceMAC).isEqualTo("30:C9:22:D2:BE:E8")
+    assertThat(result.needsCloudConfig).isFalse()
+  }
+
+  @Test
+  fun shouldLoadConfigQuota() {
+    // given
+    val (file) = guardLet(testFileQuota) { throw IllegalStateException("Test file not found!") }
+    val document = Jsoup.parse(file, "UTF-8")
+    val inputs = parser.findInputs(document)
+
+    // then
+    val result = parser.prepareResult(document, inputs)
+
+    // then
+    assertThat(result.deviceName).isEqualTo("ZAMEL mSRW-01")
+    assertThat(result.deviceLastState)
+      .isEqualTo("WiFi Network \"M&Msd\" Not found,WiFi - Connecting...,WiFi Network \"M&Msd\" Not found,WiFi - Connecting...")
+    assertThat(result.deviceFirmwareVersion).isEqualTo("2.8.62")
+    assertThat(result.deviceGUID).isEqualTo("DF572A7DF11A5F74A6F533285BE66675")
+    assertThat(result.deviceMAC).isEqualTo("48:55:19:DA:0A:E1")
     assertThat(result.needsCloudConfig).isFalse()
   }
 }
