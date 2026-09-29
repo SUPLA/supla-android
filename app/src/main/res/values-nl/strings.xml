@@ -862,4 +862,18 @@
   <string name="wizard_result_certificate_pin_mismatch">Het certificaat van het apparaat wijkt af van het verwachte certificaat. Werk de app en de apparaatsoftware bij en probeer het opnieuw.</string>
   <string name="wizard_result_certificate_unsupported_security">Het apparaat gebruikt beveiligingsinstellingen die niet worden ondersteund. Werk de apparaatsoftware bij en probeer het opnieuw.</string>
   <string name="wizard_result_certificate_different_names">Het apparaat heeft een onjuist certificaat - de namen komen niet overeen (certificaat: %1$s, apparaat: %2$s)</string>
+  <string name="schedule_program_default">Standaard</string>
+  <string name="schedule_program_turn_on_seconds">Schakel %1$ds in</string>
+  <string name="schedule_program_turn_off_seconds">Schakel %1$ds uit</string>
+  <string name="schedule_program_cycle">Cyclus</string>
+  <string name="schedule_program_force_on">Forceer AAN</string>
+  <string name="schedule_program_force_off">Forceer UIT</string>
+  <string name="relay_schedule_program_operation_type">Bewerkingstype</string>
+  <string name="relay_schedule_program_mode_start_on">Eenmaal inschakelen</string>
+  <string name="relay_schedule_program_mode_start_off">Eenmaal uitschakelen</string>
+  <string name="relay_schedule_program_mode_forced_on">Geforceerd aan</string>
+  <string name="relay_schedule_program_mode_forced_off">Geforceerd uit</string>
+  <string name="relay_schedule_program_mode_automatic">Automatisch</string>
+  <string name="relay_schedule_program_first_duration">Eerste duur (%1$s)</string>
+  <string name="relay_schedule_program_second_duration">Tweede duur (%1$s)</string>
 </resources>

@@ -959,12 +959,12 @@
   <string name="schedule_program_cycle">Cykl</string>
   <string name="schedule_program_force_on">Wymuś ON</string>
   <string name="schedule_program_force_off">Wymuś OFF</string>
-  <string name="switch_schedule_program_operation_type">Typ operacji</string>
-  <string name="switch_schedule_program_mode_start_on">Włącz raz</string>
-  <string name="switch_schedule_program_mode_start_off">Wyłącz raz</string>
-  <string name="switch_schedule_program_mode_forced_on">Wymuś włączenie</string>
-  <string name="switch_schedule_program_mode_forced_off">Wymuś wyłączenie</string>
-  <string name="switch_schedule_program_mode_automatic">Automatyczny</string>
-  <string name="switch_schedule_program_first_duration">Pierwszy czas trwania (%1$s)</string>
-  <string name="switch_schedule_program_second_duration">Drugi czas trwania (%1$s)</string>
+  <string name="relay_schedule_program_operation_type">Typ operacji</string>
+  <string name="relay_schedule_program_mode_start_on">Włącz raz</string>
+  <string name="relay_schedule_program_mode_start_off">Wyłącz raz</string>
+  <string name="relay_schedule_program_mode_forced_on">Wymuś włączenie</string>
+  <string name="relay_schedule_program_mode_forced_off">Wymuś wyłączenie</string>
+  <string name="relay_schedule_program_mode_automatic">Automatyczny</string>
+  <string name="relay_schedule_program_first_duration">Pierwszy czas trwania (%1$s)</string>
+  <string name="relay_schedule_program_second_duration">Drugi czas trwania (%1$s)</string>
 </resources>

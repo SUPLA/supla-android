@@ -27,7 +27,10 @@ fun GateScheduleScreen(
   item: ItemBundle,
   viewModel: GateScheduleViewModel = hiltViewModel()
 ) {
-  ViewModelHost(viewModel = viewModel) { state ->
+  ViewModelHost(
+    viewModel = viewModel,
+    onCreate = { viewModel.observeConfig(item.remoteId, item.deviceId) }
+  ) { state ->
     viewModel.View(state)
   }
 }
