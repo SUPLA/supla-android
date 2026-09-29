@@ -1,4 +1,4 @@
-package org.supla.android.features.details.switchdetail.schedule.data
+package org.supla.android.features.details.relayschedule.data
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -27,7 +27,7 @@ import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
 
-data class SwitchScheduleProgram(
+data class RelayScheduleProgram(
   override val program: SuplaScheduleProgram,
   val relayMode: SuplaRelayMode,
   val relayModeDurationS: Int?,
@@ -40,9 +40,9 @@ data class SwitchScheduleProgram(
     get() = program == SuplaScheduleProgram.OFF || relayMode.isProgramMode
 
   companion object {
-    operator fun invoke(program: SuplaWeeklyScheduleProgram): SwitchScheduleProgram {
+    operator fun invoke(program: SuplaWeeklyScheduleProgram): RelayScheduleProgram {
       val relayMode = program.relayMode ?: SuplaRelayMode.NOT_SET
-      return SwitchScheduleProgram(
+      return RelayScheduleProgram(
         program = program.program,
         relayMode = relayMode,
         relayModeDurationS = program.relayModeDurationS,
@@ -51,7 +51,7 @@ data class SwitchScheduleProgram(
       )
     }
 
-    val DEFAULT = SwitchScheduleProgram(
+    val DEFAULT = RelayScheduleProgram(
       program = SuplaScheduleProgram.OFF,
       relayMode = SuplaRelayMode.NOT_SET,
       relayModeDurationS = 0,

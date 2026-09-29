@@ -861,4 +861,18 @@
   <string name="wizard_result_certificate_pin_mismatch">Enhetens sertifikat er forskjellig fra det forventede. Oppdater appen og enhetens programvare, og prøv igjen.</string>
   <string name="wizard_result_certificate_unsupported_security">Enheten bruker sikkerhetsinnstillinger som ikke støttes. Oppdater enhetens programvare og prøv igjen.</string>
   <string name="wizard_result_certificate_different_names">Enheten har feil sertifikat - navnene samsvarer ikke (sertifikat: %1$s, enhet: %2$s)</string>
+  <string name="schedule_program_default">Standard</string>
+  <string name="schedule_program_turn_on_seconds">Slå på i %1$ds</string>
+  <string name="schedule_program_turn_off_seconds">Slå av i %1$ds</string>
+  <string name="schedule_program_cycle">Syklus</string>
+  <string name="schedule_program_force_on">Tving PÅ</string>
+  <string name="schedule_program_force_off">Tving AV</string>
+  <string name="relay_schedule_program_operation_type">Operasjonstype</string>
+  <string name="relay_schedule_program_mode_start_on">Slå på én gang</string>
+  <string name="relay_schedule_program_mode_start_off">Slå av én gang</string>
+  <string name="relay_schedule_program_mode_forced_on">Tvunget på</string>
+  <string name="relay_schedule_program_mode_forced_off">Tvunget av</string>
+  <string name="relay_schedule_program_mode_automatic">Automatisk</string>
+  <string name="relay_schedule_program_first_duration">Første varighet (%1$s)</string>
+  <string name="relay_schedule_program_second_duration">Andre varighet (%1$s)</string>
 </resources>

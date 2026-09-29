@@ -921,4 +921,18 @@
   <string name="wizard_result_certificate_pin_mismatch">Das Zertifikat des Geräts unterscheidet sich vom erwarteten Zertifikat. Aktualisieren Sie die App und die Gerätesoftware und versuchen Sie es erneut.</string>
   <string name="wizard_result_certificate_unsupported_security">Das Gerät verwendet nicht unterstützte Sicherheitseinstellungen. Aktualisieren Sie die Gerätesoftware und versuchen Sie es erneut.</string>
   <string name="wizard_result_certificate_different_names">Das Gerät hat ein falsches Zertifikat - die Namen stimmen nicht überein (Zertifikat: %1$s, Gerät: %2$s)</string>
+  <string name="schedule_program_default">Standard</string>
+  <string name="schedule_program_turn_on_seconds">Für %1$ds einschalten</string>
+  <string name="schedule_program_turn_off_seconds">Für %1$ds ausschalten</string>
+  <string name="schedule_program_cycle">Zyklus</string>
+  <string name="schedule_program_force_on">EIN erzwingen</string>
+  <string name="schedule_program_force_off">AUS erzwingen</string>
+  <string name="relay_schedule_program_operation_type">Betriebsart</string>
+  <string name="relay_schedule_program_mode_start_on">Einmal einschalten</string>
+  <string name="relay_schedule_program_mode_start_off">Einmal ausschalten</string>
+  <string name="relay_schedule_program_mode_forced_on">Erzwungen ein</string>
+  <string name="relay_schedule_program_mode_forced_off">Erzwungen aus</string>
+  <string name="relay_schedule_program_mode_automatic">Automatisch</string>
+  <string name="relay_schedule_program_first_duration">Erste Dauer (%1$s)</string>
+  <string name="relay_schedule_program_second_duration">Zweite Dauer (%1$s)</string>
 </resources>
