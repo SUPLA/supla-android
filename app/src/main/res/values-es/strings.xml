@@ -849,4 +849,18 @@
   <string name="wizard_result_certificate_pin_mismatch">El certificado del dispositivo difiere del esperado. Actualice la aplicación y el software del dispositivo, y vuelva a intentarlo.</string>
   <string name="wizard_result_certificate_unsupported_security">El dispositivo usa ajustes de seguridad no compatibles. Actualice el software del dispositivo y vuelva a intentarlo.</string>
   <string name="wizard_result_certificate_different_names">El dispositivo tiene un certificado incorrecto - los nombres no coinciden (certificado: %1$s, dispositivo: %2$s)</string>
+  <string name="schedule_program_default">Predeterminado</string>
+  <string name="schedule_program_turn_on_seconds">Activar durante %1$ds</string>
+  <string name="schedule_program_turn_off_seconds">Desactivar durante %1$ds</string>
+  <string name="schedule_program_cycle">Ciclo</string>
+  <string name="schedule_program_force_on">Forzar activación</string>
+  <string name="schedule_program_force_off">Forzar desactivación</string>
+  <string name="relay_schedule_program_operation_type">Tipo de operación</string>
+  <string name="relay_schedule_program_mode_start_on">Activar una vez</string>
+  <string name="relay_schedule_program_mode_start_off">Desactivar una vez</string>
+  <string name="relay_schedule_program_mode_forced_on">Activación forzada</string>
+  <string name="relay_schedule_program_mode_forced_off">Desactivación forzada</string>
+  <string name="relay_schedule_program_mode_automatic">Automático</string>
+  <string name="relay_schedule_program_first_duration">Primera duración (%1$s)</string>
+  <string name="relay_schedule_program_second_duration">Segunda duración (%1$s)</string>
 </resources>

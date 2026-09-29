@@ -846,4 +846,18 @@
   <string name="wizard_result_certificate_pin_mismatch">Certifikát zařízení se liší od očekávaného. Aktualizujte aplikaci i software zařízení a zkuste to znovu.</string>
   <string name="wizard_result_certificate_unsupported_security">Zařízení používá nepodporované nastavení zabezpečení. Aktualizujte software zařízení a zkuste to znovu.</string>
   <string name="wizard_result_certificate_different_names">Zařízení má nesprávný certifikát - názvy se neshodují (certifikát: %1$s, zařízení: %2$s)</string>
+  <string name="schedule_program_default">Výchozí</string>
+  <string name="schedule_program_turn_on_seconds">Zapnout na %1$ds</string>
+  <string name="schedule_program_turn_off_seconds">Vypnout na %1$ds</string>
+  <string name="schedule_program_cycle">Cyklus</string>
+  <string name="schedule_program_force_on">Vynutit ZAP</string>
+  <string name="schedule_program_force_off">Vynutit VYP</string>
+  <string name="relay_schedule_program_operation_type">Typ operace</string>
+  <string name="relay_schedule_program_mode_start_on">Jednou zapnout</string>
+  <string name="relay_schedule_program_mode_start_off">Jednou vypnout</string>
+  <string name="relay_schedule_program_mode_forced_on">Vynuceně zapnuto</string>
+  <string name="relay_schedule_program_mode_forced_off">Vynuceně vypnuto</string>
+  <string name="relay_schedule_program_mode_automatic">Automaticky</string>
+  <string name="relay_schedule_program_first_duration">První doba trvání (%1$s)</string>
+  <string name="relay_schedule_program_second_duration">Druhá doba trvání (%1$s)</string>
 </resources>

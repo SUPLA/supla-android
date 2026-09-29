@@ -983,12 +983,12 @@
   <string name="schedule_program_cycle">Cycle</string>
   <string name="schedule_program_force_on">Force ON</string>
   <string name="schedule_program_force_off">Force OFF</string>
-  <string name="switch_schedule_program_operation_type">Operation type</string>
-  <string name="switch_schedule_program_mode_start_on">Turn on once</string>
-  <string name="switch_schedule_program_mode_start_off">Turn off once</string>
-  <string name="switch_schedule_program_mode_forced_on">Forced on</string>
-  <string name="switch_schedule_program_mode_forced_off">Forced off</string>
-  <string name="switch_schedule_program_mode_automatic">Automatic</string>
-  <string name="switch_schedule_program_first_duration">First duration (%1$s)</string>
-  <string name="switch_schedule_program_second_duration">Second duration (%1$s)</string>
+  <string name="relay_schedule_program_operation_type">Operation type</string>
+  <string name="relay_schedule_program_mode_start_on">Turn on once</string>
+  <string name="relay_schedule_program_mode_start_off">Turn off once</string>
+  <string name="relay_schedule_program_mode_forced_on">Forced on</string>
+  <string name="relay_schedule_program_mode_forced_off">Forced off</string>
+  <string name="relay_schedule_program_mode_automatic">Automatic</string>
+  <string name="relay_schedule_program_first_duration">First duration (%1$s)</string>
+  <string name="relay_schedule_program_second_duration">Second duration (%1$s)</string>
 </resources>

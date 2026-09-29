@@ -858,4 +858,18 @@
   <string name="wizard_result_certificate_pin_mismatch">Το πιστοποιητικό της συσκευής διαφέρει από το αναμενόμενο. Ενημερώστε την εφαρμογή και το λογισμικό της συσκευής και δοκιμάστε ξανά.</string>
   <string name="wizard_result_certificate_unsupported_security">Η συσκευή χρησιμοποιεί μη υποστηριζόμενες ρυθμίσεις ασφαλείας. Ενημερώστε το λογισμικό της συσκευής και δοκιμάστε ξανά.</string>
   <string name="wizard_result_certificate_different_names">Η συσκευή έχει λανθασμένο πιστοποιητικό - τα ονόματα δεν ταιριάζουν (πιστοποιητικό: %1$s, συσκευή: %2$s)</string>
+  <string name="schedule_program_default">Προεπιλογή</string>
+  <string name="schedule_program_turn_on_seconds">Ενεργοποίηση για %1$ds</string>
+  <string name="schedule_program_turn_off_seconds">Απενεργοποίηση για %1$ds</string>
+  <string name="schedule_program_cycle">Κύκλος</string>
+  <string name="schedule_program_force_on">Εξαναγκασμός ON</string>
+  <string name="schedule_program_force_off">Εξαναγκασμός OFF</string>
+  <string name="relay_schedule_program_operation_type">Τύπος λειτουργίας</string>
+  <string name="relay_schedule_program_mode_start_on">Ενεργοποίηση μία φορά</string>
+  <string name="relay_schedule_program_mode_start_off">Απενεργοποίηση μία φορά</string>
+  <string name="relay_schedule_program_mode_forced_on">Εξαναγκασμένη ενεργοποίηση</string>
+  <string name="relay_schedule_program_mode_forced_off">Εξαναγκασμένη απενεργοποίηση</string>
+  <string name="relay_schedule_program_mode_automatic">Αυτόματα</string>
+  <string name="relay_schedule_program_first_duration">Πρώτη διάρκεια (%1$s)</string>
+  <string name="relay_schedule_program_second_duration">Δεύτερη διάρκεια (%1$s)</string>
 </resources>
