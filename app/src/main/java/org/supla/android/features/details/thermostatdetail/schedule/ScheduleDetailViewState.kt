@@ -18,12 +18,9 @@ package org.supla.android.features.details.thermostatdetail.schedule
  */
 
 import org.supla.android.R
-import org.supla.android.core.networking.suplaclient.DelayableState
 import org.supla.android.core.ui.ViewState
-import org.supla.android.data.source.local.calendar.QuarterOfHour
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
-import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleEntry
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.events.LoadingTimeoutManager
@@ -53,9 +50,8 @@ data class ScheduleDetailViewState(
   val editorState: WeeklyScheduleEditorState<ScheduleDetailProgramBox> = WeeklyScheduleEditorState(),
   val quarterSelection: QuartersSelectionData? = null,
   val programSettings: ProgramSettingsData? = null,
-  val showHelp: Boolean = false,
-  override val sent: Boolean = false
-) : ViewState(), DelayableState {
+  val showHelp: Boolean = false
+) : ViewState() {
 
   fun updatedPrograms(function: Int, thermometerValueFormatter: ValueFormatter): List<ScheduleDetailProgramBox> =
     programSettings?.let { programToUpdate ->
@@ -103,15 +99,6 @@ data class ScheduleDetailViewState(
     }
   }
 
-  fun suplaSchedule(): List<SuplaWeeklyScheduleEntry> = mutableListOf<SuplaWeeklyScheduleEntry>().apply {
-    for (entry in editorState.scheduleTableState.schedule) {
-      add(SuplaWeeklyScheduleEntry(entry.key.dayOfWeek, entry.key.hour.toInt(), QuarterOfHour.FIRST, entry.value.firstQuarterProgram))
-      add(SuplaWeeklyScheduleEntry(entry.key.dayOfWeek, entry.key.hour.toInt(), QuarterOfHour.SECOND, entry.value.secondQuarterProgram))
-      add(SuplaWeeklyScheduleEntry(entry.key.dayOfWeek, entry.key.hour.toInt(), QuarterOfHour.THIRD, entry.value.thirdQuarterProgram))
-      add(SuplaWeeklyScheduleEntry(entry.key.dayOfWeek, entry.key.hour.toInt(), QuarterOfHour.FOURTH, entry.value.fourthQuarterProgram))
-    }
-  }
-
   fun alignTemperature(temperature: Float?): Float {
     val temperatureToAlign = temperature
       ?: if (channelFunction == SuplaFunction.HVAC_DOMESTIC_HOT_WATER.value) DEFAULT_WATER_TEMPERATURE else DEFAULT_HEAT_TEMPERATURE
@@ -123,7 +110,4 @@ data class ScheduleDetailViewState(
       temperatureToAlign
     }
   }
-
-  override fun sentState(): DelayableState = copy(sent = true)
-  override fun delayableCopy(): DelayableState = copy()
 }
