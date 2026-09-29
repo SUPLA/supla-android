@@ -945,4 +945,18 @@
   <string name="wizard_result_certificate_pin_mismatch">Cihaz sertifikatı gözləniləndən fərqlidir. Tətbiqi və cihazın proqram təminatını yeniləyin, sonra yenidən cəhd edin.</string>
   <string name="wizard_result_certificate_unsupported_security">Cihaz dəstəklənməyən təhlükəsizlik parametrlərindən istifadə edir. Cihazın proqram təminatını yeniləyin və yenidən cəhd edin.</string>
   <string name="wizard_result_certificate_different_names">Cihazın sertifikatı yanlışdır - adlar eyni deyil (sertifikat: %1$s, cihaz: %2$s)</string>
+  <string name="schedule_program_default">Standart</string>
+  <string name="schedule_program_turn_on_seconds">%1$ds yandır</string>
+  <string name="schedule_program_turn_off_seconds">%1$ds söndür</string>
+  <string name="schedule_program_cycle">Dövr</string>
+  <string name="schedule_program_force_on">Məcburi ON</string>
+  <string name="schedule_program_force_off">Məcburi OFF</string>
+  <string name="relay_schedule_program_operation_type">Əməliyyat növü</string>
+  <string name="relay_schedule_program_mode_start_on">Bir dəfə yandır</string>
+  <string name="relay_schedule_program_mode_start_off">Bir dəfə söndür</string>
+  <string name="relay_schedule_program_mode_forced_on">Məcburi yandırma</string>
+  <string name="relay_schedule_program_mode_forced_off">Məcburi söndürmə</string>
+  <string name="relay_schedule_program_mode_automatic">Avtomatik</string>
+  <string name="relay_schedule_program_first_duration">Birinci müddət (%1$s)</string>
+  <string name="relay_schedule_program_second_duration">İkinci müddət (%1$s)</string>
 </resources>

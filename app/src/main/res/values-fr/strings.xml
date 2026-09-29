@@ -849,4 +849,18 @@
   <string name="wizard_result_certificate_pin_mismatch">Le certificat du dispositif diffère de celui attendu. Mettez à jour l’application et le logiciel du dispositif, puis réessayez.</string>
   <string name="wizard_result_certificate_unsupported_security">Le dispositif utilise des paramètres de sécurité non pris en charge. Mettez à jour le logiciel du dispositif et réessayez.</string>
   <string name="wizard_result_certificate_different_names">Le dispositif possède un certificat incorrect - les noms ne correspondent pas (certificat : %1$s, dispositif : %2$s)</string>
+  <string name="schedule_program_default">Par défaut</string>
+  <string name="schedule_program_turn_on_seconds">Activer pendant %1$ds</string>
+  <string name="schedule_program_turn_off_seconds">Désactiver pendant %1$ds</string>
+  <string name="schedule_program_cycle">Cycle</string>
+  <string name="schedule_program_force_on">Forcer activation</string>
+  <string name="schedule_program_force_off">Forcer désactivation</string>
+  <string name="relay_schedule_program_operation_type">Type d’opération</string>
+  <string name="relay_schedule_program_mode_start_on">Activer une fois</string>
+  <string name="relay_schedule_program_mode_start_off">Désactiver une fois</string>
+  <string name="relay_schedule_program_mode_forced_on">Activation forcée</string>
+  <string name="relay_schedule_program_mode_forced_off">Désactivation forcée</string>
+  <string name="relay_schedule_program_mode_automatic">Automatique</string>
+  <string name="relay_schedule_program_first_duration">Première durée (%1$s)</string>
+  <string name="relay_schedule_program_second_duration">Deuxième durée (%1$s)</string>
 </resources>

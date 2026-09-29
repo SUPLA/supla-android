@@ -1,4 +1,4 @@
-package org.supla.android.features.details.switchdetail.schedule
+package org.supla.android.features.details.relayschedule
 
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
@@ -46,8 +46,8 @@ import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
-import org.supla.android.features.details.switchdetail.schedule.data.SwitchProgramDuration
-import org.supla.android.features.details.switchdetail.schedule.data.SwitchScheduleProgram
+import org.supla.android.features.details.relayschedule.data.RelayProgramDuration
+import org.supla.android.features.details.relayschedule.data.RelayScheduleProgram
 import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxKey
 import org.supla.android.ui.views.schedule.editor.QuartersSelectionData
@@ -56,8 +56,8 @@ import org.supla.android.ui.views.schedule.editor.ScheduleTableState
 import org.supla.android.ui.views.schedule.editor.WeeklyScheduleEditorState
 import java.util.concurrent.TimeUnit
 
-class SwitchScheduleViewModelTest :
-  BaseViewModelTest<SwitchScheduleViewState, SwitchScheduleViewEvent, SwitchScheduleViewModel>(MockSchedulers.MOCKK) {
+class RelayScheduleViewModelTest :
+  BaseViewModelTest<RelayScheduleViewState, RelayScheduleViewEvent, RelayScheduleViewModel>(MockSchedulers.MOCKK) {
 
   @RelaxedMockK
   private lateinit var channelConfigEventsManager: ChannelConfigEventsManager
@@ -81,7 +81,7 @@ class SwitchScheduleViewModelTest :
   override lateinit var threading: SuplaThreading
 
   @InjectMockKs
-  override lateinit var viewModel: SwitchScheduleViewModel
+  override lateinit var viewModel: RelayScheduleViewModel
 
   @Before
   override fun setUp() {
@@ -119,7 +119,7 @@ class SwitchScheduleViewModelTest :
 
     // then
     assertThat(states.last()).isEqualTo(
-      SwitchScheduleViewState(
+      RelayScheduleViewState(
         loadingState = LoadingTimeoutManager.LoadingState(initialLoading = false, loading = true, lastLoadingStartTimestamp = 100)
       )
     )
@@ -154,10 +154,10 @@ class SwitchScheduleViewModelTest :
 
     // then
     assertThat(states.last()).isEqualTo(
-      SwitchScheduleViewState(
+      RelayScheduleViewState(
         loadingState = LoadingTimeoutManager.LoadingState(initialLoading = false, loading = false),
         editorState = WeeklyScheduleEditorState(
-          programs = listOf(SwitchScheduleProgram(weeklyProgram), SwitchScheduleProgram.DEFAULT),
+          programs = listOf(RelayScheduleProgram(weeklyProgram), RelayScheduleProgram.DEFAULT),
           scheduleTableState = ScheduleTableState(
             schedule = mapOf(
               ScheduleDetailEntryBoxKey(DayOfWeek.MONDAY, 8) to ScheduleTableBox(
@@ -198,7 +198,7 @@ class SwitchScheduleViewModelTest :
 
     // then
     assertThat(states.last()).isEqualTo(
-      SwitchScheduleViewState(
+      RelayScheduleViewState(
         loadingState = LoadingTimeoutManager.LoadingState(initialLoading = false, loading = false)
       )
     )
@@ -365,23 +365,23 @@ class SwitchScheduleViewModelTest :
     }
 
     // when - try to decrement zero
-    viewModel.onProgramSettingsDurationMinusClick(SwitchProgramDuration.RELAY_MODE)
+    viewModel.onProgramSettingsDurationMinusClick(RelayProgramDuration.RELAY_MODE)
 
     // then
     assertThat(states.last().programSettings!!.relayModeDurationS).isZero()
 
     // when - increment and provide invalid manual values
-    viewModel.onProgramSettingsDurationPlusClick(SwitchProgramDuration.RELAY_MODE)
-    viewModel.onProgramSettingsDurationManualChange(SwitchProgramDuration.RELAY_MODE, "12a")
-    viewModel.onProgramSettingsDurationManualChange(SwitchProgramDuration.RELAY_MODE, "65536")
+    viewModel.onProgramSettingsDurationPlusClick(RelayProgramDuration.RELAY_MODE)
+    viewModel.onProgramSettingsDurationManualChange(RelayProgramDuration.RELAY_MODE, "12a")
+    viewModel.onProgramSettingsDurationManualChange(RelayProgramDuration.RELAY_MODE, "65536")
 
     // then
     assertThat(states.last().programSettings!!.relayModeDurationS).isEqualTo(1)
     assertThat(states.last().programSettings!!.relayModeDurationSString).isEqualTo("1")
 
     // when - provide valid values
-    viewModel.onProgramSettingsDurationManualChange(SwitchProgramDuration.RELAY_MODE, "00123")
-    viewModel.onProgramSettingsDurationManualChange(SwitchProgramDuration.OPPOSITE_MODE, "")
+    viewModel.onProgramSettingsDurationManualChange(RelayProgramDuration.RELAY_MODE, "00123")
+    viewModel.onProgramSettingsDurationManualChange(RelayProgramDuration.OPPOSITE_MODE, "")
 
     // then
     assertThat(states.last().programSettings!!.relayModeDurationS).isEqualTo(123)
@@ -390,8 +390,8 @@ class SwitchScheduleViewModelTest :
     assertThat(states.last().programSettings!!.relayOppositeModeDurationSString).isEqualTo("0")
 
     // when - reach the upper limit and try to increment it
-    viewModel.onProgramSettingsDurationManualChange(SwitchProgramDuration.OPPOSITE_MODE, "65535")
-    viewModel.onProgramSettingsDurationPlusClick(SwitchProgramDuration.OPPOSITE_MODE)
+    viewModel.onProgramSettingsDurationManualChange(RelayProgramDuration.OPPOSITE_MODE, "65535")
+    viewModel.onProgramSettingsDurationPlusClick(RelayProgramDuration.OPPOSITE_MODE)
 
     // then
     assertThat(states.last().programSettings!!.relayOppositeModeDurationS).isEqualTo(65_535)
@@ -425,14 +425,14 @@ class SwitchScheduleViewModelTest :
     assertThat(states.last().programSettings).isNull()
   }
 
-  private fun loadPrograms(vararg programs: SuplaWeeklyScheduleProgram): SwitchScheduleViewState {
+  private fun loadPrograms(vararg programs: SuplaWeeklyScheduleProgram): RelayScheduleViewState {
     return loadConfiguration(programs.toList(), emptyList())
   }
 
   private fun loadConfiguration(
     programs: List<SuplaWeeklyScheduleProgram>,
     schedule: List<SuplaWeeklyScheduleEntry>
-  ): SwitchScheduleViewState {
+  ): RelayScheduleViewState {
     val remoteId = 123
     val deviceId = 321
     val channelConfigSubject = PublishSubject.create<ChannelConfigEventsManager.ConfigEvent>()

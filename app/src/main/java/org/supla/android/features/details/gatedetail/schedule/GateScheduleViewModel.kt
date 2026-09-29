@@ -17,43 +17,6 @@ package org.supla.android.features.details.gatedetail.schedule
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import dagger.hilt.android.lifecycle.HiltViewModel
-import org.supla.android.core.ui.BaseViewModel
-import org.supla.android.core.ui.ViewEvent
-import org.supla.android.core.ui.ViewState
-import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
-import org.supla.android.events.LoadingTimeoutManager
-import org.supla.android.tools.SuplaThreading
-import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxKey
-import org.supla.android.ui.views.schedule.editor.WeeklyScheduleEditorState
-import org.supla.android.ui.views.schedule.editor.WeeklyScheduleProgram
-import javax.inject.Inject
-
-@HiltViewModel
-class GateScheduleViewModel @Inject constructor(
-  threading: SuplaThreading
-) : BaseViewModel<GateScheduleViewState, GateScheduleViewEvent>(
-  GateScheduleViewState(),
-  threading
-),
-  GateScheduleScope {
-
-  override fun onScheduleProgramClick(program: SuplaScheduleProgram) {}
-
-  override fun onScheduleProgramLongClick(program: SuplaScheduleProgram) {}
-
-  override fun onScheduleTableLongPress(key: ScheduleDetailEntryBoxKey?) {}
-
-  override fun onScheduleTableTouched(key: ScheduleDetailEntryBoxKey) {}
-
-  override fun onScheduleTableReload() {}
-
-  override fun onScheduleTableInvalidate() {}
-}
-
-sealed class GateScheduleViewEvent : ViewEvent
-
-data class GateScheduleViewState(
-  val loadingState: LoadingTimeoutManager.LoadingState = LoadingTimeoutManager.LoadingState(),
-  val editorState: WeeklyScheduleEditorState<WeeklyScheduleProgram> = WeeklyScheduleEditorState()
-) : ViewState()
+typealias GateScheduleViewModel = org.supla.android.features.details.relayschedule.RelayScheduleViewModel
+typealias GateScheduleViewState = org.supla.android.features.details.relayschedule.RelayScheduleViewState
+typealias GateScheduleViewEvent = org.supla.android.features.details.relayschedule.RelayScheduleViewEvent

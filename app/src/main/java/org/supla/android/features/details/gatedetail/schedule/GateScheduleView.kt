@@ -18,15 +18,12 @@ package org.supla.android.features.details.gatedetail.schedule
  */
 
 import androidx.compose.runtime.Composable
-import org.supla.android.ui.views.schedule.editor.WeeklyScheduleEditor
-import org.supla.android.ui.views.schedule.editor.WeeklyScheduleEditorScope
+import org.supla.android.features.details.relayschedule.RelayScheduleScope
+import org.supla.android.features.details.relayschedule.RelayScheduleView
 
-interface GateScheduleScope : WeeklyScheduleEditorScope
+typealias GateScheduleScope = RelayScheduleScope
 
 @Composable
 fun GateScheduleScope.View(state: GateScheduleViewState) {
-  WeeklyScheduleEditor(
-    state = state.editorState,
-    loading = state.loadingState.loading
-  )
+  RelayScheduleView(state)
 }

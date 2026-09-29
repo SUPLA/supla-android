@@ -861,4 +861,18 @@
   <string name="wizard_result_certificate_pin_mismatch">Az eszköz tanúsítványa eltér a várt tanúsítványtól. Frissítse az alkalmazást és az eszköz szoftverét, majd próbálja újra.</string>
   <string name="wizard_result_certificate_unsupported_security">Az eszköz nem támogatott biztonsági beállításokat használ. Frissítse az eszköz szoftverét, majd próbálja újra.</string>
   <string name="wizard_result_certificate_different_names">Az eszköz tanúsítványa hibás - a nevek nem egyeznek (tanúsítvány: %1$s, eszköz: %2$s)</string>
+  <string name="schedule_program_default">Alapértelmezett</string>
+  <string name="schedule_program_turn_on_seconds">Bekapcsolás %1$ds időre</string>
+  <string name="schedule_program_turn_off_seconds">Kikapcsolás %1$ds időre</string>
+  <string name="schedule_program_cycle">Ciklus</string>
+  <string name="schedule_program_force_on">Kényszerített BE</string>
+  <string name="schedule_program_force_off">Kényszerített KI</string>
+  <string name="relay_schedule_program_operation_type">Művelet típusa</string>
+  <string name="relay_schedule_program_mode_start_on">Egyszeri bekapcsolás</string>
+  <string name="relay_schedule_program_mode_start_off">Egyszeri kikapcsolás</string>
+  <string name="relay_schedule_program_mode_forced_on">Kényszerített bekapcsolás</string>
+  <string name="relay_schedule_program_mode_forced_off">Kényszerített kikapcsolás</string>
+  <string name="relay_schedule_program_mode_automatic">Automatikus</string>
+  <string name="relay_schedule_program_first_duration">Első időtartam (%1$s)</string>
+  <string name="relay_schedule_program_second_duration">Második időtartam (%1$s)</string>
 </resources>
