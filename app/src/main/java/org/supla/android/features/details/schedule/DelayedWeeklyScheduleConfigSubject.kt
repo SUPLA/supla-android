@@ -1,4 +1,5 @@
-package org.supla.android.features.details.thermostatdetail.schedule
+package org.supla.android.features.details.schedule
+
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -18,24 +19,24 @@ package org.supla.android.features.details.thermostatdetail.schedule
  */
 
 import android.annotation.SuppressLint
+import dagger.hilt.android.scopes.ViewModelScoped
 import io.reactivex.rxjava3.core.Completable
 import org.supla.android.core.networking.suplaclient.DelayedCommandSubject
 import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.client.SetWeeklyScheduleConfigUseCase
 import javax.inject.Inject
-import javax.inject.Singleton
 
 @SuppressLint("CheckResult")
-@Singleton
+@ViewModelScoped
 class DelayedWeeklyScheduleConfigSubject @Inject constructor(
   private val setWeeklyScheduleConfigUseCase: SetWeeklyScheduleConfigUseCase,
   threading: SuplaThreading
-) : DelayedCommandSubject<ScheduleDetailViewState>(threading) {
+) : DelayedCommandSubject<WeeklyScheduleConfigChange>(threading) {
 
-  override fun execute(state: ScheduleDetailViewState): Completable =
+  override fun execute(state: WeeklyScheduleConfigChange): Completable =
     setWeeklyScheduleConfigUseCase.invoke(
       state.remoteId,
-      state.suplaPrograms(),
-      state.suplaSchedule()
+      state.programConfigurations,
+      state.schedule
     )
 }

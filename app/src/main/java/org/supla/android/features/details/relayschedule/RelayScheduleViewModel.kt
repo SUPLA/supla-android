@@ -19,6 +19,7 @@ package org.supla.android.features.details.relayschedule
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.PublishSubject
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.BaseViewModel
@@ -31,6 +32,7 @@ import org.supla.android.data.source.remote.SuplaDeviceConfig
 import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
 import org.supla.android.data.source.remote.hvac.SuplaRelayMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
+import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
@@ -39,10 +41,13 @@ import org.supla.android.features.details.relayschedule.data.MAX_PROGRAM_DURATIO
 import org.supla.android.features.details.relayschedule.data.RelayProgramDuration
 import org.supla.android.features.details.relayschedule.data.RelayProgramSettingsData
 import org.supla.android.features.details.relayschedule.data.RelayScheduleProgram
+import org.supla.android.features.details.relayschedule.extensions.toWeeklyScheduleConfigChange
 import org.supla.android.features.details.relayschedule.extensions.viewRelayProgramsList
+import org.supla.android.features.details.schedule.DelayedWeeklyScheduleConfigSubject
 import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxKey
 import org.supla.android.ui.views.schedule.editor.QuartersSelectionData
+import org.supla.android.ui.views.schedule.editor.ScheduleTableBox
 import org.supla.android.ui.views.schedule.editor.WeeklyScheduleEditorState
 import org.supla.android.ui.views.schedule.editor.quartersSelectionData
 import org.supla.android.ui.views.schedule.editor.viewScheduleTableState
@@ -58,8 +63,12 @@ private val PROGRAM_MODES = listOf(
   SuplaRelayMode.AUTOMATIC
 )
 
+private const val CONFIG_RELOAD_DELAY_MS = 1000L
+private const val INTERACTION_PROTECTION_DELAY_MS = 3000L
+
 @HiltViewModel
 class RelayScheduleViewModel @Inject constructor(
+  private val delayedWeeklyScheduleConfigSubject: DelayedWeeklyScheduleConfigSubject,
   private val channelConfigEventsManager: ChannelConfigEventsManager,
   private val deviceConfigEventsManager: DeviceConfigEventsManager,
   private val loadingTimeoutManager: LoadingTimeoutManager,
@@ -72,7 +81,10 @@ class RelayScheduleViewModel @Inject constructor(
 ),
   RelayScheduleScope {
 
+  private val configReloadSubject = PublishSubject.create<Unit>()
   private var remoteId: Int = 0
+  private var changing: Boolean = false
+  private var lastInteractionTime: Long? = null
 
   override fun onViewCreated() {
     loadingTimeoutManager.watch({ currentState().loadingState }) {
@@ -85,6 +97,16 @@ class RelayScheduleViewModel @Inject constructor(
 
   fun observeConfig(remoteId: Int, deviceId: Int) {
     this.remoteId = remoteId
+    changing = false
+    lastInteractionTime = null
+
+    configReloadSubject.attachSilent()
+      .debounce(CONFIG_RELOAD_DELAY_MS, TimeUnit.MILLISECONDS, threading.schedulers.computation)
+      .subscribeBy(
+        onNext = { reloadConfig(remoteId) },
+        onError = defaultErrorHandler("observeConfig($remoteId)")
+      )
+      .disposeBySelf()
 
     updateState {
       it.copy(loadingState = it.loadingState.changingLoading(true, dateProvider))
@@ -181,7 +203,32 @@ class RelayScheduleViewModel @Inject constructor(
     updateState { it.copy(programSettings = null) }
   }
 
-  override fun onProgramSettingsSave() {}
+  override fun onProgramSettingsSave() {
+    updateState { state ->
+      val settings = state.programSettings ?: return@updateState state
+      val updatedProgram = RelayScheduleProgram(
+        SuplaWeeklyScheduleProgram(
+          program = settings.program,
+          relayMode = settings.selectedMode,
+          relayModeDurationS = settings.relayModeDurationS,
+          relayOppositeModeDurationS = settings.relayOppositeModeDurationS
+        )
+      )
+      val newState = state.copy(
+        editorState = state.editorState.copy(
+          programs = state.editorState.programs.map {
+            if (it.program == settings.program) updatedProgram else it
+          },
+          activeProgram = settings.program
+        ),
+        programSettings = null
+      )
+
+      lastInteractionTime = dateProvider.currentTimestamp()
+      emitScheduleChange(newState)
+      newState
+    }
+  }
 
   override fun onScheduleTableLongPress(key: ScheduleDetailEntryBoxKey?) {
     updateState { it.copy(quarterSelection = it.editorState.quartersSelectionData(key)) }
@@ -219,7 +266,7 @@ class RelayScheduleViewModel @Inject constructor(
   override fun onQuartersSelectionFinish() {
     updateState { state ->
       val selection = state.quarterSelection ?: return@updateState state
-      state.copy(
+      val newState = state.copy(
         editorState = state.editorState.copy(
           scheduleTableState = state.editorState.scheduleTableState.copy(
             schedule = state.editorState.scheduleTableState.schedule + (selection.entryKey to selection.entryValue)
@@ -228,14 +275,47 @@ class RelayScheduleViewModel @Inject constructor(
         ),
         quarterSelection = null
       )
+
+      lastInteractionTime = dateProvider.currentTimestamp()
+      emitScheduleChange(newState)
+      newState
     }
   }
 
-  override fun onScheduleTableTouched(key: ScheduleDetailEntryBoxKey) {}
+  override fun onScheduleTableTouched(key: ScheduleDetailEntryBoxKey) {
+    currentState().let { state ->
+      val activeProgram = state.editorState.activeProgram ?: return
 
-  override fun onScheduleTableReload() {}
+      if (state.editorState.scheduleTableState.schedule[key]?.singleProgram != activeProgram) {
+        changing = true
+        updateState {
+          state.copy(
+            editorState = state.editorState.copy(
+              scheduleTableState = state.editorState.scheduleTableState.copy(
+                schedule = state.editorState.scheduleTableState.schedule + (key to ScheduleTableBox(activeProgram))
+              )
+            )
+          )
+        }
+      }
 
-  override fun onScheduleTableInvalidate() {}
+      emitScheduleChange(currentState())
+    }
+  }
+
+  override fun onScheduleTableReload() {
+    emitScheduleChange(currentState())
+    changing = false
+    lastInteractionTime = dateProvider.currentTimestamp()
+  }
+
+  override fun onScheduleTableInvalidate() {
+    reloadConfig(remoteId)
+  }
+
+  private fun emitScheduleChange(state: RelayScheduleViewState) {
+    delayedWeeklyScheduleConfigSubject.emit(state.toWeeklyScheduleConfigChange(remoteId))
+  }
 
   private fun changeProgramDuration(duration: RelayProgramDuration, change: (Int) -> Int) {
     val settings = currentState().programSettings ?: return
@@ -285,6 +365,17 @@ class RelayScheduleViewModel @Inject constructor(
     Timber.i("Relay schedule got data: $data")
 
     if (data.weeklyScheduleResult != ConfigResult.RESULT_TRUE) {
+      return
+    }
+
+    if (changing) {
+      Timber.d("Relay schedule update skipped because of changing")
+      return
+    }
+
+    if (lastInteractionTime?.plus(INTERACTION_PROTECTION_DELAY_MS)?.let { it > dateProvider.currentTimestamp() } == true) {
+      Timber.d("Relay schedule update skipped because of last interaction time")
+      configReloadSubject.onNext(Unit)
       return
     }
 
