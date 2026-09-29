@@ -40,7 +40,9 @@ import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.extensions.subscribeBy
+import org.supla.android.features.details.schedule.DelayedWeeklyScheduleConfigSubject
 import org.supla.android.features.details.thermostatdetail.schedule.data.ProgramSettingsData
+import org.supla.android.features.details.thermostatdetail.schedule.extensions.toWeeklyScheduleConfigChange
 import org.supla.android.features.details.thermostatdetail.schedule.extensions.viewProgramBoxesList
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
@@ -120,7 +122,7 @@ class ScheduleDetailViewModel @Inject constructor(
   }
 
   override fun onScheduleTableReload() {
-    delayedWeeklyScheduleConfigSubject.emit(currentState())
+    delayedWeeklyScheduleConfigSubject.emit(currentState().toWeeklyScheduleConfigChange())
     updateState { it.copy(changing = false, lastInteractionTime = System.currentTimeMillis()) }
   }
 
@@ -145,7 +147,7 @@ class ScheduleDetailViewModel @Inject constructor(
         }
       }
 
-      delayedWeeklyScheduleConfigSubject.emit(currentState())
+      delayedWeeklyScheduleConfigSubject.emit(currentState().toWeeklyScheduleConfigChange())
     }
   }
 
@@ -213,7 +215,7 @@ class ScheduleDetailViewModel @Inject constructor(
           lastInteractionTime = System.currentTimeMillis()
         )
 
-        delayedWeeklyScheduleConfigSubject.emit(newState) // Sending changes to the server
+        delayedWeeklyScheduleConfigSubject.emit(newState.toWeeklyScheduleConfigChange()) // Sending changes to the server
 
         newState // Updating view state
       } ?: state.copy(quarterSelection = null)
@@ -240,7 +242,7 @@ class ScheduleDetailViewModel @Inject constructor(
         programSettings = null,
         lastInteractionTime = System.currentTimeMillis()
       ).also {
-        delayedWeeklyScheduleConfigSubject.emit(it.copy())
+        delayedWeeklyScheduleConfigSubject.emit(it.toWeeklyScheduleConfigChange())
       }
     }
   }
