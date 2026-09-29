@@ -18,6 +18,7 @@ package org.supla.android.features.addwizard.model
  */
 
 import org.jsoup.nodes.Document
+import org.jsoup.nodes.Entities
 import org.jsoup.select.Elements
 import timber.log.Timber
 import java.util.regex.Pattern
@@ -84,7 +85,7 @@ class EspHtmlParser @Inject constructor() {
           val matcher = pattern.matcher(element.html())
           if (matcher.find() && matcher.groupCount() == 4) {
             result.deviceName = it.text()
-            result.deviceLastState = matcher.group(1)
+            result.deviceLastState = matcher.group(1)?.let(Entities::unescape)
             result.deviceFirmwareVersion = matcher.group(2)
             result.deviceGUID = matcher.group(3)
             result.deviceMAC = matcher.group(4)
