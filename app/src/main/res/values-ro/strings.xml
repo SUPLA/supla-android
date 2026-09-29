@@ -866,4 +866,18 @@
   <string name="wizard_result_certificate_pin_mismatch">Certificatul dispozitivului diferă de cel așteptat. Actualizați aplicația și software-ul dispozitivului, apoi încercați din nou.</string>
   <string name="wizard_result_certificate_unsupported_security">Dispozitivul utilizează setări de securitate neacceptate. Actualizați software-ul dispozitivului și încercați din nou.</string>
   <string name="wizard_result_certificate_different_names">Dispozitivul are un certificat incorect - numele nu se potrivesc (certificat: %1$s, dispozitiv: %2$s)</string>
+  <string name="schedule_program_default">Implicit</string>
+  <string name="schedule_program_turn_on_seconds">Pornește pentru %1$ds</string>
+  <string name="schedule_program_turn_off_seconds">Oprește pentru %1$ds</string>
+  <string name="schedule_program_cycle">Ciclu</string>
+  <string name="schedule_program_force_on">Forțează PORNIT</string>
+  <string name="schedule_program_force_off">Forțează OPRIT</string>
+  <string name="relay_schedule_program_operation_type">Tipul operației</string>
+  <string name="relay_schedule_program_mode_start_on">Pornește o dată</string>
+  <string name="relay_schedule_program_mode_start_off">Oprește o dată</string>
+  <string name="relay_schedule_program_mode_forced_on">Pornire forțată</string>
+  <string name="relay_schedule_program_mode_forced_off">Oprire forțată</string>
+  <string name="relay_schedule_program_mode_automatic">Automat</string>
+  <string name="relay_schedule_program_first_duration">Prima durată (%1$s)</string>
+  <string name="relay_schedule_program_second_duration">A doua durată (%1$s)</string>
 </resources>

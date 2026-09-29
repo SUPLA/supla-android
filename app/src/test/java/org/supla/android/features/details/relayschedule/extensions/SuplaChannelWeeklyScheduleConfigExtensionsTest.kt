@@ -1,4 +1,4 @@
-package org.supla.android.features.details.switchdetail.schedule.extensions
+package org.supla.android.features.details.relayschedule.extensions
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -23,7 +23,7 @@ import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfi
 import org.supla.android.data.source.remote.hvac.SuplaRelayMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
-import org.supla.android.features.details.switchdetail.schedule.data.SwitchScheduleProgram
+import org.supla.android.features.details.relayschedule.data.RelayScheduleProgram
 
 class SuplaChannelWeeklyScheduleConfigExtensionsTest {
 
@@ -42,7 +42,7 @@ class SuplaChannelWeeklyScheduleConfigExtensionsTest {
       schedule = emptyList()
     )
 
-    val result = config.viewProgramsList()
+    val result = config.viewRelayProgramsList()
 
     assertThat(result.map { it.program }).containsExactly(
       SuplaScheduleProgram.PROGRAM_1,
@@ -51,7 +51,7 @@ class SuplaChannelWeeklyScheduleConfigExtensionsTest {
       SuplaScheduleProgram.PROGRAM_4,
       SuplaScheduleProgram.OFF
     )
-    assertThat(result.last()).isEqualTo(SwitchScheduleProgram.DEFAULT)
+    assertThat(result.last()).isEqualTo(RelayScheduleProgram.DEFAULT)
   }
 
   private fun program(program: SuplaScheduleProgram) = SuplaWeeklyScheduleProgram(

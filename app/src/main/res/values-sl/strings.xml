@@ -865,4 +865,18 @@
   <string name="wizard_result_certificate_pin_mismatch">Potrdilo naprave se razlikuje od pričakovanega. Posodobite aplikacijo in programsko opremo naprave, nato poskusite znova.</string>
   <string name="wizard_result_certificate_unsupported_security">Naprava uporablja nepodprte varnostne nastavitve. Posodobite programsko opremo naprave in poskusite znova.</string>
   <string name="wizard_result_certificate_different_names">Naprava ima napačno potrdilo - imena se ne ujemajo (potrdilo: %1$s, naprava: %2$s)</string>
+  <string name="schedule_program_default">Privzeto</string>
+  <string name="schedule_program_turn_on_seconds">Vklopi za %1$ds</string>
+  <string name="schedule_program_turn_off_seconds">Izklopi za %1$ds</string>
+  <string name="schedule_program_cycle">Cikel</string>
+  <string name="schedule_program_force_on">Prisili VKLOP</string>
+  <string name="schedule_program_force_off">Prisili IZKLOP</string>
+  <string name="relay_schedule_program_operation_type">Vrsta operacije</string>
+  <string name="relay_schedule_program_mode_start_on">Vklopi enkrat</string>
+  <string name="relay_schedule_program_mode_start_off">Izklopi enkrat</string>
+  <string name="relay_schedule_program_mode_forced_on">Prisilno vklopljeno</string>
+  <string name="relay_schedule_program_mode_forced_off">Prisilno izklopljeno</string>
+  <string name="relay_schedule_program_mode_automatic">Samodejno</string>
+  <string name="relay_schedule_program_first_duration">Prvo trajanje (%1$s)</string>
+  <string name="relay_schedule_program_second_duration">Drugo trajanje (%1$s)</string>
 </resources>
