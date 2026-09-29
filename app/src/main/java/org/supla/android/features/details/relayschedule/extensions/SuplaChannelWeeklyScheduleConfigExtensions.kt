@@ -1,4 +1,4 @@
-package org.supla.android.features.details.switchdetail.schedule.extensions
+package org.supla.android.features.details.relayschedule.extensions
 
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
@@ -19,10 +19,10 @@ package org.supla.android.features.details.switchdetail.schedule.extensions
  */
 
 import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
-import org.supla.android.features.details.switchdetail.schedule.data.SwitchScheduleProgram
+import org.supla.android.features.details.relayschedule.data.RelayScheduleProgram
 
-fun SuplaChannelWeeklyScheduleConfig.viewProgramsList(): List<SwitchScheduleProgram> =
+fun SuplaChannelWeeklyScheduleConfig.viewRelayProgramsList(): List<RelayScheduleProgram> =
   programConfigurations
     .sortedBy { it.program.value }
-    .map { SwitchScheduleProgram(it) }
-    .plus(SwitchScheduleProgram.DEFAULT)
+    .map { RelayScheduleProgram(it) }
+    .plus(RelayScheduleProgram.DEFAULT)

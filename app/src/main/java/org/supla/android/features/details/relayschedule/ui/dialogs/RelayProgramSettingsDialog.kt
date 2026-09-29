@@ -1,4 +1,4 @@
-package org.supla.android.features.details.switchdetail.schedule.ui.dialogs
+package org.supla.android.features.details.relayschedule.ui.dialogs
 
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
@@ -39,9 +39,9 @@ import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.source.remote.hvac.SuplaRelayMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
-import org.supla.android.features.details.switchdetail.schedule.data.MAX_PROGRAM_DURATION_S
-import org.supla.android.features.details.switchdetail.schedule.data.SwitchProgramDuration
-import org.supla.android.features.details.switchdetail.schedule.data.SwitchProgramSettingsData
+import org.supla.android.features.details.relayschedule.data.MAX_PROGRAM_DURATION_S
+import org.supla.android.features.details.relayschedule.data.RelayProgramDuration
+import org.supla.android.features.details.relayschedule.data.RelayProgramSettingsData
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.dialogs.Dialog
 import org.supla.android.ui.dialogs.DialogButtonsRow
@@ -54,21 +54,21 @@ import org.supla.android.ui.views.schedule.ScheduleProgramDialogHeader
 import org.supla.android.ui.views.spinner.Spinner
 import org.supla.android.ui.views.texts.Label
 
-interface ProgramSettingsScope {
+interface RelayProgramSettingsScope {
   fun onProgramSettingsModeChange(mode: SuplaRelayMode)
-  fun onProgramSettingsDurationMinusClick(duration: SwitchProgramDuration)
-  fun onProgramSettingsDurationPlusClick(duration: SwitchProgramDuration)
-  fun onProgramSettingsDurationManualChange(duration: SwitchProgramDuration, value: String)
+  fun onProgramSettingsDurationMinusClick(duration: RelayProgramDuration)
+  fun onProgramSettingsDurationPlusClick(duration: RelayProgramDuration)
+  fun onProgramSettingsDurationManualChange(duration: RelayProgramDuration, value: String)
   fun onProgramSettingsDismiss()
   fun onProgramSettingsSave()
 }
 
 @Composable
-fun ProgramSettingsScope.ProgramDialog(data: SwitchProgramSettingsData) {
+fun RelayProgramSettingsScope.RelayProgramDialog(data: RelayProgramSettingsData) {
   Dialog(onDismiss = { onProgramSettingsDismiss() }) {
     ScheduleProgramDialogHeader(program = data.program)
     Spinner(
-      label = stringResource(id = R.string.switch_schedule_program_operation_type),
+      label = stringResource(id = R.string.relay_schedule_program_operation_type),
       options = data.spinnerModes(),
       onOptionSelected = { onProgramSettingsModeChange(it) },
       modifier = Modifier
@@ -78,27 +78,27 @@ fun ProgramSettingsScope.ProgramDialog(data: SwitchProgramSettingsData) {
     if (data.selectedMode == SuplaRelayMode.START_ON || data.selectedMode == SuplaRelayMode.START_OFF) {
       DurationControlRow(
         headerText = stringResource(
-          id = R.string.switch_schedule_program_first_duration,
+          id = R.string.relay_schedule_program_first_duration,
           data.selectedMode.relayModeStateLabel()
         ),
         duration = data.relayModeDurationSString,
         minusAllowed = data.relayModeDurationS > 0,
         plusAllowed = data.relayModeDurationS < MAX_PROGRAM_DURATION_S,
-        onMinusClicked = { onProgramSettingsDurationMinusClick(SwitchProgramDuration.RELAY_MODE) },
-        onPlusClicked = { onProgramSettingsDurationPlusClick(SwitchProgramDuration.RELAY_MODE) },
-        onValueChanged = { onProgramSettingsDurationManualChange(SwitchProgramDuration.RELAY_MODE, it) }
+        onMinusClicked = { onProgramSettingsDurationMinusClick(RelayProgramDuration.RELAY_MODE) },
+        onPlusClicked = { onProgramSettingsDurationPlusClick(RelayProgramDuration.RELAY_MODE) },
+        onValueChanged = { onProgramSettingsDurationManualChange(RelayProgramDuration.RELAY_MODE, it) }
       )
       DurationControlRow(
         headerText = stringResource(
-          id = R.string.switch_schedule_program_second_duration,
+          id = R.string.relay_schedule_program_second_duration,
           data.selectedMode.oppositeModeStateLabel()
         ),
         duration = data.relayOppositeModeDurationSString,
         minusAllowed = data.relayOppositeModeDurationS > 0,
         plusAllowed = data.relayOppositeModeDurationS < MAX_PROGRAM_DURATION_S,
-        onMinusClicked = { onProgramSettingsDurationMinusClick(SwitchProgramDuration.OPPOSITE_MODE) },
-        onPlusClicked = { onProgramSettingsDurationPlusClick(SwitchProgramDuration.OPPOSITE_MODE) },
-        onValueChanged = { onProgramSettingsDurationManualChange(SwitchProgramDuration.OPPOSITE_MODE, it) }
+        onMinusClicked = { onProgramSettingsDurationMinusClick(RelayProgramDuration.OPPOSITE_MODE) },
+        onPlusClicked = { onProgramSettingsDurationPlusClick(RelayProgramDuration.OPPOSITE_MODE) },
+        onValueChanged = { onProgramSettingsDurationManualChange(RelayProgramDuration.OPPOSITE_MODE, it) }
       )
     }
     DialogButtonsRow {
@@ -161,7 +161,7 @@ private fun DurationControlRow(
 }
 
 @Composable
-private fun SwitchProgramSettingsData.spinnerModes(): Map<SuplaRelayMode, String> =
+private fun RelayProgramSettingsData.spinnerModes(): Map<SuplaRelayMode, String> =
   linkedMapOf<SuplaRelayMode, String>().apply {
     listOf(selectedMode).plus(modes).distinct().forEach { mode ->
       this[mode] = stringResource(id = mode.labelRes())
@@ -170,11 +170,11 @@ private fun SwitchProgramSettingsData.spinnerModes(): Map<SuplaRelayMode, String
 
 @StringRes
 private fun SuplaRelayMode.labelRes(): Int = when (this) {
-  SuplaRelayMode.START_ON -> R.string.switch_schedule_program_mode_start_on
-  SuplaRelayMode.START_OFF -> R.string.switch_schedule_program_mode_start_off
-  SuplaRelayMode.FORCED_ON -> R.string.switch_schedule_program_mode_forced_on
-  SuplaRelayMode.FORCED_OFF -> R.string.switch_schedule_program_mode_forced_off
-  SuplaRelayMode.AUTOMATIC -> R.string.switch_schedule_program_mode_automatic
+  SuplaRelayMode.START_ON -> R.string.relay_schedule_program_mode_start_on
+  SuplaRelayMode.START_OFF -> R.string.relay_schedule_program_mode_start_off
+  SuplaRelayMode.FORCED_ON -> R.string.relay_schedule_program_mode_forced_on
+  SuplaRelayMode.FORCED_OFF -> R.string.relay_schedule_program_mode_forced_off
+  SuplaRelayMode.AUTOMATIC -> R.string.relay_schedule_program_mode_automatic
   SuplaRelayMode.NOT_SET,
   SuplaRelayMode.CMD_WEEKLY_SCHEDULE,
   SuplaRelayMode.CMD_SWITCH_TO_MANUAL -> R.string.hvac_mode_no_caption
@@ -192,11 +192,11 @@ private fun SuplaRelayMode.oppositeModeStateLabel(): String = when (this) {
   else -> ""
 }
 
-private val previewScope = object : ProgramSettingsScope {
+private val previewScope = object : RelayProgramSettingsScope {
   override fun onProgramSettingsModeChange(mode: SuplaRelayMode) {}
-  override fun onProgramSettingsDurationMinusClick(duration: SwitchProgramDuration) {}
-  override fun onProgramSettingsDurationPlusClick(duration: SwitchProgramDuration) {}
-  override fun onProgramSettingsDurationManualChange(duration: SwitchProgramDuration, value: String) {}
+  override fun onProgramSettingsDurationMinusClick(duration: RelayProgramDuration) {}
+  override fun onProgramSettingsDurationPlusClick(duration: RelayProgramDuration) {}
+  override fun onProgramSettingsDurationManualChange(duration: RelayProgramDuration, value: String) {}
   override fun onProgramSettingsDismiss() {}
   override fun onProgramSettingsSave() {}
 }
@@ -205,8 +205,8 @@ private val previewScope = object : ProgramSettingsScope {
 @Composable
 private fun Preview() {
   SuplaTheme {
-    previewScope.ProgramDialog(
-      data = SwitchProgramSettingsData(
+    previewScope.RelayProgramDialog(
+      data = RelayProgramSettingsData(
         program = SuplaScheduleProgram.PROGRAM_1,
         modes = listOf(
           SuplaRelayMode.START_ON,

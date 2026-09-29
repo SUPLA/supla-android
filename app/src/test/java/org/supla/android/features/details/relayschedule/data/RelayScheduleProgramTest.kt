@@ -1,4 +1,4 @@
-package org.supla.android.features.details.switchdetail.schedule.data
+package org.supla.android.features.details.relayschedule.data
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -27,7 +27,7 @@ import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
 
-class SwitchScheduleProgramTest {
+class RelayScheduleProgramTest {
 
   @Test
   fun `should create labels for relay modes`() {
@@ -53,7 +53,7 @@ class SwitchScheduleProgramTest {
 
   @Test
   fun `should create valid default program from off`() {
-    val program = SwitchScheduleProgram.DEFAULT
+    val program = RelayScheduleProgram.DEFAULT
 
     assertThat(program.program).isEqualTo(SuplaScheduleProgram.OFF)
     assertThat(program.relayMode).isEqualTo(SuplaRelayMode.NOT_SET)
@@ -83,7 +83,7 @@ class SwitchScheduleProgramTest {
     mode: SuplaRelayMode,
     durationS: Int = 0,
     oppositeDurationS: Int = 0
-  ): SwitchScheduleProgram = SwitchScheduleProgram(
+  ): RelayScheduleProgram = RelayScheduleProgram(
     SuplaWeeklyScheduleProgram(
       program = SuplaScheduleProgram.PROGRAM_1,
       relayMode = mode,

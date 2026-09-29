@@ -841,4 +841,18 @@
   <string name="wizard_result_certificate_pin_mismatch">Сертифікат пристрою відрізняється від очікуваного. Оновіть застосунок і програмне забезпечення пристрою, а потім спробуйте ще раз.</string>
   <string name="wizard_result_certificate_unsupported_security">Пристрій використовує непідтримувані налаштування безпеки. Оновіть програмне забезпечення пристрою і спробуйте ще раз.</string>
   <string name="wizard_result_certificate_different_names">Пристрій має неправильний сертифікат - імена не збігаються (сертифікат: %1$s, пристрій: %2$s)</string>
+  <string name="schedule_program_default">За замовчуванням</string>
+  <string name="schedule_program_turn_on_seconds">Увімкнути на %1$ds</string>
+  <string name="schedule_program_turn_off_seconds">Вимкнути на %1$ds</string>
+  <string name="schedule_program_cycle">Цикл</string>
+  <string name="schedule_program_force_on">Примусово УВІМК</string>
+  <string name="schedule_program_force_off">Примусово ВИМК</string>
+  <string name="relay_schedule_program_operation_type">Тип операції</string>
+  <string name="relay_schedule_program_mode_start_on">Увімкнути один раз</string>
+  <string name="relay_schedule_program_mode_start_off">Вимкнути один раз</string>
+  <string name="relay_schedule_program_mode_forced_on">Примусово увімкнено</string>
+  <string name="relay_schedule_program_mode_forced_off">Примусово вимкнено</string>
+  <string name="relay_schedule_program_mode_automatic">Автоматично</string>
+  <string name="relay_schedule_program_first_duration">Перша тривалість (%1$s)</string>
+  <string name="relay_schedule_program_second_duration">Друга тривалість (%1$s)</string>
 </resources>
