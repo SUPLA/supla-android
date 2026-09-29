@@ -843,4 +843,18 @@
   <string name="wizard_result_certificate_pin_mismatch">Įrenginio sertifikatas skiriasi nuo tikėtino. Atnaujinkite programą ir įrenginio programinę įrangą, tada bandykite dar kartą.</string>
   <string name="wizard_result_certificate_unsupported_security">Įrenginys naudoja nepalaikomus saugumo nustatymus. Atnaujinkite įrenginio programinę įrangą ir bandykite dar kartą.</string>
   <string name="wizard_result_certificate_different_names">Įrenginio sertifikatas neteisingas - pavadinimai nesutampa (sertifikatas: %1$s, įrenginys: %2$s)</string>
+  <string name="schedule_program_default">Numatytasis</string>
+  <string name="schedule_program_turn_on_seconds">Įjungti %1$ds</string>
+  <string name="schedule_program_turn_off_seconds">Išjungti %1$ds</string>
+  <string name="schedule_program_cycle">Ciklas</string>
+  <string name="schedule_program_force_on">Priverstinai ĮJUNGTI</string>
+  <string name="schedule_program_force_off">Priverstinai IŠJUNGTI</string>
+  <string name="relay_schedule_program_operation_type">Operacijos tipas</string>
+  <string name="relay_schedule_program_mode_start_on">Įjungti vieną kartą</string>
+  <string name="relay_schedule_program_mode_start_off">Išjungti vieną kartą</string>
+  <string name="relay_schedule_program_mode_forced_on">Priverstinai įjungta</string>
+  <string name="relay_schedule_program_mode_forced_off">Priverstinai išjungta</string>
+  <string name="relay_schedule_program_mode_automatic">Automatinis</string>
+  <string name="relay_schedule_program_first_duration">Pirmoji trukmė (%1$s)</string>
+  <string name="relay_schedule_program_second_duration">Antroji trukmė (%1$s)</string>
 </resources>

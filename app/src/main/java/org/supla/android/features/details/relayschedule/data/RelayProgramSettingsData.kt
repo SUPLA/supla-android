@@ -1,4 +1,4 @@
-package org.supla.android.features.details.switchdetail.schedule.data
+package org.supla.android.features.details.relayschedule.data
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,24 +17,22 @@ package org.supla.android.features.details.switchdetail.schedule.data
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.Test
 import org.supla.android.data.source.remote.hvac.SuplaRelayMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 
-class SwitchProgramSettingsDataTest {
+const val MAX_PROGRAM_DURATION_S = 65_535
 
-  @Test
-  fun `should use zero when durations are not provided`() {
-    val data = SwitchProgramSettingsData(
-      program = SuplaScheduleProgram.PROGRAM_1,
-      modes = listOf(SuplaRelayMode.START_ON),
-      selectedMode = SuplaRelayMode.START_ON
-    )
+data class RelayProgramSettingsData(
+  val program: SuplaScheduleProgram,
+  val modes: List<SuplaRelayMode>,
+  val selectedMode: SuplaRelayMode,
+  val relayModeDurationS: Int = 0,
+  val relayOppositeModeDurationS: Int = 0,
+  val relayModeDurationSString: String = relayModeDurationS.toString(),
+  val relayOppositeModeDurationSString: String = relayOppositeModeDurationS.toString()
+)
 
-    assertThat(data.relayModeDurationS).isZero()
-    assertThat(data.relayOppositeModeDurationS).isZero()
-    assertThat(data.relayModeDurationSString).isEqualTo("0")
-    assertThat(data.relayOppositeModeDurationSString).isEqualTo("0")
-  }
+enum class RelayProgramDuration {
+  RELAY_MODE,
+  OPPOSITE_MODE
 }
