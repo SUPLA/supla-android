@@ -48,6 +48,7 @@ import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.features.details.relayschedule.data.RelayProgramDuration
 import org.supla.android.features.details.relayschedule.data.RelayScheduleProgram
+import org.supla.android.features.details.schedule.DelayedWeeklyScheduleConfigSubject
 import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxKey
 import org.supla.android.ui.views.schedule.editor.QuartersSelectionData
@@ -76,6 +77,9 @@ class RelayScheduleViewModelTest :
 
   @RelaxedMockK
   private lateinit var dateProvider: DateProvider
+
+  @RelaxedMockK
+  private lateinit var delayedWeeklyScheduleConfigSubject: DelayedWeeklyScheduleConfigSubject
 
   @RelaxedMockK
   override lateinit var threading: SuplaThreading
@@ -206,6 +210,83 @@ class RelayScheduleViewModelTest :
   }
 
   @Test
+  fun `should protect local table changes from incoming configuration`() {
+    // given
+    val remoteId = 123
+    val deviceId = 321
+    val key = ScheduleDetailEntryBoxKey(DayOfWeek.MONDAY, 8)
+    val channelConfigSubject = PublishSubject.create<ChannelConfigEventsManager.ConfigEvent>()
+    val deviceConfigSubject = PublishSubject.create<DeviceConfigEventsManager.ConfigEvent>()
+    val serverConfig = SuplaChannelWeeklyScheduleConfig(
+      remoteId = remoteId,
+      func = null,
+      crc32 = 0,
+      programConfigurations = listOf(
+        weeklyProgram(SuplaScheduleProgram.PROGRAM_1, SuplaRelayMode.START_ON),
+        weeklyProgram(SuplaScheduleProgram.PROGRAM_2, SuplaRelayMode.FORCED_ON)
+      ),
+      schedule = listOf(
+        SuplaWeeklyScheduleEntry(
+          DayOfWeek.MONDAY,
+          8,
+          QuarterOfHour.FIRST,
+          SuplaScheduleProgram.PROGRAM_1
+        )
+      )
+    )
+    every { channelConfigEventsManager.observerConfig(remoteId) } returns channelConfigSubject
+    every { deviceConfigEventsManager.observerConfig(deviceId) } returns deviceConfigSubject
+    viewModel.observeConfig(remoteId, deviceId)
+    deviceConfigSubject.onNext(DeviceConfigEventsManager.ConfigEvent(ConfigResult.RESULT_TRUE, null))
+    channelConfigSubject.onNext(ChannelConfigEventsManager.ConfigEvent(ConfigResult.RESULT_TRUE, serverConfig))
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
+    viewModel.onScheduleProgramClick(SuplaScheduleProgram.PROGRAM_2)
+    viewModel.onScheduleTableTouched(key)
+
+    // when - stale config arrives during table interaction
+    channelConfigSubject.onNext(ChannelConfigEventsManager.ConfigEvent(ConfigResult.RESULT_TRUE, serverConfig))
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
+
+    // then
+    assertThat(states.last().editorState.scheduleTableState.schedule[key]).isEqualTo(
+      ScheduleTableBox(SuplaScheduleProgram.PROGRAM_2)
+    )
+
+    // when - interaction ends and stale config arrives immediately afterwards
+    viewModel.onScheduleTableReload()
+    channelConfigSubject.onNext(ChannelConfigEventsManager.ConfigEvent(ConfigResult.RESULT_TRUE, serverConfig))
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
+
+    // then - local state is still protected and a fresh config is requested with a delay
+    assertThat(states.last().editorState.scheduleTableState.schedule[key]).isEqualTo(
+      ScheduleTableBox(SuplaScheduleProgram.PROGRAM_2)
+    )
+    testScheduler.advanceTimeBy(1, TimeUnit.SECONDS)
+    verify(exactly = 2) { suplaClient.getChannelConfig(remoteId, ChannelConfigType.WEEKLY_SCHEDULE) }
+  }
+
+  @Test
+  fun `should emit current schedule on table reload and reload config on invalidation`() {
+    // given
+    loadPrograms(weeklyProgram(SuplaScheduleProgram.PROGRAM_1, SuplaRelayMode.START_ON))
+
+    // when
+    viewModel.onScheduleTableReload()
+    viewModel.onScheduleTableInvalidate()
+
+    // then
+    verify {
+      delayedWeeklyScheduleConfigSubject.emit(
+        match {
+          it.remoteId == 123 &&
+            it.programConfigurations.single().program == SuplaScheduleProgram.PROGRAM_1
+        }
+      )
+    }
+    verify(exactly = 2) { suplaClient.getChannelConfig(123, ChannelConfigType.WEEKLY_SCHEDULE) }
+  }
+
+  @Test
   fun `should select only valid schedule programs`() {
     // given
     val remoteId = 123
@@ -268,7 +349,46 @@ class RelayScheduleViewModelTest :
   }
 
   @Test
-  fun `should edit schedule quarters locally without sending configuration`() {
+  fun `should apply active program to touched schedule table entry`() {
+    // given
+    val key = ScheduleDetailEntryBoxKey(DayOfWeek.MONDAY, 8)
+    loadConfiguration(
+      programs = listOf(
+        weeklyProgram(SuplaScheduleProgram.PROGRAM_1, SuplaRelayMode.START_ON),
+        weeklyProgram(SuplaScheduleProgram.PROGRAM_2, SuplaRelayMode.FORCED_ON)
+      ),
+      schedule = listOf(
+        SuplaWeeklyScheduleEntry(
+          DayOfWeek.MONDAY,
+          8,
+          QuarterOfHour.FIRST,
+          SuplaScheduleProgram.PROGRAM_1
+        )
+      )
+    )
+    viewModel.onScheduleProgramClick(SuplaScheduleProgram.PROGRAM_2)
+
+    // when
+    viewModel.onScheduleTableTouched(key)
+
+    // then
+    assertThat(states.last().editorState.scheduleTableState.schedule[key]).isEqualTo(
+      ScheduleTableBox(SuplaScheduleProgram.PROGRAM_2)
+    )
+    verify {
+      delayedWeeklyScheduleConfigSubject.emit(
+        match { change ->
+          change.remoteId == 123 &&
+            change.schedule
+              .filter { it.dayOfWeek == DayOfWeek.MONDAY && it.hour == 8 }
+              .all { it.program == SuplaScheduleProgram.PROGRAM_2 }
+        }
+      )
+    }
+  }
+
+  @Test
+  fun `should edit schedule quarters and emit updated configuration`() {
     // given
     val key = ScheduleDetailEntryBoxKey(DayOfWeek.MONDAY, 8)
     val initialValue = ScheduleTableBox(
@@ -292,12 +412,6 @@ class RelayScheduleViewModelTest :
       )
     )
 
-    // when - regular touch remains unsupported
-    viewModel.onScheduleTableTouched(key)
-
-    // then
-    assertThat(states.last()).isEqualTo(loadedState)
-
     // when - open quarter selection
     viewModel.onScheduleTableLongPress(key)
 
@@ -319,7 +433,7 @@ class RelayScheduleViewModelTest :
       initialValue.copy(secondQuarterProgram = SuplaScheduleProgram.PROGRAM_2)
     )
 
-    // when - confirm local changes
+    // when - confirm changes
     viewModel.onQuartersSelectionFinish()
 
     // then
@@ -330,7 +444,18 @@ class RelayScheduleViewModelTest :
         initialValue.copy(secondQuarterProgram = SuplaScheduleProgram.PROGRAM_2)
       )
     }
-    verify(exactly = 0) { suplaClient.setChannelConfig(any()) }
+    verify {
+      delayedWeeklyScheduleConfigSubject.emit(
+        match {
+          it.remoteId == 123 &&
+            it.schedule.first { entry ->
+              entry.dayOfWeek == DayOfWeek.MONDAY &&
+                entry.hour == 8 &&
+                entry.quarterOfHour == QuarterOfHour.SECOND
+            }.program == SuplaScheduleProgram.PROGRAM_2
+        }
+      )
+    }
   }
 
   @Test
@@ -399,7 +524,7 @@ class RelayScheduleViewModelTest :
   }
 
   @Test
-  fun `should update and dismiss program settings while save remains empty`() {
+  fun `should update and save program settings`() {
     // given
     loadPrograms(weeklyProgram(SuplaScheduleProgram.PROGRAM_1, SuplaRelayMode.START_ON))
     viewModel.onScheduleProgramLongClick(SuplaScheduleProgram.PROGRAM_1)
@@ -410,19 +535,43 @@ class RelayScheduleViewModelTest :
     // then
     assertThat(states.last().programSettings!!.selectedMode).isEqualTo(SuplaRelayMode.FORCED_ON)
 
-    // when - unsupported mode and save
-    val stateBeforeInvalidChange = states.last()
+    // when - unsupported mode
     viewModel.onProgramSettingsModeChange(SuplaRelayMode.NOT_SET)
+
+    // then
+    assertThat(states.last().programSettings!!.selectedMode).isEqualTo(SuplaRelayMode.FORCED_ON)
+
+    // when
     viewModel.onProgramSettingsSave()
 
     // then
-    assertThat(states.last()).isEqualTo(stateBeforeInvalidChange)
+    with(states.last()) {
+      assertThat(programSettings).isNull()
+      assertThat(editorState.activeProgram).isEqualTo(SuplaScheduleProgram.PROGRAM_1)
+      assertThat(editorState.programs.first().relayMode).isEqualTo(SuplaRelayMode.FORCED_ON)
+    }
+    verify {
+      delayedWeeklyScheduleConfigSubject.emit(
+        match {
+          it.remoteId == 123 &&
+            it.programConfigurations.single().relayMode == SuplaRelayMode.FORCED_ON
+        }
+      )
+    }
+  }
+
+  @Test
+  fun `should dismiss program settings without saving`() {
+    // given
+    loadPrograms(weeklyProgram(SuplaScheduleProgram.PROGRAM_1, SuplaRelayMode.START_ON))
+    viewModel.onScheduleProgramLongClick(SuplaScheduleProgram.PROGRAM_1)
 
     // when
     viewModel.onProgramSettingsDismiss()
 
     // then
     assertThat(states.last().programSettings).isNull()
+    verify(exactly = 0) { delayedWeeklyScheduleConfigSubject.emit(any()) }
   }
 
   private fun loadPrograms(vararg programs: SuplaWeeklyScheduleProgram): RelayScheduleViewState {
