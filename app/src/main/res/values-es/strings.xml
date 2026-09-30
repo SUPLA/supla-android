@@ -82,7 +82,7 @@
   <string name="advanced_settings">Ajustes avanzados</string>
   <string name="wizard_iodev_data">Datos del dispositivo</string>
   <string name="email">DIRECCIÓN DE CORREO ELECTRÓNICO</string>
-  <string name="wizard_done">Configuración del dispositivo completada con éxito :)</string>
+  <string name="wizard_done">La configuración se ha transferido al dispositivo de E/S.</string>
   <string name="wizard_result_failed">¡Configuración no completada con éxito!</string>
   <string name="add_wizard_step_3_message_3"><![CDATA[Presiona la tecla <b>START</b> para iniciar la configuración.]]></string>
   <string name="wizard_iodev_name">Nombre</string>
@@ -364,7 +364,7 @@
   <string name="dgf_too_long_operation_warning">Las secciones de vidrio están expuestas durante más de 20 horas, lo que puede tener un impacto negativo en su vida útil. Se recomienda cubrir todas las secciones durante un mínimo de 4 horas para regenerarlas.</string>
   <string name="dgf_planned_regeneration_in_progress">La regeneración planificada está en curso.</string>
   <string name="dgf_regeneration_after20h">La regeneración está en curso, iniciada después de 20 horas de funcionamiento.</string>
-  <string name="wizard_done_explentations">Si el dispositivo no aparece en la aplicación, repite este procedimiento de adición nuevamente y lee el \"Estado anterior\" que se muestra arriba. Contiene información que permite determinar por qué el dispositivo no pudo conectarse al servidor. El mensaje \"SSID no encontrado\" significa que no se encontró el nombre ingresado de la red Wi-Fi de 2,4 GHz o que la red está fuera del alcance.</string>
+  <string name="wizard_done_explentations">Si el dispositivo no aparece en la aplicación, vuelve a ejecutar el asistente para añadir dispositivos y consulta el «Estado anterior» que se muestra arriba. Contiene información que ayuda a determinar por qué el dispositivo no pudo conectarse al servidor. El mensaje «SSID no encontrado» significa que la red Wi-Fi de 2,4 GHz seleccionada está fuera de alcance o que el nombre de la red es incorrecto.</string>
   <string name="incorrect_email_or_password">Dirección de correo electrónico o contraseña incorrecta</string>
   <string name="incorrect_password">Contraseña incorrecta</string>
   <string name="channel_name">Nombre del canal</string>

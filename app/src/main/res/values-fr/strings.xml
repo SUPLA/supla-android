@@ -81,7 +81,7 @@
   <string name="advanced_settings">Paramètres avancés</string>
   <string name="wizard_iodev_data">Données du dispositif</string>
   <string name="email">ADRESSE E-MAIL</string>
-  <string name="wizard_done">Configuration du dispositif est terminée avec succès :)</string>
+  <string name="wizard_done">Les paramètres ont été transférés vers l’appareil I/O.</string>
   <string name="wizard_result_failed">Échec de la configuration!</string>
   <string name="wizard_iodev_laststate">Statut précédent</string>
   <string name="add_wizard_step_3_message_3"><![CDATA[Appuyez sur <b>DÉMARRER</b> pour commencer la configuration.]]></string>
@@ -363,7 +363,7 @@
   <string name="dgf_too_long_operation_warning">Des sections du verre sont exposées pendant plus de 20 heures, ce qui peut affecter leur durée de vie. Il est conseillé de couvrir toutes les sections pendant un minimum de 4 heures pour la régénération.</string>
   <string name="dgf_planned_regeneration_in_progress">Régénération programmée en cours.</string>
   <string name="dgf_regeneration_after20h">Régénération initiée après 20h de fonctionnement en cours.</string>
-  <string name="wizard_done_explentations">Si l\'appareil n\'apparaît pas dans l\'application, répétez à nouveau cette procédure d\'ajout et lisez le « Statut précédent » indiqué ci-dessus. Il contient des informations permettant de déterminer pourquoi l\'appareil ne s\'est pas connecté au serveur. Le message « SSID non trouvé » signifie que le nom du réseau Wi-Fi 2,4 GHz saisi n\'a pas été trouvé ou que le réseau est hors de portée.</string>
+  <string name="wizard_done_explentations">Si l\'appareil n\'apparaît pas dans l\'application, relancez l\'assistant d\'ajout d\'appareil et consultez le « Statut précédent » affiché ci-dessus. Il contient des informations qui aident à déterminer pourquoi l\'appareil n\'a pas pu se connecter au serveur. Le message « SSID non trouvé » signifie que le réseau Wi-Fi 2,4 GHz sélectionné est hors de portée ou que son nom est incorrect.</string>
   <string name="incorrect_email_or_password">Adresse e-mail ou mot de passe incorrect(e)</string>
   <string name="incorrect_password">Mot de passe incorrect</string>
   <string name="channel_name">Nom du canal</string>

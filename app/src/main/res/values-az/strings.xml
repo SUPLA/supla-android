@@ -401,7 +401,7 @@
   <string name="dgf_too_long_operation_warning">Şüşə bölmələr 20 saatdan çox işləyib, bu ömrünə mənfi təsir göstərə bilər. Bərpa üçün bütün bölmələri minimum 4 saat örtmək tövsiyə olunur.</string>
   <string name="dgf_planned_regeneration_in_progress">Planlaşdırılmış bərpa davam edir.</string>
   <string name="dgf_regeneration_after20h">20 saatlıq işdən sonra başlanan bərpa davam edir.</string>
-  <string name="wizard_done_explentations">Yeni I/O cihazınız Supla tətbiqində görünmürsə, “Add I/O Device” wizard-ını yenidən işə salın və səhifədəki “Previous State” məlumatına baxın. “SSID Not Found” 2.4 GHz şəbəkənin əhatə dairəsində olmadığını və ya adının düzgün olmadığını göstərir.</string>
+  <string name="wizard_done_explentations">Yeni I/O cihazınız Supla tətbiqində görünmürsə, cihaz əlavə etmək sehrbazını yenidən başladın və yuxarıda göstərilən “Previous State” məlumatını oxuyun. Bu məlumat cihazın serverə niyə qoşulmadığını müəyyən etməyə kömək edir. “SSID Not Found” mesajı seçilmiş 2,4 GHz Wi-Fi şəbəkəsinin əhatə dairəsində olmadığını və ya şəbəkə adının səhv olduğunu bildirir.</string>
   <string name="incorrect_email_or_password">Email ünvanı və ya şifrə yanlışdır</string>
   <string name="incorrect_password">Şifrə yanlışdır</string>
   <string name="channel_name">Kanal adı</string>
