@@ -105,7 +105,7 @@
   <string name="wizard_iodevice_notfound">Ni najdenih naprav! Prepričajte se, da je naprava, ki jo želite konfigurirati, v konfiguracijskem načinu in poskusite znova. POMEMBNO - Nekatere različice Androida zahtevajo, da je vklopljen GPS, kar aplikacijam omogoča iskanje po omrežju Wi-Fi, zato preverite tudi, ali je vklopljen GPS.</string>
 
 
-  <string name="wizard_done">Konfiguracija naprave je bila uspešna :)</string>
+  <string name="wizard_done">Nastavitve so bile prenesene na napravo I/O.</string>
     <string name="wizard_iodev_data">Podatki o napravi</string>
   <string name="wizard_iodev_name">Ime</string>
   <string name="wizard_iodev_laststate">Prejšnji status</string>
@@ -373,7 +373,7 @@
   <string name="dgf_too_long_operation_warning">Stekleni deli so izpostavljeni več kot 20 ur, kar lahko negativno vpliva na njihovo življenjsko dobo. Priporočljivo je, da vse dele prekrijete za najmanj 4 ure, da se obnovijo.</string>
   <string name="dgf_planned_regeneration_in_progress">Načrtovana obnova je v teku.</string>
   <string name="dgf_regeneration_after20h">Obnova je v teku po 20 urah dela.</string>
-  <string name="wizard_done_explentations">Če se naprava ne prikaže v aplikaciji, ponovite ta postopek dodajanja še enkrat in preberite \"Prejšnje stanje\", prikazano zgoraj. Vsebuje informacije, na podlagi katerih je mogoče ugotoviti, zakaj naprava ni vzpostavila povezave s strežnikom. Sporočilo »SSID not found« pomeni, da vnesenega imena 2,4 GHz Wi-Fi omrežja ni bilo mogoče najti ali pa je omrežje izven dosega.</string>
+  <string name="wizard_done_explentations">Če se naprava ne prikaže v aplikaciji, znova zaženite čarovnika za dodajanje naprave in preberite zgoraj prikazano »Prejšnje stanje«. Vsebuje informacije, ki pomagajo ugotoviti, zakaj se naprava ni mogla povezati s strežnikom. Sporočilo »SSID not found« pomeni, da je izbrano omrežje Wi-Fi 2,4 GHz zunaj dosega ali pa je ime omrežja napačno.</string>
   <string name="incorrect_email_or_password">Napačen e-naslov ali geslo</string>
   <string name="incorrect_password">Napačno geslo</string>
   <string name="channel_name">Ime kanala</string>

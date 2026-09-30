@@ -86,7 +86,7 @@
   <string name="wizard_reconnect_timeout">Viršytas grįžimo prie pagrindinio Wi-Fi tinklo laukimo laikas!</string>
   <string name="device_reg_request_timeout">Viršytas informacijos apie įrenginių registracijos prieinamumą laukimo laikas!</string>
   <string name="wizard_iodevice_notfound">Nerasta jokių įrenginių! Įsitikinkite, kad įrenginys, kurį norite konfigūruoti veikia konfigūracijos režime, o tada pabandykite dar kartą. SVARBU – Kai kuriose Android versijose būtina įjungti GPS, kad programos galėtų ieškoti Wi-Fi tinklo, todėl taip pat įsitikinkite, kad GPS yra įjungtas.</string>
-  <string name="wizard_done">Įrenginio konfigūravimas baigtas sėkmingai :)</string>
+  <string name="wizard_done">Nustatymai perkelti į I/O įrenginį.</string>
   <string name="wizard_iodev_data">Įrenginio duomenys</string>
   <string name="wizard_iodev_name">Pavadinimas</string>
   <string name="wizard_iodev_laststate">Ankstesnis statusas</string>
@@ -354,7 +354,7 @@
   <string name="dgf_too_long_operation_warning">Stiklo sekcijos atidengtos virš 20 valandų, kas gali neigiamai įtakoti jų tarnavimo laiką. Rekomenduojama uždengti visas sekcijas bent 4 valandoms regeneravimui.</string>
   <string name="dgf_planned_regeneration_in_progress">Vyksta suplanuotas regeneravimas.</string>
   <string name="dgf_regeneration_after20h">Vyksta regeneravimas, kuris paleidžiamas po 20 darbo valandų.</string>
-  <string name="wizard_done_explentations">Jei įrenginys nebus matomas programoje, pakartokite šią pridėjimo procedūrą dar kartą ir nuskaitykite žemiau matomą „Ankstesnį statusą“. Jame yra informacija, kuri leidžia nustatyti, kodėl įrenginys neprisijungė prie serverio. Pranešimas “SSID not found“ reiškia, kad įvestas Wi-Fi 2,4 GHz tinklo pavadinimas nebuvo rastas arba tinklas neprieinamas.</string>
+  <string name="wizard_done_explentations">Jei įrenginys programoje nerodomas, dar kartą paleiskite įrenginio pridėjimo vedlį ir perskaitykite aukščiau rodomą „Ankstesnę būseną“. Joje pateikta informacija padeda nustatyti, kodėl įrenginiui nepavyko prisijungti prie serverio. Pranešimas „SSID not found“ reiškia, kad pasirinktas 2,4 GHz Wi-Fi tinklas yra už ryšio zonos ribų arba jo pavadinimas neteisingas.</string>
   <string name="incorrect_email_or_password">Neteisingas el. pašto adresas arba slaptažodis</string>
   <string name="incorrect_password">Neteisingas slaptažodis</string>
   <string name="channel_name">Kanalo pavadinimas</string>
