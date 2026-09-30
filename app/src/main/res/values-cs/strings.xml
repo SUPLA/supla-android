@@ -87,7 +87,7 @@
   <string name="wizard_reconnect_timeout">Doba čekání na návrat do základní sítě Wi-Fi byla překročena!</string>
   <string name="device_reg_request_timeout">Doba čekání na informace o dostupnosti registrace zařízení byla překročena!</string>
   <string name="wizard_iodevice_notfound">Nebyly nalezeny žádné přístroje! Ujistěte se, že zařízení, které chcete konfigurovat, je v konfiguračním režimu a zkuste to znovu. DŮLEŽITÉ - Některé verze systému Android vyžadují službu GPS umožňující aplikacím vyhledávat v síti Wi-Fi, proto se také ujistěte, že GPS je zapnuté.</string>
-  <string name="wizard_done">Konfigurace zařízení byla úspěšně dokončena :)</string>
+  <string name="wizard_done">Nastavení byla přenesena do I/O zařízení.</string>
   <string name="wizard_iodev_data">Data zařízení</string>
   <string name="wizard_iodev_name">Název</string>
   <string name="wizard_iodev_laststate">Předchozí stav</string>
@@ -356,7 +356,7 @@
   <string name="dgf_too_long_operation_warning">Části skla jsou vystaveny světlu déle než 20 hodin, což může ovlivnit jejich životnost. Pro jejich obnovu se doporučuje zakrýt všechny části na minimálně 4 hodiny.</string>
   <string name="dgf_planned_regeneration_in_progress">Probíhá plánovaná obnova.</string>
   <string name="dgf_regeneration_after20h">Obnova byla zahájena po 20h provozní činnosti.</string>
-  <string name="wizard_done_explentations">Pokud se zařízení v aplikaci nezobrazí, zopakujte tento postup přidání znovu a přečtěte si výše uvedený \"Předchozí stav\". Obsahuje informace, díky nímž lze zjistit, proč se zařízení nepřipojilo k serveru. Zpráva  \"SSID not found“ znamená, že zadaný název sítě Wi-Fi 2,4 GHz nebyl nalezen nebo je síť mimo dosah.</string>
+  <string name="wizard_done_explentations">Pokud se zařízení v aplikaci nezobrazí, spusťte znovu průvodce přidáním zařízení a přečtěte si výše uvedený „Předchozí stav“. Obsahuje informace, které pomohou zjistit, proč se zařízení nepřipojilo k serveru. Zpráva „SSID not found“ znamená, že vybraná síť Wi-Fi 2,4 GHz je mimo dosah nebo je její název nesprávný.</string>
   <string name="incorrect_email_or_password">Nesprávná e-mailová adresa nebo heslo</string>
   <string name="incorrect_password">Nesprávné heslo</string>
   <string name="channel_name">Název kanálu</string>

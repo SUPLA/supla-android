@@ -81,7 +81,7 @@
   <string name="advanced_settings">Configurações avançadas</string>
   <string name="wizard_iodev_data">Dados do dispositivo</string>
   <string name="email">ENDEREÇO E-MAIL</string>
-  <string name="wizard_done">O dispositivo foi configurado com sucesso :)</string>
+  <string name="wizard_done">As definições foram transferidas para o dispositivo I/O.</string>
   <string name="wizard_result_failed">A configuração falhou!</string>
   <string name="wizard_iodev_laststate">Estatuto anterior</string>
   <string name="add_wizard_step_3_message_3"><![CDATA[Carregue no botão <b>START</b> para iniciar uma configuração.]]></string>
@@ -390,7 +390,7 @@
   <string name="rs_display_mode_opening">Aberto</string>
   <string name="rs_display_mode_closing">Encerramentos</string>
   <string name="status_accessid_inactive">Acesso ID inativo</string>
-  <string name="wizard_done_explentations">Se o seu dispositivo não aparecer na aplicação, repita este procedimento de adicionar novamente e leia o \"Estado anterior\" acima indicado. Contém informações para determinar por que razão o dispositivo não se ligou ao servidor. A mensagem \"SSID não encontrado\" significa que o nome de rede Wi-Fi de 2,4 GHz que inseriu não foi encontrado ou a rede está fora de alcance.</string>
+  <string name="wizard_done_explentations">Se o dispositivo não aparecer na aplicação, inicie novamente o assistente de adição de dispositivos e consulte o «Estado anterior» apresentado acima. Este contém informações que ajudam a determinar por que razão o dispositivo não conseguiu ligar-se ao servidor. A mensagem «SSID not found» significa que a rede Wi-Fi de 2,4 GHz selecionada está fora do alcance ou que o nome da rede está incorreto.</string>
   <string name="hour_string_format">HH:mm:ss</string>
   <string name="roller_shutter_calibration">Calibrar</string>
   <string name="details_em_forward_active_energy">Energia ativa direta</string>
