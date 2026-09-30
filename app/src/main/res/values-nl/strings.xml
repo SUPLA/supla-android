@@ -108,7 +108,7 @@
   <string name="wizard_iodevice_notfound">Geen apparaten gevonden! Zorg ervoor dat het apparaat dat u wilt configureren zich in de configuratiemodus bevindt en probeer het opnieuw. BELANGRIJK - Sommige versies van Android vereisen dat GPS is ingeschakeld zodat toepassingen het WiFi-netwerk kunnen doorzoeken, dus zorg ervoor dat GPS ook is ingeschakeld.</string>
 
 
-  <string name="wizard_done">De apparaatconfiguratie is geslaagd :)</string>
+  <string name="wizard_done">De instellingen zijn naar het I/O-apparaat overgebracht.</string>
   <string name="wizard_iodev_data">Apparaatgegevens</string>
   <string name="wizard_iodev_name">Naam</string>
   <string name="wizard_iodev_laststate">Vorige status</string>
@@ -376,7 +376,7 @@
   <string name="dgf_too_long_operation_warning">Beglazingssecties worden meer dan 20 uur blootgesteld, wat hun levensduur nadelig kan beïnvloeden. Aanbevolen wordt alle secties minimaal 4 uur af te dekken om ze te laten regenereren.</string>
   <string name="dgf_planned_regeneration_in_progress">Geplande regeneratie is aan de gang.</string>
   <string name="dgf_regeneration_after20h">De regeneratie die na 20h in werking is gesteld, is aan de gang.</string>
-  <string name="wizard_done_explentations">Als het toestel niet in de toepassing verschijnt, herhaalt u deze toevoegingsprocedure nogmaals en leest u de hierboven getoonde \"Vorige status\". Dit bevat informatie om te bepalen waarom het toestel geen verbinding maakte met de server. De melding \"SSID niet gevonden\" betekent dat de ingevoerde 2,4 GHz WiFi-netwerknaam niet is gevonden of dat het netwerk buiten bereik is.</string>
+  <string name="wizard_done_explentations">Als het apparaat niet in de app verschijnt, start u de wizard voor het toevoegen van een apparaat opnieuw en leest u de hierboven weergegeven ‘Vorige status’. Deze bevat informatie die helpt vaststellen waarom het apparaat geen verbinding met de server kon maken. De melding ‘SSID not found’ betekent dat het geselecteerde 2,4GHz-wifi-netwerk buiten bereik is of dat de netwerknaam onjuist is.</string>
   <string name="incorrect_email_or_password">Onjuist e-mailadres of wachtwoord</string>
   <string name="incorrect_password">Onjuist wachtwoord</string>
   <string name="channel_name">Naam kanaal</string>

@@ -108,7 +108,7 @@
   <string name="wizard_iodevice_notfound">Semmilyen eszköz sem található! Ellenőrizze, hogy a konfigurálni kívánt eszköz konfigurációs módban van-e, majd próbálja újra. FONTOS - Az Android néhány verziója megköveteli a GPS engedélyezését, hogy az alkalmazások lehetővé tegyék a Wi-Fi hálózaton keresztüli keresést, ezért ellenőrizze, hogy a GPS is engedélyezve van-e.</string>
 
 
-  <string name="wizard_done">Az eszköz konfigurálása sikeres :)</string>
+  <string name="wizard_done">A beállítások átkerültek az I/O-eszközre.</string>
   <string name="wizard_iodev_data">Eszköz adatok</string>
   <string name="wizard_iodev_name">Megnevezés</string>
   <string name="wizard_iodev_laststate">Előző állapot</string>
@@ -376,7 +376,7 @@
   <string name="dgf_too_long_operation_warning">Az üvegszekciók több mint 20 órán át lefedetlenek, ez negatívan befolyásolhatja az élettartamukat. Javasoljuk, hogy az összes szekciót legalább 4 órán át takarja el a helyreállítás érdekében.</string>
   <string name="dgf_planned_regeneration_in_progress">Tervezett helyreállítás folyamatban.</string>
   <string name="dgf_regeneration_after20h">20 üzemóra után kezdődő helyreállítás folyamatban.</string>
-  <string name="wizard_done_explentations">Ha a készülék nem jelenik meg az alkalmazásban, ismételje meg ezt az eljárást, és olvassa el a fenti „Előző állapotot”. Ez azt jelzi, hogy a készülék miért nem csatlakozott a szerverhez. Az \"SSID not found\" üzenet azt jelenti, hogy a megadott 2,4 GHz-es Wi-Fi nevet nem találták meg, vagy a hálózat nem érhető el.</string>
+  <string name="wizard_done_explentations">Ha az eszköz nem jelenik meg az alkalmazásban, indítsa el újra az eszköz hozzáadására szolgáló varázslót, és olvassa el a fent látható „Előző állapot” részt. Ez segít megállapítani, miért nem tudott az eszköz csatlakozni a szerverhez. Az „SSID not found” üzenet azt jelenti, hogy a kiválasztott 2,4 GHz-es Wi-Fi-hálózat hatótávolságon kívül van, vagy a neve hibás.</string>
   <string name="incorrect_email_or_password">Hibás email cím vagy jelszó</string>
   <string name="incorrect_password">Helytelen jelszó</string>
   <string name="channel_name">Csatorna neve</string>
