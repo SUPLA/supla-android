@@ -108,7 +108,7 @@
   <string name="wizard_iodevice_notfound">Ingen enheter ble funnet! Sjekk om enheten du ønsker å konfigurere er satt i konfigurasjonsmodus, og prøv på nytt. VIKTIG – noen Android versjoner krever at GPS funksjonen er skrudd på for å gjøre det mulig for applikasjonene å søke gjennom trådløse nettverk, husk derfor å sjekke at også GPS er på.</string>
 
 
-  <string name="wizard_done">Konfigurering av enheten ble vellykket :)</string>
+  <string name="wizard_done">Innstillingene er overført til I/O-enheten.</string>
   <string name="wizard_iodev_data">Opplysninger om enheten</string>
   <string name="wizard_iodev_name">Navn</string>
   <string name="wizard_iodev_laststate">Forrige status</string>
@@ -376,7 +376,7 @@
   <string name="dgf_too_long_operation_warning">Glasspartiene er eksponert i mer enn 20 timer, noe som kan ha negativ innvirkning på levetiden. Det anbefales å dekke alle seksjoner i minimum 4 timer for å regenerere dem.</string>
   <string name="dgf_planned_regeneration_in_progress">Planlagt regenerering pågår.</string>
   <string name="dgf_regeneration_after20h">Regenerering pågår, startet etter 20 timers drift.</string>
-  <string name="wizard_done_explentations">Hvis enheten ikke vises i applikasjonen, gjenta denne tilleggsprosedyren igjen og les \"Forrige status\" vist ovenfor. Den inneholder informasjon som gjør det mulig å finne ut hvorfor enheten ikke klarte å koble til serveren. Meldingen \"SSID not found\" betyr at det angitte navnet på 2,4 GHz WiFi-nettverket ikke ble funnet eller at nettverket er utenfor rekkevidde.</string>
+  <string name="wizard_done_explentations">Hvis enheten ikke vises i appen, start veiviseren for å legge til en enhet på nytt, og les «Forrige status» som vises ovenfor. Den inneholder informasjon som kan hjelpe deg med å finne ut hvorfor enheten ikke kunne koble til serveren. Meldingen «SSID not found» betyr at det valgte 2,4 GHz Wi-Fi-nettverket er utenfor rekkevidde, eller at nettverksnavnet er feil.</string>
   <string name="incorrect_email_or_password">Feil e-postadresse eller passord</string>
   <string name="incorrect_password">Feil passord</string>
   <string name="channel_name">Kanalnavn</string>

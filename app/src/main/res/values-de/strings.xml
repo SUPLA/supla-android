@@ -88,7 +88,7 @@
   <string name="advanced_settings">Erweiterte Einstellungen</string>
   <string name="wizard_iodev_data">Daten des Gerätes</string>
   <string name="email">E-MAIL-ADRESSE</string>
-  <string name="wizard_done">Die Konfiguration wurde erfolgreich abgeschlossen :)</string>
+  <string name="wizard_done">Die Einstellungen wurden auf das I/O-Gerät übertragen.</string>
   <string name="wizard_result_failed">Die Konfiguration war nicht erfolgreich!</string>
   <string name="wizard_iodev_laststate">Vorheriger Status</string>
   <string name="add_wizard_step_3_message_3"><![CDATA[Drücken Sie die Taste <b>START</b>, um die Konfiguration zu beginnen.]]></string>
@@ -387,7 +387,7 @@
   <string name="dgf_too_long_operation_warning">Die Scheibensektionen sind über 20 h aufgedeckt, was negativ ihre Lebensdauer beeinflussen kann. Verdeckung aller Sektionen für mind. 4 h zu ihrer Regeneration ist empfohlen.</string>
   <string name="dgf_planned_regeneration_in_progress">Geplante Regeneration läuft.</string>
   <string name="dgf_regeneration_after20h">Es läuft die nach 20 Betriebsstunden begonnene Regeneration.</string>
-  <string name="wizard_done_explentations">Wenn das Gerät nicht in der App erscheint, wiederholen Sie dieses Hinzufügungsverfahren noch einmal und lesen Sie „Bisheriger Status“, das oben zu sehen ist, ab. Er enthält eine Information, warum das Gerät sich nicht mit dem Server verbunden hat. Meldung „SSID not found“ bedeutet, dass der eingeführte Name des WiFi-Netzwerks 2,4 GHz nicht gefunden wurde oder dieses Netzwerk sich außerhalb der Reichweite befindet.</string>
+  <string name="wizard_done_explentations">Wenn das Gerät nicht in der App erscheint, starten Sie den Assistenten zum Hinzufügen des Geräts erneut und lesen Sie den oben angezeigten „Vorherigen Status“. Er enthält Informationen dazu, warum das Gerät keine Verbindung zum Server herstellen konnte. Die Meldung „SSID not found“ bedeutet, dass das ausgewählte 2,4-GHz-WLAN außerhalb der Reichweite ist oder sein Name falsch eingegeben wurde.</string>
   <string name="incorrect_email_or_password">Falsche E-Mail-Adresse oder Kennwort</string>
   <string name="incorrect_password">Falsches Passwort</string>
   <string name="channel_name">Name des Kanals</string>

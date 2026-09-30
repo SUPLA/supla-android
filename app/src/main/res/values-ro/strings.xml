@@ -107,7 +107,7 @@
   <string name="wizard_iodevice_notfound">Nu s-au găsit dispozitive! Asigurați-vă că dispozitivul pe care doriți să îl configurați este în modul de configurare și apoi încercați din nou. IMPORTANT – Unele versiuni de Android necesită activarea GPS-ului pentru a permite aplicațiilor să caute în rețeaua Wi-Fi, deci asigurați-vă că GPS-ul este activat.</string>
 
 
-  <string name="wizard_done">Configurația dispozitivului a fost terminată cu succes :)</string>
+  <string name="wizard_done">Setările au fost transferate pe dispozitivul I/O.</string>
   <string name="wizard_iodev_data">Datele dispozitivului</string>
   <string name="wizard_iodev_name">Numele</string>
   <string name="wizard_iodev_laststate">Starea precedentă</string>
@@ -375,7 +375,7 @@
   <string name="dgf_too_long_operation_warning">Secțiunile de sticlă sunt expuse mai mult de 20 de ore, ceea ce poate avea un impact negativ asupra longevității lor. Se recomandă acoperirea tuturor secțiunilor minim 4 ore pentru regenerarea acestora.</string>
   <string name="dgf_planned_regeneration_in_progress">Regenerarea planificată este în curs.</string>
   <string name="dgf_regeneration_after20h">Regenerarea este în desfășurare, inițiată după 20 de ore de funcționare.</string>
-  <string name="wizard_done_explentations">Dacă dispozitivul nu apare în aplicație, repeta această procedură de adăugare din nou și citiți „Starea anterioară” prezentată mai sus. Conține informație care face posibilă determinarea motivului pentru care dispozitivul nu a reușit să se conecteze la server. Mesajul „SSID not found” înseamnă că denumirea introdusă a rețelei Wi-Fi de 2,4 GHz nu a fost  găsită sau rețeaua este în afara razei de acțiune.</string>
+  <string name="wizard_done_explentations">Dacă dispozitivul nu apare în aplicație, porniți din nou expertul de adăugare a dispozitivului și consultați „Starea anterioară” afișată mai sus. Aceasta conține informații care ajută la stabilirea motivului pentru care dispozitivul nu s-a putut conecta la server. Mesajul „SSID not found” înseamnă că rețeaua Wi-Fi de 2,4 GHz selectată este în afara razei de acțiune sau că numele rețelei este incorect.</string>
   <string name="incorrect_email_or_password">Adresă de e-mail sau parolă greșită</string>
   <string name="incorrect_password">Parolă incorectă</string>
   <string name="channel_name">Denumirea canalului</string>
