@@ -108,7 +108,7 @@
   <string name="wizard_iodevice_notfound">Nenašli sa žiadne zariadenia! Skontrolujte, či zariadenie, ktoré chcete konfigurovať, pracuje v konfiguračnom režime, a potom to skúste znova. DÔLEŽITÉ – Niektoré verzie systému Android vyžadujú, aby bolo aktivované GPS s cieľom umožniť aplikáciám vyhľadávať Wi-Fi site. Preto skontrolujte, že je GPS spustené.</string>
 
 
-  <string name="wizard_done">Konfigurácia zariadenia bola úspešne dokončená :)</string>
+  <string name="wizard_done">Nastavenia boli prenesené do zariadenia I/O.</string>
   <string name="wizard_iodev_data">Údaje zariadenia</string>
   <string name="wizard_iodev_name">Názov</string>
   <string name="wizard_iodev_laststate">Predchádzajúci status</string>
@@ -376,7 +376,7 @@
   <string name="dgf_too_long_operation_warning">Zasklenie je odhalené viac ako 20 hodín, čo môže mať negatívny vplyv na jeho životnosť. Odporúča sa všetky úseky pokryť minimálne 4 hodiny, aby sa zregenerovali.</string>
   <string name="dgf_planned_regeneration_in_progress">Prebieha plánovaná regenerácia.</string>
   <string name="dgf_regeneration_after20h">Prebieha regenerácia, ktorá bola spustená po 20 h prevádzky.</string>
-  <string name="wizard_done_explentations">Ak sa zariadenie v aplikácii nezobrazí, zopakujte postup pridávania znova a prečítajte si „Predchádzajúci status” zobrazený vyššie. Obsahuje informácie, na základe ktorých vieme určiť, prečo sa zariadeniu nepodarilo pripojiť k serveru. Hlásenie “SSID Not Found” znamená, že zadaný názov Wi-Fi siete 2,4 GHz nebol nájdený alebo je sieť mimo dosahu.</string>
+  <string name="wizard_done_explentations">Ak sa zariadenie v aplikácii nezobrazí, znova spustite sprievodcu pridaním zariadenia a prečítajte si vyššie zobrazený „Predchádzajúci stav“. Obsahuje informácie, ktoré pomáhajú zistiť, prečo sa zariadenie nemohlo pripojiť k serveru. Hlásenie „SSID not found“ znamená, že vybraná Wi-Fi sieť 2,4 GHz je mimo dosahu alebo je jej názov nesprávny.</string>
   <string name="incorrect_email_or_password">Nesprávna e-mailová adresa alebo heslo</string>
   <string name="incorrect_password">Nesprávne heslo</string>
   <string name="channel_name">Názov kanála</string>
