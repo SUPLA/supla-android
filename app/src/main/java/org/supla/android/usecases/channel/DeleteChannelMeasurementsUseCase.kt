@@ -53,6 +53,7 @@ class DeleteChannelMeasurementsUseCase @Inject constructor(
 
   operator fun invoke(remoteId: Int): Completable =
     readChannelWithChildrenUseCase(remoteId)
+      .firstElement()
       .flatMapCompletable { channelWithChildren ->
         val profileId = channelWithChildren.profileId
 

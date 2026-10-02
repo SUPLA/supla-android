@@ -157,9 +157,13 @@ class SwitchGeneralViewModel @Inject constructor(
   }
 
   override fun onManual() {
+    val state = currentState()
+    performAction(ActionId.SWITCH_TO_MANUAL_MODE, state.itemType, state.remoteId)
   }
 
   override fun onWeekly() {
+    val state = currentState()
+    performAction(ActionId.SWITCH_TO_PROGRAM_MODE, state.itemType, state.remoteId)
   }
 
   override fun onAuto() {
@@ -177,7 +181,7 @@ class SwitchGeneralViewModel @Inject constructor(
   }
 
   private fun loadChannel(remoteId: Int, cleanupDownloading: Boolean) {
-    readChannelWithChildrenUseCase(remoteId)
+    readChannelWithChildrenUseCase(remoteId).firstElement()
       .flatMap { channelWithChildren ->
         channelWithChildren.isOrHasElectricityMeter.forTrue {
           loadElectricityMeterMeasurementsUseCase(

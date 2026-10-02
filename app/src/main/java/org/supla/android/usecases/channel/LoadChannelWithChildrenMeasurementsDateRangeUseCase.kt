@@ -41,6 +41,7 @@ class LoadChannelWithChildrenMeasurementsDateRangeUseCase @Inject constructor(
 
   operator fun invoke(remoteId: Int, profileId: Long): Single<Optional<DateRange>> =
     readChannelWithChildrenUseCase(remoteId)
+      .firstElement()
       .toSingle()
       .flatMap { channel ->
         if (channel.channel.isHvacThermostat()) {

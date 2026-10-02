@@ -9,12 +9,12 @@ interface DoubleValueParser {
   fun asDoubleValue(channelValueEntity: ChannelValueEntity): Double? {
     return channelValueEntity.getValueAsByteArray().let {
       if (it.isEmpty()) {
-        null
+        return null
       }
 
       try {
         ByteBuffer.wrap(it).order(ByteOrder.LITTLE_ENDIAN).getDouble()
-      } catch (exception: Exception) {
+      } catch (_: Exception) {
         null
       }
     }

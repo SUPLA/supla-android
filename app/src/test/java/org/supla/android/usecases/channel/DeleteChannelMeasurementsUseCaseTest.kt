@@ -17,12 +17,16 @@ package org.supla.android.usecases.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import io.mockk.*
 import io.mockk.Called
+import io.mockk.MockKAnnotations
+import io.mockk.confirmVerified
+import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
+import io.mockk.mockk
+import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
 import org.junit.Before
 import org.junit.Test
 import org.supla.android.data.source.CurrentLogRepository
@@ -99,7 +103,7 @@ class DeleteChannelMeasurementsUseCaseTest {
       every { this@mockk.remoteId } returns remoteId
     }
 
-    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channel)
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Observable.just(channel)
     every { temperatureLogRepository.delete(remoteId, profileId) } returns Completable.complete()
 
     // when
@@ -130,7 +134,7 @@ class DeleteChannelMeasurementsUseCaseTest {
       every { this@mockk.remoteId } returns remoteId
     }
 
-    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channel)
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Observable.just(channel)
     every { temperatureAndHumidityLogUseCase.delete(remoteId, profileId) } returns Completable.complete()
 
     // when
@@ -161,7 +165,7 @@ class DeleteChannelMeasurementsUseCaseTest {
       every { this@mockk.remoteId } returns remoteId
     }
 
-    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channel)
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Observable.just(channel)
     every { generalPurposeMeasurementLogRepository.delete(remoteId, profileId) } returns Completable.complete()
 
     // when
@@ -192,7 +196,7 @@ class DeleteChannelMeasurementsUseCaseTest {
       every { this@mockk.remoteId } returns remoteId
     }
 
-    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channel)
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Observable.just(channel)
     every { generalPurposeMeterLogRepository.delete(remoteId, profileId) } returns Completable.complete()
 
     // when
@@ -224,7 +228,7 @@ class DeleteChannelMeasurementsUseCaseTest {
       every { this@mockk.remoteId } returns remoteId
     }
 
-    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channel)
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Observable.just(channel)
     every { voltageLogRepository.delete(remoteId, profileId) } returns Completable.complete()
     every { currentLogRepository.delete(remoteId, profileId) } returns Completable.complete()
     every { powerActiveLogRepository.delete(remoteId, profileId) } returns Completable.complete()
@@ -276,7 +280,7 @@ class DeleteChannelMeasurementsUseCaseTest {
       }
     }
 
-    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channelWithChildren)
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Observable.just(channelWithChildren)
     every { temperatureLogRepository.delete(111, profileId) } returns Completable.complete()
     every { temperatureAndHumidityLogUseCase.delete(222, profileId) } returns Completable.complete()
 

@@ -37,7 +37,7 @@ import org.supla.android.features.details.detailbase.base.DetailPage
 import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
-import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
+import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.extensions.forTrue
@@ -52,7 +52,7 @@ import javax.inject.Named
 @HiltViewModel
 class ThermostatSlavesListViewModel @Inject constructor(
   @param:Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter,
-  private val readChannelWithChildrenTreeUseCase: ReadChannelWithChildrenTreeUseCase,
+  private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   private val getChannelIssuesForSlavesUseCase: GetChannelIssuesForSlavesUseCase,
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
@@ -67,7 +67,7 @@ class ThermostatSlavesListViewModel @Inject constructor(
   ThermostatSlavesListScope {
 
   fun onCreate(remoteId: Int) {
-    readChannelWithChildrenTreeUseCase(remoteId)
+    readChannelWithChildrenUseCase(remoteId)
       .attachSilent()
       .subscribeBy(
         onNext = this::handle,

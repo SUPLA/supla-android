@@ -71,7 +71,7 @@ class ElectricityMeterGeneralViewModel @Inject constructor(
   }
 
   fun loadData(remoteId: Int, cleanupDownloading: Boolean = false) {
-    readChannelWithChildrenUseCase(remoteId)
+    readChannelWithChildrenUseCase(remoteId).firstElement()
       .flatMap { channelWithChildren ->
         loadElectricityMeterMeasurementsUseCase(
           profileId = channelWithChildren.profileId,

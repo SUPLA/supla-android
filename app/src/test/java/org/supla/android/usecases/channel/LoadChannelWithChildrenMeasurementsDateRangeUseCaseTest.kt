@@ -18,11 +18,15 @@ package org.supla.android.usecases.channel
  */
 
 import androidx.room.rxjava3.EmptyResultSetException
-import io.mockk.*
 import io.mockk.Called
+import io.mockk.MockKAnnotations
+import io.mockk.confirmVerified
+import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
-import io.reactivex.rxjava3.core.Maybe
+import io.mockk.mockk
+import io.mockk.verify
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -67,7 +71,7 @@ class LoadChannelWithChildrenMeasurementsDateRangeUseCaseTest {
     val maxDate = date(2023, 10, 10)
 
     val channelWithChildren = mockChannelWithChildren()
-    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channelWithChildren)
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Observable.just(channelWithChildren)
     every { temperatureAndHumidityLogRepository.findMinTimestamp(2, profileId) } returns Single.just(minDate.time)
     every { temperatureLogRepository.findMinTimestamp(3, profileId) } returns Single.just(date(2023, 10, 2).time)
     every { temperatureAndHumidityLogRepository.findMaxTimestamp(2, profileId) } returns Single.just(date(2023, 10, 3).time)
@@ -98,7 +102,7 @@ class LoadChannelWithChildrenMeasurementsDateRangeUseCaseTest {
     val maxDate = date(2023, 10, 3)
 
     val channelWithChildren = mockChannelWithChildren()
-    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channelWithChildren)
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Observable.just(channelWithChildren)
     every { temperatureAndHumidityLogRepository.findMinTimestamp(2, profileId) } returns Single.just(minDate.time)
     every { temperatureLogRepository.findMinTimestamp(3, profileId) } returns Single.error(EmptyResultSetException(""))
     every { temperatureAndHumidityLogRepository.findMaxTimestamp(2, profileId) } returns Single.just(maxDate.time)
@@ -127,7 +131,7 @@ class LoadChannelWithChildrenMeasurementsDateRangeUseCaseTest {
     val profileId = 321L
 
     val channelWithChildren = mockChannelWithChildren()
-    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channelWithChildren)
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Observable.just(channelWithChildren)
     every { temperatureAndHumidityLogRepository.findMinTimestamp(2, profileId) } returns Single.error(EmptyResultSetException(""))
     every { temperatureLogRepository.findMinTimestamp(3, profileId) } returns Single.error(EmptyResultSetException(""))
 
@@ -151,7 +155,7 @@ class LoadChannelWithChildrenMeasurementsDateRangeUseCaseTest {
     val profileId = 321L
 
     val channelWithChildren = mockChannelWithChildren()
-    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channelWithChildren)
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Observable.just(channelWithChildren)
     every { temperatureAndHumidityLogRepository.findMinTimestamp(2, profileId) } returns Single.just(1L)
     every { temperatureLogRepository.findMinTimestamp(3, profileId) } returns Single.just(1L)
     every { temperatureAndHumidityLogRepository.findMaxTimestamp(2, profileId) } returns Single.error(EmptyResultSetException(""))
@@ -182,7 +186,7 @@ class LoadChannelWithChildrenMeasurementsDateRangeUseCaseTest {
     every { channel.remoteId } returns remoteId
     every { channel.function } returns SuplaFunction.HUMIDITY
 
-    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(ChannelWithChildren(channel, emptyList()))
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Observable.just(ChannelWithChildren(channel, emptyList()))
 
     // when
     val testObserver = useCase.invoke(remoteId, profileId).test()

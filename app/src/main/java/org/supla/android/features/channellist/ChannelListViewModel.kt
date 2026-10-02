@@ -63,10 +63,10 @@ import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class ChannelListViewModel @Inject constructor(
+  private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   private val createProfileChannelsListUseCase: CreateProfileChannelsListUseCase,
   private val triggerLogHistoryDownloadUseCase: TriggerLogHistoryDownloadUseCase,
   private val provideChannelDetailTypeUseCase: ProvideChannelDetailTypeUseCase,
-  private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   private val executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
   private val channelToListItemMapper: ChannelToListItemMapper,
   private val reorderChannelsUseCase: ReorderChannelsUseCase,
@@ -96,7 +96,7 @@ class ChannelListViewModel @Inject constructor(
 
     updateEventsManager.observeAllChannels()
       .attachSilent()
-      .flatMapMaybe { readChannelWithChildrenUseCase(it) }
+      .flatMapMaybe { readChannelWithChildrenUseCase(it).firstElement() }
       .map { channelToListItemMapper(it) }
       .subscribeBy(
         onNext = { updateDefaultItem(it) },
@@ -258,7 +258,7 @@ class ChannelListViewModel @Inject constructor(
 
   override fun onItemClick(remoteId: Int) {
     if (isEventAllowed()) {
-      readChannelWithChildrenUseCase(remoteId)
+      readChannelWithChildrenUseCase(remoteId).firstElement()
         .attach()
         .subscribeBy(
           onSuccess = { openDetailsByChannelFunction(it) },

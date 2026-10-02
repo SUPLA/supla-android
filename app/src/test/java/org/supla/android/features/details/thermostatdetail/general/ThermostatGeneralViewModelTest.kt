@@ -60,7 +60,7 @@ import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.SuplaTimerState
 import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.channel.GetChannelValueUseCase
-import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
+import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.thermostat.CheckIsSlaveThermostatUseCase
 import org.supla.android.usecases.thermostat.CreateTemperaturesListUseCase
@@ -80,7 +80,7 @@ class ThermostatGeneralViewModelTest :
   BaseViewModelTest<ThermostatGeneralViewState, ThermostatGeneralViewEvent, ThermostatGeneralViewModel>(MockSchedulers.MOCKK) {
 
   @MockK
-  lateinit var readChannelWithChildrenTreeUseCase: ReadChannelWithChildrenTreeUseCase
+  lateinit var readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase
 
   @MockK
   lateinit var createTemperaturesListUseCase: CreateTemperaturesListUseCase
@@ -200,7 +200,7 @@ class ThermostatGeneralViewModelTest :
 
     every { deviceConfigEventsManager.observerConfig(deviceId) } returns
       Observable.just(DeviceConfigEventsManager.ConfigEvent(ConfigResult.RESULT_FALSE, null))
-    every { readChannelWithChildrenTreeUseCase.invoke(remoteId) } returns Observable.just(channelWithChildren)
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Observable.just(channelWithChildren)
     every { createTemperaturesListUseCase.invoke(channelWithChildren) } returns emptyList()
     every { valueFormatter.format(10f) } returns "10,0"
     every { valueFormatter.format(40f) } returns "40,0"
@@ -769,7 +769,7 @@ class ThermostatGeneralViewModelTest :
 
     every { deviceConfigEventsManager.observerConfig(deviceId) } returns
       Observable.just(DeviceConfigEventsManager.ConfigEvent(ConfigResult.RESULT_FALSE, null))
-    every { readChannelWithChildrenTreeUseCase.invoke(remoteId) } returns
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns
       Observable.just(channelWithChildren)
     every { createTemperaturesListUseCase.invoke(channelWithChildren) } returns emptyList()
     every { valueFormatter.format(10f) } returns "10,0"
@@ -807,7 +807,7 @@ class ThermostatGeneralViewModelTest :
 
     every { deviceConfigEventsManager.observerConfig(deviceId) } returns
       Observable.just(DeviceConfigEventsManager.ConfigEvent(ConfigResult.RESULT_FALSE, null))
-    every { readChannelWithChildrenTreeUseCase.invoke(remoteId) } returns Observable.just(channelWithChildren)
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Observable.just(channelWithChildren)
     every { createTemperaturesListUseCase.invoke(channelWithChildren) } returns emptyList()
     every { valueFormatter.format(10f) } returns "10,0"
     every { valueFormatter.format(40f) } returns "40,0"

@@ -55,7 +55,7 @@ import org.supla.android.images.ImageId
 import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.views.DeviceStateData
 import org.supla.android.usecases.channel.GetChannelValueUseCase
-import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
+import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.thermostat.CheckIsSlaveThermostatUseCase
 import org.supla.android.usecases.thermostat.CreateTemperaturesListUseCase
@@ -83,7 +83,7 @@ private const val REFRESH_DELAY_MS = 3000
 
 @HiltViewModel
 class ThermostatGeneralViewModel @Inject constructor(
-  private val readChannelWithChildrenTreeUseCase: ReadChannelWithChildrenTreeUseCase,
+  private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   private val delayedThermostatActionSubject: DelayedThermostatActionSubject,
   private val createTemperaturesListUseCase: CreateTemperaturesListUseCase,
   private val checkIsSlaveThermostatUseCase: CheckIsSlaveThermostatUseCase,
@@ -116,7 +116,7 @@ class ThermostatGeneralViewModel @Inject constructor(
 
   fun observeData(remoteId: Int, deviceId: Int) {
     Observable.combineLatest(
-      readChannelWithChildrenTreeUseCase(remoteId),
+      readChannelWithChildrenUseCase(remoteId),
       channelConfigEventsManager.observerConfig(remoteId)
         .filter { it.config is SuplaChannelHvacConfig && it.result == ConfigResult.RESULT_TRUE }
         .map { it.config as SuplaChannelHvacConfig },

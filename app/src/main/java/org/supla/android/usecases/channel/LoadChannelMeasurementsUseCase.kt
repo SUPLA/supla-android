@@ -58,6 +58,7 @@ class LoadChannelMeasurementsUseCase @Inject constructor(
 
   operator fun invoke(remoteId: Int, spec: ChartDataSpec): Single<ChannelChartSets> =
     readChannelWithChildrenUseCase(remoteId)
+      .firstElement()
       .toSingle()
       .flatMap {
         providers.forEach { provider ->

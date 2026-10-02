@@ -116,7 +116,7 @@ class UpdateEventsManager @Inject constructor(
 
   fun observeChannelWithChildren(channelId: Int): Observable<ChannelWithChildren> {
     return getSubjectForChannel(channelId).hide()
-      .flatMap { readChannelWithChildrenUseCase(channelId).toObservable() }
+      .flatMap { readChannelWithChildrenUseCase(channelId).firstElement().toObservable() }
   }
 
   fun observeGroup(groupId: Int): Observable<ChannelGroup> {

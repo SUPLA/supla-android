@@ -74,7 +74,7 @@ class ValveGeneralDetailViewModel @Inject constructor(
   }
 
   fun loadData(remoteId: Int) {
-    readChannelWithChildrenUseCase(remoteId)
+    readChannelWithChildrenUseCase(remoteId).firstElement()
       .attach()
       .subscribeBy(
         onSuccess = this::handle,
