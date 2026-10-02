@@ -24,7 +24,7 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import io.mockk.verify
-import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import org.junit.Before
 import org.junit.Test
@@ -90,7 +90,7 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
     val minDate = date(2024, 5, 1)
     val maxDate = date(2024, 8, 14)
 
-    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channelWithChildren)
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Observable.just(channelWithChildren)
     every { thermometerDataRangeProvide.handle(channelWithChildren, DEFAULT_TYPE) } returns true
     every { thermometerDataRangeProvide.minTime(remoteId, profileId) } returns Single.just(minDate.time)
     every { thermometerDataRangeProvide.maxTime(remoteId, profileId) } returns Single.just(maxDate.time)
@@ -128,7 +128,7 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
       every { function } returns channelFunction
     }
 
-    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channelWithChildren)
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Observable.just(channelWithChildren)
     every { thermometerDataRangeProvide.handle(channelWithChildren, DEFAULT_TYPE) } returns false
     every { humidityAndTemperatureDataRangeProvide.handle(channelWithChildren, DEFAULT_TYPE) } returns false
     every { generalPurposeMeasurementDataRangeProvide.handle(channelWithChildren, DEFAULT_TYPE) } returns false

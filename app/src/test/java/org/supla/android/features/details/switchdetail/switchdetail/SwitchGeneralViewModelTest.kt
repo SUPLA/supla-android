@@ -148,7 +148,7 @@ class SwitchGeneralViewModelTest :
       every { value } returns ChannelState.Value.ON
     }
 
-    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channelData)
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Observable.just(channelData)
     every { getChannelStateUseCase.invoke(channelData) } returns channelState
     every { getChannelIconUseCase.invoke(channelData) } returns stateIcon
     every { getChannelIconUseCase.invoke(channelData, channelStateValue = ChannelState.Value.ON) } returns onIcon
@@ -212,7 +212,7 @@ class SwitchGeneralViewModelTest :
     val channelData = mockChannelData(remoteId, function)
     val stateIcon: ImageId = mockk()
 
-    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channelData)
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Observable.just(channelData)
     every { getChannelStateUseCase.invoke(channelData) } returns mockk { every { isActive } returns true }
     every { getChannelIconUseCase.invoke(channelData) } returns stateIcon
     every { dateProvider.currentDate() } returns Date()
@@ -346,7 +346,7 @@ class SwitchGeneralViewModelTest :
 
     val channelData = mockChannelData(remoteId, function, estimatedEndDate)
 
-    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channelData)
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Observable.just(channelData)
     every { getChannelStateUseCase.invoke(channelData) } returns channelState
     every { getChannelIconUseCase.invoke(channelData) } returns stateIcon
     every { getChannelIconUseCase.invoke(channelData, channelStateValue = ChannelState.Value.ON) } returns onIcon
@@ -419,7 +419,7 @@ class SwitchGeneralViewModelTest :
     }
 
     val channelData = mockChannelData(remoteId, function, estimatedEndDate)
-    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channelData)
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Observable.just(channelData)
     every { getChannelStateUseCase.invoke(channelData) } returns channelState
     every { getChannelIconUseCase.invoke(channelData) } returns stateIcon
     every { getChannelIconUseCase.invoke(channelData, channelStateValue = ChannelState.Value.ON) } returns onIcon
