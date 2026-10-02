@@ -17,10 +17,14 @@ package org.supla.android.usecases.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import io.mockk.*
+import io.mockk.MockKAnnotations
+import io.mockk.confirmVerified
+import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
-import io.reactivex.rxjava3.core.Maybe
+import io.mockk.mockk
+import io.mockk.verify
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import org.assertj.core.api.Assertions
 import org.junit.Before
@@ -67,7 +71,7 @@ class LoadChannelWithChildrenMeasurementsUseCaseTest : BaseLoadMeasurementsUseCa
     val temperatureAndHumiditySets: ChannelChartSets = mockk()
 
     val channelWithChildren = mockChannelWithChildren()
-    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channelWithChildren)
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Observable.just(channelWithChildren)
     val child1 = channelWithChildren.children[1].withChildren
     every { temperatureMeasurementsProvider.provide(eq(child1), eq(spec), any()) } returns Single.just(temperatureSets)
     val child0 = channelWithChildren.children[0].withChildren

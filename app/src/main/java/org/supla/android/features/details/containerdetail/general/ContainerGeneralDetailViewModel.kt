@@ -127,7 +127,7 @@ class ContainerGeneralDetailViewModel @Inject constructor(
 
   fun loadData(remoteId: Int) {
     Maybe.zip(
-      readChannelWithChildrenUseCase(remoteId),
+      readChannelWithChildrenUseCase(remoteId).firstElement(),
       loadChannelConfigUseCase(remoteId).toMaybe(),
     ) { channel, config -> Pair(channel, config) }
       .attach()

@@ -44,6 +44,7 @@ class LoadChannelWithChildrenMeasurementsUseCase @Inject constructor(
     spec: ChartDataSpec
   ): Single<List<ChannelChartSets>> =
     readChannelWithChildrenUseCase(remoteId)
+      .firstElement()
       .toSingle()
       .flatMap {
         if (it.channel.isHvacThermostat()) {

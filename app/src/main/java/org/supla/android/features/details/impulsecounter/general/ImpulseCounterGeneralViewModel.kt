@@ -84,7 +84,7 @@ class ImpulseCounterGeneralViewModel @Inject constructor(
 
   fun loadData(remoteId: Int, cleanupDownloading: Boolean = false) {
     Maybe.zip(
-      readChannelWithChildrenUseCase(remoteId),
+      readChannelWithChildrenUseCase(remoteId).firstElement(),
       loadImpulseCounterMeasurementsUseCase(remoteId, dateProvider.currentDate().monthStart())
     ) { channel, measurements -> Pair(channel, measurements) }
       .attach()
