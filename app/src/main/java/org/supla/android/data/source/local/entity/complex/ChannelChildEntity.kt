@@ -25,6 +25,7 @@ import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.thermostat.ThermostatIndicatorIcon
 import org.supla.android.data.source.remote.thermostat.getIndicatorIcon
 import org.supla.android.ui.lists.ListOnlineState
+import org.supla.android.ui.lists.onlineState
 import org.supla.core.shared.data.model.channel.ChannelRelationType
 
 data class ChannelChildEntity @JvmOverloads constructor(
@@ -58,17 +59,8 @@ val List<ChannelChildEntity>.indicatorIcon: ThermostatIndicatorIcon
     .fold(ThermostatIndicatorIcon.OFF) { result, value -> if (value moreImportantThan result) value else result }
 
 val List<ChannelChildEntity>.onlineState: ListOnlineState
-  get() = map { it.channelDataEntity.channelValueEntity.status }
-    .fold(ListOnlineState.UNKNOWN) { result, online ->
-      if (result == ListOnlineState.UNKNOWN && online.online) {
-        ListOnlineState.ONLINE
-      } else if (result == ListOnlineState.UNKNOWN) {
-        ListOnlineState.OFFLINE
-      } else if (result == ListOnlineState.ONLINE && online.offline) {
-        ListOnlineState.PARTIALLY_ONLINE
-      } else if (result == ListOnlineState.OFFLINE && online.online) {
-        ListOnlineState.PARTIALLY_ONLINE
-      } else {
-        result
-      }
-    }
+  get() = fold(ListOnlineState.UNKNOWN) { result, child ->
+    val childState = child.channelDataEntity.channelValueEntity.status.onlineState
+    val descendantsState = child.children.onlineState
+    result mergeWith (childState mergeWith descendantsState)
+  }

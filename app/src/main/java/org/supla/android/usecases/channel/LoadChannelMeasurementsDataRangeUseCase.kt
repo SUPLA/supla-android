@@ -75,6 +75,7 @@ class LoadChannelMeasurementsDataRangeUseCase @Inject constructor(
     type: DownloadEventsManager.DataType = DownloadEventsManager.DataType.DEFAULT_TYPE
   ): Single<Optional<DateRange>> =
     readChannelWithChildrenUseCase(remoteId)
+      .firstElement()
       .toSingle()
       .flatMap { channel ->
         providers.forEach {

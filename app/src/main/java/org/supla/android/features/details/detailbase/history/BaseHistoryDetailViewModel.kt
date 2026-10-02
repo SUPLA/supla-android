@@ -406,9 +406,9 @@ abstract class BaseHistoryDetailViewModel(
 
   private fun triggerDataLoad(remoteId: Int) {
     Maybe.zip(
-      readChannelWithChildrenUseCase(remoteId)
+      readChannelWithChildrenUseCase(remoteId).firstElement()
         .flatMap { groupingStringMigrationUseCase(it).andThen(Maybe.just(it)) },
-      profileRepository.findActiveProfile().toMaybe().map { loadChartState(it.id!!, remoteId) },
+      profileRepository.findActiveProfile().toMaybe().map { loadChartState(it.id, remoteId) },
     ) { first, second -> Pair(first, second) }
       .flatMap { pair ->
         try {

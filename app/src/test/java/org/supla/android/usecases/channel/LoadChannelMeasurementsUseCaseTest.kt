@@ -25,7 +25,7 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import io.mockk.verify
-import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import org.junit.Before
 import org.junit.Test
@@ -88,7 +88,7 @@ class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
     val spec: ChartDataSpec = mockk()
     val channelChartSets: ChannelChartSets = mockk()
 
-    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channelWithChildren)
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Observable.just(channelWithChildren)
     every { temperatureMeasurementsProvider.handle(channelWithChildren) } returns true
     every { temperatureMeasurementsProvider.provide(channelWithChildren, spec) } returns Single.just(channelChartSets)
 
@@ -125,7 +125,7 @@ class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
     }
     val spec: ChartDataSpec = mockk()
 
-    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channelWithChildren)
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Observable.just(channelWithChildren)
     every { temperatureMeasurementsProvider.handle(channelWithChildren) } returns false
     every { temperatureAndHumidityMeasurementsProvider.handle(channelWithChildren) } returns false
     every { generalPurposeMeasurementMeasurementsProvider.handle(channelWithChildren) } returns false
