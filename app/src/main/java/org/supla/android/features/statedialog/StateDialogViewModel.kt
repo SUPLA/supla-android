@@ -44,7 +44,7 @@ import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
 import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModelScope
-import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
+import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.LoginUseCase
 import org.supla.core.shared.extensions.forTrue
@@ -62,8 +62,8 @@ private const val REFRESH_INTERVAL_MS = 4000
 
 @HiltViewModel
 class StateDialogViewModel @Inject constructor(
-  private val readChannelWithChildrenTreeUseCase: ReadChannelWithChildrenTreeUseCase,
   private val getChannelDefaultCaptionUseCase: GetChannelDefaultCaptionUseCase,
+  private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   private val onlineEventsManager: OnlineEventsManager,
   private val getCaptionUseCase: GetCaptionUseCase,
   private val dateProvider: DateProvider,
@@ -183,7 +183,7 @@ class StateDialogViewModel @Inject constructor(
 
   fun showDialog(channelRemoteId: Int) {
     subscribe(
-      readChannelWithChildrenTreeUseCase(channelRemoteId).firstElement(),
+      readChannelWithChildrenUseCase(channelRemoteId).firstElement(),
       onSuccess = { showDialog(it.channels) },
       onError = defaultErrorHandler("showDialog($channelRemoteId)")
     )

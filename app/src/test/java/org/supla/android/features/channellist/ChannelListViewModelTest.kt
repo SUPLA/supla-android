@@ -116,10 +116,10 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
 
   override val viewModel: ChannelListViewModel by lazy {
     ChannelListViewModel(
+      readChannelWithChildrenUseCase,
       createProfileChannelsListUseCase,
       triggerLogHistoryDownloadUseCase,
       provideChannelDetailTypeUseCase,
-      readChannelWithChildrenUseCase,
       executeSimpleActionUseCase,
       channelToListItemMapper,
       reorderChannelsUseCase,
@@ -321,7 +321,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val deviceId = 234
     val function = SuplaFunction.RGB_LIGHTING
     val channel = mockChannelData(remoteId, function, deviceId)
-    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channel)
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns io.reactivex.rxjava3.core.Observable.just(channel)
     every { dateProvider.currentTimestamp() } returns 500
 
     val detailType = StandardDetailType(listOf())
@@ -348,7 +348,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val deviceId = 222
     val function = SuplaFunction.LIGHTSWITCH
     val channel = mockChannelData(remoteId, function, deviceId, subValueType = SUBV_TYPE_IC_MEASUREMENTS.toShort())
-    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channel)
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns io.reactivex.rxjava3.core.Observable.just(channel)
 
     val detailType = StandardDetailType(listOf())
     every { provideChannelDetailTypeUseCase(channel) } returns detailType
@@ -376,7 +376,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val function = SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER
     val pages = emptyList<DetailPage>()
     val channel = mockChannelData(remoteId, function, deviceId, SuplaChannelAvailabilityStatus.ONLINE)
-    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channel)
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns io.reactivex.rxjava3.core.Observable.just(channel)
 
     val rollerShutterDetail = StandardDetailType(pages)
     every { provideChannelDetailTypeUseCase(channel) } returns rollerShutterDetail
@@ -403,7 +403,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val function = SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER
     val pages = emptyList<DetailPage>()
     val channel = mockChannelData(remoteId, function, deviceId)
-    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channel)
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns io.reactivex.rxjava3.core.Observable.just(channel)
 
     val rollerShutterDetail = StandardDetailType(pages)
     every { provideChannelDetailTypeUseCase(channel) } returns rollerShutterDetail
@@ -428,7 +428,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val channelFunction = SuplaFunction.NONE
     val channel = mockChannelData(remoteId, channelFunction, status = SuplaChannelAvailabilityStatus.ONLINE)
     every { provideChannelDetailTypeUseCase(channel) } returns null
-    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channel)
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns io.reactivex.rxjava3.core.Observable.just(channel)
     every { dateProvider.currentTimestamp() } returns 500
 
     // when
