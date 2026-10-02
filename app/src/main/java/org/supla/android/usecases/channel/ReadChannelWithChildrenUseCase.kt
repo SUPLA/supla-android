@@ -17,23 +17,38 @@ package org.supla.android.usecases.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.ChannelRelationRepository
 import org.supla.android.data.source.ChannelRepository
+import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import timber.log.Timber
+import java.util.LinkedList
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ReadChannelWithChildrenUseCase @Inject constructor(
   private val channelRepository: ChannelRepository,
-  private val channelRelationRepository: ChannelRelationRepository
+  private val channelRelationRepository: ChannelRelationRepository,
+  private val getChannelChildrenTreeUseCase: GetChannelChildrenTreeUseCase
 ) {
 
-  operator fun invoke(remoteId: Int): Maybe<ChannelWithChildren> =
-    channelRepository.findChannelDataEntity(remoteId)
-      .firstElement()
-      .flatMap { channel ->
-        channelRelationRepository.findChildrenForParent(remoteId).map { ChannelWithChildren(channel, it) }
+  operator fun invoke(remoteId: Int): Observable<ChannelWithChildren> =
+    Observable.combineLatest(
+      channelRelationRepository.findChildrenToParentsRelations(),
+      channelRepository.findObservableList()
+    ) { relationMap, entities -> Pair(relationMap, entities) }
+      .flatMap { (relationMap, entities) ->
+        val channel = entities.firstOrNull { it.remoteId == remoteId }
+        if (channel == null) {
+          Timber.w("Could not find channel where channels tree was requested!")
+          return@flatMap Observable.error(NoSuchElementException())
+        }
+
+        val channelsMap = mutableMapOf<Int, ChannelDataEntity>().also { map -> entities.forEach { map[it.remoteId] = it } }
+        val children = getChannelChildrenTreeUseCase(remoteId, relationMap, channelsMap, LinkedList())
+        Observable.just(ChannelWithChildren(channel, children))
       }
+      .distinctUntilChanged()
 }
