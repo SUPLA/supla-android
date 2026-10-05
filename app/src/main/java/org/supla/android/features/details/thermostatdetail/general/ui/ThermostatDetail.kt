@@ -62,8 +62,8 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.formatting.LocalPercentageFormatter
 import org.supla.android.data.model.temperature.TemperatureCorrection
 import org.supla.android.events.LoadingTimeoutManager
+import org.supla.android.features.details.programinfo.ProgramInfo
 import org.supla.android.features.details.thermostatdetail.general.ThermostatGeneralViewState
-import org.supla.android.features.details.thermostatdetail.general.data.ThermostatProgramInfo
 import org.supla.android.features.details.thermostatdetail.ui.ThermometersValues
 import org.supla.android.images.ImageId
 import org.supla.android.ui.lists.data.warning
@@ -72,6 +72,7 @@ import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.LoadingScrim
 import org.supla.android.ui.views.buttons.supla.SuplaButton
 import org.supla.android.ui.views.buttons.supla.SuplaButtonDefaults
+import org.supla.android.ui.views.schedule.ProgramInfoRow
 import org.supla.android.ui.views.thermostat.TemperatureControlButton
 import org.supla.android.ui.views.tools.Shadow
 import org.supla.android.ui.views.tools.ShadowOrientation
@@ -553,16 +554,17 @@ private fun PreviewTemporaryOverride() {
           thermometerValueFormatter = DefaultValueFormatter,
           temporaryChangeActive = true,
           temporaryProgramInfo = listOf(
-            ThermostatProgramInfo(
-              ThermostatProgramInfo.Type.CURRENT,
+            ProgramInfo(
+              ProgramInfo.Type.CURRENT,
               LocalizedString.Constant("vor 7 hours 10 min."),
               R.drawable.ic_heat,
               R.color.red,
               LocalizedString.Constant("22.7"),
-              true
+              R.drawable.ic_manual,
+              R.color.primary
             ),
-            ThermostatProgramInfo(
-              ThermostatProgramInfo.Type.NEXT,
+            ProgramInfo(
+              ProgramInfo.Type.NEXT,
               null,
               R.drawable.ic_power_button,
               R.color.on_surface_variant,

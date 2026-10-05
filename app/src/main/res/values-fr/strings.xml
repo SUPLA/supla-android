@@ -509,11 +509,11 @@
   <string name="thermostat_thermometer_error">Erreur de lecture de la température</string>
   <string name="thermostat_clock_error">Erreur d\'horloge</string>
   <string name="channel_not_supported">Fonction non supportée</string>
-  <string name="thermostat_detail_program_current">Actuellement :</string>
-  <string name="thermostat_detail_program_next">Ensuite :</string>
+  <string name="program_info_current">Actuellement :</string>
+  <string name="program_info_next">Ensuite :</string>
   <string name="time_just_minutes">%1$d min.</string>
   <string name="time_hours_and_minutes">%1$d heures %2$d min.</string>
-  <string name="thermostat_detail_program_time">pendant %1$s</string>
+  <string name="program_info_time">pendant %1$s</string>
 
   <string name="history_range_label">Plage</string>
   <string name="history_range_current_day">Jour</string>

@@ -215,7 +215,7 @@ private fun ProgramModeCard() {
       color = MaterialTheme.colorScheme.onSurfaceVariant
     )
     BodySmall(
-      stringRes = R.string.thermostat_detail_program_current,
+      stringRes = R.string.program_info_current,
       color = MaterialTheme.colorScheme.onSurfaceVariant
     )
     ProgramRow {
@@ -224,7 +224,7 @@ private fun ProgramModeCard() {
     }
     Spacer(modifier = Modifier.height(1.dp).fillMaxWidth().background(MaterialTheme.colorScheme.outline))
     BodySmall(
-      stringRes = R.string.thermostat_detail_program_next,
+      stringRes = R.string.program_info_next,
       color = MaterialTheme.colorScheme.onSurfaceVariant
     )
     ProgramRow {

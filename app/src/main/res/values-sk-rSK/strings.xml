@@ -523,11 +523,11 @@
   <string name="thermostat_thermometer_error">Chyba pri čítaní teploty</string>
   <string name="thermostat_clock_error">Chyba hodín</string>
   <string name="channel_not_supported">Nepodporovaná funkcia</string>
-  <string name="thermostat_detail_program_current">Aktuálne:</string>
-  <string name="thermostat_detail_program_next">Následne:</string>
+  <string name="program_info_current">Aktuálne:</string>
+  <string name="program_info_next">Následne:</string>
   <string name="time_just_minutes">%1$d min.</string>
   <string name="time_hours_and_minutes">%1$d hod. %2$d min.</string>
-  <string name="thermostat_detail_program_time">na %1$s</string>
+  <string name="program_info_time">na %1$s</string>
 
   <string name="history_range_label">Rozsah</string>
   <string name="history_range_current_day">Deň</string>

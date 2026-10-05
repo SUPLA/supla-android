@@ -19,9 +19,11 @@ package org.supla.android.features.details.switchdetail.general
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
+import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.shared.shareable
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.BaseViewModel
@@ -31,9 +33,13 @@ import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.data.source.remote.ChannelConfigType
+import org.supla.android.data.source.remote.ConfigResult
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
+import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
 import org.supla.android.data.source.remote.hvac.SuplaRelayMode
 import org.supla.android.data.source.runtime.ItemType
+import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.extensions.monthStart
 import org.supla.android.extensions.subscribeBy
@@ -41,6 +47,8 @@ import org.supla.android.features.details.detailbase.electricitymeter.Electricit
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterState
 import org.supla.android.features.details.detailbase.impulsecounter.ImpulseCounterGeneralStateHandler
 import org.supla.android.features.details.detailbase.impulsecounter.ImpulseCounterState
+import org.supla.android.features.details.programinfo.ProgramInfo
+import org.supla.android.features.details.relayschedule.data.RelayProgramInfoBuilder
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.lists.sensordata.RelatedChannelData
@@ -54,6 +62,7 @@ import org.supla.android.usecases.channel.measurements.ImpulseCounterMeasurement
 import org.supla.android.usecases.channel.measurements.SummarizedMeasurements
 import org.supla.android.usecases.channel.measurements.electricitymeter.LoadElectricityMeterMeasurementsUseCase
 import org.supla.android.usecases.channel.measurements.impulsecounter.LoadImpulseCounterMeasurementsUseCase
+import org.supla.android.usecases.client.ExecuteRelayActionUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.group.ChannelGroupRelationDataEntityConvertible
 import org.supla.android.usecases.group.GroupWithChannels
@@ -70,6 +79,7 @@ import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetAllChannelIssuesUseCase
 import java.util.Date
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -83,7 +93,10 @@ class SwitchGeneralViewModel @Inject constructor(
   private val readGroupWithChannelsUseCase: ReadGroupWithChannelsUseCase,
   private val executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
   private val getAllChannelIssuesUseCase: GetAllChannelIssuesUseCase,
+  private val channelConfigEventsManager: ChannelConfigEventsManager,
+  private val executeRelayActionUseCase: ExecuteRelayActionUseCase,
   private val downloadEventsManager: DownloadEventsManager,
+  private val suplaClientProvider: SuplaClientProvider,
   private val dateProvider: DateProvider,
   private val preferences: ApplicationPreferences,
   override val getChannelStateUseCase: GetChannelStateUseCase,
@@ -97,13 +110,23 @@ class SwitchGeneralViewModel @Inject constructor(
 
   private var remoteId = 0
   private var itemType = ItemType.CHANNEL
+  private var isOn = false
+  private var isOffline = false
+  private var weeklyScheduleEnabled = false
 
   init {
     setupSuplaClientMessageHandler(suplaClientMessageHandlerWrapper)
   }
 
-  fun onViewCreated(remoteId: Int) {
+  fun onViewCreated(remoteId: Int, itemType: ItemType) {
+    this.remoteId = remoteId
+    this.itemType = itemType
     observeDownload(remoteId)
+
+    if (itemType == ItemType.CHANNEL) {
+      observeProgramInfo(remoteId)
+      reloadWeeklySchedule(remoteId)
+    }
   }
 
   override fun handleSuplaMessage(message: SuplaClientMessage) {
@@ -129,6 +152,12 @@ class SwitchGeneralViewModel @Inject constructor(
     }
   }
 
+  fun reloadWeeklySchedule(remoteId: Int) {
+    if (itemType == ItemType.CHANNEL) {
+      suplaClientProvider.provide()?.getChannelConfig(remoteId, ChannelConfigType.WEEKLY_SCHEDULE)
+    }
+  }
+
   fun forceTurnOn(remoteId: Int, itemType: ItemType) {
     updateState { it.copy(showOvercurrentDialog = false) }
     performAction(ActionId.TURN_ON, itemType, remoteId)
@@ -139,13 +168,12 @@ class SwitchGeneralViewModel @Inject constructor(
     if (state.flags.contains(SuplaRelayFlag.OVERCURRENT_RELAY_OFF)) {
       updateState { it.copy(showOvercurrentDialog = true) }
     } else {
-      performAction(ActionId.TURN_ON, state.itemType, state.remoteId)
+      performAction(ActionId.TURN_ON, itemType, remoteId)
     }
   }
 
   override fun onTurnOff() {
-    val state = currentState()
-    performAction(ActionId.TURN_OFF, state.itemType, state.remoteId)
+    performAction(ActionId.TURN_OFF, itemType, remoteId)
   }
 
   override fun onIntroductionClose() {
@@ -154,19 +182,20 @@ class SwitchGeneralViewModel @Inject constructor(
   }
 
   override fun onForce() {
+    val mode = if (isOn) SuplaRelayMode.FORCED_ON else SuplaRelayMode.FORCED_OFF
+    performRelayAction(mode, itemType, remoteId)
   }
 
   override fun onManual() {
-    val state = currentState()
-    performAction(ActionId.SWITCH_TO_MANUAL_MODE, state.itemType, state.remoteId)
+    performAction(ActionId.SWITCH_TO_MANUAL_MODE, itemType, remoteId)
   }
 
   override fun onWeekly() {
-    val state = currentState()
-    performAction(ActionId.SWITCH_TO_PROGRAM_MODE, state.itemType, state.remoteId)
+    performAction(ActionId.SWITCH_TO_PROGRAM_MODE, itemType, remoteId)
   }
 
   override fun onAuto() {
+    performRelayAction(SuplaRelayMode.AUTOMATIC, itemType, remoteId)
   }
 
   fun hideOvercurrentDialog() {
@@ -177,6 +206,13 @@ class SwitchGeneralViewModel @Inject constructor(
     executeSimpleActionUseCase(actionId, itemType.subjectType, remoteId)
       .attach()
       .subscribeBy(onError = defaultErrorHandler("performAction($actionId, $itemType, $remoteId)"))
+      .disposeBySelf()
+  }
+
+  private fun performRelayAction(mode: SuplaRelayMode, itemType: ItemType, remoteId: Int) {
+    executeRelayActionUseCase(itemType.subjectType, remoteId, mode)
+      .attach()
+      .subscribeBy(onError = defaultErrorHandler("performRelayAction($mode, $itemType, $remoteId)"))
       .disposeBySelf()
   }
 
@@ -222,10 +258,11 @@ class SwitchGeneralViewModel @Inject constructor(
       val showButtons = data.function.switchWithButtons
       val channelState = getChannelStateUseCase(data)
       val value = data.channel.channelValueEntity.asRelayValue()
+      isOn = channelState.value == ChannelState.Value.ON
+      isOffline = data.status.offline
+      weeklyScheduleEnabled = value.flags.contains(SuplaRelayFlag.WEEKLY_SCHEDULE_ENABLED)
 
       state.copy(
-        remoteId = data.remoteId,
-        itemType = ItemType.CHANNEL,
         leftButtonDisabled = data.status.offline,
         rightButtonDisabled = data.status.offline,
         flags = value.flags,
@@ -299,6 +336,28 @@ class SwitchGeneralViewModel @Inject constructor(
       .disposeBySelf()
   }
 
+  private fun observeProgramInfo(remoteId: Int) {
+    val weeklySchedule = channelConfigEventsManager.observerConfig(remoteId)
+      .filter { it.result == ConfigResult.RESULT_TRUE && it.config is SuplaChannelWeeklyScheduleConfig }
+      .map { it.config as SuplaChannelWeeklyScheduleConfig }
+
+    Observable.combineLatest(
+      weeklySchedule,
+      Observable.interval(1, TimeUnit.MINUTES, threading.schedulers.computation).startWithItem(0L)
+    ) { config, _ ->
+      if (isOffline || !weeklyScheduleEnabled) {
+        emptyList()
+      } else {
+        RelayProgramInfoBuilder(config, dateProvider).build()
+      }
+    }
+      .subscribeBy(
+        onNext = { programInfo -> updateState { it.copy(programInfo = programInfo) } },
+        onError = defaultErrorHandler("observeProgramInfo($remoteId)")
+      )
+      .disposeBySelf()
+  }
+
   private fun handleDownloadEvents(downloadState: DownloadEventsManager.State) {
     when (downloadState) {
       is DownloadEventsManager.State.InProgress,
@@ -311,9 +370,7 @@ class SwitchGeneralViewModel @Inject constructor(
         }
       }
       else -> {
-        with(currentState()) {
-          loadData(remoteId, itemType, cleanupDownloading = true)
-        }
+        loadData(remoteId, itemType, cleanupDownloading = true)
       }
     }
   }
@@ -331,17 +388,19 @@ class SwitchGeneralViewModel @Inject constructor(
 
   private fun handleGroup(groupWithChannels: GroupWithChannels) {
     val groupState: ChannelState.Value? = groupWithChannels.aggregatedState(GroupWithChannels.Policy.OnOff)
+    isOn = groupState == ChannelState.Value.ON
+    isOffline = groupWithChannels.group.status.offline
+    weeklyScheduleEnabled = false
 
     updateState { state ->
       state.copy(
-        remoteId = groupWithChannels.group.remoteId,
-        itemType = ItemType.GROUP,
         leftButtonDisabled = groupWithChannels.group.status.offline,
         rightButtonDisabled = groupWithChannels.group.status.offline,
         flags = emptyList(),
         initialDataLoadStarted = true,
         deviceStateData = null,
         channelIssues = emptyList(),
+        programInfo = emptyList(),
         leftButtonState = SwitchButtonState(
           icon = getChannelIconUseCase(groupWithChannels.group, channelStateValue = ChannelState.Value.OFF),
           textRes = R.string.channel_btn_off,
@@ -378,12 +437,11 @@ class SwitchGeneralViewModel @Inject constructor(
 sealed class SwitchGeneralViewEvent : ViewEvent
 
 data class SwitchGeneralViewState(
-  val remoteId: Int = 0,
-  val itemType: ItemType = ItemType.CHANNEL,
   val initialDataLoadStarted: Boolean = false,
   val flags: List<SuplaRelayFlag> = emptyList(),
 
   val deviceStateData: DeviceStateData? = null,
+  val programInfo: List<ProgramInfo> = emptyList(),
   val channelIssues: List<ChannelIssueItem>? = null,
 
   val showOvercurrentDialog: Boolean = false,

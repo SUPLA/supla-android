@@ -496,11 +496,11 @@
   <string name="thermostat_thermometer_error">Помилка зчитування температури</string>
   <string name="thermostat_clock_error">Помилка годинника</string>
   <string name="channel_not_supported">Непідтримувана функція</string>
-  <string name="thermostat_detail_program_current">На даний момент:</string>
-  <string name="thermostat_detail_program_next">Далі:</string>
+  <string name="program_info_current">На даний момент:</string>
+  <string name="program_info_next">Далі:</string>
   <string name="time_just_minutes">%1$d хв.</string>
   <string name="time_hours_and_minutes">%1$d год %2$d хв.</string>
-  <string name="thermostat_detail_program_time">протягом %1$s</string>
+  <string name="program_info_time">протягом %1$s</string>
 
   <string name="history_range_label">Діапазон</string>
   <string name="history_range_current_day">День</string>
