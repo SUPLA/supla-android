@@ -17,9 +17,6 @@ package org.supla.android.features.details.thermostatdetail.general.data
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.data.ValuesFormatter
@@ -33,6 +30,7 @@ import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
 import org.supla.android.data.source.remote.hvac.icon
 import org.supla.android.data.source.remote.hvac.iconColor
 import org.supla.android.data.source.remote.isAutomaticTimeSyncDisabled
+import org.supla.android.features.details.programinfo.ProgramInfo
 import org.supla.android.features.details.thermostatdetail.ui.OFF
 import org.supla.android.features.details.thermostatdetail.ui.description
 import org.supla.core.shared.data.model.function.thermostat.SuplaThermostatFlag
@@ -42,45 +40,30 @@ import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
 
-data class ThermostatProgramInfo(
-  val type: Type,
-  val time: LocalizedString? = null,
-  @param:DrawableRes val icon: Int?,
-  @param:ColorRes val iconColor: Int?,
-  val descriptionProvider: LocalizedString?,
-  val manualActive: Boolean = false
-) {
-  enum class Type(@param:StringRes val stringRes: Int) {
-    CURRENT(R.string.thermostat_detail_program_current), NEXT(R.string.thermostat_detail_program_next)
-  }
+class ThermostatProgramInfoBuilder(val thermometerValueFormatter: ValueFormatter) {
+  // external
+  var dateProvider: DateProvider? = null
+  var weeklyScheduleConfig: SuplaChannelWeeklyScheduleConfig? = null
+  var deviceConfig: SuplaDeviceConfig? = null
+  var thermostatFlags: List<SuplaThermostatFlag>? = null
+  var currentMode: SuplaHvacMode? = null
+  var currentTemperature: Float? = null
+  var channelOnline: Boolean? = null
 
-  class Builder(
-    val thermometerValueFormatter: ValueFormatter
-  ) {
-    // external
-    var dateProvider: DateProvider? = null
-    var weeklyScheduleConfig: SuplaChannelWeeklyScheduleConfig? = null
-    var deviceConfig: SuplaDeviceConfig? = null
-    var thermostatFlags: List<SuplaThermostatFlag>? = null
-    var currentMode: SuplaHvacMode? = null
-    var currentTemperature: Float? = null
-    var channelOnline: Boolean? = null
+  val currentTemperatureString: String
+    get() = thermometerValueFormatter.format(currentTemperature, ValueFormat.TemperatureWithDegree)
 
-    val currentTemperatureString: String
-      get() = thermometerValueFormatter.format(currentTemperature, ValueFormat.TemperatureWithDegree)
+  // internal
+  internal var currentDayOfWeek: DayOfWeek? = null
+  internal var currentHour: Int? = null
+  internal var currentMinute: Int? = null
 
-    // internal
-    internal var currentDayOfWeek: DayOfWeek? = null
-    internal var currentHour: Int? = null
-    internal var currentMinute: Int? = null
-
-    internal var foundCurrentProgram: SuplaScheduleProgram? = null
-    internal var foundNextProgram: SuplaScheduleProgram? = null
-    internal var quartersToNextProgram: Int? = null
-  }
+  internal var foundCurrentProgram: SuplaScheduleProgram? = null
+  internal var foundNextProgram: SuplaScheduleProgram? = null
+  internal var quartersToNextProgram: Int? = null
 }
 
-fun ThermostatProgramInfo.Builder.build(): List<ThermostatProgramInfo> {
+fun ThermostatProgramInfoBuilder.build(): List<ProgramInfo> {
   val (dateProvider) = guardLet(dateProvider) { throw IllegalStateException("Date provider cannot be null") }
   val (config) = guardLet(weeklyScheduleConfig) { throw IllegalStateException("Config cannot be null") }
   val (flags) = guardLet(thermostatFlags) { throw IllegalStateException("Thermostat flags cannot be null") }
@@ -110,7 +93,7 @@ fun ThermostatProgramInfo.Builder.build(): List<ThermostatProgramInfo> {
   return createList()
 }
 
-private fun ThermostatProgramInfo.Builder.identifyPrograms() {
+private fun ThermostatProgramInfoBuilder.identifyPrograms() {
   val currentQuarter = QuarterOfHour.from(currentMinute!!)
 
   var idx = 0
@@ -136,18 +119,18 @@ private fun ThermostatProgramInfo.Builder.identifyPrograms() {
   }
 }
 
-private fun ThermostatProgramInfo.Builder.clockErrorList() =
+private fun ThermostatProgramInfoBuilder.clockErrorList() =
   listOf(
-    ThermostatProgramInfo(
-      type = ThermostatProgramInfo.Type.CURRENT,
+    ProgramInfo(
+      type = ProgramInfo.Type.CURRENT,
       time = localizedString(R.string.thermostat_clock_error),
       icon = currentMode!!.icon,
       iconColor = currentMode!!.iconColor,
-      descriptionProvider = LocalizedString.Constant(currentTemperatureString)
+      description = LocalizedString.Constant(currentTemperatureString)
     )
   )
 
-private fun ThermostatProgramInfo.Builder.createList(): List<ThermostatProgramInfo> {
+private fun ThermostatProgramInfoBuilder.createList(): List<ProgramInfo> {
   val minutesToNextProgram = quartersToNextProgram!! * 15 + (15 - (currentMinute!! % 15))
   val nextScheduleProgram = getProgram(foundNextProgram)
   val descriptionProvider: LocalizedString = LocalizedString.Constant(currentTemperatureString)
@@ -155,35 +138,37 @@ private fun ThermostatProgramInfo.Builder.createList(): List<ThermostatProgramIn
   // If time synchronization disabled show only current program
   if (deviceConfig.isAutomaticTimeSyncDisabled()) {
     return listOf(
-      ThermostatProgramInfo(
-        type = ThermostatProgramInfo.Type.CURRENT,
+      ProgramInfo(
+        type = ProgramInfo.Type.CURRENT,
         icon = currentMode!!.icon,
         iconColor = currentMode!!.iconColor,
-        descriptionProvider = if (currentMode == SuplaHvacMode.OFF) null else descriptionProvider,
-        manualActive = thermostatFlags!!.contains(SuplaThermostatFlag.WEEKLY_SCHEDULE_TEMPORAL_OVERRIDE)
+        description = if (currentMode == SuplaHvacMode.OFF) null else descriptionProvider,
+        indicatorIcon = R.drawable.ic_manual.takeIf { thermostatFlags!!.contains(SuplaThermostatFlag.WEEKLY_SCHEDULE_TEMPORAL_OVERRIDE) },
+        indicatorIconColor = R.color.primary.takeIf { thermostatFlags!!.contains(SuplaThermostatFlag.WEEKLY_SCHEDULE_TEMPORAL_OVERRIDE) }
       )
     )
   }
 
   return listOf(
-    ThermostatProgramInfo(
-      type = ThermostatProgramInfo.Type.CURRENT,
-      time = localizedString(R.string.thermostat_detail_program_time, ValuesFormatter.getHourWithMinutes(minutesToNextProgram)),
+    ProgramInfo(
+      type = ProgramInfo.Type.CURRENT,
+      time = localizedString(R.string.program_info_time, ValuesFormatter.getHourWithMinutes(minutesToNextProgram)),
       icon = currentMode!!.icon,
       iconColor = currentMode!!.iconColor,
-      descriptionProvider = if (currentMode == SuplaHvacMode.OFF) null else descriptionProvider,
-      manualActive = thermostatFlags!!.contains(SuplaThermostatFlag.WEEKLY_SCHEDULE_TEMPORAL_OVERRIDE)
+      description = if (currentMode == SuplaHvacMode.OFF) null else descriptionProvider,
+      indicatorIcon = R.drawable.ic_manual.takeIf { thermostatFlags!!.contains(SuplaThermostatFlag.WEEKLY_SCHEDULE_TEMPORAL_OVERRIDE) },
+      indicatorIconColor = R.color.primary.takeIf { thermostatFlags!!.contains(SuplaThermostatFlag.WEEKLY_SCHEDULE_TEMPORAL_OVERRIDE) }
     ),
-    ThermostatProgramInfo(
-      type = ThermostatProgramInfo.Type.NEXT,
+    ProgramInfo(
+      type = ProgramInfo.Type.NEXT,
       icon = nextScheduleProgram?.mode?.icon,
       iconColor = nextScheduleProgram?.mode?.iconColor,
-      descriptionProvider = nextScheduleProgram?.description(thermometerValueFormatter)
+      description = nextScheduleProgram?.description(thermometerValueFormatter)
     )
   )
 }
 
-private fun ThermostatProgramInfo.Builder.getProgram(program: SuplaScheduleProgram?) =
+private fun ThermostatProgramInfoBuilder.getProgram(program: SuplaScheduleProgram?) =
   if (program == SuplaScheduleProgram.OFF) {
     SuplaWeeklyScheduleProgram.OFF
   } else {

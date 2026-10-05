@@ -522,11 +522,11 @@
   <string name="thermostat_thermometer_error">Feil i temperaturavlesningen</string>
   <string name="thermostat_clock_error">Klokkefeil</string>
   <string name="channel_not_supported">Ikke-støttet funksjon</string>
-  <string name="thermostat_detail_program_current">Nåværende:</string>
-  <string name="thermostat_detail_program_next">Neste:</string>
+  <string name="program_info_current">Nåværende:</string>
+  <string name="program_info_next">Neste:</string>
   <string name="time_just_minutes">%1$d min.</string>
   <string name="time_hours_and_minutes">%1$d kl.%2$d  min.</string>
-  <string name="thermostat_detail_program_time">via %1$s</string>
+  <string name="program_info_time">via %1$s</string>
 
   <string name="history_range_label">Omfang</string>
   <string name="history_range_current_day">Dag</string>

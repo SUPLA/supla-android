@@ -520,11 +520,11 @@
   <string name="thermostat_thermometer_error">Napaka pri odčitavanju temperature</string>
   <string name="thermostat_clock_error">Napaka ure</string>
   <string name="channel_not_supported">Nepodprta funkcija</string>
-  <string name="thermostat_detail_program_current">Trenutno:</string>
-  <string name="thermostat_detail_program_next">Naslednje:</string>
+  <string name="program_info_current">Trenutno:</string>
+  <string name="program_info_next">Naslednje:</string>
   <string name="time_just_minutes">%1$d min.</string>
   <string name="time_hours_and_minutes">%1$d ur %2$d min.</string>
-  <string name="thermostat_detail_program_time">prek %1$s</string>
+  <string name="program_info_time">prek %1$s</string>
 
   <string name="history_range_label">Območje</string>
   <string name="history_range_current_day">Dan</string>

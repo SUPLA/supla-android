@@ -46,8 +46,9 @@ import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.extensions.ifNumber
 import org.supla.android.extensions.subscribeBy
+import org.supla.android.features.details.programinfo.ProgramInfo
 import org.supla.android.features.details.thermostatdetail.general.data.SensorIssue
-import org.supla.android.features.details.thermostatdetail.general.data.ThermostatProgramInfo
+import org.supla.android.features.details.thermostatdetail.general.data.ThermostatProgramInfoBuilder
 import org.supla.android.features.details.thermostatdetail.general.data.build
 import org.supla.android.features.details.thermostatdetail.general.ui.ThermostatGeneralViewProxy
 import org.supla.android.features.details.thermostatdetail.ui.TimerHeaderHelper
@@ -449,7 +450,7 @@ class ThermostatGeneralViewModel @Inject constructor(
     value: ThermostatValue,
     channelOnline: Boolean
   ) =
-    ThermostatProgramInfo.Builder(thermometerValueFormatter).also {
+    ThermostatProgramInfoBuilder(thermometerValueFormatter).also {
       it.dateProvider = this@ThermostatGeneralViewModel.dateProvider
       it.weeklyScheduleConfig = weeklyConfig
       it.deviceConfig = deviceConfig
@@ -690,7 +691,7 @@ data class ThermostatGeneralViewState(
   val programmedModeActive: Boolean = false,
 
   val temporaryChangeActive: Boolean = false,
-  val temporaryProgramInfo: List<ThermostatProgramInfo> = emptyList(),
+  val temporaryProgramInfo: List<ProgramInfo> = emptyList(),
 
   val sensorIssue: SensorIssue? = null,
 

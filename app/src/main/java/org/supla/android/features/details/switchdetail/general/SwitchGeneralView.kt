@@ -40,6 +40,7 @@ import org.supla.android.features.details.detailbase.electricitymeter.Electricit
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterState
 import org.supla.android.features.details.detailbase.electricitymeter.PhaseWithMeasurements
 import org.supla.android.features.details.detailbase.impulsecounter.ImpulseCounterMetricsView
+import org.supla.android.features.details.programinfo.ProgramInfo
 import org.supla.android.images.ImageId
 import org.supla.android.ui.extensions.ifTrue
 import org.supla.android.ui.lists.channelissues.ChannelIssuesView
@@ -54,6 +55,7 @@ import org.supla.android.ui.views.buttons.supla.SuplaButton
 import org.supla.android.ui.views.buttons.supla.SuplaButtonDefaults
 import org.supla.android.ui.views.card.SummaryCardData
 import org.supla.android.ui.views.icons.LockIcon
+import org.supla.android.ui.views.schedule.ProgramInfoRow
 import org.supla.android.ui.views.tools.Shadow
 import org.supla.android.ui.views.tools.ShadowOrientation
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
@@ -81,6 +83,7 @@ fun SwitchGeneralScope.View(
   Box {
     Column {
       if (state.electricityMeterState != null) {
+        state.programInfo.takeIf { it.isNotEmpty() }?.let { ProgramInfoRow(it) }
         state.channelIssues?.let { ChannelIssuesView(it, modifier = Modifier.padding(top = Distance.default)) }
         Box(modifier = Modifier.weight(1f)) {
           ElectricityMeterMetricsView(
@@ -90,6 +93,7 @@ fun SwitchGeneralScope.View(
           Shadow(orientation = ShadowOrientation.STARTING_BOTTOM, modifier = Modifier.align(Alignment.BottomCenter))
         }
       } else if (state.impulseCounterState != null) {
+        state.programInfo.takeIf { it.isNotEmpty() }?.let { ProgramInfoRow(it) }
         state.channelIssues?.let { ChannelIssuesView(it, modifier = Modifier.padding(top = Distance.default)) }
         Box(modifier = Modifier.weight(1f)) {
           ImpulseCounterMetricsView(state = state.impulseCounterState)
@@ -104,7 +108,11 @@ fun SwitchGeneralScope.View(
           onCaptionLongPress = onCaptionLongPress
         )
       } else if (state.deviceStateData != null) {
-        DeviceState(data = state.deviceStateData, modifier = Modifier.padding(vertical = Distance.vertical))
+        if (state.programInfo.isNotEmpty()) {
+          ProgramInfoRow(state.programInfo)
+        } else {
+          DeviceState(data = state.deviceStateData, modifier = Modifier.padding(vertical = Distance.vertical))
+        }
         state.channelIssues?.let { ChannelIssuesView(it) }
         Spacer(modifier = Modifier.weight(1f))
       } else {
@@ -307,6 +315,49 @@ private fun Preview_Disabled() {
           icon = ImageId(R.drawable.fnc_switch_on),
           textRes = R.string.channel_btn_on
         ),
+      )
+    )
+  }
+}
+
+@Preview(name = "Weekly schedule", showBackground = true)
+@Preview(name = "Weekly schedule", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun Preview_WeeklySchedule() {
+  SuplaTheme {
+    previewScope.View(
+      state = SwitchGeneralViewState(
+        deviceStateData = DeviceStateData(
+          label = localizedString(R.string.details_timer_state_label),
+          icon = ImageId(R.drawable.fnc_switch_on),
+          value = localizedString(R.string.details_timer_device_on)
+        ),
+        programInfo = listOf(
+          ProgramInfo(
+            type = ProgramInfo.Type.CURRENT,
+            time = localizedString(R.string.program_info_time, localizedString(R.string.time_just_minutes, 12)),
+            description = localizedString(R.string.schedule_program_force_on)
+          ),
+          ProgramInfo(
+            type = ProgramInfo.Type.NEXT,
+            description = localizedString(R.string.schedule_program_force_off)
+          )
+        ),
+        leftButtonState = SwitchButtonState(
+          icon = ImageId(R.drawable.fnc_switch_off),
+          textRes = R.string.channel_btn_off
+        ),
+        rightButtonState = SwitchButtonState(
+          icon = ImageId(R.drawable.fnc_switch_on),
+          textRes = R.string.channel_btn_on,
+          pressed = true
+        ),
+        operatingMode = OperatingMode(
+          manualAllowed = true,
+          weeklyAllowed = true,
+          autoAllowed = true,
+          weeklyActive = true
+        )
       )
     )
   }
