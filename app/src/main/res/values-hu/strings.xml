@@ -522,11 +522,11 @@
   <string name="thermostat_thermometer_error">Hőmérséklet leolvasási hiba</string>
   <string name="thermostat_clock_error">Óra hiba</string>
   <string name="channel_not_supported">Nem támogatott funkció</string>
-  <string name="thermostat_detail_program_current">Aktuális:</string>
-  <string name="thermostat_detail_program_next">Következő:</string>
+  <string name="program_info_current">Aktuális:</string>
+  <string name="program_info_next">Következő:</string>
   <string name="time_just_minutes">%1$d min.</string>
   <string name="time_hours_and_minutes">%1$d óra %2$d min.</string>
-  <string name="thermostat_detail_program_time">%1$s keresztül</string>
+  <string name="program_info_time">%1$s keresztül</string>
 
   <string name="history_range_label">Időtartam</string>
   <string name="history_range_current_day">Nap</string>

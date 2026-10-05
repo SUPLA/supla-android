@@ -536,11 +536,11 @@
   <string name="thermostat_thermometer_error">Temperature reading error</string>
   <string name="thermostat_clock_error">Clock error</string>
   <string name="channel_not_supported">Not supported function</string>
-  <string name="thermostat_detail_program_current">Currently:</string>
-  <string name="thermostat_detail_program_next">Next:</string>
+  <string name="program_info_current">Currently:</string>
+  <string name="program_info_next">Next:</string>
   <string name="time_just_minutes">%1$d min.</string>
   <string name="time_hours_and_minutes">%1$d hours %2$d min.</string>
-  <string name="thermostat_detail_program_time">for %1$s</string>
+  <string name="program_info_time">for %1$s</string>
 
   <string name="history_range_label">Range</string>
   <string name="history_range_last_day">Last 24 hours</string>

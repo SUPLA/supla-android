@@ -512,11 +512,11 @@
   <string name="thermostat_thermometer_error">Temperatur oxuma xətası</string>
   <string name="thermostat_clock_error">Saat xətası</string>
   <string name="channel_not_supported">Dəstəklənməyən funksiya</string>
-  <string name="thermostat_detail_program_current">Hazırda:</string>
-  <string name="thermostat_detail_program_next">Növbəti:</string>
+  <string name="program_info_current">Hazırda:</string>
+  <string name="program_info_next">Növbəti:</string>
   <string name="time_just_minutes">%1$d dəq.</string>
   <string name="time_hours_and_minutes">%1$d saat %2$d dəq.</string>
-  <string name="thermostat_detail_program_time">%1$s üçün</string>
+  <string name="program_info_time">%1$s üçün</string>
 
   <string name="history_range_label">Aralıq</string>
   <string name="history_range_last_day">Son 24 saat</string>

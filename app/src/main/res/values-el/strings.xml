@@ -518,11 +518,11 @@
   <string name="thermostat_thermometer_error">Σφάλμα ανάγνωσης θερμοκρασίας</string>
   <string name="thermostat_clock_error">Σφάλμα ρολογιού</string>
   <string name="channel_not_supported">Μη υποστηριζόμενη λειτουργία</string>
-  <string name="thermostat_detail_program_current">Τρέχον:</string>
-  <string name="thermostat_detail_program_next">Επόμενο:</string>
+  <string name="program_info_current">Τρέχον:</string>
+  <string name="program_info_next">Επόμενο:</string>
   <string name="time_just_minutes">%1$d λεπτά</string>
   <string name="time_hours_and_minutes">%1$d ώρες %2$d λεπτά</string>
-  <string name="thermostat_detail_program_time">μέσω %1$s</string>
+  <string name="program_info_time">μέσω %1$s</string>
 
   <string name="history_range_label">Περιοχή</string>
   <string name="history_range_current_day">Ημέρα</string>

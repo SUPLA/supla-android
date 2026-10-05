@@ -25,8 +25,8 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.mockk
 import io.mockk.verify
-import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.PublishSubject
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.tuple
 import org.junit.Before
@@ -35,15 +35,24 @@ import org.supla.android.R
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
+import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.model.general.ChannelState
+import org.supla.android.data.source.local.calendar.DayOfWeek
+import org.supla.android.data.source.local.calendar.QuarterOfHour
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.data.source.remote.ConfigResult
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
+import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
 import org.supla.android.data.source.remote.hvac.SuplaRelayMode
+import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
+import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleEntry
 import org.supla.android.data.source.runtime.ItemType
+import org.supla.android.events.ChannelConfigEventsManager
+import org.supla.android.events.ChannelConfigEventsManager.ConfigEvent
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterGeneralStateHandler
 import org.supla.android.features.details.detailbase.impulsecounter.ImpulseCounterGeneralStateHandler
@@ -59,17 +68,20 @@ import org.supla.android.usecases.channel.GetChannelStateUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.channel.measurements.electricitymeter.LoadElectricityMeterMeasurementsUseCase
 import org.supla.android.usecases.channel.measurements.impulsecounter.LoadImpulseCounterMeasurementsUseCase
+import org.supla.android.usecases.client.ExecuteRelayActionUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.group.GroupWithChannels
 import org.supla.android.usecases.group.ReadGroupWithChannelsUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.model.function.relay.RelayValue
+import org.supla.core.shared.data.model.function.relay.SuplaRelayFlag
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetAllChannelIssuesUseCase
 import java.util.Date
+import java.util.concurrent.TimeUnit
 
 class SwitchGeneralViewModelTest :
   BaseViewModelTest<SwitchGeneralViewState, SwitchGeneralViewEvent, SwitchGeneralViewModel>(MockSchedulers.MOCKK) {
@@ -97,6 +109,15 @@ class SwitchGeneralViewModelTest :
 
   @MockK
   private lateinit var executeSimpleActionUseCase: ExecuteSimpleActionUseCase
+
+  @MockK
+  private lateinit var executeRelayActionUseCase: ExecuteRelayActionUseCase
+
+  @MockK
+  private lateinit var channelConfigEventsManager: ChannelConfigEventsManager
+
+  @MockK
+  private lateinit var suplaClientProvider: SuplaClientProvider
 
   @MockK
   private lateinit var getAllChannelIssuesUseCase: GetAllChannelIssuesUseCase
@@ -131,6 +152,7 @@ class SwitchGeneralViewModelTest :
   @Before
   override fun setUp() {
     MockKAnnotations.init(this)
+    every { suplaClientProvider.provide() } returns null
     super.setUp()
   }
 
@@ -213,7 +235,10 @@ class SwitchGeneralViewModelTest :
     val stateIcon: ImageId = mockk()
 
     every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Observable.just(channelData)
-    every { getChannelStateUseCase.invoke(channelData) } returns mockk { every { isActive } returns true }
+    every { getChannelStateUseCase.invoke(channelData) } returns mockk {
+      every { isActive } returns true
+      every { value } returns ChannelState.Value.ON
+    }
     every { getChannelIconUseCase.invoke(channelData) } returns stateIcon
     every { dateProvider.currentDate() } returns Date()
     every { electricityMeterGeneralStateHandler.updateState(any(), any(), any()) } answers { firstArg() }
@@ -262,6 +287,77 @@ class SwitchGeneralViewModelTest :
       loadElectricityMeterMeasurementsUseCase,
       readGroupWithChannelsUseCase
     )
+  }
+
+  @Test
+  fun `should show relay program info for online channel with weekly schedule enabled`() {
+    // given
+    val remoteId = 123
+    val channelData = mockChannelData(remoteId, SuplaFunction.POWER_SWITCH, weeklyScheduleEnabled = true)
+    val configEvents = PublishSubject.create<ConfigEvent>()
+    every { threading.schedulers.computation } returns testScheduler
+    every { channelConfigEventsManager.observerConfig(remoteId) } returns configEvents
+    every { downloadEventsManager.observeProgress(remoteId) } returns Observable.never()
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Observable.just(channelData)
+    every { getChannelStateUseCase.invoke(channelData) } returns mockk {
+      every { isActive } returns true
+      every { value } returns ChannelState.Value.ON
+    }
+    every { getChannelIconUseCase.invoke(channelData) } returns mockk()
+    every { getChannelIconUseCase.invoke(channelData, channelStateValue = any()) } returns mockk()
+    every { dateProvider.currentDayOfWeek() } returns DayOfWeek.MONDAY
+    every { dateProvider.currentHour() } returns 10
+    every { dateProvider.currentMinute() } returns 2 andThen 17
+    every { dateProvider.currentDate() } returns Date()
+    every { electricityMeterGeneralStateHandler.updateState(any(), any(), any()) } answers { firstArg() }
+    every { impulseCounterGeneralStateHandler.updateState(any(), any(), any()) } answers { firstArg() }
+    every { getAllChannelIssuesUseCase.invoke(any()) } returns emptyList()
+    every { preferences.scale } returns 1f
+
+    // when
+    viewModel.onViewCreated(remoteId, ItemType.CHANNEL)
+    viewModel.loadData(remoteId, ItemType.CHANNEL)
+    configEvents.onNext(
+      ConfigEvent(
+        ConfigResult.RESULT_TRUE,
+        SuplaChannelWeeklyScheduleConfig(
+          remoteId,
+          null,
+          1L,
+          emptyList(),
+          listOf(SuplaWeeklyScheduleEntry(DayOfWeek.MONDAY, 10, QuarterOfHour.FIRST, SuplaScheduleProgram.OFF))
+        )
+      )
+    )
+
+    // then
+    assertThat(states.last().programInfo).hasSize(1)
+    assertThat(states.last().programInfo.single().description).isEqualTo(localizedString(R.string.turn_off))
+    verify(exactly = 1) { readChannelWithChildrenUseCase.invoke(remoteId) }
+
+    // when
+    testScheduler.advanceTimeBy(1, TimeUnit.MINUTES)
+
+    // then
+    verify(exactly = 2) { dateProvider.currentMinute() }
+
+    // when
+    every { channelData.status } returns SuplaChannelAvailabilityStatus.OFFLINE
+    viewModel.loadData(remoteId, ItemType.CHANNEL)
+    testScheduler.advanceTimeBy(1, TimeUnit.MINUTES)
+
+    // then
+    assertThat(states.last().programInfo).isEmpty()
+
+    // when
+    every { channelData.status } returns SuplaChannelAvailabilityStatus.ONLINE
+    every { channelData.channel.channelValueEntity.asRelayValue() } returns
+      RelayValue(SuplaChannelAvailabilityStatus.OFFLINE, false, emptyList(), SuplaRelayMode.NOT_SET)
+    viewModel.loadData(remoteId, ItemType.CHANNEL)
+    testScheduler.advanceTimeBy(1, TimeUnit.MINUTES)
+
+    // then
+    assertThat(states.last().programInfo).isEmpty()
   }
 
   @Test
@@ -484,12 +580,22 @@ class SwitchGeneralViewModelTest :
     return extendedValue
   }
 
-  private fun mockChannelData(remoteId: Int, function: SuplaFunction, estimatedEndDate: Date? = null): ChannelWithChildren {
+  private fun mockChannelData(
+    remoteId: Int,
+    function: SuplaFunction,
+    estimatedEndDate: Date? = null,
+    weeklyScheduleEnabled: Boolean = false
+  ): ChannelWithChildren {
     val channel: ChannelDataEntity = mockk {
       mockShareable(remoteId = remoteId, function = function)
       every { flags } returns 0
       every { channelValueEntity } returns mockk {
-        every { asRelayValue() } returns RelayValue(SuplaChannelAvailabilityStatus.OFFLINE, false, emptyList(), SuplaRelayMode.NOT_SET)
+        every { asRelayValue() } returns RelayValue(
+          SuplaChannelAvailabilityStatus.OFFLINE,
+          false,
+          if (weeklyScheduleEnabled) listOf(SuplaRelayFlag.WEEKLY_SCHEDULE_ENABLED) else emptyList(),
+          SuplaRelayMode.NOT_SET
+        )
         every { getValueAsByteArray() } returns byteArrayOf()
       }
       every { channelExtendedValueEntity } returns estimatedEndDate?.let { mockTimerState(estimatedEndDate) }

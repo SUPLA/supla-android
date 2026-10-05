@@ -427,10 +427,10 @@ public class SuplaConst {
         resId = R.string.channel_func_heat_meter;
         break;
       case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT:
-        //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO:
-        //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_DRYER:
-        //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_FAN:
-        //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_DIFFERENTIAL:
+      //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO:
+      //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_DRYER:
+      //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_FAN:
+      //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_DIFFERENTIAL:
       case SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER:
         resId = R.string.channel_func_thermostat;
         break;
