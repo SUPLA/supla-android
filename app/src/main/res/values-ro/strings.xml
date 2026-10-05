@@ -524,11 +524,11 @@
   <string name="thermostat_thermometer_error">Eroare de citire a temperaturii</string>
   <string name="thermostat_clock_error">Eroare de ceas</string>
   <string name="channel_not_supported">Funcție nesuportată</string>
-  <string name="thermostat_detail_program_current">În prezent:</string>
-  <string name="thermostat_detail_program_next">Următorul:</string>
+  <string name="program_info_current">În prezent:</string>
+  <string name="program_info_next">Următorul:</string>
   <string name="time_just_minutes">%1$d min.</string>
   <string name="time_hours_and_minutes">%1$d godz. %2$d min.</string>
-  <string name="thermostat_detail_program_time">prin %1$s</string>
+  <string name="program_info_time">prin %1$s</string>
 
   <string name="history_range_label">Domeniu:</string>
   <string name="history_range_current_day">Ziua</string>
