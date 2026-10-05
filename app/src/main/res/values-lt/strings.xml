@@ -500,11 +500,11 @@
   <string name="thermostat_thermometer_error">Temperatūros nuskaitymo klaida</string>
   <string name="thermostat_clock_error">Laikrodžio klaida</string>
   <string name="channel_not_supported">Nepalaikoma funkcija</string>
-  <string name="thermostat_detail_program_current">Dabar:</string>
-  <string name="thermostat_detail_program_next">Vėliau:</string>
+  <string name="program_info_current">Dabar:</string>
+  <string name="program_info_next">Vėliau:</string>
   <string name="time_just_minutes">%1$d min.</string>
   <string name="time_hours_and_minutes">%1$d val. %2$d min.</string>
-  <string name="thermostat_detail_program_time">per %1$s</string>
+  <string name="program_info_time">per %1$s</string>
 
   <string name="history_range_label">Diapazonas</string>
   <string name="history_range_current_day">Diena</string>

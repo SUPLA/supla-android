@@ -1,4 +1,4 @@
-package org.supla.android.features.details.thermostatdetail.general.ui
+package org.supla.android.ui.views.schedule
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -44,12 +44,12 @@ import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.gray
-import org.supla.android.features.details.thermostatdetail.general.data.ThermostatProgramInfo
+import org.supla.android.features.details.programinfo.ProgramInfo
 
 @Composable
-fun ProgramInfoRow(infos: List<ThermostatProgramInfo>) {
+fun ProgramInfoRow(infos: List<ProgramInfo>, modifier: Modifier = Modifier) {
   Column(
-    modifier = Modifier
+    modifier = modifier
       .height(80.dp)
       .padding(
         start = dimensionResource(id = R.dimen.distance_default),
@@ -64,9 +64,7 @@ fun ProgramInfoRow(infos: List<ThermostatProgramInfo>) {
         if (info.icon != null && info.iconColor != null) {
           ProgramInfoIcon(info.icon, info.iconColor)
         }
-        info.descriptionProvider?.let {
-          ProgramInfoDescription(it(LocalContext.current))
-        }
+        info.description?.let { ProgramInfoDescription(it(LocalContext.current)) }
         info.time?.let {
           Text(
             text = it(LocalContext.current),
@@ -76,8 +74,8 @@ fun ProgramInfoRow(infos: List<ThermostatProgramInfo>) {
             overflow = TextOverflow.Ellipsis
           )
         }
-        if (info.manualActive) {
-          ProgramInfoManual()
+        if (info.indicatorIcon != null && info.indicatorIconColor != null) {
+          ProgramInfoIcon(info.indicatorIcon, info.indicatorIconColor)
         }
       }
     }
@@ -110,14 +108,4 @@ private fun ProgramInfoDescription(description: String) =
     style = MaterialTheme.typography.bodyMedium,
     fontWeight = FontWeight.SemiBold,
     color = MaterialTheme.colorScheme.onBackground
-  )
-
-@Composable
-private fun ProgramInfoManual() =
-  Image(
-    painter = painterResource(id = R.drawable.ic_manual),
-    contentDescription = null,
-    colorFilter = ColorFilter.tint(color = colorResource(id = R.color.primary)),
-    modifier = Modifier.size(19.dp),
-    contentScale = ContentScale.Fit
   )
