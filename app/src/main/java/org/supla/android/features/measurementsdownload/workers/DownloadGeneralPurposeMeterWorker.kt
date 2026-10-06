@@ -27,20 +27,17 @@ import dagger.assisted.AssistedInject
 import org.supla.android.data.source.local.entity.measurements.GeneralPurposeMeterEntity
 import org.supla.android.data.source.remote.rest.channel.GeneralPurposeMeter
 import org.supla.android.events.DownloadEventsManager
-import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.measurementsdownload.DownloadGeneralPurposeMeterLogUseCase
 
 @HiltWorker
 class DownloadGeneralPurposeMeterWorker @AssistedInject constructor(
   @Assisted appContext: Context,
   @Assisted workerParameters: WorkerParameters,
-  updateEventsManager: UpdateEventsManager,
   downloadEventsManager: DownloadEventsManager,
   downloadGeneralPurposeMeterLogUseCase: DownloadGeneralPurposeMeterLogUseCase
 ) : BaseDownloadLogWorker<GeneralPurposeMeter, GeneralPurposeMeterEntity>(
   appContext,
   workerParameters,
-  updateEventsManager,
   downloadEventsManager,
   downloadGeneralPurposeMeterLogUseCase
 ) {

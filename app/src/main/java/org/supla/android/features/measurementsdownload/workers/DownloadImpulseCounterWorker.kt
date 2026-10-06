@@ -29,7 +29,6 @@ import org.supla.android.data.model.settings.ListValueAggregation
 import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity
 import org.supla.android.data.source.remote.rest.channel.ImpulseCounterMeasurement
 import org.supla.android.events.DownloadEventsManager
-import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.measurementsdownload.DownloadImpulseCounterLogUseCase
 import org.supla.android.usecases.list.RefreshImpulseCounterAggregatedValueUseCase
 import timber.log.Timber
@@ -38,7 +37,6 @@ import timber.log.Timber
 class DownloadImpulseCounterWorker @AssistedInject constructor(
   @Assisted appContext: Context,
   @Assisted workerParameters: WorkerParameters,
-  updateEventsManager: UpdateEventsManager,
   downloadEventsManager: DownloadEventsManager,
   downloadImpulseCounterLogUseCase: DownloadImpulseCounterLogUseCase,
   private val userStateHolder: UserStateHolder,
@@ -46,7 +44,6 @@ class DownloadImpulseCounterWorker @AssistedInject constructor(
 ) : BaseDownloadLogWorker<ImpulseCounterMeasurement, ImpulseCounterLogEntity>(
   appContext,
   workerParameters,
-  updateEventsManager,
   downloadEventsManager,
   downloadImpulseCounterLogUseCase
 ) {

@@ -53,6 +53,15 @@ interface ChannelConfigDao {
   )
   fun read(profileId: Long, channelId: Int, type: ChannelConfigType): Single<ChannelConfigEntity>
 
+  @Query(
+    """
+    SELECT $ALL_COLUMNS 
+    FROM $TABLE_NAME 
+    WHERE $COLUMN_PROFILE_ID = :profileId AND $COLUMN_CHANNEL_ID = :channelId AND $COLUMN_CONFIG_TYPE = :type
+    """
+  )
+  fun observe(profileId: Long, channelId: Int, type: ChannelConfigType): Observable<ChannelConfigEntity>
+
   @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_PROFILE_ID = :profileId AND $COLUMN_CHANNEL_ID = :channelId")
   fun delete(profileId: Long, channelId: Int): Completable
 
