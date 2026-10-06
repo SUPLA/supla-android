@@ -23,11 +23,9 @@ import androidx.work.CoroutineWorker
 import androidx.work.NetworkType
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import kotlinx.coroutines.rx3.awaitLast
 import org.supla.android.data.source.local.entity.measurements.BaseLogEntity
 import org.supla.android.data.source.remote.rest.channel.Measurement
 import org.supla.android.events.DownloadEventsManager
-import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.blockingSubscribeBy
 import org.supla.android.features.measurementsdownload.BaseDownloadLogUseCase
 import org.supla.core.shared.extensions.guardLet
@@ -36,7 +34,6 @@ import timber.log.Timber
 abstract class BaseDownloadLogWorker<T : Measurement, U : BaseLogEntity>(
   appContext: Context,
   workerParameters: WorkerParameters,
-  private val updateEventsManager: UpdateEventsManager,
   private val downloadEventsManager: DownloadEventsManager,
   private val baseDownloadLogUseCase: BaseDownloadLogUseCase<T, U>
 ) : CoroutineWorker(appContext, workerParameters) {
@@ -73,7 +70,6 @@ abstract class BaseDownloadLogWorker<T : Measurement, U : BaseLogEntity>(
     baseDownloadLogUseCase.loadMeasurements(remoteId, profileId)
       .doOnSubscribe {
         downloadEventsManager.emitProgressState(remoteId, dataType, DownloadEventsManager.State.Started)
-        updateEventsManager.emitChannelUpdate(remoteId)
       }
       .doOnNext {
         downloadEventsManager.emitProgressState(
@@ -98,8 +94,6 @@ abstract class BaseDownloadLogWorker<T : Measurement, U : BaseLogEntity>(
     if (success && downloaded) {
       onDownloadFinished()
     }
-
-    updateEventsManager.emitChannelUpdate(remoteId)
 
     return result
   }

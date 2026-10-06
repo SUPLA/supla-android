@@ -19,7 +19,6 @@ package org.supla.android.features.details.containerdetail.general
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Maybe
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.supla.android.R
@@ -29,16 +28,16 @@ import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.ValuesFormatter
+import org.supla.android.data.source.ChannelConfigRepository
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.extensions.onlineState
+import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.SuplaChannelConfig
 import org.supla.android.data.source.remote.container.SuplaChannelContainerConfig
 import org.supla.android.data.source.runtime.ItemType
-import org.supla.android.events.ChannelUpdatesObserver
-import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.details.containerdetail.general.ui.ContainerType
 import org.supla.android.features.details.containerdetail.general.ui.ControlLevel
@@ -52,7 +51,6 @@ import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
 import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModelScope
 import org.supla.android.ui.lists.sensordata.RelatedChannelData
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
-import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.CallSuplaClientOperationUseCase
 import org.supla.android.usecases.client.LoginUseCase
@@ -66,6 +64,7 @@ import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetAllChannelIssuesUseCase
 import org.supla.core.shared.usecase.channel.GetChannelBatteryIconUseCase
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -74,12 +73,11 @@ class ContainerGeneralDetailViewModel @Inject constructor(
   private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   private val getChannelBatteryIconUseCase: GetChannelBatteryIconUseCase,
   private val getAllChannelIssuesUseCase: GetAllChannelIssuesUseCase,
-  private val loadChannelConfigUseCase: LoadChannelConfigUseCase,
+  private val channelConfigRepository: ChannelConfigRepository,
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val getCaptionUseCase: GetCaptionUseCase,
   private val vibrationHelper: VibrationHelper,
   private val preferences: ApplicationPreferences,
-  override val updateEventsManager: UpdateEventsManager,
   override val suplaClientProvider: SuplaClientProvider,
   override val profileRepository: ProfileRepository,
   override val authorizeUseCase: AuthorizeUseCase,
@@ -90,8 +88,11 @@ class ContainerGeneralDetailViewModel @Inject constructor(
   threading
 ),
   BaseAuthorizationViewModelScope,
-  ContainerGeneralDetailViewScope,
-  ChannelUpdatesObserver {
+  ContainerGeneralDetailViewScope {
+
+  fun onViewCreated(remoteId: Int) {
+    observeData(remoteId)
+  }
 
   override fun updateAuthorizationDialogState(updater: (AuthorizationDialogState?) -> AuthorizationDialogState?) {
     updateState { it.copy(authorizationDialogState = updater(it.authorizationDialogState)) }
@@ -121,18 +122,19 @@ class ContainerGeneralDetailViewModel @Inject constructor(
     }
   }
 
-  override fun onChannelUpdate(channelWithChildren: ChannelWithChildren) {
-    loadData(channelWithChildren.remoteId)
-  }
-
-  fun loadData(remoteId: Int) {
-    Maybe.zip(
-      readChannelWithChildrenUseCase(remoteId).firstElement(),
-      loadChannelConfigUseCase(remoteId).toMaybe(),
-    ) { channel, config -> Pair(channel, config) }
+  private fun observeData(remoteId: Int) {
+    readChannelWithChildrenUseCase(remoteId)
+      .flatMap { channel ->
+        channelConfigRepository.observeChannelConfig(
+          profileId = channel.profileId,
+          channelId = channel.remoteId,
+          type = ChannelConfigType.from(channel.channel.channelEntity)
+        ).map { config -> Pair(channel, config) }
+      }
+      .throttleLatest(250, TimeUnit.MILLISECONDS, true)
       .attach()
       .subscribeBy(
-        onSuccess = this::handle,
+        onNext = this::handle,
         onError = defaultErrorHandler("loadData()")
       )
       .disposeBySelf()

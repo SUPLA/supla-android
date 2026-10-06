@@ -18,12 +18,10 @@ package org.supla.android.usecases.captionchange
  */
 
 import io.mockk.MockKAnnotations
-import io.mockk.Runs
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
-import io.mockk.just
 import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable
 import org.junit.Before
@@ -34,7 +32,6 @@ import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.LocationRepository
 import org.supla.android.data.source.SceneRepository
-import org.supla.android.events.UpdateEventsManager
 import org.supla.android.usecases.captionchange.CaptionChangeUseCase.Type
 
 class CaptionChangeUseCaseTest {
@@ -54,16 +51,12 @@ class CaptionChangeUseCaseTest {
   @MockK
   private lateinit var suplaClientProvider: SuplaClientProvider
 
-  @MockK
-  private lateinit var updateEventsManager: UpdateEventsManager
-
   @InjectMockKs
   private lateinit var useCase: CaptionChangeUseCase
 
   @Before
   fun setup() {
     MockKAnnotations.init(this)
-    every { updateEventsManager.emitChannelUpdate(any()) } just Runs
   }
 
   @Test
@@ -94,8 +87,7 @@ class CaptionChangeUseCaseTest {
       suplaClient,
       channelRepository,
       groupRepository,
-      sceneRepository,
-      updateEventsManager
+      sceneRepository
     )
   }
 
@@ -120,13 +112,11 @@ class CaptionChangeUseCaseTest {
       channelRepository.updateCaption(caption, remoteId, profileId)
       suplaClientProvider.provide()
       suplaClient.setChannelCaption(remoteId, caption)
-      updateEventsManager.emitChannelUpdate(remoteId)
     }
     confirmVerified(
       channelRepository,
       suplaClientProvider,
       suplaClient,
-      updateEventsManager,
       locationRepository,
       groupRepository,
       sceneRepository
@@ -159,7 +149,6 @@ class CaptionChangeUseCaseTest {
       groupRepository,
       suplaClientProvider,
       suplaClient,
-      updateEventsManager,
       locationRepository,
       channelRepository,
       sceneRepository
@@ -192,7 +181,6 @@ class CaptionChangeUseCaseTest {
       sceneRepository,
       suplaClientProvider,
       suplaClient,
-      updateEventsManager,
       locationRepository,
       channelRepository,
       groupRepository
@@ -222,8 +210,7 @@ class CaptionChangeUseCaseTest {
       suplaClientProvider,
       locationRepository,
       groupRepository,
-      sceneRepository,
-      updateEventsManager
+      sceneRepository
     )
   }
 }

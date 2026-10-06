@@ -23,7 +23,6 @@ import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.LocationRepository
 import org.supla.android.data.source.SceneRepository
-import org.supla.android.events.UpdateEventsManager
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -33,8 +32,7 @@ class CaptionChangeUseCase @Inject constructor(
   private val channelRepository: ChannelRepository,
   private val groupRepository: ChannelGroupRepository,
   private val sceneRepository: SceneRepository,
-  private val suplaClientProvider: SuplaClientProvider,
-  private val updateEventsManager: UpdateEventsManager
+  private val suplaClientProvider: SuplaClientProvider
 ) {
 
   operator fun invoke(caption: String, type: Type, remoteId: Int, profileId: Long): Completable {
@@ -44,10 +42,7 @@ class CaptionChangeUseCase @Inject constructor(
           suplaClientProvider.provide()?.run {
             when (type) {
               Type.LOCATION -> setLocationCaption(remoteId, caption)
-              Type.CHANNEL -> {
-                setChannelCaption(remoteId, caption)
-                updateEventsManager.emitChannelUpdate(remoteId)
-              }
+              Type.CHANNEL -> setChannelCaption(remoteId, caption)
               Type.GROUP -> setChannelGroupCaption(remoteId, caption)
               Type.SCENE -> setSceneCaption(remoteId, caption)
             }

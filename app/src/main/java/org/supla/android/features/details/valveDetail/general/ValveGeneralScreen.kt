@@ -38,8 +38,7 @@ fun ValveGeneralScreen(
 ) {
   ViewModelHost(
     viewModel = viewModel,
-    onCreate = { viewModel.observe(item.remoteId) },
-    onStart = { viewModel.loadData(item.remoteId) }
+    onCreate = { viewModel.observeData(item.remoteId) }
   ) { state ->
     ValveGeneralDetailView(
       state = state.viewState,

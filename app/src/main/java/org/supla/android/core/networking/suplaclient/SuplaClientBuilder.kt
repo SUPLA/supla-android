@@ -26,7 +26,6 @@ import org.supla.android.db.room.measurements.MeasurementsDatabase
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.OnlineEventsManager
-import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.channelscleanup.RemoveHiddenChannelsManager
 import org.supla.android.features.scenescleanup.RemoveHiddenScenesManager
 import org.supla.android.lib.SuplaClient
@@ -63,7 +62,6 @@ class SuplaClientBuilder @Inject constructor(private val dependencies: SuplaClie
 @Singleton
 data class SuplaClientDependencies @Inject constructor(
   val profileRepository: ProfileRepository,
-  val updateEventsManager: UpdateEventsManager,
   val channelConfigEventsManager: ChannelConfigEventsManager,
   val deviceConfigEventsManager: DeviceConfigEventsManager,
   val encryptedPreferences: EncryptedPreferences,

@@ -29,13 +29,10 @@ import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.extensions.onlineState
-import org.supla.android.events.ChannelUpdatesObserver
-import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaThreading
-import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.lists.sensordata.RelatedChannelData
 import org.supla.android.ui.views.buttons.SwitchButtonState
 import org.supla.android.usecases.channel.ActionException
@@ -61,23 +58,17 @@ class ValveGeneralDetailViewModel @Inject constructor(
   private val channelActionUseCase: ChannelActionUseCase,
   private val getCaptionUseCase: GetCaptionUseCase,
   private val preferences: ApplicationPreferences,
-  override val updateEventsManager: UpdateEventsManager,
   override val threading: SuplaThreading
 ) : BaseViewModel<ValveGeneralDetailViewModeState, ValveGeneralDetailViewEvent>(
   ValveGeneralDetailViewModeState(),
   threading
-),
-  ChannelUpdatesObserver {
+) {
 
-  override fun onChannelUpdate(channelWithChildren: ChannelWithChildren) {
-    handle(channelWithChildren)
-  }
-
-  fun loadData(remoteId: Int) {
-    readChannelWithChildrenUseCase(remoteId).firstElement()
+  fun observeData(remoteId: Int) {
+    readChannelWithChildrenUseCase(remoteId)
       .attach()
       .subscribeBy(
-        onSuccess = this::handle,
+        onNext = this::handle,
         onError = defaultErrorHandler("loadData()")
       )
       .disposeBySelf()

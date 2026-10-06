@@ -70,31 +70,35 @@ class ChannelConfigRepository @Inject constructor(
     return channelConfigDao.delete(profileId, channelId)
   }
 
-  fun findChannelConfig(profileId: Long, channelId: Int, type: ChannelConfigType): Single<SuplaChannelConfig> {
-    return channelConfigDao.read(profileId, channelId, type)
-      .map {
-        when (type) {
-          ChannelConfigType.GENERAL_PURPOSE_MEASUREMENT ->
-            gson.fromJson(it.config, SuplaChannelGeneralPurposeMeasurementConfig::class.java)
-          ChannelConfigType.GENERAL_PURPOSE_METER ->
-            gson.fromJson(it.config, SuplaChannelGeneralPurposeMeterConfig::class.java)
-          ChannelConfigType.FACADE_BLIND ->
-            gson.fromJson(it.config, SuplaChannelFacadeBlindConfig::class.java)
-          ChannelConfigType.CONTAINER ->
-            gson.fromJson(it.config, SuplaChannelContainerConfig::class.java)
-          ChannelConfigType.HVAC ->
-            gson.fromJson(it.config, SuplaChannelHvacConfig::class.java)
-          else ->
-            gson.fromJson(it.config, SuplaChannelConfig::class.java)
-        }
-      }
-  }
+  fun findChannelConfig(profileId: Long, channelId: Int, type: ChannelConfigType): Single<SuplaChannelConfig> =
+    channelConfigDao.read(profileId, channelId, type)
+      .map { jsonToConfig(type, it.config) }
+
+  fun observeChannelConfig(profileId: Long, channelId: Int, type: ChannelConfigType): Observable<SuplaChannelConfig> =
+    channelConfigDao.observe(profileId, channelId, type)
+      .map { jsonToConfig(type, it.config) }
 
   override fun count(): Observable<Int> = channelConfigDao.count()
 
   override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = channelConfigDao.deleteKtx(remoteId, profileId)
 
   override fun deleteByProfile(profileId: Long): Completable = channelConfigDao.deleteByProfile(profileId)
+
+  private fun jsonToConfig(type: ChannelConfigType, json: String): SuplaChannelConfig =
+    when (type) {
+      ChannelConfigType.GENERAL_PURPOSE_MEASUREMENT ->
+        gson.fromJson(json, SuplaChannelGeneralPurposeMeasurementConfig::class.java)
+      ChannelConfigType.GENERAL_PURPOSE_METER ->
+        gson.fromJson(json, SuplaChannelGeneralPurposeMeterConfig::class.java)
+      ChannelConfigType.FACADE_BLIND ->
+        gson.fromJson(json, SuplaChannelFacadeBlindConfig::class.java)
+      ChannelConfigType.CONTAINER ->
+        gson.fromJson(json, SuplaChannelContainerConfig::class.java)
+      ChannelConfigType.HVAC ->
+        gson.fromJson(json, SuplaChannelHvacConfig::class.java)
+      else ->
+        gson.fromJson(json, SuplaChannelConfig::class.java)
+    }
 }
 
 private fun SuplaChannelGeneralPurposeMeasurementConfig.toEntity(profileId: Long, gson: Gson): ChannelConfigEntity {
