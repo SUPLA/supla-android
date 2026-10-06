@@ -49,8 +49,6 @@ class ChannelRepository @Inject constructor(
 
   suspend fun findChannelsBy(profileId: Long, function: SuplaFunction) = channelDao.findChannelsBy(profileId, function)
 
-  fun findListWithoutUnavailable() = channelDao.findListWithoutUnavailable().firstOrError()
-
   fun findObservableList() = channelDao.findList()
 
   fun findObservableList(profileId: Long) = channelDao.findList(profileId)

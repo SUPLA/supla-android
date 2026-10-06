@@ -19,17 +19,18 @@ package org.supla.android.features.channellist
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.rx3.awaitFirst
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.events.UpdateEventsManager
+import org.supla.android.events.DownloadEventsManager
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.details.detailbase.base.DetailPage
 import org.supla.android.features.details.detailbase.base.ItemBundle
@@ -58,6 +59,7 @@ import org.supla.android.usecases.list.TriggerLogHistoryDownloadUseCase
 import org.supla.android.usecases.list.canMoveItemWithinSection
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
@@ -71,8 +73,8 @@ class ChannelListViewModel @Inject constructor(
   private val channelToListItemMapper: ChannelToListItemMapper,
   private val reorderChannelsUseCase: ReorderChannelsUseCase,
   private val toggleLocationUseCase: ToggleLocationUseCase,
+  private val downloadEventsManager: DownloadEventsManager,
   private val channelActionUseCase: ChannelActionUseCase,
-  updateEventsManager: UpdateEventsManager,
   vibrationHelper: VibrationHelper,
   dateProvider: DateProvider,
   threading: SuplaThreading
@@ -84,49 +86,28 @@ class ChannelListViewModel @Inject constructor(
 ),
   ChannelListScope {
 
-  override fun reloadList() = loadChannels()
-
   var searchData: TopBarSearchData = TopBarSearchData()
     private set
 
   private var downloadJob: Job? = null
+  private val listReloadSubject = BehaviorSubject.createDefault("")
 
   init {
-    observeUpdates(updateEventsManager.observeChannelsUpdate())
-
-    updateEventsManager.observeAllChannels()
-      .attachSilent()
-      .flatMapMaybe { readChannelWithChildrenUseCase(it).firstElement() }
-      .map { channelToListItemMapper(it) }
-      .subscribeBy(
-        onNext = { updateDefaultItem(it) },
-        onError = defaultErrorHandler("init()")
-      )
-      .disposeBySelf()
+    observeListUpdates()
+    observeProcessingUpdates()
   }
 
   fun handle(event: TopBarSearchEvent) {
     searchData = searchData.handle(event)
-    loadChannels()
+    listReloadSubject.onNext(searchData.query)
   }
 
   override fun onStart() {
-    loadChannels()
     startLogHistoryDownload()
   }
 
   override fun onStop() {
     stopLogHistoryDownload()
-  }
-
-  fun loadChannels() {
-    createProfileChannelsListUseCase(filterString = searchData.query)
-      .attach()
-      .subscribeBy(
-        onNext = { updateItems(it) },
-        onError = defaultErrorHandler("loadChannels()")
-      )
-      .disposeBySelf()
   }
 
   fun startLogHistoryDownload() {
@@ -181,19 +162,6 @@ class ChannelListViewModel @Inject constructor(
     updateState { it.copy(actionAlertDialogState = null) }
   }
 
-  private fun openDetailsByChannelFunction(data: ChannelWithChildren) {
-    val channel = data.channel
-    if (isAvailableInOffline(channel).not() && channel.status.offline) {
-      return // do not open details for offline channels
-    }
-
-    when (val detailType = provideChannelDetailTypeUseCase(data)) {
-      is StandardDetailType -> sendEvent(ChannelListViewEvent.OpenDetail(ItemBundle.from(channel), detailType.pages))
-      is LegacyDetailType -> sendEvent(ChannelListViewEvent.OpenLegacyDetail(channel.remoteId, detailType))
-      null -> {} // no action
-    }
-  }
-
   override fun onDeviceCatalogClick() {
     sendEvent(ChannelListViewEvent.NavigateToDeviceCatalog)
   }
@@ -220,24 +188,18 @@ class ChannelListViewModel @Inject constructor(
   }
 
   override fun onDragStopped(remoteId: Int) {
+    val items = list.toList()
     viewModelScope.launch {
-      val reorderedChannels = threading.io {
-        reorderChannelsUseCase(list, remoteId)
-        createProfileChannelsListUseCase().awaitFirst()
+      threading.io {
+        reorderChannelsUseCase(items, remoteId)
       }
-
-      updateItems(reorderedChannels)
     }
   }
 
   override fun onLocationClick(remoteId: Int) {
     toggleLocationUseCase(remoteId, CollapsedFlag.CHANNEL)
-      .andThen(createProfileChannelsListUseCase(filterString = searchData.query))
       .attach()
-      .subscribeBy(
-        onNext = { updateItems(it) },
-        onError = defaultErrorHandler("onLocationClick($remoteId)")
-      )
+      .subscribeBy(onError = defaultErrorHandler("onLocationClick($remoteId)"))
       .disposeBySelf()
   }
 
@@ -274,6 +236,51 @@ class ChannelListViewModel @Inject constructor(
 
   override fun onLocationLongClick(item: ListItem.LocationItem) {
     sendEvent(ChannelListViewEvent.ShowLocationCaptionChangeDialog(item.remoteId, item.profileId, item.userCaption))
+  }
+
+  private fun observeListUpdates() {
+    listReloadSubject
+      .debounce(250, TimeUnit.MILLISECONDS, threading.schedulers.computation)
+      .distinctUntilChanged()
+      .switchMap { filterString ->
+        createProfileChannelsListUseCase(filterString)
+          .attach()
+          .doOnError(defaultErrorHandler("observeChannels()"))
+          .onErrorResumeNext { _: Throwable -> Observable.empty() }
+      }
+      .subscribeBy(
+        onNext = this::updateItemsAtomically
+      )
+      .disposeBySelf()
+  }
+
+  private fun observeProcessingUpdates() {
+    downloadEventsManager.observeDefaultProgressUpdates()
+      .attachSilent()
+      .flatMapMaybe { remoteId ->
+        readChannelWithChildrenUseCase(remoteId)
+          .firstElement()
+          .onErrorComplete { it is NoSuchElementException }
+      }
+      .map { channelToListItemMapper(it) }
+      .subscribeBy(
+        onNext = this::updateDefaultItem,
+        onError = defaultErrorHandler("observeProcessingUpdates()")
+      )
+      .disposeBySelf()
+  }
+
+  private fun openDetailsByChannelFunction(data: ChannelWithChildren) {
+    val channel = data.channel
+    if (isAvailableInOffline(channel).not() && channel.status.offline) {
+      return // do not open details for offline channels
+    }
+
+    when (val detailType = provideChannelDetailTypeUseCase(data)) {
+      is StandardDetailType -> sendEvent(ChannelListViewEvent.OpenDetail(ItemBundle.from(channel), detailType.pages))
+      is LegacyDetailType -> sendEvent(ChannelListViewEvent.OpenLegacyDetail(channel.remoteId, detailType))
+      null -> {} // no action
+    }
   }
 }
 

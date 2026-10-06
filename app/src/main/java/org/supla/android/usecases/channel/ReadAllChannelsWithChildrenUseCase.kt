@@ -20,10 +20,7 @@ package org.supla.android.usecases.channel
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.ChannelRelationRepository
 import org.supla.android.data.source.ChannelRepository
-import org.supla.android.data.source.local.entity.ChannelRelationEntity
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import java.util.LinkedList
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -31,25 +28,15 @@ import javax.inject.Singleton
 class ReadAllChannelsWithChildrenUseCase @Inject constructor(
   private val channelRelationRepository: ChannelRelationRepository,
   private val channelRepository: ChannelRepository,
-  private val getChannelChildrenTreeUseCase: GetChannelChildrenTreeUseCase
+  private val channelsTreeSnapshotFactory: ChannelsTreeSnapshotFactory
 ) {
   operator fun invoke(profileId: Long): Observable<List<ChannelWithChildren>> =
     Observable.combineLatest(
       channelRelationRepository.findChildrenToParentsRelationsForProfile(profileId),
       channelRepository.findObservableList(profileId)
     ) { relationMap, entities -> Pair(relationMap, entities) }
-      .map { (relationMap, entities) -> entities.map { it.toChannelWithChildren(entities, relationMap) } }
-
-  private fun ChannelDataEntity.toChannelWithChildren(
-    entities: List<ChannelDataEntity>,
-    relationMap: Map<Int, List<ChannelRelationEntity>>
-  ): ChannelWithChildren {
-    val channelsMap = mutableMapOf<Int, ChannelDataEntity>().also { map -> entities.forEach { map[it.remoteId] = it } }
-    val childrenList = LinkedList<Int>()
-
-    return ChannelWithChildren(
-      channel = this,
-      children = getChannelChildrenTreeUseCase(remoteId, relationMap, channelsMap, childrenList)
-    )
-  }
+      .map { (relationMap, entities) ->
+        val snapshot = channelsTreeSnapshotFactory.create(entities, relationMap)
+        entities.map { snapshot.channelsWithChildren.getValue(it.remoteId) }
+      }
 }

@@ -37,7 +37,6 @@ import org.supla.android.core.storage.LocalApplicationPreferences
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.source.runtime.ItemType
-import org.supla.android.features.captionchangedialog.CaptionChangeViewEvent
 import org.supla.android.features.captionchangedialog.CaptionChangeViewModel
 import org.supla.android.features.captionchangedialog.View
 import org.supla.android.features.statedialog.StateDialogViewModel
@@ -101,10 +100,7 @@ fun ChannelListScreen(
     )
   }
 
-  ViewModelHostBase(
-    viewModel = captionChangeViewModel,
-    eventHandler = { handleCaptionChangeEvents(it, viewModel) }
-  ) {
+  ViewModelHostBase(captionChangeViewModel) {
     captionChangeViewModel.View(it)
   }
 
@@ -129,13 +125,6 @@ private fun handleChannelEvents(
     ChannelListViewEvent.NavigateToAddDevice -> navigator?.navigateTo(AddWizard)
     ChannelListViewEvent.NavigateToDeviceCatalog -> navigator?.navigateTo(DeviceCatalog)
     is ChannelListViewEvent.OpenLegacyDetail -> navigator?.navigateTo(MainRoute.LegacyDetail(event.remoteId, ItemType.CHANNEL, event.type))
-  }
-}
-
-private fun handleCaptionChangeEvents(event: CaptionChangeViewEvent, viewModel: ChannelListViewModel) {
-  when (event) {
-    is CaptionChangeViewEvent.Finish ->
-      event.type.isLocation.forTrue { viewModel.loadChannels() }
   }
 }
 

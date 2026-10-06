@@ -20,13 +20,12 @@ package org.supla.android.features.scenelist
 import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.rx3.awaitFirst
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
-import org.supla.android.data.source.SceneRepository
-import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
@@ -36,9 +35,7 @@ import org.supla.android.tools.SuplaThreading
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.lists.BaseListViewModel
 import org.supla.android.ui.lists.ListItem
-import org.supla.android.ui.lists.sceneItem
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
-import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.android.usecases.list.canMoveItemWithinSection
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
@@ -46,6 +43,7 @@ import org.supla.android.usecases.profile.CloudUrl
 import org.supla.android.usecases.profile.LoadActiveProfileUrlUseCase
 import org.supla.android.usecases.scene.CreateProfileScenesListUseCase
 import org.supla.android.usecases.scene.ReorderScenesUseCase
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -54,10 +52,7 @@ class SceneListViewModel @Inject constructor(
   private val executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
   private val reorderScenesUseCase: ReorderScenesUseCase,
   private val toggleLocationUseCase: ToggleLocationUseCase,
-  private val getSceneIconUseCase: GetSceneIconUseCase,
-  private val sceneRepository: SceneRepository,
   loadActiveProfileUrlUseCase: LoadActiveProfileUrlUseCase,
-  updateEventsManager: UpdateEventsManager,
   vibrationHelper: VibrationHelper,
   threading: SuplaThreading,
   dateProvider: DateProvider,
@@ -73,35 +68,15 @@ class SceneListViewModel @Inject constructor(
   var searchData: TopBarSearchData = TopBarSearchData()
     private set
 
-  override fun reloadList() = loadScenes()
+  private val listReloadSubject = BehaviorSubject.createDefault("")
 
   init {
-    observeUpdates(updateEventsManager.observeScenesUpdate())
-
-    updateEventsManager.observeAllScenes()
-      .attachSilent()
-      .flatMapMaybe { sceneRepository.findSceneData(it) }
-      .map { it.sceneItem(getSceneIconUseCase) }
-      .subscribeBy(
-        onNext = { updateSceneItem(it) },
-        onError = defaultErrorHandler("init()")
-      )
-      .disposeBySelf()
+    observeListUpdates()
   }
 
   fun handle(event: TopBarSearchEvent) {
     searchData = searchData.handle(event)
-    loadScenes()
-  }
-
-  fun loadScenes() {
-    createProfileScenesListUseCase(searchData.query)
-      .attach()
-      .subscribeBy(
-        onNext = { updateItems(it) },
-        onError = defaultErrorHandler("loadScenes()")
-      )
-      .disposeBySelf()
+    listReloadSubject.onNext(searchData.query)
   }
 
   override fun onAddGroupClick() {
@@ -137,22 +112,18 @@ class SceneListViewModel @Inject constructor(
   }
 
   override fun onDragStopped(remoteId: Int) {
+    val items = list.toList()
     viewModelScope.launch {
-      val reorderedScenes = this@SceneListViewModel.threading.io {
-        reorderScenesUseCase(list, remoteId)
-        createProfileScenesListUseCase().awaitFirst()
+      threading.io {
+        reorderScenesUseCase(items, remoteId)
       }
-
-      updateItems(reorderedScenes)
     }
   }
 
   override fun onLocationClick(remoteId: Int) {
     toggleLocationUseCase(remoteId, CollapsedFlag.SCENE)
-      .andThen(createProfileScenesListUseCase(searchData.query))
       .attach()
       .subscribeBy(
-        onNext = { updateItems(it) },
         onError = defaultErrorHandler("onLocationClick($remoteId)")
       )
       .disposeBySelf()
@@ -166,6 +137,20 @@ class SceneListViewModel @Inject constructor(
 
   override fun onLocationLongClick(item: ListItem.LocationItem) {
     sendEvent(SceneListViewEvent.ShowLocationCaptionChangeDialog(item.remoteId, item.profileId, item.userCaption))
+  }
+
+  private fun observeListUpdates() {
+    listReloadSubject
+      .debounce(250, TimeUnit.MILLISECONDS, threading.schedulers.computation)
+      .distinctUntilChanged()
+      .switchMap { filterString ->
+        createProfileScenesListUseCase(filterString)
+          .attach()
+          .doOnError(defaultErrorHandler("observeScenes()"))
+          .onErrorResumeNext { _: Throwable -> Observable.empty() }
+      }
+      .subscribeBy(onNext = this::updateItemsAtomically)
+      .disposeBySelf()
   }
 }
 

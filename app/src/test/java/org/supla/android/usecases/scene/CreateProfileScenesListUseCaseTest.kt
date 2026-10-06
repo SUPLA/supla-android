@@ -22,7 +22,7 @@ import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
-import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.core.Observable
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -68,7 +68,7 @@ class CreateProfileScenesListUseCaseTest {
       mockScene(114, thirdLocation)
     )
 
-    every { sceneRepository.findList() } returns Single.just(scenes)
+    every { sceneRepository.findList() } returns Observable.just(scenes)
 
     // when
     val testObserver = useCase().test()
@@ -112,7 +112,7 @@ class CreateProfileScenesListUseCaseTest {
       mockScene(124, thirdLocation)
     )
 
-    every { sceneRepository.findList() } returns Single.just(scenes)
+    every { sceneRepository.findList() } returns Observable.just(scenes)
 
     // when
     val testObserver = useCase("caption 11").test()
@@ -150,7 +150,7 @@ class CreateProfileScenesListUseCaseTest {
       mockScene(114, thirdLocation, sortOrder = 4)
     )
 
-    every { sceneRepository.findList() } returns Single.just(scenes)
+    every { sceneRepository.findList() } returns Observable.just(scenes)
 
     // when
     val testObserver = useCase().test()

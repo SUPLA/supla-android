@@ -30,7 +30,6 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.subjects.PublishSubject
-import io.reactivex.rxjava3.subjects.Subject
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -39,8 +38,6 @@ import org.junit.Test
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.MainDispatcherRule
 import org.supla.android.core.infrastructure.DateProvider
-import org.supla.android.data.source.SceneRepository
-import org.supla.android.events.UpdateEventsManager
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.main.topbar.TopBarSearchEvent
@@ -48,13 +45,13 @@ import org.supla.android.tools.SuplaThreading
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
-import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 import org.supla.android.usecases.profile.CloudUrl
 import org.supla.android.usecases.profile.LoadActiveProfileUrlUseCase
 import org.supla.android.usecases.scene.CreateProfileScenesListUseCase
 import org.supla.android.usecases.scene.ReorderScenesUseCase
+import java.util.concurrent.TimeUnit
 
 class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListViewEvent, SceneListViewModel>(MockSchedulers.MOCKK) {
   @get:Rule
@@ -70,16 +67,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
   private lateinit var executeSimpleActionUseCase: ExecuteSimpleActionUseCase
 
   @MockK
-  private lateinit var getSceneIconUseCase: GetSceneIconUseCase
-
-  @MockK
   private lateinit var reorderScenesUseCase: ReorderScenesUseCase
-
-  @MockK
-  private lateinit var sceneRepository: SceneRepository
-
-  @MockK
-  private lateinit var updateEventsManager: UpdateEventsManager
 
   @MockK
   private lateinit var loadActiveProfileUrlUseCase: LoadActiveProfileUrlUseCase
@@ -99,23 +87,17 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
       executeSimpleActionUseCase,
       reorderScenesUseCase,
       toggleLocationUseCase,
-      getSceneIconUseCase,
-      sceneRepository,
       loadActiveProfileUrlUseCase,
-      updateEventsManager,
       vibrationHelper,
       threading,
       dateProvider
     )
   }
 
-  private val listsEventsSubject: Subject<Any> = PublishSubject.create()
-
   @Before
   override fun setUp() {
     MockKAnnotations.init(this)
-    every { updateEventsManager.observeScenesUpdate() } returns listsEventsSubject
-    every { updateEventsManager.observeAllScenes() } returns Observable.empty()
+    every { threading.schedulers.computation } returns testScheduler
     super.setUp()
   }
 
@@ -127,7 +109,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
     every { createProfileScenesListUseCase() } returns Observable.just(items)
 
     // when
-    viewModel.loadScenes()
+    triggerScenesLoad()
 
     // then
     assertThat(viewModel.list).containsExactly(item)
@@ -149,7 +131,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
     every { createProfileScenesListUseCase() } returns Observable.just(scenes)
 
     // when
-    viewModel.loadScenes()
+    triggerScenesLoad()
     viewModel.moveItems(1, 3)
 
     // then
@@ -173,7 +155,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
     every { createProfileScenesListUseCase() } returns Observable.just(scenes)
 
     // when
-    viewModel.loadScenes()
+    triggerScenesLoad()
     viewModel.moveItems(1, 4)
 
     // then
@@ -199,7 +181,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
     every { createProfileScenesListUseCase() } returns Observable.just(scenes)
 
     // when
-    viewModel.loadScenes()
+    triggerScenesLoad()
     viewModel.moveItems(2, 0)
 
     // then
@@ -212,39 +194,36 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
   }
 
   @Test
-  fun `should toggle location collapsed and reload scenes`() {
+  fun `should toggle location collapsed`() {
     // given
     val locationId = 1
     every { toggleLocationUseCase(locationId, CollapsedFlag.SCENE) } returns Completable.complete()
-    val item = mockk<ListItem.SceneItem>()
-    val list = listOf(item)
-    every { createProfileScenesListUseCase() } returns Observable.just(list)
-
     // when
     viewModel.onLocationClick(locationId)
 
     // then
-    assertThat(viewModel.list).containsExactly(item)
     Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).isEmpty()
 
     verify { toggleLocationUseCase(locationId, CollapsedFlag.SCENE) }
-    verify { createProfileScenesListUseCase() }
     confirmDependencies()
   }
 
   @Test
-  fun `should reload list on update`() {
+  fun `should update list when scene data changes`() {
     // given
-    val item = mockk<ListItem.SceneItem>()
-    val list = listOf(item)
-    every { createProfileScenesListUseCase() } returns Observable.just(list)
+    val item = mockk<ListItem.SceneItem> { every { key } returns "S1" }
+    val updatedItem = mockk<ListItem.SceneItem> { every { key } returns "S2" }
+    val scenesSubject = PublishSubject.create<List<ListItem>>()
+    every { createProfileScenesListUseCase() } returns scenesSubject
 
     // when
-    listsEventsSubject.onNext(Any())
+    triggerScenesLoad()
+    scenesSubject.onNext(listOf(item))
+    scenesSubject.onNext(listOf(updatedItem))
 
     // then
-    assertThat(viewModel.list).containsExactly(item)
+    assertThat(viewModel.list).containsExactly(updatedItem)
     Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).isEmpty()
 
@@ -262,6 +241,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
 
     // when
     viewModel.handle(TopBarSearchEvent.QueryChange(filterText))
+    testScheduler.advanceTimeBy(250, TimeUnit.MILLISECONDS)
 
     // then
     assertThat(viewModel.searchData.query).isEqualTo(filterText)
@@ -310,23 +290,28 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
   }
 
   @Test
-  fun `should reorder scenes and reload list when drag stops`() {
+  fun `should store scene order and apply next list emission when drag stops`() {
     // given
     val remoteId = 123
     val firstItem: ListItem.SceneItem = mockk {
+      every { key } returns "S1"
       every { locationCaption } returns "1"
     }
     val secondItem: ListItem.SceneItem = mockk {
+      every { key } returns "S2"
       every { locationCaption } returns "1"
     }
     val scenes = listOf<ListItem>(firstItem, secondItem)
     val reorderedScenes = listOf<ListItem>(secondItem, firstItem)
     coEvery { reorderScenesUseCase(match { it.toList() == scenes }, remoteId) } returns Unit
-    every { createProfileScenesListUseCase() } returnsMany listOf(Observable.just(scenes), Observable.just(reorderedScenes))
+    val scenesSubject = PublishSubject.create<List<ListItem>>()
+    every { createProfileScenesListUseCase() } returns scenesSubject
 
     // when
-    viewModel.loadScenes()
+    triggerScenesLoad()
+    scenesSubject.onNext(scenes)
     viewModel.onDragStopped(remoteId)
+    scenesSubject.onNext(reorderedScenes)
 
     // then
     assertThat(viewModel.list).containsExactly(secondItem, firstItem)
@@ -334,7 +319,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
     assertThat(events).isEmpty()
 
     coVerify { reorderScenesUseCase(any(), remoteId) }
-    verify(exactly = 2) { createProfileScenesListUseCase() }
+    verify { createProfileScenesListUseCase() }
     confirmVerified(createProfileScenesListUseCase, reorderScenesUseCase)
     confirmDependencies()
   }
@@ -378,10 +363,13 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
       createProfileScenesListUseCase,
       reorderScenesUseCase,
       executeSimpleActionUseCase,
-      getSceneIconUseCase,
-      sceneRepository,
       loadActiveProfileUrlUseCase,
       dateProvider
     )
+  }
+
+  private fun triggerScenesLoad() {
+    viewModel.handle(TopBarSearchEvent.QueryChange(viewModel.searchData.query))
+    testScheduler.advanceTimeBy(250, TimeUnit.MILLISECONDS)
   }
 }

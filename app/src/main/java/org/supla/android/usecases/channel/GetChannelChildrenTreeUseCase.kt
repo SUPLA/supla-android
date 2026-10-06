@@ -27,31 +27,34 @@ import javax.inject.Singleton
 
 @Singleton
 class GetChannelChildrenTreeUseCase @Inject constructor() {
+
   operator fun invoke(
     forChannelId: Int,
     relationMap: Map<Int, List<ChannelRelationEntity>>,
-    channelsMap: MutableMap<Int, ChannelDataEntity>,
-    childrenList: LinkedList<Int>
+    channelsMap: Map<Int, ChannelDataEntity>,
+    childrenList: LinkedList<Int>,
+    childrenCache: MutableMap<Int, List<ChannelChildEntity>>? = null
   ): List<ChannelChildEntity> {
-    childrenList.add(forChannelId)
+    childrenCache?.get(forChannelId)?.let { return it }
 
-    val result = relationMap[forChannelId]?.mapNotNull {
-      channelsMap[it.channelId]?.let { child ->
+    childrenList.add(forChannelId)
+    val result = relationMap[forChannelId]?.mapNotNull { relation ->
+      channelsMap[relation.channelId]?.let { child ->
         if (childrenList.contains(child.remoteId)) {
-          Timber.w("Cycle dependency found! Skipping child ${child.remoteId}")
+          Timber.w("Circular dependency found for channel ${child.remoteId}!")
           null
         } else {
           ChannelChildEntity(
-            it,
+            relation,
             child,
-            invoke(it.channelId, relationMap, channelsMap, childrenList)
+            invoke(child.remoteId, relationMap, channelsMap, childrenList, childrenCache)
           )
         }
       }
     } ?: emptyList()
-
     childrenList.removeLast()
 
+    childrenCache?.set(forChannelId, result)
     return result
   }
 }

@@ -64,9 +64,6 @@ class DisconnectUseCaseTest {
       suplaClient.canceled()
       suplaClient.cancel()
       updateEventsManager.cleanup()
-      updateEventsManager.emitChannelsUpdate()
-      updateEventsManager.emitGroupsUpdate()
-      updateEventsManager.emitScenesUpdate()
     }
     confirmVerified(suplaClient, updateEventsManager)
   }
@@ -92,16 +89,10 @@ class DisconnectUseCaseTest {
       suplaClient.cancel()
       suplaClient.join()
       updateEventsManager.cleanup()
-      updateEventsManager.emitChannelsUpdate()
-      updateEventsManager.emitGroupsUpdate()
-      updateEventsManager.emitScenesUpdate()
     }
   }
 
   private fun mockUpdateEventsManager() {
     every { updateEventsManager.cleanup() } answers {}
-    every { updateEventsManager.emitChannelsUpdate() } answers {}
-    every { updateEventsManager.emitGroupsUpdate() } answers {}
-    every { updateEventsManager.emitScenesUpdate() } answers {}
   }
 }
