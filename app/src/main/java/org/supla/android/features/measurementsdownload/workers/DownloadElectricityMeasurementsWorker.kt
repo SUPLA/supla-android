@@ -28,7 +28,6 @@ import org.supla.android.core.storage.UserStateHolder
 import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity
 import org.supla.android.data.source.remote.rest.channel.ElectricityMeasurement
 import org.supla.android.events.DownloadEventsManager
-import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.measurementsdownload.DownloadElectricityMeterLogUseCase
 import org.supla.android.usecases.list.RefreshElectricityMeterAggregatedValueUseCase
 import timber.log.Timber
@@ -37,7 +36,6 @@ import timber.log.Timber
 class DownloadElectricityMeasurementsWorker @AssistedInject constructor(
   @Assisted appContext: Context,
   @Assisted workerParameters: WorkerParameters,
-  updateEventsManager: UpdateEventsManager,
   downloadEventsManager: DownloadEventsManager,
   downloadElectricityMeterLogUseCase: DownloadElectricityMeterLogUseCase,
   private val userStateHolder: UserStateHolder,
@@ -45,7 +43,6 @@ class DownloadElectricityMeasurementsWorker @AssistedInject constructor(
 ) : BaseDownloadLogWorker<ElectricityMeasurement, ElectricityMeterLogEntity>(
   appContext,
   workerParameters,
-  updateEventsManager,
   downloadEventsManager,
   downloadElectricityMeterLogUseCase
 ) {

@@ -30,7 +30,6 @@ import org.junit.Before
 import org.junit.Test
 import org.supla.android.data.source.RoomUserIconRepository
 import org.supla.android.data.source.local.entity.UserIconEntity
-import org.supla.android.events.UpdateEventsManager
 import org.supla.android.images.ImageCacheProxy
 import org.supla.android.images.ImageId
 import org.supla.android.widget.WidgetManager
@@ -39,9 +38,6 @@ class LoadUserIconsIntoCacheUseCaseTest {
 
   @MockK
   private lateinit var userIconRepository: RoomUserIconRepository
-
-  @MockK
-  private lateinit var updateEventsManager: UpdateEventsManager
 
   @MockK
   private lateinit var imageCacheProxy: ImageCacheProxy
@@ -102,7 +98,7 @@ class LoadUserIconsIntoCacheUseCaseTest {
     verify(exactly = 2) {
       imageCacheProxy.sum()
     }
-    confirmVerified(imageCacheProxy, userIconRepository, widgetManager, updateEventsManager)
+    confirmVerified(imageCacheProxy, userIconRepository, widgetManager)
   }
 
   @Test
@@ -124,6 +120,6 @@ class LoadUserIconsIntoCacheUseCaseTest {
     verify(exactly = 2) {
       imageCacheProxy.sum()
     }
-    confirmVerified(imageCacheProxy, userIconRepository, widgetManager, updateEventsManager)
+    confirmVerified(imageCacheProxy, userIconRepository, widgetManager)
   }
 }
