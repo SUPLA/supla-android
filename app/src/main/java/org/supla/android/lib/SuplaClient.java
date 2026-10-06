@@ -69,7 +69,6 @@ import org.supla.android.db.room.measurements.MeasurementsDatabase;
 import org.supla.android.events.ChannelConfigEventsManager;
 import org.supla.android.events.DeviceConfigEventsManager;
 import org.supla.android.events.OnlineEventsManager;
-import org.supla.android.events.UpdateEventsManager;
 import org.supla.android.features.channelscleanup.RemoveHiddenChannelsManager;
 import org.supla.android.features.icons.DownloadUserIconsWorker;
 import org.supla.android.features.scenescleanup.RemoveHiddenScenesManager;
@@ -128,7 +127,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private final Context _context;
   private final ConnectivityManager connectivityManager;
   private final ProfileRepository profileRepository;
-  private final UpdateEventsManager updateEventsManager;
   private final ChannelConfigEventsManager channelConfigEventsManager;
   private final DeviceConfigEventsManager deviceConfigEventsManager;
   private final EncryptedPreferences preferences;
@@ -168,7 +166,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
         (ConnectivityManager) _context.getSystemService(Context.CONNECTIVITY_SERVICE);
     this.oneTimePassword = oneTimePassword;
     this.profileRepository = dependencies.getProfileRepository();
-    this.updateEventsManager = dependencies.getUpdateEventsManager();
     this.channelConfigEventsManager = dependencies.getChannelConfigEventsManager();
     this.deviceConfigEventsManager = dependencies.getDeviceConfigEventsManager();
     this.preferences = dependencies.getEncryptedPreferences();
@@ -1086,7 +1083,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     if (_DataChanged) {
       Timber.d("Channel updated");
       sendMessage(new SuplaClientMessage.ChannelDataChanged(channel.Id, false, false));
-      updateEventsManager.emitChannelUpdate(channel.Id);
     }
   }
 
@@ -1208,7 +1204,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     if (updateChannelValueUseCase.invoke(channelValueUpdate).blockingGet()
         == EntityUpdateResult.UPDATED) {
       sendMessage(new SuplaClientMessage.ChannelDataChanged(channelValueUpdate.Id, false, false));
-      updateEventsManager.emitChannelUpdate(channelValueUpdate.Id);
     }
 
     if (channelValueUpdate.EOL) {
@@ -1228,7 +1223,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
       sendMessage(
           new SuplaClientMessage.ChannelDataChanged(
               channelExtendedValueUpdate.Id, true, result.getTimerChanged()));
-      updateEventsManager.emitChannelUpdate(channelExtendedValueUpdate.Id);
     }
   }
 
@@ -1276,7 +1270,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     Timber.d("onChannelState channelId: %d", state.getChannelId());
     updateChannelStateUseCase.invoke(state).blockingSubscribe();
     sendMessage(new SuplaClientMessage.ChannelState(state));
-    updateEventsManager.emitChannelUpdate(state.getChannelId());
   }
 
   private void onChannelBasicCfg(SuplaChannelBasicCfg cfg) {
@@ -1363,9 +1356,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private void onChannelConfigUpdateOrResult(SuplaChannelConfig config, ConfigResult result) {
     insertChannelConfigUseCase.invoke(config, result).blockingSubscribe();
     channelConfigEventsManager.emitConfig(result, config);
-    if (result == ConfigResult.RESULT_TRUE && config != null) {
-      updateEventsManager.emitChannelUpdate(config.getRemoteId());
-    }
   }
 
   private void onDeviceConfigUpdateOrResult(

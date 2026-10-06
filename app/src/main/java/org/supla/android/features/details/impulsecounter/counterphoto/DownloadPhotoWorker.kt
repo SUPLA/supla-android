@@ -29,7 +29,6 @@ import androidx.work.workDataOf
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import org.supla.android.data.source.remote.rest.SuplaCloudService
-import org.supla.android.events.UpdateEventsManager
 import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.usecase.channel.StoreChannelOcrPhotoUseCase
 import timber.log.Timber
@@ -40,7 +39,6 @@ class DownloadPhotoWorker @AssistedInject constructor(
   @Assisted workerParameters: WorkerParameters,
   private val suplaCloudServiceProvider: SuplaCloudService.Provider,
   private val storeChannelOcrPhotoUseCase: StoreChannelOcrPhotoUseCase,
-  private val updateEventsManager: UpdateEventsManager,
 ) : Worker(appContext, workerParameters) {
 
   private val remoteId: Int?
@@ -71,7 +69,6 @@ class DownloadPhotoWorker @AssistedInject constructor(
         profileId = profileId,
         photo = photoData
       )
-      updateEventsManager.emitChannelUpdate(remoteId)
       Result.success()
     } catch (_: Exception) {
       Timber.e("Could not download OCR photo")

@@ -18,18 +18,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import io.reactivex.rxjava3.core.Completable
-import org.supla.android.core.SuplaAppProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientState
-import org.supla.android.events.UpdateEventsManager
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class DisconnectUseCase @Inject constructor(
-  private val suplaClientProvider: SuplaClientProvider,
-  private val updateEventsManager: UpdateEventsManager,
+  private val suplaClientProvider: SuplaClientProvider
 ) {
 
   operator fun invoke(reason: SuplaClientState.Reason? = null): Completable = Completable.fromRunnable {
@@ -50,7 +47,5 @@ class DisconnectUseCase @Inject constructor(
       // If it will be marked as canceled, supla app will initialize it again.
       suplaClient?.cancel()
     }
-
-    updateEventsManager.cleanup()
   }
 }

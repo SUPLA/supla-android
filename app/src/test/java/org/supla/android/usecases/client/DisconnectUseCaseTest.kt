@@ -28,14 +28,10 @@ import org.junit.Before
 import org.junit.Test
 import org.supla.android.core.networking.suplaclient.SuplaClientApi
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
-import org.supla.android.events.UpdateEventsManager
 
 class DisconnectUseCaseTest {
   @MockK
   private lateinit var suplaClientProvider: SuplaClientProvider
-
-  @MockK
-  private lateinit var updateEventsManager: UpdateEventsManager
 
   @InjectMockKs
   private lateinit var useCase: DisconnectUseCase
@@ -53,7 +49,6 @@ class DisconnectUseCaseTest {
       every { cancel() } answers {}
     }
     every { suplaClientProvider.provide() } returns suplaClient
-    mockUpdateEventsManager()
 
     // when
     val observer = useCase.invoke().test()
@@ -63,9 +58,8 @@ class DisconnectUseCaseTest {
     verify {
       suplaClient.canceled()
       suplaClient.cancel()
-      updateEventsManager.cleanup()
     }
-    confirmVerified(suplaClient, updateEventsManager)
+    confirmVerified(suplaClient)
   }
 
   @Test
@@ -77,7 +71,6 @@ class DisconnectUseCaseTest {
       every { join() } answers {}
     }
     every { suplaClientProvider.provide() } returns suplaClient
-    mockUpdateEventsManager()
 
     // when
     val observer = useCase.invoke().test()
@@ -88,11 +81,6 @@ class DisconnectUseCaseTest {
       suplaClient.canceled()
       suplaClient.cancel()
       suplaClient.join()
-      updateEventsManager.cleanup()
     }
-  }
-
-  private fun mockUpdateEventsManager() {
-    every { updateEventsManager.cleanup() } answers {}
   }
 }
