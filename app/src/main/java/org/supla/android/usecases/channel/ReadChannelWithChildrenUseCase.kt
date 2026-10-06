@@ -18,37 +18,26 @@ package org.supla.android.usecases.channel
  */
 
 import io.reactivex.rxjava3.core.Observable
-import org.supla.android.data.source.ChannelRelationRepository
-import org.supla.android.data.source.ChannelRepository
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import timber.log.Timber
-import java.util.LinkedList
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ReadChannelWithChildrenUseCase @Inject constructor(
-  private val channelRepository: ChannelRepository,
-  private val channelRelationRepository: ChannelRelationRepository,
-  private val getChannelChildrenTreeUseCase: GetChannelChildrenTreeUseCase
+  private val observeChannelsTreeSnapshotUseCase: ObserveChannelsTreeSnapshotUseCase
 ) {
 
   operator fun invoke(remoteId: Int): Observable<ChannelWithChildren> =
-    Observable.combineLatest(
-      channelRelationRepository.findChildrenToParentsRelations(),
-      channelRepository.findObservableList()
-    ) { relationMap, entities -> Pair(relationMap, entities) }
-      .flatMap { (relationMap, entities) ->
-        val channel = entities.firstOrNull { it.remoteId == remoteId }
+    observeChannelsTreeSnapshotUseCase()
+      .flatMap { snapshot ->
+        val channel = snapshot.channelsWithChildren[remoteId]
         if (channel == null) {
           Timber.w("Could not find channel where channels tree was requested!")
           return@flatMap Observable.error(NoSuchElementException())
         }
 
-        val channelsMap = mutableMapOf<Int, ChannelDataEntity>().also { map -> entities.forEach { map[it.remoteId] = it } }
-        val children = getChannelChildrenTreeUseCase(remoteId, relationMap, channelsMap, LinkedList())
-        Observable.just(ChannelWithChildren(channel, children))
+        Observable.just(channel)
       }
       .distinctUntilChanged()
 }

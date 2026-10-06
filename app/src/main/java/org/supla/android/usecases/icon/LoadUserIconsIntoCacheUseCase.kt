@@ -50,9 +50,6 @@ class LoadUserIconsIntoCacheUseCase @Inject constructor(
 
           if (imageCacheProxy.size() > 0 && initialSum != imageCacheProxy.sum()) {
             widgetManager.updateAllWidgets()
-            updateEventsManager.emitChannelsUpdate()
-            updateEventsManager.emitGroupsUpdate()
-            updateEventsManager.emitScenesUpdate()
           }
           Timber.d("Icons loading finished")
         }

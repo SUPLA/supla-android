@@ -18,136 +18,49 @@ package org.supla.android.events
 */
 
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
-import org.supla.android.data.source.ChannelGroupRepository
-import org.supla.android.data.source.SceneRepository
-import org.supla.android.data.source.local.entity.SceneEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.db.ChannelGroup
 import org.supla.android.usecases.channel.ChannelToRootRelationHolderUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class UpdateEventsManager @Inject constructor(
-  private val channelGroupRepository: ChannelGroupRepository,
-  private val sceneRepository: SceneRepository,
   private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   private val channelToRootRelationHolderUseCase: ChannelToRootRelationHolderUseCase
 ) {
 
   private val subjects: MutableMap<Id, Subject<State>> = mutableMapOf()
 
-  private val channelUpdatesSubject: BehaviorSubject<Any> = BehaviorSubject.create()
-  private val groupUpdatesSubject: BehaviorSubject<Any> = BehaviorSubject.create()
-  private val sceneUpdatesSubject: BehaviorSubject<Any> = BehaviorSubject.create()
-
-  private val updatesSubject: BehaviorSubject<Id> = BehaviorSubject.create()
-
-  private val androidAutoReloadSubject = PublishSubject.create<Unit>()
-
   @Synchronized
   fun cleanup() {
     subjects.clear()
   }
 
-  fun emitSceneUpdate(sceneId: Int) {
-    getSubjectForScene(sceneId).onNext(State.Scene)
-    updatesSubject.onNext(Id(IdType.SCENE, sceneId))
-  }
-
   fun emitChannelUpdate(channelId: Int) {
     getSubjectForChannel(channelId).onNext(State.Channel)
-    updatesSubject.onNext(Id(IdType.CHANNEL, channelId))
 
     channelToRootRelationHolderUseCase.getParents(channelId)?.let { parents ->
       parents.forEach {
         getSubjectForChannel(it).onNext(State.Channel)
-        updatesSubject.onNext(Id(IdType.CHANNEL, it))
       }
     }
   }
 
-  fun emitGroupUpdate(groupId: Int) {
-    getSubjectForChannelGroup(groupId).onNext(State.Group)
-    updatesSubject.onNext(Id(IdType.GROUP, groupId))
-  }
-
-  fun emitChannelsUpdate() {
-    channelUpdatesSubject.onNext(Any())
-  }
-
-  fun emitGroupsUpdate() {
-    groupUpdatesSubject.onNext(Any())
-  }
-
-  fun emitScenesUpdate() {
-    sceneUpdatesSubject.onNext(Any())
-  }
-
-  fun observeAllChannels(): Observable<Int> =
-    updatesSubject
-      .filter { it.type == IdType.CHANNEL }
-      .map { it.id }
-      .hide()
-
-  fun observeAllGroups(): Observable<Int> =
-    updatesSubject
-      .filter { it.type == IdType.GROUP }
-      .map { it.id }
-      .hide()
-
-  fun observeAllScenes(): Observable<Int> =
-    updatesSubject
-      .filter { it.type == IdType.SCENE }
-      .map { it.id }
-      .hide()
-
-  fun observerScene(sceneId: Int): Observable<SceneEntity> {
-    return getSubjectForScene(sceneId).hide()
-      .observeOn(Schedulers.io())
-      .flatMap { sceneRepository.findByRemoteId(sceneId).toObservable() }
-  }
-
   fun observeChannelWithChildren(channelId: Int): Observable<ChannelWithChildren> {
     return getSubjectForChannel(channelId).hide()
-      .flatMap { readChannelWithChildrenUseCase(channelId).firstElement().toObservable() }
-  }
-
-  fun observeGroup(groupId: Int): Observable<ChannelGroup> {
-    return getSubjectForChannelGroup(groupId).hide()
-      .flatMapMaybe { channelGroupRepository.findGroupDataEntity(groupId).map { it.getLegacyGroup() }.firstElement() }
-  }
-
-  fun observeChannelsUpdate(): Observable<Any> = channelUpdatesSubject.hide().debounce(200, TimeUnit.MILLISECONDS)
-  fun observeGroupsUpdate(): Observable<Any> = groupUpdatesSubject.hide().debounce(200, TimeUnit.MILLISECONDS)
-  fun observeScenesUpdate(): Observable<Any> = sceneUpdatesSubject.hide().debounce(200, TimeUnit.MILLISECONDS)
-
-  fun updateAndroidAuto() {
-    androidAutoReloadSubject.onNext(Unit)
-  }
-
-  fun observeAndroidAutoUpdates(): Observable<Unit> = androidAutoReloadSubject.hide()
-
-  private fun getSubjectForScene(sceneId: Int): Subject<State> {
-    return getSubject(sceneId, IdType.SCENE) {
-      BehaviorSubject.create<State>().also { it.onNext(State.Scene) }
-    }
+      .flatMap {
+        readChannelWithChildrenUseCase(channelId)
+          .firstElement()
+          .onErrorComplete { it is NoSuchElementException }
+          .toObservable()
+      }
   }
 
   private fun getSubjectForChannel(remoteId: Int): Subject<State> {
     return getSubject(remoteId, IdType.CHANNEL) {
-      BehaviorSubject.create()
-    }
-  }
-
-  private fun getSubjectForChannelGroup(remoteId: Int): Subject<State> {
-    return getSubject(remoteId, IdType.GROUP) {
       BehaviorSubject.create()
     }
   }
@@ -167,11 +80,9 @@ class UpdateEventsManager @Inject constructor(
   }
 
   sealed class State {
-    data object Scene : State()
     data object Channel : State()
-    data object Group : State()
   }
 
-  private enum class IdType { SCENE, CHANNEL, GROUP }
+  private enum class IdType { CHANNEL }
   private data class Id(val type: IdType, val id: Int)
 }

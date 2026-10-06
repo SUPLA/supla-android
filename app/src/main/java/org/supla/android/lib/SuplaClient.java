@@ -987,17 +987,14 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     Timber.d("registerResult.ChannelCount=%d", registerResult.ChannelCount);
     Timber.d("registerResult.ChannelGroupCount=%d", registerResult.ChannelGroupCount);
 
-    if (registerResult.ChannelCount == 0
-        && setChannelsVisibleUseCase.invoke(VisibilityChange.PROCESSING_TO_HIDE)) {
-      updateEventsManager.emitChannelsUpdate();
+    if (registerResult.ChannelCount == 0) {
+      setChannelsVisibleUseCase.invoke(VisibilityChange.PROCESSING_TO_HIDE);
     }
-    if (registerResult.ChannelGroupCount == 0
-        && setChannelGroupsVisibleUseCase.invoke(VisibilityChange.PROCESSING_TO_HIDE)) {
-      updateEventsManager.emitGroupsUpdate();
+    if (registerResult.ChannelGroupCount == 0) {
+      setChannelGroupsVisibleUseCase.invoke(VisibilityChange.PROCESSING_TO_HIDE);
     }
-    if (registerResult.SceneCount == 0
-        && setScenesVisibleUseCase.invoke(VisibilityChange.PROCESSING_TO_HIDE)) {
-      updateEventsManager.emitScenesUpdate();
+    if (registerResult.SceneCount == 0) {
+      setScenesVisibleUseCase.invoke(VisibilityChange.PROCESSING_TO_HIDE);
     }
 
     sendMessage(SuplaClientMessage.ClientRegistered.INSTANCE);
@@ -1083,7 +1080,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     if (channel.EOL) {
       _DataChanged = setChannelsVisibleUseCase.invoke(VisibilityChange.PROCESSING_TO_HIDE);
       removeHiddenChannelsManager.start();
-      updateEventsManager.emitChannelsUpdate();
       DownloadUserIconsWorker.Companion.start(_context);
     }
 
@@ -1098,7 +1094,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     List<Integer> groupIds = updateChannelGroupTotalValueUseCase.invoke().blockingGet();
     for (int groupId : groupIds) {
       sendMessage(new SuplaClientMessage.GroupDataChanged(groupId));
-      updateEventsManager.emitGroupUpdate(groupId);
     }
   }
 
@@ -1119,7 +1114,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     }
 
     if (channel_group.EOL) {
-      updateEventsManager.emitGroupsUpdate();
       _DataChanged = setChannelGroupsVisibleUseCase.invoke(VisibilityChange.PROCESSING_TO_HIDE);
     }
 
@@ -1130,7 +1124,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     if (_DataChanged) {
       Timber.d("Channel Group updated");
       sendMessage(new SuplaClientMessage.GroupDataChanged(channel_group.Id));
-      updateEventsManager.emitGroupUpdate(channel_group.Id);
     }
   }
 
@@ -1146,7 +1139,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     if (channel_relation.isEol()) {
       deleteRemovableChannelRelationsUseCase.invoke().blockingSubscribe();
       channelToRootRelationHolderUseCase.reloadRelations();
-      updateEventsManager.emitChannelsUpdate();
     }
   }
 
@@ -1174,7 +1166,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     if (_DataChanged) {
       Timber.d("Channel Group Relation updated");
       sendMessage(new SuplaClientMessage.GroupDataChanged(channelgroup_relation.ChannelGroupID));
-      updateEventsManager.emitGroupUpdate(channelgroup_relation.ChannelGroupID);
     }
   }
 
@@ -1189,28 +1180,24 @@ public class SuplaClient extends Thread implements SuplaClientApi {
         scene.getCaption(),
         scene.isEol());
 
-    if (updateSceneUseCase.invoke(scene)) {
-      updateEventsManager.emitSceneUpdate(scene.getId());
-    }
+    updateSceneUseCase.invoke(scene);
 
     if (scene.isEol()) {
-      updateEventsManager.emitScenesUpdate();
       setScenesVisibleUseCase.invoke(VisibilityChange.PROCESSING_TO_HIDE);
       removeHiddenScenesManager.start();
     }
   }
 
   private void sceneStateUpdate(SuplaSceneState state) {
-    if (updateSceneStateUseCase.invoke(state)) {
-      Timber.d(
-          "Scene State sceneId: %d isDuringExecution: %b initiatorId: %d initiatorName: %s EOL: %b",
-          state.getSceneId(),
-          state.isDuringExecution(),
-          state.getInitiatorId(),
-          state.getInitiatorName(),
-          state.isEol());
-      updateEventsManager.emitSceneUpdate(state.getSceneId());
-    }
+    Timber.d(
+        "Scene State sceneId: %d isDuringExecution: %b initiatorId: %d initiatorName: %s EOL: %b",
+        state.getSceneId(),
+        state.isDuringExecution(),
+        state.getInitiatorId(),
+        state.getInitiatorName(),
+        state.isEol());
+
+    updateSceneStateUseCase.invoke(state);
   }
 
   private void channelValueUpdate(SuplaChannelValueUpdate channelValueUpdate) {
@@ -1462,32 +1449,12 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     boolean emitChannelsUpdate = false;
     boolean emitGroupsUpdate = false;
 
-    if (setChannelsVisibleUseCase.invoke(VisibilityChange.VISIBLE_TO_PROCESSING)) {
-      emitChannelsUpdate = true;
-    }
+    setChannelsVisibleUseCase.invoke(VisibilityChange.VISIBLE_TO_PROCESSING);
+    setChannelGroupsVisibleUseCase.invoke(VisibilityChange.VISIBLE_TO_PROCESSING);
+    setChannelGroupRelationsVisibleUseCase.invoke(VisibilityChange.VISIBLE_TO_PROCESSING);
+    setScenesVisibleUseCase.invoke(VisibilityChange.VISIBLE_TO_PROCESSING);
 
-    if (setChannelGroupsVisibleUseCase.invoke(VisibilityChange.VISIBLE_TO_PROCESSING)) {
-      emitGroupsUpdate = true;
-    }
-
-    if (setChannelGroupRelationsVisibleUseCase.invoke(VisibilityChange.VISIBLE_TO_PROCESSING)) {
-      emitGroupsUpdate = true;
-    }
-
-    if (setScenesVisibleUseCase.invoke(VisibilityChange.VISIBLE_TO_PROCESSING)) {
-      updateEventsManager.emitScenesUpdate();
-    }
-
-    if (setChannelsOfflineUseCase.invoke()) {
-      emitChannelsUpdate = true;
-    }
-
-    if (emitChannelsUpdate) {
-      updateEventsManager.emitChannelsUpdate();
-    }
-    if (emitGroupsUpdate) {
-      updateEventsManager.emitGroupsUpdate();
-    }
+    setChannelsOfflineUseCase.invoke();
   }
 
   public void run() {

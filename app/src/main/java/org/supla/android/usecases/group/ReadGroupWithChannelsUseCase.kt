@@ -19,19 +19,15 @@ package org.supla.android.usecases.group
 
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.core.shared.shareable
-import org.supla.android.data.model.Quadruple
 import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.source.ChannelGroupRelationRepository
 import org.supla.android.data.source.ChannelGroupRepository
-import org.supla.android.data.source.ChannelRelationRepository
-import org.supla.android.data.source.ChannelRepository
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.ui.lists.onlineState
 import org.supla.android.ui.lists.sensordata.RelatedChannelData
-import org.supla.android.usecases.channel.GetChannelChildrenTreeUseCase
 import org.supla.android.usecases.channel.GetChannelStateUseCase
+import org.supla.android.usecases.channel.ObserveChannelsTreeSnapshotUseCase
 import org.supla.android.usecases.group.totalvalue.DimmerAndRgbGroupValue
 import org.supla.android.usecases.group.totalvalue.DimmerCctAndRgbGroupValue
 import org.supla.android.usecases.group.totalvalue.DimmerCctGroupValue
@@ -43,39 +39,32 @@ import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.usecase.GetCaptionUseCase
-import java.util.LinkedList
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ReadGroupWithChannelsUseCase @Inject constructor(
   private val channelGroupRepository: ChannelGroupRepository,
-  private val channelRepository: ChannelRepository,
-  private val channelRelationRepository: ChannelRelationRepository,
   private val channelGroupRelationRepository: ChannelGroupRelationRepository,
-  private val getChannelChildrenTreeUseCase: GetChannelChildrenTreeUseCase
+  private val observeChannelsTreeSnapshotUseCase: ObserveChannelsTreeSnapshotUseCase
 ) {
   operator fun invoke(remoteId: Int): Observable<GroupWithChannels> =
     Observable.combineLatest(
       channelGroupRepository.findGroupDataEntity(remoteId),
-      channelRepository.findObservableList(),
-      channelRelationRepository.findChildrenToParentsRelations(),
+      observeChannelsTreeSnapshotUseCase(),
       channelGroupRelationRepository.findGroupRelations(remoteId)
-    ) { group, allChannels, childrenToParents, groupRelations ->
-      Quadruple(group, allChannels, childrenToParents, groupRelations)
+    ) { group, snapshot, groupRelations ->
+      Triple(group, snapshot, groupRelations)
     }
-      .map { (group, allChannels, childrenToParents, groupRelations) ->
-        val channelsMap = mutableMapOf<Int, ChannelDataEntity>().also { map -> allChannels.forEach { map[it.remoteId] = it } }
+      .map { (group, snapshot, groupRelations) ->
         val channels = groupRelations
           .map { groupRelation ->
-            val channel = allChannels.firstOrNull { channel -> channel.remoteId == groupRelation.channelId }
-            val childrenList = LinkedList<Int>()
-            val children = getChannelChildrenTreeUseCase(groupRelation.channelId, childrenToParents, channelsMap, childrenList)
+            val channel = snapshot.channelsWithChildren[groupRelation.channelId]
 
             if (channel == null) {
               ChannelInGroup.Invisible
             } else {
-              ChannelInGroup.Visible(ChannelWithChildren(channel, children))
+              ChannelInGroup.Visible(channel)
             }
           }
 
