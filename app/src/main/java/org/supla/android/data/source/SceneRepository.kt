@@ -21,6 +21,7 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.dao.SceneDao
 import org.supla.android.data.source.local.entity.SceneEntity
+import org.supla.android.data.source.local.entity.complex.SceneDataEntity
 import org.supla.android.usecases.captionchange.CaptionChangeUseCase
 import org.supla.android.usecases.channel.VisibilityChange
 import org.supla.android.usecases.developerinfo.CountProvider
@@ -46,7 +47,7 @@ class SceneRepository @Inject constructor(
 
   suspend fun findHiddenScenes() = sceneDao.findHiddenScenes()
 
-  fun findList() = sceneDao.findList()
+  fun findList(): Observable<List<SceneDataEntity>> = sceneDao.findList()
 
   fun update(scenes: List<SceneEntity>) = sceneDao.update(scenes)
 

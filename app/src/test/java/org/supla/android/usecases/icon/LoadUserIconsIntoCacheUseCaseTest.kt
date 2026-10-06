@@ -85,9 +85,6 @@ class LoadUserIconsIntoCacheUseCaseTest {
     every { imageCacheProxy.size() } returns 3
     every { userIconRepository.loadAllIcons() } returns Observable.just(listOf(entity))
     every { widgetManager.updateAllWidgets() } just Runs
-    every { updateEventsManager.emitChannelsUpdate() } just Runs
-    every { updateEventsManager.emitGroupsUpdate() } just Runs
-    every { updateEventsManager.emitScenesUpdate() } just Runs
 
     // when
     val testObserver = useCase.invoke().test()
@@ -101,9 +98,6 @@ class LoadUserIconsIntoCacheUseCaseTest {
       imageCacheProxy.size()
       userIconRepository.loadAllIcons()
       widgetManager.updateAllWidgets()
-      updateEventsManager.emitChannelsUpdate()
-      updateEventsManager.emitGroupsUpdate()
-      updateEventsManager.emitScenesUpdate()
     }
     verify(exactly = 2) {
       imageCacheProxy.sum()

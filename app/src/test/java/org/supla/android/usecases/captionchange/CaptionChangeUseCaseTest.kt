@@ -64,8 +64,6 @@ class CaptionChangeUseCaseTest {
   fun setup() {
     MockKAnnotations.init(this)
     every { updateEventsManager.emitChannelUpdate(any()) } just Runs
-    every { updateEventsManager.emitGroupUpdate(any()) } just Runs
-    every { updateEventsManager.emitSceneUpdate(any()) } just Runs
   }
 
   @Test
@@ -156,7 +154,6 @@ class CaptionChangeUseCaseTest {
       groupRepository.updateCaption(caption, remoteId, profileId)
       suplaClientProvider.provide()
       suplaClient.setChannelGroupCaption(remoteId, caption)
-      updateEventsManager.emitGroupUpdate(remoteId)
     }
     confirmVerified(
       groupRepository,
@@ -190,7 +187,6 @@ class CaptionChangeUseCaseTest {
       sceneRepository.updateCaption(caption, remoteId, profileId)
       suplaClientProvider.provide()
       suplaClient.setSceneCaption(remoteId, caption)
-      updateEventsManager.emitSceneUpdate(remoteId)
     }
     confirmVerified(
       sceneRepository,

@@ -36,6 +36,7 @@ class DownloadEventsManager @Inject constructor() {
 
   private val subjects: MutableMap<Id, Subject<State>> = mutableMapOf()
   private val lastEventMap: MutableMap<Id, State> = mutableMapOf()
+  private val defaultProgressUpdatesSubject: Subject<Int> = PublishSubject.create<Int>().toSerialized()
 
   fun emitProgressState(remoteId: Int, state: State) {
     emitProgressState(remoteId, DataType.DEFAULT_TYPE, state)
@@ -44,6 +45,9 @@ class DownloadEventsManager @Inject constructor() {
   fun emitProgressState(remoteId: Int, dataType: DataType, state: State) {
     lastEventMap[Id(IdType.CHANNEL, remoteId, dataType)] = state
     getSubjectForChannel(remoteId, dataType).onNext(state)
+    if (dataType == DataType.DEFAULT_TYPE) {
+      defaultProgressUpdatesSubject.onNext(remoteId)
+    }
   }
 
   fun observeProgress(remoteId: Int): Observable<State> =
@@ -52,6 +56,8 @@ class DownloadEventsManager @Inject constructor() {
   fun observeProgress(remoteId: Int, dataType: DataType): Observable<State> {
     return getSubjectForChannel(remoteId, dataType).hide()
   }
+
+  fun observeDefaultProgressUpdates(): Observable<Int> = defaultProgressUpdatesSubject.hide()
 
   fun getLastChannelDownloadState(remoteId: Int, dataType: DataType = DataType.DEFAULT_TYPE): State? =
     lastEventMap[Id(IdType.CHANNEL, remoteId, dataType)]

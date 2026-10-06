@@ -93,7 +93,7 @@ interface SceneDao {
         scene.$COLUMN_REMOTE_ID
     """
   )
-  fun findList(): Single<List<SceneDataEntity>>
+  fun findList(): Observable<List<SceneDataEntity>>
 
   @Query(
     """
