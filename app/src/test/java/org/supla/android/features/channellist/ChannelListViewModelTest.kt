@@ -45,7 +45,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.runtime.ItemType
-import org.supla.android.events.UpdateEventsManager
+import org.supla.android.events.DownloadEventsManager
 import org.supla.android.features.details.detailbase.base.DetailPage
 import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
@@ -70,6 +70,7 @@ import org.supla.android.usecases.list.TriggerLogHistoryDownloadUseCase
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
+import java.util.concurrent.TimeUnit
 
 class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, ChannelListViewEvent, ChannelListViewModel>(MockSchedulers.MOCKK) {
   @get:Rule
@@ -97,7 +98,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   private lateinit var readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase
 
   @MockK
-  private lateinit var updateEventsManager: UpdateEventsManager
+  private lateinit var downloadEventsManager: DownloadEventsManager
 
   @MockK
   private lateinit var executeSimpleActionUseCase: ExecuteSimpleActionUseCase
@@ -124,22 +125,22 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       channelToListItemMapper,
       reorderChannelsUseCase,
       toggleLocationUseCase,
+      downloadEventsManager,
       channelActionUseCase,
-      updateEventsManager,
       vibrationHelper,
       dateProvider,
       threading
     )
   }
 
-  private val listsEventsSubject: Subject<Any> = PublishSubject.create()
+  private val downloadEventsSubject: Subject<Int> = PublishSubject.create()
   private val profileId: Long = 1
 
   @Before
   override fun setUp() {
     MockKAnnotations.init(this)
-    every { updateEventsManager.observeChannelsUpdate() } returns listsEventsSubject
-    every { updateEventsManager.observeAllChannels() } returns Observable.empty()
+    every { downloadEventsManager.observeDefaultProgressUpdates() } returns downloadEventsSubject
+    every { threading.schedulers.computation } returns testScheduler
     super.setUp()
   }
 
@@ -151,7 +152,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     every { createProfileChannelsListUseCase() } returns Observable.just(list)
 
     // when
-    viewModel.loadChannels()
+    triggerChannelsLoad()
 
     // then
     assertThat(viewModel.list).containsExactly(item)
@@ -163,7 +164,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   }
 
   @Test
-  fun `should toggle location collapsed and reload channels`() {
+  fun `should toggle location collapsed`() {
     // given
     val locationId = 123
     every { toggleLocationUseCase(locationId, CollapsedFlag.CHANNEL) } returns Completable.complete()
@@ -172,6 +173,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     every { createProfileChannelsListUseCase() } returns Observable.just(list)
 
     // when
+    triggerChannelsLoad()
     viewModel.onLocationClick(locationId)
 
     // then
@@ -197,7 +199,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     every { createProfileChannelsListUseCase() } returns Observable.just(items)
 
     // when
-    viewModel.loadChannels()
+    triggerChannelsLoad()
     viewModel.moveItems(1, 3)
 
     // then
@@ -221,7 +223,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     every { createProfileChannelsListUseCase() } returns Observable.just(items)
 
     // when
-    viewModel.loadChannels()
+    triggerChannelsLoad()
     viewModel.moveItems(1, 4)
 
     // then
@@ -247,7 +249,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     every { createProfileChannelsListUseCase() } returns Observable.just(items)
 
     // when
-    viewModel.loadChannels()
+    triggerChannelsLoad()
     viewModel.moveItems(2, 0)
 
     // then
@@ -445,21 +447,34 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   }
 
   @Test
-  fun `should reload list on update`() {
+  fun `should update channel on download progress update`() {
     // given
-    val item = mockk<ListItem.DefaultItem>()
-    val list = listOf(item)
-    every { createProfileChannelsListUseCase() } returns Observable.just(list)
+    val remoteId = 123
+    val item = mockk<ListItem.DefaultItem> {
+      every { this@mockk.remoteId } returns remoteId
+    }
+    val updatedItem = mockk<ListItem.DefaultItem> {
+      every { this@mockk.remoteId } returns remoteId
+    }
+    val channel = mockChannelData(remoteId, SuplaFunction.POWER_SWITCH)
+    every { createProfileChannelsListUseCase() } returns Observable.just(listOf(item))
+    every { readChannelWithChildrenUseCase(remoteId) } returns Observable.just(channel)
+    every { channelToListItemMapper(channel) } returns updatedItem
 
     // when
-    listsEventsSubject.onNext(Any())
+    triggerChannelsLoad()
+    downloadEventsSubject.onNext(remoteId)
 
     // then
-    assertThat(viewModel.list).containsExactly(item)
+    assertThat(viewModel.list).containsExactly(updatedItem)
     assertThat(states).isEmpty()
     assertThat(events).isEmpty()
 
-    verify { createProfileChannelsListUseCase() }
+    verify {
+      createProfileChannelsListUseCase()
+      readChannelWithChildrenUseCase(remoteId)
+      channelToListItemMapper(channel)
+    }
     confirmDependenciesVerified()
   }
 
@@ -473,6 +488,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
 
     // when
     viewModel.handle(TopBarSearchEvent.QueryChange(filterText))
+    testScheduler.advanceTimeBy(250, TimeUnit.MILLISECONDS)
 
     // then
     assertThat(viewModel.searchData.query).isEqualTo(filterText)
@@ -607,24 +623,28 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   }
 
   @Test
-  fun `should reorder channels and reload list when drag stops`() {
+  fun `should store channel order and apply next list emission when drag stops`() {
     // given
     val remoteId = 123
     val firstItem: ListItem.DefaultItem = mockk {
+      every { key } returns "C1"
       every { locationCaption } returns "1"
     }
     val secondItem: ListItem.DefaultItem = mockk {
+      every { key } returns "C2"
       every { locationCaption } returns "1"
     }
     val channels = listOf<ListItem>(firstItem, secondItem)
     val reorderedChannels = listOf<ListItem>(secondItem, firstItem)
     coEvery { reorderChannelsUseCase(match { it.toList() == channels }, remoteId) } returns Unit
-    every { createProfileChannelsListUseCase() } returnsMany
-      listOf(Observable.just(channels), Observable.just(reorderedChannels))
+    val listsSubject = PublishSubject.create<List<ListItem>>()
+    every { createProfileChannelsListUseCase() } returns listsSubject
 
     // when
-    viewModel.loadChannels()
+    triggerChannelsLoad()
+    listsSubject.onNext(channels)
     viewModel.onDragStopped(remoteId)
+    listsSubject.onNext(reorderedChannels)
 
     // then
     assertThat(viewModel.list).containsExactly(secondItem, firstItem)
@@ -632,7 +652,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).isEmpty()
 
     coVerify { reorderChannelsUseCase(any(), remoteId) }
-    verify(exactly = 2) { createProfileChannelsListUseCase() }
+    verify { createProfileChannelsListUseCase() }
     confirmDependenciesVerified()
   }
 
@@ -687,6 +707,11 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       toggleLocationUseCase,
       channelActionUseCase
     )
+  }
+
+  private fun triggerChannelsLoad() {
+    viewModel.handle(TopBarSearchEvent.QueryChange(viewModel.searchData.query))
+    testScheduler.advanceTimeBy(250, TimeUnit.MILLISECONDS)
   }
 
   private fun mockChannelData(
