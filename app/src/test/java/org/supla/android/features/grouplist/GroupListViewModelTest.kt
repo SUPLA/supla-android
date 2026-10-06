@@ -31,7 +31,6 @@ import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.subjects.PublishSubject
-import io.reactivex.rxjava3.subjects.Subject
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -44,7 +43,6 @@ import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.runtime.ItemType
-import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.base.DetailPage
 import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.lib.actions.ActionId
@@ -61,7 +59,6 @@ import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.details.ProvideGroupDetailTypeUseCase
 import org.supla.android.usecases.details.StandardDetailType
 import org.supla.android.usecases.group.CreateProfileGroupsListUseCase
-import org.supla.android.usecases.group.GroupToListItemMapper
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.group.ReorderGroupsUseCase
 import org.supla.android.usecases.location.CollapsedFlag
@@ -69,6 +66,7 @@ import org.supla.android.usecases.location.ToggleLocationUseCase
 import org.supla.android.usecases.profile.CloudUrl
 import org.supla.android.usecases.profile.LoadActiveProfileUrlUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
+import java.util.concurrent.TimeUnit
 
 class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListViewEvent, GroupListViewModel>(MockSchedulers.MOCKK) {
   @get:Rule
@@ -81,9 +79,6 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   private lateinit var groupActionUseCase: GroupActionUseCase
 
   @MockK
-  private lateinit var groupToListItemMapper: GroupToListItemMapper
-
-  @MockK
   private lateinit var toggleLocationUseCase: ToggleLocationUseCase
 
   @MockK
@@ -94,9 +89,6 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
 
   @MockK
   private lateinit var reorderGroupsUseCase: ReorderGroupsUseCase
-
-  @MockK
-  private lateinit var updateEventsManager: UpdateEventsManager
 
   @MockK
   private lateinit var loadActiveProfileUrlUseCase: LoadActiveProfileUrlUseCase
@@ -119,25 +111,20 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       provideGroupDetailTypeUseCase,
       findGroupByRemoteIdUseCase,
       executeSimpleActionUseCase,
-      groupToListItemMapper,
       toggleLocationUseCase,
       reorderGroupsUseCase,
       groupActionUseCase,
       loadActiveProfileUrlUseCase,
-      updateEventsManager,
       vibrationHelper,
       dateProvider,
       threading
     )
   }
 
-  private val listsEventsSubject: Subject<Any> = PublishSubject.create()
-
   @Before
   override fun setUp() {
     MockKAnnotations.init(this)
-    every { updateEventsManager.observeGroupsUpdate() } returns listsEventsSubject
-    every { updateEventsManager.observeAllGroups() } returns Observable.empty()
+    every { threading.schedulers.computation } returns testScheduler
 
     super.setUp()
   }
@@ -150,7 +137,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     every { createProfileGroupsListUseCase.invoke() } returns Observable.just(list)
 
     // when
-    viewModel.loadGroups()
+    triggerGroupsLoad()
 
     // then
     assertThat(viewModel.list).containsExactly(item)
@@ -171,7 +158,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   }
 
   @Test
-  fun `should toggle location collapsed and reload groups`() {
+  fun `should toggle location collapsed`() {
     // given
     val locationId = 123
     every { toggleLocationUseCase(locationId, CollapsedFlag.GROUP) } returns Completable.complete()
@@ -180,6 +167,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     every { createProfileGroupsListUseCase() } returns Observable.just(list)
 
     // when
+    triggerGroupsLoad()
     viewModel.onLocationClick(locationId)
 
     // then
@@ -188,8 +176,8 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     assertThat(events).isEmpty()
 
     verify {
-      createProfileGroupsListUseCase.invoke()
       toggleLocationUseCase.invoke(locationId, CollapsedFlag.GROUP)
+      createProfileGroupsListUseCase.invoke()
     }
     confirmVerified(
       createProfileGroupsListUseCase,
@@ -213,7 +201,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     every { createProfileGroupsListUseCase() } returns Observable.just(items)
 
     // when
-    viewModel.loadGroups()
+    triggerGroupsLoad()
     viewModel.moveItems(1, 3)
 
     // then
@@ -246,7 +234,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     every { createProfileGroupsListUseCase() } returns Observable.just(items)
 
     // when
-    viewModel.loadGroups()
+    triggerGroupsLoad()
     viewModel.moveItems(1, 4)
 
     // then
@@ -282,7 +270,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     every { createProfileGroupsListUseCase() } returns Observable.just(items)
 
     // when
-    viewModel.loadGroups()
+    triggerGroupsLoad()
     viewModel.moveItems(2, 0)
 
     // then
@@ -455,21 +443,24 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   }
 
   @Test
-  fun `should reload list on update`() {
+  fun `should update list when group data changes`() {
     // given
-    val item = mockk<ListItem.DefaultItem>()
-    val list = listOf(item)
-    every { createProfileGroupsListUseCase.invoke() } returns Observable.just(list)
+    val item = mockk<ListItem.DefaultItem> { every { key } returns "G1" }
+    val updatedItem = mockk<ListItem.DefaultItem> { every { key } returns "G2" }
+    val listsSubject = PublishSubject.create<List<ListItem>>()
+    every { createProfileGroupsListUseCase() } returns listsSubject
 
     // when
-    listsEventsSubject.onNext(Any())
+    triggerGroupsLoad()
+    listsSubject.onNext(listOf(item))
+    listsSubject.onNext(listOf(updatedItem))
 
     // then
-    assertThat(viewModel.list).containsExactly(item)
+    assertThat(viewModel.list).containsExactly(updatedItem)
     assertThat(states).isEmpty()
     assertThat(events).isEmpty()
 
-    verify { createProfileGroupsListUseCase.invoke() }
+    verify { createProfileGroupsListUseCase() }
     confirmVerified(
       createProfileGroupsListUseCase,
       provideGroupDetailTypeUseCase,
@@ -491,6 +482,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
 
     // when
     viewModel.handle(TopBarSearchEvent.QueryChange(filterText))
+    testScheduler.advanceTimeBy(250, TimeUnit.MILLISECONDS)
 
     // then
     assertThat(viewModel.searchData.query).isEqualTo(filterText)
@@ -680,23 +672,28 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   }
 
   @Test
-  fun `should reorder groups and reload list when drag stops`() {
+  fun `should store group order and apply next list emission when drag stops`() {
     // given
     val remoteId = 123
     val firstItem: ListItem.DefaultItem = mockk {
+      every { key } returns "G1"
       every { locationCaption } returns "1"
     }
     val secondItem: ListItem.DefaultItem = mockk {
+      every { key } returns "G2"
       every { locationCaption } returns "1"
     }
     val groups = listOf<ListItem>(firstItem, secondItem)
     val reorderedGroups = listOf<ListItem>(secondItem, firstItem)
     coEvery { reorderGroupsUseCase(match { it.toList() == groups }, remoteId) } returns Unit
-    every { createProfileGroupsListUseCase() } returnsMany listOf(Observable.just(groups), Observable.just(reorderedGroups))
+    val listsSubject = PublishSubject.create<List<ListItem>>()
+    every { createProfileGroupsListUseCase() } returns listsSubject
 
     // when
-    viewModel.loadGroups()
+    triggerGroupsLoad()
+    listsSubject.onNext(groups)
     viewModel.onDragStopped(remoteId)
+    listsSubject.onNext(reorderedGroups)
 
     // then
     assertThat(viewModel.list).containsExactly(secondItem, firstItem)
@@ -704,7 +701,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     assertThat(events).isEmpty()
 
     coVerify { reorderGroupsUseCase(any(), remoteId) }
-    verify(exactly = 2) { createProfileGroupsListUseCase() }
+    verify { createProfileGroupsListUseCase() }
     confirmVerified(
       createProfileGroupsListUseCase,
       provideGroupDetailTypeUseCase,
@@ -790,5 +787,10 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       groupActionUseCase,
       dateProvider
     )
+  }
+
+  private fun triggerGroupsLoad() {
+    viewModel.handle(TopBarSearchEvent.QueryChange(viewModel.searchData.query))
+    testScheduler.advanceTimeBy(250, TimeUnit.MILLISECONDS)
   }
 }

@@ -46,7 +46,6 @@ import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.AndroidAutoItemRepository
 import org.supla.android.data.source.local.entity.AndroidAutoItemEntity
 import org.supla.android.data.source.local.entity.complex.AndroidAutoDataEntity
-import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.extensions.ucFirst
 import org.supla.android.images.ImageCache
@@ -56,6 +55,7 @@ import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import kotlin.time.Duration.Companion.seconds
 
 class MainScreen(
@@ -65,7 +65,6 @@ class MainScreen(
   private val singleCallProvider: SingleCallProvider,
   private val preferences: ApplicationPreferences,
   private val threading: SuplaThreading,
-  updateEventsManager: UpdateEventsManager,
   dateProvider: DateProvider,
   carContext: CarContext
 ) : Screen(carContext) {
@@ -84,7 +83,6 @@ class MainScreen(
     }
 
     override fun onResume(owner: LifecycleOwner) {
-      load()
     }
 
     override fun onDestroy(owner: LifecycleOwner) {
@@ -94,31 +92,20 @@ class MainScreen(
   }
 
   init {
+    observeAndroidAutoItems()
     lifecycle.addObserver(observer)
-
-    disposables.add(
-      updateEventsManager.observeScenesUpdate()
-        .subscribeOn(threading.schedulers.io)
-        .observeOn(threading.schedulers.ui)
-        .subscribe { load() }
-    )
-    disposables.add(
-      updateEventsManager.observeAndroidAutoUpdates()
-        .subscribeOn(threading.schedulers.io)
-        .observeOn(threading.schedulers.ui)
-        .subscribe { load() }
-    )
   }
 
-  private fun load() {
+  private fun observeAndroidAutoItems() {
     state.loading = true
     invalidate()
     disposables.add(
-      androidAutoItemRepository.findAll().firstOrError()
+      androidAutoItemRepository.findAll()
+        .throttleLatest(5, TimeUnit.SECONDS, true)
         .subscribeOn(threading.schedulers.io)
         .observeOn(threading.schedulers.ui)
         .subscribeBy(
-          onSuccess = { items ->
+          onNext = { items ->
             state.items = items
             state.loading = false
             invalidate()
@@ -140,7 +127,7 @@ class MainScreen(
         .addAction(
           Action.Builder()
             .setTitle(carContext.getString(R.string.android_auto_empty_refresh))
-            .setOnClickListener { load() }
+            .setOnClickListener { observeAndroidAutoItems() }
             .build()
         )
         .build()

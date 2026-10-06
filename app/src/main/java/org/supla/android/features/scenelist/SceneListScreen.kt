@@ -32,7 +32,6 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.features.captionchangedialog.CaptionChangeViewEvent
 import org.supla.android.features.captionchangedialog.CaptionChangeViewModel
 import org.supla.android.features.captionchangedialog.View
 import org.supla.android.main.LocalNavigator
@@ -75,10 +74,7 @@ fun SceneListScreen(
     )
   }
 
-  ViewModelHostBase(
-    viewModel = captionChangeViewModel,
-    eventHandler = { handleCaptionChangeEvents(it, viewModel) }
-  ) {
+  ViewModelHostBase(captionChangeViewModel) {
     captionChangeViewModel.View(it)
   }
 }
@@ -92,13 +88,6 @@ private fun handleSceneEvents(event: SceneListViewEvent, navigator: MainComposeN
     is SceneListViewEvent.NavigateToPrivateCloud -> navigator?.navigateToWeb(event.url)
     SceneListViewEvent.NavigateToSuplaBetaCloud -> navigator?.navigateToBetaCloudExternal()
     SceneListViewEvent.NavigateToSuplaCloud -> navigator?.navigateToCloudExternal()
-  }
-}
-
-private fun handleCaptionChangeEvents(event: CaptionChangeViewEvent, viewModel: SceneListViewModel) {
-  when (event) {
-    is CaptionChangeViewEvent.Finish ->
-      event.type.isLocation.forTrue { viewModel.loadScenes() }
   }
 }
 

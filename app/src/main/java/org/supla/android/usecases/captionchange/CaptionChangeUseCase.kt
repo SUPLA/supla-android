@@ -48,14 +48,8 @@ class CaptionChangeUseCase @Inject constructor(
                 setChannelCaption(remoteId, caption)
                 updateEventsManager.emitChannelUpdate(remoteId)
               }
-              Type.GROUP -> {
-                setChannelGroupCaption(remoteId, caption)
-                updateEventsManager.emitGroupUpdate(remoteId)
-              }
-              Type.SCENE -> {
-                setSceneCaption(remoteId, caption)
-                updateEventsManager.emitSceneUpdate(remoteId)
-              }
+              Type.GROUP -> setChannelGroupCaption(remoteId, caption)
+              Type.SCENE -> setSceneCaption(remoteId, caption)
             }
           }
         }

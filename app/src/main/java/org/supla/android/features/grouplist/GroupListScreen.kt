@@ -33,7 +33,6 @@ import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.source.runtime.ItemType
-import org.supla.android.features.captionchangedialog.CaptionChangeViewEvent
 import org.supla.android.features.captionchangedialog.CaptionChangeViewModel
 import org.supla.android.features.captionchangedialog.View
 import org.supla.android.main.LocalNavigator
@@ -88,10 +87,7 @@ fun GroupListScreen(
     )
   }
 
-  ViewModelHostBase(
-    viewModel = captionChangeViewModel,
-    eventHandler = { handleCaptionChangeEvents(it, viewModel) }
-  ) {
+  ViewModelHostBase(captionChangeViewModel) {
     captionChangeViewModel.View(it)
   }
 }
@@ -105,13 +101,6 @@ private fun handleGroupEvents(event: GroupListViewEvent, navigator: MainComposeN
     GroupListViewEvent.NavigateToSuplaCloud -> navigator?.navigateToCloudExternal()
     is GroupListViewEvent.OpenLegacyDetail -> navigator?.navigateTo(MainRoute.LegacyDetail(event.remoteId, ItemType.GROUP, event.type))
     is GroupListViewEvent.OpenDetail -> navigator?.navigateTo(StandardDetail(event.itemBundle, event.pages))
-  }
-}
-
-private fun handleCaptionChangeEvents(event: CaptionChangeViewEvent, viewModel: GroupListViewModel) {
-  when (event) {
-    is CaptionChangeViewEvent.Finish ->
-      event.type.isLocation.forTrue { viewModel.loadGroups() }
   }
 }
 

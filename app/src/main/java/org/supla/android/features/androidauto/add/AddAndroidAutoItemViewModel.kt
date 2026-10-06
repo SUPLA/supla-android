@@ -238,10 +238,7 @@ class AddAndroidAutoItemViewModel @Inject constructor(
       }.flatMapCompletable { androidAutoItemRepository.insert(it) }
       .attach()
       .subscribeBy(
-        onComplete = {
-          updateEventsManager.updateAndroidAuto()
-          sendEvent(AddAndroidAutoItemViewEvent.Close)
-        }
+        onComplete = { sendEvent(AddAndroidAutoItemViewEvent.Close) }
       )
       .disposeBySelf()
   }
@@ -256,10 +253,7 @@ class AddAndroidAutoItemViewModel @Inject constructor(
     androidAutoItemRepository.delete(id)
       .attach()
       .subscribeBy(
-        onComplete = {
-          updateEventsManager.updateAndroidAuto()
-          sendEvent(AddAndroidAutoItemViewEvent.Close)
-        }
+        onComplete = { sendEvent(AddAndroidAutoItemViewEvent.Close) }
       )
       .disposeBySelf()
   }
