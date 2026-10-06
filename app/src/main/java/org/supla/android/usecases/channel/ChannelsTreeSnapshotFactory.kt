@@ -20,41 +20,40 @@ package org.supla.android.usecases.channel
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import timber.log.Timber
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import java.util.LinkedList
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class GetChannelChildrenTreeUseCase @Inject constructor() {
+class ChannelsTreeSnapshotFactory @Inject constructor(
+  private val getChannelChildrenTreeUseCase: GetChannelChildrenTreeUseCase
+) {
 
-  operator fun invoke(
-    forChannelId: Int,
-    relationMap: Map<Int, List<ChannelRelationEntity>>,
-    channelsMap: Map<Int, ChannelDataEntity>,
-    childrenList: LinkedList<Int>,
-    childrenCache: MutableMap<Int, List<ChannelChildEntity>>? = null
-  ): List<ChannelChildEntity> {
-    childrenCache?.get(forChannelId)?.let { return it }
+  fun create(
+    channels: List<ChannelDataEntity>,
+    relationMap: Map<Int, List<ChannelRelationEntity>>
+  ): ChannelsTreeSnapshot {
+    val channelsById = channels.associateBy { it.remoteId }
+    val childrenByParentId = mutableMapOf<Int, List<ChannelChildEntity>>()
 
-    childrenList.add(forChannelId)
-    val result = relationMap[forChannelId]?.mapNotNull { relation ->
-      channelsMap[relation.channelId]?.let { child ->
-        if (childrenList.contains(child.remoteId)) {
-          Timber.w("Circular dependency found for channel ${child.remoteId}!")
-          null
-        } else {
-          ChannelChildEntity(
-            relation,
-            child,
-            invoke(child.remoteId, relationMap, channelsMap, childrenList, childrenCache)
-          )
-        }
-      }
-    } ?: emptyList()
-    childrenList.removeLast()
+    val channelsWithChildren = channels.associate { channel ->
+      channel.remoteId to ChannelWithChildren(
+        channel = channel,
+        children = getChannelChildrenTreeUseCase(
+          channel.remoteId,
+          relationMap,
+          channelsById,
+          LinkedList(),
+          childrenByParentId
+        )
+      )
+    }
 
-    childrenCache?.set(forChannelId, result)
-    return result
+    return ChannelsTreeSnapshot(
+      channels = channels,
+      channelsWithChildren = channelsWithChildren,
+      childChannelIds = relationMap.values.flatten().map { it.channelId }.toSet()
+    )
   }
 }

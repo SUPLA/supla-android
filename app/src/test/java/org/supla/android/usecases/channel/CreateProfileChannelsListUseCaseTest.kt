@@ -23,18 +23,18 @@ import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
+import io.mockk.verify
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.supla.android.core.storage.ApplicationPreferences
-import org.supla.android.data.source.ChannelRelationRepository
-import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
+import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.location.CollapsedFlag
@@ -46,16 +46,10 @@ import org.supla.core.shared.usecase.GetCaptionUseCase
 class CreateProfileChannelsListUseCaseTest {
 
   @MockK
-  private lateinit var getChannelChildrenTreeUseCase: GetChannelChildrenTreeUseCase
-
-  @MockK
-  private lateinit var channelRelationRepository: ChannelRelationRepository
+  private lateinit var observeChannelsTreeSnapshotUseCase: ObserveChannelsTreeSnapshotUseCase
 
   @MockK
   private lateinit var channelToListItemMapper: ChannelToListItemMapper
-
-  @MockK
-  private lateinit var channelRepository: ChannelRepository
 
   @MockK
   private lateinit var getCaptionUseCase: GetCaptionUseCase
@@ -83,10 +77,10 @@ class CreateProfileChannelsListUseCaseTest {
     val fourth = mockListEntity(41, 42)
     val fifth = mockListEntity(51, 42)
     val sixth = mockListEntity(61, 42)
+    val snapshot = channelsTreeSnapshot(listOf(first, second, third, fourth, fifth, sixth))
 
     every { preferences.hideUnavailableChannels } returns false
-    every { channelRepository.findList() } returns Single.just(listOf(first, second, third, fourth, fifth, sixth))
-    every { channelRelationRepository.findChildrenToParentsRelations() } returns Observable.just(emptyMap())
+    every { observeChannelsTreeSnapshotUseCase() } returns Observable.just(snapshot)
 
     // when
     val testObserver = usecase().test()
@@ -125,10 +119,10 @@ class CreateProfileChannelsListUseCaseTest {
     val fourth = mockListEntity(104, 42)
     val fifth = mockListEntity(111, 42)
     val sixth = mockListEntity(113, 42)
+    val snapshot = channelsTreeSnapshot(listOf(first, second, third, fourth, fifth, sixth))
 
     every { preferences.hideUnavailableChannels } returns false
-    every { channelRepository.findList() } returns Single.just(listOf(first, second, third, fourth, fifth, sixth))
-    every { channelRelationRepository.findChildrenToParentsRelations() } returns Observable.just(emptyMap())
+    every { observeChannelsTreeSnapshotUseCase() } returns Observable.just(snapshot)
 
     // when
     val testObserver = usecase("caption 10").test()
@@ -163,10 +157,11 @@ class CreateProfileChannelsListUseCaseTest {
     val second = mockListEntity(21, 12, locationSortOrder = 1, position = 3)
     val third = mockListEntity(31, 32, locationName = "12", locationSortOrder = 2, position = 2)
     val fourth = mockListEntity(41, 42, locationSortOrder = 3, position = 4)
+    val channels = listOf(first, second, third, fourth)
+    val snapshot = channelsTreeSnapshot(channels)
 
     every { preferences.hideUnavailableChannels } returns true
-    every { channelRepository.findListWithoutUnavailable() } returns Single.just(listOf(first, second, third, fourth))
-    every { channelRelationRepository.findChildrenToParentsRelations() } returns Observable.just(emptyMap())
+    every { observeChannelsTreeSnapshotUseCase() } returns Observable.just(snapshot)
 
     // when
     val testObserver = usecase().test()
@@ -200,19 +195,22 @@ class CreateProfileChannelsListUseCaseTest {
     val third = mockListEntity(31, 12)
 
     every { preferences.hideUnavailableChannels } returns false
-    every { channelRepository.findList() } returns Single.just(listOf(first, second, third))
     val childrenRelation = mockk<ChannelRelationEntity> {
       every { channelId } returns 21
       every { parentId } returns 11
       every { relationType } returns ChannelRelationType.DEFAULT
     }
-    val relationMap = mapOf(11 to listOf(childrenRelation))
-    every { channelRelationRepository.findChildrenToParentsRelations() } returns Observable.just(relationMap)
-    val childEntity = ChannelChildEntity(childrenRelation, second)
-    every {
-      getChannelChildrenTreeUseCase.invoke(eq(11), eq(relationMap), any(), any())
-    } returns listOf(childEntity)
-
+    val parentWithChildren = ChannelWithChildren(first, listOf(ChannelChildEntity(childrenRelation, second)))
+    val snapshot = channelsTreeSnapshot(
+      channels = listOf(first, second, third),
+      childChannelIds = setOf(second.remoteId),
+      channelsWithChildren = mapOf(
+        first.remoteId to parentWithChildren,
+        second.remoteId to ChannelWithChildren(second),
+        third.remoteId to ChannelWithChildren(third)
+      )
+    )
+    every { observeChannelsTreeSnapshotUseCase() } returns Observable.just(snapshot)
     // when
     val testObserver = usecase().test()
 
@@ -227,7 +225,40 @@ class CreateProfileChannelsListUseCaseTest {
     assertThat((list[0] as ListItem.LocationItem).userCaption).isEqualTo("12")
     assertThat((list[1] as ListItem.DefaultItem).remoteId).isEqualTo(11)
     assertThat((list[2] as ListItem.DefaultItem).remoteId).isEqualTo(31)
+    verify { channelToListItemMapper(parentWithChildren) }
   }
+
+  @Test
+  fun `should hide unavailable channels`() {
+    // given
+    val unavailable = mockListEntity(
+      channelRemoteId = 11,
+      locationRemoteId = 12,
+      lastOnlineStateValue = SuplaChannelAvailabilityStatus.ONLINE_BUT_NOT_AVAILABLE
+    )
+    val available = mockListEntity(channelRemoteId = 21, locationRemoteId = 12)
+    val snapshot = channelsTreeSnapshot(listOf(unavailable, available))
+
+    every { preferences.hideUnavailableChannels } returns true
+    every { observeChannelsTreeSnapshotUseCase() } returns Observable.just(snapshot)
+
+    // when
+    val testObserver = usecase().test()
+
+    // then
+    testObserver.assertComplete()
+    val list = testObserver.values().first()
+    assertThat(list).hasSize(2)
+    assertThat(list[0]).isInstanceOf(ListItem.LocationItem::class.java)
+    assertThat((list[1] as ListItem.DefaultItem).remoteId).isEqualTo(21)
+    verify(exactly = 0) { channelToListItemMapper(snapshot.channelsWithChildren.getValue(11)) }
+  }
+
+  private fun channelsTreeSnapshot(
+    channels: List<ChannelDataEntity>,
+    childChannelIds: Set<Int> = emptySet(),
+    channelsWithChildren: Map<Int, ChannelWithChildren> = channels.associate { it.remoteId to ChannelWithChildren(it) }
+  ) = ChannelsTreeSnapshot(channels, channelsWithChildren, childChannelIds)
 
   private fun mockListEntity(
     channelRemoteId: Int,
@@ -236,9 +267,14 @@ class CreateProfileChannelsListUseCaseTest {
     locationCollapsed: Boolean = false,
     locationSortOrder: Int = locationRemoteId,
     position: Int = channelRemoteId,
+    lastOnlineStateValue: SuplaChannelAvailabilityStatus? = null,
   ): ChannelDataEntity {
     val channelEntityMock = mockk<ChannelEntity>()
     every { channelEntityMock.position } returns position
+    val channelValueEntityMock = mockk<ChannelValueEntity> {
+      every { lastOnlineState } returns lastOnlineStateValue
+      every { getValueAsByteArray() } returns byteArrayOf()
+    }
 
     return mockk {
       every { remoteId } returns channelRemoteId
@@ -255,9 +291,7 @@ class CreateProfileChannelsListUseCaseTest {
         every { isCollapsed(CollapsedFlag.CHANNEL) } returns locationCollapsed
       }
       every { channelEntity } returns channelEntityMock
-      every { channelValueEntity } returns mockk {
-        every { getValueAsByteArray() } returns byteArrayOf()
-      }
+      every { channelValueEntity } returns channelValueEntityMock
 
       val listItem: ListItem.DefaultItem = mockk {
         every { remoteId } returns channelRemoteId

@@ -21,7 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import io.reactivex.rxjava3.core.Observable
+import androidx.compose.runtime.snapshots.Snapshot
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
@@ -57,14 +57,10 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
     vibrationHelper.vibrate()
   }
 
-  protected abstract fun reloadList()
+  protected open fun reloadList() = Unit
 
   protected fun updateDefaultItem(item: ListItem) {
     updateItem(item) { it is ListItem.DefaultItem }
-  }
-
-  protected fun updateSceneItem(item: ListItem) {
-    updateItem(item) { it is ListItem.SceneItem }
   }
 
   private fun updateItem(item: ListItem, matcher: (ListItem) -> Boolean) {
@@ -78,22 +74,35 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
     }
   }
 
-  protected fun updateItems(items: List<ListItem>) {
-    if (!listLoaded) {
-      listLoaded = true
+  protected fun updateItemsAtomically(items: List<ListItem>) {
+    Snapshot.withMutableSnapshot {
+      if (!listLoaded) {
+        listLoaded = true
+      }
+
+      items.forEachIndexed { index, newItem ->
+        val currentItem = listState.getOrNull(index)
+        if (currentItem == null) {
+          listState.add(newItem)
+        } else if (currentItem.key == newItem.key) {
+          if (!currentItem.hasSameContentAs(newItem)) {
+            listState[index] = newItem
+          }
+        } else {
+          val currentIndex = listState.indexOfFirst { it.key == newItem.key }
+          if (currentIndex >= 0) {
+            val movedItem = listState.removeAt(currentIndex)
+            listState.add(index, if (movedItem.hasSameContentAs(newItem)) movedItem else newItem)
+          } else {
+            listState.add(index, newItem)
+          }
+        }
+      }
+
+      while (listState.size > items.size) {
+        listState.removeAt(listState.lastIndex)
+      }
     }
-
-    listState.clear()
-    listState.addAll(items)
-  }
-
-  protected fun observeUpdates(updatesObservable: Observable<Any>) {
-    updatesObservable
-      .attachSilent()
-      .subscribeBy(
-        onNext = { reloadList() }
-      )
-      .disposeBySelf()
   }
 
   protected fun isEventAllowed(): Boolean {

@@ -86,10 +86,7 @@ class AndroidAutoItemsViewModel @Inject constructor(
   override fun onMoveFinished() {
     androidAutoItemRepository.setItemsOrder(currentState().viewState.items.map { it.id })
       .attach()
-      .subscribeBy(
-        onComplete = { updateEventsManager.updateAndroidAuto() },
-        onError = defaultErrorHandler("onMoveFinished")
-      )
+      .subscribeBy(onError = defaultErrorHandler("onMoveFinished"))
       .disposeBySelf()
   }
 

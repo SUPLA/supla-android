@@ -17,27 +17,11 @@ package org.supla.android.usecases.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import io.reactivex.rxjava3.core.Observable
+import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import timber.log.Timber
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class ReadChannelWithChildrenUseCase @Inject constructor(
-  private val observeChannelsTreeSnapshotUseCase: ObserveChannelsTreeSnapshotUseCase
-) {
-
-  operator fun invoke(remoteId: Int): Observable<ChannelWithChildren> =
-    observeChannelsTreeSnapshotUseCase()
-      .flatMap { snapshot ->
-        val channel = snapshot.channelsWithChildren[remoteId]
-        if (channel == null) {
-          Timber.w("Could not find channel where channels tree was requested!")
-          return@flatMap Observable.error(NoSuchElementException())
-        }
-
-        Observable.just(channel)
-      }
-      .distinctUntilChanged()
-}
+data class ChannelsTreeSnapshot(
+  val channels: List<ChannelDataEntity>,
+  val channelsWithChildren: Map<Int, ChannelWithChildren>,
+  val childChannelIds: Set<Int>
+)

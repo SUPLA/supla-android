@@ -146,7 +146,7 @@ interface ChannelGroupDao {
         channel_group.$COLUMN_CAPTION COLLATE LOCALIZED
     """
   )
-  fun findList(): Single<List<ChannelGroupDataEntity>>
+  fun findList(): Observable<List<ChannelGroupDataEntity>>
 
   @Query(
     """

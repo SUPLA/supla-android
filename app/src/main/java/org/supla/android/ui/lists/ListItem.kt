@@ -232,6 +232,47 @@ sealed interface ListItem {
   )
 }
 
+fun ListItem.hasSameContentAs(other: ListItem): Boolean {
+  if (this === other) return true
+  if (this::class != other::class) return false
+
+  return when (this) {
+    is ListItem.LocationItem -> this == other
+    is ListItem.SceneItem -> this == other
+    is ListItem.DefaultItem -> hasSameContentAs(other as ListItem.DefaultItem)
+  }
+}
+
+private fun ListItem.DefaultItem.hasSameContentAs(other: ListItem.DefaultItem): Boolean =
+  remoteId == other.remoteId &&
+    profileId == other.profileId &&
+    userCaption == other.userCaption &&
+    function == other.function &&
+    locationCaption == other.locationCaption &&
+    locationId == other.locationId &&
+    status == other.status &&
+    captionProvider == other.captionProvider &&
+    icon == other.icon &&
+    value == other.value &&
+    issues == other.issues &&
+    processing == other.processing &&
+    estimatedTimerEndDate == other.estimatedTimerEndDate &&
+    infoSupported == other.infoSupported &&
+    leftButtonString == other.leftButtonString &&
+    rightButtonString == other.rightButtonString &&
+    hasSameSubtypeContentAs(other)
+
+private fun ListItem.DefaultItem.hasSameSubtypeContentAs(other: ListItem.DefaultItem): Boolean =
+  when (this) {
+    is ListItem.DoubleValueItem ->
+      other is ListItem.DoubleValueItem && secondIcon == other.secondIcon && secondValue == other.secondValue
+    is ListItem.HeatpolThermostatItem ->
+      other is ListItem.HeatpolThermostatItem && subValue == other.subValue
+    is ListItem.HvacThermostatItem ->
+      other is ListItem.HvacThermostatItem && subValue == other.subValue && indicatorIcon == other.indicatorIcon
+    else -> true
+  }
+
 fun LocationEntity.locationItem(collapsedFlag: CollapsedFlag): ListItem.LocationItem =
   ListItem.LocationItem(
     remoteId = remoteId,

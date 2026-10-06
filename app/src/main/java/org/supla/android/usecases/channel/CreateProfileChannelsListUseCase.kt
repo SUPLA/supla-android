@@ -20,69 +20,50 @@ package org.supla.android.usecases.channel
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
 import org.supla.android.core.shared.invoke
 import org.supla.android.core.storage.ApplicationPreferences
-import org.supla.android.data.source.ChannelRelationRepository
-import org.supla.android.data.source.ChannelRepository
-import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.shareable
-import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.main.topbar.searchable
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.lists.locationItem
 import org.supla.android.usecases.list.toLocationSections
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.core.shared.usecase.GetCaptionUseCase
-import java.util.LinkedList
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class CreateProfileChannelsListUseCase @Inject constructor(
-  private val getChannelChildrenTreeUseCase: GetChannelChildrenTreeUseCase,
-  private val channelRelationRepository: ChannelRelationRepository,
+  private val observeChannelsTreeSnapshotUseCase: ObserveChannelsTreeSnapshotUseCase,
   private val channelToListItemMapper: ChannelToListItemMapper,
-  private val channelRepository: ChannelRepository,
   private val getCaptionUseCase: GetCaptionUseCase,
   private val preferences: ApplicationPreferences,
   @param:ApplicationContext private val context: Context
 ) {
 
-  private val channelListSource: Single<List<ChannelDataEntity>>
-    get() =
-      if (preferences.hideUnavailableChannels) {
-        channelRepository.findListWithoutUnavailable()
-      } else {
-        channelRepository.findList()
-      }
-
   operator fun invoke(filterString: String = ""): Observable<List<ListItem>> =
-    Single.zip(
-      channelRelationRepository.findChildrenToParentsRelations().firstOrError(),
-      channelListSource
-    ) { relationMap, entities -> Pair(relationMap, entities) }
-      .map { (relationMap, entities) ->
+    observeChannelsTreeSnapshotUseCase()
+      .throttleLatest(250, TimeUnit.MILLISECONDS, true)
+      .map { snapshot ->
         val channels = mutableListOf<ListItem>()
-
-        val channelsMap = mutableMapOf<Int, ChannelDataEntity>().also { map -> entities.forEach { map[it.remoteId] = it } }
-        val allChildrenIds = relationMap.flatMap { it.value }.map { it.channelId }.toSet()
-        val childrenMap = mutableMapOf<Int, List<ChannelChildEntity?>>().also { map ->
-          relationMap.forEach { relation ->
-            val childrenList = LinkedList<Int>()
-            map[relation.key] = getChannelChildrenTreeUseCase.invoke(relation.key, relationMap, channelsMap, childrenList)
+        val sourceChannels = if (preferences.hideUnavailableChannels) {
+          snapshot.channels.filterNot {
+            it.channelValueEntity.lastOnlineState == SuplaChannelAvailabilityStatus.ONLINE_BUT_NOT_AVAILABLE
           }
+        } else {
+          snapshot.channels
         }
 
-        entities
+        sourceChannels
           .toLocationSections(
             locationOf = { it.locationEntity },
             positionOf = { it.channelEntity.position }
           )
           .forEach { section ->
             val visibleChannels = section.items.filter {
-              if (allChildrenIds.contains(it.remoteId)) {
+              if (snapshot.childChannelIds.contains(it.remoteId)) {
                 // Skip channels which have parent ID.
                 return@filter false
               }
@@ -105,21 +86,13 @@ class CreateProfileChannelsListUseCase @Inject constructor(
 
             if (!location.isCollapsed(CollapsedFlag.CHANNEL) || filterString.searchable) {
               visibleChannels.forEach {
-                channels.add(channelToListItemMapper(channelWithChildren(it, childrenMap)))
+                snapshot.channelsWithChildren[it.remoteId]?.let { channel ->
+                  channels.add(channelToListItemMapper(channel))
+                }
               }
             }
           }
 
         channels.toList()
-      }.toObservable()
-
-  private fun channelWithChildren(
-    channelData: ChannelDataEntity,
-    childrenMap: Map<Int, List<ChannelChildEntity?>>
-  ): ChannelWithChildren {
-    val children = mutableListOf<ChannelChildEntity>().apply {
-      childrenMap[channelData.remoteId]?.filterIsInstance<ChannelChildEntity>()?.let { addAll(it) }
-    }
-    return ChannelWithChildren(channelData, children)
-  }
+      }
 }

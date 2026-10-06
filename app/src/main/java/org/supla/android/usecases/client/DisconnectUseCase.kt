@@ -52,8 +52,5 @@ class DisconnectUseCase @Inject constructor(
     }
 
     updateEventsManager.cleanup()
-    updateEventsManager.emitChannelsUpdate()
-    updateEventsManager.emitGroupsUpdate()
-    updateEventsManager.emitScenesUpdate()
   }
 }

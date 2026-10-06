@@ -67,5 +67,5 @@ class CreateProfileScenesListUseCase @Inject constructor(
       }
 
       result.toList()
-    }.toObservable()
+    }
 }

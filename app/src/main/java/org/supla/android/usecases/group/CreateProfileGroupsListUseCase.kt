@@ -56,5 +56,5 @@ class CreateProfileGroupsListUseCase @Inject constructor(
       }
 
       groups.toList()
-    }.toObservable()
+    }
 }

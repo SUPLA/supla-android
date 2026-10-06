@@ -44,7 +44,13 @@ class ReadChannelWithChildrenUseCaseTest {
   @Before
   fun setUp() {
     MockKAnnotations.init(this)
-    useCase = ReadChannelWithChildrenUseCase(channelRepository, channelRelationRepository, GetChannelChildrenTreeUseCase())
+    useCase = ReadChannelWithChildrenUseCase(
+      ObserveChannelsTreeSnapshotUseCase(
+        channelRepository,
+        channelRelationRepository,
+        ChannelsTreeSnapshotFactory(GetChannelChildrenTreeUseCase())
+      )
+    )
   }
 
   @Test

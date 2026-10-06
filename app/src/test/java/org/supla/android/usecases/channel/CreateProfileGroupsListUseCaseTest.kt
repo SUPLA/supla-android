@@ -23,7 +23,7 @@ import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
-import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.core.Observable
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -72,7 +72,7 @@ class CreateProfileGroupsListUseCaseTest {
     val thirdGroup = mockGroupData(33, collapsedLocationId, "Collapsed location", true)
     val fourthGroup = mockGroupData(44, thirdLocationId)
 
-    every { channelGroupRepository.findList() } returns Single.just(listOf(firstGroup, secondGroup, thirdGroup, fourthGroup))
+    every { channelGroupRepository.findList() } returns Observable.just(listOf(firstGroup, secondGroup, thirdGroup, fourthGroup))
     every { groupToListItemMapper(firstGroup) } returns mockGroupItem(11)
     every { groupToListItemMapper(secondGroup) } returns mockGroupItem(22)
     every { groupToListItemMapper(thirdGroup) } returns mockGroupItem(33)
@@ -114,7 +114,7 @@ class CreateProfileGroupsListUseCaseTest {
     val thirdGroup = mockGroupData(33, secondLocationId, "Location", locationSortOrder = 2, position = 2)
     val fourthGroup = mockGroupData(44, thirdLocationId, locationSortOrder = 3, position = 4)
 
-    every { channelGroupRepository.findList() } returns Single.just(listOf(firstGroup, secondGroup, thirdGroup, fourthGroup))
+    every { channelGroupRepository.findList() } returns Observable.just(listOf(firstGroup, secondGroup, thirdGroup, fourthGroup))
     every { groupToListItemMapper(firstGroup) } returns mockGroupItem(11)
     every { groupToListItemMapper(secondGroup) } returns mockGroupItem(22)
     every { groupToListItemMapper(thirdGroup) } returns mockGroupItem(33)
@@ -149,7 +149,7 @@ class CreateProfileGroupsListUseCaseTest {
     // given
     val firstGroup = mockGroupData(11, 1, "Location")
     val secondGroup = mockGroupData(22, 1, "Location")
-    every { channelGroupRepository.findList() } returns Single.just(listOf(firstGroup, secondGroup))
+    every { channelGroupRepository.findList() } returns Observable.just(listOf(firstGroup, secondGroup))
     every { groupToListItemMapper(firstGroup) } returns mockGroupItem(11)
 
     // when

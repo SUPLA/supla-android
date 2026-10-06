@@ -20,23 +20,25 @@ package org.supla.android.usecases.channel
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.ChannelRelationRepository
 import org.supla.android.data.source.ChannelRepository
-import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ReadAllChannelsWithChildrenUseCase @Inject constructor(
-  private val channelRelationRepository: ChannelRelationRepository,
+class ObserveChannelsTreeSnapshotUseCase @Inject constructor(
   private val channelRepository: ChannelRepository,
+  private val channelRelationRepository: ChannelRelationRepository,
   private val channelsTreeSnapshotFactory: ChannelsTreeSnapshotFactory
 ) {
-  operator fun invoke(profileId: Long): Observable<List<ChannelWithChildren>> =
+
+  private val snapshot by lazy {
     Observable.combineLatest(
-      channelRelationRepository.findChildrenToParentsRelationsForProfile(profileId),
-      channelRepository.findObservableList(profileId)
-    ) { relationMap, entities -> Pair(relationMap, entities) }
-      .map { (relationMap, entities) ->
-        val snapshot = channelsTreeSnapshotFactory.create(entities, relationMap)
-        entities.map { snapshot.channelsWithChildren.getValue(it.remoteId) }
-      }
+      channelRelationRepository.findChildrenToParentsRelations(),
+      channelRepository.findObservableList()
+    ) { relationMap, channels -> channelsTreeSnapshotFactory.create(channels, relationMap) }
+      .distinctUntilChanged()
+      .replay(1)
+      .autoConnect(1)
+  }
+
+  operator fun invoke(): Observable<ChannelsTreeSnapshot> = snapshot
 }

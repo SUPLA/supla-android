@@ -37,7 +37,7 @@ class ChannelGroupRepository @Inject constructor(
 
   fun findByRemoteId(remoteId: Int) = channelGroupDao.findByRemoteId(remoteId)
 
-  fun findList() = channelGroupDao.findList()
+  fun findList(): Observable<List<ChannelGroupDataEntity>> = channelGroupDao.findList()
 
   fun findGroupDataEntity(remoteId: Int) = channelGroupDao.findGroupDataEntity(remoteId)
 
