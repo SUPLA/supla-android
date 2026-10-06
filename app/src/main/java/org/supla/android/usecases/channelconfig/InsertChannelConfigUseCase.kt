@@ -53,32 +53,32 @@ class InsertChannelConfigUseCase @Inject constructor(
     ifLet(config as? SuplaChannelContainerConfig) { (config) ->
       return profileRepository.findActiveProfile().flatMapCompletable {
         Timber.d("Saving config (remoteId: `${config.remoteId}`, function: `${config.func}`) - container")
-        channelConfigRepository.insertOrUpdate(it.id!!, config)
+        channelConfigRepository.insertOrUpdate(it.id, config)
       }
     }
     ifLet(config as? SuplaChannelHvacConfig) { (config) ->
       return profileRepository.findActiveProfile().flatMapCompletable {
         Timber.d("Saving config (remoteId: `${config.remoteId}`, function: `${config.func}`) - hvac")
-        channelConfigRepository.insertOrUpdate(it.id!!, config)
+        channelConfigRepository.insertOrUpdate(it.id, config)
       }
     }
     ifLet(config as? SuplaChannelGeneralPurposeMeasurementConfig) { (config) ->
       return profileRepository.findActiveProfile().flatMapCompletable {
         Timber.d("Saving config (remoteId: `${config.remoteId}`, function: `${config.func}`) - measurement")
-        channelConfigRepository.insertOrUpdate(it.id!!, config)
+        channelConfigRepository.insertOrUpdate(it.id, config)
       }
     }
     // Order is important as the SuplaChannelFacadeBlindConfig is child of SuplaChannelRollerShutterConfig
     ifLet(config as? SuplaChannelFacadeBlindConfig) { (config) ->
       return profileRepository.findActiveProfile().flatMapCompletable {
         Timber.d("Saving config (remoteId: `${config.remoteId}`, function: `${config.func}`) - facade blind")
-        channelConfigRepository.insertOrUpdate(it.id!!, config)
+        channelConfigRepository.insertOrUpdate(it.id, config)
       }
     }
     ifLet(config as? SuplaChannelGeneralPurposeMeterConfig) { (config) ->
       return profileRepository.findActiveProfile().flatMapCompletable { profile ->
         Timber.d("Saving config (remoteId: `${config.remoteId}`, function: `${config.func}`) - meter")
-        channelConfigRepository.findChannelConfig(profile.id!!, config.remoteId, ChannelConfigType.GENERAL_PURPOSE_METER)
+        channelConfigRepository.findChannelConfig(profile.id, config.remoteId, ChannelConfigType.GENERAL_PURPOSE_METER)
           .flatMapCompletable { oldConfig ->
             if (shouldCleanupHistory(oldConfig, config)) {
               Timber.d("Cleaning history (remoteId: `${config.remoteId}`, function: `${config.func}`)")
@@ -111,7 +111,7 @@ class InsertChannelConfigUseCase @Inject constructor(
       if (shouldHandle(config)) {
         return profileRepository.findActiveProfile().flatMapCompletable {
           Timber.d("Saving config (remoteId: `${config.remoteId}`, function: `${config.func}`)")
-          channelConfigRepository.delete(it.id!!, config.remoteId)
+          channelConfigRepository.delete(it.id, config.remoteId)
         }
       }
     }

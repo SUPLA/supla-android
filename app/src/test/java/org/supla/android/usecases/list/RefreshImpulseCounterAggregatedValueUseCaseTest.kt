@@ -40,7 +40,6 @@ import org.supla.android.data.source.ChannelValueRepository
 import org.supla.android.data.source.ImpulseCounterLogRepository
 import org.supla.android.data.source.local.dao.measurements.ImpulseCounterCalculatedValueSum
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
-import org.supla.android.events.UpdateEventsManager
 import org.supla.android.lib.SuplaChannelExtendedValue
 import org.supla.android.lib.SuplaChannelImpulseCounterValue
 import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
@@ -57,9 +56,6 @@ class RefreshImpulseCounterAggregatedValueUseCaseTest {
 
   @MockK
   private lateinit var channelValueRepository: ChannelValueRepository
-
-  @MockK
-  private lateinit var updateEventsManager: UpdateEventsManager
 
   @MockK
   private lateinit var userStateHolder: UserStateHolder
@@ -121,7 +117,6 @@ class RefreshImpulseCounterAggregatedValueUseCaseTest {
     val now = ZonedDateTime.parse("2023-10-10T10:30:00Z")
     val settings = ImpulseCounterSettings(showOnList = ListValueAggregation.CURRENT_HOUR)
 
-    every { updateEventsManager.emitChannelUpdate(remoteId) } answers {}
     every { userStateHolder.getImpulseCounterSettings(profileId, remoteId) } returns settings
     every { dateProvider.currentDate() } returns Date(now.toInstant().toEpochMilli())
     every { dateProvider.currentDateTime } returns now
@@ -156,7 +151,6 @@ class RefreshImpulseCounterAggregatedValueUseCaseTest {
     val now = ZonedDateTime.parse("2023-10-10T10:30:00Z")
     val settings = ImpulseCounterSettings(showOnList = ListValueAggregation.CURRENT_HOUR)
 
-    every { updateEventsManager.emitChannelUpdate(remoteId) } answers {}
     every { userStateHolder.getImpulseCounterSettings(profileId, remoteId) } returns settings
     every { dateProvider.currentDate() } returns Date(now.toInstant().toEpochMilli())
     every { dateProvider.currentDateTime } returns now
@@ -182,7 +176,6 @@ class RefreshImpulseCounterAggregatedValueUseCaseTest {
     val settings = ImpulseCounterSettings(showOnList = ListValueAggregation.CURRENT_DAY)
     val expectedStartDate = now.withHour(0).withMinute(0).withSecond(0).withNano(0)
 
-    every { updateEventsManager.emitChannelUpdate(remoteId) } answers {}
     every { userStateHolder.getImpulseCounterSettings(profileId, remoteId) } returns settings
     every { dateProvider.currentDate() } returns Date(now.toInstant().toEpochMilli())
     every { dateProvider.currentDateTime } returns now
@@ -211,7 +204,6 @@ class RefreshImpulseCounterAggregatedValueUseCaseTest {
     // 2023-10-12 is Thursday, so Monday same week is 2023-10-09
     val expectedStartDate = ZonedDateTime.parse("2023-10-09T00:00:00Z")
 
-    every { updateEventsManager.emitChannelUpdate(remoteId) } answers {}
     every { userStateHolder.getImpulseCounterSettings(profileId, remoteId) } returns settings
     every { dateProvider.currentDate() } returns Date(now.toInstant().toEpochMilli())
     every { dateProvider.currentDateTime } returns now
@@ -239,7 +231,6 @@ class RefreshImpulseCounterAggregatedValueUseCaseTest {
     val settings = ImpulseCounterSettings(showOnList = ListValueAggregation.CURRENT_MONTH)
     val expectedStartDate = ZonedDateTime.parse("2023-10-01T00:00:00Z")
 
-    every { updateEventsManager.emitChannelUpdate(remoteId) } answers {}
     every { userStateHolder.getImpulseCounterSettings(profileId, remoteId) } returns settings
     every { dateProvider.currentDate() } returns Date(now.toInstant().toEpochMilli())
     every { dateProvider.currentDateTime } returns now
