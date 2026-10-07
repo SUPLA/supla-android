@@ -48,6 +48,7 @@ import org.supla.android.features.details.detailbase.electricitymeter.Electricit
 import org.supla.android.features.details.detailbase.impulsecounter.ImpulseCounterGeneralStateHandler
 import org.supla.android.features.details.detailbase.impulsecounter.ImpulseCounterState
 import org.supla.android.features.details.programinfo.ProgramInfo
+import org.supla.android.features.details.relayschedule.OperatingMode
 import org.supla.android.features.details.relayschedule.data.RelayProgramInfoBuilder
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaThreading
@@ -68,7 +69,6 @@ import org.supla.android.usecases.group.ChannelGroupRelationDataEntityConvertibl
 import org.supla.android.usecases.group.GroupWithChannels
 import org.supla.android.usecases.group.ReadGroupWithChannelsUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
-import org.supla.core.shared.data.model.function.relay.RelayValue
 import org.supla.core.shared.data.model.function.relay.SuplaRelayFlag
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
@@ -460,71 +460,6 @@ data class SwitchGeneralViewState(
 
   val scale: Float = 1f
 ) : ViewState()
-
-@JvmInline
-value class OperatingMode(val value: Int) {
-  val manualAllowed: Boolean
-    get() = value and MASK_MANUAL_ALLOWED == MASK_MANUAL_ALLOWED
-  val weeklyAllowed: Boolean
-    get() = value and MASK_WEEKLY_ALLOWED == MASK_WEEKLY_ALLOWED
-  val autoAllowed: Boolean
-    get() = value and MASK_AUTO_ALLOWED == MASK_AUTO_ALLOWED
-
-  val manualActive: Boolean
-    get() = value and MASK_MANUAL_ACTIVE == MASK_MANUAL_ACTIVE
-  val weeklyActive: Boolean
-    get() = value and MASK_WEEKLY_ACTIVE == MASK_WEEKLY_ACTIVE
-  val autoActive: Boolean
-    get() = value and MASK_AUTO_ACTIVE == MASK_AUTO_ACTIVE
-
-  companion object {
-    private const val MASK_MANUAL_ALLOWED = 0x01
-    private const val MASK_WEEKLY_ALLOWED = 0x02
-    private const val MASK_AUTO_ALLOWED = 0x04
-    private const val MASK_MANUAL_ACTIVE = 0x08
-    private const val MASK_WEEKLY_ACTIVE = 0x10
-    private const val MASK_AUTO_ACTIVE = 0x20
-
-    operator fun invoke(channelFlags: Long, relayValue: RelayValue): OperatingMode? {
-      val weeklyAllowed = SuplaChannelFlag.WEEKLY_SCHEDULE inside channelFlags
-      val autoAllowed = SuplaChannelFlag.RELAY_MODE_AUTOMATIC_SUPPORTED inside channelFlags
-
-      if (!weeklyAllowed && !autoAllowed) {
-        return null
-      }
-
-      val weeklyActive = relayValue.flags.contains(SuplaRelayFlag.WEEKLY_SCHEDULE_ENABLED)
-      val autoActive = relayValue.mode == SuplaRelayMode.AUTOMATIC && !weeklyActive
-
-      return OperatingMode(
-        value =
-        MASK_MANUAL_ALLOWED or
-          (if (weeklyAllowed) MASK_WEEKLY_ALLOWED else 0) or
-          (if (autoAllowed) MASK_AUTO_ALLOWED else 0) or
-          (if (!weeklyActive && !autoActive) MASK_MANUAL_ACTIVE else 0) or
-          (if (weeklyActive) MASK_WEEKLY_ACTIVE else 0) or
-          (if (autoActive) MASK_AUTO_ACTIVE else 0)
-      )
-    }
-
-    operator fun invoke(
-      manualAllowed: Boolean = false,
-      weeklyAllowed: Boolean = false,
-      autoAllowed: Boolean = false,
-      manualActive: Boolean = false,
-      weeklyActive: Boolean = false,
-      autoActive: Boolean = false
-    ) = OperatingMode(
-      value =
-      (if (manualAllowed) MASK_MANUAL_ALLOWED else 0) or
-        (if (weeklyAllowed) MASK_WEEKLY_ALLOWED else 0) or
-        (if (autoAllowed) MASK_AUTO_ALLOWED else 0) or
-        (if (manualActive) MASK_MANUAL_ACTIVE else 0) or
-        (if (weeklyActive) MASK_WEEKLY_ACTIVE else 0) or
-        (if (autoActive) MASK_AUTO_ACTIVE else 0)
-    )
-  }
-}
 
 private val SuplaFunction.switchWithButtons: Boolean
   get() = when (this) {
