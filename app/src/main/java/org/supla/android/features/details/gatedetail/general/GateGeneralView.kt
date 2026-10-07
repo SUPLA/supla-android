@@ -31,12 +31,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import org.supla.android.R
 import org.supla.android.core.shared.invoke
+import org.supla.android.core.ui.ViewState
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.features.details.relayschedule.OperatingMode
+import org.supla.android.features.details.relayschedule.ui.OperatingButtons
+import org.supla.android.features.details.relayschedule.ui.OperatingButtonsScope
 import org.supla.android.images.ImageId
+import org.supla.android.tools.SuplaPreview
+import org.supla.android.tools.SuplaPreviewLandscape
+import org.supla.android.ui.extensions.ifTrue
 import org.supla.android.ui.lists.ListOnlineState
 import org.supla.android.ui.lists.channelissues.ChannelIssueView
 import org.supla.android.ui.lists.channelissues.ChannelIssuesView
@@ -44,6 +50,7 @@ import org.supla.android.ui.lists.sensordata.RelatedChannelData
 import org.supla.android.ui.lists.sensordata.RelatedChannelsView
 import org.supla.android.ui.views.DeviceState
 import org.supla.android.ui.views.DeviceStateData
+import org.supla.android.ui.views.buttons.LockSuplaButton
 import org.supla.android.ui.views.buttons.SwitchButton
 import org.supla.android.ui.views.buttons.SwitchButtonState
 import org.supla.android.ui.views.buttons.SwitchButtons
@@ -61,14 +68,19 @@ data class GateGeneralViewState(
   val closeButtonState: SwitchButtonState? = null,
   val openButtonState: SwitchButtonState? = null,
   val showOpenAndCloseWarning: Boolean = false,
+  val operatingMode: OperatingMode? = null,
+  val forceSupported: Boolean = false,
+  val forceActive: Boolean = false,
   val offline: Boolean = false,
   val scale: Float = 1f
-)
+) : ViewState()
 
-interface GateGeneralScope {
+interface GateGeneralScope : OperatingButtonsScope {
   fun onOpenClose()
   fun onOpen()
   fun onClose()
+
+  fun onForce()
 }
 
 @Composable
@@ -106,6 +118,17 @@ fun GateGeneralScope.View(
         modifier = Modifier.padding(all = Distance.default),
       )
     }
+
+    state.forceSupported.ifTrue {
+      Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+        LockSuplaButton(
+          pressed = state.forceActive,
+          onClick = { onForce() }
+        )
+      }
+    }
+    state.operatingMode?.let { OperatingButtons(it) }
+
     if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT) {
       PortraitButtons(state)
     } else {
@@ -178,10 +201,15 @@ private val previewScope = object : GateGeneralScope {
   override fun onOpenClose() {}
   override fun onOpen() {}
   override fun onClose() {}
+  override fun onForce() {}
+
+  override fun onManual() {}
+  override fun onWeekly() {}
+  override fun onAuto() {}
 }
 
-@Preview(showBackground = true)
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@SuplaPreview
+@SuplaPreviewLandscape
 @Composable
 private fun Preview() {
   SuplaTheme {
@@ -201,14 +229,21 @@ private fun Preview() {
           icon = ImageId(R.drawable.fnc_garage_door_opened),
           textRes = R.string.channel_btn_open,
           pressed = false
+        ),
+        forceSupported = true,
+        operatingMode = OperatingMode(
+          manualAllowed = true,
+          weeklyAllowed = true,
+          autoAllowed = true,
+          manualActive = true
         )
       )
     )
   }
 }
 
-@Preview(showBackground = true)
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@SuplaPreview
+@SuplaPreviewLandscape
 @Composable
 private fun PreviewGroup() {
   SuplaTheme {
