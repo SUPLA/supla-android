@@ -38,7 +38,7 @@ fun GateGeneralScreen(
     viewModel = viewModel,
     onCreate = { viewModel.observeData(item.remoteId, item.itemType) }
   ) {
-    viewModel.View(state = it.viewState)
+    viewModel.View(state = it)
   }
 
   ViewModelHostBase(captionChangeViewModel) {

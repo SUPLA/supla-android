@@ -41,37 +41,37 @@ import org.supla.android.features.details.detailbase.electricitymeter.Electricit
 import org.supla.android.features.details.detailbase.electricitymeter.PhaseWithMeasurements
 import org.supla.android.features.details.detailbase.impulsecounter.ImpulseCounterMetricsView
 import org.supla.android.features.details.programinfo.ProgramInfo
+import org.supla.android.features.details.relayschedule.OperatingMode
+import org.supla.android.features.details.relayschedule.ui.OperatingButtons
+import org.supla.android.features.details.relayschedule.ui.OperatingButtonsScope
 import org.supla.android.images.ImageId
+import org.supla.android.tools.SuplaPreview
+import org.supla.android.tools.SuplaPreviewLandscape
 import org.supla.android.ui.extensions.ifTrue
 import org.supla.android.ui.lists.channelissues.ChannelIssuesView
 import org.supla.android.ui.lists.sensordata.RelatedChannelData
 import org.supla.android.ui.lists.sensordata.RelatedChannelsView
 import org.supla.android.ui.views.DeviceState
 import org.supla.android.ui.views.DeviceStateData
+import org.supla.android.ui.views.buttons.LockSuplaButton
 import org.supla.android.ui.views.buttons.SwitchButton
 import org.supla.android.ui.views.buttons.SwitchButtonState
 import org.supla.android.ui.views.buttons.SwitchButtonsLayout
-import org.supla.android.ui.views.buttons.supla.SuplaButton
 import org.supla.android.ui.views.buttons.supla.SuplaButtonDefaults
 import org.supla.android.ui.views.card.SummaryCardData
-import org.supla.android.ui.views.icons.LockIcon
 import org.supla.android.ui.views.schedule.ProgramInfoRow
 import org.supla.android.ui.views.tools.Shadow
 import org.supla.android.ui.views.tools.ShadowOrientation
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
-import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 
-interface SwitchGeneralScope {
+interface SwitchGeneralScope : OperatingButtonsScope {
   fun onTurnOn()
   fun onTurnOff()
   fun onIntroductionClose()
 
   fun onForce()
-  fun onManual()
-  fun onWeekly()
-  fun onAuto()
 }
 
 @Composable
@@ -150,46 +150,6 @@ private fun ColumnScope.WithRelatedChannels(
 }
 
 @Composable
-private fun SwitchGeneralScope.OperatingButtons(operatingMode: OperatingMode) {
-  SwitchButtonsLayout(
-    modifier = Modifier.padding(horizontal = Distance.horizontal, vertical = Distance.vertical)
-  ) {
-    operatingMode.manualAllowed.ifTrue {
-      SwitchButton(
-        icon = null,
-        text = stringResource(R.string.thermostat_detail_mode_manual),
-        colors = SuplaButtonDefaults.primaryColors(),
-        pressed = operatingMode.manualActive,
-        onClick = { onManual() },
-        modifier = Modifier.widthIn(max = 120.dp)
-      )
-    }
-
-    operatingMode.weeklyAllowed.ifTrue {
-      SwitchButton(
-        icon = null,
-        text = stringResource(R.string.thermostat_detail_mode_weekly_schedule),
-        colors = SuplaButtonDefaults.primaryColors(),
-        pressed = operatingMode.weeklyActive,
-        onClick = { onWeekly() },
-        modifier = Modifier.widthIn(max = 120.dp)
-      )
-    }
-
-    operatingMode.autoAllowed.ifTrue {
-      SwitchButton(
-        icon = null,
-        text = stringResource(R.string.auto),
-        colors = SuplaButtonDefaults.primaryColors(),
-        pressed = operatingMode.autoActive,
-        onClick = { onAuto() },
-        modifier = Modifier.widthIn(max = 120.dp)
-      )
-    }
-  }
-}
-
-@Composable
 private fun SwitchGeneralScope.ControlButtons(state: SwitchGeneralViewState) {
   SwitchButtonsLayout(
     modifier = Modifier.padding(horizontal = Distance.horizontal, vertical = Distance.vertical)
@@ -207,7 +167,7 @@ private fun SwitchGeneralScope.ControlButtons(state: SwitchGeneralViewState) {
     }
 
     state.forceSupported.ifTrue {
-      LockButton(
+      LockSuplaButton(
         pressed = state.forceActive,
         onClick = { onForce() }
       )
@@ -227,29 +187,6 @@ private fun SwitchGeneralScope.ControlButtons(state: SwitchGeneralViewState) {
   }
 }
 
-@Composable
-fun LockButton(
-  modifier: Modifier = Modifier,
-  disabled: Boolean = false,
-  pressed: Boolean = false,
-  onClick: () -> Unit
-) {
-  val colorDisabled = MaterialTheme.colorScheme.outline
-  SuplaButton(
-    onClick = onClick,
-    modifier = modifier,
-    disabled = disabled,
-    active = pressed,
-    colors = SuplaButtonDefaults.errorColors(),
-    shape = SuplaButtonDefaults.allRoundedShape()
-  ) { color ->
-    LockIcon(
-      color = disabled.forTrue { colorDisabled } ?: color,
-      modifier = Modifier.align(Alignment.Center)
-    )
-  }
-}
-
 private val previewScope = object : SwitchGeneralScope {
   override fun onTurnOn() {}
   override fun onTurnOff() {}
@@ -260,8 +197,8 @@ private val previewScope = object : SwitchGeneralScope {
   override fun onAuto() {}
 }
 
-@Preview(showBackground = true)
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@SuplaPreview
+@SuplaPreviewLandscape
 @Composable
 private fun Preview() {
   SuplaTheme {
@@ -293,8 +230,7 @@ private fun Preview() {
   }
 }
 
-@Preview(name = "Disabled", showBackground = true)
-@Preview(name = "Disabled", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@SuplaPreview
 @Composable
 private fun Preview_Disabled() {
   SuplaTheme {
@@ -320,8 +256,7 @@ private fun Preview_Disabled() {
   }
 }
 
-@Preview(name = "Weekly schedule", showBackground = true)
-@Preview(name = "Weekly schedule", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@SuplaPreview
 @Composable
 private fun Preview_WeeklySchedule() {
   SuplaTheme {

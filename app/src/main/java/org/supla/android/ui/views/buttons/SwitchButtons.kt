@@ -112,6 +112,7 @@ fun SwitchButtons(
 @Composable
 fun SwitchButtonsLayout(
   modifier: Modifier = Modifier,
+  defaultWidth: Int = 300,
   content: @Composable () -> Unit
 ) {
   val defaultDistance = Distance.default
@@ -122,7 +123,7 @@ fun SwitchButtonsLayout(
   Layout(modifier = modifier, content = content) { measurables, constraints ->
     val spacing = defaultDistance.toPx().toInt()
     val smallSpacing = smallDistance.toPx().toInt()
-    val buttonMaxWidth = 300.dp.toPx().toInt()
+    val buttonMaxWidth = defaultWidth.dp.toPx().toInt()
     val possibleWidth = min(constraints.maxWidth, screenWidth)
 
     when (measurables.size) {
