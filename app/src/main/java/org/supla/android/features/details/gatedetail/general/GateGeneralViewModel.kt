@@ -22,19 +22,22 @@ import org.supla.android.R
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
-import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.custom.hasPositionSensor
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
+import org.supla.android.data.source.remote.channel.SuplaChannelFlag
+import org.supla.android.data.source.remote.hvac.SuplaRelayMode
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.extensions.subscribeBy
+import org.supla.android.features.details.relayschedule.OperatingMode
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.views.DeviceStateData
 import org.supla.android.ui.views.buttons.SwitchButtonState
 import org.supla.android.usecases.channel.GetChannelStateUseCase
 import org.supla.android.usecases.channel.ObserveChannelWithChildrenUseCase
+import org.supla.android.usecases.client.ExecuteRelayActionUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.group.ChannelGroupRelationDataEntityConvertible
 import org.supla.android.usecases.group.ChannelInGroup
@@ -53,16 +56,23 @@ class GateGeneralViewModel @Inject constructor(
   private val observeChannelWithChildrenUseCase: ObserveChannelWithChildrenUseCase,
   private val readGroupWithChannelsUseCase: ReadGroupWithChannelsUseCase,
   private val executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
+  private val executeRelayActionUseCase: ExecuteRelayActionUseCase,
   override val getChannelStateUseCase: GetChannelStateUseCase,
   override val getChannelIconUseCase: GetChannelIconUseCase,
   override val getCaptionUseCase: GetCaptionUseCase,
   private val preferences: ApplicationPreferences,
   threading: SuplaThreading
-) : BaseViewModel<GateGeneralModelState, GateGeneralViewEvent>(GateGeneralModelState(), threading),
+) : BaseViewModel<GateGeneralViewState, GateGeneralViewEvent>(GateGeneralViewState(), threading),
   GateGeneralScope,
   ChannelGroupRelationDataEntityConvertible {
 
+  private var remoteId: Int? = null
+  private var type: ItemType? = null
+
   fun observeData(remoteId: Int, type: ItemType) {
+    this.remoteId = remoteId
+    this.type = type
+
     when (type) {
       ItemType.CHANNEL -> observeChannel(remoteId)
       ItemType.GROUP -> observeGroup(remoteId)
@@ -81,6 +91,38 @@ class GateGeneralViewModel @Inject constructor(
     triggerAction(ActionId.CLOSE)
   }
 
+  override fun onForce() {
+    val currentRemoteId = remoteId
+    val currentType = type
+
+    if (currentRemoteId != null && currentType != null) {
+      executeRelayActionUseCase(currentType.subjectType, currentRemoteId, SuplaRelayMode.FORCED_OFF)
+        .attachSilent()
+        .subscribe()
+        .disposeBySelf()
+    }
+  }
+
+  override fun onManual() {
+    triggerAction(ActionId.SWITCH_TO_MANUAL_MODE)
+  }
+
+  override fun onWeekly() {
+    triggerAction(ActionId.SWITCH_TO_PROGRAM_MODE)
+  }
+
+  override fun onAuto() {
+    val currentRemoteId = remoteId
+    val currentType = type
+
+    if (currentRemoteId != null && currentType != null) {
+      executeRelayActionUseCase(currentType.subjectType, currentRemoteId, SuplaRelayMode.AUTOMATIC)
+        .attachSilent()
+        .subscribe()
+        .disposeBySelf()
+    }
+  }
+
   private fun observeChannel(remoteId: Int) {
     observeChannelWithChildrenUseCase(remoteId)
       .distinctUntilChanged()
@@ -95,36 +137,37 @@ class GateGeneralViewModel @Inject constructor(
   private fun handleChannel(channelWithChildren: ChannelWithChildren) {
     val channel = channelWithChildren.channel
     val channelState = getChannelStateUseCase(channel)
+    val relayValue = channel.channelValueEntity.asRelayValue()
+    val forceSupported = SuplaChannelFlag.RELAY_MODE_FORCED_SUPPORTED inside channel.flags
     val showOpenAndClose = channelWithChildren.hasPositionSensor && channelWithChildren.function.supportsOpenAndClose
 
     updateState { state ->
       state.copy(
-        remoteId = channel.remoteId,
-        type = ItemType.CHANNEL,
-        viewState = state.viewState.copy(
-          offline = channel.status.offline,
-          deviceStateData = DeviceStateData(
-            icon = getChannelIconUseCase(channel),
-            label = localizedString(R.string.details_timer_state_label),
-            value = getDeviceStateValue(channel.status, channelState),
-          ),
-          mainButtonLabel = mainButtonLabel(channel.function),
-          openButtonState = showOpenAndClose.forTrue {
-            SwitchButtonState(
-              icon = getChannelIconUseCase(channel, channelStateValue = ChannelState.Value.OPEN),
-              textRes = R.string.channel_btn_open,
-              pressed = channelState.value == ChannelState.Value.OPEN
-            )
-          },
-          closeButtonState = showOpenAndClose.forTrue {
-            SwitchButtonState(
-              icon = getChannelIconUseCase(channel, channelStateValue = ChannelState.Value.CLOSED),
-              textRes = R.string.channel_btn_close,
-              pressed = channelState.value == ChannelState.Value.CLOSED
-            )
-          },
-          scale = preferences.scale
-        )
+        offline = channel.status.offline,
+        deviceStateData = DeviceStateData(
+          icon = getChannelIconUseCase(channel),
+          label = localizedString(R.string.details_timer_state_label),
+          value = getDeviceStateValue(channel.status, channelState),
+        ),
+        mainButtonLabel = mainButtonLabel(channel.function),
+        openButtonState = showOpenAndClose.forTrue {
+          SwitchButtonState(
+            icon = getChannelIconUseCase(channel, channelStateValue = ChannelState.Value.OPEN),
+            textRes = R.string.channel_btn_open,
+            pressed = channelState.value == ChannelState.Value.OPEN
+          )
+        },
+        closeButtonState = showOpenAndClose.forTrue {
+          SwitchButtonState(
+            icon = getChannelIconUseCase(channel, channelStateValue = ChannelState.Value.CLOSED),
+            textRes = R.string.channel_btn_close,
+            pressed = channelState.value == ChannelState.Value.CLOSED
+          )
+        },
+        operatingMode = OperatingMode(channelFlags = channel.flags, relayValue = relayValue),
+        forceSupported = forceSupported,
+        forceActive = forceSupported && relayValue.mode in listOf(SuplaRelayMode.FORCED_ON, SuplaRelayMode.FORCED_OFF),
+        scale = preferences.scale
       )
     }
   }
@@ -159,40 +202,38 @@ class GateGeneralViewModel @Inject constructor(
 
     updateState { state ->
       state.copy(
-        remoteId = groupWithChannels.group.remoteId,
-        type = ItemType.GROUP,
-        viewState = state.viewState.copy(
-          offline = false,
-          mainButtonLabel = mainButtonLabel(groupWithChannels.group.function),
-          relatedChannelsData = groupWithChannels.relatedChannelData,
-          openButtonState = showOpenAndClose.forTrue {
-            SwitchButtonState(
-              icon = getChannelIconUseCase(groupWithChannels.group, channelStateValue = ChannelState.Value.OPEN),
-              textRes = R.string.channel_btn_open,
-              pressed = groupState == ChannelState.Value.OPEN
-            )
-          },
-          closeButtonState = showOpenAndClose.forTrue {
-            SwitchButtonState(
-              icon = getChannelIconUseCase(groupWithChannels.group, channelStateValue = ChannelState.Value.CLOSED),
-              textRes = R.string.channel_btn_close,
-              pressed = groupState == ChannelState.Value.CLOSED
-            )
-          },
-          showOpenAndCloseWarning = groupWithChannels.group.function.supportsOpenAndClose && showOpenAndClose && gateWithoutSensor,
-          scale = preferences.scale
-        )
+        offline = false,
+        mainButtonLabel = mainButtonLabel(groupWithChannels.group.function),
+        relatedChannelsData = groupWithChannels.relatedChannelData,
+        openButtonState = showOpenAndClose.forTrue {
+          SwitchButtonState(
+            icon = getChannelIconUseCase(groupWithChannels.group, channelStateValue = ChannelState.Value.OPEN),
+            textRes = R.string.channel_btn_open,
+            pressed = groupState == ChannelState.Value.OPEN
+          )
+        },
+        closeButtonState = showOpenAndClose.forTrue {
+          SwitchButtonState(
+            icon = getChannelIconUseCase(groupWithChannels.group, channelStateValue = ChannelState.Value.CLOSED),
+            textRes = R.string.channel_btn_close,
+            pressed = groupState == ChannelState.Value.CLOSED
+          )
+        },
+        showOpenAndCloseWarning = groupWithChannels.group.function.supportsOpenAndClose && showOpenAndClose && gateWithoutSensor,
+        operatingMode = null,
+        forceSupported = false,
+        forceActive = false,
+        scale = preferences.scale
       )
     }
   }
 
   private fun triggerAction(actionId: ActionId) {
-    val state = currentState()
-    val remoteId = state.remoteId
-    val type = state.type
+    val currentRemoteId = remoteId
+    val currentType = type
 
-    if (remoteId != null && type != null) {
-      executeSimpleActionUseCase(actionId, type.subjectType, remoteId)
+    if (currentRemoteId != null && currentType != null) {
+      executeSimpleActionUseCase(actionId, currentType.subjectType, currentRemoteId)
         .attachSilent()
         .subscribe()
         .disposeBySelf()
@@ -221,9 +262,3 @@ private val SuplaFunction.supportsOpenAndClose: Boolean
   }
 
 sealed interface GateGeneralViewEvent : ViewEvent
-
-data class GateGeneralModelState(
-  val remoteId: Int? = null,
-  val type: ItemType? = null,
-  val viewState: GateGeneralViewState = GateGeneralViewState()
-) : ViewState()
