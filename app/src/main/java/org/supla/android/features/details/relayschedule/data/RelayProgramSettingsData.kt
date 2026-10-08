@@ -24,12 +24,9 @@ const val MAX_PROGRAM_DURATION_S = 65_535
 
 data class RelayProgramSettingsData(
   val program: SuplaScheduleProgram,
-  val modes: List<SuplaRelayMode>,
   val selectedMode: SuplaRelayMode,
-  val relayModeDurationS: Int = 0,
-  val relayOppositeModeDurationS: Int = 0,
-  val relayModeDurationSString: String = relayModeDurationS.toString(),
-  val relayOppositeModeDurationSString: String = relayOppositeModeDurationS.toString()
+  val relayDurationS: Int = 0,
+  val relayOppositeDurationS: Int = 0
 )
 
 enum class RelayProgramDuration {
