@@ -38,14 +38,14 @@ fun SuplaChannelWeeklyScheduleConfig.viewScheduleTableState(
 
 fun SuplaChannelWeeklyScheduleConfig.viewScheduleBoxesMap() =
   mutableMapOf<ScheduleDetailEntryBoxKey, ScheduleTableBox>().apply {
-    for (entry in schedule) {
-      val key = ScheduleDetailEntryBoxKey(entry.dayOfWeek, entry.hour.toShort())
+    for ((dayOfWeek, hour, quarterOfHour, program) in schedule) {
+      val key = ScheduleDetailEntryBoxKey(dayOfWeek, hour.toShort())
       val value = this[key] ?: ScheduleTableBox(SuplaScheduleProgram.OFF)
-      this[key] = when (entry.quarterOfHour) {
-        QuarterOfHour.FIRST -> value.copy(firstQuarterProgram = entry.program)
-        QuarterOfHour.SECOND -> value.copy(secondQuarterProgram = entry.program)
-        QuarterOfHour.THIRD -> value.copy(thirdQuarterProgram = entry.program)
-        QuarterOfHour.FOURTH -> value.copy(fourthQuarterProgram = entry.program)
+      this[key] = when (quarterOfHour) {
+        QuarterOfHour.FIRST -> value.copy(firstQuarterProgram = program)
+        QuarterOfHour.SECOND -> value.copy(secondQuarterProgram = program)
+        QuarterOfHour.THIRD -> value.copy(thirdQuarterProgram = program)
+        QuarterOfHour.FOURTH -> value.copy(fourthQuarterProgram = program)
       }
     }
   }
