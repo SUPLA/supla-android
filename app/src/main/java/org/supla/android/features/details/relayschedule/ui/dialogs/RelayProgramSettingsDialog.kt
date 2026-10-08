@@ -54,6 +54,18 @@ import org.supla.android.ui.views.schedule.ScheduleProgramDialogHeader
 import org.supla.android.ui.views.spinner.Spinner
 import org.supla.android.ui.views.texts.Label
 
+data class RelayProgramSettingsViewState(
+  val data: RelayProgramSettingsData,
+  val modes: List<SuplaRelayMode>,
+  val relayDurationSString: String = data.relayDurationS.toString(),
+  val relayOppositeDurationSString: String = data.relayOppositeDurationS.toString(),
+  val relayDurationMinusDisabled: Boolean = data.relayDurationS <= 0,
+  val relayDurationPlusDisabled: Boolean = data.relayDurationS >= MAX_PROGRAM_DURATION_S,
+  val relayOppositeDurationDisabled: Boolean = data.relayDurationS <= 0,
+  val relayOppositeDurationMinusDisabled: Boolean = relayOppositeDurationDisabled || data.relayOppositeDurationS <= 0,
+  val relayOppositeDurationPlusDisabled: Boolean = relayOppositeDurationDisabled || data.relayOppositeDurationS >= MAX_PROGRAM_DURATION_S
+)
+
 interface RelayProgramSettingsScope {
   fun onProgramSettingsModeChange(mode: SuplaRelayMode)
   fun onProgramSettingsDurationMinusClick(duration: RelayProgramDuration)
@@ -64,12 +76,13 @@ interface RelayProgramSettingsScope {
 }
 
 @Composable
-fun RelayProgramSettingsScope.RelayProgramDialog(data: RelayProgramSettingsData) {
+fun RelayProgramSettingsScope.RelayProgramDialog(state: RelayProgramSettingsViewState) {
+  val data = state.data
   Dialog(onDismiss = { onProgramSettingsDismiss() }) {
     ScheduleProgramDialogHeader(program = data.program)
     Spinner(
       label = stringResource(id = R.string.relay_schedule_program_operation_type),
-      options = data.spinnerModes(),
+      options = state.spinnerModes(),
       onOptionSelected = { onProgramSettingsModeChange(it) },
       modifier = Modifier
         .padding(horizontal = dimensionResource(id = R.dimen.distance_default))
@@ -81,9 +94,9 @@ fun RelayProgramSettingsScope.RelayProgramDialog(data: RelayProgramSettingsData)
           id = R.string.relay_schedule_program_first_duration,
           data.selectedMode.relayModeStateLabel()
         ),
-        duration = data.relayModeDurationSString,
-        minusAllowed = data.relayModeDurationS > 0,
-        plusAllowed = data.relayModeDurationS < MAX_PROGRAM_DURATION_S,
+        duration = state.relayDurationSString,
+        minusDisabled = state.relayDurationMinusDisabled,
+        plusDisabled = state.relayDurationPlusDisabled,
         onMinusClicked = { onProgramSettingsDurationMinusClick(RelayProgramDuration.RELAY_MODE) },
         onPlusClicked = { onProgramSettingsDurationPlusClick(RelayProgramDuration.RELAY_MODE) },
         onValueChanged = { onProgramSettingsDurationManualChange(RelayProgramDuration.RELAY_MODE, it) }
@@ -93,9 +106,10 @@ fun RelayProgramSettingsScope.RelayProgramDialog(data: RelayProgramSettingsData)
           id = R.string.relay_schedule_program_second_duration,
           data.selectedMode.oppositeModeStateLabel()
         ),
-        duration = data.relayOppositeModeDurationSString,
-        minusAllowed = data.relayOppositeModeDurationS > 0,
-        plusAllowed = data.relayOppositeModeDurationS < MAX_PROGRAM_DURATION_S,
+        duration = state.relayOppositeDurationSString,
+        disabled = state.relayOppositeDurationDisabled,
+        minusDisabled = state.relayOppositeDurationMinusDisabled,
+        plusDisabled = state.relayOppositeDurationPlusDisabled,
         onMinusClicked = { onProgramSettingsDurationMinusClick(RelayProgramDuration.OPPOSITE_MODE) },
         onPlusClicked = { onProgramSettingsDurationPlusClick(RelayProgramDuration.OPPOSITE_MODE) },
         onValueChanged = { onProgramSettingsDurationManualChange(RelayProgramDuration.OPPOSITE_MODE, it) }
@@ -123,15 +137,16 @@ fun RelayProgramSettingsScope.RelayProgramDialog(data: RelayProgramSettingsData)
 private fun DurationControlRow(
   headerText: String,
   duration: String,
-  minusAllowed: Boolean,
-  plusAllowed: Boolean,
+  disabled: Boolean = false,
+  minusDisabled: Boolean,
+  plusDisabled: Boolean,
   onMinusClicked: () -> Unit,
   onPlusClicked: () -> Unit,
   onValueChanged: (String) -> Unit
 ) {
   Label(
     text = headerText,
-    color = colorResource(id = R.color.on_surface_variant),
+    color = if (disabled) MaterialTheme.colorScheme.outline else colorResource(id = R.color.on_surface_variant),
     modifier = Modifier.padding(
       start = dimensionResource(id = R.dimen.distance_default) + 12.dp,
       top = dimensionResource(id = R.dimen.distance_default),
@@ -147,23 +162,24 @@ private fun DurationControlRow(
     horizontalArrangement = Arrangement.spacedBy(8.dp),
     verticalAlignment = Alignment.CenterVertically
   ) {
-    MinusIconButton(disabled = minusAllowed.not(), onClick = onMinusClicked)
+    MinusIconButton(disabled = minusDisabled, onClick = onMinusClicked)
     TextField(
       value = duration,
       modifier = Modifier.width(120.dp),
       keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+      enabled = disabled.not(),
       singleLine = true,
       onValueChange = onValueChanged,
       trailingIcon = { Text(text = "s") }
     )
-    PlusIconButton(disabled = plusAllowed.not(), onClick = onPlusClicked)
+    PlusIconButton(disabled = plusDisabled, onClick = onPlusClicked)
   }
 }
 
 @Composable
-private fun RelayProgramSettingsData.spinnerModes(): Map<SuplaRelayMode, String> =
+private fun RelayProgramSettingsViewState.spinnerModes(): Map<SuplaRelayMode, String> =
   linkedMapOf<SuplaRelayMode, String>().apply {
-    listOf(selectedMode).plus(modes).distinct().forEach { mode ->
+    modes.forEach { mode ->
       this[mode] = stringResource(id = mode.labelRes())
     }
   }
@@ -206,18 +222,20 @@ private val previewScope = object : RelayProgramSettingsScope {
 private fun Preview() {
   SuplaTheme {
     previewScope.RelayProgramDialog(
-      data = RelayProgramSettingsData(
-        program = SuplaScheduleProgram.PROGRAM_1,
+      state = RelayProgramSettingsViewState(
+        data = RelayProgramSettingsData(
+          program = SuplaScheduleProgram.PROGRAM_1,
+          selectedMode = SuplaRelayMode.START_OFF,
+          relayDurationS = 20,
+          relayOppositeDurationS = 10
+        ),
         modes = listOf(
           SuplaRelayMode.START_ON,
           SuplaRelayMode.START_OFF,
           SuplaRelayMode.FORCED_ON,
           SuplaRelayMode.FORCED_OFF,
           SuplaRelayMode.AUTOMATIC
-        ),
-        selectedMode = SuplaRelayMode.START_OFF,
-        relayModeDurationS = 20,
-        relayOppositeModeDurationS = 10
+        )
       )
     )
   }

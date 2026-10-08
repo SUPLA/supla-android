@@ -25,7 +25,11 @@ import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 
 @UsedFromNativeCode
-open class ActionParameters(open val action: ActionId, open val subjectType: SubjectType, open val subjectId: Int)
+open class ActionParameters(open val action: ActionId, open val subjectType: SubjectType, open val subjectId: Int) {
+  override fun toString(): String {
+    return "ActionParameters(action=$action, subjectType=$subjectType, subjectId=$subjectId)"
+  }
+}
 
 object SubjectTypeValue {
   const val CHANNEL = 1

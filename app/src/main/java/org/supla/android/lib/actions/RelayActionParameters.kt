@@ -25,4 +25,8 @@ class RelayActionParameters(
   subjectType: SubjectType,
   subjectId: Int,
   val mode: SuplaRelayMode
-) : ActionParameters(ActionId.SET_RELAY_PARAMETERS, subjectType, subjectId)
+) : ActionParameters(ActionId.SET_RELAY_PARAMETERS, subjectType, subjectId) {
+  override fun toString(): String {
+    return "RelayActionParameters(mode=$mode, super=${super.toString()})"
+  }
+}
