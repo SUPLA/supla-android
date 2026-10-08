@@ -28,13 +28,10 @@ class RelayProgramSettingsDataTest {
   fun `should use zero when durations are not provided`() {
     val data = RelayProgramSettingsData(
       program = SuplaScheduleProgram.PROGRAM_1,
-      modes = listOf(SuplaRelayMode.START_ON),
       selectedMode = SuplaRelayMode.START_ON
     )
 
-    assertThat(data.relayModeDurationS).isZero()
-    assertThat(data.relayOppositeModeDurationS).isZero()
-    assertThat(data.relayModeDurationSString).isEqualTo("0")
-    assertThat(data.relayOppositeModeDurationSString).isEqualTo("0")
+    assertThat(data.relayDurationS).isZero()
+    assertThat(data.relayOppositeDurationS).isZero()
   }
 }

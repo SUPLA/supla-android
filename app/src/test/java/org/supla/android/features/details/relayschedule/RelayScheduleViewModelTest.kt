@@ -24,6 +24,7 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.mockk
 import io.mockk.verify
+import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import org.assertj.core.api.Assertions.assertThat
@@ -35,9 +36,11 @@ import org.supla.android.core.networking.suplaclient.SuplaClientApi
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.data.source.local.calendar.DayOfWeek
 import org.supla.android.data.source.local.calendar.QuarterOfHour
+import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.ConfigResult
 import org.supla.android.data.source.remote.SuplaChannelConfig
+import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
 import org.supla.android.data.source.remote.hvac.SuplaRelayMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
@@ -55,6 +58,7 @@ import org.supla.android.ui.views.schedule.editor.QuartersSelectionData
 import org.supla.android.ui.views.schedule.editor.ScheduleTableBox
 import org.supla.android.ui.views.schedule.editor.ScheduleTableState
 import org.supla.android.ui.views.schedule.editor.WeeklyScheduleEditorState
+import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import java.util.concurrent.TimeUnit
 
 class RelayScheduleViewModelTest :
@@ -82,7 +86,12 @@ class RelayScheduleViewModelTest :
   private lateinit var delayedWeeklyScheduleConfigSubject: DelayedWeeklyScheduleConfigSubject
 
   @RelaxedMockK
+  private lateinit var readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase
+
+  @RelaxedMockK
   override lateinit var threading: SuplaThreading
+
+  private lateinit var channel: ChannelDataEntity
 
   @InjectMockKs
   override lateinit var viewModel: RelayScheduleViewModel
@@ -97,6 +106,9 @@ class RelayScheduleViewModelTest :
     every { dateProvider.currentDayOfWeek() } returns DayOfWeek.MONDAY
     every { dateProvider.currentHour() } returns 12
     every { suplaClientProvider.provide() } returns suplaClient
+    channel = mockk(relaxed = true)
+    every { channel.flags } returns 0
+    every { readChannelByRemoteIdUseCase(any()) } returns Maybe.just(channel)
   }
 
   @Test
@@ -481,19 +493,25 @@ class RelayScheduleViewModelTest :
 
     // then
     with(states.last().programSettings!!) {
-      assertThat(program).isEqualTo(SuplaScheduleProgram.PROGRAM_1)
-      assertThat(selectedMode).isEqualTo(SuplaRelayMode.START_ON)
-      assertThat(relayModeDurationS).isZero()
-      assertThat(relayOppositeModeDurationS).isZero()
-      assertThat(relayModeDurationSString).isEqualTo("0")
-      assertThat(relayOppositeModeDurationSString).isEqualTo("0")
+      assertThat(data.program).isEqualTo(SuplaScheduleProgram.PROGRAM_1)
+      assertThat(modes).doesNotContain(SuplaRelayMode.AUTOMATIC)
+      assertThat(data.selectedMode).isEqualTo(SuplaRelayMode.START_ON)
+      assertThat(data.relayDurationS).isZero()
+      assertThat(data.relayOppositeDurationS).isZero()
+      assertThat(relayDurationSString).isEqualTo("0")
+      assertThat(relayOppositeDurationSString).isEqualTo("0")
+      assertThat(relayDurationMinusDisabled).isTrue()
+      assertThat(relayDurationPlusDisabled).isFalse()
+      assertThat(relayOppositeDurationDisabled).isTrue()
+      assertThat(relayOppositeDurationMinusDisabled).isTrue()
+      assertThat(relayOppositeDurationPlusDisabled).isTrue()
     }
 
     // when - try to decrement zero
     viewModel.onProgramSettingsDurationMinusClick(RelayProgramDuration.RELAY_MODE)
 
     // then
-    assertThat(states.last().programSettings!!.relayModeDurationS).isZero()
+    assertThat(states.last().programSettings!!.data.relayDurationS).isZero()
 
     // when - increment and provide invalid manual values
     viewModel.onProgramSettingsDurationPlusClick(RelayProgramDuration.RELAY_MODE)
@@ -501,26 +519,112 @@ class RelayScheduleViewModelTest :
     viewModel.onProgramSettingsDurationManualChange(RelayProgramDuration.RELAY_MODE, "65536")
 
     // then
-    assertThat(states.last().programSettings!!.relayModeDurationS).isEqualTo(1)
-    assertThat(states.last().programSettings!!.relayModeDurationSString).isEqualTo("1")
+    assertThat(states.last().programSettings!!.data.relayDurationS).isEqualTo(1)
+    assertThat(states.last().programSettings!!.relayDurationSString).isEqualTo("1")
 
     // when - provide valid values
     viewModel.onProgramSettingsDurationManualChange(RelayProgramDuration.RELAY_MODE, "00123")
     viewModel.onProgramSettingsDurationManualChange(RelayProgramDuration.OPPOSITE_MODE, "")
 
     // then
-    assertThat(states.last().programSettings!!.relayModeDurationS).isEqualTo(123)
-    assertThat(states.last().programSettings!!.relayModeDurationSString).isEqualTo("00123")
-    assertThat(states.last().programSettings!!.relayOppositeModeDurationS).isZero()
-    assertThat(states.last().programSettings!!.relayOppositeModeDurationSString).isEqualTo("0")
+    assertThat(states.last().programSettings!!.data.relayDurationS).isEqualTo(123)
+    assertThat(states.last().programSettings!!.relayDurationSString).isEqualTo("00123")
+    assertThat(states.last().programSettings!!.data.relayOppositeDurationS).isZero()
+    assertThat(states.last().programSettings!!.relayOppositeDurationSString).isEqualTo("0")
 
     // when - reach the upper limit and try to increment it
     viewModel.onProgramSettingsDurationManualChange(RelayProgramDuration.OPPOSITE_MODE, "65535")
     viewModel.onProgramSettingsDurationPlusClick(RelayProgramDuration.OPPOSITE_MODE)
 
     // then
-    assertThat(states.last().programSettings!!.relayOppositeModeDurationS).isEqualTo(65_535)
-    assertThat(states.last().programSettings!!.relayOppositeModeDurationSString).isEqualTo("65535")
+    assertThat(states.last().programSettings!!.data.relayOppositeDurationS).isEqualTo(65_535)
+    assertThat(states.last().programSettings!!.relayOppositeDurationSString).isEqualTo("65535")
+  }
+
+  @Test
+  fun `should clear second duration and block it when first duration is zero`() {
+    // given
+    loadPrograms(
+      SuplaWeeklyScheduleProgram(
+        program = SuplaScheduleProgram.PROGRAM_1,
+        relayMode = SuplaRelayMode.START_ON,
+        relayModeDurationS = 0,
+        relayOppositeModeDurationS = 10
+      )
+    )
+    viewModel.onScheduleProgramLongClick(SuplaScheduleProgram.PROGRAM_1)
+
+    // then - invalid stored second duration is cleared when dialog opens
+    assertThat(states.last().programSettings!!.data.relayOppositeDurationS).isZero()
+    assertThat(states.last().programSettings!!.relayOppositeDurationSString).isEqualTo("0")
+    assertThat(states.last().programSettings!!.relayOppositeDurationDisabled).isTrue()
+    assertThat(states.last().programSettings!!.relayOppositeDurationMinusDisabled).isTrue()
+    assertThat(states.last().programSettings!!.relayOppositeDurationPlusDisabled).isTrue()
+
+    // when - try all ways of changing the second duration
+    viewModel.onProgramSettingsDurationMinusClick(RelayProgramDuration.OPPOSITE_MODE)
+    viewModel.onProgramSettingsDurationPlusClick(RelayProgramDuration.OPPOSITE_MODE)
+    viewModel.onProgramSettingsDurationManualChange(RelayProgramDuration.OPPOSITE_MODE, "20")
+
+    // then
+    assertThat(states.last().programSettings!!.data.relayOppositeDurationS).isZero()
+    assertThat(states.last().programSettings!!.relayOppositeDurationSString).isEqualTo("0")
+
+    // when - enable the second duration and change it
+    viewModel.onProgramSettingsDurationPlusClick(RelayProgramDuration.RELAY_MODE)
+    viewModel.onProgramSettingsDurationManualChange(RelayProgramDuration.OPPOSITE_MODE, "20")
+
+    // then
+    assertThat(states.last().programSettings!!.data.relayDurationS).isEqualTo(1)
+    assertThat(states.last().programSettings!!.data.relayOppositeDurationS).isEqualTo(20)
+    assertThat(states.last().programSettings!!.relayOppositeDurationSString).isEqualTo("20")
+    assertThat(states.last().programSettings!!.relayOppositeDurationDisabled).isFalse()
+    assertThat(states.last().programSettings!!.relayOppositeDurationMinusDisabled).isFalse()
+    assertThat(states.last().programSettings!!.relayOppositeDurationPlusDisabled).isFalse()
+
+    // when - decrease first duration to zero
+    viewModel.onProgramSettingsDurationMinusClick(RelayProgramDuration.RELAY_MODE)
+
+    // then - second duration is cleared and controls disabled
+    with(states.last().programSettings!!) {
+      assertThat(data.relayDurationS).isZero()
+      assertThat(data.relayOppositeDurationS).isZero()
+      assertThat(relayDurationMinusDisabled).isTrue()
+      assertThat(relayOppositeDurationDisabled).isTrue()
+      assertThat(relayOppositeDurationSString).isEqualTo("0")
+    }
+  }
+
+  @Test
+  fun `should expose automatic mode only when supported by channel`() {
+    // given
+    every { channel.flags } returns SuplaChannelFlag.RELAY_MODE_AUTOMATIC_SUPPORTED.rawValue
+    loadPrograms(weeklyProgram(SuplaScheduleProgram.PROGRAM_1, SuplaRelayMode.AUTOMATIC))
+
+    // when
+    viewModel.onScheduleProgramLongClick(SuplaScheduleProgram.PROGRAM_1)
+
+    // then
+    with(states.last().programSettings!!) {
+      assertThat(modes).contains(SuplaRelayMode.AUTOMATIC)
+      assertThat(data.selectedMode).isEqualTo(SuplaRelayMode.AUTOMATIC)
+    }
+  }
+
+  @Test
+  fun `should reject automatic mode when not supported by channel`() {
+    // given
+    loadPrograms(weeklyProgram(SuplaScheduleProgram.PROGRAM_1, SuplaRelayMode.AUTOMATIC))
+    viewModel.onScheduleProgramLongClick(SuplaScheduleProgram.PROGRAM_1)
+
+    // when
+    viewModel.onProgramSettingsModeChange(SuplaRelayMode.AUTOMATIC)
+
+    // then
+    with(states.last().programSettings!!) {
+      assertThat(modes).doesNotContain(SuplaRelayMode.AUTOMATIC)
+      assertThat(data.selectedMode).isEqualTo(SuplaRelayMode.START_ON)
+    }
   }
 
   @Test
@@ -533,13 +637,13 @@ class RelayScheduleViewModelTest :
     viewModel.onProgramSettingsModeChange(SuplaRelayMode.FORCED_ON)
 
     // then
-    assertThat(states.last().programSettings!!.selectedMode).isEqualTo(SuplaRelayMode.FORCED_ON)
+    assertThat(states.last().programSettings!!.data.selectedMode).isEqualTo(SuplaRelayMode.FORCED_ON)
 
     // when - unsupported mode
     viewModel.onProgramSettingsModeChange(SuplaRelayMode.NOT_SET)
 
     // then
-    assertThat(states.last().programSettings!!.selectedMode).isEqualTo(SuplaRelayMode.FORCED_ON)
+    assertThat(states.last().programSettings!!.data.selectedMode).isEqualTo(SuplaRelayMode.FORCED_ON)
 
     // when
     viewModel.onProgramSettingsSave()

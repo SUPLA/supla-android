@@ -52,7 +52,7 @@ fun RelayScheduleScope.RelayScheduleView(state: RelayScheduleViewState) {
     loading = state.loadingState.loading,
     dialogs = {
       state.quarterSelection?.let { QuartersDialog(it, state.editorState.programs) }
-      state.programSettings?.let { RelayProgramDialog(data = it) }
+      state.programSettings?.let { RelayProgramDialog(state = it) }
     }
   )
 }
