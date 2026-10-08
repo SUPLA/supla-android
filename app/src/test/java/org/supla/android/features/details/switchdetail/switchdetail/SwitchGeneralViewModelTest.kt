@@ -22,7 +22,6 @@ import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
-import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.mockk
 import io.mockk.verify
 import io.reactivex.rxjava3.core.Observable
@@ -34,7 +33,6 @@ import org.junit.Test
 import org.supla.android.R
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
-import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.model.general.ChannelState
@@ -140,9 +138,6 @@ class SwitchGeneralViewModelTest :
   @MockK
   private lateinit var getCaptionUseCase: GetCaptionUseCase
 
-  @RelaxedMockK
-  private lateinit var suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper
-
   @MockK
   override lateinit var threading: SuplaThreading
 
@@ -153,6 +148,9 @@ class SwitchGeneralViewModelTest :
   override fun setUp() {
     MockKAnnotations.init(this)
     every { suplaClientProvider.provide() } returns null
+    every { downloadEventsManager.observeProgress(any()) } returns Observable.never()
+    every { channelConfigEventsManager.observerConfig(any()) } returns Observable.never()
+    every { threading.schedulers.computation } returns testScheduler
     super.setUp()
   }
 
@@ -182,7 +180,7 @@ class SwitchGeneralViewModelTest :
     every { preferences.scale } returns 1f
 
     // when
-    viewModel.loadData(remoteId, ItemType.CHANNEL)
+    viewModel.onViewCreated(remoteId, ItemType.CHANNEL)
 
     // then
     assertThat(events).isEmpty()
@@ -247,7 +245,7 @@ class SwitchGeneralViewModelTest :
     every { preferences.scale } returns 1f
 
     // when
-    viewModel.loadData(remoteId, ItemType.CHANNEL)
+    viewModel.onViewCreated(remoteId, ItemType.CHANNEL)
 
     // then
     assertThat(events).isEmpty()
@@ -316,7 +314,6 @@ class SwitchGeneralViewModelTest :
 
     // when
     viewModel.onViewCreated(remoteId, ItemType.CHANNEL)
-    viewModel.loadData(remoteId, ItemType.CHANNEL)
     configEvents.onNext(
       ConfigEvent(
         ConfigResult.RESULT_TRUE,
@@ -343,7 +340,6 @@ class SwitchGeneralViewModelTest :
 
     // when
     every { channelData.status } returns SuplaChannelAvailabilityStatus.OFFLINE
-    viewModel.loadData(remoteId, ItemType.CHANNEL)
     testScheduler.advanceTimeBy(1, TimeUnit.MINUTES)
 
     // then
@@ -353,7 +349,6 @@ class SwitchGeneralViewModelTest :
     every { channelData.status } returns SuplaChannelAvailabilityStatus.ONLINE
     every { channelData.channel.channelValueEntity.asRelayValue() } returns
       RelayValue(SuplaChannelAvailabilityStatus.OFFLINE, false, emptyList(), SuplaRelayMode.NOT_SET)
-    viewModel.loadData(remoteId, ItemType.CHANNEL)
     testScheduler.advanceTimeBy(1, TimeUnit.MINUTES)
 
     // then
@@ -383,7 +378,7 @@ class SwitchGeneralViewModelTest :
     every { preferences.scale } returns 1f
 
     // when
-    viewModel.loadData(remoteId, ItemType.GROUP)
+    viewModel.onViewCreated(remoteId, ItemType.GROUP)
 
     // then
     assertThat(events).isEmpty()
@@ -453,7 +448,7 @@ class SwitchGeneralViewModelTest :
     every { preferences.scale } returns 1f
 
     // when
-    viewModel.loadData(remoteId, ItemType.CHANNEL)
+    viewModel.onViewCreated(remoteId, ItemType.CHANNEL)
 
     // then
     assertThat(events).isEmpty()
@@ -526,7 +521,7 @@ class SwitchGeneralViewModelTest :
     every { preferences.scale } returns 1f
 
     // when
-    viewModel.loadData(remoteId, ItemType.CHANNEL)
+    viewModel.onViewCreated(remoteId, ItemType.CHANNEL)
 
     // then
     assertThat(events).isEmpty()

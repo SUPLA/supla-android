@@ -22,7 +22,6 @@ import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
-import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.shared.shareable
 import org.supla.android.core.storage.ApplicationPreferences
@@ -75,7 +74,6 @@ import org.supla.core.shared.data.model.lists.ChannelIssueItem
 import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
-import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetAllChannelIssuesUseCase
 import java.util.Date
@@ -102,7 +100,6 @@ class SwitchGeneralViewModel @Inject constructor(
   override val getChannelStateUseCase: GetChannelStateUseCase,
   override val getChannelIconUseCase: GetChannelIconUseCase,
   override val getCaptionUseCase: GetCaptionUseCase,
-  suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper,
   threading: SuplaThreading
 ) : BaseViewModel<SwitchGeneralViewState, SwitchGeneralViewEvent>(SwitchGeneralViewState(), threading),
   SwitchGeneralScope,
@@ -114,41 +111,20 @@ class SwitchGeneralViewModel @Inject constructor(
   private var isOffline = false
   private var weeklyScheduleEnabled = false
 
-  init {
-    setupSuplaClientMessageHandler(suplaClientMessageHandlerWrapper)
-  }
-
   fun onViewCreated(remoteId: Int, itemType: ItemType) {
     this.remoteId = remoteId
     this.itemType = itemType
+
     observeDownload(remoteId)
 
     if (itemType == ItemType.CHANNEL) {
       observeProgramInfo(remoteId)
       reloadWeeklySchedule(remoteId)
     }
-  }
-
-  override fun handleSuplaMessage(message: SuplaClientMessage) {
-    (message as? SuplaClientMessage.ChannelDataChanged)?.let {
-      if (it.channelId == remoteId && itemType == ItemType.CHANNEL) {
-        loadData(remoteId, itemType)
-      }
-    }
-    (message as? SuplaClientMessage.GroupDataChanged)?.let {
-      if (it.groupId == remoteId && itemType == ItemType.GROUP) {
-        loadData(remoteId, itemType)
-      }
-    }
-  }
-
-  fun loadData(remoteId: Int, itemType: ItemType, cleanupDownloading: Boolean = false) {
-    this.remoteId = remoteId
-    this.itemType = itemType
 
     when (itemType) {
-      ItemType.CHANNEL -> loadChannel(remoteId, cleanupDownloading)
-      ItemType.GROUP -> loadGroup(remoteId)
+      ItemType.CHANNEL -> observeChannel(remoteId)
+      ItemType.GROUP -> observeGroup(remoteId)
     }
   }
 
@@ -216,9 +192,9 @@ class SwitchGeneralViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  private fun loadChannel(remoteId: Int, cleanupDownloading: Boolean) {
-    readChannelWithChildrenUseCase(remoteId).firstElement()
-      .flatMap { channelWithChildren ->
+  private fun observeChannel(remoteId: Int) {
+    readChannelWithChildrenUseCase(remoteId)
+      .flatMapMaybe { channelWithChildren ->
         channelWithChildren.isOrHasElectricityMeter.forTrue {
           loadElectricityMeterMeasurementsUseCase(
             profileId = channelWithChildren.profileId,
@@ -235,13 +211,13 @@ class SwitchGeneralViewModel @Inject constructor(
       }
       .attachSilent()
       .subscribeBy(
-        onSuccess = { (channelBase, measurements) -> handleChannel(channelBase, measurements, cleanupDownloading) },
-        onError = defaultErrorHandler("loadChannel($remoteId, $cleanupDownloading)")
+        onNext = { (channelBase, measurements) -> handleChannel(channelBase, measurements) },
+        onError = defaultErrorHandler("loadChannel($remoteId)")
       )
       .disposeBySelf()
   }
 
-  private fun handleChannel(data: ChannelWithChildren, measurements: SummarizedMeasurements?, cleanupDownloading: Boolean) {
+  private fun handleChannel(data: ChannelWithChildren, measurements: SummarizedMeasurements?) {
     updateState { state ->
       data.let {
         if ((data.isOrHasElectricityMeter || data.isOrHasImpulseCounter) && !state.initialDataLoadStarted) {
@@ -249,12 +225,6 @@ class SwitchGeneralViewModel @Inject constructor(
         }
       }
 
-      val downloading = when {
-        cleanupDownloading -> false
-        data.isOrHasElectricityMeter -> state.electricityMeterState?.currentMonthDownloading ?: false
-        data.isOrHasImpulseCounter -> state.impulseCounterState?.currentMonthDownloading ?: false
-        else -> false
-      }
       val showButtons = data.function.switchWithButtons
       val channelState = getChannelStateUseCase(data)
       val value = data.channel.channelValueEntity.asRelayValue()
@@ -287,12 +257,8 @@ class SwitchGeneralViewModel @Inject constructor(
             pressed = channelState.value == ChannelState.Value.ON
           )
         },
-        electricityMeterState = electricityMeterGeneralStateHandler
-          .updateState(state.electricityMeterState, data, measurements)
-          ?.copy(currentMonthDownloading = downloading),
-        impulseCounterState = impulseCounterGeneralStateHandler
-          .updateState(state.impulseCounterState, data, measurements)
-          ?.copy(currentMonthDownloading = downloading),
+        electricityMeterState = electricityMeterGeneralStateHandler.updateState(state.electricityMeterState, data, measurements),
+        impulseCounterState = impulseCounterGeneralStateHandler.updateState(state.impulseCounterState, data, measurements),
         forceSupported = data.channel.forceSupported,
         forceActive = data.channel.forceActive,
         operatingMode = OperatingMode(channelFlags = data.channel.flags, relayValue = value),
@@ -370,17 +336,21 @@ class SwitchGeneralViewModel @Inject constructor(
         }
       }
       else -> {
-        loadData(remoteId, itemType, cleanupDownloading = true)
+        updateState {
+          it.copy(
+            electricityMeterState = it.electricityMeterState?.copy(currentMonthDownloading = false),
+            impulseCounterState = it.impulseCounterState?.copy(currentMonthDownloading = false)
+          )
+        }
       }
     }
   }
 
-  private fun loadGroup(remoteId: Int) {
+  private fun observeGroup(remoteId: Int) {
     readGroupWithChannelsUseCase(remoteId)
-      .firstElement()
       .attachSilent()
       .subscribeBy(
-        onSuccess = this::handleGroup,
+        onNext = this::handleGroup,
         onError = defaultErrorHandler("loadGroup($remoteId)")
       )
       .disposeBySelf()
