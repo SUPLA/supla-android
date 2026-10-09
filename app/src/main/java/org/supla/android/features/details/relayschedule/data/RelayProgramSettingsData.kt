@@ -19,6 +19,7 @@ package org.supla.android.features.details.relayschedule.data
 
 import org.supla.android.data.source.remote.hvac.SuplaRelayMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 const val MAX_PROGRAM_DURATION_S = 65_535
 
@@ -32,4 +33,31 @@ data class RelayProgramSettingsData(
 enum class RelayProgramDuration {
   RELAY_MODE,
   OPPOSITE_MODE
+}
+
+data class RelayProgramSettingsConstraints(
+  val modes: List<SuplaRelayMode> = listOf(
+    SuplaRelayMode.START_ON,
+    SuplaRelayMode.START_OFF,
+    SuplaRelayMode.FORCED_ON,
+    SuplaRelayMode.FORCED_OFF,
+    SuplaRelayMode.AUTOMATIC
+  ),
+  val durationSupported: Boolean = true,
+  val oppositeDurationSupported: Boolean = true
+) {
+  companion object {
+    operator fun invoke(function: SuplaFunction): RelayProgramSettingsConstraints = when (function) {
+      SuplaFunction.CONTROLLING_THE_GATE,
+      SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
+      SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
+      SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK -> RelayProgramSettingsConstraints(
+        modes = listOf(SuplaRelayMode.START_ON, SuplaRelayMode.FORCED_OFF),
+        durationSupported = false,
+        oppositeDurationSupported = false
+      )
+      SuplaFunction.STAIRCASE_TIMER -> RelayProgramSettingsConstraints(oppositeDurationSupported = false)
+      else -> RelayProgramSettingsConstraints()
+    }
+  }
 }

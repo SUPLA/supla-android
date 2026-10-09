@@ -19,30 +19,25 @@ package org.supla.android.ui.views.icons
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import org.supla.android.R
 
 @Composable
-fun LockIcon(
+fun LockOpenIcon(
   modifier: Modifier = Modifier,
   contentDescription: String? = null,
   color: Color = MaterialTheme.colorScheme.onSurfaceVariant,
   size: Dp = dimensionResource(R.dimen.icon_small_size),
-  filled: Boolean = false
 ) {
-  val icon = if (filled) Icons.Filled.Lock else Icons.Outlined.Lock
-
   Image(
-    imageVector = icon,
+    painter = painterResource(R.drawable.ic_lock_open_right),
     contentDescription = contentDescription,
     modifier = modifier.size(size),
     colorFilter = ColorFilter.tint(color)

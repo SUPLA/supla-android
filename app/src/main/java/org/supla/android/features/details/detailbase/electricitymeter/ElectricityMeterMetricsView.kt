@@ -90,7 +90,8 @@ import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
 fun ElectricityMeterMetricsView(
   state: ElectricityMeterState,
   modifier: Modifier = Modifier,
-  onIntroductionClose: () -> Unit = {}
+  onIntroductionClose: () -> Unit = {},
+  topPadding: Dp = Distance.default
 ) {
   val horizontalScrollState = rememberScrollState()
   val verticalScrollState = rememberScrollState()
@@ -111,7 +112,7 @@ fun ElectricityMeterMetricsView(
       EnergySummaryBox(
         state.totalForwardActiveEnergy,
         state.totalReversedActiveEnergy,
-        modifier = Modifier.padding(start = Distance.default, top = Distance.default, end = Distance.default),
+        modifier = Modifier.padding(start = Distance.default, top = topPadding, end = Distance.default),
         labelSuffix = stringResource(id = R.string.details_em_total_suffix)
       )
       EnergySummaryBox(

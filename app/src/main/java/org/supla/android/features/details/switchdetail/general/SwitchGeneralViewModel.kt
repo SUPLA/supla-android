@@ -19,26 +19,20 @@ package org.supla.android.features.details.switchdetail.general
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Maybe
-import io.reactivex.rxjava3.core.Observable
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.shared.shareable
 import org.supla.android.core.storage.ApplicationPreferences
-import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.model.general.ChannelState
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.data.source.remote.ChannelConfigType
-import org.supla.android.data.source.remote.ConfigResult
-import org.supla.android.data.source.remote.channel.SuplaChannelFlag
-import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
 import org.supla.android.data.source.remote.hvac.SuplaRelayMode
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.ChannelConfigEventsManager
+import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.extensions.monthStart
 import org.supla.android.extensions.subscribeBy
@@ -47,12 +41,13 @@ import org.supla.android.features.details.detailbase.electricitymeter.Electricit
 import org.supla.android.features.details.detailbase.impulsecounter.ImpulseCounterGeneralStateHandler
 import org.supla.android.features.details.detailbase.impulsecounter.ImpulseCounterState
 import org.supla.android.features.details.programinfo.ProgramInfo
+import org.supla.android.features.details.relayschedule.BaseRelayGeneralViewModel
 import org.supla.android.features.details.relayschedule.OperatingMode
-import org.supla.android.features.details.relayschedule.data.RelayProgramInfoBuilder
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.lists.sensordata.RelatedChannelData
 import org.supla.android.ui.views.DeviceStateData
+import org.supla.android.ui.views.buttons.LockIconType
 import org.supla.android.ui.views.buttons.SwitchButtonState
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.GetChannelStateUseCase
@@ -77,7 +72,6 @@ import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetAllChannelIssuesUseCase
 import java.util.Date
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -88,50 +82,39 @@ class SwitchGeneralViewModel @Inject constructor(
   private val downloadChannelMeasurementsUseCase: DownloadChannelMeasurementsUseCase,
   private val impulseCounterGeneralStateHandler: ImpulseCounterGeneralStateHandler,
   private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
-  private val readGroupWithChannelsUseCase: ReadGroupWithChannelsUseCase,
-  private val executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
   private val getAllChannelIssuesUseCase: GetAllChannelIssuesUseCase,
-  private val channelConfigEventsManager: ChannelConfigEventsManager,
-  private val executeRelayActionUseCase: ExecuteRelayActionUseCase,
   private val downloadEventsManager: DownloadEventsManager,
-  private val suplaClientProvider: SuplaClientProvider,
-  private val dateProvider: DateProvider,
   private val preferences: ApplicationPreferences,
   override val getChannelStateUseCase: GetChannelStateUseCase,
   override val getChannelIconUseCase: GetChannelIconUseCase,
   override val getCaptionUseCase: GetCaptionUseCase,
+  readGroupWithChannelsUseCase: ReadGroupWithChannelsUseCase,
+  executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
+  executeRelayActionUseCase: ExecuteRelayActionUseCase,
+  channelConfigEventsManager: ChannelConfigEventsManager,
+  deviceConfigEventsManager: DeviceConfigEventsManager,
+  suplaClientProvider: SuplaClientProvider,
+  dateProvider: DateProvider,
   threading: SuplaThreading
-) : BaseViewModel<SwitchGeneralViewState, SwitchGeneralViewEvent>(SwitchGeneralViewState(), threading),
+) : BaseRelayGeneralViewModel<SwitchGeneralViewState, SwitchGeneralViewEvent>(
+  SwitchGeneralViewState(),
+  readGroupWithChannelsUseCase,
+  executeSimpleActionUseCase,
+  executeRelayActionUseCase,
+  channelConfigEventsManager,
+  deviceConfigEventsManager,
+  suplaClientProvider,
+  dateProvider,
+  threading
+),
   SwitchGeneralScope,
   ChannelGroupRelationDataEntityConvertible {
 
-  private var remoteId = 0
-  private var itemType = ItemType.CHANNEL
   private var isOn = false
-  private var isOffline = false
-  private var weeklyScheduleEnabled = false
 
-  fun onViewCreated(remoteId: Int, itemType: ItemType) {
-    this.remoteId = remoteId
-    this.itemType = itemType
-
+  fun onViewCreated(remoteId: Int, itemType: ItemType, deviceId: Int = 0) {
     observeDownload(remoteId)
-
-    if (itemType == ItemType.CHANNEL) {
-      observeProgramInfo(remoteId)
-      reloadWeeklySchedule(remoteId)
-    }
-
-    when (itemType) {
-      ItemType.CHANNEL -> observeChannel(remoteId)
-      ItemType.GROUP -> observeGroup(remoteId)
-    }
-  }
-
-  fun reloadWeeklySchedule(remoteId: Int) {
-    if (itemType == ItemType.CHANNEL) {
-      suplaClientProvider.provide()?.getChannelConfig(remoteId, ChannelConfigType.WEEKLY_SCHEDULE)
-    }
+    observeData(remoteId, itemType, deviceId)
   }
 
   fun forceTurnOn(remoteId: Int, itemType: ItemType) {
@@ -144,12 +127,12 @@ class SwitchGeneralViewModel @Inject constructor(
     if (state.flags.contains(SuplaRelayFlag.OVERCURRENT_RELAY_OFF)) {
       updateState { it.copy(showOvercurrentDialog = true) }
     } else {
-      performAction(ActionId.TURN_ON, itemType, remoteId)
+      performAction(ActionId.TURN_ON)
     }
   }
 
   override fun onTurnOff() {
-    performAction(ActionId.TURN_OFF, itemType, remoteId)
+    performAction(ActionId.TURN_OFF)
   }
 
   override fun onIntroductionClose() {
@@ -158,43 +141,22 @@ class SwitchGeneralViewModel @Inject constructor(
   }
 
   override fun onForce() {
-    val mode = if (isOn) SuplaRelayMode.FORCED_ON else SuplaRelayMode.FORCED_OFF
-    performRelayAction(mode, itemType, remoteId)
-  }
-
-  override fun onManual() {
-    performAction(ActionId.SWITCH_TO_MANUAL_MODE, itemType, remoteId)
-  }
-
-  override fun onWeekly() {
-    performAction(ActionId.SWITCH_TO_PROGRAM_MODE, itemType, remoteId)
-  }
-
-  override fun onAuto() {
-    performRelayAction(SuplaRelayMode.AUTOMATIC, itemType, remoteId)
+    val state = currentState()
+    if (state.forceActive) {
+      performAction(forceDeactivationAction(state.flags.contains(SuplaRelayFlag.WEEKLY_SCHEDULE_ENABLED)))
+    } else {
+      val mode = if (isOn) SuplaRelayMode.FORCED_ON else SuplaRelayMode.FORCED_OFF
+      performRelayAction(mode)
+    }
   }
 
   fun hideOvercurrentDialog() {
     updateState { it.copy(showOvercurrentDialog = false) }
   }
 
-  private fun performAction(actionId: ActionId, itemType: ItemType, remoteId: Int) {
-    executeSimpleActionUseCase(actionId, itemType.subjectType, remoteId)
-      .attach()
-      .subscribeBy(onError = defaultErrorHandler("performAction($actionId, $itemType, $remoteId)"))
-      .disposeBySelf()
-  }
-
-  private fun performRelayAction(mode: SuplaRelayMode, itemType: ItemType, remoteId: Int) {
-    executeRelayActionUseCase(itemType.subjectType, remoteId, mode)
-      .attach()
-      .subscribeBy(onError = defaultErrorHandler("performRelayAction($mode, $itemType, $remoteId)"))
-      .disposeBySelf()
-  }
-
-  private fun observeChannel(remoteId: Int) {
-    readChannelWithChildrenUseCase(remoteId)
-      .flatMapMaybe { channelWithChildren ->
+  override fun observeChannel(remoteId: Int, deviceId: Int) {
+    val channelWithMeasurements = readChannelWithChildrenUseCase(remoteId)
+      .switchMapMaybe { channelWithChildren ->
         channelWithChildren.isOrHasElectricityMeter.forTrue {
           loadElectricityMeterMeasurementsUseCase(
             profileId = channelWithChildren.profileId,
@@ -209,62 +171,69 @@ class SwitchGeneralViewModel @Inject constructor(
           }
           ?: Maybe.just(Pair<ChannelWithChildren, SummarizedMeasurements?>(channelWithChildren, null))
       }
-      .attachSilent()
-      .subscribeBy(
-        onNext = { (channelBase, measurements) -> handleChannel(channelBase, measurements) },
-        onError = defaultErrorHandler("loadChannel($remoteId)")
-      )
-      .disposeBySelf()
+
+    observeChannel(channelWithMeasurements, remoteId, deviceId) { (channel, measurements), schedule ->
+      buildChannelState(channel, measurements, schedule)
+    }
   }
 
-  private fun handleChannel(data: ChannelWithChildren, measurements: SummarizedMeasurements?) {
-    updateState { state ->
-      data.let {
-        if ((data.isOrHasElectricityMeter || data.isOrHasImpulseCounter) && !state.initialDataLoadStarted) {
-          downloadChannelMeasurementsUseCase.invoke(data)
-        }
-      }
-
-      val showButtons = data.function.switchWithButtons
-      val channelState = getChannelStateUseCase(data)
-      val value = data.channel.channelValueEntity.asRelayValue()
-      isOn = channelState.value == ChannelState.Value.ON
-      isOffline = data.status.offline
-      weeklyScheduleEnabled = value.flags.contains(SuplaRelayFlag.WEEKLY_SCHEDULE_ENABLED)
-
-      state.copy(
-        leftButtonDisabled = data.status.offline,
-        rightButtonDisabled = data.status.offline,
-        flags = value.flags,
-        initialDataLoadStarted = true,
-        deviceStateData = DeviceStateData(
-          label = getDeviceStateLabel(data),
-          icon = getChannelIconUseCase(data),
-          value = getDeviceStateValue(data)
-        ),
-        channelIssues = getAllChannelIssuesUseCase(data.shareable),
-        leftButtonState = showButtons.forTrue {
-          SwitchButtonState(
-            icon = getChannelIconUseCase(data, channelStateValue = ChannelState.Value.OFF),
-            textRes = R.string.channel_btn_off,
-            pressed = channelState.value == ChannelState.Value.OFF
-          )
-        },
-        rightButtonState = showButtons.forTrue {
-          SwitchButtonState(
-            icon = getChannelIconUseCase(data, channelStateValue = ChannelState.Value.ON),
-            textRes = R.string.channel_btn_on,
-            pressed = channelState.value == ChannelState.Value.ON
-          )
-        },
-        electricityMeterState = electricityMeterGeneralStateHandler.updateState(state.electricityMeterState, data, measurements),
-        impulseCounterState = impulseCounterGeneralStateHandler.updateState(state.impulseCounterState, data, measurements),
-        forceSupported = data.channel.forceSupported,
-        forceActive = data.channel.forceActive,
-        operatingMode = OperatingMode(channelFlags = data.channel.flags, relayValue = value),
-        scale = preferences.scale
-      )
+  private fun buildChannelState(
+    data: ChannelWithChildren,
+    measurements: SummarizedMeasurements?,
+    schedule: RelayScheduleContext
+  ): SwitchGeneralViewState {
+    if ((data.isOrHasElectricityMeter || data.isOrHasImpulseCounter) && !currentState().initialDataLoadStarted) {
+      downloadChannelMeasurementsUseCase.invoke(data)
     }
+    val state = currentState()
+
+    val showButtons = data.function.switchWithButtons
+    val channelState = getChannelStateUseCase(data)
+    val value = data.channel.channelValueEntity.asRelayValue()
+    val weeklyScheduleEnabled = value.weeklyScheduleEnabled
+    val forced = value.forced
+    isOn = channelState.value == ChannelState.Value.ON
+
+    return state.copy(
+      manualButtonDisabled = data.status.offline,
+      weeklyButtonDisabled = data.status.offline,
+      autoButtonDisabled = data.status.offline,
+      leftButtonDisabled = data.status.offline || forced,
+      rightButtonDisabled = data.status.offline || forced,
+      forceButtonDisabled = weeklyScheduleEnabled,
+      flags = value.flags,
+      initialDataLoadStarted = true,
+      deviceStateData = DeviceStateData(
+        label = getDeviceStateLabel(data),
+        icon = getChannelIconUseCase(data),
+        value = getDeviceStateValue(data)
+      ),
+      channelIssues = getAllChannelIssuesUseCase(data.shareable),
+      programInfo = schedule.programInfo(data.status.offline, value),
+      leftButtonState = showButtons.forTrue {
+        SwitchButtonState(
+          icon = getChannelIconUseCase(data, channelStateValue = ChannelState.Value.OFF),
+          textRes = R.string.channel_btn_off,
+          pressed = channelState.value == ChannelState.Value.OFF
+        )
+      },
+      rightButtonState = showButtons.forTrue {
+        SwitchButtonState(
+          icon = getChannelIconUseCase(data, channelStateValue = ChannelState.Value.ON),
+          textRes = R.string.channel_btn_on,
+          pressed = channelState.value == ChannelState.Value.ON
+        )
+      },
+      electricityMeterState = electricityMeterGeneralStateHandler.updateState(state.electricityMeterState, data, measurements)
+        ?.copy(currentMonthDownloading = state.electricityMeterState?.currentMonthDownloading ?: false),
+      impulseCounterState = impulseCounterGeneralStateHandler.updateState(state.impulseCounterState, data, measurements)
+        ?.copy(currentMonthDownloading = state.impulseCounterState?.currentMonthDownloading ?: false),
+      forceSupported = data.channel.forceSupported,
+      forceActive = data.channel.forceActive(value),
+      lockIconType = lockIconType(value),
+      operatingMode = OperatingMode(channelFlags = data.channel.flags, relayValue = value),
+      scale = preferences.scale
+    )
   }
 
   private fun getDeviceStateLabel(data: ChannelDataBase): LocalizedString {
@@ -302,28 +271,6 @@ class SwitchGeneralViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  private fun observeProgramInfo(remoteId: Int) {
-    val weeklySchedule = channelConfigEventsManager.observerConfig(remoteId)
-      .filter { it.result == ConfigResult.RESULT_TRUE && it.config is SuplaChannelWeeklyScheduleConfig }
-      .map { it.config as SuplaChannelWeeklyScheduleConfig }
-
-    Observable.combineLatest(
-      weeklySchedule,
-      Observable.interval(1, TimeUnit.MINUTES, threading.schedulers.computation).startWithItem(0L)
-    ) { config, _ ->
-      if (isOffline || !weeklyScheduleEnabled) {
-        emptyList()
-      } else {
-        RelayProgramInfoBuilder(config, dateProvider).build()
-      }
-    }
-      .subscribeBy(
-        onNext = { programInfo -> updateState { it.copy(programInfo = programInfo) } },
-        onError = defaultErrorHandler("observeProgramInfo($remoteId)")
-      )
-      .disposeBySelf()
-  }
-
   private fun handleDownloadEvents(downloadState: DownloadEventsManager.State) {
     when (downloadState) {
       is DownloadEventsManager.State.InProgress,
@@ -346,25 +293,16 @@ class SwitchGeneralViewModel @Inject constructor(
     }
   }
 
-  private fun observeGroup(remoteId: Int) {
-    readGroupWithChannelsUseCase(remoteId)
-      .attachSilent()
-      .subscribeBy(
-        onNext = this::handleGroup,
-        onError = defaultErrorHandler("loadGroup($remoteId)")
-      )
-      .disposeBySelf()
-  }
-
-  private fun handleGroup(groupWithChannels: GroupWithChannels) {
+  override fun handleGroup(groupWithChannels: GroupWithChannels) {
     val groupState: ChannelState.Value? = groupWithChannels.aggregatedState(GroupWithChannels.Policy.OnOff)
     isOn = groupState == ChannelState.Value.ON
-    isOffline = groupWithChannels.group.status.offline
-    weeklyScheduleEnabled = false
 
     updateState { state ->
       state.copy(
         leftButtonDisabled = groupWithChannels.group.status.offline,
+        manualButtonDisabled = groupWithChannels.group.status.offline,
+        weeklyButtonDisabled = groupWithChannels.group.status.offline,
+        autoButtonDisabled = groupWithChannels.group.status.offline,
         rightButtonDisabled = groupWithChannels.group.status.offline,
         flags = emptyList(),
         initialDataLoadStarted = true,
@@ -426,7 +364,12 @@ data class SwitchGeneralViewState(
   val rightButtonDisabled: Boolean = false,
   val forceSupported: Boolean = false,
   val forceActive: Boolean = false,
+  val lockIconType: LockIconType = LockIconType.OPENED,
   val operatingMode: OperatingMode? = null,
+  val manualButtonDisabled: Boolean = false,
+  val weeklyButtonDisabled: Boolean = false,
+  val autoButtonDisabled: Boolean = false,
+  val forceButtonDisabled: Boolean = false,
 
   val scale: Float = 1f
 ) : ViewState()
@@ -438,13 +381,3 @@ private val SuplaFunction.switchWithButtons: Boolean
     SuplaFunction.LIGHTSWITCH -> true
     else -> false
   }
-
-private val ChannelDataEntity.forceSupported: Boolean
-  get() = SuplaChannelFlag.RELAY_MODE_FORCED_SUPPORTED inside flags
-
-private val ChannelDataEntity.forceActive: Boolean
-  get() = forceSupported &&
-    (
-      channelValueEntity.asRelayValue().mode == SuplaRelayMode.FORCED_ON ||
-        channelValueEntity.asRelayValue().mode == SuplaRelayMode.FORCED_OFF
-      )

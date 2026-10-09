@@ -36,7 +36,7 @@ fun GateGeneralScreen(
 ) {
   ViewModelHost(
     viewModel = viewModel,
-    onCreate = { viewModel.observeData(item.remoteId, item.itemType) }
+    onCreate = { viewModel.observeData(item.remoteId, item.itemType, item.deviceId) }
   ) {
     viewModel.View(state = it)
   }

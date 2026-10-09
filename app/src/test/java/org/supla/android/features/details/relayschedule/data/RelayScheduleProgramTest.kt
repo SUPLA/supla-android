@@ -32,7 +32,7 @@ class RelayScheduleProgramTest {
   @Test
   fun `should create labels for relay modes`() {
     assertThat(program(SuplaRelayMode.NOT_SET).label)
-      .isEqualTo(LocalizedString.Constant(NO_VALUE_TEXT))
+      .isEqualTo(localizedString(R.string.schedule_program_default))
     assertThat(program(SuplaRelayMode.START_ON).label)
       .isEqualTo(localizedString(R.string.turn_on))
     assertThat(program(SuplaRelayMode.START_OFF, durationS = 200).label)

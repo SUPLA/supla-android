@@ -82,6 +82,30 @@ fun SwitchButtons(
   rightColors: SuplaButtonColors = SuplaButtonDefaults.primaryColors(contentDisabled = MaterialTheme.colorScheme.onSurface),
   modifier: Modifier
 ) =
+  SwitchButtons(
+    leftButton = leftButton,
+    rightButton = rightButton,
+    leftButtonDisabled = disabled,
+    rightButtonDisabled = disabled,
+    leftButtonClick = leftButtonClick,
+    rightButtonClick = rightButtonClick,
+    leftColors = leftColors,
+    rightColors = rightColors,
+    modifier = modifier
+  )
+
+@Composable
+fun SwitchButtons(
+  leftButton: SwitchButtonState?,
+  rightButton: SwitchButtonState?,
+  leftButtonDisabled: Boolean = false,
+  rightButtonDisabled: Boolean = false,
+  leftButtonClick: () -> Unit = {},
+  rightButtonClick: () -> Unit = {},
+  leftColors: SuplaButtonColors = SuplaButtonDefaults.errorColors(contentDisabled = MaterialTheme.colorScheme.onSurface),
+  rightColors: SuplaButtonColors = SuplaButtonDefaults.primaryColors(contentDisabled = MaterialTheme.colorScheme.onSurface),
+  modifier: Modifier
+) =
   SwitchButtonsLayout(
     modifier = modifier
   ) {
@@ -90,7 +114,7 @@ fun SwitchButtons(
         icon = it.icon,
         text = stringResource(id = it.textRes),
         colors = leftColors,
-        disabled = disabled,
+        disabled = leftButtonDisabled,
         pressed = it.pressed,
         onClick = leftButtonClick,
         modifier = Modifier.widthIn(max = 120.dp)
@@ -101,7 +125,7 @@ fun SwitchButtons(
         icon = it.icon,
         text = stringResource(id = it.textRes),
         colors = rightColors,
-        disabled = disabled,
+        disabled = rightButtonDisabled,
         pressed = it.pressed,
         onClick = rightButtonClick,
         modifier = Modifier.widthIn(max = 120.dp)
@@ -115,21 +139,19 @@ fun SwitchButtonsLayout(
   defaultWidth: Int = 300,
   content: @Composable () -> Unit
 ) {
-  val defaultDistance = Distance.default
   val smallDistance = Distance.small
   val configuration = LocalWindowInfo.current
   val screenWidth = with(LocalDensity.current) { configuration.containerSize.width.dp.toPx().toInt() }
 
   Layout(modifier = modifier, content = content) { measurables, constraints ->
-    val spacing = defaultDistance.toPx().toInt()
-    val smallSpacing = smallDistance.toPx().toInt()
+    val spacing = smallDistance.toPx().toInt()
     val buttonMaxWidth = defaultWidth.dp.toPx().toInt()
     val possibleWidth = min(constraints.maxWidth, screenWidth)
 
     when (measurables.size) {
       1 -> layoutSingleButton(measurables, constraints, possibleWidth, buttonMaxWidth)
       2 -> layoutTwoButtons(measurables, constraints, possibleWidth, buttonMaxWidth, spacing)
-      3 -> layoutThreeButtons(measurables, constraints, possibleWidth, buttonMaxWidth, smallSpacing)
+      3 -> layoutThreeButtons(measurables, constraints, possibleWidth, buttonMaxWidth, spacing)
       else -> layoutNoButtons(constraints)
     }
   }

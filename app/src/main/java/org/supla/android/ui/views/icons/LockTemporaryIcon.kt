@@ -20,8 +20,8 @@ package org.supla.android.ui.views.icons
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material.icons.filled.LockClock
+import androidx.compose.material.icons.outlined.LockClock
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -32,14 +32,14 @@ import androidx.compose.ui.unit.Dp
 import org.supla.android.R
 
 @Composable
-fun LockIcon(
+fun LockTemporaryIcon(
   modifier: Modifier = Modifier,
   contentDescription: String? = null,
   color: Color = MaterialTheme.colorScheme.onSurfaceVariant,
   size: Dp = dimensionResource(R.dimen.icon_small_size),
   filled: Boolean = false
 ) {
-  val icon = if (filled) Icons.Filled.Lock else Icons.Outlined.Lock
+  val icon = if (filled) Icons.Filled.LockClock else Icons.Outlined.LockClock
 
   Image(
     imageVector = icon,
