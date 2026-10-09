@@ -18,9 +18,11 @@ package org.supla.android.features.details.switchdetail.general
  */
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
@@ -29,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -36,6 +39,7 @@ import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
+import org.supla.android.extensions.isNotNull
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterMetricsView
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterState
 import org.supla.android.features.details.detailbase.electricitymeter.PhaseWithMeasurements
@@ -44,6 +48,7 @@ import org.supla.android.features.details.programinfo.ProgramInfo
 import org.supla.android.features.details.relayschedule.OperatingMode
 import org.supla.android.features.details.relayschedule.ui.OperatingButtons
 import org.supla.android.features.details.relayschedule.ui.OperatingButtonsScope
+import org.supla.android.features.details.relayschedule.ui.OperatingButtonsStyle
 import org.supla.android.images.ImageId
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.tools.SuplaPreviewLandscape
@@ -88,7 +93,8 @@ fun SwitchGeneralScope.View(
         Box(modifier = Modifier.weight(1f)) {
           ElectricityMeterMetricsView(
             state = state.electricityMeterState,
-            onIntroductionClose = { onIntroductionClose() }
+            onIntroductionClose = { onIntroductionClose() },
+            topPadding = if (state.programInfo.isNotEmpty() || state.channelIssues.isNotNull) Distance.tiny else Distance.default
           )
           Shadow(orientation = ShadowOrientation.STARTING_BOTTOM, modifier = Modifier.align(Alignment.BottomCenter))
         }
@@ -96,7 +102,10 @@ fun SwitchGeneralScope.View(
         state.programInfo.takeIf { it.isNotEmpty() }?.let { ProgramInfoRow(it) }
         state.channelIssues?.let { ChannelIssuesView(it, modifier = Modifier.padding(top = Distance.default)) }
         Box(modifier = Modifier.weight(1f)) {
-          ImpulseCounterMetricsView(state = state.impulseCounterState)
+          ImpulseCounterMetricsView(
+            state = state.impulseCounterState,
+            topPadding = if (state.programInfo.isNotEmpty() || state.channelIssues.isNotNull) Distance.tiny else Distance.default
+          )
           Shadow(orientation = ShadowOrientation.STARTING_BOTTOM, modifier = Modifier.align(Alignment.BottomCenter))
         }
       } else if (state.relatedChannelsData != null) {
@@ -120,8 +129,11 @@ fun SwitchGeneralScope.View(
         Spacer(modifier = Modifier.weight(1f))
       }
 
-      state.operatingMode?.let { OperatingButtons(it) }
-      ControlButtons(state)
+      if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        LandscapeControlButtons(state)
+      } else {
+        PortraitControlButtons(state)
+      }
     }
   }
 }
@@ -150,7 +162,16 @@ private fun ColumnScope.WithRelatedChannels(
 }
 
 @Composable
-private fun SwitchGeneralScope.ControlButtons(state: SwitchGeneralViewState) {
+private fun SwitchGeneralScope.PortraitControlButtons(state: SwitchGeneralViewState) {
+  state.operatingMode?.let {
+    OperatingButtons(
+      operatingMode = it,
+      manualButtonDisabled = state.manualButtonDisabled,
+      weeklyButtonDisabled = state.weeklyButtonDisabled,
+      autoButtonDisabled = state.autoButtonDisabled
+    )
+  }
+
   SwitchButtonsLayout(
     modifier = Modifier.padding(horizontal = Distance.horizontal, vertical = Distance.vertical)
   ) {
@@ -158,7 +179,10 @@ private fun SwitchGeneralScope.ControlButtons(state: SwitchGeneralViewState) {
       SwitchButton(
         icon = it.icon,
         text = stringResource(id = it.textRes),
-        colors = SuplaButtonDefaults.errorColors(contentDisabled = MaterialTheme.colorScheme.onSurface),
+        colors = SuplaButtonDefaults.errorColors(
+          contentDisabled = MaterialTheme.colorScheme.onSurface,
+          borderDisabledAndPressed = MaterialTheme.colorScheme.error
+        ),
         disabled = state.leftButtonDisabled,
         pressed = it.pressed,
         onClick = { onTurnOff() },
@@ -169,6 +193,8 @@ private fun SwitchGeneralScope.ControlButtons(state: SwitchGeneralViewState) {
     state.forceSupported.ifTrue {
       LockSuplaButton(
         pressed = state.forceActive,
+        type = state.lockIconType,
+        disabled = state.forceButtonDisabled,
         onClick = { onForce() }
       )
     }
@@ -177,12 +203,76 @@ private fun SwitchGeneralScope.ControlButtons(state: SwitchGeneralViewState) {
       SwitchButton(
         icon = it.icon,
         text = stringResource(id = it.textRes),
-        colors = SuplaButtonDefaults.primaryColors(contentDisabled = MaterialTheme.colorScheme.onSurface),
+        colors = SuplaButtonDefaults.primaryColors(
+          contentDisabled = MaterialTheme.colorScheme.onSurface,
+          borderDisabledAndPressed = MaterialTheme.colorScheme.primary
+        ),
         disabled = state.rightButtonDisabled,
         pressed = it.pressed,
         onClick = { onTurnOn() },
         modifier = Modifier.widthIn(max = 120.dp)
       )
+    }
+  }
+}
+
+@Composable
+private fun SwitchGeneralScope.LandscapeControlButtons(state: SwitchGeneralViewState) {
+  Row(
+    modifier = Modifier.padding(horizontal = Distance.horizontal, vertical = Distance.vertical),
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.spacedBy(Distance.small)
+  ) {
+    state.operatingMode?.let {
+      OperatingButtons(
+        operatingMode = it,
+        modifier = Modifier,
+        manualButtonDisabled = state.manualButtonDisabled,
+        weeklyButtonDisabled = state.weeklyButtonDisabled,
+        autoButtonDisabled = state.autoButtonDisabled,
+        style = OperatingButtonsStyle.ICONS
+      )
+    }
+
+    SwitchButtonsLayout {
+      state.leftButtonState?.let {
+        SwitchButton(
+          icon = it.icon,
+          text = stringResource(id = it.textRes),
+          colors = SuplaButtonDefaults.errorColors(
+            contentDisabled = MaterialTheme.colorScheme.onSurface,
+            borderDisabledAndPressed = MaterialTheme.colorScheme.error
+          ),
+          disabled = state.leftButtonDisabled,
+          pressed = it.pressed,
+          onClick = { onTurnOff() },
+          modifier = Modifier.widthIn(max = 120.dp)
+        )
+      }
+
+      state.forceSupported.ifTrue {
+        LockSuplaButton(
+          pressed = state.forceActive,
+          type = state.lockIconType,
+          disabled = state.forceButtonDisabled,
+          onClick = { onForce() }
+        )
+      }
+
+      state.rightButtonState?.let {
+        SwitchButton(
+          icon = it.icon,
+          text = stringResource(id = it.textRes),
+          colors = SuplaButtonDefaults.primaryColors(
+            contentDisabled = MaterialTheme.colorScheme.onSurface,
+            borderDisabledAndPressed = MaterialTheme.colorScheme.primary
+          ),
+          disabled = state.rightButtonDisabled,
+          pressed = it.pressed,
+          onClick = { onTurnOn() },
+          modifier = Modifier.widthIn(max = 120.dp)
+        )
+      }
     }
   }
 }

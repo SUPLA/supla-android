@@ -67,11 +67,14 @@ fun <T> Spinner(
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
   fillMaxWidth: Boolean = false,
+  selectedOption: T? = null,
   onOptionSelected: (selectedId: T) -> Unit
 ) {
   var expanded by remember { mutableStateOf(false) }
   val firstOptionText = options[options.keys.first()] ?: ""
-  var selectedOptionText by remember(options) { mutableStateOf(firstOptionText) }
+  var selectedOptionText by remember(options, selectedOption) {
+    mutableStateOf(selectedOption?.let { options[it] } ?: firstOptionText)
+  }
 
   Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
     Label(

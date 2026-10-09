@@ -40,6 +40,7 @@ import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.details.relayschedule.data.MAX_PROGRAM_DURATION_S
 import org.supla.android.features.details.relayschedule.data.RelayProgramDuration
+import org.supla.android.features.details.relayschedule.data.RelayProgramSettingsConstraints
 import org.supla.android.features.details.relayschedule.data.RelayProgramSettingsData
 import org.supla.android.features.details.relayschedule.data.RelayScheduleProgram
 import org.supla.android.features.details.relayschedule.extensions.toWeeklyScheduleConfigChange
@@ -54,17 +55,10 @@ import org.supla.android.ui.views.schedule.editor.WeeklyScheduleEditorState
 import org.supla.android.ui.views.schedule.editor.quartersSelectionData
 import org.supla.android.ui.views.schedule.editor.viewScheduleTableState
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
+import org.supla.core.shared.data.model.general.SuplaFunction
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-
-private val PROGRAM_MODES = listOf(
-  SuplaRelayMode.START_ON,
-  SuplaRelayMode.START_OFF,
-  SuplaRelayMode.FORCED_ON,
-  SuplaRelayMode.FORCED_OFF,
-  SuplaRelayMode.AUTOMATIC
-)
 
 private const val CONFIG_RELOAD_DELAY_MS = 1000L
 private const val INTERACTION_PROTECTION_DELAY_MS = 3000L
@@ -90,6 +84,7 @@ class RelayScheduleViewModel @Inject constructor(
   private var changing: Boolean = false
   private var lastInteractionTime: Long? = null
   private var automaticModeSupported: Boolean = false
+  private var programSettingsConstraints = RelayProgramSettingsConstraints()
 
   override fun onViewCreated() {
     loadingTimeoutManager.watch({ currentState().loadingState }) {
@@ -104,7 +99,6 @@ class RelayScheduleViewModel @Inject constructor(
     this.remoteId = remoteId
     changing = false
     lastInteractionTime = null
-    automaticModeSupported = false
 
     configReloadSubject.attachSilent()
       .debounce(CONFIG_RELOAD_DELAY_MS, TimeUnit.MILLISECONDS, threading.schedulers.computation)
@@ -128,7 +122,8 @@ class RelayScheduleViewModel @Inject constructor(
         weeklyScheduleConfig = weeklyConfig.config as SuplaChannelWeeklyScheduleConfig,
         weeklyScheduleResult = weeklyConfig.result,
         deviceConfig = deviceConfig.config,
-        channelFlags = channel.flags
+        channelFlags = channel.flags,
+        function = channel.function
       )
     }
       .debounce(50, TimeUnit.MILLISECONDS, threading.schedulers.computation)
@@ -160,23 +155,18 @@ class RelayScheduleViewModel @Inject constructor(
     updateState { state ->
       val programConfiguration = state.editorState.programs.firstOrNull { it.program == program }
         ?: return@updateState state
-      val relayDurationS = (programConfiguration.relayModeDurationS ?: 0).coerceIn(0, MAX_PROGRAM_DURATION_S)
-      val relayOppositeDurationS = if (relayDurationS > 0) {
-        (programConfiguration.relayOppositeModeDurationS ?: 0).coerceIn(0, MAX_PROGRAM_DURATION_S)
-      } else {
-        0
-      }
+      val relayDurationS = programConfiguration.relayModeDurationS ?: 0
+      val relayOppositeDurationS = programConfiguration.relayOppositeModeDurationS ?: 0
       val availableModes = availableProgramModes()
       val data = RelayProgramSettingsData(
         program = program,
-        selectedMode = programConfiguration.relayMode.takeIf { programConfiguration.isValid && it in availableModes }
-          ?: SuplaRelayMode.START_ON,
+        selectedMode = programConfiguration.relayMode,
         relayDurationS = relayDurationS,
         relayOppositeDurationS = relayOppositeDurationS
       )
 
       state.copy(
-        programSettings = RelayProgramSettingsViewState(data = data, modes = availableModes)
+        programSettings = createProgramSettingsViewState(data, availableModes)
       )
     }
   }
@@ -188,7 +178,8 @@ class RelayScheduleViewModel @Inject constructor(
         return@updateState state
       }
 
-      state.copy(programSettings = settings.copy(data = settings.data.copy(selectedMode = mode)))
+      val data = settings.data.copy(selectedMode = mode)
+      state.copy(programSettings = createProgramSettingsViewState(data, settings.modes))
     }
   }
 
@@ -230,8 +221,10 @@ class RelayScheduleViewModel @Inject constructor(
         SuplaWeeklyScheduleProgram(
           program = data.program,
           relayMode = data.selectedMode,
-          relayModeDurationS = data.relayDurationS,
-          relayOppositeModeDurationS = data.relayOppositeDurationS.takeIf { data.relayDurationS > 0 } ?: 0
+          relayModeDurationS = data.relayDurationS.takeIf { settings.durationSupported } ?: 0,
+          relayOppositeModeDurationS = data.relayOppositeDurationS.takeIf {
+            settings.oppositeDurationSupported && data.relayDurationS > 0
+          } ?: 0
         )
       )
       val newState = state.copy(
@@ -335,8 +328,22 @@ class RelayScheduleViewModel @Inject constructor(
     delayedWeeklyScheduleConfigSubject.emit(state.toWeeklyScheduleConfigChange(remoteId))
   }
 
-  private fun availableProgramModes(): List<SuplaRelayMode> = PROGRAM_MODES.filter {
+  private fun availableProgramModes(): List<SuplaRelayMode> = programSettingsConstraints.modes.filter {
     it != SuplaRelayMode.AUTOMATIC || automaticModeSupported
+  }
+
+  private fun createProgramSettingsViewState(
+    data: RelayProgramSettingsData,
+    modes: List<SuplaRelayMode>
+  ): RelayProgramSettingsViewState {
+    val startModeSelected = data.selectedMode == SuplaRelayMode.START_ON || data.selectedMode == SuplaRelayMode.START_OFF
+    val durationSupported = programSettingsConstraints.durationSupported && startModeSelected
+    return RelayProgramSettingsViewState(
+      data = data,
+      modes = modes,
+      durationSupported = durationSupported,
+      oppositeDurationSupported = durationSupported && programSettingsConstraints.oppositeDurationSupported
+    )
   }
 
   private fun changeProgramDuration(duration: RelayProgramDuration, change: (Int) -> Int) {
@@ -356,8 +363,10 @@ class RelayScheduleViewModel @Inject constructor(
   private fun durationChangeAllowed(
     duration: RelayProgramDuration,
     settings: RelayProgramSettingsViewState? = currentState().programSettings
-  ): Boolean = settings != null &&
-    (duration == RelayProgramDuration.RELAY_MODE || settings.data.relayDurationS > 0)
+  ): Boolean = settings != null && when (duration) {
+    RelayProgramDuration.RELAY_MODE -> settings.durationSupported
+    RelayProgramDuration.OPPOSITE_MODE -> settings.oppositeDurationSupported && settings.data.relayDurationS > 0
+  }
 
   private fun updateProgramDuration(duration: RelayProgramDuration, value: Int, valueString: String) {
     updateState { state ->
@@ -372,6 +381,8 @@ class RelayScheduleViewModel @Inject constructor(
       val newSettings = RelayProgramSettingsViewState(
         data = data,
         modes = settings.modes,
+        durationSupported = settings.durationSupported,
+        oppositeDurationSupported = settings.oppositeDurationSupported,
         relayDurationSString = if (duration == RelayProgramDuration.RELAY_MODE) valueString else settings.relayDurationSString,
         relayOppositeDurationSString = if (duration == RelayProgramDuration.RELAY_MODE && value == 0) {
           "0"
@@ -410,6 +421,7 @@ class RelayScheduleViewModel @Inject constructor(
     }
 
     automaticModeSupported = SuplaChannelFlag.RELAY_MODE_AUTOMATIC_SUPPORTED inside data.channelFlags
+    programSettingsConstraints = RelayProgramSettingsConstraints(data.function)
 
     if (changing) {
       Timber.d("Relay schedule update skipped because of changing")
@@ -437,7 +449,8 @@ class RelayScheduleViewModel @Inject constructor(
     val weeklyScheduleConfig: SuplaChannelWeeklyScheduleConfig,
     val weeklyScheduleResult: ConfigResult,
     val deviceConfig: SuplaDeviceConfig?,
-    val channelFlags: Long
+    val channelFlags: Long,
+    val function: SuplaFunction
   )
 }
 
