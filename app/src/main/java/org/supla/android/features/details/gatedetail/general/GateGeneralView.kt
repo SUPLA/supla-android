@@ -36,6 +36,7 @@ import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.ViewState
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.features.details.programinfo.ProgramInfo
 import org.supla.android.features.details.relayschedule.OperatingMode
 import org.supla.android.features.details.relayschedule.ui.OperatingButtons
 import org.supla.android.features.details.relayschedule.ui.OperatingButtonsScope
@@ -50,27 +51,36 @@ import org.supla.android.ui.lists.sensordata.RelatedChannelData
 import org.supla.android.ui.lists.sensordata.RelatedChannelsView
 import org.supla.android.ui.views.DeviceState
 import org.supla.android.ui.views.DeviceStateData
+import org.supla.android.ui.views.buttons.LockIconType
 import org.supla.android.ui.views.buttons.LockSuplaButton
 import org.supla.android.ui.views.buttons.SwitchButton
 import org.supla.android.ui.views.buttons.SwitchButtonState
 import org.supla.android.ui.views.buttons.SwitchButtons
 import org.supla.android.ui.views.buttons.supla.SuplaButton
 import org.supla.android.ui.views.buttons.supla.SuplaButtonDefaults
+import org.supla.android.ui.views.schedule.ProgramInfoRow
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 
 data class GateGeneralViewState(
   val deviceStateData: DeviceStateData? = null,
+  val programInfo: List<ProgramInfo> = emptyList(),
   val relatedChannelsData: List<RelatedChannelData>? = null,
   val channelIssues: List<ChannelIssueItem>? = null,
   val mainButtonLabel: LocalizedString = localizedString(R.string.channel_btn_step_by_step),
   val closeButtonState: SwitchButtonState? = null,
   val openButtonState: SwitchButtonState? = null,
+  val actionButtonsDisabled: Boolean = false,
   val showOpenAndCloseWarning: Boolean = false,
   val operatingMode: OperatingMode? = null,
+  val manualButtonDisabled: Boolean = false,
+  val weeklyButtonDisabled: Boolean = false,
+  val autoButtonDisabled: Boolean = false,
+  val forceButtonDisabled: Boolean = false,
   val forceSupported: Boolean = false,
   val forceActive: Boolean = false,
+  val lockIconType: LockIconType = LockIconType.OPENED,
   val offline: Boolean = false,
   val scale: Float = 1f
 ) : ViewState()
@@ -91,7 +101,11 @@ fun GateGeneralScope.View(
 ) {
   Column {
     state.deviceStateData?.let {
-      DeviceState(data = it, modifier = Modifier.padding(vertical = Distance.vertical))
+      if (state.programInfo.isNotEmpty()) {
+        ProgramInfoRow(state.programInfo)
+      } else {
+        DeviceState(data = it, modifier = Modifier.padding(vertical = Distance.vertical))
+      }
       state.channelIssues?.let { issues -> ChannelIssuesView(issues) }
       Spacer(modifier = Modifier.weight(1f))
     }
@@ -119,15 +133,14 @@ fun GateGeneralScope.View(
       )
     }
 
-    state.forceSupported.ifTrue {
-      Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-        LockSuplaButton(
-          pressed = state.forceActive,
-          onClick = { onForce() }
-        )
-      }
+    state.operatingMode?.let {
+      OperatingButtons(
+        operatingMode = it,
+        manualButtonDisabled = state.manualButtonDisabled,
+        weeklyButtonDisabled = state.weeklyButtonDisabled,
+        autoButtonDisabled = state.autoButtonDisabled
+      )
     }
-    state.operatingMode?.let { OperatingButtons(it) }
 
     if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT) {
       PortraitButtons(state)
@@ -143,36 +156,58 @@ private fun GateGeneralScope.PortraitButtons(state: GateGeneralViewState) {
     SwitchButtons(
       leftButton = state.closeButtonState,
       rightButton = state.openButtonState,
-      disabled = state.offline,
+      leftButtonDisabled = state.actionButtonsDisabled,
+      rightButtonDisabled = state.actionButtonsDisabled,
       leftButtonClick = { onClose() },
       rightButtonClick = { onOpen() },
+      modifier = Modifier.padding(start = Distance.default, end = Distance.default, top = Distance.default)
     )
   }
 
-  SuplaButton(
-    text = state.mainButtonLabel(LocalContext.current),
-    onClick = { onOpenClose() },
-    disabled = state.offline,
-    modifier = Modifier
-      .fillMaxWidth()
-      .padding(start = Distance.default, end = Distance.default, bottom = Distance.default)
-  )
+  Row(
+    modifier = Modifier.padding(Distance.default),
+    horizontalArrangement = Arrangement.spacedBy(Distance.small)
+  ) {
+    state.forceSupported.ifTrue {
+      LockSuplaButton(
+        pressed = state.forceActive,
+        type = state.lockIconType,
+        disabled = state.forceButtonDisabled,
+        onClick = { onForce() }
+      )
+    }
+
+    SuplaButton(
+      text = state.mainButtonLabel(LocalContext.current),
+      onClick = { onOpenClose() },
+      disabled = state.offline || state.actionButtonsDisabled,
+      modifier = Modifier.weight(1f)
+    )
+  }
 }
 
 @Composable
 private fun GateGeneralScope.LandscapeButtons(state: GateGeneralViewState) {
   Row(
-    horizontalArrangement = Arrangement.spacedBy(Distance.default),
+    horizontalArrangement = Arrangement.spacedBy(Distance.small),
     modifier = Modifier
       .padding(horizontal = Distance.default)
       .padding(bottom = Distance.small, top = Distance.small)
   ) {
+    state.forceSupported.ifTrue {
+      LockSuplaButton(
+        pressed = state.forceActive,
+        type = state.lockIconType,
+        disabled = state.forceButtonDisabled,
+        onClick = { onForce() }
+      )
+    }
     state.closeButtonState?.let {
       SwitchButton(
         icon = it.icon,
         text = stringResource(id = it.textRes),
         colors = SuplaButtonDefaults.primaryColors(contentDisabled = MaterialTheme.colorScheme.onSurface),
-        disabled = state.offline,
+        disabled = state.offline || state.actionButtonsDisabled,
         pressed = it.pressed,
         onClick = { onClose() },
         modifier = Modifier.weight(1f)
@@ -181,14 +216,14 @@ private fun GateGeneralScope.LandscapeButtons(state: GateGeneralViewState) {
     SuplaButton(
       text = stringResource(R.string.channel_btn_step_by_step),
       onClick = { onOpenClose() },
-      disabled = state.offline
+      disabled = state.offline || state.actionButtonsDisabled
     )
     state.openButtonState?.let {
       SwitchButton(
         icon = it.icon,
         text = stringResource(id = it.textRes),
         colors = SuplaButtonDefaults.primaryColors(contentDisabled = MaterialTheme.colorScheme.onSurface),
-        disabled = state.offline,
+        disabled = state.offline || state.actionButtonsDisabled,
         pressed = it.pressed,
         onClick = { onClose() },
         modifier = Modifier.weight(1f)

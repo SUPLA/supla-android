@@ -62,7 +62,7 @@ data class RelayScheduleProgram(
 
     private fun createLabel(mode: SuplaRelayMode, durationS: Int?, oppositeDurationS: Int?): LocalizedString =
       when (mode) {
-        SuplaRelayMode.NOT_SET -> LocalizedString.Constant(NO_VALUE_TEXT)
+        SuplaRelayMode.NOT_SET -> localizedString(R.string.schedule_program_default)
         SuplaRelayMode.START_ON -> startLabel(
           durationS = durationS,
           oppositeDurationS = oppositeDurationS,
