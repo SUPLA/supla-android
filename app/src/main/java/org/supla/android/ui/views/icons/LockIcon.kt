@@ -38,10 +38,13 @@ fun LockIcon(
   color: Color = MaterialTheme.colorScheme.onSurfaceVariant,
   size: Dp = dimensionResource(R.dimen.icon_small_size),
   filled: Boolean = false
-) =
+) {
+  val icon = if (filled) Icons.Filled.Lock else Icons.Outlined.Lock
+
   Image(
-    imageVector = if (filled) Icons.Filled.Lock else Icons.Outlined.Lock,
+    imageVector = icon,
     contentDescription = contentDescription,
     modifier = modifier.size(size),
     colorFilter = ColorFilter.tint(color)
   )
+}

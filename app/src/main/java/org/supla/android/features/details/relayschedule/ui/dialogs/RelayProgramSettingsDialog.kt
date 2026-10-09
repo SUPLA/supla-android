@@ -57,6 +57,8 @@ import org.supla.android.ui.views.texts.Label
 data class RelayProgramSettingsViewState(
   val data: RelayProgramSettingsData,
   val modes: List<SuplaRelayMode>,
+  val durationSupported: Boolean = true,
+  val oppositeDurationSupported: Boolean = true,
   val relayDurationSString: String = data.relayDurationS.toString(),
   val relayOppositeDurationSString: String = data.relayOppositeDurationS.toString(),
   val relayDurationMinusDisabled: Boolean = data.relayDurationS <= 0,
@@ -83,12 +85,13 @@ fun RelayProgramSettingsScope.RelayProgramDialog(state: RelayProgramSettingsView
     Spinner(
       label = stringResource(id = R.string.relay_schedule_program_operation_type),
       options = state.spinnerModes(),
+      selectedOption = data.selectedMode,
       onOptionSelected = { onProgramSettingsModeChange(it) },
       modifier = Modifier
         .padding(horizontal = dimensionResource(id = R.dimen.distance_default))
         .fillMaxWidth()
     )
-    if (data.selectedMode == SuplaRelayMode.START_ON || data.selectedMode == SuplaRelayMode.START_OFF) {
+    if (state.durationSupported) {
       DurationControlRow(
         headerText = stringResource(
           id = R.string.relay_schedule_program_first_duration,
@@ -101,19 +104,21 @@ fun RelayProgramSettingsScope.RelayProgramDialog(state: RelayProgramSettingsView
         onPlusClicked = { onProgramSettingsDurationPlusClick(RelayProgramDuration.RELAY_MODE) },
         onValueChanged = { onProgramSettingsDurationManualChange(RelayProgramDuration.RELAY_MODE, it) }
       )
-      DurationControlRow(
-        headerText = stringResource(
-          id = R.string.relay_schedule_program_second_duration,
-          data.selectedMode.oppositeModeStateLabel()
-        ),
-        duration = state.relayOppositeDurationSString,
-        disabled = state.relayOppositeDurationDisabled,
-        minusDisabled = state.relayOppositeDurationMinusDisabled,
-        plusDisabled = state.relayOppositeDurationPlusDisabled,
-        onMinusClicked = { onProgramSettingsDurationMinusClick(RelayProgramDuration.OPPOSITE_MODE) },
-        onPlusClicked = { onProgramSettingsDurationPlusClick(RelayProgramDuration.OPPOSITE_MODE) },
-        onValueChanged = { onProgramSettingsDurationManualChange(RelayProgramDuration.OPPOSITE_MODE, it) }
-      )
+      if (state.oppositeDurationSupported) {
+        DurationControlRow(
+          headerText = stringResource(
+            id = R.string.relay_schedule_program_second_duration,
+            data.selectedMode.oppositeModeStateLabel()
+          ),
+          duration = state.relayOppositeDurationSString,
+          disabled = state.relayOppositeDurationDisabled,
+          minusDisabled = state.relayOppositeDurationMinusDisabled,
+          plusDisabled = state.relayOppositeDurationPlusDisabled,
+          onMinusClicked = { onProgramSettingsDurationMinusClick(RelayProgramDuration.OPPOSITE_MODE) },
+          onPlusClicked = { onProgramSettingsDurationPlusClick(RelayProgramDuration.OPPOSITE_MODE) },
+          onValueChanged = { onProgramSettingsDurationManualChange(RelayProgramDuration.OPPOSITE_MODE, it) }
+        )
+      }
     }
     DialogButtonsRow {
       TextButton(

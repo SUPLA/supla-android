@@ -25,6 +25,7 @@ class SuplaButtonColors(
   val border: Color,
   val borderPressed: Color,
   val borderDisabled: Color,
+  val borderDisabledAndPressed: Color,
   val content: Color,
   val contentPressed: Color,
   val contentDisabled: Color,
@@ -34,6 +35,7 @@ class SuplaButtonColors(
 
   fun border(active: Boolean, disabled: Boolean) =
     when {
+      disabled && active -> borderDisabledAndPressed
       disabled -> borderDisabled
       active -> borderPressed
       else -> border

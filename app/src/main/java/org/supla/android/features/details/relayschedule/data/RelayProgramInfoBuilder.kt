@@ -31,7 +31,7 @@ class RelayProgramInfoBuilder(
   private val weeklyScheduleConfig: SuplaChannelWeeklyScheduleConfig,
   private val dateProvider: DateProvider
 ) {
-  fun build(): List<ProgramInfo> {
+  fun build(isAutomaticTimeSyncDisabled: Boolean = false): List<ProgramInfo> {
     val schedule = weeklyScheduleConfig.schedule
     if (schedule.isEmpty()) return emptyList()
 
@@ -69,6 +69,10 @@ class RelayProgramInfoBuilder(
       },
       description = currentDescription
     )
+    if (isAutomaticTimeSyncDisabled) {
+      return listOf(currentInfo.copy(time = null))
+    }
+
     val nextInfo = nextDescription?.let { ProgramInfo(type = ProgramInfo.Type.NEXT, description = it) }
 
     return listOfNotNull(currentInfo, nextInfo)
@@ -76,7 +80,7 @@ class RelayProgramInfoBuilder(
 
   private fun description(program: SuplaScheduleProgram): LocalizedString? =
     if (program == SuplaScheduleProgram.OFF) {
-      localizedString(R.string.turn_off)
+      RelayScheduleProgram.DEFAULT.label
     } else {
       weeklyScheduleConfig.programConfigurations
         .firstOrNull { it.program == program }

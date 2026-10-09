@@ -52,6 +52,7 @@ import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.features.details.relayschedule.data.RelayProgramDuration
 import org.supla.android.features.details.relayschedule.data.RelayScheduleProgram
 import org.supla.android.features.details.schedule.DelayedWeeklyScheduleConfigSubject
+import org.supla.android.features.details.schedule.WeeklyScheduleConfigChange
 import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxKey
 import org.supla.android.ui.views.schedule.editor.QuartersSelectionData
@@ -59,6 +60,7 @@ import org.supla.android.ui.views.schedule.editor.ScheduleTableBox
 import org.supla.android.ui.views.schedule.editor.ScheduleTableState
 import org.supla.android.ui.views.schedule.editor.WeeklyScheduleEditorState
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
+import org.supla.core.shared.data.model.general.SuplaFunction
 import java.util.concurrent.TimeUnit
 
 class RelayScheduleViewModelTest :
@@ -476,7 +478,7 @@ class RelayScheduleViewModelTest :
     val loadedState = loadPrograms(
       SuplaWeeklyScheduleProgram(
         program = SuplaScheduleProgram.PROGRAM_1,
-        relayMode = SuplaRelayMode.NOT_SET,
+        relayMode = SuplaRelayMode.START_ON,
         relayModeDurationS = null,
         relayOppositeModeDurationS = null
       )
@@ -542,19 +544,19 @@ class RelayScheduleViewModelTest :
   }
 
   @Test
-  fun `should clear second duration and block it when first duration is zero`() {
+  fun `should block second duration when first duration is zero`() {
     // given
     loadPrograms(
       SuplaWeeklyScheduleProgram(
         program = SuplaScheduleProgram.PROGRAM_1,
         relayMode = SuplaRelayMode.START_ON,
         relayModeDurationS = 0,
-        relayOppositeModeDurationS = 10
+        relayOppositeModeDurationS = 0
       )
     )
     viewModel.onScheduleProgramLongClick(SuplaScheduleProgram.PROGRAM_1)
 
-    // then - invalid stored second duration is cleared when dialog opens
+    // then - second duration is disabled when first duration is zero
     assertThat(states.last().programSettings!!.data.relayOppositeDurationS).isZero()
     assertThat(states.last().programSettings!!.relayOppositeDurationSString).isEqualTo("0")
     assertThat(states.last().programSettings!!.relayOppositeDurationDisabled).isTrue()
@@ -614,7 +616,7 @@ class RelayScheduleViewModelTest :
   @Test
   fun `should reject automatic mode when not supported by channel`() {
     // given
-    loadPrograms(weeklyProgram(SuplaScheduleProgram.PROGRAM_1, SuplaRelayMode.AUTOMATIC))
+    loadPrograms(weeklyProgram(SuplaScheduleProgram.PROGRAM_1, SuplaRelayMode.START_ON))
     viewModel.onScheduleProgramLongClick(SuplaScheduleProgram.PROGRAM_1)
 
     // when
@@ -676,6 +678,134 @@ class RelayScheduleViewModelTest :
     // then
     assertThat(states.last().programSettings).isNull()
     verify(exactly = 0) { delayedWeeklyScheduleConfigSubject.emit(any()) }
+  }
+
+  @Test
+  fun `should block second duration for staircase timer and send zero for every program`() {
+    val changes = mutableListOf<WeeklyScheduleConfigChange>()
+    every { delayedWeeklyScheduleConfigSubject.emit(capture(changes)) } returns Unit
+    every { channel.function } returns SuplaFunction.STAIRCASE_TIMER
+    loadPrograms(
+      weeklyProgram(SuplaScheduleProgram.PROGRAM_1, SuplaRelayMode.START_ON).copy(
+        relayModeDurationS = 20,
+        relayOppositeModeDurationS = 0
+      ),
+      weeklyProgram(SuplaScheduleProgram.PROGRAM_2, SuplaRelayMode.START_OFF).copy(
+        relayModeDurationS = 40,
+        relayOppositeModeDurationS = 0
+      )
+    )
+    viewModel.onScheduleProgramLongClick(SuplaScheduleProgram.PROGRAM_1)
+
+    assertThat(states.last().programSettings!!.durationSupported).isTrue()
+    assertThat(states.last().programSettings!!.oppositeDurationSupported).isFalse()
+    assertThat(states.last().programSettings!!.data.relayOppositeDurationS).isZero()
+
+    viewModel.onProgramSettingsModeChange(SuplaRelayMode.START_OFF)
+    viewModel.onProgramSettingsDurationManualChange(RelayProgramDuration.RELAY_MODE, "25")
+    viewModel.onProgramSettingsDurationPlusClick(RelayProgramDuration.OPPOSITE_MODE)
+    viewModel.onProgramSettingsDurationMinusClick(RelayProgramDuration.OPPOSITE_MODE)
+    viewModel.onProgramSettingsDurationManualChange(RelayProgramDuration.OPPOSITE_MODE, "15")
+    assertThat(states.last().programSettings!!.data.relayOppositeDurationS).isZero()
+    viewModel.onProgramSettingsSave()
+
+    assertThat(changes.last().programConfigurations.map { it.relayModeDurationS }).containsExactly(25, 40)
+    assertThat(changes.last().programConfigurations.map { it.relayOppositeModeDurationS }).containsExactly(0, 0)
+    assertThat(changes.last().programConfigurations.first().relayMode).isEqualTo(SuplaRelayMode.START_OFF)
+  }
+
+  @Test
+  fun `should restrict gate and lock programs and send zero durations`() {
+    val changes = mutableListOf<WeeklyScheduleConfigChange>()
+    every { delayedWeeklyScheduleConfigSubject.emit(capture(changes)) } returns Unit
+    listOf(
+      SuplaFunction.CONTROLLING_THE_GATE,
+      SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
+      SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
+      SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK
+    ).forEach { function ->
+      every { channel.function } returns function
+      loadPrograms(
+        weeklyProgram(SuplaScheduleProgram.PROGRAM_1, SuplaRelayMode.START_ON).copy(
+          relayModeDurationS = 0,
+          relayOppositeModeDurationS = 0
+        ),
+        weeklyProgram(SuplaScheduleProgram.PROGRAM_2, SuplaRelayMode.START_ON).copy(
+          relayModeDurationS = 0,
+          relayOppositeModeDurationS = 0
+        )
+      )
+      viewModel.onScheduleProgramLongClick(SuplaScheduleProgram.PROGRAM_1)
+      with(states.last().programSettings!!) {
+        assertThat(modes).containsExactly(SuplaRelayMode.START_ON, SuplaRelayMode.FORCED_OFF)
+        assertThat(data.selectedMode).isEqualTo(SuplaRelayMode.START_ON)
+        assertThat(durationSupported).isFalse()
+        assertThat(oppositeDurationSupported).isFalse()
+        assertThat(data.relayDurationS).isZero()
+        assertThat(data.relayOppositeDurationS).isZero()
+      }
+
+      listOf(SuplaRelayMode.START_OFF, SuplaRelayMode.FORCED_ON, SuplaRelayMode.AUTOMATIC).forEach {
+        viewModel.onProgramSettingsModeChange(it)
+      }
+      RelayProgramDuration.entries.forEach {
+        viewModel.onProgramSettingsDurationPlusClick(it)
+        viewModel.onProgramSettingsDurationMinusClick(it)
+        viewModel.onProgramSettingsDurationManualChange(it, "10")
+      }
+      assertThat(states.last().programSettings!!.data.selectedMode).isEqualTo(SuplaRelayMode.START_ON)
+      assertThat(states.last().programSettings!!.data.relayDurationS).isZero()
+      assertThat(states.last().programSettings!!.data.relayOppositeDurationS).isZero()
+      viewModel.onProgramSettingsModeChange(SuplaRelayMode.FORCED_OFF)
+      assertThat(states.last().programSettings!!.data.selectedMode).isEqualTo(SuplaRelayMode.FORCED_OFF)
+      viewModel.onProgramSettingsModeChange(SuplaRelayMode.NOT_SET)
+      viewModel.onProgramSettingsSave()
+
+      assertThat(changes.last().programConfigurations.first().relayMode).isEqualTo(SuplaRelayMode.FORCED_OFF)
+      assertThat(changes.last().programConfigurations.map { it.relayModeDurationS }).containsExactly(0, 0)
+      assertThat(changes.last().programConfigurations.map { it.relayOppositeModeDurationS }).containsExactly(0, 0)
+      viewModel.onScheduleProgramLongClick(SuplaScheduleProgram.PROGRAM_1)
+      assertThat(states.last().programSettings!!.data.selectedMode).isEqualTo(SuplaRelayMode.FORCED_OFF)
+    }
+  }
+
+  @Test
+  fun `should retain all supported modes and both durations for power and light switches`() {
+    val changes = mutableListOf<WeeklyScheduleConfigChange>()
+    every { delayedWeeklyScheduleConfigSubject.emit(capture(changes)) } returns Unit
+    every { channel.flags } returns SuplaChannelFlag.RELAY_MODE_AUTOMATIC_SUPPORTED.rawValue
+    listOf(SuplaFunction.POWER_SWITCH, SuplaFunction.LIGHTSWITCH).forEach { function ->
+      every { channel.function } returns function
+      loadPrograms(weeklyProgram(SuplaScheduleProgram.PROGRAM_1, SuplaRelayMode.START_ON))
+      viewModel.onScheduleProgramLongClick(SuplaScheduleProgram.PROGRAM_1)
+      assertThat(states.last().programSettings!!.modes).containsExactly(
+        SuplaRelayMode.START_ON,
+        SuplaRelayMode.START_OFF,
+        SuplaRelayMode.FORCED_ON,
+        SuplaRelayMode.FORCED_OFF,
+        SuplaRelayMode.AUTOMATIC
+      )
+      with(states.last().programSettings!!) {
+        assertThat(durationSupported).isTrue()
+        assertThat(oppositeDurationSupported).isTrue()
+      }
+      viewModel.onProgramSettingsModeChange(SuplaRelayMode.FORCED_OFF)
+      with(states.last().programSettings!!) {
+        assertThat(durationSupported).isFalse()
+        assertThat(oppositeDurationSupported).isFalse()
+      }
+      viewModel.onProgramSettingsModeChange(SuplaRelayMode.START_ON)
+      with(states.last().programSettings!!) {
+        assertThat(durationSupported).isTrue()
+        assertThat(oppositeDurationSupported).isTrue()
+      }
+      viewModel.onProgramSettingsDurationManualChange(RelayProgramDuration.RELAY_MODE, "20")
+      viewModel.onProgramSettingsDurationManualChange(RelayProgramDuration.OPPOSITE_MODE, "30")
+      viewModel.onProgramSettingsSave()
+
+      assertThat(changes.last().programConfigurations.single().relayModeDurationS).isEqualTo(20)
+      assertThat(changes.last().programConfigurations.single().relayOppositeModeDurationS).isEqualTo(30)
+    }
   }
 
   private fun loadPrograms(vararg programs: SuplaWeeklyScheduleProgram): RelayScheduleViewState {

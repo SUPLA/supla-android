@@ -22,13 +22,15 @@ import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.data.source.remote.hvac.SuplaRelayMode
 import org.supla.android.lib.actions.RelayActionParameters
 import org.supla.android.lib.actions.SubjectType
+import org.supla.android.tools.VibrationHelper
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ExecuteRelayActionUseCase @Inject constructor(
-  private val suplaClientProvider: SuplaClientProvider
+  private val suplaClientProvider: SuplaClientProvider,
+  private val vibrationHelper: VibrationHelper
 ) {
 
   operator fun invoke(
@@ -46,6 +48,9 @@ class ExecuteRelayActionUseCase @Inject constructor(
         Timber.d("Executing relay action with parameters: $parameters")
 
         val result = executeAction(parameters)
+        if (result) {
+          vibrationHelper.vibrate()
+        }
         Timber.i("Relay action ended up with '$result'")
       }
     }
