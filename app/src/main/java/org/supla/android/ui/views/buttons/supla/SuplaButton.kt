@@ -24,7 +24,6 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
@@ -150,6 +149,7 @@ fun SuplaButton(
   disabled: Boolean = false,
   pressed: Boolean = false,
   shape: SuplaButtonShape = SuplaButtonDefaults.allRoundedShape(minWidth = 124.dp),
+  colors: SuplaButtonColors = SuplaButtonDefaults.buttonColors(),
   onClick: () -> Unit
 ) {
   SuplaButton(
@@ -158,6 +158,7 @@ fun SuplaButton(
     disabled = disabled,
     active = pressed,
     shape = shape,
+    colors = colors,
   ) {
     Text(
       text = text,
@@ -190,7 +191,7 @@ fun SuplaButton(
 
   var borderColor by remember(colors, active, disabled) { mutableStateOf(colors.border(active, disabled)) }
   var shadowColor by remember(colors, active) {
-    mutableStateOf(if (!disabled && active) colors.shadowPressed else colors.shadow)
+    mutableStateOf(if (active) colors.shadowPressed else colors.shadow)
   }
   var foregroundColor by remember(colors, active, disabled) { mutableStateOf(colors.content(active, disabled)) }
 
@@ -240,7 +241,6 @@ fun SuplaButton(
   }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 @Preview(name = "Light mode", showBackground = true, widthDp = 220)
 @Preview(name = "Dark mode", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, widthDp = 220)
@@ -264,7 +264,8 @@ private fun Preview() {
         iconRes = R.drawable.ic_power_button,
         onClick = {},
         colors = SuplaButtonDefaults.buttonColors(content = MaterialTheme.colorScheme.primary),
-        disabled = true
+        disabled = true,
+        pressed = true
       )
       SuplaButton(
         iconRes = R.drawable.ic_power_button,
