@@ -20,7 +20,6 @@ package org.supla.android.features.details.switchdetail.switchdetail
 import io.mockk.MockKAnnotations
 import io.mockk.confirmVerified
 import io.mockk.every
-import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import io.mockk.verify
@@ -51,6 +50,7 @@ import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleEntry
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.ChannelConfigEventsManager.ConfigEvent
+import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterGeneralStateHandler
 import org.supla.android.features.details.detailbase.impulsecounter.ImpulseCounterGeneralStateHandler
@@ -115,6 +115,9 @@ class SwitchGeneralViewModelTest :
   private lateinit var channelConfigEventsManager: ChannelConfigEventsManager
 
   @MockK
+  private lateinit var deviceConfigEventsManager: DeviceConfigEventsManager
+
+  @MockK
   private lateinit var suplaClientProvider: SuplaClientProvider
 
   @MockK
@@ -141,15 +144,37 @@ class SwitchGeneralViewModelTest :
   @MockK
   override lateinit var threading: SuplaThreading
 
-  @InjectMockKs
   override lateinit var viewModel: SwitchGeneralViewModel
 
   @Before
   override fun setUp() {
     MockKAnnotations.init(this)
+    viewModel = SwitchGeneralViewModel(
+      loadElectricityMeterMeasurementsUseCase = loadElectricityMeterMeasurementsUseCase,
+      loadImpulseCounterMeasurementsUseCase = loadImpulseCounterMeasurementsUseCase,
+      electricityMeterGeneralStateHandler = electricityMeterGeneralStateHandler,
+      downloadChannelMeasurementsUseCase = downloadChannelMeasurementsUseCase,
+      impulseCounterGeneralStateHandler = impulseCounterGeneralStateHandler,
+      readChannelWithChildrenUseCase = readChannelWithChildrenUseCase,
+      readGroupWithChannelsUseCase = readGroupWithChannelsUseCase,
+      getAllChannelIssuesUseCase = getAllChannelIssuesUseCase,
+      downloadEventsManager = downloadEventsManager,
+      executeSimpleActionUseCase = executeSimpleActionUseCase,
+      executeRelayActionUseCase = executeRelayActionUseCase,
+      channelConfigEventsManager = channelConfigEventsManager,
+      deviceConfigEventsManager = deviceConfigEventsManager,
+      suplaClientProvider = suplaClientProvider,
+      dateProvider = dateProvider,
+      preferences = preferences,
+      getChannelStateUseCase = getChannelStateUseCase,
+      getChannelIconUseCase = getChannelIconUseCase,
+      getCaptionUseCase = getCaptionUseCase,
+      threading = threading
+    )
     every { suplaClientProvider.provide() } returns null
     every { downloadEventsManager.observeProgress(any()) } returns Observable.never()
     every { channelConfigEventsManager.observerConfig(any()) } returns Observable.never()
+    every { deviceConfigEventsManager.observerConfig(any()) } returns Observable.never()
     every { threading.schedulers.computation } returns testScheduler
     super.setUp()
   }
@@ -329,7 +354,7 @@ class SwitchGeneralViewModelTest :
 
     // then
     assertThat(states.last().programInfo).hasSize(1)
-    assertThat(states.last().programInfo.single().description).isEqualTo(localizedString(R.string.turn_off))
+    assertThat(states.last().programInfo.single().description).isEqualTo(localizedString(R.string.schedule_program_default))
     verify(exactly = 1) { readChannelWithChildrenUseCase.invoke(remoteId) }
 
     // when

@@ -18,6 +18,7 @@ package org.supla.android.features.details.detailbase.impulsecounter
  */
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -29,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import androidx.compose.ui.unit.Dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
@@ -39,25 +41,28 @@ import org.supla.android.ui.views.card.SummaryCardData
 @Composable
 fun ImpulseCounterMetricsView(
   state: ImpulseCounterState,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
+  topPadding: Dp = Distance.default
 ) {
   Column(
     modifier = modifier
       .background(MaterialTheme.colorScheme.background)
       .verticalScroll(rememberScrollState())
+      .padding(top = topPadding, bottom = Distance.small),
+    verticalArrangement = Arrangement.spacedBy(Distance.default)
   ) {
     state.totalData?.let {
       SingleSummaryCard(
         label = stringResource(R.string.details_ic_meter_value),
         data = it,
-        modifier = Modifier.padding(start = Distance.default, top = Distance.default, end = Distance.default)
+        modifier = Modifier.padding(horizontal = Distance.default)
       )
     }
     state.currentMonthData?.let {
       SingleSummaryCard(
         label = stringResource(R.string.details_ic_current_consumption),
         data = it,
-        modifier = Modifier.padding(start = Distance.default, top = Distance.default, end = Distance.default),
+        modifier = Modifier.padding(horizontal = Distance.default),
         loading = state.currentMonthDownloading
       )
     }
