@@ -478,6 +478,7 @@
   <string name="details_history">Előzmények</string>
   <string name="details_timer_wrong_time">A beállított időnek 0-nál nagyobbnak kell lennie</string>
   <string name="details_timer_text">Határozza meg az időt, amikor a készülék legyen:</string>
+  <string name="details_timer_disabled_forced_mode">A visszaszámláló időzítő kényszerített be-/kikapcsolási módban le van tiltva.</string>
   <string name="details_timer_turn_on_for">Bekapcsolt állapotban</string>
   <string name="details_timer_turn_off_for">Kikapcsolt állapotban</string>
   <string name="details_timer_info">A készülék %1$s állapotban lesz %2$s keresztül, ezt követően %3$s</string>

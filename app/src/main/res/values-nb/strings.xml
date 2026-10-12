@@ -478,6 +478,7 @@
   <string name="details_history">Historien</string>
   <string name="details_timer_wrong_time">Tiden må være større enn 0</string>
   <string name="details_timer_text">Angi tidspunktet når enheten skal være:</string>
+  <string name="details_timer_disabled_forced_mode">Nedtelling er deaktivert i tvungen på/av-modus.</string>
   <string name="details_timer_turn_on_for">Aktivert</string>
   <string name="details_timer_turn_off_for">Utelukket</string>
   <string name="details_timer_info">Enheten vil være %1$s i %2$s og deretter bli %3$s</string>

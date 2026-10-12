@@ -487,6 +487,7 @@
   <string name="details_history">History</string>
   <string name="details_timer_wrong_time">Time should be bigger than 0</string>
   <string name="details_timer_text">How long should the device stay:</string>
+  <string name="details_timer_disabled_forced_mode">Countdown timer is disabled in forced on/off mode</string>
   <string name="details_timer_turn_on_for">Switched on</string>
   <string name="details_timer_turn_off_for">Switched off</string>
   <string name="details_timer_info">Te device will be switched %1$s for %2$s, and then switch %3$s</string>

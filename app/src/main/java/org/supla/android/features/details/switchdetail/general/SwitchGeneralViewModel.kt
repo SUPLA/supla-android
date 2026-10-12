@@ -40,15 +40,15 @@ import org.supla.android.features.details.detailbase.electricitymeter.Electricit
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterState
 import org.supla.android.features.details.detailbase.impulsecounter.ImpulseCounterGeneralStateHandler
 import org.supla.android.features.details.detailbase.impulsecounter.ImpulseCounterState
-import org.supla.android.features.details.programinfo.ProgramInfo
 import org.supla.android.features.details.relayschedule.BaseRelayGeneralViewModel
 import org.supla.android.features.details.relayschedule.OperatingMode
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.lists.sensordata.RelatedChannelData
-import org.supla.android.ui.views.DeviceStateData
 import org.supla.android.ui.views.buttons.LockIconType
 import org.supla.android.ui.views.buttons.SwitchButtonState
+import org.supla.android.ui.views.channelstate.ChannelCurrentData
+import org.supla.android.ui.views.channelstate.ChannelProgramData
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.GetChannelStateUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
@@ -203,13 +203,13 @@ class SwitchGeneralViewModel @Inject constructor(
       forceButtonDisabled = weeklyScheduleEnabled,
       flags = value.flags,
       initialDataLoadStarted = true,
-      deviceStateData = DeviceStateData(
+      deviceStateData = ChannelCurrentData(
         label = getDeviceStateLabel(data),
         icon = getChannelIconUseCase(data),
         value = getDeviceStateValue(data)
       ),
       channelIssues = getAllChannelIssuesUseCase(data.shareable),
-      programInfo = schedule.programInfo(data.status.offline, value),
+      programInfo = schedule.programInfo(data.status.offline, value, data.hasActiveTimer()),
       leftButtonState = showButtons.forTrue {
         SwitchButtonState(
           icon = getChannelIconUseCase(data, channelStateValue = ChannelState.Value.OFF),
@@ -348,8 +348,8 @@ data class SwitchGeneralViewState(
   val initialDataLoadStarted: Boolean = false,
   val flags: List<SuplaRelayFlag> = emptyList(),
 
-  val deviceStateData: DeviceStateData? = null,
-  val programInfo: List<ProgramInfo> = emptyList(),
+  val deviceStateData: ChannelCurrentData? = null,
+  val programInfo: List<ChannelProgramData> = emptyList(),
   val channelIssues: List<ChannelIssueItem>? = null,
 
   val showOvercurrentDialog: Boolean = false,

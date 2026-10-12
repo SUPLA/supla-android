@@ -465,6 +465,7 @@
   <string name="details_history">Histoire</string>
   <string name="details_timer_wrong_time">Le temps doit être supérieur à 0</string>
   <string name="details_timer_text">Spécifiez l\'heure à laquelle l\'appareil doit être :</string>
+  <string name="details_timer_disabled_forced_mode">Le compte à rebours est désactivé en mode marche/arrêt forcé.</string>
   <string name="details_timer_turn_on_for">Activé</string>
   <string name="details_timer_turn_off_for">Désactivé</string>
   <string name="details_timer_info">Le dispositif sera %1$s pendant %2$s, puis il sera %3$s</string>

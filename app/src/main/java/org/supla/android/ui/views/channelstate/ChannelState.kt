@@ -1,4 +1,4 @@
-package org.supla.android.extensions
+package org.supla.android.ui.views.channelstate
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,7 +17,22 @@ package org.supla.android.extensions
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.db.Channel
-import org.supla.android.lib.SuplaTimerState
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import org.supla.android.core.ui.theme.Distance
 
-fun Channel.getTimerStateValue(): SuplaTimerState? = extendedValue?.extendedValue?.TimerStateValue
+@Composable
+fun ChannelState(
+  deviceStateData: ChannelCurrentData?,
+  programInfo: List<ChannelProgramData>,
+  modifier: Modifier = Modifier
+) {
+  if (programInfo.isNotEmpty()) {
+    ChannelProgramState(infos = programInfo, modifier = modifier)
+  } else {
+    deviceStateData?.let {
+      ChannelCurrentState(data = it, modifier = modifier.padding(vertical = Distance.vertical))
+    }
+  }
+}

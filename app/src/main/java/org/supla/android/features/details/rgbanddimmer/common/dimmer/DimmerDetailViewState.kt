@@ -20,12 +20,12 @@ package org.supla.android.features.details.rgbanddimmer.common.dimmer
 import org.supla.android.R
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.features.details.rgbanddimmer.common.SavedColor
-import org.supla.android.ui.views.DeviceStateData
 import org.supla.android.ui.views.buttons.SwitchButtonState
+import org.supla.android.ui.views.channelstate.ChannelCurrentData
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
 
 data class DimmerDetailViewState(
-  val deviceStateData: DeviceStateData? = null,
+  val deviceStateData: ChannelCurrentData? = null,
   val channelIssues: List<ChannelIssueItem>? = null,
   val offButtonState: SwitchButtonState? = null,
   val onButtonState: SwitchButtonState? = null,
