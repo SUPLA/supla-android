@@ -34,8 +34,8 @@ import org.supla.android.features.details.relayschedule.BaseRelayGeneralViewMode
 import org.supla.android.features.details.relayschedule.OperatingMode
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaThreading
-import org.supla.android.ui.views.DeviceStateData
 import org.supla.android.ui.views.buttons.SwitchButtonState
+import org.supla.android.ui.views.channelstate.ChannelCurrentData
 import org.supla.android.usecases.channel.GetChannelStateUseCase
 import org.supla.android.usecases.channel.ObserveChannelWithChildrenUseCase
 import org.supla.android.usecases.client.ExecuteRelayActionUseCase
@@ -127,7 +127,7 @@ class GateGeneralViewModel @Inject constructor(
       autoButtonDisabled = channel.status.offline,
       forceButtonDisabled = weeklyScheduleEnabled,
       actionButtonsDisabled = actionButtonsDisabled,
-      deviceStateData = DeviceStateData(
+      deviceStateData = ChannelCurrentData(
         icon = getChannelIconUseCase(channel),
         label = localizedString(R.string.details_timer_state_label),
         value = getDeviceStateValue(channel.status, channelState),
@@ -147,7 +147,7 @@ class GateGeneralViewModel @Inject constructor(
           pressed = channelState.value == ChannelState.Value.CLOSED
         )
       },
-      programInfo = schedule.programInfo(channel.status.offline, relayValue),
+      programInfo = schedule.programInfo(channel.status.offline, relayValue, channelWithChildren.hasActiveTimer()),
       operatingMode = OperatingMode(channelFlags = channel.flags, relayValue = relayValue),
       forceSupported = channel.forceSupported,
       forceActive = channel.forceActive(relayValue),

@@ -24,6 +24,7 @@ import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.ConfigResult
 import org.supla.android.data.source.remote.SuplaDeviceConfig
@@ -35,12 +36,12 @@ import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.extensions.subscribeBy
-import org.supla.android.features.details.programinfo.ProgramInfo
 import org.supla.android.features.details.relayschedule.data.RelayProgramInfoBuilder
 import org.supla.android.features.details.relayschedule.ui.OperatingButtonsScope
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.views.buttons.LockIconType
+import org.supla.android.ui.views.channelstate.ChannelProgramData
 import org.supla.android.usecases.client.ExecuteRelayActionUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.group.GroupWithChannels
@@ -163,7 +164,7 @@ abstract class BaseRelayGeneralViewModel<S : ViewState, E : ViewEvent>(
       source,
       weeklySchedule,
       observeDeviceConfig(deviceId),
-      Observable.interval(1, TimeUnit.MINUTES, threading.schedulers.computation).startWithItem(0L)
+      Observable.interval(2, TimeUnit.SECONDS, threading.schedulers.computation).startWithItem(0L)
     ) { data, schedule, device, _ ->
       data to RelayScheduleContext(schedule.orElse(null), device.orElse(null)?.isAutomaticTimeSyncDisabled() ?: false)
     }
@@ -207,8 +208,11 @@ abstract class BaseRelayGeneralViewModel<S : ViewState, E : ViewEvent>(
 
   protected fun ChannelDataEntity.forceActive(value: RelayValue): Boolean = forceSupported && value.forced
 
-  protected fun RelayScheduleContext.programInfo(offline: Boolean, value: RelayValue): List<ProgramInfo> =
-    if (offline || !value.weeklyScheduleEnabled) {
+  protected fun ChannelWithChildren.hasActiveTimer(): Boolean =
+    channel.channelExtendedValueEntity?.getSuplaValue()?.timerEstimatedEndDate?.after(dateProvider.currentDate()) == true
+
+  protected fun RelayScheduleContext.programInfo(offline: Boolean, value: RelayValue, timerActive: Boolean): List<ChannelProgramData> =
+    if (offline || timerActive || !value.weeklyScheduleEnabled) {
       emptyList()
     } else {
       weeklyScheduleConfig?.let { RelayProgramInfoBuilder(it, dateProvider).build(timeSyncDisabled) }.orEmpty()

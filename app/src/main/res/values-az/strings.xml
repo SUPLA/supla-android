@@ -467,6 +467,7 @@
   <string name="details_history">Tarixçə</string>
   <string name="details_timer_wrong_time">Vaxt 0-dan böyük olmalıdır</string>
   <string name="details_timer_text">Cihaz nə qədər işləməlidir:</string>
+  <string name="details_timer_disabled_forced_mode">Geri sayım taymeri məcburi açıq/söndürülmüş rejimdə deaktivdir</string>
   <string name="details_timer_turn_on_for">İşə salındı</string>
   <string name="details_timer_turn_off_for">Söndürüldü</string>
   <string name="details_timer_info">Cihaz %1$s müddətinə %2$s olacaq, sonra %3$s olacaq</string>

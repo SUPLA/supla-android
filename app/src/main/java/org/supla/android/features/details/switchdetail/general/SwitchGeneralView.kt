@@ -44,7 +44,6 @@ import org.supla.android.features.details.detailbase.electricitymeter.Electricit
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterState
 import org.supla.android.features.details.detailbase.electricitymeter.PhaseWithMeasurements
 import org.supla.android.features.details.detailbase.impulsecounter.ImpulseCounterMetricsView
-import org.supla.android.features.details.programinfo.ProgramInfo
 import org.supla.android.features.details.relayschedule.OperatingMode
 import org.supla.android.features.details.relayschedule.ui.OperatingButtons
 import org.supla.android.features.details.relayschedule.ui.OperatingButtonsScope
@@ -56,15 +55,15 @@ import org.supla.android.ui.extensions.ifTrue
 import org.supla.android.ui.lists.channelissues.ChannelIssuesView
 import org.supla.android.ui.lists.sensordata.RelatedChannelData
 import org.supla.android.ui.lists.sensordata.RelatedChannelsView
-import org.supla.android.ui.views.DeviceState
-import org.supla.android.ui.views.DeviceStateData
 import org.supla.android.ui.views.buttons.LockSuplaButton
 import org.supla.android.ui.views.buttons.SwitchButton
 import org.supla.android.ui.views.buttons.SwitchButtonState
 import org.supla.android.ui.views.buttons.SwitchButtonsLayout
 import org.supla.android.ui.views.buttons.supla.SuplaButtonDefaults
 import org.supla.android.ui.views.card.SummaryCardData
-import org.supla.android.ui.views.schedule.ProgramInfoRow
+import org.supla.android.ui.views.channelstate.ChannelCurrentData
+import org.supla.android.ui.views.channelstate.ChannelProgramData
+import org.supla.android.ui.views.channelstate.ChannelState
 import org.supla.android.ui.views.tools.Shadow
 import org.supla.android.ui.views.tools.ShadowOrientation
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
@@ -88,23 +87,35 @@ fun SwitchGeneralScope.View(
   Box {
     Column {
       if (state.electricityMeterState != null) {
-        state.programInfo.takeIf { it.isNotEmpty() }?.let { ProgramInfoRow(it) }
+        ChannelState(state.deviceStateData, state.programInfo)
         state.channelIssues?.let { ChannelIssuesView(it, modifier = Modifier.padding(top = Distance.default)) }
         Box(modifier = Modifier.weight(1f)) {
           ElectricityMeterMetricsView(
             state = state.electricityMeterState,
             onIntroductionClose = { onIntroductionClose() },
-            topPadding = if (state.programInfo.isNotEmpty() || state.channelIssues.isNotNull) Distance.tiny else Distance.default
+            topPadding = if (state.programInfo.isNotEmpty() || state.deviceStateData != null ||
+              state.channelIssues.isNotNull
+            ) {
+              Distance.tiny
+            } else {
+              Distance.default
+            }
           )
           Shadow(orientation = ShadowOrientation.STARTING_BOTTOM, modifier = Modifier.align(Alignment.BottomCenter))
         }
       } else if (state.impulseCounterState != null) {
-        state.programInfo.takeIf { it.isNotEmpty() }?.let { ProgramInfoRow(it) }
+        ChannelState(state.deviceStateData, state.programInfo)
         state.channelIssues?.let { ChannelIssuesView(it, modifier = Modifier.padding(top = Distance.default)) }
         Box(modifier = Modifier.weight(1f)) {
           ImpulseCounterMetricsView(
             state = state.impulseCounterState,
-            topPadding = if (state.programInfo.isNotEmpty() || state.channelIssues.isNotNull) Distance.tiny else Distance.default
+            topPadding = if (state.programInfo.isNotEmpty() || state.deviceStateData != null ||
+              state.channelIssues.isNotNull
+            ) {
+              Distance.tiny
+            } else {
+              Distance.default
+            }
           )
           Shadow(orientation = ShadowOrientation.STARTING_BOTTOM, modifier = Modifier.align(Alignment.BottomCenter))
         }
@@ -116,12 +127,8 @@ fun SwitchGeneralScope.View(
           onInfoClick = onInfoClick,
           onCaptionLongPress = onCaptionLongPress
         )
-      } else if (state.deviceStateData != null) {
-        if (state.programInfo.isNotEmpty()) {
-          ProgramInfoRow(state.programInfo)
-        } else {
-          DeviceState(data = state.deviceStateData, modifier = Modifier.padding(vertical = Distance.vertical))
-        }
+      } else if (state.deviceStateData != null || state.programInfo.isNotEmpty()) {
+        ChannelState(state.deviceStateData, state.programInfo)
         state.channelIssues?.let { ChannelIssuesView(it) }
         Spacer(modifier = Modifier.weight(1f))
       } else {
@@ -294,7 +301,7 @@ private fun Preview() {
   SuplaTheme {
     previewScope.View(
       state = SwitchGeneralViewState(
-        deviceStateData = DeviceStateData(
+        deviceStateData = ChannelCurrentData(
           label = localizedString(R.string.details_timer_state_label),
           icon = ImageId(R.drawable.fnc_switch_on),
           value = LocalizedString.Empty
@@ -328,7 +335,7 @@ private fun Preview_Disabled() {
       state = SwitchGeneralViewState(
         leftButtonDisabled = true,
         rightButtonDisabled = true,
-        deviceStateData = DeviceStateData(
+        deviceStateData = ChannelCurrentData(
           label = localizedString(R.string.details_timer_state_label),
           icon = ImageId(R.drawable.fnc_switch_on),
           value = LocalizedString.Empty
@@ -352,19 +359,19 @@ private fun Preview_WeeklySchedule() {
   SuplaTheme {
     previewScope.View(
       state = SwitchGeneralViewState(
-        deviceStateData = DeviceStateData(
+        deviceStateData = ChannelCurrentData(
           label = localizedString(R.string.details_timer_state_label),
           icon = ImageId(R.drawable.fnc_switch_on),
           value = localizedString(R.string.details_timer_device_on)
         ),
         programInfo = listOf(
-          ProgramInfo(
-            type = ProgramInfo.Type.CURRENT,
+          ChannelProgramData(
+            type = ChannelProgramData.Type.CURRENT,
             time = localizedString(R.string.program_info_time, localizedString(R.string.time_just_minutes, 12)),
             description = localizedString(R.string.schedule_program_force_on)
           ),
-          ProgramInfo(
-            type = ProgramInfo.Type.NEXT,
+          ChannelProgramData(
+            type = ChannelProgramData.Type.NEXT,
             description = localizedString(R.string.schedule_program_force_off)
           )
         ),

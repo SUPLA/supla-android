@@ -49,7 +49,7 @@ class CounterPhotoViewModel @Inject constructor(
     updateState { it.copy(viewState = it.viewState.copy(refreshing = true)) }
 
     Maybe.zip(
-      readChannelByRemoteIdUseCase(remoteId),
+      readChannelByRemoteIdUseCase(remoteId).firstElement(),
       loadActiveProfileUrlUseCase().toMaybe(),
       loadLatestOcrPhotoUseCase(remoteId).firstElement(),
       loadOcrPhotosUseCase(remoteId).firstElement()

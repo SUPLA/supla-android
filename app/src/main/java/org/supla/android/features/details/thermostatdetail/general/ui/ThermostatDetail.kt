@@ -62,17 +62,17 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.formatting.LocalPercentageFormatter
 import org.supla.android.data.model.temperature.TemperatureCorrection
 import org.supla.android.events.LoadingTimeoutManager
-import org.supla.android.features.details.programinfo.ProgramInfo
 import org.supla.android.features.details.thermostatdetail.general.ThermostatGeneralViewState
 import org.supla.android.features.details.thermostatdetail.ui.ThermometersValues
 import org.supla.android.images.ImageId
 import org.supla.android.ui.lists.data.warning
-import org.supla.android.ui.views.DeviceState
 import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.LoadingScrim
 import org.supla.android.ui.views.buttons.supla.SuplaButton
 import org.supla.android.ui.views.buttons.supla.SuplaButtonDefaults
-import org.supla.android.ui.views.schedule.ProgramInfoRow
+import org.supla.android.ui.views.channelstate.ChannelCurrentState
+import org.supla.android.ui.views.channelstate.ChannelProgramData
+import org.supla.android.ui.views.channelstate.ChannelProgramState
 import org.supla.android.ui.views.thermostat.TemperatureControlButton
 import org.supla.android.ui.views.tools.Shadow
 import org.supla.android.ui.views.tools.ShadowOrientation
@@ -153,7 +153,7 @@ private fun ThermostatView(viewState: ThermostatGeneralViewState, viewProxy: The
       Column {
         if (viewState.isOff.not() && viewState.isAutoFunction && !viewState.programmedModeActive) {
           if (viewState.viewModelState?.timerEndDate != null) {
-            DeviceState(
+            ChannelCurrentState(
               data = viewState.deviceState,
               modifier = Modifier
                 .fillMaxWidth()
@@ -165,14 +165,14 @@ private fun ThermostatView(viewState: ThermostatGeneralViewState, viewProxy: The
         } else if (viewState.sensorIssue != null) {
           SensorIssueView(sensorIssue = viewState.sensorIssue)
         } else if (viewState.isOffline.not() && viewState.viewModelState?.timerEndDate != null) {
-          DeviceState(
+          ChannelCurrentState(
             data = viewState.deviceState,
             modifier = Modifier
               .fillMaxWidth()
               .height(80.dp)
           )
         } else if (viewState.temporaryProgramInfo.isNotEmpty()) {
-          ProgramInfoRow(infos = viewState.temporaryProgramInfo)
+          ChannelProgramState(infos = viewState.temporaryProgramInfo)
         } else {
           Spacer(modifier = Modifier.height(80.dp))
         }
@@ -554,8 +554,8 @@ private fun PreviewTemporaryOverride() {
           thermometerValueFormatter = DefaultValueFormatter,
           temporaryChangeActive = true,
           temporaryProgramInfo = listOf(
-            ProgramInfo(
-              ProgramInfo.Type.CURRENT,
+            ChannelProgramData(
+              ChannelProgramData.Type.CURRENT,
               LocalizedString.Constant("vor 7 hours 10 min."),
               R.drawable.ic_heat,
               R.color.red,
@@ -563,8 +563,8 @@ private fun PreviewTemporaryOverride() {
               R.drawable.ic_manual,
               R.color.primary
             ),
-            ProgramInfo(
-              ProgramInfo.Type.NEXT,
+            ChannelProgramData(
+              ChannelProgramData.Type.NEXT,
               null,
               R.drawable.ic_power_button,
               R.color.on_surface_variant,

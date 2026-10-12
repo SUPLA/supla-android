@@ -42,23 +42,31 @@ fun NumberPicker(
   formatter: (Context, Int) -> String = { _, i -> "$i" },
   onValueChanged: (Int) -> Unit = { }
 ) {
-  AndroidView(factory = { context ->
-    val view = LayoutInflater.from(context).inflate(R.layout.inc_number_picker, null)
+  AndroidView(
+    factory = { context ->
+      val view = LayoutInflater.from(context).inflate(R.layout.inc_number_picker, null)
 
-    val numberPicker = view.findViewById<NumberPicker>(R.id.inc_number_picker)
-    numberPicker.displayedValues =
-      mutableListOf<String>().also {
-        for (i in range) {
-          it.add(formatter(context, i))
-        }
-      }.toTypedArray()
-    numberPicker.minValue = range.first
-    numberPicker.maxValue = range.last
-    numberPicker.value = selectedValue
-    numberPicker.setOnValueChangedListener { _, _, newValue -> onValueChanged(newValue) }
+      val numberPicker = view.findViewById<NumberPicker>(R.id.inc_number_picker)
+      numberPicker.displayedValues =
+        mutableListOf<String>().also {
+          for (i in range) {
+            it.add(formatter(context, i))
+          }
+        }.toTypedArray()
+      numberPicker.minValue = range.first
+      numberPicker.maxValue = range.last
+      numberPicker.value = selectedValue
+      numberPicker.setOnValueChangedListener { _, _, newValue -> onValueChanged(newValue) }
 
-    return@AndroidView view
-  })
+      view
+    },
+    update = { view ->
+      val numberPicker = view.findViewById<NumberPicker>(R.id.inc_number_picker)
+      if (numberPicker.value != selectedValue) {
+        numberPicker.value = selectedValue
+      }
+    }
+  )
 }
 
 @Composable

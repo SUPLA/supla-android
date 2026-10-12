@@ -443,6 +443,7 @@
   <string name="details_history">Historie</string>
   <string name="details_timer_wrong_time">Zeit muss größer als 0 sein</string>
   <string name="details_timer_text">Bestimmen Sie bitte die Zeit, zu der das Gerät ein- oder ausgeschaltet werden sollte</string>
+  <string name="details_timer_disabled_forced_mode">Der Countdown-Timer ist im erzwungenen Ein-/Aus-Modus deaktiviert.</string>
   <string name="details_timer_turn_on_for">Einschalten für</string>
   <string name="details_timer_turn_off_for">Ausschalten für</string>
   <string name="details_timer_info">Das Gerät wird bis zum %2$s Uhr %1$s und dann %3$s</string>

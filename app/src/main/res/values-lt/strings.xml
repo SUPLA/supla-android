@@ -456,6 +456,7 @@
   <string name="details_history">Istorija</string>
   <string name="details_timer_wrong_time">Laikas turi būti didesnis nei 0</string>
   <string name="details_timer_text">Nurodykite laiką, kada įrenginys turi būti:</string>
+  <string name="details_timer_disabled_forced_mode">Atgalinės atskaitos laikmatis išjungtas priverstinio įjungimo / išjungimo režimu.</string>
   <string name="details_timer_turn_on_for">Įjungtas</string>
   <string name="details_timer_turn_off_for">Išjungtas</string>
   <string name="details_timer_info">Įrenginys bus %1$s %2$s, o tada %3$s</string>

@@ -22,9 +22,10 @@ import android.text.format.DateFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
-import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
+import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.storage.RuntimeStateHolder
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
@@ -32,22 +33,34 @@ import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.extensions.onlineState
+import org.supla.android.data.source.remote.ChannelConfigType
+import org.supla.android.data.source.remote.ConfigResult
+import org.supla.android.data.source.remote.SuplaDeviceConfig
+import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
+import org.supla.android.data.source.remote.hvac.SuplaRelayMode
+import org.supla.android.data.source.remote.isAutomaticTimeSyncDisabled
+import org.supla.android.events.ChannelConfigEventsManager
+import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.extensions.subscribeBy
+import org.supla.android.features.details.relayschedule.data.RelayProgramInfoBuilder
 import org.supla.android.images.ImageId
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaThreading
-import org.supla.android.ui.views.DeviceStateData
+import org.supla.android.ui.views.channelstate.ChannelCurrentData
+import org.supla.android.ui.views.channelstate.ChannelProgramData
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.client.StartTimerUseCase
 import org.supla.android.usecases.client.StartTimerUseCase.InvalidTimeException
 import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.core.shared.data.model.function.relay.SuplaRelayFlag
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
-import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 import timber.log.Timber
 import java.util.Date
+import java.util.Optional
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -58,71 +71,47 @@ class TimersDetailViewModel @Inject constructor(
   private val runtimeStateHolder: RuntimeStateHolder,
   private val startTimerUseCase: StartTimerUseCase,
   private val dateProvider: DateProvider,
+  private val channelConfigEventsManager: ChannelConfigEventsManager,
+  private val deviceConfigEventsManager: DeviceConfigEventsManager,
+  private val suplaClientProvider: SuplaClientProvider,
   @param:ApplicationContext private val context: Context,
-  suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper,
   threading: SuplaThreading
 ) : BaseViewModel<TimersDetailViewState, TimersDetailViewEvent>(TimersDetailViewState(), threading),
   TimerDetailViewScope {
 
   private var remoteId: Int = 0
+  private var deviceId: Int = 0
 
-  init {
-    setupSuplaClientMessageHandler(suplaClientMessageHandlerWrapper)
-  }
-
-  fun onViewCreated(remoteId: Int) {
+  fun onViewCreated(remoteId: Int, deviceId: Int = 0) {
     this.remoteId = remoteId
+    this.deviceId = deviceId
+
     updateState { it.copy(timerTimeInSeconds = runtimeStateHolder.getLastTimerValue(remoteId)) }
-  }
 
-  fun loadData() {
-    readChannelByRemoteIdUseCase(remoteId)
-      .attach()
-      .subscribeBy(
-        onSuccess = ::handleChannel,
-        onError = defaultErrorHandler("loadData($remoteId)")
-      )
-      .disposeBySelf()
-  }
-
-  fun loadData(remoteId: Int) {
-    this.remoteId = remoteId
-    loadData()
+    observeData()
+    askForConfigs()
   }
 
   override fun onStartTimer() {
     val state = currentState()
+    if (!state.online || state.forceActive) return
+
     val action = state.targetAction ?: TimerTargetAction.TURN_ON
     runtimeStateHolder.setLastTimerValue(remoteId, state.timerTimeInSeconds)
     startTimer(action == TimerTargetAction.TURN_ON, state.timerTimeInSeconds)
-  }
 
-  private fun startTimer(turnOn: Boolean, durationInSecs: Int) {
-    startTimerUseCase(remoteId, turnOn, durationInSecs)
-      .attach()
-      .subscribeBy(
-        onError = {
-          if (it is InvalidTimeException) {
-            sendEvent(TimersDetailViewEvent.ShowInvalidTimeToast)
-          } else {
-            defaultErrorHandler("startTimer($remoteId, $turnOn, $durationInSecs)")(it)
-          }
-        }
-      )
-      .disposeBySelf()
+    updateState { it.copy(editMode = false) }
   }
 
   override fun stopTimer() {
-    readChannelByRemoteIdUseCase(remoteId)
-      .flatMapCompletable { abortCompletable(remoteId, it.channelValueEntity.isClosed()) }
+    abortCompletable(remoteId, currentState().timerData?.timerValue == TimerValue.ON)
       .attach()
       .subscribeBy(onError = defaultErrorHandler("stopTimer($remoteId)"))
       .disposeBySelf()
   }
 
   override fun cancelTimer() {
-    readChannelByRemoteIdUseCase(remoteId)
-      .flatMapCompletable { abortCompletable(remoteId, it.channelValueEntity.isClosed().not()) }
+    abortCompletable(remoteId, currentState().timerData?.timerValue == TimerValue.OFF)
       .attach()
       .subscribeBy(onError = defaultErrorHandler("cancelTimer($remoteId)"))
       .disposeBySelf()
@@ -151,16 +140,6 @@ class TimersDetailViewModel @Inject constructor(
   }
 
   override fun onTimerFinished() {
-    loadData()
-  }
-
-  override fun handleSuplaMessage(message: SuplaClientMessage) {
-    (message as? SuplaClientMessage.ChannelDataChanged)?.let {
-      if (it.channelId == remoteId && (it.timerValueChanged || !it.extendedValueChanged)) {
-        Timber.i("Detail got data changed event")
-        loadData()
-      }
-    }
   }
 
   fun calculateProgressViewData(startTime: Date, endTime: Date): ProgressViewData {
@@ -173,6 +152,21 @@ class TimersDetailViewModel @Inject constructor(
     )
   }
 
+  private fun startTimer(turnOn: Boolean, durationInSecs: Int) {
+    startTimerUseCase(remoteId, turnOn, durationInSecs)
+      .attach()
+      .subscribeBy(
+        onError = {
+          if (it is InvalidTimeException) {
+            sendEvent(TimersDetailViewEvent.ShowInvalidTimeToast)
+          } else {
+            defaultErrorHandler("startTimer($remoteId, $turnOn, $durationInSecs)")(it)
+          }
+        }
+      )
+      .disposeBySelf()
+  }
+
   private fun calculateLeftTime(endTime: Date) = endTime.time.minus(dateProvider.currentTimestamp())
 
   private fun abortCompletable(remoteId: Int, turnOn: Boolean): Completable {
@@ -180,51 +174,99 @@ class TimersDetailViewModel @Inject constructor(
     return executeSimpleActionUseCase(actionId, SubjectType.CHANNEL, remoteId)
   }
 
-  private fun handleChannel(channelDataEntity: ChannelDataEntity) {
+  private fun observeData() {
+    val weeklySchedule = channelConfigEventsManager.observerConfig(remoteId)
+      .filter { it.result == ConfigResult.RESULT_TRUE && it.config is SuplaChannelWeeklyScheduleConfig }
+      .map { Optional.of(it.config as SuplaChannelWeeklyScheduleConfig) }
+      .startWithItem(Optional.empty<SuplaChannelWeeklyScheduleConfig>())
+      .distinctUntilChanged()
+    val deviceConfig = if (deviceId == 0) {
+      Observable.just(Optional.empty<SuplaDeviceConfig>())
+    } else {
+      deviceConfigEventsManager.observerConfig(deviceId)
+        .filter { it.result == ConfigResult.RESULT_TRUE && it.config is SuplaDeviceConfig }
+        .map { Optional.of(it.config as SuplaDeviceConfig) }
+        .startWithItem(Optional.empty<SuplaDeviceConfig>())
+        .distinctUntilChanged()
+    }
+    Observable.combineLatest(
+      readChannelByRemoteIdUseCase(remoteId).subscribeOn(threading.schedulers.io),
+      weeklySchedule,
+      deviceConfig,
+      Observable.interval(1, TimeUnit.SECONDS, threading.schedulers.computation).startWithItem(0L)
+    ) { channel, schedule, device, _ ->
+      Triple(channel, schedule.orElse(null), device.orElse(null)?.isAutomaticTimeSyncDisabled() ?: false)
+    }
+      .observeOn(threading.schedulers.ui)
+      .map { (channel, schedule, syncDisabled) -> handleChannel(channel, schedule, syncDisabled) }
+      .distinctUntilChanged()
+      .subscribeBy(
+        onNext = { viewState -> updateState { viewState } },
+        onError = defaultErrorHandler("observeData($remoteId, $deviceId)")
+      )
+      .disposeBySelf()
+  }
+
+  private fun askForConfigs() {
+    suplaClientProvider.provide()?.let { client ->
+      client.getChannelConfig(remoteId, ChannelConfigType.WEEKLY_SCHEDULE)
+      if (deviceId != 0) client.getDeviceConfig(deviceId)
+    }
+  }
+
+  private fun handleChannel(
+    channelDataEntity: ChannelDataEntity,
+    weeklyScheduleConfig: SuplaChannelWeeklyScheduleConfig?,
+    timeSyncDisabled: Boolean
+  ): TimersDetailViewState {
     val currentTime = dateProvider.currentDate()
     val timerState = channelDataEntity.channelExtendedValueEntity?.getSuplaValue()?.TimerStateValue
     val isTimerOn = timerState != null && timerState.countdownEndsAt?.after(currentTime) == true
     val startDate = channelDataEntity.channelExtendedValueEntity?.timerStartTime
     Timber.d("Handling channel update $timerState")
 
-    updateState { state ->
-      var editMode = state.editMode
-      if (state.editMode && isTimerOn) {
-        // To avoid screen blinking, edit mode is canceled when new timer values will come
-        editMode = false
+    val state = currentState()
+    val isOn = channelDataEntity.channelValueEntity.asRelayValue().on
+    val targetAction = state.targetAction
+      ?: if (state.editMode && isOn) {
+        TimerTargetAction.TURN_OFF
+      } else {
+        TimerTargetAction.TURN_ON
       }
-      val isOn = channelDataEntity.channelValueEntity.asRelayValue().on
-      val targetAction = state.targetAction
-        ?: if (state.editMode && isOn) {
-          TimerTargetAction.TURN_OFF
-        } else {
-          TimerTargetAction.TURN_ON
-        }
 
-      state.copy(
+    return state.copy(
+      icon = getChannelIconUseCase(channelDataEntity),
+      online = channelDataEntity.channelValueEntity.onlineState.online,
+      on = isOn,
+      forceActive = channelDataEntity.channelValueEntity.asRelayValue().mode in listOf(
+        SuplaRelayMode.FORCED_ON,
+        SuplaRelayMode.FORCED_OFF
+      ),
+      deviceStateData = ChannelCurrentData(
+        label = deviceStateLabel(currentTime, timerState?.countdownEndsAt),
         icon = getChannelIconUseCase(channelDataEntity),
-        online = channelDataEntity.channelValueEntity.onlineState.online,
-        on = isOn,
-        deviceStateData = DeviceStateData(
-          label = deviceStateLabel(currentTime, timerState?.countdownEndsAt),
-          icon = getChannelIconUseCase(channelDataEntity),
-          value = deviceStateValue(channelDataEntity.channelValueEntity)
-        ),
-        timerData = if (isTimerOn) {
-          TimerProgressData(
-            endTime = timerState.countdownEndsAt!!,
-            startTime = startDate ?: currentTime,
-            indeterminate = startDate == null,
-            timerValue = if (timerState.expectedHiValue()) TimerValue.OFF else TimerValue.ON
-          )
-        } else {
-          null
-        },
-        editMode = editMode,
-        targetAction = targetAction,
-        timerTimeInSeconds = runtimeStateHolder.getLastTimerValue(channelDataEntity.remoteId)
-      )
-    }
+        value = deviceStateValue(channelDataEntity.channelValueEntity)
+      ),
+      programInfo = if (channelDataEntity.channelValueEntity.onlineState.online &&
+        !isTimerOn &&
+        channelDataEntity.channelValueEntity.asRelayValue().flags.contains(SuplaRelayFlag.WEEKLY_SCHEDULE_ENABLED)
+      ) {
+        weeklyScheduleConfig?.let { RelayProgramInfoBuilder(it, dateProvider).build(timeSyncDisabled) }.orEmpty()
+      } else {
+        emptyList()
+      },
+      timerData = if (isTimerOn) {
+        TimerProgressData(
+          endTime = timerState.countdownEndsAt!!,
+          startTime = startDate ?: currentTime,
+          indeterminate = startDate == null,
+          timerValue = if (timerState.expectedHiValue()) TimerValue.OFF else TimerValue.ON
+        )
+      } else {
+        null
+      },
+      targetAction = targetAction,
+    )
   }
 
   private fun deviceStateLabel(currentDate: Date, endDate: Date?): LocalizedString =
@@ -249,9 +291,11 @@ sealed class TimersDetailViewEvent : ViewEvent {
 
 data class TimersDetailViewState(
   val online: Boolean = false,
+  val forceActive: Boolean = false,
   val on: Boolean = false,
   val timerData: TimerProgressData? = null,
-  val deviceStateData: DeviceStateData? = null,
+  val deviceStateData: ChannelCurrentData? = null,
+  val programInfo: List<ChannelProgramData> = emptyList(),
   val editMode: Boolean = false,
   val targetAction: TimerTargetAction? = null,
   val timerTimeInSeconds: Int = 0,
