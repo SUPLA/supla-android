@@ -46,7 +46,6 @@ import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.extensions.ifNumber
 import org.supla.android.extensions.subscribeBy
-import org.supla.android.features.details.programinfo.ProgramInfo
 import org.supla.android.features.details.thermostatdetail.general.data.SensorIssue
 import org.supla.android.features.details.thermostatdetail.general.data.ThermostatProgramInfoBuilder
 import org.supla.android.features.details.thermostatdetail.general.data.build
@@ -54,7 +53,8 @@ import org.supla.android.features.details.thermostatdetail.general.ui.Thermostat
 import org.supla.android.features.details.thermostatdetail.ui.TimerHeaderHelper
 import org.supla.android.images.ImageId
 import org.supla.android.tools.SuplaThreading
-import org.supla.android.ui.views.DeviceStateData
+import org.supla.android.ui.views.channelstate.ChannelCurrentData
+import org.supla.android.ui.views.channelstate.ChannelProgramData
 import org.supla.android.usecases.channel.GetChannelValueUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -691,7 +691,7 @@ data class ThermostatGeneralViewState(
   val programmedModeActive: Boolean = false,
 
   val temporaryChangeActive: Boolean = false,
-  val temporaryProgramInfo: List<ProgramInfo> = emptyList(),
+  val temporaryProgramInfo: List<ChannelProgramData> = emptyList(),
 
   val sensorIssue: SensorIssue? = null,
 
@@ -760,8 +760,8 @@ data class ThermostatGeneralViewState(
       return false
     }
 
-  val deviceState: DeviceStateData
-    get() = DeviceStateData(
+  val deviceState: ChannelCurrentData
+    get() = ChannelCurrentData(
       label = TimerHeaderHelper.endDateText(viewModelState?.timerEndDate),
       icon = TimerHeaderHelper.currentStateIcon(viewModelState?.mode)?.let { ImageId(it) },
       value = TimerHeaderHelper.currentStateValue(

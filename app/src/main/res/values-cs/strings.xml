@@ -458,6 +458,7 @@
   <string name="details_history">Historie</string>
   <string name="details_timer_wrong_time">Čas musí být větší než 0</string>
   <string name="details_timer_text">Zadejte čas, kdy má být zařízení:</string>
+  <string name="details_timer_disabled_forced_mode">Odpočet času je v režimu nuceného zapnutí/vypnutí zakázán</string>
   <string name="details_timer_turn_on_for">Zapnuté</string>
   <string name="details_timer_turn_off_for">Vypnuté</string>
   <string name="details_timer_info">Zařízení bude %1$s po dobu%2$s a poté %3$s</string>

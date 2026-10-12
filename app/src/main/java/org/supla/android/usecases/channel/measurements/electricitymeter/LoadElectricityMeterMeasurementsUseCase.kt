@@ -53,7 +53,7 @@ class LoadElectricityMeterMeasurementsUseCase @Inject constructor(
       endTimestamp ?: dateProvider.currentTimestamp()
     )
       .firstElement()
-      .flatMap { measurements -> readChannelByRemoteIdUseCase(remoteId).map { Pair(it, measurements) } }
+      .flatMap { measurements -> readChannelByRemoteIdUseCase(remoteId).firstElement().map { Pair(it, measurements) } }
       .map { (channel, measurements) ->
 
         when (balancing ?: userStateHolder.getElectricityMeterSettings(channel.profileId, channel.remoteId).currentMonthBalancing) {

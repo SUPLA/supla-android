@@ -1,4 +1,4 @@
-package org.supla.android.ui.views.schedule
+package org.supla.android.ui.views.channelstate
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -19,6 +19,7 @@ package org.supla.android.ui.views.schedule
 
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -49,12 +50,27 @@ import org.supla.android.R
 import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.core.ui.theme.gray
-import org.supla.android.features.details.programinfo.ProgramInfo
 import org.supla.android.tools.SuplaPreview
 import org.supla.core.shared.infrastructure.LocalizedString
 
+/** Presentation data shared by schedule summaries across device functions. */
+data class ChannelProgramData(
+  val type: Type,
+  val time: LocalizedString? = null,
+  @param:DrawableRes val icon: Int? = null,
+  @param:ColorRes val iconColor: Int? = null,
+  val description: LocalizedString? = null,
+  @param:DrawableRes val indicatorIcon: Int? = null,
+  @param:ColorRes val indicatorIconColor: Int? = null
+) {
+  enum class Type(@param:StringRes val stringRes: Int) {
+    CURRENT(R.string.program_info_current),
+    NEXT(R.string.program_info_next)
+  }
+}
+
 @Composable
-fun ProgramInfoRow(infos: List<ProgramInfo>, modifier: Modifier = Modifier) {
+fun ChannelProgramState(infos: List<ChannelProgramData>, modifier: Modifier = Modifier) {
   val labels = infos.map { stringResource(id = it.type.stringRes).uppercase() }
   val context = LocalContext.current
   val descriptions = infos.map { it.description?.invoke(context) }
@@ -129,7 +145,7 @@ private fun ProgramInfoLabel(label: String) =
   )
 
 @Composable
-private fun ProgramInfoValue(info: ProgramInfo, description: String?, time: String?, spacing: Dp) {
+private fun ProgramInfoValue(info: ChannelProgramData, description: String?, time: String?, spacing: Dp) {
   Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
     if (info.icon != null && info.iconColor != null) {
       ProgramInfoIcon(info.icon, info.iconColor)
@@ -171,18 +187,18 @@ private fun ProgramInfoDescription(description: String) =
 
 @SuplaPreview
 @Composable
-private fun ProgramInfoRowPreview() {
+private fun ChannelProgramStatePreview() {
   SuplaTheme {
     Box(modifier = Modifier.fillMaxWidth()) {
-      ProgramInfoRow(
+      ChannelProgramState(
         infos = listOf(
-          ProgramInfo(
-            type = ProgramInfo.Type.CURRENT,
+          ChannelProgramData(
+            type = ChannelProgramData.Type.CURRENT,
             description = LocalizedString.Constant("On"),
             time = LocalizedString.Constant("until 14:30")
           ),
-          ProgramInfo(
-            type = ProgramInfo.Type.NEXT,
+          ChannelProgramData(
+            type = ChannelProgramData.Type.NEXT,
             description = LocalizedString.Constant("Off"),
             time = LocalizedString.Constant("at 14:30")
           )

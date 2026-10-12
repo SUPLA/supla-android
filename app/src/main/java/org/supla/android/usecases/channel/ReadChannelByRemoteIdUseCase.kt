@@ -17,7 +17,7 @@ package org.supla.android.usecases.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import javax.inject.Inject
@@ -25,6 +25,6 @@ import javax.inject.Singleton
 
 @Singleton
 class ReadChannelByRemoteIdUseCase @Inject constructor(private val channelRepository: ChannelRepository) {
-  operator fun invoke(remoteId: Int): Maybe<ChannelDataEntity> =
-    channelRepository.findChannelDataEntity(remoteId).firstElement()
+  operator fun invoke(remoteId: Int): Observable<ChannelDataEntity> =
+    channelRepository.findChannelDataEntity(remoteId)
 }
