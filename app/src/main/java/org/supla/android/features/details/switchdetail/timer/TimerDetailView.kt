@@ -54,11 +54,11 @@ import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.tools.SuplaPreview
-import org.supla.android.ui.views.DeviceState
 import org.supla.android.ui.views.SegmentedComponent
 import org.supla.android.ui.views.TimerProgressView
 import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.buttons.OutlinedButton
+import org.supla.android.ui.views.channelstate.ChannelState
 import org.supla.android.ui.views.forms.NumberPicker
 import org.supla.android.ui.views.forms.NumberPickerHighlight
 import java.util.Date
@@ -84,14 +84,11 @@ fun TimerDetailViewScope.TimerDetailView(state: TimersDetailViewState) {
   Box(
     modifier = Modifier.fillMaxSize()
   ) {
-    state.deviceStateData?.let {
-      DeviceState(
-        data = it,
-        modifier = Modifier
-          .padding(vertical = Distance.vertical)
-          .align(Alignment.TopCenter)
-      )
-    }
+    ChannelState(
+      deviceStateData = state.deviceStateData,
+      programInfo = state.programInfo,
+      modifier = Modifier.align(Alignment.TopCenter)
+    )
 
     if (timerData != null) {
       TimerInProgress(
@@ -235,7 +232,7 @@ private fun TimerDetailViewScope.TimerConfiguration(state: TimersDetailViewState
         SegmentedComponent(
           items = TimerTargetAction.entries,
           activeItem = state.targetAction,
-          enabled = state.online,
+          enabled = state.online && !state.forceActive,
           onClick = { updateAction(it) },
           modifier = Modifier
             .fillMaxWidth()
@@ -280,7 +277,7 @@ private fun TimerDetailViewScope.TimerConfiguration(state: TimersDetailViewState
         modifier = Modifier
           .fillMaxWidth()
           .padding(start = Distance.default, end = Distance.default),
-        enabled = state.online,
+        enabled = state.online && !state.forceActive,
         onClick = { onStartTimer() }
       )
     }
@@ -290,6 +287,7 @@ private fun TimerDetailViewScope.TimerConfiguration(state: TimersDetailViewState
 @Composable
 private fun configurationHeader(state: TimersDetailViewState): String =
   when {
+    state.forceActive -> stringResource(id = R.string.details_timer_disabled_forced_mode)
     state.editMode.not() -> stringResource(id = R.string.details_timer_text)
     state.on -> stringResource(
       id = R.string.details_timer_edit_header,

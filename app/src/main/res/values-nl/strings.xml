@@ -479,6 +479,7 @@
   <string name="details_history">Geschiedenis</string>
   <string name="details_timer_wrong_time">Tijd moet groter zijn dan 0</string>
   <string name="details_timer_text">Geef de tijd op waarop het apparaat moet werken:</string>
+  <string name="details_timer_disabled_forced_mode">De afteltimer is uitgeschakeld in de geforceerde aan/uit-modus.</string>
   <string name="details_timer_turn_on_for">Aan</string>
   <string name="details_timer_turn_off_for">Uitgeschakeld</string>
   <string name="details_timer_info">Het apparaat is %1$s voor %2$s en wordt dan %3$s</string>

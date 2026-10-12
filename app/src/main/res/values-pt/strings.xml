@@ -467,6 +467,7 @@
   <string name="details_history">Histórico</string>
   <string name="details_timer_wrong_time">O tempo deve ser superior a 0</string>
   <string name="details_timer_text">Defina o tempo para o dispositivo estar:</string>
+  <string name="details_timer_disabled_forced_mode">O temporizador de contagem decrescente está desativado no modo ligado/desligado forçado.</string>
   <string name="details_timer_turn_on_for">Ligado</string>
   <string name="details_timer_turn_off_for">Desligado</string>
   <string name="details_timer_info">O dispositivo estará %1$s durante %2$s e, em seguida, %3$s</string>

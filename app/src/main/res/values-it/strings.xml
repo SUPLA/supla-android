@@ -466,6 +466,7 @@
   <string name="details_history">Cronologia</string>
   <string name="details_timer_wrong_time">Il tempo deve essere superiore a 0</string>
   <string name="details_timer_text">Specifica il tempo in cui il dispositivo deve essere:</string>
+  <string name="details_timer_disabled_forced_mode">Il timer conto alla rovescia è disattivato in modalità accensione/spegnimento forzata.</string>
   <string name="details_timer_turn_on_for">Acceso</string>
   <string name="details_timer_turn_off_for">Spento</string>
   <string name="details_timer_info">Il dispositivo sarà %1$s per %2$s e poi si %3$s</string>

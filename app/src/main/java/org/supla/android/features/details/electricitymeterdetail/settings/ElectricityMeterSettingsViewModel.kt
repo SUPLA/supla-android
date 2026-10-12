@@ -61,7 +61,7 @@ class ElectricityMeterSettingsViewModel @Inject constructor(
   private var remoteId = 0
 
   fun loadData(remoteId: Int) {
-    readChannelByRemoteIdUseCase(remoteId)
+    readChannelByRemoteIdUseCase(remoteId).firstElement()
       .attach()
       .subscribeBy(
         onSuccess = this::handleChannel,

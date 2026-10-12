@@ -59,13 +59,13 @@ import org.supla.android.tools.SuplaPreviewLandscape
 import org.supla.android.tools.SuplaSizeClassPreview
 import org.supla.android.ui.extensions.ifFalse
 import org.supla.android.ui.lists.channelissues.ChannelIssuesView
-import org.supla.android.ui.views.DeviceState
-import org.supla.android.ui.views.DeviceStateData
 import org.supla.android.ui.views.LoadingScrim
 import org.supla.android.ui.views.buttons.SwitchButtonState
 import org.supla.android.ui.views.buttons.SwitchButtons
 import org.supla.android.ui.views.buttons.SwitchIconButton
 import org.supla.android.ui.views.buttons.supla.SuplaButtonDefaults
+import org.supla.android.ui.views.channelstate.ChannelCurrentData
+import org.supla.android.ui.views.channelstate.ChannelCurrentState
 import org.supla.core.shared.infrastructure.localizedString
 
 interface RgbDetailScope : RgbColorDialogScope, SavedColorListScope {
@@ -117,7 +117,7 @@ private fun RgbDetailScope.Landscape(
     Column(
       modifier = Modifier.weight(1f)
     ) {
-      state.deviceStateData?.let { DeviceState(data = it, modifier = Modifier.padding(vertical = Distance.vertical)) }
+      state.deviceStateData?.let { ChannelCurrentState(data = it, modifier = Modifier.padding(vertical = Distance.vertical)) }
       state.channelIssues?.let { issues -> ChannelIssuesView(issues) }
 
       ColorAndBrightnessBox(color, state.value, !state.offline)
@@ -221,7 +221,7 @@ private fun RgbDetailScope.Portrait(state: RgbDetailViewState) {
   }
 
   Column {
-    state.deviceStateData?.let { DeviceState(data = it, modifier = Modifier.padding(vertical = sizeClass.padding)) }
+    state.deviceStateData?.let { ChannelCurrentState(data = it, modifier = Modifier.padding(vertical = sizeClass.padding)) }
     sizeClass.isSmall.ifFalse {
       state.channelIssues?.let { issues -> ChannelIssuesView(issues) }
     }
@@ -302,7 +302,7 @@ private fun Preview() {
   SuplaTheme {
     previewScope.View(
       state = RgbDetailViewState(
-        deviceStateData = DeviceStateData(
+        deviceStateData = ChannelCurrentData(
           label = localizedString(R.string.details_timer_state_label),
           icon = ImageId(R.drawable.fnc_rgb_on),
           value = localizedString(R.string.details_timer_device_on)

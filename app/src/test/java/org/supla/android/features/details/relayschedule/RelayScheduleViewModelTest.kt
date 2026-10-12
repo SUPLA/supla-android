@@ -24,7 +24,7 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.mockk
 import io.mockk.verify
-import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import org.assertj.core.api.Assertions.assertThat
@@ -110,7 +110,7 @@ class RelayScheduleViewModelTest :
     every { suplaClientProvider.provide() } returns suplaClient
     channel = mockk(relaxed = true)
     every { channel.flags } returns 0
-    every { readChannelByRemoteIdUseCase(any()) } returns Maybe.just(channel)
+    every { readChannelByRemoteIdUseCase(any()) } returns Observable.just(channel)
   }
 
   @Test
