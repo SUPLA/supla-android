@@ -36,7 +36,6 @@ import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.ViewState
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.features.details.programinfo.ProgramInfo
 import org.supla.android.features.details.relayschedule.OperatingMode
 import org.supla.android.features.details.relayschedule.ui.OperatingButtons
 import org.supla.android.features.details.relayschedule.ui.OperatingButtonsScope
@@ -49,8 +48,6 @@ import org.supla.android.ui.lists.channelissues.ChannelIssueView
 import org.supla.android.ui.lists.channelissues.ChannelIssuesView
 import org.supla.android.ui.lists.sensordata.RelatedChannelData
 import org.supla.android.ui.lists.sensordata.RelatedChannelsView
-import org.supla.android.ui.views.DeviceState
-import org.supla.android.ui.views.DeviceStateData
 import org.supla.android.ui.views.buttons.LockIconType
 import org.supla.android.ui.views.buttons.LockSuplaButton
 import org.supla.android.ui.views.buttons.SwitchButton
@@ -58,14 +55,16 @@ import org.supla.android.ui.views.buttons.SwitchButtonState
 import org.supla.android.ui.views.buttons.SwitchButtons
 import org.supla.android.ui.views.buttons.supla.SuplaButton
 import org.supla.android.ui.views.buttons.supla.SuplaButtonDefaults
-import org.supla.android.ui.views.schedule.ProgramInfoRow
+import org.supla.android.ui.views.channelstate.ChannelCurrentData
+import org.supla.android.ui.views.channelstate.ChannelProgramData
+import org.supla.android.ui.views.channelstate.ChannelState
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 
 data class GateGeneralViewState(
-  val deviceStateData: DeviceStateData? = null,
-  val programInfo: List<ProgramInfo> = emptyList(),
+  val deviceStateData: ChannelCurrentData? = null,
+  val programInfo: List<ChannelProgramData> = emptyList(),
   val relatedChannelsData: List<RelatedChannelData>? = null,
   val channelIssues: List<ChannelIssueItem>? = null,
   val mainButtonLabel: LocalizedString = localizedString(R.string.channel_btn_step_by_step),
@@ -100,12 +99,8 @@ fun GateGeneralScope.View(
   onCaptionLongPress: (RelatedChannelData) -> Unit = {}
 ) {
   Column {
-    state.deviceStateData?.let {
-      if (state.programInfo.isNotEmpty()) {
-        ProgramInfoRow(state.programInfo)
-      } else {
-        DeviceState(data = it, modifier = Modifier.padding(vertical = Distance.vertical))
-      }
+    if (state.deviceStateData != null || state.programInfo.isNotEmpty()) {
+      ChannelState(state.deviceStateData, state.programInfo)
       state.channelIssues?.let { issues -> ChannelIssuesView(issues) }
       Spacer(modifier = Modifier.weight(1f))
     }
@@ -250,7 +245,7 @@ private fun Preview() {
   SuplaTheme {
     previewScope.View(
       state = GateGeneralViewState(
-        deviceStateData = DeviceStateData(
+        deviceStateData = ChannelCurrentData(
           label = localizedString(R.string.details_timer_state_label),
           icon = ImageId(id = R.drawable.fnc_garage_door_closed),
           value = localizedString(R.string.state_closed)

@@ -474,6 +474,7 @@
   <string name="details_history">Historia</string>
   <string name="details_timer_wrong_time">Czas musi być większy od 0</string>
   <string name="details_timer_text">Określ czas, w którym urządzenie powinno być:</string>
+  <string name="details_timer_disabled_forced_mode">Timer odliczający jest wyłączony w trybie wymuszonego włączenia/wyłączenia.</string>
   <string name="details_timer_turn_on_for">Włączone</string>
   <string name="details_timer_turn_off_for">Wyłączone</string>
   <string name="details_timer_info">Urządzenie będzie %1$s przez %2$s, a następnie się %3$s</string>

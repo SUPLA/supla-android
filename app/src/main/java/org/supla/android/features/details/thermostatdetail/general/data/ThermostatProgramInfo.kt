@@ -30,9 +30,9 @@ import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
 import org.supla.android.data.source.remote.hvac.icon
 import org.supla.android.data.source.remote.hvac.iconColor
 import org.supla.android.data.source.remote.isAutomaticTimeSyncDisabled
-import org.supla.android.features.details.programinfo.ProgramInfo
 import org.supla.android.features.details.thermostatdetail.ui.OFF
 import org.supla.android.features.details.thermostatdetail.ui.description
+import org.supla.android.ui.views.channelstate.ChannelProgramData
 import org.supla.core.shared.data.model.function.thermostat.SuplaThermostatFlag
 import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.infrastructure.LocalizedString
@@ -63,7 +63,7 @@ class ThermostatProgramInfoBuilder(val thermometerValueFormatter: ValueFormatter
   internal var quartersToNextProgram: Int? = null
 }
 
-fun ThermostatProgramInfoBuilder.build(): List<ProgramInfo> {
+fun ThermostatProgramInfoBuilder.build(): List<ChannelProgramData> {
   val (dateProvider) = guardLet(dateProvider) { throw IllegalStateException("Date provider cannot be null") }
   val (config) = guardLet(weeklyScheduleConfig) { throw IllegalStateException("Config cannot be null") }
   val (flags) = guardLet(thermostatFlags) { throw IllegalStateException("Thermostat flags cannot be null") }
@@ -121,8 +121,8 @@ private fun ThermostatProgramInfoBuilder.identifyPrograms() {
 
 private fun ThermostatProgramInfoBuilder.clockErrorList() =
   listOf(
-    ProgramInfo(
-      type = ProgramInfo.Type.CURRENT,
+    ChannelProgramData(
+      type = ChannelProgramData.Type.CURRENT,
       time = localizedString(R.string.thermostat_clock_error),
       icon = currentMode!!.icon,
       iconColor = currentMode!!.iconColor,
@@ -130,7 +130,7 @@ private fun ThermostatProgramInfoBuilder.clockErrorList() =
     )
   )
 
-private fun ThermostatProgramInfoBuilder.createList(): List<ProgramInfo> {
+private fun ThermostatProgramInfoBuilder.createList(): List<ChannelProgramData> {
   val minutesToNextProgram = quartersToNextProgram!! * 15 + (15 - (currentMinute!! % 15))
   val nextScheduleProgram = getProgram(foundNextProgram)
   val descriptionProvider: LocalizedString = LocalizedString.Constant(currentTemperatureString)
@@ -138,8 +138,8 @@ private fun ThermostatProgramInfoBuilder.createList(): List<ProgramInfo> {
   // If time synchronization disabled show only current program
   if (deviceConfig.isAutomaticTimeSyncDisabled()) {
     return listOf(
-      ProgramInfo(
-        type = ProgramInfo.Type.CURRENT,
+      ChannelProgramData(
+        type = ChannelProgramData.Type.CURRENT,
         icon = currentMode!!.icon,
         iconColor = currentMode!!.iconColor,
         description = if (currentMode == SuplaHvacMode.OFF) null else descriptionProvider,
@@ -150,8 +150,8 @@ private fun ThermostatProgramInfoBuilder.createList(): List<ProgramInfo> {
   }
 
   return listOf(
-    ProgramInfo(
-      type = ProgramInfo.Type.CURRENT,
+    ChannelProgramData(
+      type = ChannelProgramData.Type.CURRENT,
       time = localizedString(R.string.program_info_time, ValuesFormatter.getHourWithMinutes(minutesToNextProgram)),
       icon = currentMode!!.icon,
       iconColor = currentMode!!.iconColor,
@@ -159,8 +159,8 @@ private fun ThermostatProgramInfoBuilder.createList(): List<ProgramInfo> {
       indicatorIcon = R.drawable.ic_manual.takeIf { thermostatFlags!!.contains(SuplaThermostatFlag.WEEKLY_SCHEDULE_TEMPORAL_OVERRIDE) },
       indicatorIconColor = R.color.primary.takeIf { thermostatFlags!!.contains(SuplaThermostatFlag.WEEKLY_SCHEDULE_TEMPORAL_OVERRIDE) }
     ),
-    ProgramInfo(
-      type = ProgramInfo.Type.NEXT,
+    ChannelProgramData(
+      type = ChannelProgramData.Type.NEXT,
       icon = nextScheduleProgram?.mode?.icon,
       iconColor = nextScheduleProgram?.mode?.iconColor,
       description = nextScheduleProgram?.description(thermometerValueFormatter)

@@ -23,7 +23,7 @@ import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.local.calendar.QuarterOfHour
 import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
-import org.supla.android.features.details.programinfo.ProgramInfo
+import org.supla.android.ui.views.channelstate.ChannelProgramData
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 
@@ -31,7 +31,7 @@ class RelayProgramInfoBuilder(
   private val weeklyScheduleConfig: SuplaChannelWeeklyScheduleConfig,
   private val dateProvider: DateProvider
 ) {
-  fun build(isAutomaticTimeSyncDisabled: Boolean = false): List<ProgramInfo> {
+  fun build(isAutomaticTimeSyncDisabled: Boolean = false): List<ChannelProgramData> {
     val schedule = weeklyScheduleConfig.schedule
     if (schedule.isEmpty()) return emptyList()
 
@@ -61,8 +61,8 @@ class RelayProgramInfoBuilder(
 
     val nextDescription = nextProgram?.let(::description)
 
-    val currentInfo = ProgramInfo(
-      type = ProgramInfo.Type.CURRENT,
+    val currentInfo = ChannelProgramData(
+      type = ChannelProgramData.Type.CURRENT,
       time = nextDescription?.let {
         val minutesToNextProgram = quartersBeforeNextProgram * 15 + (15 - minute % 15)
         localizedString(R.string.program_info_time, ValuesFormatter.getHourWithMinutes(minutesToNextProgram))
@@ -73,7 +73,7 @@ class RelayProgramInfoBuilder(
       return listOf(currentInfo.copy(time = null))
     }
 
-    val nextInfo = nextDescription?.let { ProgramInfo(type = ProgramInfo.Type.NEXT, description = it) }
+    val nextInfo = nextDescription?.let { ChannelProgramData(type = ChannelProgramData.Type.NEXT, description = it) }
 
     return listOfNotNull(currentInfo, nextInfo)
   }

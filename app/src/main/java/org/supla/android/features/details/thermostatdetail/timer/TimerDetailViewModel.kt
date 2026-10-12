@@ -61,7 +61,7 @@ import org.supla.android.features.details.thermostatdetail.ui.TimerHeaderHelper
 import org.supla.android.images.ImageId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaThreading
-import org.supla.android.ui.views.DeviceStateData
+import org.supla.android.ui.views.channelstate.ChannelCurrentData
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.client.ExecuteThermostatActionUseCase
 import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
@@ -116,7 +116,7 @@ class TimerDetailViewModel @Inject constructor(
   }
 
   fun loadData() {
-    readChannelByRemoteIdUseCase.invoke(remoteId)
+    readChannelByRemoteIdUseCase.invoke(remoteId).firstElement()
       .attach()
       .subscribeBy(
         onSuccess = { channelSubject.onNext(it) },
@@ -508,8 +508,8 @@ data class TimerDetailViewState(
       }
     }
 
-  val deviceState: DeviceStateData
-    get() = DeviceStateData(
+  val deviceState: ChannelCurrentData
+    get() = ChannelCurrentData(
       label = TimerHeaderHelper.endDateText(timerEndDate),
       icon = TimerHeaderHelper.currentStateIcon(currentMode)?.let { ImageId(it) },
       value = TimerHeaderHelper.currentStateValue(

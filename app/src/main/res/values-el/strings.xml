@@ -474,6 +474,7 @@
   <string name="details_history">Ιστορία</string>
   <string name="details_timer_wrong_time">Ο χρόνος πρέπει να είναι μεγαλύτερος από 0</string>
   <string name="details_timer_text">Καθορίστε την ώρα που θα πρέπει να είναι η συσκευή:</string>
+  <string name="details_timer_disabled_forced_mode">Ο χρονοδιακόπτης αντίστροφης μέτρησης είναι απενεργοποιημένος στη λειτουργία αναγκαστικής ενεργοποίησης/απενεργοποίησης</string>
   <string name="details_timer_turn_on_for">Ενεργοποιημένο</string>
   <string name="details_timer_turn_off_for">Απενεργοποιημένο</string>
   <string name="details_timer_info">Η συσκευή θα είναι  %1$s %2$s, και στη συνέχεια θα %3$s</string>

@@ -466,6 +466,7 @@
   <string name="details_history">Historial</string>
   <string name="details_timer_wrong_time">La hora debe ser mayor que 0</string>
   <string name="details_timer_text">Especifica la hora en la que el dispositivo debe estar:</string>
+  <string name="details_timer_disabled_forced_mode">El temporizador de cuenta atrás está desactivado en el modo de encendido/apagado forzado</string>
   <string name="details_timer_turn_on_for">Encendido</string>
   <string name="details_timer_turn_off_for">Apagado</string>
   <string name="details_timer_info">El dispositivo estará %1$s durante %2$s y después se %3$s</string>

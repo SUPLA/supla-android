@@ -56,10 +56,10 @@ import org.supla.android.features.details.thermostatdetail.timer.SetpointTempera
 import org.supla.android.features.details.thermostatdetail.timer.TimerDetailViewState
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.tools.SuplaPreviewLandscape
-import org.supla.android.ui.views.DeviceState
 import org.supla.android.ui.views.TimerProgressView
 import org.supla.android.ui.views.buttons.TextButton
 import org.supla.android.ui.views.buttons.supla.SuplaButton
+import org.supla.android.ui.views.channelstate.ChannelCurrentState
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.usecase.channel.valueformatter.DefaultValueFormatter
 import java.util.Date
@@ -91,7 +91,7 @@ private fun ThermostatTimerInProgressScope.Landscape(state: TimerDetailViewState
       verticalArrangement = Arrangement.SpaceEvenly,
       modifier = Modifier.fillMaxHeight().weight(1f)
     ) {
-      DeviceState(
+      ChannelCurrentState(
         data = state.deviceState,
         modifier = Modifier.padding(top = Distance.default)
       )
@@ -112,7 +112,7 @@ private fun ThermostatTimerInProgressScope.Portrait(state: TimerDetailViewState)
       .fillMaxHeight()
       .background(MaterialTheme.colorScheme.background)
   ) {
-    DeviceState(
+    ChannelCurrentState(
       data = state.deviceState,
       modifier = Modifier
         .align(Alignment.TopCenter)

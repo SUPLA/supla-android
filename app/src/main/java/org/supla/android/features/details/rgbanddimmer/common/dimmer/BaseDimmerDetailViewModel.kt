@@ -49,8 +49,8 @@ import org.supla.android.features.details.rgbanddimmer.common.dimmerValues
 import org.supla.android.images.ImageId
 import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaThreading
-import org.supla.android.ui.views.DeviceStateData
 import org.supla.android.ui.views.buttons.SwitchButtonState
+import org.supla.android.ui.views.channelstate.ChannelCurrentData
 import org.supla.android.usecases.channel.GetChannelStateUseCase
 import org.supla.android.usecases.channel.ObserveChannelWithChildrenUseCase
 import org.supla.android.usecases.client.ExecuteRgbwActionUseCase
@@ -323,7 +323,7 @@ abstract class BaseDimmerDetailViewModel(
         viewState = state.viewState.copy(
           offline = channel.status.offline,
           value = DimmerValue.Single(value.brightness, value.cct),
-          deviceStateData = DeviceStateData(
+          deviceStateData = ChannelCurrentData(
             icon = getChannelIconUseCase(channel),
             label = localizedString(R.string.details_timer_state_label),
             value = getDeviceStateValue(channel.status, channelState),
@@ -372,7 +372,7 @@ abstract class BaseDimmerDetailViewModel(
             brightnesses = group.channelGroupEntity.dimmerValues,
             ccts = group.channelGroupEntity.cctValues
           ),
-          deviceStateData = DeviceStateData(
+          deviceStateData = ChannelCurrentData(
             icon = getChannelIconUseCase(group),
             label = localizedString(R.string.details_timer_state_label),
             value = getDeviceStateValue(group.status, groupState),
