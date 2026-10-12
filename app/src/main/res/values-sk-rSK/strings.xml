@@ -479,6 +479,7 @@
   <string name="details_history">História</string>
   <string name="details_timer_wrong_time">Čas musí byť väčší ako 0</string>
   <string name="details_timer_text">Zadajte čas, kedy má byť zariadenie:</string>
+  <string name="details_timer_disabled_forced_mode">Odpočítavací časovač je v režime núteného zapnutia/vypnutia vypnutý.</string>
   <string name="details_timer_turn_on_for">Zapnuté</string>
   <string name="details_timer_turn_off_for">Vypnuté</string>
   <string name="details_timer_info">Zariadenie bude %1$s na  %2$s, a potom sa %3$s</string>

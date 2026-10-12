@@ -480,6 +480,7 @@
   <string name="details_history">Istoric</string>
   <string name="details_timer_wrong_time">Timpul trebuie să fie mai mare decât 0</string>
   <string name="details_timer_text">Specificați ora la care dispozitivul ar trebui să fie:</string>
+  <string name="details_timer_disabled_forced_mode">Temporizatorul cu numărătoare inversă este dezactivat în modul de pornire/oprire forțată.</string>
   <string name="details_timer_turn_on_for">Activat</string>
   <string name="details_timer_turn_off_for">Dezactivat</string>
   <string name="details_timer_info">Dispozitivul va fi  %1$s pentru %2$s, și apoi se va %3$s</string>

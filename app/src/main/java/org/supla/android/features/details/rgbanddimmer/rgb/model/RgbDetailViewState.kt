@@ -17,17 +17,16 @@ package org.supla.android.features.details.rgbanddimmer.rgb.model
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.compose.ui.graphics.Color
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.extensions.HsvColor
 import org.supla.android.features.details.rgbanddimmer.common.SavedColor
 import org.supla.android.features.details.rgbanddimmer.rgb.ui.ColorDialogState
-import org.supla.android.ui.views.DeviceStateData
 import org.supla.android.ui.views.buttons.SwitchButtonState
+import org.supla.android.ui.views.channelstate.ChannelCurrentData
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
 
 data class RgbDetailViewState(
-  val deviceStateData: DeviceStateData? = null,
+  val deviceStateData: ChannelCurrentData? = null,
   val channelIssues: List<ChannelIssueItem>? = null,
   val offButtonState: SwitchButtonState? = null,
   val onButtonState: SwitchButtonState? = null,

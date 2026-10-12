@@ -452,6 +452,7 @@
   <string name="details_history">Історія</string>
   <string name="details_timer_wrong_time">Час має бути більшим за 0</string>
   <string name="details_timer_text">Вкажіть час, коли пристрій повинен бути:</string>
+  <string name="details_timer_disabled_forced_mode">Таймер зворотного відліку вимкнено в режимі примусового ввімкнення/вимкнення.</string>
   <string name="details_timer_turn_on_for">Ввімкнений</string>
   <string name="details_timer_turn_off_for">Вимкнений</string>
   <string name="details_timer_info">Пристрій буде %1$s протягом %2$s, а потім %3$s</string>

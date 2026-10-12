@@ -24,7 +24,8 @@ import io.mockk.Called
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.TestScheduler
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -32,6 +33,7 @@ import org.supla.android.R
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
+import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.storage.RuntimeStateHolder
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
@@ -41,13 +43,15 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.LocationSortingType
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.remote.hvac.SuplaRelayMode
+import org.supla.android.events.ChannelConfigEventsManager
+import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.images.ImageId
 import org.supla.android.lib.SuplaChannelExtendedValue
 import org.supla.android.lib.SuplaTimerState
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaThreading
-import org.supla.android.ui.views.DeviceStateData
+import org.supla.android.ui.views.channelstate.ChannelCurrentData
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.client.StartTimerUseCase
@@ -78,6 +82,15 @@ class TimersDetailViewModelTest : BaseViewModelTest<TimersDetailViewState, Timer
   @MockK
   private lateinit var getChannelIconUseCase: GetChannelIconUseCase
 
+  @MockK
+  private lateinit var channelConfigEventsManager: ChannelConfigEventsManager
+
+  @MockK
+  private lateinit var deviceConfigEventsManager: DeviceConfigEventsManager
+
+  @MockK
+  private lateinit var suplaClientProvider: SuplaClientProvider
+
   @MockK(relaxUnitFun = true)
   private lateinit var suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper
 
@@ -100,6 +113,10 @@ class TimersDetailViewModelTest : BaseViewModelTest<TimersDetailViewState, Timer
     every { getChannelIconUseCase(any<ChannelDataEntity>()) } returns icon
     every { context.getString(R.string.hour_string_format) } returns "HH:mm:ss"
     every { DateFormat.format(any<String>(), any<Date>()) } returns "12:00:00"
+    every { threading.schedulers.computation } returns testScheduler
+    every { channelConfigEventsManager.observerConfig(any()) } returns Observable.never()
+    every { deviceConfigEventsManager.observerConfig(any()) } returns Observable.never()
+    every { suplaClientProvider.provide() } returns null
   }
 
   @Test
@@ -107,12 +124,12 @@ class TimersDetailViewModelTest : BaseViewModelTest<TimersDetailViewState, Timer
     // given
     val remoteId = 123
     val channelData = channelData(remoteId = remoteId, online = true, on = false, extendedValue = null)
-    every { readChannelByRemoteIdUseCase(remoteId) } returns Maybe.just(channelData)
+    every { readChannelByRemoteIdUseCase(remoteId) } returns Observable.just(channelData)
     every { dateProvider.currentDate() } returns Date()
     every { runtimeStateHolder.getLastTimerValue(remoteId) } returns 0
 
     // when
-    viewModel.loadData(remoteId)
+    viewModel.onViewCreated(remoteId)
 
     // then
     assertThat(events).isEmpty()
@@ -120,7 +137,7 @@ class TimersDetailViewModelTest : BaseViewModelTest<TimersDetailViewState, Timer
       TimersDetailViewState(
         online = true,
         on = false,
-        deviceStateData = DeviceStateData(
+        deviceStateData = ChannelCurrentData(
           label = localizedString(R.string.details_timer_state_label),
           icon = icon,
           value = localizedString(R.string.details_timer_device_off)
@@ -148,11 +165,11 @@ class TimersDetailViewModelTest : BaseViewModelTest<TimersDetailViewState, Timer
       on = false,
       extendedValue = createExtendedValueWithTimer(remoteId, endDate, startDate, true)
     )
-    every { readChannelByRemoteIdUseCase(remoteId) } returns Maybe.just(channelData)
+    every { readChannelByRemoteIdUseCase(remoteId) } returns Observable.just(channelData)
     every { runtimeStateHolder.getLastTimerValue(remoteId) } returns 0
 
     // when
-    viewModel.loadData(remoteId)
+    viewModel.onViewCreated(remoteId)
 
     // then
     assertThat(events).isEmpty()
@@ -185,11 +202,11 @@ class TimersDetailViewModelTest : BaseViewModelTest<TimersDetailViewState, Timer
       on = false,
       extendedValue = createExtendedValueWithTimer(remoteId, endDate, null, false)
     )
-    every { readChannelByRemoteIdUseCase(remoteId) } returns Maybe.just(channelData)
+    every { readChannelByRemoteIdUseCase(remoteId) } returns Observable.just(channelData)
     every { runtimeStateHolder.getLastTimerValue(remoteId) } returns 0
 
     // when
-    viewModel.loadData(remoteId)
+    viewModel.onViewCreated(remoteId)
 
     // then
     assertThat(events).isEmpty()
@@ -222,12 +239,12 @@ class TimersDetailViewModelTest : BaseViewModelTest<TimersDetailViewState, Timer
       on = false,
       extendedValue = createExtendedValueWithTimer(remoteId, endDate, null, false)
     )
-    every { readChannelByRemoteIdUseCase(remoteId) } returns Maybe.just(channelData)
+    every { readChannelByRemoteIdUseCase(remoteId) } returns Observable.just(channelData)
     every { runtimeStateHolder.getLastTimerValue(remoteId) } returns 0
 
     // when
     viewModel.startEditMode()
-    viewModel.loadData(remoteId)
+    viewModel.onViewCreated(remoteId)
 
     // then
     assertThat(events).isEmpty()
@@ -252,11 +269,13 @@ class TimersDetailViewModelTest : BaseViewModelTest<TimersDetailViewState, Timer
     val duration = 345
 
     every { runtimeStateHolder.getLastTimerValue(remoteId) } returns 0
+    every { readChannelByRemoteIdUseCase(remoteId) } returns Observable.never()
     every { runtimeStateHolder.setLastTimerValue(remoteId, duration) } just Runs
     every { startTimerUseCase(remoteId, turnOn, duration) } returns Completable.complete()
 
     // when
     viewModel.onViewCreated(remoteId)
+    viewModel.setState(TimersDetailViewState(online = true))
     viewModel.updateAction(TimerTargetAction.TURN_ON)
     viewModel.updateTimerTime(duration)
     states.clear()
@@ -268,7 +287,6 @@ class TimersDetailViewModelTest : BaseViewModelTest<TimersDetailViewState, Timer
     verify { startTimerUseCase.invoke(remoteId, turnOn, duration) }
     confirmVerified(startTimerUseCase)
     verify {
-      readChannelByRemoteIdUseCase wasNot Called
       dateProvider wasNot Called
       executeSimpleActionUseCase wasNot Called
     }
@@ -282,11 +300,13 @@ class TimersDetailViewModelTest : BaseViewModelTest<TimersDetailViewState, Timer
     val duration = 345
 
     every { runtimeStateHolder.getLastTimerValue(remoteId) } returns 0
+    every { readChannelByRemoteIdUseCase(remoteId) } returns Observable.never()
     every { runtimeStateHolder.setLastTimerValue(remoteId, duration) } just Runs
     every { startTimerUseCase(remoteId, turnOn, duration) } returns Completable.error(StartTimerUseCase.InvalidTimeException())
 
     // when
     viewModel.onViewCreated(remoteId)
+    viewModel.setState(TimersDetailViewState(online = true))
     viewModel.updateAction(TimerTargetAction.TURN_ON)
     viewModel.updateTimerTime(duration)
     states.clear()
@@ -298,7 +318,6 @@ class TimersDetailViewModelTest : BaseViewModelTest<TimersDetailViewState, Timer
     verify { startTimerUseCase.invoke(remoteId, turnOn, duration) }
     confirmVerified(startTimerUseCase)
     verify {
-      readChannelByRemoteIdUseCase wasNot Called
       dateProvider wasNot Called
       executeSimpleActionUseCase wasNot Called
     }
@@ -309,19 +328,13 @@ class TimersDetailViewModelTest : BaseViewModelTest<TimersDetailViewState, Timer
     // given
     val remoteId = 123
 
-    val channelValue: ChannelValueEntity = mockk {
-      every { isClosed() } returns true
-    }
-    val channel: ChannelDataEntity = mockk {
-      every { channelValueEntity } returns channelValue
-    }
-    every { readChannelByRemoteIdUseCase(remoteId) } returns Maybe.just(channel)
-
     every { executeSimpleActionUseCase(ActionId.TURN_ON, SubjectType.CHANNEL, remoteId) } returns Completable.complete()
     every { runtimeStateHolder.getLastTimerValue(remoteId) } returns 0
+    every { readChannelByRemoteIdUseCase(remoteId) } returns Observable.never()
 
     // when
     viewModel.onViewCreated(remoteId)
+    viewModel.setState(TimersDetailViewState(timerData = TimerProgressData(Date(), Date(), false, TimerValue.ON)))
     states.clear()
     viewModel.stopTimer()
 
@@ -329,9 +342,8 @@ class TimersDetailViewModelTest : BaseViewModelTest<TimersDetailViewState, Timer
     assertThat(events).isEmpty()
     assertThat(states).isEmpty()
 
-    verify { readChannelByRemoteIdUseCase.invoke(remoteId) }
     verify { executeSimpleActionUseCase.invoke(ActionId.TURN_ON, SubjectType.CHANNEL, remoteId) }
-    confirmVerified(readChannelByRemoteIdUseCase, executeSimpleActionUseCase)
+    confirmVerified(executeSimpleActionUseCase)
     verify {
       dateProvider wasNot Called
       startTimerUseCase wasNot Called
@@ -343,19 +355,15 @@ class TimersDetailViewModelTest : BaseViewModelTest<TimersDetailViewState, Timer
     // given
     val remoteId = 123
 
-    val channelValue: ChannelValueEntity = mockk {
-      every { isClosed() } returns false
-    }
-    val channel: ChannelDataEntity = mockk {
-      every { channelValueEntity } returns channelValue
-    }
-    every { readChannelByRemoteIdUseCase.invoke(remoteId) } returns Maybe.just(channel)
-
     every { executeSimpleActionUseCase(ActionId.TURN_ON, SubjectType.CHANNEL, remoteId) } returns Completable.complete()
     every { runtimeStateHolder.getLastTimerValue(remoteId) } returns 0
+    every { readChannelByRemoteIdUseCase(remoteId) } returns Observable.never()
+    every { readChannelByRemoteIdUseCase(remoteId) } returns Observable.never()
+    every { readChannelByRemoteIdUseCase(remoteId) } returns Observable.never()
 
     // when
     viewModel.onViewCreated(remoteId)
+    viewModel.setState(TimersDetailViewState(timerData = TimerProgressData(Date(), Date(), false, TimerValue.OFF)))
     states.clear()
     viewModel.cancelTimer()
 
@@ -363,9 +371,8 @@ class TimersDetailViewModelTest : BaseViewModelTest<TimersDetailViewState, Timer
     assertThat(events).isEmpty()
     assertThat(states).isEmpty()
 
-    verify { readChannelByRemoteIdUseCase.invoke(remoteId) }
     verify { executeSimpleActionUseCase.invoke(ActionId.TURN_ON, SubjectType.CHANNEL, remoteId) }
-    confirmVerified(readChannelByRemoteIdUseCase, executeSimpleActionUseCase)
+    confirmVerified(executeSimpleActionUseCase)
     verify {
       dateProvider wasNot Called
       startTimerUseCase wasNot Called

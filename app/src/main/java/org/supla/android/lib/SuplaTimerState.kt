@@ -44,4 +44,13 @@ class SuplaTimerState(
   )
 
   fun expectedHiValue(): Boolean = targetValue?.let { it[0] > 0 } ?: false
+
+  override fun toString(): String {
+    return "SuplaTimerState(" +
+      "countdownEndsAt=$countdownEndsAt, " +
+      "targetValue=${targetValue.contentToString()}, " +
+      "senderId=$senderId, " +
+      "senderName=$senderName" +
+      ")"
+  }
 }

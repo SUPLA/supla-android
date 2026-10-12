@@ -476,6 +476,7 @@
   <string name="details_history">Zgodovina</string>
   <string name="details_timer_wrong_time">Čas mora biti večji od 0</string>
   <string name="details_timer_text">Določite čas, ko naj bo naprava:</string>
+  <string name="details_timer_disabled_forced_mode">Odštevalnik časa je onemogočen v načinu prisilnega vklopa/izklopa.</string>
   <string name="details_timer_turn_on_for">Vklopljena</string>
   <string name="details_timer_turn_off_for">Izklopljena</string>
   <string name="details_timer_info">Naprava bo %1$s  %2$s, nato pa bo %3$s</string>

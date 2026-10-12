@@ -116,7 +116,7 @@ class RelayScheduleViewModel @Inject constructor(
       channelConfigEventsManager.observerConfig(remoteId)
         .filter { it.config is SuplaChannelWeeklyScheduleConfig },
       deviceConfigEventsManager.observerConfig(deviceId),
-      readChannelByRemoteIdUseCase(remoteId).toObservable()
+      readChannelByRemoteIdUseCase(remoteId)
     ) { weeklyConfig, deviceConfig, channel ->
       LoadedData(
         weeklyScheduleConfig = weeklyConfig.config as SuplaChannelWeeklyScheduleConfig,

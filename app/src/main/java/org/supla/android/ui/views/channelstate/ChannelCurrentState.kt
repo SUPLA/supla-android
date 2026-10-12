@@ -1,4 +1,4 @@
-package org.supla.android.ui.views
+package org.supla.android.ui.views.channelstate
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -34,9 +34,10 @@ import androidx.compose.ui.unit.dp
 import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.images.ImageId
+import org.supla.android.ui.views.Image
 import org.supla.core.shared.infrastructure.LocalizedString
 
-data class DeviceStateData(
+data class ChannelCurrentData(
   val label: LocalizedString,
   val icon: ImageId?,
   val value: LocalizedString,
@@ -45,11 +46,11 @@ data class DeviceStateData(
 )
 
 @Composable
-fun DeviceState(
-  data: DeviceStateData,
+fun ChannelCurrentState(
+  data: ChannelCurrentData,
   modifier: Modifier = Modifier
 ) {
-  DeviceState(
+  ChannelCurrentState(
     stateLabel = data.label(LocalContext.current),
     icon = data.icon,
     stateValue = data.value(LocalContext.current),
@@ -59,7 +60,7 @@ fun DeviceState(
 }
 
 @Composable
-fun DeviceState(
+fun ChannelCurrentState(
   stateLabel: String,
   icon: ImageId?,
   stateValue: String,

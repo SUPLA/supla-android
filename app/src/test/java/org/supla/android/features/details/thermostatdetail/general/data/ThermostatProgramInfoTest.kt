@@ -36,7 +36,7 @@ import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleEntry
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
-import org.supla.android.features.details.programinfo.ProgramInfo
+import org.supla.android.ui.views.channelstate.ChannelProgramData
 import org.supla.core.shared.data.model.function.thermostat.SuplaThermostatFlag
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
@@ -190,8 +190,8 @@ class ThermostatProgramInfoTest {
 
     // then
     assertThat(list).containsExactly(
-      ProgramInfo(
-        type = ProgramInfo.Type.CURRENT,
+      ChannelProgramData(
+        type = ChannelProgramData.Type.CURRENT,
         time = localizedString(R.string.thermostat_clock_error),
         icon = R.drawable.ic_heat,
         iconColor = R.color.red,
@@ -246,8 +246,8 @@ class ThermostatProgramInfoTest {
 
     // then
     assertThat(list).containsExactly(
-      ProgramInfo(
-        type = ProgramInfo.Type.CURRENT,
+      ChannelProgramData(
+        type = ChannelProgramData.Type.CURRENT,
         time = LocalizedString.WithResourceAndArguments(
           id = R.string.program_info_time,
           arguments = listOf(LocalizedString.WithResourceAndArguments(R.string.time_just_minutes, listOf(55)))
@@ -256,8 +256,8 @@ class ThermostatProgramInfoTest {
         iconColor = R.color.red,
         description = LocalizedString.Constant("18.4")
       ),
-      ProgramInfo(
-        type = ProgramInfo.Type.NEXT,
+      ChannelProgramData(
+        type = ChannelProgramData.Type.NEXT,
         time = null,
         icon = R.drawable.ic_cool,
         iconColor = R.color.blue,
@@ -290,8 +290,8 @@ class ThermostatProgramInfoTest {
 
     // then
     assertThat(list).containsExactly(
-      ProgramInfo(
-        type = ProgramInfo.Type.CURRENT,
+      ChannelProgramData(
+        type = ChannelProgramData.Type.CURRENT,
         time = null,
         icon = R.drawable.ic_heat,
         iconColor = R.color.red,
@@ -324,8 +324,8 @@ class ThermostatProgramInfoTest {
 
     // then
     assertThat(list).containsExactly(
-      ProgramInfo(
-        type = ProgramInfo.Type.CURRENT,
+      ChannelProgramData(
+        type = ChannelProgramData.Type.CURRENT,
         time = LocalizedString.WithResourceAndArguments(
           id = R.string.program_info_time,
           arguments = listOf(LocalizedString.WithResourceAndArguments(R.string.time_just_minutes, listOf(55)))
@@ -336,8 +336,8 @@ class ThermostatProgramInfoTest {
         indicatorIconColor = R.color.primary,
         description = LocalizedString.Constant(temperatureString)
       ),
-      ProgramInfo(
-        type = ProgramInfo.Type.NEXT,
+      ChannelProgramData(
+        type = ChannelProgramData.Type.NEXT,
         time = null,
         icon = R.drawable.ic_cool,
         iconColor = R.color.blue,

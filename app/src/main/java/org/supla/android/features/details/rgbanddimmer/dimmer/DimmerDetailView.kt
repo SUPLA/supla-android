@@ -44,8 +44,8 @@ import org.supla.android.tools.SuplaPreview
 import org.supla.android.tools.SuplaPreviewLandscape
 import org.supla.android.tools.SuplaSizeClassPreview
 import org.supla.android.tools.SuplaSmallPreview
-import org.supla.android.ui.views.DeviceStateData
 import org.supla.android.ui.views.buttons.SwitchButtonState
+import org.supla.android.ui.views.channelstate.ChannelCurrentData
 import org.supla.core.shared.infrastructure.localizedString
 import kotlin.math.roundToInt
 
@@ -122,7 +122,7 @@ private fun Preview() {
   SuplaTheme {
     previewScope.View(
       state = DimmerDetailViewState(
-        deviceStateData = DeviceStateData(
+        deviceStateData = ChannelCurrentData(
           label = localizedString(R.string.details_timer_state_label),
           icon = ImageId(R.drawable.fnc_dimmer_on),
           value = localizedString(R.string.details_timer_device_on)
@@ -150,7 +150,7 @@ private fun PreviewCircular() {
     previewScope.View(
       state = DimmerDetailViewState(
         selectorType = DimmerSelectorType.CIRCULAR,
-        deviceStateData = DeviceStateData(
+        deviceStateData = ChannelCurrentData(
           label = localizedString(R.string.details_timer_state_label),
           icon = ImageId(R.drawable.fnc_dimmer_on),
           value = localizedString(R.string.details_timer_device_on)

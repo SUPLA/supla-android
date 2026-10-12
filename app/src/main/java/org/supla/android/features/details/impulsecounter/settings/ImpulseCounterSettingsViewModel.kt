@@ -49,7 +49,7 @@ class ImpulseCounterSettingsViewModel @Inject constructor(
   private lateinit var item: ItemBundle
 
   fun loadData(remoteId: Int) {
-    readChannelByRemoteIdUseCase(remoteId)
+    readChannelByRemoteIdUseCase(remoteId).firstElement()
       .attach()
       .subscribeBy(
         onSuccess = this::handleChannel,

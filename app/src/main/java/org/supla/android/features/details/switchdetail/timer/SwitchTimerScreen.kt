@@ -40,8 +40,7 @@ fun SwitchTimerScreen(
           Toast.makeText(context, R.string.details_timer_wrong_time, Toast.LENGTH_LONG).show()
       }
     },
-    onCreate = { viewModel.onViewCreated(item.remoteId) },
-    onResume = { viewModel.loadData() }
+    onCreate = { viewModel.onViewCreated(item.remoteId, item.deviceId) },
   ) { state ->
     viewModel.TimerDetailView(state)
   }

@@ -358,14 +358,14 @@ class SwitchGeneralViewModelTest :
     verify(exactly = 1) { readChannelWithChildrenUseCase.invoke(remoteId) }
 
     // when
-    testScheduler.advanceTimeBy(1, TimeUnit.MINUTES)
+    testScheduler.advanceTimeBy(2, TimeUnit.SECONDS)
 
     // then
     verify(exactly = 2) { dateProvider.currentMinute() }
 
     // when
     every { channelData.status } returns SuplaChannelAvailabilityStatus.OFFLINE
-    testScheduler.advanceTimeBy(1, TimeUnit.MINUTES)
+    testScheduler.advanceTimeBy(2, TimeUnit.SECONDS)
 
     // then
     assertThat(states.last().programInfo).isEmpty()
@@ -374,7 +374,7 @@ class SwitchGeneralViewModelTest :
     every { channelData.status } returns SuplaChannelAvailabilityStatus.ONLINE
     every { channelData.channel.channelValueEntity.asRelayValue() } returns
       RelayValue(SuplaChannelAvailabilityStatus.OFFLINE, false, emptyList(), SuplaRelayMode.NOT_SET)
-    testScheduler.advanceTimeBy(1, TimeUnit.MINUTES)
+    testScheduler.advanceTimeBy(2, TimeUnit.SECONDS)
 
     // then
     assertThat(states.last().programInfo).isEmpty()
