@@ -20,7 +20,7 @@ package org.supla.android.features.details.thermostatdetail.general
 import androidx.compose.runtime.Composable
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.supla.android.features.details.detailbase.base.ItemBundle
-import org.supla.android.features.details.thermostatdetail.general.ui.ThermostatDetail
+import org.supla.android.features.details.thermostatdetail.general.ui.View
 import org.supla.android.main.ViewModelHost
 
 @Composable
@@ -32,7 +32,7 @@ fun ThermostatGeneralScreen(
     viewModel = viewModel,
     onCreate = { viewModel.observeData(item.remoteId, item.deviceId) },
     onResume = { viewModel.loadData(item.remoteId, item.deviceId) }
-  ) {
-    ThermostatDetail(viewModel)
+  ) { state ->
+    viewModel.View(state)
   }
 }
