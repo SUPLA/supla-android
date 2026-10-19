@@ -232,6 +232,12 @@ class ScheduleDetailViewModel @Inject constructor(
     updateState { it.copy(programSettings = null) }
   }
 
+  override fun onProgramSettingsModeChange(mode: SuplaHvacMode) {
+    updateState { state ->
+      state.copy(programSettings = state.programSettings?.copy(selectedMode = mode))
+    }
+  }
+
   override fun onProgramSettingsSave() {
     updateState { state ->
       state.copy(
