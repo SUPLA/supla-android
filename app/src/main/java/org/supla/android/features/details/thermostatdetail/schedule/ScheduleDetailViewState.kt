@@ -58,9 +58,10 @@ data class ScheduleDetailViewState(
       mutableListOf<ScheduleDetailProgramBox>().apply {
         for (program in editorState.programs) {
           if (program.program == programToUpdate.program) {
+            val mode = programToUpdate.selectedMode
             val icon = when (function) {
-              SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL if program.mode == SuplaHvacMode.HEAT -> R.drawable.ic_heat
-              SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL if program.mode == SuplaHvacMode.COOL -> R.drawable.ic_cool
+              SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL if mode == SuplaHvacMode.HEAT -> R.drawable.ic_heat
+              SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL if mode == SuplaHvacMode.COOL -> R.drawable.ic_cool
               else -> null
             }
 
@@ -68,7 +69,7 @@ data class ScheduleDetailViewState(
               channelFunction = function,
               thermostatFunction = thermostatFunction!!,
               program = programToUpdate.program,
-              mode = programToUpdate.selectedMode,
+              mode = mode,
               setpointTemperatureHeat = programToUpdate.setpointTemperatureHeat,
               setpointTemperatureCool = programToUpdate.setpointTemperatureCool,
               valueFormatter = thermometerValueFormatter,

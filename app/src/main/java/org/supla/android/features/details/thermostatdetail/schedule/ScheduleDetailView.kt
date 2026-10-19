@@ -78,6 +78,7 @@ private val previewScope = object : ScheduleDetailViewScope {
   override fun onScheduleTableTouched(key: ScheduleDetailEntryBoxKey) {}
   override fun onScheduleTableReload() {}
   override fun onScheduleTableInvalidate() {}
+  override fun onProgramSettingsModeChange(mode: SuplaHvacMode) {}
   override fun onProgramSettingsTemperatureClickChange(forMode: SuplaHvacMode, correction: TemperatureCorrection) {}
   override fun onProgramSettingsTemperatureManualChange(forMode: SuplaHvacMode, value: String) {}
   override fun onProgramSettingsDismiss() {}
