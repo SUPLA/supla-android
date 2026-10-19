@@ -64,12 +64,12 @@ object Constraints {
 
       if (isSmallScreen) {
         constrain(increaseButton) {
-          end.linkTo(parent.end, distance.default)
-          bottom.linkTo(decreaseButton.top, distance.default)
+          end.linkTo(parent.end, distance.small)
+          bottom.linkTo(decreaseButton.top, distance.small)
         }
         constrain(decreaseButton) {
-          end.linkTo(parent.end, distance.default)
-          bottom.linkTo(parent.bottom, distance.default)
+          end.linkTo(parent.end, distance.small)
+          bottom.linkTo(parent.bottom, distance.small)
         }
       } else {
         val horizontalCenterGuideline = createGuidelineFromStart(0.5f)

@@ -49,10 +49,11 @@ import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.details.thermostatdetail.general.data.SensorIssue
 import org.supla.android.features.details.thermostatdetail.general.data.ThermostatProgramInfoBuilder
 import org.supla.android.features.details.thermostatdetail.general.data.build
-import org.supla.android.features.details.thermostatdetail.general.ui.ThermostatGeneralViewProxy
+import org.supla.android.features.details.thermostatdetail.general.ui.ThermostatGeneralScope
 import org.supla.android.features.details.thermostatdetail.ui.TimerHeaderHelper
 import org.supla.android.images.ImageId
 import org.supla.android.tools.SuplaThreading
+import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.views.channelstate.ChannelCurrentData
 import org.supla.android.ui.views.channelstate.ChannelProgramData
 import org.supla.android.usecases.channel.GetChannelValueUseCase
@@ -95,6 +96,7 @@ class ThermostatGeneralViewModel @Inject constructor(
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val loadingTimeoutManager: LoadingTimeoutManager,
   private val suplaClientProvider: SuplaClientProvider,
+  private val vibrationHelper: VibrationHelper,
   private val dateProvider: DateProvider,
   @param:Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter,
   threading: SuplaThreading
@@ -102,7 +104,7 @@ class ThermostatGeneralViewModel @Inject constructor(
   ThermostatGeneralViewState(thermometerValueFormatter),
   threading
 ),
-  ThermostatGeneralViewProxy {
+  ThermostatGeneralScope {
 
   private val updateSubject: BehaviorSubject<Int> = BehaviorSubject.createDefault(0)
 
@@ -157,32 +159,54 @@ class ThermostatGeneralViewModel @Inject constructor(
   override fun heatingModeChanged() {
     currentState().viewModelState?.let { viewModelState ->
       val newMode = when (val mode = viewModelState.mode) {
-        SuplaHvacMode.HEAT_COOL -> SuplaHvacMode.COOL
-        SuplaHvacMode.COOL -> SuplaHvacMode.HEAT_COOL
-        SuplaHvacMode.HEAT -> SuplaHvacMode.OFF
-        SuplaHvacMode.OFF -> SuplaHvacMode.HEAT
+        SuplaHvacMode.HEAT_COOL, SuplaHvacMode.COOL, SuplaHvacMode.OFF -> SuplaHvacMode.HEAT
         else -> mode
       }
 
-      val newState = viewModelState.copy(mode = newMode)
-      updateState { it.copy(viewModelState = newState) }
-      delayedThermostatActionSubject.emit(newState)
+      if (newMode != viewModelState.mode) {
+        val newState = viewModelState.copy(mode = newMode)
+        updateState {
+          it.copy(viewModelState = newState, heatingModeActive = true, coolingModeActive = false, heatingAndCoolingActive = false)
+        }
+        delayedThermostatActionSubject.emit(newState)
+        vibrationHelper.vibrate()
+      }
     }
   }
 
   override fun coolingModeChanged() {
     currentState().viewModelState?.let { viewModelState ->
       val newMode = when (val mode = viewModelState.mode) {
-        SuplaHvacMode.HEAT_COOL -> SuplaHvacMode.HEAT
-        SuplaHvacMode.COOL -> SuplaHvacMode.OFF
-        SuplaHvacMode.HEAT -> SuplaHvacMode.HEAT_COOL
-        SuplaHvacMode.OFF -> SuplaHvacMode.COOL
+        SuplaHvacMode.HEAT_COOL, SuplaHvacMode.HEAT, SuplaHvacMode.OFF -> SuplaHvacMode.COOL
         else -> mode
       }
 
-      val newState = viewModelState.copy(mode = newMode)
-      updateState { it.copy(viewModelState = newState) }
-      delayedThermostatActionSubject.emit(newState)
+      if (newMode != viewModelState.mode) {
+        val newState = viewModelState.copy(mode = newMode)
+        updateState {
+          it.copy(viewModelState = newState, coolingModeActive = true, heatingModeActive = false, heatingAndCoolingActive = false)
+        }
+        delayedThermostatActionSubject.emit(newState)
+        vibrationHelper.vibrate()
+      }
+    }
+  }
+
+  override fun heatingAndCoolingModeChanged() {
+    currentState().viewModelState?.let { viewModelState ->
+      val newMode = when (val mode = viewModelState.mode) {
+        SuplaHvacMode.COOL, SuplaHvacMode.HEAT, SuplaHvacMode.OFF -> SuplaHvacMode.HEAT_COOL
+        else -> mode
+      }
+
+      if (newMode != viewModelState.mode) {
+        val newState = viewModelState.copy(mode = newMode)
+        updateState {
+          it.copy(viewModelState = newState, heatingAndCoolingActive = true, heatingModeActive = false, coolingModeActive = false)
+        }
+        delayedThermostatActionSubject.emit(newState)
+        vibrationHelper.vibrate()
+      }
     }
   }
 
@@ -373,6 +397,7 @@ class ThermostatGeneralViewModel @Inject constructor(
         isAutoFunction = channelData.function == SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
         heatingModeActive = isHeatingModeActive(channelData, thermostatValue),
         coolingModeActive = isCoolingModeActive(channelData, thermostatValue),
+        heatingAndCoolingActive = isHeatingAndCoolingModeActive(channelData, thermostatValue),
 
         showHeatingIndicator = isFlagActive(data.channelWithChildren, SuplaThermostatFlag.HEATING),
         showCoolingIndicator = isFlagActive(data.channelWithChildren, SuplaThermostatFlag.COOLING),
@@ -466,12 +491,13 @@ class ThermostatGeneralViewModel @Inject constructor(
       .build()
 
   private fun isHeatingModeActive(channel: ChannelDataEntity, value: ThermostatValue) =
-    channel.function == SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL &&
-      (value.mode == SuplaHvacMode.HEAT_COOL || value.mode == SuplaHvacMode.HEAT)
+    channel.function == SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL && value.mode == SuplaHvacMode.HEAT
 
   private fun isCoolingModeActive(channel: ChannelDataEntity, value: ThermostatValue) =
-    channel.function == SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL &&
-      (value.mode == SuplaHvacMode.HEAT_COOL || value.mode == SuplaHvacMode.COOL)
+    channel.function == SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL && value.mode == SuplaHvacMode.COOL
+
+  private fun isHeatingAndCoolingModeActive(channel: ChannelDataEntity, value: ThermostatValue) =
+    channel.function == SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL && value.mode == SuplaHvacMode.HEAT_COOL
 
   private fun calculateTemperatureControlText(
     isOffline: Boolean,
@@ -677,6 +703,7 @@ data class ThermostatGeneralViewState(
   val isAutoFunction: Boolean = false,
   val heatingModeActive: Boolean = false,
   val coolingModeActive: Boolean = false,
+  val heatingAndCoolingActive: Boolean = false,
   val showHeatingIndicator: Boolean = false,
   val showCoolingIndicator: Boolean = false,
   val pumpSwitchIcon: ImageId? = null,
