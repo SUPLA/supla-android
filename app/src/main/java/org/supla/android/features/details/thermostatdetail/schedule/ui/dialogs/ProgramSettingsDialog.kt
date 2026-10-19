@@ -56,6 +56,7 @@ import org.supla.android.ui.views.spinner.Spinner
 import org.supla.core.shared.data.model.thermometer.TemperatureUnit
 
 interface ProgramSettingsScope {
+  fun onProgramSettingsModeChange(mode: SuplaHvacMode)
   fun onProgramSettingsTemperatureClickChange(forMode: SuplaHvacMode, correction: TemperatureCorrection)
   fun onProgramSettingsTemperatureManualChange(forMode: SuplaHvacMode, value: String)
   fun onProgramSettingsDismiss()
@@ -73,7 +74,8 @@ fun ProgramSettingsScope.ProgramDialog(
       Spinner(
         label = stringResource(id = R.string.schedule_detail_program_dialog_program),
         options = data.spinnerModes(),
-        onOptionSelected = { },
+        selectedOption = data.selectedMode,
+        onOptionSelected = { onProgramSettingsModeChange(it) },
         modifier = Modifier
           .padding(
             start = dimensionResource(id = R.dimen.distance_default),
@@ -201,6 +203,7 @@ private fun SuplaHvacMode.temperatureTextRes(): Int = when (this) {
 }
 
 private val previewScope = object : ProgramSettingsScope {
+  override fun onProgramSettingsModeChange(mode: SuplaHvacMode) {}
   override fun onProgramSettingsTemperatureClickChange(forMode: SuplaHvacMode, correction: TemperatureCorrection) {}
   override fun onProgramSettingsTemperatureManualChange(forMode: SuplaHvacMode, value: String) {}
   override fun onProgramSettingsDismiss() {}
