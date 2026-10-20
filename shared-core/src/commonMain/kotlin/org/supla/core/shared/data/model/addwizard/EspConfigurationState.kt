@@ -1,9 +1,4 @@
 package org.supla.core.shared.data.model.addwizard
-
-import org.supla.core.shared.infrastructure.LocalizedString
-import org.supla.core.shared.infrastructure.LocalizedStringId
-import org.supla.core.shared.infrastructure.localizedString
-
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -21,6 +16,10 @@ import org.supla.core.shared.infrastructure.localizedString
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.LocalizedStringId
+import org.supla.core.shared.infrastructure.localizedString
 
 sealed interface EspConfigurationState {
   val progress: Float
