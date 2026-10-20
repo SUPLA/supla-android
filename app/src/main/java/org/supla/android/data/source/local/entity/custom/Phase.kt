@@ -1,9 +1,4 @@
 package org.supla.android.data.source.local.entity.custom
-
-import androidx.annotation.StringRes
-import org.supla.android.R
-import org.supla.android.data.source.remote.channel.SuplaChannelFlag
-
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -21,6 +16,10 @@ import org.supla.android.data.source.remote.channel.SuplaChannelFlag
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+
+import androidx.annotation.StringRes
+import org.supla.android.R
+import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 
 enum class Phase(val value: Int, @param:StringRes val label: Int) {
   PHASE_1(1, R.string.details_em_phase1), PHASE_2(2, R.string.details_em_phase2), PHASE_3(3, R.string.details_em_phase3);
