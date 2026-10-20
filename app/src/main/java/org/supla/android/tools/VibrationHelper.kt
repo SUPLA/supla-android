@@ -62,12 +62,12 @@ class VibrationHelper @Inject constructor(@param:ApplicationContext private val 
   private fun getAudioAttributes(): AudioAttributes =
     AudioAttributes.Builder()
       .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-      .setUsage(AudioAttributes.USAGE_ALARM)
+      .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
       .build()
 
   @RequiresApi(Build.VERSION_CODES.R)
   private fun getVibrationAttributes(): VibrationAttributes =
     VibrationAttributes.Builder()
-      .setUsage(VibrationAttributes.USAGE_ALARM)
+      .setUsage(VibrationAttributes.USAGE_TOUCH)
       .build()
 }
