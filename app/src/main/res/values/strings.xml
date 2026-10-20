@@ -871,6 +871,8 @@
   <string name="dimmer_detail_temperature">Color:</string>
   <string name="menu_nfc">NFC</string>
   <string name="settings_nfc_label">NFC</string>
+  <string name="schedules_list_title">Schedules</string>
+  <string name="schedules_login_required">Access requires login</string>
   <string name="nfc_list_add">Add NFC tag</string>
   <string name="edit_nfc_tag_name">Tag name</string>
   <string name="call_nfc_action_calling">Performing action</string>

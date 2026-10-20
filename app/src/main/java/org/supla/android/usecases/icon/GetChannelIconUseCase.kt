@@ -116,6 +116,18 @@ class GetChannelIconUseCase @Inject constructor(
     return ImageId(getDefaultIconResourceUseCase(iconData))
   }
 
+  fun forCloudSubject(function: SuplaFunction, altIcon: Int?, userIconId: Int?, profileId: Long): ImageId {
+    val state = ChannelState.inactive(function)
+    val iconData = IconData(
+      function = function,
+      altIcon = altIcon ?: 0,
+      state = state
+    )
+    val userId = userIconId?.takeIf { it != 0 } ?: return ImageId(getDefaultIconResourceUseCase(iconData))
+    val imageId = userImageId(function.value, userId, IconType.SINGLE, state, profileId)
+    return if (imageCacheProxy.bitmapExists(imageId)) imageId else ImageId(getDefaultIconResourceUseCase(iconData))
+  }
+
   private fun findUserIcon(channelBase: ChannelBase, iconType: IconType, state: ChannelState): ImageId? {
     val (userIconId) = guardLet(channelBase.userIconId) { return null }
     if (userIconId == 0) {
