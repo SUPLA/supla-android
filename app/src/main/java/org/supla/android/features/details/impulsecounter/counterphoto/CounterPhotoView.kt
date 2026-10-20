@@ -26,7 +26,6 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -35,7 +34,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.NoPhotography
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
@@ -49,7 +47,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -62,7 +59,7 @@ import org.supla.android.R
 import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.ui.views.buttons.BlueTextButton
+import org.supla.android.ui.views.ErrorContent
 import org.supla.android.ui.views.buttons.OutlinedButton
 import org.supla.android.usecases.ocr.OcrPhoto
 import org.supla.core.shared.infrastructure.LocalizedString
@@ -75,7 +72,6 @@ data class CounterPhotoViewState(
   val loadingError: Boolean = false
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CounterPhotoView(
   state: CounterPhotoViewState,
@@ -95,7 +91,7 @@ fun CounterPhotoView(
       )
   ) {
     if (state.loadingError) {
-      ErrorContent(
+      CounterPhotoErrorContent(
         onCloudClick = onCloudClick,
         onTryAgainClick = onRefresh
       )
@@ -118,30 +114,13 @@ fun CounterPhotoView(
 }
 
 @Composable
-private fun ErrorContent(onCloudClick: () -> Unit, onTryAgainClick: () -> Unit) {
-  Box(
-    modifier = Modifier.fillMaxSize(),
-  ) {
-    Column(
-      verticalArrangement = Arrangement.spacedBy(Distance.default),
-      horizontalAlignment = Alignment.CenterHorizontally,
-      modifier = Modifier.align(Alignment.Center)
-    ) {
-      Image(
-        painter = painterResource(id = R.drawable.ic_status_error),
-        contentDescription = null
-      )
-      Text(stringResource(R.string.counter_photo_loading_error), style = MaterialTheme.typography.bodyLarge)
-      BlueTextButton(
-        text = stringResource(id = R.string.status_try_again),
-        onClick = onTryAgainClick
-      )
-      OutlinedButton(
-        text = stringResource(R.string.counter_photo_settings),
-        onClick = onCloudClick
-      )
-    }
-  }
+private fun CounterPhotoErrorContent(onCloudClick: () -> Unit, onTryAgainClick: () -> Unit) {
+  ErrorContent(
+    message = R.string.counter_photo_loading_error,
+    onTryAgainClick = onTryAgainClick,
+    secondaryButtonTitle = R.string.counter_photo_settings,
+    onSecondaryClick = onCloudClick
+  )
 }
 
 @Composable
