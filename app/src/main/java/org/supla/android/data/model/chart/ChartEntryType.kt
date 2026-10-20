@@ -1,7 +1,4 @@
 package org.supla.android.data.model.chart
-
-import com.github.mikephil.charting.components.YAxis.AxisDependency
-
 /*
 Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -19,6 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+
+import com.github.mikephil.charting.components.YAxis.AxisDependency
 
 enum class ChartEntryType(private val axisDependency: AxisDependency) {
   TEMPERATURE(AxisDependency.LEFT),

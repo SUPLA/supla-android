@@ -1,7 +1,4 @@
 package org.supla.android
-
-import org.supla.android.data.ValuesFormatter
-
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -19,6 +16,8 @@ import org.supla.android.data.ValuesFormatter
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+
+import org.supla.android.data.ValuesFormatter
 
 interface ValuesFormatterProvider {
   fun getValuesFormatter(): ValuesFormatter

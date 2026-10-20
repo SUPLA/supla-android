@@ -1,7 +1,4 @@
 package org.supla.android.data.source.remote.hvac
-
-import org.supla.core.shared.infrastructure.logging.Logger
-
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -19,6 +16,8 @@ import org.supla.core.shared.infrastructure.logging.Logger
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+
+import org.supla.core.shared.infrastructure.logging.Logger
 
 enum class SuplaRelayMode(val value: Int) {
   NOT_SET(0),
