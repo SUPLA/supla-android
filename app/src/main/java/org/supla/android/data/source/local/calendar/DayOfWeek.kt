@@ -1,8 +1,4 @@
 package org.supla.android.data.source.local.calendar
-
-import androidx.annotation.StringRes
-import org.supla.android.R
-
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -20,6 +16,9 @@ import org.supla.android.R
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+
+import androidx.annotation.StringRes
+import org.supla.android.R
 
 enum class DayOfWeek(val day: Int, @param:StringRes val fullText: Int, @param:StringRes val shortText: Int) {
   MONDAY(1, R.string.monday, R.string.monday_short),
