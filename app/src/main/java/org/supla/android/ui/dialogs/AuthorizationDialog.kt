@@ -28,7 +28,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.platform.LocalAutofillManager
@@ -143,7 +142,6 @@ private fun getDialogTitle(isCloudAccount: Boolean) =
     stringResource(id = R.string.enter_superuser_credentials)
   }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun UserNameTextField(
   state: AuthorizationDialogState,

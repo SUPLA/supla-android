@@ -751,6 +751,8 @@
 
   <string name="menu_nfc">NFC</string>
   <string name="settings_nfc_label">NFC</string>
+  <string name="schedules_list_title">Tidsplaner</string>
+  <string name="schedules_login_required">Innlogging kreves</string>
   <string name="nfc_list_add">Legg til NFC-tag</string>
   <string name="edit_nfc_tag_name">Tagnavn</string>
   <string name="call_nfc_action_calling">Utfører handling</string>

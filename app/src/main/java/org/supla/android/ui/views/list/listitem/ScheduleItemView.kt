@@ -1,0 +1,56 @@
+package org.supla.android.ui.views.list.listitem
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+
+import androidx.compose.runtime.Composable
+import org.supla.android.core.storage.LocalApplicationPreferences
+import org.supla.android.ui.lists.ListItem
+import org.supla.android.ui.views.list.ListItemScaffold
+import org.supla.android.ui.views.list.StatusIndicator
+import org.supla.android.ui.views.list.components.ListItemIcon
+import org.supla.android.ui.views.list.components.ListItemMainRow
+import org.supla.core.shared.data.model.lists.ListItemIssues
+
+@Composable
+fun ScheduleListItemView(
+  data: ListItem.Schedule,
+  scale: Float = LocalApplicationPreferences.current.scale,
+  onItemClick: () -> Unit = {},
+  onTitleLongClick: () -> Unit = {}
+) {
+  ListItemScaffold(
+    itemTitle = data.userCaption,
+    onTitleLongClick = onTitleLongClick,
+    onItemClick = onItemClick,
+    issues = ListItemIssues.empty,
+    scale = scale,
+    showInfoIcon = false,
+    statusIndicator = StatusIndicator(
+      listItemStatus = data.status,
+      hasLeftButton = true,
+      hasRightButton = true
+    ),
+    onInfoClick = {},
+    onIssueClick = {},
+    itemEstimatedEndDate = null
+  ) {
+    ListItemMainRow(scale = scale) {
+      ListItemIcon(imageId = data.icon, scale = scale)
+    }
+  }
+}

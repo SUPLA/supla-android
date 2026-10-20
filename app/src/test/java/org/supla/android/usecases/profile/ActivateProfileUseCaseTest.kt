@@ -32,6 +32,7 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import org.junit.Before
 import org.junit.Test
+import org.supla.android.core.networking.suplacloud.CloudApiTokenProvider
 import org.supla.android.core.networking.suplacloud.SuplaCloudConfigHolder
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
@@ -45,6 +46,9 @@ class ActivateProfileUseCaseTest {
 
   @MockK
   private lateinit var suplaCloudConfigHolder: SuplaCloudConfigHolder
+
+  @MockK
+  private lateinit var cloudApiTokenProvider: CloudApiTokenProvider
 
   @MockK
   private lateinit var loadUserIconsIntoCacheUseCase: LoadUserIconsIntoCacheUseCase
@@ -80,6 +84,7 @@ class ActivateProfileUseCaseTest {
     confirmVerified(profileRepository)
     verify {
       suplaCloudConfigHolder wasNot Called
+      cloudApiTokenProvider wasNot Called
     }
   }
 
@@ -99,6 +104,7 @@ class ActivateProfileUseCaseTest {
     every { loadUserIconsIntoCacheUseCase.invoke() } returns Completable.complete()
     every { reconnectUseCase.invoke() } returns Completable.complete()
     every { suplaCloudConfigHolder.clean() } just Runs
+    every { cloudApiTokenProvider.clean() } just Runs
 
     // when
     val testObserver = useCase.invoke(newActiveProfileId, false).test()
@@ -109,8 +115,16 @@ class ActivateProfileUseCaseTest {
     verify { profileRepository.findActiveProfile() }
     verify { profileRepository.activateProfile(newActiveProfileId) }
     verify { suplaCloudConfigHolder.clean() }
+    verify { cloudApiTokenProvider.clean() }
     verify { reconnectUseCase.invoke() }
-    confirmVerified(profileRepository, suplaCloudConfigHolder, reconnectUseCase)
+    verify { loadUserIconsIntoCacheUseCase.invoke() }
+    confirmVerified(
+      profileRepository,
+      suplaCloudConfigHolder,
+      cloudApiTokenProvider,
+      reconnectUseCase,
+      loadUserIconsIntoCacheUseCase
+    )
   }
 
   @Test
@@ -127,6 +141,7 @@ class ActivateProfileUseCaseTest {
     every { loadUserIconsIntoCacheUseCase.invoke() } returns Completable.complete()
     every { reconnectUseCase.invoke() } returns Completable.complete()
     every { suplaCloudConfigHolder.clean() } just Runs
+    every { cloudApiTokenProvider.clean() } just Runs
 
     // when
     val testObserver = useCase.invoke(activeProfileId, true).test()
@@ -137,8 +152,16 @@ class ActivateProfileUseCaseTest {
     verify { profileRepository.findActiveProfile() }
     verify { profileRepository.activateProfile(activeProfileId) }
     verify { suplaCloudConfigHolder.clean() }
+    verify { cloudApiTokenProvider.clean() }
     verify { reconnectUseCase.invoke() }
-    confirmVerified(profileRepository, suplaCloudConfigHolder, reconnectUseCase)
+    verify { loadUserIconsIntoCacheUseCase.invoke() }
+    confirmVerified(
+      profileRepository,
+      suplaCloudConfigHolder,
+      cloudApiTokenProvider,
+      reconnectUseCase,
+      loadUserIconsIntoCacheUseCase
+    )
   }
 
   @Test
@@ -151,6 +174,7 @@ class ActivateProfileUseCaseTest {
     every { loadUserIconsIntoCacheUseCase.invoke() } returns Completable.complete()
     every { reconnectUseCase.invoke() } returns Completable.complete()
     every { suplaCloudConfigHolder.clean() } just Runs
+    every { cloudApiTokenProvider.clean() } just Runs
 
     // when
     val testObserver = useCase.invoke(activeProfileId, true).test()
@@ -161,8 +185,16 @@ class ActivateProfileUseCaseTest {
     verify { profileRepository.findActiveProfile() }
     verify { profileRepository.activateProfile(activeProfileId) }
     verify { suplaCloudConfigHolder.clean() }
+    verify { cloudApiTokenProvider.clean() }
     verify { reconnectUseCase.invoke() }
-    confirmVerified(profileRepository, suplaCloudConfigHolder, reconnectUseCase)
+    verify { loadUserIconsIntoCacheUseCase.invoke() }
+    confirmVerified(
+      profileRepository,
+      suplaCloudConfigHolder,
+      cloudApiTokenProvider,
+      reconnectUseCase,
+      loadUserIconsIntoCacheUseCase
+    )
   }
 
   @Test
@@ -179,6 +211,6 @@ class ActivateProfileUseCaseTest {
     testObserver.assertError(error)
 
     verify { profileRepository.findActiveProfile() }
-    confirmVerified(profileRepository, suplaCloudConfigHolder)
+    confirmVerified(profileRepository, suplaCloudConfigHolder, cloudApiTokenProvider)
   }
 }
