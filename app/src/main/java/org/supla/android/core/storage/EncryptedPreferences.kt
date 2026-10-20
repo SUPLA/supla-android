@@ -71,6 +71,9 @@ val DEV_FILTER_KEY = stringPreferencesKey("DEV_FILTER_KEY")
 val WIZARD_WIFI_NAME_KEY = stringPreferencesKey("WIZARD_WIFI_NAME_KEY")
 val WIZARD_WIFI_PASSWORD_KEY = stringPreferencesKey("WIZARD_WIFI_PASSWORD_KEY")
 
+private val CLOUD_API_TOKEN_KEY = stringPreferencesKey("CLOUD_API_TOKEN_KEY")
+private val CLOUD_API_TOKEN_EXPIRES_AT_KEY = longPreferencesKey("CLOUD_API_TOKEN_EXPIRES_AT_KEY")
+
 @Singleton
 class EncryptedPreferences @Inject constructor(
   @param:ApplicationContext private val context: Context,
@@ -181,6 +184,26 @@ class EncryptedPreferences @Inject constructor(
   fun setFcmProfileToken(profileId: Long, token: String) {
     writeValue {
       this[fcmProfileTokenKey(profileId)] = token
+    }
+  }
+
+  fun getCloudApiToken(): Pair<String, Long>? = readValue { preferences ->
+    val token = preferences[CLOUD_API_TOKEN_KEY]
+    val expiresAtMillis = preferences[CLOUD_API_TOKEN_EXPIRES_AT_KEY]
+    if (token.isNullOrBlank() || expiresAtMillis == null) null else token to expiresAtMillis
+  }
+
+  fun setCloudApiToken(token: String, expiresAtMillis: Long) {
+    writeValue {
+      this[CLOUD_API_TOKEN_KEY] = token
+      this[CLOUD_API_TOKEN_EXPIRES_AT_KEY] = expiresAtMillis
+    }
+  }
+
+  fun removeCloudApiToken() {
+    writeValue {
+      remove(CLOUD_API_TOKEN_KEY)
+      remove(CLOUD_API_TOKEN_EXPIRES_AT_KEY)
     }
   }
 

@@ -748,6 +748,8 @@
 
   <string name="menu_nfc">NFC</string>
   <string name="settings_nfc_label">NFC</string>
+  <string name="schedules_list_title">Χρονοδιαγράμματα</string>
+  <string name="schedules_login_required">Απαιτείται σύνδεση</string>
   <string name="nfc_list_add">Προσθήκη ετικέτας NFC</string>
   <string name="edit_nfc_tag_name">Όνομα ετικέτας</string>
   <string name="call_nfc_action_calling">Εκτέλεση ενέργειας</string>

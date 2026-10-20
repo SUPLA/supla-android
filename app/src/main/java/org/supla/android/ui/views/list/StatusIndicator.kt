@@ -26,7 +26,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import org.supla.android.R
-import org.supla.android.lib.actions.SubjectType
 import org.supla.android.ui.lists.ListOnlineState
 import org.supla.android.ui.views.list.components.ListItemRect
 import org.supla.android.ui.views.list.components.RectColors
@@ -36,14 +35,12 @@ enum class StatusSide { START, END }
 sealed interface ListItemStatus {
   val isGroup: Boolean
   val online: Boolean
-  val type: SubjectType
 
   data class Channel(
     val onlineState: ListOnlineState
   ) : ListItemStatus {
     override val isGroup: Boolean = false
     override val online: Boolean = onlineState.online
-    override val type: SubjectType = SubjectType.CHANNEL
   }
 
   data class Group(
@@ -52,13 +49,18 @@ sealed interface ListItemStatus {
   ) : ListItemStatus {
     override val isGroup: Boolean = true
     override val online: Boolean = onlinePercentage > 0
-    override val type: SubjectType = SubjectType.GROUP
   }
 
   data object Scene : ListItemStatus {
     override val isGroup: Boolean = false
     override val online: Boolean = true
-    override val type: SubjectType = SubjectType.SCENE
+  }
+
+  data class Schedule(val enabled: Boolean) : ListItemStatus {
+    override val isGroup: Boolean = false
+    override val online: Boolean = enabled
+
+    val onlineState: ListOnlineState = if (enabled) ListOnlineState.ONLINE else ListOnlineState.OFFLINE
   }
 }
 
@@ -82,6 +84,7 @@ class StatusIndicator(
           modifier = modifier
         )
       ListItemStatus.Scene -> DotStatusView(onlineState = ListOnlineState.ONLINE, side, modifier)
+      is ListItemStatus.Schedule -> DotStatusView(onlineState = type.onlineState, side, modifier)
     }
   }
 
