@@ -116,8 +116,7 @@ class GateGeneralViewModel @Inject constructor(
     val channelState = getChannelStateUseCase(channel)
     val relayValue = channel.channelValueEntity.asRelayValue()
     val weeklyScheduleEnabled = relayValue.weeklyScheduleEnabled
-    val actionButtonsDisabled = channel.status.offline ||
-      (weeklyScheduleEnabled && relayValue.mode == SuplaRelayMode.FORCED_OFF)
+    val actionButtonsDisabled = channel.status.offline || channel.forceActive(relayValue)
     val showOpenAndClose = channelWithChildren.hasPositionSensor && channelWithChildren.function.supportsOpenAndClose
 
     return state.copy(
