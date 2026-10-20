@@ -752,6 +752,8 @@
 
   <string name="menu_nfc">NFC</string>
   <string name="settings_nfc_label">NFC</string>
+  <string name="schedules_list_title">Schema\'s</string>
+  <string name="schedules_login_required">Inloggen vereist</string>
   <string name="nfc_list_add">NFC-tag toevoegen</string>
   <string name="edit_nfc_tag_name">Tagnaam</string>
   <string name="call_nfc_action_calling">Actie uitvoeren</string>

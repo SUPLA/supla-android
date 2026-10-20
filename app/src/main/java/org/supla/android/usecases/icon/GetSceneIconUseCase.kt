@@ -43,17 +43,27 @@ class GetSceneIconUseCase @Inject constructor(
   )
 
   operator fun invoke(sceneEntity: SceneEntity): ImageId {
-    if (sceneEntity.userIcon != 0) {
-      val id = ImageId(sceneEntity.userIcon, 1, sceneEntity.profileId!!.toLong())
+    return invoke(sceneEntity.altIcon, sceneEntity.userIcon, sceneEntity.profileId?.toLong())
+  }
+
+  operator fun invoke(altIcon: Int?, userIconId: Int?, profileId: Long): ImageId =
+    icon(altIcon ?: 0, userIconId ?: 0, profileId)
+
+  private fun invoke(altIcon: Int, userIconId: Int, profileId: Long?): ImageId =
+    icon(altIcon, userIconId, profileId ?: 0)
+
+  private fun icon(altIcon: Int, userIconId: Int, profileId: Long): ImageId {
+    if (userIconId != 0) {
+      val id = ImageId(userIconId, 1, profileId)
       if (imageCacheProxy.bitmapExists(id)) {
         return id
       }
     }
 
-    return if (sceneEntity.altIcon >= icons.size) {
+    return if (altIcon !in icons.indices) {
       ImageId(icons[0])
     } else {
-      ImageId(icons[sceneEntity.altIcon])
+      ImageId(icons[altIcon])
     }
   }
 }

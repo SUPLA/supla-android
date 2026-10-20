@@ -113,6 +113,17 @@ sealed interface ListItem {
     override val draggable: Boolean = true
   }
 
+  data class Schedule(
+    override val remoteId: Int,
+    override val profileId: Long,
+    override val userCaption: String,
+    val status: ListItemStatus,
+    val icon: ImageId
+  ) : ListItem {
+    override val key: String = "H$remoteId"
+    override val draggable: Boolean = false
+  }
+
   data class LocationItem(
     override val remoteId: Int,
     override val profileId: Long,
@@ -239,6 +250,7 @@ fun ListItem.hasSameContentAs(other: ListItem): Boolean {
   return when (this) {
     is ListItem.LocationItem -> this == other
     is ListItem.SceneItem -> this == other
+    is ListItem.Schedule -> this == other
     is ListItem.DefaultItem -> hasSameContentAs(other as ListItem.DefaultItem)
   }
 }

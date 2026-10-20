@@ -32,6 +32,7 @@ class GetSceneIconUseCaseTest {
     val scene: SceneEntity = mockk {
       every { userIcon } returns 0
       every { altIcon } returns 4
+      every { profileId } returns null
     }
 
     // when
@@ -47,6 +48,7 @@ class GetSceneIconUseCaseTest {
     val scene: SceneEntity = mockk {
       every { userIcon } returns 0
       every { altIcon } returns 37
+      every { profileId } returns null
     }
 
     // when

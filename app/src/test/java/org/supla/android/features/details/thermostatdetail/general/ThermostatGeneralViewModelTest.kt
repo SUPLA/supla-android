@@ -59,6 +59,7 @@ import org.supla.android.lib.SuplaChannelExtendedValue
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.SuplaTimerState
 import org.supla.android.tools.SuplaThreading
+import org.supla.android.tools.VibrationHelper
 import org.supla.android.usecases.channel.GetChannelValueUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -111,6 +112,9 @@ class ThermostatGeneralViewModelTest :
 
   @MockK
   override lateinit var threading: SuplaThreading
+
+  @MockK(relaxed = true)
+  lateinit var vibrationHelper: VibrationHelper
 
   @MockK
   lateinit var checkIsSlaveThermostatUseCase: CheckIsSlaveThermostatUseCase
@@ -238,6 +242,61 @@ class ThermostatGeneralViewModelTest :
         thermometerValueFormatter = valueFormatter
       )
     )
+  }
+
+  @Test
+  fun `should update selected mode and active mode state when mode buttons are clicked`() {
+    // given
+    val remoteId = 123
+    val deviceId = 321
+    mockHeatThermostat(
+      remoteId = remoteId,
+      deviceId = deviceId,
+      setpointTemperatureHeat = 23.4f,
+      mode = SuplaHvacMode.HEAT_COOL,
+      func = SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL
+    )
+    val date = date(2025, 9, 8, 11, 39)
+    every { dateProvider.currentDate() } returns date
+    every { checkIsSlaveThermostatUseCase(remoteId) } returns Single.just(false)
+    every { delayedThermostatActionSubject.emit(any()) } answers {}
+
+    // when
+    viewModel.observeData(remoteId, deviceId)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
+    val initialState = states.last()
+    assertThat(initialState.isAutoFunction).isTrue()
+    assertThat(initialState.heatingAndCoolingActive).isTrue()
+
+    viewModel.heatingModeChanged()
+    val heatingState = initialState.copy(
+      viewModelState = initialState.viewModelState!!.copy(mode = SuplaHvacMode.HEAT),
+      heatingModeActive = true,
+      coolingModeActive = false,
+      heatingAndCoolingActive = false
+    )
+    viewModel.coolingModeChanged()
+    val coolingState = heatingState.copy(
+      viewModelState = heatingState.viewModelState!!.copy(mode = SuplaHvacMode.COOL),
+      heatingModeActive = false,
+      coolingModeActive = true,
+      heatingAndCoolingActive = false
+    )
+    viewModel.heatingAndCoolingModeChanged()
+    val heatingAndCoolingState = coolingState.copy(
+      viewModelState = coolingState.viewModelState!!.copy(mode = SuplaHvacMode.HEAT_COOL),
+      heatingModeActive = false,
+      coolingModeActive = false,
+      heatingAndCoolingActive = true
+    )
+
+    // then
+    assertThat(events).isEmpty()
+    assertThat(states).containsExactly(initialState, heatingState, coolingState, heatingAndCoolingState)
+    verify(exactly = 1) { delayedThermostatActionSubject.emit(heatingState.viewModelState!!) }
+    verify(exactly = 1) { delayedThermostatActionSubject.emit(coolingState.viewModelState!!) }
+    verify(exactly = 1) { delayedThermostatActionSubject.emit(heatingAndCoolingState.viewModelState!!) }
+    verify(exactly = 3) { vibrationHelper.vibrate() }
   }
 
   @Test
@@ -740,7 +799,8 @@ class ThermostatGeneralViewModelTest :
     setpointTemperatureHeat: Float,
     weeklyScheduleActive: Boolean = false,
     mode: SuplaHvacMode = SuplaHvacMode.HEAT,
-    timerEndDate: Date? = null
+    timerEndDate: Date? = null,
+    func: SuplaFunction = SuplaFunction.HVAC_THERMOSTAT
   ) {
     val flags = mutableListOf(SuplaThermostatFlag.SETPOINT_TEMP_MIN_SET)
     if (weeklyScheduleActive) {
@@ -748,6 +808,7 @@ class ThermostatGeneralViewModelTest :
     }
     val channelWithChildren = mockChannelWithChildren(
       remoteId = remoteId,
+      func = func,
       mode = mode,
       setpointTemperatureHeat = setpointTemperatureHeat,
       flags = flags,

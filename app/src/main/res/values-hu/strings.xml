@@ -751,6 +751,8 @@
 
   <string name="menu_nfc">NFC</string>
   <string name="settings_nfc_label">NFC</string>
+  <string name="schedules_list_title">Ütemezések</string>
+  <string name="schedules_login_required">Bejelentkezés szükséges</string>
   <string name="nfc_list_add">NFC-címke hozzáadása</string>
   <string name="edit_nfc_tag_name">Címke neve</string>
   <string name="call_nfc_action_calling">Művelet végrehajtása</string>

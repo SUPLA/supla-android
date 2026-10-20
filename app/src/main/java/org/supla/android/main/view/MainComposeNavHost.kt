@@ -55,6 +55,7 @@ import org.supla.android.features.nfc.list.NfcTagListScreen
 import org.supla.android.features.nfc.lock.LockNfcTagScreen
 import org.supla.android.features.notificationslog.NotificationsLogScreen
 import org.supla.android.features.pinsetup.PinSetupScreen
+import org.supla.android.features.schedulelist.ScheduleListScreen
 import org.supla.android.features.status.StatusScreen
 import org.supla.android.main.MainComposeNavigator
 import org.supla.android.main.MainRoute
@@ -100,6 +101,7 @@ fun MainComposeNavHost(
           fadedEntry<MainRoute.AndroidAutoItems> { BackScaffold { AndroidAutoItemsScreen(navigator) } }
           fadedEntry<MainRoute.AddAndroidAutoItem> { BackScaffold { AddAndroidAutoItemScreen(navigator, it.id) } }
           fadedEntry<MainRoute.NfcTagList> { BackScaffold { NfcTagListScreen(navigator) } }
+          fadedEntry<MainRoute.ScheduleList> { BackScaffold { ScheduleListScreen() } }
           fadedEntry<MainRoute.NfcTagDetail> { BackScaffold { NfcTagDetailScreen(it.id, navigator) } }
           fadedEntry<MainRoute.AddNfcTag> { BackScaffold { AddNfcTagScreen(navigator) } }
           fadedEntry<MainRoute.EditNfcTag> { EditNfcTagScreen(it.id, it.newItemData, navigator) }
