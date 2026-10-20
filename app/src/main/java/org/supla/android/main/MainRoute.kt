@@ -61,7 +61,7 @@ sealed interface MainRoute : NavKey {
 
   @Serializable
   data object Settings : MainRoute {
-    override val screenTakeoverAllowed: Boolean = true
+    override val screenTakeoverAllowed: Boolean = false
   }
 
   @Serializable
@@ -107,6 +107,11 @@ sealed interface MainRoute : NavKey {
   @Serializable
   data object NfcTagList : MainRoute {
     override val screenTakeoverAllowed: Boolean = true
+  }
+
+  @Serializable
+  data object ScheduleList : MainRoute {
+    override val screenTakeoverAllowed: Boolean = false
   }
 
   @Serializable
