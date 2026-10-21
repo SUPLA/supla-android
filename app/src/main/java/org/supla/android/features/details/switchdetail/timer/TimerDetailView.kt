@@ -18,20 +18,21 @@ package org.supla.android.features.details.switchdetail.timer
  */
 
 import android.text.format.DateFormat
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -43,6 +44,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -53,14 +55,22 @@ import kotlinx.coroutines.delay
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.images.ImageId
 import org.supla.android.tools.SuplaPreview
+import org.supla.android.tools.SuplaPreviewLandscape
+import org.supla.android.ui.extensions.ifFalse
+import org.supla.android.ui.extensions.isPhoneLandscape
 import org.supla.android.ui.views.SegmentedComponent
 import org.supla.android.ui.views.TimerProgressView
 import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.buttons.OutlinedButton
+import org.supla.android.ui.views.channelstate.ChannelCurrentData
+import org.supla.android.ui.views.channelstate.ChannelProgramData
 import org.supla.android.ui.views.channelstate.ChannelState
 import org.supla.android.ui.views.forms.NumberPicker
 import org.supla.android.ui.views.forms.NumberPickerHighlight
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 import java.util.Date
 import kotlin.math.max
 import kotlin.time.Duration.Companion.milliseconds
@@ -78,8 +88,55 @@ interface TimerDetailViewScope {
 
 @Composable
 fun TimerDetailViewScope.TimerDetailView(state: TimersDetailViewState) {
+  if (LocalConfiguration.current.isPhoneLandscape) {
+    LandscapeView(state)
+  } else {
+    PortraitView(state)
+  }
+}
+
+@Composable
+private fun TimerDetailViewScope.PortraitView(state: TimersDetailViewState) {
   val timerData = state.timerData
-  var leftTimeInSecs by remember(timerData?.endTime) { mutableIntStateOf(0) }
+  if (timerData != null) {
+    PortraitRunning(state, timerData)
+  } else {
+    PortraitDefault(state)
+  }
+}
+
+@Composable
+private fun TimerDetailViewScope.PortraitDefault(state: TimersDetailViewState) {
+  Column(
+    modifier = Modifier.fillMaxHeight(),
+    verticalArrangement = Arrangement.SpaceBetween
+  ) {
+    ChannelState(state.deviceStateData, state.programInfo)
+
+    Column(
+      modifier = Modifier
+        .background(MaterialTheme.colorScheme.surface)
+        .fillMaxWidth()
+        .padding(all = Distance.default),
+      horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+      TimerHeader(state)
+      SwitchSelector(state)
+      TimePicker(
+        timeInSeconds = state.timerTimeInSeconds,
+        onTimeChanged = { updateTimerTime(it) },
+        modifier = Modifier
+          .fillMaxWidth()
+      )
+      state.forceActive.ifFalse { DurationInfoTime(state) }
+      StartButton(state)
+    }
+  }
+}
+
+@Composable
+private fun TimerDetailViewScope.PortraitRunning(state: TimersDetailViewState, timerData: TimerProgressData) {
+  var leftTimeInSecs by remember(timerData.endTime) { mutableIntStateOf(0) }
 
   Box(
     modifier = Modifier.fillMaxSize()
@@ -90,45 +147,130 @@ fun TimerDetailViewScope.TimerDetailView(state: TimersDetailViewState) {
       modifier = Modifier.align(Alignment.TopCenter)
     )
 
-    if (timerData != null) {
+    TimerInProgress(
+      timerData = timerData,
+      leftTimeInSecs = leftTimeInSecs,
+      onLeftTimeChanged = { leftTimeInSecs = it },
+      modifier = Modifier.align(Alignment.Center)
+    )
+
+    EditButton(
+      leftTimeInSecs = leftTimeInSecs,
+      modifier = Modifier
+        .align(Alignment.Center)
+        .padding(top = 292.dp)
+    )
+
+    TimerActionButtons(
+      timerValue = timerData.timerValue,
+      modifier = Modifier.align(Alignment.BottomCenter)
+    )
+
+    if (state.editMode) {
+      Column(
+        modifier = Modifier
+          .align(Alignment.BottomCenter)
+          .background(MaterialTheme.colorScheme.surface)
+          .fillMaxWidth()
+          .padding(all = Distance.default),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(Distance.small)
+      ) {
+        TimerHeader(state)
+        TimePicker(
+          timeInSeconds = state.timerTimeInSeconds,
+          onTimeChanged = { updateTimerTime(it) },
+          modifier = Modifier.fillMaxWidth()
+        )
+        CancelEditButton()
+        StartButton(state)
+      }
+    }
+  }
+}
+
+@Composable
+private fun TimerDetailViewScope.LandscapeView(state: TimersDetailViewState) {
+  val timerData = state.timerData
+  if (timerData != null) {
+    LandscapeRunning(state, timerData)
+  } else {
+    LandscapeDefault(state)
+  }
+}
+
+@Composable
+private fun TimerDetailViewScope.LandscapeDefault(state: TimersDetailViewState) {
+  Row(
+    horizontalArrangement = Arrangement.spacedBy(Distance.default),
+    modifier = Modifier
+      .fillMaxHeight()
+      .background(MaterialTheme.colorScheme.surface)
+      .padding(start = Distance.default, end = Distance.default, bottom = Distance.default)
+  ) {
+    Column(modifier = Modifier.weight(1f)) {
+      ChannelState(state.deviceStateData, state.programInfo, padding = PaddingValues(top = Distance.default))
+      Spacer(modifier = Modifier.weight(1f))
+      state.forceActive.ifFalse { DurationInfoTime(state) }
+      StartButton(state, padding = PaddingValues.Zero)
+    }
+    Column(modifier = Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
+      TimerHeader(state, PaddingValues(top = Distance.default))
+      SwitchSelector(state)
+      TimePicker(
+        timeInSeconds = state.timerTimeInSeconds,
+        onTimeChanged = { updateTimerTime(it) },
+        modifier = Modifier.fillMaxWidth()
+      )
+    }
+  }
+}
+
+@Composable
+private fun TimerDetailViewScope.LandscapeRunning(state: TimersDetailViewState, timerData: TimerProgressData) {
+  var leftTimeInSecs by remember(timerData.endTime) { mutableIntStateOf(0) }
+
+  Row(
+    horizontalArrangement = Arrangement.spacedBy(Distance.default),
+    modifier = Modifier
+      .fillMaxHeight()
+      .background(MaterialTheme.colorScheme.surface)
+      .padding(start = Distance.default, end = Distance.default, bottom = Distance.default)
+  ) {
+    Column(modifier = Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
+      ChannelState(state.deviceStateData, state.programInfo, padding = PaddingValues(top = Distance.default))
+      Spacer(modifier = Modifier.weight(1f))
       TimerInProgress(
         timerData = timerData,
         leftTimeInSecs = leftTimeInSecs,
         onLeftTimeChanged = { leftTimeInSecs = it },
-        modifier = Modifier.align(Alignment.Center)
+        modifier = Modifier.heightIn(max = 200.dp)
       )
-
-      TextButton(
-        onClick = { startEditMode(leftTimeInSecs) },
-        modifier = Modifier
-          .align(Alignment.Center)
-          .padding(top = 292.dp)
-      ) {
-        Text(
-          text = stringResource(id = R.string.details_timer_edit_time),
-          color = MaterialTheme.colorScheme.onBackground,
-          style = MaterialTheme.typography.bodyMedium
-        )
-        Icon(
-          painter = painterResource(id = R.drawable.pencil),
-          contentDescription = null,
-          modifier = Modifier
-            .padding(start = Distance.tiny)
-            .size(24.dp)
-        )
+      Spacer(modifier = Modifier.weight(1f))
+      if (state.editMode) {
+        CancelEditButton()
       }
-
-      TimerActionButtons(
-        timerValue = timerData.timerValue,
-        modifier = Modifier.align(Alignment.BottomCenter)
-      )
     }
-
-    if (timerData == null || state.editMode) {
-      TimerConfiguration(
-        state = state,
-        modifier = Modifier.align(Alignment.BottomCenter)
-      )
+    Column(
+      modifier = Modifier.weight(1f),
+      horizontalAlignment = Alignment.CenterHorizontally,
+      verticalArrangement = Arrangement.spacedBy(Distance.small)
+    ) {
+      if (state.editMode) {
+        TimerHeader(state, PaddingValues(top = Distance.default))
+        TimePicker(
+          timeInSeconds = state.timerTimeInSeconds,
+          onTimeChanged = { updateTimerTime(it) },
+          modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        StartButton(state)
+      } else {
+        Spacer(modifier = Modifier.weight(1f))
+        EditButton(leftTimeInSecs)
+        TimerLeaveButton(timerData.timerValue)
+        TimerCancelButton(timerData.timerValue)
+      }
     }
   }
 }
@@ -185,104 +327,122 @@ private fun TimerDetailViewScope.TimerActionButtons(timerValue: TimerValue, modi
     modifier = modifier.padding(start = Distance.default, end = Distance.default, bottom = Distance.default),
     verticalArrangement = Arrangement.spacedBy(Distance.small)
   ) {
-    OutlinedButton(
-      text = stringResource(
-        id = R.string.details_timer_leave_it,
-        pluralStringResource(
-          id = if (timerValue == TimerValue.ON) R.plurals.details_timer_info_on else R.plurals.details_timer_info_off,
-          count = 1
-        )
-      ),
-      modifier = Modifier.fillMaxWidth(),
-      singleLine = false,
-      onClick = { stopTimer() }
-    )
-    Button(
-      text = stringResource(
-        id = R.string.details_timer_cancel_and,
-        stringResource(
-          id = if (timerValue == TimerValue.ON) R.string.details_timer_cancel_turn_off else R.string.details_timer_cancel_turn_on
-        )
-      ),
-      modifier = Modifier.fillMaxWidth(),
-      singleLine = false,
-      onClick = { cancelTimer() }
-    )
+    TimerLeaveButton(timerValue)
+    TimerCancelButton(timerValue)
   }
 }
 
 @Composable
-private fun TimerDetailViewScope.TimerConfiguration(state: TimersDetailViewState, modifier: Modifier = Modifier) {
-  Surface(
-    modifier = modifier.fillMaxWidth(),
-    color = MaterialTheme.colorScheme.surface
-  ) {
-    Column(
-      modifier = Modifier.padding(vertical = Distance.default),
-      horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-      Text(
-        text = configurationHeader(state),
-        style = MaterialTheme.typography.titleSmall,
-        textAlign = TextAlign.Center,
-        modifier = Modifier.padding(horizontal = Distance.default)
+private fun TimerDetailViewScope.TimerLeaveButton(timerValue: TimerValue) =
+  OutlinedButton(
+    text = stringResource(
+      id = R.string.details_timer_leave_it,
+      pluralStringResource(
+        id = if (timerValue == TimerValue.ON) R.plurals.details_timer_info_on else R.plurals.details_timer_info_off,
+        count = 1
       )
+    ),
+    modifier = Modifier.fillMaxWidth(),
+    singleLine = false,
+    onClick = { stopTimer() }
+  )
 
-      if (state.editMode.not()) {
-        SegmentedComponent(
-          items = TimerTargetAction.entries,
-          activeItem = state.targetAction,
-          enabled = state.online && !state.forceActive,
-          onClick = { updateAction(it) },
-          modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 24.dp, vertical = Distance.default)
-        )
-      } else {
-        Spacer(modifier = Modifier.height(Distance.default))
-      }
-
-      TimePicker(
-        timeInSeconds = state.timerTimeInSeconds,
-        onTimeChanged = { updateTimerTime(it) },
-        modifier = Modifier.fillMaxWidth()
+@Composable
+private fun TimerDetailViewScope.TimerCancelButton(timerValue: TimerValue) =
+  Button(
+    text = stringResource(
+      id = R.string.details_timer_cancel_and,
+      stringResource(
+        id = if (timerValue == TimerValue.ON) R.string.details_timer_cancel_turn_off else R.string.details_timer_cancel_turn_on
       )
+    ),
+    modifier = Modifier.fillMaxWidth(),
+    singleLine = false,
+    onClick = { cancelTimer() }
+  )
 
-      if (state.editMode.not()) {
-        HorizontalDivider(
-          modifier = Modifier.padding(top = Distance.default),
-          color = MaterialTheme.colorScheme.background
-        )
-        Text(
-          text = timerInfoText(state),
-          style = MaterialTheme.typography.bodyMedium,
-          color = MaterialTheme.colorScheme.onSurfaceVariant,
-          textAlign = TextAlign.Center,
-          modifier = Modifier.padding(horizontal = Distance.default, vertical = Distance.small)
-        )
-      }
-
-      if (state.editMode) {
-        OutlinedButton(
-          text = stringResource(id = R.string.details_timer_edit_cancel),
-          modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = Distance.default, bottom = Distance.small, end = Distance.default),
-          onClick = { cancelEditMode() }
-        )
-      }
-
-      Button(
-        text = stringResource(id = if (state.editMode) R.string.save else R.string.details_timer_start),
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(start = Distance.default, end = Distance.default),
-        enabled = state.online && !state.forceActive,
-        onClick = { onStartTimer() }
-      )
-    }
-  }
+@Composable
+private fun TimerDetailViewScope.StartButton(
+  state: TimersDetailViewState,
+  padding: PaddingValues = PaddingValues.Zero
+) {
+  Button(
+    text = stringResource(id = if (state.editMode) R.string.save else R.string.details_timer_start),
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(padding),
+    enabled = state.online && !state.forceActive,
+    onClick = { onStartTimer() }
+  )
 }
+
+@Composable
+private fun TimerDetailViewScope.CancelEditButton() =
+  OutlinedButton(
+    text = stringResource(id = R.string.details_timer_edit_cancel),
+    modifier = Modifier.fillMaxWidth(),
+    onClick = { cancelEditMode() }
+  )
+
+@Composable
+private fun TimerHeader(
+  state: TimersDetailViewState,
+  padding: PaddingValues = PaddingValues(horizontal = Distance.default)
+) =
+  Text(
+    text = configurationHeader(state),
+    style = MaterialTheme.typography.titleSmall,
+    textAlign = TextAlign.Center,
+    modifier = Modifier.padding(padding)
+  )
+
+@Composable
+private fun TimerDetailViewScope.SwitchSelector(
+  state: TimersDetailViewState,
+  padding: PaddingValues = PaddingValues(vertical = Distance.default)
+) =
+  SegmentedComponent(
+    items = TimerTargetAction.entries,
+    activeItem = state.targetAction,
+    enabled = state.online && !state.forceActive,
+    onClick = { updateAction(it) },
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(padding)
+  )
+
+@Composable
+private fun DurationInfoTime(
+  state: TimersDetailViewState,
+  padding: PaddingValues = PaddingValues(horizontal = Distance.default, vertical = Distance.small)
+) =
+  Text(
+    text = timerInfoText(state),
+    style = MaterialTheme.typography.bodyMedium,
+    color = MaterialTheme.colorScheme.onSurfaceVariant,
+    textAlign = TextAlign.Center,
+    modifier = Modifier.padding(padding)
+  )
+
+@Composable
+private fun TimerDetailViewScope.EditButton(leftTimeInSecs: Int, modifier: Modifier = Modifier) =
+  TextButton(
+    onClick = { startEditMode(leftTimeInSecs) },
+    modifier = modifier
+  ) {
+    Text(
+      text = stringResource(id = R.string.details_timer_edit_time),
+      color = MaterialTheme.colorScheme.onBackground,
+      style = MaterialTheme.typography.bodyMedium
+    )
+    Icon(
+      painter = painterResource(id = R.drawable.pencil),
+      contentDescription = null,
+      modifier = Modifier
+        .padding(start = Distance.tiny)
+        .size(24.dp)
+    )
+  }
 
 @Composable
 private fun configurationHeader(state: TimersDetailViewState): String =
@@ -378,19 +538,26 @@ private val previewScope = object : TimerDetailViewScope {
 }
 
 @SuplaPreview
+@SuplaPreviewLandscape
 @Composable
 private fun PreviewConfiguration() {
   SuplaTheme {
     previewScope.TimerDetailView(
       TimersDetailViewState(
         targetAction = TimerTargetAction.TURN_ON,
-        timerTimeInSeconds = 3600
+        timerTimeInSeconds = 3600,
+        deviceStateData = ChannelCurrentData(
+          label = localizedString(R.string.details_timer_state_label),
+          icon = ImageId(R.drawable.fnc_switch_on),
+          value = LocalizedString.Empty
+        ),
       )
     )
   }
 }
 
 @SuplaPreview
+@SuplaPreviewLandscape
 @Composable
 private fun PreviewTimerInProgress() {
   SuplaTheme {
@@ -402,6 +569,36 @@ private fun PreviewTimerInProgress() {
           indeterminate = false,
           timerValue = TimerValue.ON
         )
+      )
+    )
+  }
+}
+
+@SuplaPreview
+@SuplaPreviewLandscape
+@Composable
+private fun PreviewTimerInEditMode() {
+  SuplaTheme {
+    previewScope.TimerDetailView(
+      TimersDetailViewState(
+        timerData = TimerProgressData(
+          startTime = Date(),
+          endTime = Date(Date().time + 3600_000),
+          indeterminate = false,
+          timerValue = TimerValue.ON
+        ),
+        editMode = true,
+        programInfo = listOf(
+          ChannelProgramData(
+            type = ChannelProgramData.Type.CURRENT,
+            time = localizedString(R.string.program_info_time, localizedString(R.string.time_just_minutes, 12)),
+            description = localizedString(R.string.schedule_program_force_on)
+          ),
+          ChannelProgramData(
+            type = ChannelProgramData.Type.NEXT,
+            description = localizedString(R.string.schedule_program_force_off)
+          )
+        ),
       )
     )
   }
