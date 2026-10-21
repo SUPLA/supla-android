@@ -23,6 +23,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -48,6 +49,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.shared.invoke
+import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.core.ui.theme.gray
 import org.supla.android.tools.SuplaPreview
@@ -70,7 +72,11 @@ data class ChannelProgramData(
 }
 
 @Composable
-fun ChannelProgramState(infos: List<ChannelProgramData>, modifier: Modifier = Modifier) {
+fun ChannelProgramState(
+  infos: List<ChannelProgramData>,
+  modifier: Modifier = Modifier,
+  padding: PaddingValues = PaddingValues(start = Distance.default, top = Distance.default, end = Distance.default)
+) {
   val labels = infos.map { stringResource(id = it.type.stringRes).uppercase() }
   val context = LocalContext.current
   val descriptions = infos.map { it.description?.invoke(context) }
@@ -81,11 +87,7 @@ fun ChannelProgramState(infos: List<ChannelProgramData>, modifier: Modifier = Mo
   Layout(
     modifier = modifier
       .height(80.dp)
-      .padding(
-        start = dimensionResource(id = R.dimen.distance_default),
-        top = dimensionResource(id = R.dimen.distance_default),
-        end = dimensionResource(id = R.dimen.distance_default)
-      ),
+      .padding(padding),
     content = {
       infos.forEachIndexed { index, info ->
         ProgramInfoLabel(labels[index])
