@@ -17,6 +17,7 @@ package org.supla.android.ui.views.channelstate
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -26,13 +27,14 @@ import org.supla.android.core.ui.theme.Distance
 fun ChannelState(
   deviceStateData: ChannelCurrentData?,
   programInfo: List<ChannelProgramData>,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
+  padding: PaddingValues = PaddingValues(start = Distance.default, top = Distance.default, end = Distance.default)
 ) {
   if (programInfo.isNotEmpty()) {
-    ChannelProgramState(infos = programInfo, modifier = modifier)
+    ChannelProgramState(infos = programInfo, modifier = modifier, padding)
   } else {
     deviceStateData?.let {
-      ChannelCurrentState(data = it, modifier = modifier.padding(vertical = Distance.vertical))
+      ChannelCurrentState(data = it, modifier = modifier.padding(padding))
     }
   }
 }
