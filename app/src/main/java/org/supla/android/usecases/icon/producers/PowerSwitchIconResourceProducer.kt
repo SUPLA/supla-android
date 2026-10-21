@@ -35,6 +35,7 @@ class PowerSwitchIconResourceProducer : IconResourceProducer {
       5 -> data.stateIcon(R.drawable.fnc_binary_sensor_1_on, R.drawable.fnc_binary_sensor_1_off)
       6 -> data.stateIcon(R.drawable.fnc_binary_sensor_2_on, R.drawable.fnc_binary_sensor_2_off)
       7 -> data.stateIcon(R.drawable.fnc_switch_5_on, R.drawable.fnc_switch_5_off)
+      8 -> data.stateIcon(R.drawable.fnc_switch_6_on, R.drawable.fnc_switch_6_off)
       else -> data.stateIcon(R.drawable.fnc_switch_on, R.drawable.fnc_switch_off)
     }
 }

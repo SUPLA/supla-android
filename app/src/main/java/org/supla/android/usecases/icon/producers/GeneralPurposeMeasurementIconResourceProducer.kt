@@ -73,6 +73,7 @@ class GeneralPurposeMeasurementIconResourceProducer : IconResourceProducer {
       43 -> R.drawable.fnc_gpm_co_3
       44 -> R.drawable.fnc_gpm_cash_1
       45 -> R.drawable.fnc_gpm_cash_2
+      46 -> R.drawable.fnc_gpm_car_1
       else -> R.drawable.fnc_gpm_5
     }
 }
