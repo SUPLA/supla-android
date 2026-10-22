@@ -757,6 +757,8 @@
   <string name="menu_nfc">NFC</string>
   <string name="settings_nfc_label">NFC</string>
   <string name="schedules_list_title">Harmonogramy</string>
+  <string name="schedule_name">Názov harmonogramu</string>
+  <string name="schedule_default_caption">Harmonogram ID%1$s</string>
   <string name="schedules_login_required">Vyžaduje sa prihlásenie</string>
   <string name="nfc_list_add">Pridať NFC štítok</string>
   <string name="edit_nfc_tag_name">Názov štítku</string>
