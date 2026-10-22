@@ -38,6 +38,7 @@ import org.supla.android.core.ui.EventBasedViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.ProfileRepository
+import org.supla.android.main.view.MainDrawerState
 import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.AuthorizationReason
@@ -66,11 +67,8 @@ class MainListViewModel @Inject constructor(
   private val authorizationDialogStateFlow: MutableStateFlow<AuthorizationDialogState?> = MutableStateFlow(null)
   val authorizationDialogState: StateFlow<AuthorizationDialogState?> = authorizationDialogStateFlow
 
-  private val zWaveAvailableFlow = MutableStateFlow(false)
-  val zWaveAvailable: StateFlow<Boolean> = zWaveAvailableFlow
-
-  private val developerOptionsVisibleFlow = MutableStateFlow(false)
-  val developerOptionsVisible: StateFlow<Boolean> = developerOptionsVisibleFlow
+  private val mainDrawerStateFlow = MutableStateFlow(MainDrawerState())
+  val mainDrawerState: StateFlow<MainDrawerState> = mainDrawerStateFlow
 
   private val showNotificationInfoFlow = MutableStateFlow(false)
   val showNotificationInfo: StateFlow<Boolean> = showNotificationInfoFlow
@@ -89,9 +87,18 @@ class MainListViewModel @Inject constructor(
       val zWaveAvailable = withContext(Dispatchers.IO) {
         runCatching { channelRepository.isZWaveBridgeChannelAvailable().await() }.getOrNull() ?: false
       }
-      zWaveAvailableFlow.tryEmit(zWaveAvailable)
 
-      developerOptionsVisibleFlow.tryEmit(encryptedPreferences.devModeActive)
+      val schedulesVisible = withContext(Dispatchers.IO) {
+        runCatching { profileRepository.findActiveProfile().await().emailAuth }.getOrNull() ?: false
+      }
+
+      mainDrawerStateFlow.tryEmit(
+        MainDrawerState(
+          developerOptionsVisible = encryptedPreferences.devModeActive,
+          zWaveVisible = zWaveAvailable,
+          schedulesVisible = schedulesVisible
+        )
+      )
     }
   }
 

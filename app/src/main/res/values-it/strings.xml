@@ -770,6 +770,8 @@
   <string name="menu_nfc">NFC</string>
   <string name="settings_nfc_label">NFC</string>
   <string name="schedules_list_title">Programmazioni</string>
+  <string name="schedule_name">Nome della programmazione</string>
+  <string name="schedule_default_caption">Programmazione ID%1$s</string>
   <string name="schedules_login_required">Accesso richiesto</string>
   <string name="nfc_list_add">Aggiungi tag NFC</string>
   <string name="edit_nfc_tag_name">Nome del tag</string>

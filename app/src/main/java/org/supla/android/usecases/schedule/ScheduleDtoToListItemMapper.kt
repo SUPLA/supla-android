@@ -45,13 +45,14 @@ class ScheduleDtoToListItemMapper @Inject constructor(
   private val getSceneIconUseCase: GetSceneIconUseCase
 ) {
 
-  suspend operator fun invoke(schedule: ScheduleDto, profileId: Long): ListItem.Schedule? {
-    val remoteId = schedule.id ?: return null
+  suspend operator fun invoke(schedule: ScheduleDto, profileId: Long): ListItem.Schedule {
+    val remoteId = schedule.id ?: 0
 
     return ListItem.Schedule(
       remoteId = remoteId,
       profileId = profileId,
-      userCaption = schedule.caption.orEmpty(),
+      userCaption = schedule.caption ?: "",
+      caption = schedule.captionString,
       status = ListItemStatus.Schedule(enabled = schedule.enabled == true),
       icon = resolveIcon(schedule, profileId)
     )

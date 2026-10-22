@@ -51,6 +51,7 @@ import org.supla.android.ui.views.ErrorContent
 import org.supla.android.ui.views.list.Content
 import org.supla.android.ui.views.list.ListItemStatus
 import org.supla.android.ui.views.list.MainListScope
+import org.supla.core.shared.infrastructure.LocalizedString
 
 interface ScheduleListScope : MainListScope, AuthorizationDialogScope, CaptionChangeDialogScope {
   fun onTryAgain()
@@ -152,6 +153,7 @@ private fun sampleSchedule(id: Int, caption: String) = ListItem.Schedule(
   remoteId = id,
   profileId = 1,
   userCaption = caption,
+  caption = LocalizedString.Constant(caption),
   status = ListItemStatus.Schedule(enabled = true),
   icon = ImageId(R.drawable.fnc_gpm_5)
 )
