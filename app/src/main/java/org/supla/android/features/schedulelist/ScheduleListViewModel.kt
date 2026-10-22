@@ -107,7 +107,7 @@ class ScheduleListViewModel @Inject constructor(
       it.copy(
         captionChangeDialogState = CaptionChangeDialogState(
           caption = item.userCaption,
-          label = localizedString(R.string.schedules_list_title),
+          label = localizedString(R.string.schedule_name),
           authorized = true
         )
       )
