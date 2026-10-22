@@ -852,6 +852,8 @@
   <string name="menu_nfc">NFC</string>
   <string name="settings_nfc_label">NFC</string>
   <string name="schedules_list_title">Harmonogramy</string>
+  <string name="schedule_name">Nazwa harmonogramu</string>
+  <string name="schedule_default_caption">Harmonogram ID%1$s</string>
   <string name="schedules_login_required">Dostęp wymaga zalogowania</string>
   <string name="nfc_list_add">Dodaj tag NFC</string>
   <string name="edit_nfc_tag_name">Nazwa taga</string>

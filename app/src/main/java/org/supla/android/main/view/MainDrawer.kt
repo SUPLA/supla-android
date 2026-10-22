@@ -21,24 +21,19 @@ import android.view.Surface
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DrawerDefaults
@@ -50,27 +45,18 @@ import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
-import androidx.compose.material3.PermanentDrawerSheet
-import androidx.compose.material3.PermanentNavigationDrawer
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -78,7 +64,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.supla.android.R
@@ -92,17 +77,13 @@ import org.supla.android.main.ListTab
 import org.supla.android.main.LocalNavigator
 import org.supla.android.main.MainRoute
 import org.supla.android.tools.SuplaPreview
-import org.supla.android.ui.extensions.ifFalse
 import org.supla.android.ui.views.buttons.DrawerBackButton
 import org.supla.android.ui.views.buttons.TextButton
 import org.supla.android.ui.views.texts.HeadlineSmall
-import org.supla.core.shared.extensions.forFalse
-import org.supla.core.shared.extensions.forTrue
 
 @Composable
 fun MainDrawer(
-  developerOptionsVisibleFlow: StateFlow<Boolean>,
-  zWaveVisibleFlow: StateFlow<Boolean>,
+  stateFlow: StateFlow<MainDrawerState>,
   zWaveOpenCallback: () -> Unit,
   content: @Composable (() -> Unit)
 ) =
@@ -118,7 +99,8 @@ fun MainDrawer(
           .exclude(WindowInsets.statusBars)
           .exclude(WindowInsets.displayCutout)
       ) {
-        DrawerContent(developerOptionsVisibleFlow, zWaveVisibleFlow, zWaveOpenCallback)
+        val state by stateFlow.collectAsState()
+        DrawerContent(state, zWaveOpenCallback)
       }
     },
     scrimColor = Color.Black.copy(alpha = 0.32f),
@@ -128,8 +110,7 @@ fun MainDrawer(
 @Composable
 @Suppress("SimplifyBooleanWithConstants")
 private fun DrawerContent(
-  developerOptionsVisibleFlow: StateFlow<Boolean>,
-  zWaveVisibleFlow: StateFlow<Boolean>,
+  state: MainDrawerState,
   zWaveOpenCallback: () -> Unit,
 ) {
   Column {
@@ -203,6 +184,13 @@ private fun DrawerContent(
         labelRes = R.string.settings,
         onNavigate = { navigator?.navigateTo(MainRoute.Settings) }
       )
+      if (state.schedulesVisible) {
+        DrawerItem(
+          iconRes = R.drawable.ic_menu_schedule,
+          labelRes = R.string.schedules_list_title,
+          onNavigate = { navigator?.navigateTo(MainRoute.ScheduleList) }
+        )
+      }
       HorizontalDivider(modifier = Modifier.padding(top = Distance.small, bottom = Distance.tiny))
 
       DrawerItem(
@@ -211,8 +199,7 @@ private fun DrawerContent(
         onNavigate = { navigator?.navigateTo(MainRoute.AddWizard) }
       )
 
-      val zWaveVisible by zWaveVisibleFlow.collectAsState()
-      if (Menu.Z_WAVE_OPTION_VISIBLE && zWaveVisible) {
+      if (Menu.Z_WAVE_OPTION_VISIBLE && state.zWaveVisible) {
         DrawerItem(
           iconRes = R.drawable.ic_menu_z_wave,
           labelRes = R.string.z_wave,
@@ -252,8 +239,7 @@ private fun DrawerContent(
           onNavigate = { navigator?.navigateTo(MainRoute.About) }
         )
       }
-      val developerOptionsVisible by developerOptionsVisibleFlow.collectAsState()
-      if (developerOptionsVisible) {
+      if (state.developerOptionsVisible) {
         DrawerItem(
           iconRes = R.drawable.ic_dev_option,
           labelRes = R.string.developer_option,
@@ -323,8 +309,10 @@ private fun Preview() {
     CompositionLocalProvider(LocalApplicationPreferences provides ApplicationPreferences(context)) {
       Column {
         DrawerContent(
-          developerOptionsVisibleFlow = MutableStateFlow(true),
-          zWaveVisibleFlow = MutableStateFlow(false),
+          state = MainDrawerState(
+            developerOptionsVisible = true,
+            schedulesVisible = true
+          ),
           zWaveOpenCallback = {}
         )
       }
