@@ -62,7 +62,6 @@ class SettingsFragment : BaseFragment<SettingsViewState, SettingsViewEvent>(R.la
       SettingsViewEvent.NavigateToLocalizationsOrdering -> navigator.navigateTo(MainRoute.LocationReorder)
       SettingsViewEvent.NavigateToAndroidAuto -> navigator.navigateTo(MainRoute.AndroidAutoItems)
       SettingsViewEvent.NavigateToNfc -> navigator.navigateTo(MainRoute.NfcTagList)
-      SettingsViewEvent.NavigateToSchedules -> navigator.navigateTo(MainRoute.ScheduleList)
       is SettingsViewEvent.NavigateToPinSetup -> navigator.navigateTo(MainRoute.PinSetup(event.lockScreenScope))
       is SettingsViewEvent.NavigateToPinVerification -> navigator.navigateTo(MainRoute.Unlock(event.verificationAction))
       SettingsViewEvent.NavigateToSettings -> navigator.navigateToSystemSettings()

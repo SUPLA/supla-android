@@ -843,6 +843,8 @@
   <string name="menu_nfc">NFC</string>
   <string name="settings_nfc_label">NFC</string>
   <string name="schedules_list_title">Cədvəllər</string>
+  <string name="schedule_name">Cədvəlin adı</string>
+  <string name="schedule_default_caption">Cədvəl ID%1$s</string>
   <string name="schedules_login_required">Daxil olmaq tələb olunur</string>
   <string name="nfc_list_add">NFC teqi əlavə et</string>
   <string name="edit_nfc_tag_name">Teq adı</string>

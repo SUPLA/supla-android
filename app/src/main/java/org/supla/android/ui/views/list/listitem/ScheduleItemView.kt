@@ -18,6 +18,8 @@ package org.supla.android.ui.views.list.listitem
  */
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import org.supla.android.core.shared.invoke
 import org.supla.android.core.storage.LocalApplicationPreferences
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.views.list.ListItemScaffold
@@ -34,8 +36,8 @@ fun ScheduleListItemView(
   onTitleLongClick: () -> Unit = {}
 ) {
   ListItemScaffold(
-    itemTitle = data.userCaption,
-    onTitleLongClick = onTitleLongClick,
+    itemTitle = data.caption(LocalContext.current),
+    onTitleLongClick = { onTitleLongClick() },
     onItemClick = onItemClick,
     issues = ListItemIssues.empty,
     scale = scale,

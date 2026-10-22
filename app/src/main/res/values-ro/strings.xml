@@ -757,6 +757,8 @@
   <string name="menu_nfc">NFC</string>
   <string name="settings_nfc_label">NFC</string>
   <string name="schedules_list_title">Programări</string>
+  <string name="schedule_name">Numele programării</string>
+  <string name="schedule_default_caption">Programare ID%1$s</string>
   <string name="schedules_login_required">Este necesară autentificarea</string>
   <string name="nfc_list_add">Adaugă etichetă NFC</string>
   <string name="edit_nfc_tag_name">Nume etichetă</string>

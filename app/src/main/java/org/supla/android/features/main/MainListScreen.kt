@@ -134,8 +134,7 @@ private fun PortraitPhoneView(
   val scrollBehavior = scrollBehaviors[LocalMainListTabController.current.tab]
 
   MainDrawer(
-    developerOptionsVisibleFlow = viewModel.developerOptionsVisible,
-    zWaveVisibleFlow = viewModel.zWaveAvailable,
+    stateFlow = viewModel.mainDrawerState,
     zWaveOpenCallback = { viewModel.showAuthorizationDialog(AuthorizationReason.ZWaveWizard) }
   ) {
     Scaffold(
@@ -161,8 +160,7 @@ private fun LandscapePhoneView(
   val scrollBehavior = scrollBehaviors[LocalMainListTabController.current.tab]
 
   MainDrawer(
-    developerOptionsVisibleFlow = viewModel.developerOptionsVisible,
-    zWaveVisibleFlow = viewModel.zWaveAvailable,
+    stateFlow = viewModel.mainDrawerState,
     zWaveOpenCallback = { viewModel.showAuthorizationDialog(AuthorizationReason.ZWaveWizard) }
   ) {
     Scaffold(

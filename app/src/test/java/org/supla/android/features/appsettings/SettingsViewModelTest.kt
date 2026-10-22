@@ -110,7 +110,6 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
       tuple(SettingItem.NavigationItem::class.java),
       tuple(SettingItem.NavigationItem::class.java),
       tuple(SettingItem.NavigationItem::class.java),
-      tuple(SettingItem.NavigationItem::class.java),
       tuple(SettingItem.HeaderItem::class.java),
       tuple(SettingItem.NotificationsItem::class.java),
       tuple(SettingItem.LocalizationItem::class.java)
@@ -128,10 +127,9 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     assertThat((settingsList[9] as SettingItem.RollerShutterOpenClose).showOpeningPercentage).isEqualTo(true)
     assertThat((settingsList[10] as SettingItem.NightMode).nightModeSetting).isEqualTo(NightModeSetting.NEVER)
     assertThat((settingsList[11] as SettingItem.LockScreen).lockScreenScope).isEqualTo(LockScreenScope.NONE)
-    assertThat((settingsList[16] as SettingItem.NavigationItem).title).isEqualTo(R.string.schedules_list_title)
-    assertThat((settingsList[17] as SettingItem.HeaderItem).headerResource).isEqualTo(R.string.settings_permissions)
-    assertThat((settingsList[18] as SettingItem.NotificationsItem).allowed).isEqualTo(true)
-    assertThat((settingsList[19] as SettingItem.LocalizationItem).allowed).isEqualTo(true)
+    assertThat((settingsList[16] as SettingItem.HeaderItem).headerResource).isEqualTo(R.string.settings_permissions)
+    assertThat((settingsList[17] as SettingItem.NotificationsItem).allowed).isEqualTo(true)
+    assertThat((settingsList[18] as SettingItem.LocalizationItem).allowed).isEqualTo(true)
   }
 
   @Test
@@ -441,31 +439,13 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
   }
 
   @Test
-  fun `should open schedules when clicked on schedules`() {
-    mockPreferences()
-    every { permissionsHelper.checkPermissionGranted(ACCESS_FINE_LOCATION) } returns true
-
-    // when
-    viewModel.loadSettings()
-    val schedulesItem = states[0].settingsItems[16] as SettingItem.NavigationItem
-    schedulesItem.callback()
-
-    // then
-    assertThat(schedulesItem.title).isEqualTo(R.string.schedules_list_title)
-    assertThat(states.size).isEqualTo(1)
-    assertThat(events).containsExactly(SettingsViewEvent.NavigateToSchedules)
-    verifyPreferencesMockedCalls()
-    confirmVerified(applicationPreferences)
-  }
-
-  @Test
   fun `should open settings when clicked on notification permission`() {
     mockPreferences()
     every { permissionsHelper.checkPermissionGranted(ACCESS_FINE_LOCATION) } returns true
 
     // when
     viewModel.loadSettings()
-    val channelSettingItem = states[0].settingsItems[18] as SettingItem.NotificationsItem
+    val channelSettingItem = states[0].settingsItems[17] as SettingItem.NotificationsItem
     channelSettingItem.callback()
 
     // then
@@ -482,7 +462,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val channelSettingItem = states[0].settingsItems[19] as SettingItem.LocalizationItem
+    val channelSettingItem = states[0].settingsItems[18] as SettingItem.LocalizationItem
     channelSettingItem.callback()
 
     // then

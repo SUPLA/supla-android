@@ -734,6 +734,8 @@
   <string name="menu_nfc">NFC</string>
   <string name="settings_nfc_label">NFC</string>
   <string name="schedules_list_title">Tvarkaraščiai</string>
+  <string name="schedule_name">Tvarkaraščio pavadinimas</string>
+  <string name="schedule_default_caption">Tvarkaraštis ID%1$s</string>
   <string name="schedules_login_required">Būtina prisijungti</string>
   <string name="nfc_list_add">Pridėti NFC žymą</string>
   <string name="edit_nfc_tag_name">Žymos pavadinimas</string>

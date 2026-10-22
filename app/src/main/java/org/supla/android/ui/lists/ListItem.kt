@@ -117,6 +117,7 @@ sealed interface ListItem {
     override val remoteId: Int,
     override val profileId: Long,
     override val userCaption: String,
+    val caption: LocalizedString,
     val status: ListItemStatus,
     val icon: ImageId
   ) : ListItem {
