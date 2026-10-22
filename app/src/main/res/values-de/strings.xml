@@ -819,6 +819,8 @@
   <string name="menu_nfc">NFC</string>
   <string name="settings_nfc_label">NFC</string>
   <string name="schedules_list_title">Zeitpläne</string>
+  <string name="schedule_name">Zeitplanname</string>
+  <string name="schedule_default_caption">Zeitplan ID%1$s</string>
   <string name="schedules_login_required">Anmeldung erforderlich</string>
   <string name="nfc_list_add">NFC-Tag hinzufügen</string>
   <string name="edit_nfc_tag_name">Tag-Name</string>
