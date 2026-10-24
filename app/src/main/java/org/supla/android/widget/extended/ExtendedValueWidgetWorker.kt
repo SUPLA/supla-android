@@ -38,6 +38,7 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.supla.android.data.source.local.dao.WidgetConfigurationDao
+import org.supla.android.tools.VibrationHelper
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.android.widget.extended.value.ExtendedValueWidgetProvider
@@ -53,7 +54,8 @@ class ExtendedValueWidgetWorker @AssistedInject constructor(
   private val widgetConfigurationDao: WidgetConfigurationDao,
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val getSceneIconUseCase: GetSceneIconUseCase,
-  private val extendedValueWidgetProvider: ExtendedValueWidgetProvider
+  private val extendedValueWidgetProvider: ExtendedValueWidgetProvider,
+  private val vibrationHelper: VibrationHelper
 ) : CoroutineWorker(context, workerParameters) {
 
   private val glanceId: String?
@@ -61,6 +63,9 @@ class ExtendedValueWidgetWorker @AssistedInject constructor(
 
   override suspend fun doWork(): Result {
     Timber.d("Extended value widget worker started (glance id: `$glanceId`)")
+    if (inputData.getBoolean(SHOULD_VIBRATE, false)) {
+      vibrationHelper.widgetVibrate()
+    }
 
     val appWidgetManager = GlanceAppWidgetManager(context = context)
     appWidgetManager.getGlanceIds(ExtendedValueWidget::class.java)
@@ -101,6 +106,7 @@ class ExtendedValueWidgetWorker @AssistedInject constructor(
     private val UNIQUE_WORK_ID = "UNIQUE_${ExtendedValueWidgetWorker::class.java.simpleName}"
 
     private const val GLANCE_ID = "GLANCE_ID"
+    private const val SHOULD_VIBRATE = "SHOULD_VIBRATE"
 
     fun enqueuePeriodic(workManager: WorkManager) {
       workManager.enqueueUniquePeriodicWork(
@@ -112,7 +118,7 @@ class ExtendedValueWidgetWorker @AssistedInject constructor(
       )
     }
 
-    fun singleRun(workManager: WorkManager, glanceId: GlanceId? = null) {
+    fun singleRun(workManager: WorkManager, glanceId: GlanceId? = null, shouldVibrate: Boolean = false) {
       workManager.enqueueUniqueWork(
         UNIQUE_WORK_ID,
         ExistingWorkPolicy.KEEP,
@@ -120,6 +126,7 @@ class ExtendedValueWidgetWorker @AssistedInject constructor(
           .setInputData(
             Data.Builder()
               .putString(GLANCE_ID, glanceId.toString())
+              .putBoolean(SHOULD_VIBRATE, shouldVibrate)
               .build()
           )
           .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
