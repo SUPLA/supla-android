@@ -100,7 +100,7 @@ abstract class WidgetCommandWorkerBase(
   protected abstract fun valueWithUnit(): Boolean
 
   private fun performUpdate(widgetIds: IntArray, isManualUpdate: Boolean): Result {
-    isManualUpdate.forTrue { vibrationHelper.vibrate() }
+    isManualUpdate.forTrue { vibrationHelper.widgetVibrate() }
 
     if (!ensureNetworkAvailable()) {
       Timber.d("Widget update skipped because of unavailable network (widgetIds: $widgetIds)")
@@ -177,8 +177,6 @@ abstract class WidgetCommandWorkerBase(
       showToastLong(R.string.widget_command_no_connection)
       return Result.failure()
     }
-
-    vibrationHelper.vibrate()
 
     return performAction(widgetAction, configuration)
   }
