@@ -46,6 +46,8 @@ data class ScheduleDetailViewState(
   val thermostatFunction: ThermostatSubfunction? = null,
   val configTemperatureMin: Float = 0f,
   val configTemperatureMax: Float = 0f,
+  val heatCoolOffsetMin: Float? = null,
+  val heatCoolOffsetMax: Float? = null,
 
   val editorState: WeeklyScheduleEditorState<ScheduleDetailProgramBox> = WeeklyScheduleEditorState(),
   val quarterSelection: QuartersSelectionData? = null,
