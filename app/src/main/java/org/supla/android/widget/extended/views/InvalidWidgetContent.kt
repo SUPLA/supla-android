@@ -51,7 +51,9 @@ fun InvalidWidgetContent(widgetSize: DpSize, stringRes: Int) {
     },
     backgroundColor = GlanceTheme.colors.background,
     modifier = GlanceModifier
-      .clickable { ExtendedValueWidgetWorker.singleRun(WorkManager.getInstance(context), glanceId) },
+      .clickable {
+        ExtendedValueWidgetWorker.singleRun(WorkManager.getInstance(context), glanceId, shouldVibrate = true)
+      },
   ) {
     Box(modifier = GlanceModifier.fillMaxSize(), contentAlignment = Alignment.Center) {
       Text(

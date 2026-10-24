@@ -58,7 +58,9 @@ fun ElectricityMeterContent(state: ExtendedValueWidgetState, widgetSize: DpSize)
     },
     backgroundColor = GlanceTheme.colors.background,
     modifier = GlanceModifier.fillMaxSize()
-      .clickable { ExtendedValueWidgetWorker.singleRun(WorkManager.getInstance(context), glanceId) }
+      .clickable {
+        ExtendedValueWidgetWorker.singleRun(WorkManager.getInstance(context), glanceId, shouldVibrate = true)
+      }
   ) {
     when (state.value) {
       is WidgetValue.ElectricityMeter ->

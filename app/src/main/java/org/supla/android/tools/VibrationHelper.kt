@@ -30,18 +30,24 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class VibrationHelper @Inject constructor(@param:ApplicationContext private val context: Context) {
+class VibrationHelper @Inject constructor(
+  @param:ApplicationContext private val context: Context
+) {
 
-  fun vibrate() {
+  fun vibrate() = vibrate(isWidget = false)
+
+  fun widgetVibrate() = vibrate(isWidget = true)
+
+  private fun vibrate(isWidget: Boolean) {
     getVibrator()?.apply {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE), getVibrationAttributes())
-      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        @Suppress("DEPRECATION")
-        vibrate(
-          VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE),
-          getAudioAttributes()
-        )
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val effect = VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+          vibrate(effect, getVibrationAttributes(isWidget))
+        } else {
+          @Suppress("DEPRECATION")
+          vibrate(effect, getAudioAttributes(isWidget))
+        }
       } else {
         @Suppress("DEPRECATION")
         vibrate(100) // deprecated in API 26
@@ -59,15 +65,19 @@ class VibrationHelper @Inject constructor(@param:ApplicationContext private val 
     }
   }
 
-  private fun getAudioAttributes(): AudioAttributes =
+  private fun getAudioAttributes(isWidget: Boolean): AudioAttributes =
     AudioAttributes.Builder()
       .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-      .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+      .setUsage(
+        if (isWidget) AudioAttributes.USAGE_NOTIFICATION else AudioAttributes.USAGE_ASSISTANCE_SONIFICATION
+      )
       .build()
 
-  @RequiresApi(Build.VERSION_CODES.R)
-  private fun getVibrationAttributes(): VibrationAttributes =
+  @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+  private fun getVibrationAttributes(isWidget: Boolean): VibrationAttributes =
     VibrationAttributes.Builder()
-      .setUsage(VibrationAttributes.USAGE_TOUCH)
+      .setUsage(
+        if (isWidget) VibrationAttributes.USAGE_NOTIFICATION else VibrationAttributes.USAGE_TOUCH
+      )
       .build()
 }
