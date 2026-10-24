@@ -52,8 +52,8 @@ import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxKey
 import org.supla.android.ui.views.schedule.editor.ScheduleTableBox
 import org.supla.android.ui.views.schedule.editor.quartersSelectionData
 import org.supla.android.ui.views.schedule.editor.viewScheduleTableState
-import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.extensions.fromSuplaTemperature
+import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.usecase.channel.valueformatter.DefaultValueFormatter
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import timber.log.Timber
