@@ -738,7 +738,6 @@ data class ThermostatGeneralViewState(
       ) { (heat, min, max) ->
         return when (viewModelState?.mode) {
           SuplaHvacMode.HEAT, SuplaHvacMode.HEAT_COOL -> heat.minus(min).div(max - min)
-          SuplaHvacMode.OFF if programmedModeActive -> heat.minus(min).div(max - min)
           else -> null
         }
       }
@@ -754,7 +753,6 @@ data class ThermostatGeneralViewState(
       ) { (cool, min, max) ->
         return when (viewModelState?.mode) {
           SuplaHvacMode.COOL, SuplaHvacMode.HEAT_COOL -> cool.minus(min).div(max - min)
-          SuplaHvacMode.OFF if programmedModeActive -> cool.minus(min).div(max - min)
           else -> null
         }
       }
