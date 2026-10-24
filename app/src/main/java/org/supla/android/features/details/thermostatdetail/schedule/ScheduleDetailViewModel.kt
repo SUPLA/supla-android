@@ -53,6 +53,7 @@ import org.supla.android.ui.views.schedule.editor.ScheduleTableBox
 import org.supla.android.ui.views.schedule.editor.quartersSelectionData
 import org.supla.android.ui.views.schedule.editor.viewScheduleTableState
 import org.supla.core.shared.extensions.guardLet
+import org.supla.core.shared.extensions.fromSuplaTemperature
 import org.supla.core.shared.usecase.channel.valueformatter.DefaultValueFormatter
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import timber.log.Timber
@@ -234,7 +235,19 @@ class ScheduleDetailViewModel @Inject constructor(
 
   override fun onProgramSettingsModeChange(mode: SuplaHvacMode) {
     updateState { state ->
-      state.copy(programSettings = state.programSettings?.copy(selectedMode = mode))
+      state.copy(
+        programSettings = state.programSettings?.let { settings ->
+          settings.copy(
+            selectedMode = mode,
+            temperatureCoolCorrect = isCoolTemperatureCorrect(
+              state,
+              mode,
+              settings.setpointTemperatureHeat,
+              settings.setpointTemperatureCool
+            )
+          )
+        }
+      )
     }
   }
 
@@ -320,8 +333,8 @@ class ScheduleDetailViewModel @Inject constructor(
       return null // Deselect active program
     }
 
-    for (programConfiguration in state.editorState.programs) {
-      if (programConfiguration.program == program && programConfiguration.mode == SuplaHvacMode.NOT_SET) {
+    for ((_, _, program1, mode) in state.editorState.programs) {
+      if (program1 == program && mode == SuplaHvacMode.NOT_SET) {
         return null // Don't allow to set program with NOT_SET mode
       }
     }
@@ -383,7 +396,15 @@ class ScheduleDetailViewModel @Inject constructor(
             setpointTemperatureHeatString = textProvider(newTemperature),
             setpointTemperatureHeatMinusAllowed = newTemperature > it.configTemperatureMin,
             setpointTemperatureHeatPlusAllowed = newTemperature < it.configTemperatureMax,
-            temperatureHeatCorrect = temperatureCorrect
+            temperatureHeatCorrect = temperatureCorrect,
+            temperatureCoolCorrect = it.programSettings?.let { settings ->
+              isCoolTemperatureCorrect(
+                it,
+                settings.selectedMode,
+                newTemperature,
+                setpointTemperatureCool ?: settings.setpointTemperatureCool
+              )
+            } ?: true
           )
         )
       }
@@ -405,8 +426,14 @@ class ScheduleDetailViewModel @Inject constructor(
           else -> it
         }
       }
-      val minTemperature = setpointTemperatureHeat ?: state.configTemperatureMin
-      val temperatureCorrect = newTemperature >= minTemperature && newTemperature <= state.configTemperatureMax
+      val temperatureCorrect = state.programSettings?.let { settings ->
+        isCoolTemperatureCorrect(
+          state,
+          settings.selectedMode,
+          setpointTemperatureHeat ?: settings.setpointTemperatureHeat,
+          newTemperature
+        )
+      } ?: (newTemperature >= state.configTemperatureMin && newTemperature <= state.configTemperatureMax)
 
       updateState {
         it.copy(
@@ -439,7 +466,13 @@ class ScheduleDetailViewModel @Inject constructor(
           setpointTemperatureCoolMinusAllowed = coolTemperature > state.configTemperatureMin,
           setpointTemperatureHeatPlusAllowed = heatTemperature < state.configTemperatureMax,
           setpointTemperatureHeatMinusAllowed = heatTemperature > state.configTemperatureMin,
-          temperatureUnit = applicationPreferences.temperatureUnit
+          temperatureUnit = applicationPreferences.temperatureUnit,
+          temperatureCoolCorrect = isCoolTemperatureCorrect(
+            state,
+            programBox.modeForModify,
+            heatTemperature,
+            coolTemperature
+          )
         )
       }
     }
@@ -453,6 +486,26 @@ class ScheduleDetailViewModel @Inject constructor(
     SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL -> listOf(SuplaHvacMode.HEAT_COOL, SuplaHvacMode.HEAT, SuplaHvacMode.COOL)
     SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER -> listOf(SuplaHvacMode.HEAT)
     else -> listOf()
+  }
+
+  private fun isCoolTemperatureCorrect(
+    state: ScheduleDetailViewState,
+    mode: SuplaHvacMode,
+    heatTemperature: Float?,
+    coolTemperature: Float?
+  ): Boolean {
+    if (mode != SuplaHvacMode.HEAT_COOL) {
+      return coolTemperature == null || coolTemperature in state.configTemperatureMin..state.configTemperatureMax
+    }
+
+    val heat = heatTemperature ?: return false
+    val cool = coolTemperature ?: return false
+    val difference = cool - heat
+
+    return difference > 0 &&
+      state.heatCoolOffsetMin?.let { difference >= it } != false &&
+      state.heatCoolOffsetMax?.let { difference <= it } != false &&
+      cool in state.configTemperatureMin..state.configTemperatureMax
   }
 
   private fun reloadConfig(remoteId: Int) {
@@ -495,6 +548,8 @@ class ScheduleDetailViewModel @Inject constructor(
         ),
         configTemperatureMin = minTemperature,
         configTemperatureMax = maxTemperature,
+        heatCoolOffsetMin = data.defaultConfig.temperatures.heatCoolOffsetMin?.fromSuplaTemperature(),
+        heatCoolOffsetMax = data.defaultConfig.temperatures.heatCoolOffsetMax?.fromSuplaTemperature(),
         thermostatFunction = thermostatFunction
       )
     }
