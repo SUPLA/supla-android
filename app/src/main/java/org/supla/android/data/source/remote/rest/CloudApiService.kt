@@ -46,7 +46,7 @@ interface CloudApiService {
   @Headers("Content-Type: application/json;charset=UTF-8")
   suspend fun authenticate(@Body request: CloudApiAuthRequest): CloudApiAuthResponse
 
-  @GET("/api/v3/schedules?include=subject")
+  @GET("/api/v3/schedules?include=subject,closestExecutions")
   suspend fun getSchedules(): List<ScheduleDto>
 
   @GET("/api/v3/schedules/{id}")
