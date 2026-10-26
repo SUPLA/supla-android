@@ -465,6 +465,13 @@
   <string name="settings_notifications">Ειδοποιήσεις</string>
   <string name="settings_localization">Τοποθεσία (ακριβής)</string>
   <string name="settings_permissions">Δικαιώματα</string>
+  <string name="settings_appearance">Εμφάνιση</string>
+  <string name="settings_channel_list">Λίστα καναλιών</string>
+  <string name="settings_security">Ασφάλεια</string>
+  <string name="settings_integrations">Ενσωματώσεις</string>
+  <string name="settings_channel_height_compact">Συμπαγές</string>
+  <string name="settings_channel_height_standard">Τυπικό</string>
+  <string name="settings_channel_height_large">Μεγάλο</string>
 
   <string name="details_general">Γενικά</string>
   <string name="details_schedule">Εβδομάδα</string>

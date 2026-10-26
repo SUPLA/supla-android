@@ -469,6 +469,13 @@
   <string name="settings_notifications">Varsler</string>
   <string name="settings_localization">Sted (nøyaktig)</string>
   <string name="settings_permissions">Rettigheter:</string>
+  <string name="settings_appearance">Utseende</string>
+  <string name="settings_channel_list">Kanalliste</string>
+  <string name="settings_security">Sikkerhet</string>
+  <string name="settings_integrations">Integrasjoner</string>
+  <string name="settings_channel_height_compact">Kompakt</string>
+  <string name="settings_channel_height_standard">Standard</string>
+  <string name="settings_channel_height_large">Stor</string>
 
   <string name="details_general">Generelt</string>
   <string name="details_schedule">Uke</string>

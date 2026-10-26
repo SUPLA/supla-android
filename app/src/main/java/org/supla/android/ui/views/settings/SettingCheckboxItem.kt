@@ -18,6 +18,7 @@ package org.supla.android.ui.views.settings
  */
 
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -34,7 +35,10 @@ fun SettingsColumnScope.SettingCheckboxItem(
   onLabelLongClick: (() -> Unit)? = null,
   onCheckedChanged: (Boolean) -> Unit
 ) {
-  SettingRow(modifier = modifier) {
+  SettingRow(
+    modifier = modifier,
+    horizontalArrangement = Arrangement.spacedBy(Distance.default)
+  ) {
     if (description != null) {
       Column(
         modifier = Modifier.weight(1f)
