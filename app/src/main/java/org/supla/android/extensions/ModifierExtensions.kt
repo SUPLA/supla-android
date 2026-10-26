@@ -287,6 +287,6 @@ fun Modifier.settingsSurface(): Modifier {
   val shape = RoundedCornerShape(dimensionResource(id = R.dimen.radius_default))
   return this then Modifier
     .fillMaxWidth()
-    .padding(Distance.tiny)
+    .padding(horizontal = Distance.tiny)
     .background(MaterialTheme.colorScheme.surface, shape)
 }

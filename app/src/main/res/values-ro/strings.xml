@@ -471,6 +471,13 @@
   <string name="settings_notifications">Mesaje</string>
   <string name="settings_localization">Locație (exactă)</string>
   <string name="settings_permissions">Drepturi</string>
+  <string name="settings_appearance">Aspect</string>
+  <string name="settings_channel_list">Listă de canale</string>
+  <string name="settings_security">Securitate</string>
+  <string name="settings_integrations">Integrări</string>
+  <string name="settings_channel_height_compact">Compact</string>
+  <string name="settings_channel_height_standard">Standard</string>
+  <string name="settings_channel_height_large">Mare</string>
 
   <string name="details_general">Generale</string>
   <string name="details_schedule">Săptămână</string>

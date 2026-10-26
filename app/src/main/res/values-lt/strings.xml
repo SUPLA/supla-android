@@ -447,6 +447,13 @@
   <string name="settings_notifications">Pranešimai</string>
   <string name="settings_localization">Vieta (tiksli)</string>
   <string name="settings_permissions">Įgaliojimai</string>
+  <string name="settings_appearance">Išvaizda</string>
+  <string name="settings_channel_list">Kanalų sąrašas</string>
+  <string name="settings_security">Sauga</string>
+  <string name="settings_integrations">Integracijos</string>
+  <string name="settings_channel_height_compact">Kompaktiškas</string>
+  <string name="settings_channel_height_standard">Standartinis</string>
+  <string name="settings_channel_height_large">Didelis</string>
 
   <string name="details_general">Bendrieji</string>
   <string name="details_schedule">Savaitė</string>

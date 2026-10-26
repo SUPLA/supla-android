@@ -469,6 +469,13 @@
   <string name="settings_notifications">Értesítések</string>
   <string name="settings_localization">Helyszín (pontos)</string>
   <string name="settings_permissions">Jogosultságok</string>
+  <string name="settings_appearance">Megjelenés</string>
+  <string name="settings_channel_list">Csatornalista</string>
+  <string name="settings_security">Biztonság</string>
+  <string name="settings_integrations">Integrációk</string>
+  <string name="settings_channel_height_compact">Kompakt</string>
+  <string name="settings_channel_height_standard">Normál</string>
+  <string name="settings_channel_height_large">Nagy</string>
 
   <string name="details_general">Általános</string>
   <string name="details_schedule">Hét</string>

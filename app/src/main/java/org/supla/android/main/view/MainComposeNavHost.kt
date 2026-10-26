@@ -91,7 +91,7 @@ fun MainComposeNavHost(
           fadedEntry<MainRoute.UnlockApp> { EmptyScreenScaffold { LockScreen(it.unlockAction, navigator) } }
           fadedEntry<MainRoute.Unlock> { BackScaffold { LockScreen(it.unlockAction, navigator) } }
           fadedEntry<MainRoute.StandardDetail> { DetailScreen(it.item, it.pages) }
-          fadedEntry<MainRoute.Settings> { BackScaffold { SettingsScreen() } }
+          fadedEntry<MainRoute.Settings> { BackScaffold { SettingsScreen(navigator) } }
           fadedEntry<MainRoute.AddWizard> { AddWizardScreen(navigator) }
           fadedEntry<MainRoute.DeviceCatalog> { BackScaffold { DeviceCatalogScreen() } }
           fadedEntry<MainRoute.NotificationsLog> { BackScaffold { NotificationsLogScreen(navigator) } }

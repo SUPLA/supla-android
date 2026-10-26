@@ -1,4 +1,5 @@
 package org.supla.android.features.appsettings
+
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -24,7 +25,6 @@ import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import androidx.appcompat.app.AppCompatDelegate
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Observable
 import org.supla.android.R
 import org.supla.android.core.branding.Configuration
 import org.supla.android.core.permissions.PermissionsHelper
@@ -35,7 +35,6 @@ import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.LockScreenScope
 import org.supla.android.data.source.runtime.appsettings.ChannelHeight
-import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.lockscreen.UnlockAction
 import org.supla.android.model.general.appCompatDelegateValue
 import org.supla.android.model.general.modeManagerValue
@@ -56,123 +55,97 @@ class SettingsViewModel @Inject constructor(
   defaultState = SettingsViewState(),
   threading = threading,
   titleRes = R.string.settings
-) {
+),
+  SettingsViewScope {
 
   fun loadSettings() {
-    configObservable()
-      .attach()
-      .subscribeBy(
-        onNext = { updateState { state -> state.copy(settingsItems = it) } }
-      )
-      .disposeBySelf()
-  }
-
-  private fun configObservable() = Observable.fromCallable {
-    return@fromCallable if (Configuration.ANDROID_AUTO_SUPPORT) {
-      listOf(
-        SettingItem.HeaderItem(headerResource = R.string.menubar_appsettings),
-        SettingItem.ChannelHeightItem(height = getChannelHeight(), this::updateChannelHeight),
-        SettingItem.TemperatureUnitItem(unit = preferences.temperatureUnit, this::updateTemperatureUnit),
-        SettingItem.TemperaturePrecisionItem(precision = preferences.temperaturePrecision, this::updateTemperaturePrecision),
-        SettingItem.ButtonAutoHide(active = preferences.isButtonAutohide, this::updateButtonAutoHide),
-        SettingItem.InfoButton(visible = preferences.isShowChannelInfo, this::updateInfoButton),
-        SettingItem.BottomMenu(visible = preferences.isShowBottomMenu, this::updateBottomMenu),
-        SettingItem.BottomLabels(visible = preferences.isShowBottomLabel, enabled = true, this::updateBottomLabel),
-        SettingItem.UnavailableChannelsVisibility(hidden = preferences.hideUnavailableChannels, this::updateUnavailableChannels),
-        SettingItem.RollerShutterOpenClose(showOpeningPercentage = preferences.isShowOpeningPercent, this::updateShowingOpeningPercentage),
-        SettingItem.NightMode(nightModeSetting = preferences.nightMode, this::updateNightMode),
-        SettingItem.LockScreen(lockScreenScope = encryptedPreferences.lockScreenSettings.scope, this::updateLockScreen),
-        SettingItem.BatteryWarningLevel(level = preferences.batteryWarningLevel, this::updateBatteryWarningLevel),
-        SettingItem.NavigationItem(R.string.location_ordering) { sendEvent(SettingsViewEvent.NavigateToLocalizationsOrdering) },
-        SettingItem.NavigationItem(R.string.settings_android_auto_label) { sendEvent(SettingsViewEvent.NavigateToAndroidAuto) },
-        SettingItem.NavigationItem(R.string.settings_nfc_label) { sendEvent(SettingsViewEvent.NavigateToNfc) },
-
-        SettingItem.HeaderItem(headerResource = R.string.settings_permissions),
-        SettingItem.NotificationsItem(allowed = areNotificationsEnabled(), this::goToSettings),
-        SettingItem.LocalizationItem(allowed = isLocationPermissionGranted(), this::goToSettings)
-      )
-    } else {
-      listOf(
-        SettingItem.HeaderItem(headerResource = R.string.menubar_appsettings),
-        SettingItem.ChannelHeightItem(height = getChannelHeight(), this::updateChannelHeight),
-        SettingItem.TemperatureUnitItem(unit = preferences.temperatureUnit, this::updateTemperatureUnit),
-        SettingItem.TemperaturePrecisionItem(precision = preferences.temperaturePrecision, this::updateTemperaturePrecision),
-        SettingItem.ButtonAutoHide(active = preferences.isButtonAutohide, this::updateButtonAutoHide),
-        SettingItem.InfoButton(visible = preferences.isShowChannelInfo, this::updateInfoButton),
-        SettingItem.BottomMenu(visible = preferences.isShowBottomMenu, this::updateBottomMenu),
-        SettingItem.BottomLabels(visible = preferences.isShowBottomLabel, enabled = true, this::updateBottomLabel),
-        SettingItem.RollerShutterOpenClose(
-          showOpeningPercentage = preferences.isShowOpeningPercent,
-          this::updateShowingOpeningPercentage
-        ),
-        SettingItem.NightMode(nightModeSetting = preferences.nightMode, this::updateNightMode),
-        SettingItem.LockScreen(lockScreenScope = encryptedPreferences.lockScreenSettings.scope, this::updateLockScreen),
-        SettingItem.BatteryWarningLevel(level = preferences.batteryWarningLevel, this::updateBatteryWarningLevel),
-        SettingItem.NavigationItem(R.string.location_ordering) { sendEvent(SettingsViewEvent.NavigateToLocalizationsOrdering) },
-        SettingItem.NavigationItem(R.string.settings_nfc_label) { sendEvent(SettingsViewEvent.NavigateToNfc) },
-
-        SettingItem.HeaderItem(headerResource = R.string.settings_permissions),
-        SettingItem.NotificationsItem(allowed = areNotificationsEnabled(), this::goToSettings),
-        SettingItem.LocalizationItem(allowed = isLocationPermissionGranted(), this::goToSettings)
+    updateState {
+      SettingsViewState(
+        channelHeight = getChannelHeight(),
+        temperatureUnit = preferences.temperatureUnit,
+        temperaturePrecision = preferences.temperaturePrecision,
+        buttonAutoHide = preferences.isButtonAutohide,
+        showChannelInfo = preferences.isShowChannelInfo,
+        showBottomMenu = preferences.isShowBottomMenu,
+        showBottomLabels = preferences.isShowBottomLabel,
+        hideUnavailableChannels = preferences.hideUnavailableChannels,
+        showOpeningPercentage = preferences.isShowOpeningPercent,
+        nightMode = preferences.nightMode,
+        lockScreenScope = encryptedPreferences.lockScreenSettings.scope,
+        batteryWarningLevel = preferences.batteryWarningLevel.toString(),
+        androidAutoSupported = Configuration.ANDROID_AUTO_SUPPORT,
+        notificationsAllowed = areNotificationsEnabled(),
+        locationAllowed = isLocationPermissionGranted()
       )
     }
   }
 
-  private fun getChannelHeight() = ChannelHeight.entries
-    .firstOrNull { it.percent == preferences.channelHeight } ?: ChannelHeight.HEIGHT_100
-
-  private fun areNotificationsEnabled() = if (VERSION.SDK_INT > VERSION_CODES.N) {
-    notificationManager.areNotificationsEnabled()
-  } else {
-    true
+  override fun onChannelHeightChanged(position: Int) {
+    val height = ChannelHeight.forPosition(position)
+    preferences.channelHeight = height.percent
+    updateState { it.copy(channelHeight = height) }
   }
 
-  private fun updateChannelHeight(position: Int) {
-    preferences.channelHeight = ChannelHeight.forPosition(position).percent
+  override fun onTemperatureUnitChanged(position: Int) {
+    val unit = TemperatureUnit.forPosition(position)
+    preferences.temperatureUnit = unit
+    updateState { it.copy(temperatureUnit = unit) }
   }
 
-  private fun updateTemperatureUnit(position: Int) {
-    preferences.temperatureUnit = TemperatureUnit.forPosition(position)
+  override fun onTemperaturePrecisionChanged(position: Int) {
+    val precision = position + 1
+    preferences.temperaturePrecision = precision
+    updateState { it.copy(temperaturePrecision = precision) }
   }
 
-  private fun updateTemperaturePrecision(position: Int) {
-    preferences.temperaturePrecision = position + 1
-  }
-
-  private fun updateButtonAutoHide(value: Boolean) {
+  override fun onButtonAutoHideChanged(value: Boolean) {
     preferences.isButtonAutohide = value
+    updateState { it.copy(buttonAutoHide = value) }
   }
 
-  private fun updateInfoButton(value: Boolean) {
+  override fun onChannelInfoChanged(value: Boolean) {
     preferences.isShowChannelInfo = value
+    updateState { it.copy(showChannelInfo = value) }
   }
 
-  private fun updateBottomLabel(value: Boolean) {
-    preferences.isShowBottomLabel = value
-  }
-
-  private fun updateBottomMenu(value: Boolean) {
+  override fun onBottomMenuChanged(value: Boolean) {
     preferences.isShowBottomMenu = value
+    updateState { it.copy(showBottomMenu = value) }
   }
 
-  private fun updateUnavailableChannels(value: Boolean) {
+  override fun onBottomLabelsChanged(value: Boolean) {
+    preferences.isShowBottomLabel = value
+    updateState { it.copy(showBottomLabels = value) }
+  }
+
+  override fun onUnavailableChannelsChanged(value: Boolean) {
     preferences.hideUnavailableChannels = value
+    updateState { it.copy(hideUnavailableChannels = value) }
   }
 
-  private fun updateShowingOpeningPercentage(value: Boolean) {
+  override fun onOpeningPercentageChanged(position: Int) {
+    val value = position == 0
     preferences.isShowOpeningPercent = value
+    updateState { it.copy(showOpeningPercentage = value) }
   }
 
-  private fun updateNightMode(setting: NightModeSetting) {
+  override fun onNightModeChanged(position: Int) {
+    val setting = when (position) {
+      0 -> NightModeSetting.ALWAYS
+      1 -> NightModeSetting.NEVER
+      else -> NightModeSetting.AUTO
+    }
     preferences.nightMode = setting
     if (VERSION.SDK_INT >= VERSION_CODES.S) {
       modeManager.setApplicationNightMode(setting.modeManagerValue())
     } else {
       AppCompatDelegate.setDefaultNightMode(setting.appCompatDelegateValue())
     }
+    updateState { it.copy(nightMode = setting) }
   }
 
-  private fun updateLockScreen(setting: LockScreenScope) {
+  override fun onLockScreenChanged(position: Int) {
+    val setting = LockScreenScope.from(position)
     val pinSum = encryptedPreferences.lockScreenSettings.pinSum
 
     if (setting == LockScreenScope.NONE) {
@@ -186,16 +159,58 @@ class SettingsViewModel @Inject constructor(
     }
   }
 
-  private fun updateBatteryWarningLevel(level: Int) {
-    preferences.batteryWarningLevel = level
+  override fun onBatteryWarningLevelChanged(value: String) {
+    val acceptedValue = value.filter(Char::isDigit).take(2)
+    updateState { it.copy(batteryWarningLevel = acceptedValue) }
+    acceptedValue.toIntOrNull()?.let { preferences.batteryWarningLevel = it }
   }
 
-  private fun goToSettings() {
+  override fun onLocationOrderClicked() {
+    sendEvent(SettingsViewEvent.NavigateToLocalizationsOrdering)
+  }
+
+  override fun onAndroidAutoClicked() {
+    sendEvent(SettingsViewEvent.NavigateToAndroidAuto)
+  }
+
+  override fun onNfcClicked() {
+    sendEvent(SettingsViewEvent.NavigateToNfc)
+  }
+
+  override fun onPermissionClicked() {
     sendEvent(SettingsViewEvent.NavigateToSettings)
+  }
+
+  private fun getChannelHeight() = ChannelHeight.entries
+    .firstOrNull { it.percent == preferences.channelHeight } ?: ChannelHeight.HEIGHT_100
+
+  private fun areNotificationsEnabled() = if (VERSION.SDK_INT > VERSION_CODES.N) {
+    notificationManager.areNotificationsEnabled()
+  } else {
+    true
   }
 
   private fun isLocationPermissionGranted() =
     permissionsHelper.checkPermissionGranted(ACCESS_FINE_LOCATION)
+}
+
+interface SettingsViewScope {
+  fun onChannelHeightChanged(position: Int)
+  fun onTemperatureUnitChanged(position: Int)
+  fun onTemperaturePrecisionChanged(position: Int)
+  fun onButtonAutoHideChanged(value: Boolean)
+  fun onChannelInfoChanged(value: Boolean)
+  fun onBottomMenuChanged(value: Boolean)
+  fun onBottomLabelsChanged(value: Boolean)
+  fun onUnavailableChannelsChanged(value: Boolean)
+  fun onOpeningPercentageChanged(position: Int)
+  fun onNightModeChanged(position: Int)
+  fun onLockScreenChanged(position: Int)
+  fun onBatteryWarningLevelChanged(value: String)
+  fun onLocationOrderClicked()
+  fun onAndroidAutoClicked()
+  fun onNfcClicked()
+  fun onPermissionClicked()
 }
 
 sealed class SettingsViewEvent : ViewEvent {
@@ -208,5 +223,19 @@ sealed class SettingsViewEvent : ViewEvent {
 }
 
 data class SettingsViewState(
-  val settingsItems: List<SettingItem> = emptyList()
+  val channelHeight: ChannelHeight = ChannelHeight.HEIGHT_100,
+  val temperatureUnit: TemperatureUnit = TemperatureUnit.CELSIUS,
+  val temperaturePrecision: Int = 1,
+  val buttonAutoHide: Boolean = false,
+  val showChannelInfo: Boolean = false,
+  val showBottomMenu: Boolean = false,
+  val showBottomLabels: Boolean = false,
+  val hideUnavailableChannels: Boolean = false,
+  val showOpeningPercentage: Boolean = true,
+  val nightMode: NightModeSetting = NightModeSetting.NEVER,
+  val lockScreenScope: LockScreenScope = LockScreenScope.NONE,
+  val batteryWarningLevel: String = "10",
+  val androidAutoSupported: Boolean = false,
+  val notificationsAllowed: Boolean = true,
+  val locationAllowed: Boolean = false
 ) : ViewState()

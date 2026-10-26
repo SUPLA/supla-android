@@ -467,6 +467,13 @@
   <string name="settings_notifications">Obvestila</string>
   <string name="settings_localization">Lokacija (točna)</string>
   <string name="settings_permissions">Dovoljenja</string>
+  <string name="settings_appearance">Videz</string>
+  <string name="settings_channel_list">Seznam kanalov</string>
+  <string name="settings_security">Varnost</string>
+  <string name="settings_integrations">Integracije</string>
+  <string name="settings_channel_height_compact">Kompaktno</string>
+  <string name="settings_channel_height_standard">Standardno</string>
+  <string name="settings_channel_height_large">Veliko</string>
 
   <string name="details_general">Splošno</string>
   <string name="details_schedule">Teden</string>
