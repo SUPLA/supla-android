@@ -1,4 +1,5 @@
 package org.supla.android.features.appsettings
+
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -18,22 +19,32 @@ package org.supla.android.features.appsettings
  */
 
 import androidx.compose.runtime.Composable
-import org.supla.android.R
-import org.supla.android.main.topbar.ManageTopBar
-import org.supla.android.main.topbar.TopBarState
-import org.supla.android.ui.views.LegacyFragmentScreen
-import org.supla.core.shared.infrastructure.LocalizedString
-import org.supla.core.shared.infrastructure.localizedString
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import org.supla.android.main.MainComposeNavigator
+import org.supla.android.main.MainRoute
+import org.supla.android.main.ViewModelHost
 
 @Composable
-fun SettingsScreen() {
-  ManageTopBarTitle(localizedString(R.string.settings))
-  LegacyFragmentScreen(fragmentClass = SettingsFragment::class.java)
+fun SettingsScreen(
+  navigator: MainComposeNavigator,
+  viewModel: SettingsViewModel = hiltViewModel()
+) {
+  ViewModelHost(
+    viewModel = viewModel,
+    eventHandler = { handleEvent(it, navigator) },
+    onResume = viewModel::loadSettings
+  ) {
+    viewModel.View(it)
+  }
 }
 
-@Composable
-private fun ManageTopBarTitle(title: LocalizedString) {
-  ManageTopBar(
-    state = TopBarState(title = title)
-  )
+private fun handleEvent(event: SettingsViewEvent, navigator: MainComposeNavigator) {
+  when (event) {
+    SettingsViewEvent.NavigateToLocalizationsOrdering -> navigator.navigateTo(MainRoute.LocationReorder)
+    SettingsViewEvent.NavigateToAndroidAuto -> navigator.navigateTo(MainRoute.AndroidAutoItems)
+    SettingsViewEvent.NavigateToNfc -> navigator.navigateTo(MainRoute.NfcTagList)
+    SettingsViewEvent.NavigateToSettings -> navigator.navigateToSystemSettings()
+    is SettingsViewEvent.NavigateToPinSetup -> navigator.navigateTo(MainRoute.PinSetup(event.lockScreenScope))
+    is SettingsViewEvent.NavigateToPinVerification -> navigator.navigateTo(MainRoute.Unlock(event.verificationAction))
+  }
 }

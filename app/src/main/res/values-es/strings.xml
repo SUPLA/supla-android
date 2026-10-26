@@ -457,6 +457,13 @@
   <string name="settings_notifications">Notificaciones</string>
   <string name="settings_localization">Ubicación (exacta)</string>
   <string name="settings_permissions">Permisos</string>
+  <string name="settings_appearance">Apariencia</string>
+  <string name="settings_channel_list">Lista de canales</string>
+  <string name="settings_security">Seguridad</string>
+  <string name="settings_integrations">Integraciones</string>
+  <string name="settings_channel_height_compact">Compacto</string>
+  <string name="settings_channel_height_standard">Estándar</string>
+  <string name="settings_channel_height_large">Grande</string>
 
   <string name="details_general">General</string>
   <string name="details_schedule">Semana</string>

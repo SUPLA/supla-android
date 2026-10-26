@@ -478,6 +478,13 @@
   <string name="notifications_inactive" translatable="false">𐄂</string>
   <string name="settings_localization">Localization (fine)</string>
   <string name="settings_permissions">Permissions</string>
+  <string name="settings_appearance">Appearance</string>
+  <string name="settings_channel_list">Channel list</string>
+  <string name="settings_security">Security</string>
+  <string name="settings_integrations">Integrations</string>
+  <string name="settings_channel_height_compact">Compact</string>
+  <string name="settings_channel_height_standard">Standard</string>
+  <string name="settings_channel_height_large">Large</string>
 
   <string name="details_general">General</string>
   <string name="details_schedule">Week</string>
