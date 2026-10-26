@@ -470,6 +470,13 @@
   <string name="settings_notifications">Meldingen</string>
   <string name="settings_localization">Locatie (exact)</string>
   <string name="settings_permissions">Bevoegdheden</string>
+  <string name="settings_appearance">Uiterlijk</string>
+  <string name="settings_channel_list">Kanalenlijst</string>
+  <string name="settings_security">Beveiliging</string>
+  <string name="settings_integrations">Integraties</string>
+  <string name="settings_channel_height_compact">Compact</string>
+  <string name="settings_channel_height_standard">Standaard</string>
+  <string name="settings_channel_height_large">Groot</string>
 
   <string name="details_general">Algemeen</string>
   <string name="details_schedule">Week</string>

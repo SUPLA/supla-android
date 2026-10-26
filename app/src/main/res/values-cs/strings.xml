@@ -449,6 +449,13 @@
   <string name="settings_notifications">Oznámení</string>
   <string name="settings_localization">Umístění (přesné)</string>
   <string name="settings_permissions">Oprávnění</string>
+  <string name="settings_appearance">Vzhled</string>
+  <string name="settings_channel_list">Seznam kanálů</string>
+  <string name="settings_security">Zabezpečení</string>
+  <string name="settings_integrations">Integrace</string>
+  <string name="settings_channel_height_compact">Kompaktní</string>
+  <string name="settings_channel_height_standard">Standardní</string>
+  <string name="settings_channel_height_large">Velké</string>
 
   <string name="details_general">Obecné</string>
   <string name="details_schedule">Týden</string>

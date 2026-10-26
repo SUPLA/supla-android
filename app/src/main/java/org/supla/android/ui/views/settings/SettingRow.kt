@@ -17,6 +17,7 @@ package org.supla.android.ui.views.settings
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,12 +32,17 @@ import androidx.compose.ui.unit.dp
 import org.supla.android.core.ui.theme.Distance
 
 @Composable
-fun SettingsColumnScope.SettingRow(modifier: Modifier = Modifier, content: @Composable RowScope.() -> Unit) {
+fun SettingsColumnScope.SettingRow(
+  modifier: Modifier = Modifier,
+  horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
+  content: @Composable RowScope.() -> Unit
+) {
   val bottomLineColor = MaterialTheme.colorScheme.background
   val startDistance = Distance.small
 
   Row(
     verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = horizontalArrangement,
     modifier = modifier
       .fillMaxWidth()
       .drawBehind {
