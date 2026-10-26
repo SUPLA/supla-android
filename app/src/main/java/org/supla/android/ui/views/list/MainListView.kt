@@ -47,7 +47,6 @@ import org.supla.android.ui.views.list.listitem.HeatpolThermostatListItemView
 import org.supla.android.ui.views.list.listitem.IconValueListItemView
 import org.supla.android.ui.views.list.listitem.LocationListItemView
 import org.supla.android.ui.views.list.listitem.SceneListItemView
-import org.supla.android.ui.views.list.listitem.ScheduleListItemView
 import org.supla.android.ui.views.list.listitem.ThermostatListItemView
 import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.infrastructure.localizedString
@@ -160,7 +159,6 @@ private fun MainListScope.ListView(
                 dragEnabled = !LocalTopBarController.current.searchFilterSet,
                 listScope = this@ListView
               )
-            is ListItem.Schedule -> ScheduleItemView(item = item, listScope = this@ListView)
           }
         }
       }
@@ -255,30 +253,6 @@ fun ReorderableCollectionItemScope.SceneItemView(
     rightButtonString = item.status.online.forTrue { localizedString(R.string.btn_execute) }
   ) {
     SceneListItemView(
-      data = item,
-      onItemClick = { listScope.onItemClick(item.remoteId) },
-      onTitleLongClick = { listScope.onTitleLongClick(item) }
-    )
-  }
-}
-
-@Composable
-fun ReorderableCollectionItemScope.ScheduleItemView(
-  item: ListItem.Schedule,
-  listScope: MainListScope
-) {
-  SlideableListItem(
-    objectId = item.remoteId,
-    isDragging = false,
-    dragEnabled = false,
-    onLeftButtonClick = { listScope.onLeftButtonClick(item.remoteId) },
-    onRightButtonClick = { listScope.onRightButtonClick(item.remoteId) },
-    onDragStarted = { listScope.onDragStarted(item.remoteId) },
-    onDragStopped = { listScope.onDragStopped(item.remoteId) },
-    leftButtonString = localizedString(R.string.channel_btn_off),
-    rightButtonString = localizedString(R.string.channel_btn_on)
-  ) {
-    ScheduleListItemView(
       data = item,
       onItemClick = { listScope.onItemClick(item.remoteId) },
       onTitleLongClick = { listScope.onTitleLongClick(item) }

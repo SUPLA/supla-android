@@ -54,7 +54,9 @@ import org.supla.android.ui.views.buttons.FloatingAddButton
 import org.supla.android.ui.views.list.components.ListItemIcon
 import org.supla.android.ui.views.list.components.ListItemProfile
 import org.supla.android.ui.views.list.components.ListItemTitle
+import org.supla.android.ui.views.settings.SettingBlock
 import org.supla.android.ui.views.settings.SettingCheckboxItem
+import org.supla.android.ui.views.settings.SettingsBlock
 import sh.calvin.reorderable.ReorderableCollectionItemScope
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
@@ -124,10 +126,13 @@ fun AndroidAutoItemsViewScope.View(viewState: AndroidAutoItemsViewState) {
 
 @Composable
 private fun AndroidAutoItemsViewScope.Settings(viewState: AndroidAutoItemsViewState) {
-  SettingCheckboxItem(
-    label = stringResource(R.string.android_auto_play_messages),
-    checked = viewState.playMessages
-  ) { onPlayMessagesChange(it) }
+  SettingBlock(modifier = Modifier.padding(vertical = Distance.tiny)) {
+    SettingCheckboxItem(
+      label = stringResource(R.string.android_auto_play_messages),
+      checked = viewState.playMessages,
+      onCheckedChanged = { onPlayMessagesChange(it) }
+    )
+  }
 }
 
 @Composable
