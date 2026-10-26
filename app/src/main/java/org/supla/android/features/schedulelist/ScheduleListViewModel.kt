@@ -75,6 +75,10 @@ class ScheduleListViewModel @Inject constructor(
       return
     }
 
+    updateState { state ->
+      state.copy(items = state.items?.map { if (it.remoteId == remoteId) it.copy(enabled = enabled) else it })
+    }
+
     viewModelScope.launch {
       updateState { it.copy(loading = true, loadingError = false) }
       try {
