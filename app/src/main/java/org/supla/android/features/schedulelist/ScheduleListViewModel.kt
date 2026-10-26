@@ -32,10 +32,10 @@ import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.captionchangedialog.CaptionChangeDialogState
 import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.dialogs.AuthorizationDialogState
-import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.cloudapi.AuthenticateCloudApiUseCase
 import org.supla.android.usecases.cloudapi.CloudApiAuthorizationException
 import org.supla.android.usecases.schedule.ScheduleDtoToListItemMapper
+import org.supla.android.usecases.schedule.ScheduleVo
 import org.supla.core.shared.infrastructure.localizedString
 import retrofit2.HttpException
 import timber.log.Timber
@@ -65,12 +65,8 @@ class ScheduleListViewModel @Inject constructor(
     observeSchedulesReloads()
   }
 
-  override fun onLeftButtonClick(remoteId: Int) {
-    updateScheduleEnabled(remoteId, enabled = false)
-  }
-
-  override fun onRightButtonClick(remoteId: Int) {
-    updateScheduleEnabled(remoteId, enabled = true)
+  override fun onEnableChanged(remoteId: Int, enabled: Boolean) {
+    updateScheduleEnabled(remoteId, enabled)
   }
 
   private fun updateScheduleEnabled(remoteId: Int, enabled: Boolean) {
@@ -94,19 +90,12 @@ class ScheduleListViewModel @Inject constructor(
     }
   }
 
-  override fun moveItems(from: Int, to: Int): Boolean = false
-  override fun onDragStarted(remoteId: Int) {}
-  override fun onDragStopped(remoteId: Int) {}
-  override fun onLocationClick(remoteId: Int) {}
-  override fun onItemClick(remoteId: Int) {}
-  override fun onTitleLongClick(item: ListItem) {
-    if (item !is ListItem.Schedule) return
-
-    scheduleIdForCaptionChange = item.remoteId
+  override fun onTitleLongClick(schedule: ScheduleVo) {
+    scheduleIdForCaptionChange = schedule.remoteId
     updateState {
       it.copy(
         captionChangeDialogState = CaptionChangeDialogState(
-          caption = item.userCaption,
+          caption = schedule.userCaption,
           label = localizedString(R.string.schedule_name),
           authorized = true
         )
@@ -162,10 +151,6 @@ class ScheduleListViewModel @Inject constructor(
       }
     }
   }
-
-  override fun onLocationLongClick(item: ListItem.LocationItem) {}
-  override fun onInfoClick(remoteId: Int) {}
-  override fun onIssueClick(message: String) {}
 
   override fun onStart() {
     schedulesReloadSubject.onNext(Unit)
@@ -246,7 +231,7 @@ class ScheduleListViewModel @Inject constructor(
     updateState {
       it.copy(
         authorizationDialogState = null,
-        loading = if (it.items == null) false else it.loading
+        loading = it.items != null && it.loading
       )
     }
   }
@@ -257,7 +242,7 @@ class ScheduleListViewModel @Inject constructor(
     updateState { it.copy(loading = true, loadingError = false) }
     try {
       val schedules = threading.io { cloudApiServiceProvider.provide().getSchedules() }
-      val items = schedules.mapNotNull { scheduleDtoToListItemMapper(it, profileId) }
+      val items = schedules.map { scheduleDtoToListItemMapper(it, profileId) }
       updateState { it.copy(items = items, loading = false) }
     } catch (error: Exception) {
       handleScheduleLoadingError(error)

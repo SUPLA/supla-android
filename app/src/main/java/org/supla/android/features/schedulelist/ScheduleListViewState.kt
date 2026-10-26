@@ -20,10 +20,10 @@ package org.supla.android.features.schedulelist
 import org.supla.android.features.captionchangedialog.CaptionChangeDialogState
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
-import org.supla.android.ui.lists.ListItem
+import org.supla.android.usecases.schedule.ScheduleVo
 
 data class ScheduleListViewState(
-  val items: List<ListItem>? = null,
+  val items: List<ScheduleVo>? = null,
   val loading: Boolean = true,
   val loadingError: Boolean = false,
   val captionChangeDialogState: CaptionChangeDialogState? = null,

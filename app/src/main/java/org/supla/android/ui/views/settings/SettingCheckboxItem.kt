@@ -17,17 +17,21 @@ package org.supla.android.ui.views.settings
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import org.supla.android.core.ui.theme.Distance
 import org.supla.android.ui.views.Switch
 
 @Composable
-fun SettingCheckboxItem(
+fun SettingsColumnScope.SettingCheckboxItem(
   label: String,
   checked: Boolean,
   modifier: Modifier = Modifier,
   description: String? = null,
+  onLabelLongClick: (() -> Unit)? = null,
   onCheckedChanged: (Boolean) -> Unit
 ) {
   SettingRow(modifier = modifier) {
@@ -35,13 +39,20 @@ fun SettingCheckboxItem(
       Column(
         modifier = Modifier.weight(1f)
       ) {
-        SettingLabel(label)
+        SettingLabel(
+          label = label,
+          modifier = Modifier
+            .combinedClickable(enabled = onLabelLongClick != null, onClick = {}, onLongClick = { onLabelLongClick?.invoke() })
+        )
         SettingDescription(description)
       }
     } else {
       SettingLabel(
         label = label,
-        modifier = Modifier.weight(1f)
+        modifier = Modifier
+          .weight(1f)
+          .combinedClickable(enabled = onLabelLongClick != null, onClick = {}, onLongClick = { onLabelLongClick?.invoke() })
+          .padding(vertical = Distance.tiny)
       )
     }
 
