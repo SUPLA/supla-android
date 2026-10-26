@@ -32,7 +32,7 @@ import org.supla.android.core.ui.theme.Distance
 import org.supla.android.ui.views.forms.TextField
 
 @Composable
-fun SettingTextFieldItem(
+fun SettingsColumnScope.SettingTextFieldItem(
   label: String,
   value: String,
   modifier: Modifier = Modifier,

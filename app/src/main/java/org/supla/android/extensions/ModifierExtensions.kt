@@ -23,6 +23,8 @@ import android.graphics.PorterDuffXfermode
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -43,6 +45,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
+import org.supla.android.core.ui.theme.Distance
 import org.supla.android.ui.views.buttons.supla.SuplaButtonShape
 
 private val shadowPath = Path()
@@ -277,4 +280,13 @@ fun Modifier.suplaCard(): Modifier {
   return this then Modifier
     .background(MaterialTheme.colorScheme.surface, shape)
     .border(1.dp, MaterialTheme.colorScheme.outline, shape)
+}
+
+@Composable
+fun Modifier.settingsSurface(): Modifier {
+  val shape = RoundedCornerShape(dimensionResource(id = R.dimen.radius_default))
+  return this then Modifier
+    .fillMaxWidth()
+    .padding(Distance.tiny)
+    .background(MaterialTheme.colorScheme.surface, shape)
 }

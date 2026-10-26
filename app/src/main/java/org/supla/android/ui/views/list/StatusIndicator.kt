@@ -55,13 +55,6 @@ sealed interface ListItemStatus {
     override val isGroup: Boolean = false
     override val online: Boolean = true
   }
-
-  data class Schedule(val enabled: Boolean) : ListItemStatus {
-    override val isGroup: Boolean = false
-    override val online: Boolean = enabled
-
-    val onlineState: ListOnlineState = if (enabled) ListOnlineState.ONLINE else ListOnlineState.OFFLINE
-  }
 }
 
 class StatusIndicator(
@@ -84,7 +77,6 @@ class StatusIndicator(
           modifier = modifier
         )
       ListItemStatus.Scene -> DotStatusView(onlineState = ListOnlineState.ONLINE, side, modifier)
-      is ListItemStatus.Schedule -> DotStatusView(onlineState = type.onlineState, side, modifier)
     }
   }
 
