@@ -17,16 +17,13 @@ package org.supla.android.data.source.remote.rest.schedule
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.google.gson.TypeAdapter
 import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
-import com.google.gson.stream.JsonReader
-import com.google.gson.stream.JsonToken
-import com.google.gson.stream.JsonWriter
 import org.supla.android.R
 import org.supla.android.lib.actions.SubjectType
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
+import java.time.LocalDateTime
 
 /** Schedule representation returned by SUPLA Cloud API v3. */
 data class ScheduleDto(
@@ -43,13 +40,26 @@ data class ScheduleDto(
   @SerializedName("retry") val retry: Boolean? = null,
   @SerializedName("mode") val mode: String? = null,
   @SerializedName("config") val config: List<ScheduleConfigDto>? = null,
-  @SerializedName("state") val state: ScheduleStateDto? = null
+  @SerializedName("state") val state: ScheduleStateDto? = null,
+  @SerializedName("closestExecutions") val closestExecutions: ScheduleClosestExecutionsDto? = null
 ) {
   val captionString: LocalizedString
     get() = caption
       ?.takeIf { it.isNotBlank() }
       ?.let { LocalizedString.Constant(it) } ?: localizedString(R.string.schedule_default_caption, id ?: 0)
 }
+
+data class ScheduleClosestExecutionsDto(
+  @SerializedName("past") val past: List<ScheduleClosestExecutionDto>? = null,
+  @SerializedName("future") val future: List<ScheduleClosestExecutionDto>? = null
+)
+
+data class ScheduleClosestExecutionDto(
+  @SerializedName("plannedTimestamp")
+  @JsonAdapter(IsoLocalDateTimeAdapter::class)
+  val plannedTimestamp: LocalDateTime? = null,
+  @SerializedName("failed") val failed: Boolean? = null
+)
 
 data class ScheduleSubjectDto(
   @SerializedName("id") val id: Int? = null,
@@ -140,34 +150,3 @@ data class ScheduleSubjectActionDto(
   @SerializedName("nameSlug") val nameSlug: String? = null,
   @SerializedName("caption") val caption: String? = null
 )
-
-class SubjectTypeAdapter : TypeAdapter<SubjectType>() {
-  override fun read(reader: JsonReader): SubjectType? = when (reader.peek()) {
-    JsonToken.NULL -> {
-      reader.nextNull()
-      null
-    }
-    JsonToken.NUMBER -> runCatching { SubjectType.from(reader.nextInt()) }.getOrNull()
-    JsonToken.STRING -> parse(reader.nextString())
-    else -> {
-      reader.skipValue()
-      null
-    }
-  }
-
-  override fun write(writer: JsonWriter, value: SubjectType?) {
-    when (value) {
-      null -> writer.nullValue()
-      SubjectType.CHANNEL -> writer.value("channel")
-      SubjectType.GROUP -> writer.value("channelGroup")
-      SubjectType.SCENE -> writer.value("scene")
-    }
-  }
-
-  private fun parse(value: String): SubjectType? = when (value) {
-    "channel" -> SubjectType.CHANNEL
-    "channelGroup" -> SubjectType.GROUP
-    "scene" -> SubjectType.SCENE
-    else -> null
-  }
-}
