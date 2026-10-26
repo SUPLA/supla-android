@@ -18,54 +18,50 @@ package org.supla.android.features.schedulelist
  */
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.pullToRefresh
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import org.supla.android.R
-import org.supla.android.core.storage.ApplicationPreferences
-import org.supla.android.core.storage.LocalApplicationPreferences
+import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.captionchangedialog.CaptionChangeDialogScope
 import org.supla.android.features.captionchangedialog.CaptionChangeDialogState
 import org.supla.android.features.captionchangedialog.Dialog
 import org.supla.android.images.ImageId
-import org.supla.android.main.scaffold.LocalScaffoldPadding
 import org.supla.android.main.scaffold.screenPaddings
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.dialogs.AuthorizationDialog
 import org.supla.android.ui.dialogs.AuthorizationDialogScope
 import org.supla.android.ui.dialogs.AuthorizationDialogState
-import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.views.ErrorContent
-import org.supla.android.ui.views.list.Content
-import org.supla.android.ui.views.list.ListItemStatus
-import org.supla.android.ui.views.list.MainListScope
+import org.supla.android.ui.views.settings.SettingCheckboxItem
+import org.supla.android.ui.views.settings.SettingsBlock
+import org.supla.android.usecases.schedule.ScheduleVo
 import org.supla.core.shared.infrastructure.LocalizedString
 
-interface ScheduleListScope : MainListScope, AuthorizationDialogScope, CaptionChangeDialogScope {
+interface ScheduleListScope : AuthorizationDialogScope, CaptionChangeDialogScope {
+  fun onEnableChanged(remoteId: Int, enabled: Boolean)
+  fun onTitleLongClick(schedule: ScheduleVo)
   fun onTryAgain()
   fun onRefresh()
 }
 
 @Composable
-fun ScheduleListScope.View(
-  viewState: ScheduleListViewState,
-  listState: LazyListState = rememberLazyListState()
-) {
+fun ScheduleListScope.View(viewState: ScheduleListViewState) {
   val pullToRefreshState = rememberPullToRefreshState()
 
-  Box(modifier = Modifier.screenPaddings().fillMaxSize()) {
+  Box(
+    modifier = Modifier
+      .screenPaddings()
+      .fillMaxSize()
+  ) {
     Box(
       modifier = Modifier
         .fillMaxSize()
@@ -86,12 +82,7 @@ fun ScheduleListScope.View(
           onTryAgainClick = ::onTryAgain
         )
       } else {
-        CompositionLocalProvider(LocalScaffoldPadding provides PaddingValues(0.dp)) {
-          Content(
-            items = viewState.items.orEmpty(),
-            listState = listState
-          )
-        }
+        viewState.items?.let { List(it) }
       }
 
       PullToRefreshDefaults.Indicator(
@@ -107,37 +98,41 @@ fun ScheduleListScope.View(
   }
 }
 
+@Composable
+private fun ScheduleListScope.List(items: List<ScheduleVo>) {
+  SettingsBlock(
+    items = items,
+    modifier = Modifier.verticalScroll(state = rememberScrollState())
+  ) { item ->
+    SettingCheckboxItem(
+      label = item.caption(),
+      checked = item.enabled,
+      onLabelLongClick = { onTitleLongClick(item) },
+      onCheckedChanged = { onEnableChanged(item.remoteId, it) }
+    )
+  }
+}
+
 @SuplaPreview
 @Composable
 private fun ScheduleListViewPreview() {
   SuplaTheme {
-    CompositionLocalProvider(LocalApplicationPreferences provides ApplicationPreferences(LocalContext.current)) {
-      PreviewScheduleListScope.View(
-        ScheduleListViewState(
-          items = listOf(
-            sampleSchedule(1, "Living room lights"),
-            sampleSchedule(2, "Close the blinds"),
-            sampleSchedule(3, "Heating")
-          ),
-          loading = false
-        )
+    PreviewScheduleListScope.View(
+      ScheduleListViewState(
+        items = listOf(
+          sampleSchedule(1, "Living room lights", false),
+          sampleSchedule(2, "Close the blinds"),
+          sampleSchedule(3, "Heating", false)
+        ),
+        loading = false
       )
-    }
+    )
   }
 }
 
 private object PreviewScheduleListScope : ScheduleListScope {
-  override fun onLeftButtonClick(remoteId: Int) {}
-  override fun onRightButtonClick(remoteId: Int) {}
-  override fun moveItems(from: Int, to: Int): Boolean = false
-  override fun onDragStarted(remoteId: Int) {}
-  override fun onDragStopped(remoteId: Int) {}
-  override fun onLocationClick(remoteId: Int) {}
-  override fun onItemClick(remoteId: Int) {}
-  override fun onTitleLongClick(item: ListItem) {}
-  override fun onLocationLongClick(item: ListItem.LocationItem) {}
-  override fun onInfoClick(remoteId: Int) {}
-  override fun onIssueClick(message: String) {}
+  override fun onEnableChanged(remoteId: Int, enabled: Boolean) {}
+  override fun onTitleLongClick(schedule: ScheduleVo) {}
   override fun onAuthorizationDismiss() {}
   override fun onAuthorizationCancel() {}
   override fun onAuthorize(userName: String, password: String) {}
@@ -149,11 +144,11 @@ private object PreviewScheduleListScope : ScheduleListScope {
   override fun onCaptionChangeConfirmed() {}
 }
 
-private fun sampleSchedule(id: Int, caption: String) = ListItem.Schedule(
+private fun sampleSchedule(id: Int, caption: String, enabled: Boolean = true) = ScheduleVo(
   remoteId = id,
   profileId = 1,
   userCaption = caption,
   caption = LocalizedString.Constant(caption),
-  status = ListItemStatus.Schedule(enabled = true),
-  icon = ImageId(R.drawable.fnc_gpm_5)
+  icon = ImageId(R.drawable.fnc_gpm_5),
+  enabled = enabled
 )
