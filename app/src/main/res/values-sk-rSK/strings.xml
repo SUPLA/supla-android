@@ -470,6 +470,13 @@
   <string name="settings_notifications">Upozornenia</string>
   <string name="settings_localization">Lokalizácia (presná)</string>
   <string name="settings_permissions">Oprávnenia</string>
+  <string name="settings_appearance">Vzhľad</string>
+  <string name="settings_channel_list">Zoznam kanálov</string>
+  <string name="settings_security">Zabezpečenie</string>
+  <string name="settings_integrations">Integrácie</string>
+  <string name="settings_channel_height_compact">Kompaktný</string>
+  <string name="settings_channel_height_standard">Štandardný</string>
+  <string name="settings_channel_height_large">Veľký</string>
 
   <string name="details_general">Všeobecné</string>
   <string name="details_schedule">Týždeň</string>

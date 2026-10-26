@@ -458,6 +458,13 @@
   <string name="settings_notifications">Bildirişlər</string>
   <string name="settings_localization">Yerləşdirmə (dəqiq)</string>
   <string name="settings_permissions">İcazələr</string>
+  <string name="settings_appearance">Görünüş</string>
+  <string name="settings_channel_list">Kanal siyahısı</string>
+  <string name="settings_security">Təhlükəsizlik</string>
+  <string name="settings_integrations">İnteqrasiyalar</string>
+  <string name="settings_channel_height_compact">Yığcam</string>
+  <string name="settings_channel_height_standard">Standart</string>
+  <string name="settings_channel_height_large">Böyük</string>
 
   <string name="details_general">Ümumi</string>
   <string name="details_schedule">Həftə</string>

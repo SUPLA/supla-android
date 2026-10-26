@@ -443,6 +443,13 @@
   <string name="settings_notifications">Сповіщення</string>
   <string name="settings_localization">Місцезнаходження (точне)</string>
   <string name="settings_permissions">Права</string>
+  <string name="settings_appearance">Вигляд</string>
+  <string name="settings_channel_list">Список каналів</string>
+  <string name="settings_security">Безпека</string>
+  <string name="settings_integrations">Інтеграції</string>
+  <string name="settings_channel_height_compact">Компактний</string>
+  <string name="settings_channel_height_standard">Стандартний</string>
+  <string name="settings_channel_height_large">Великий</string>
 
   <string name="details_general">Загальні</string>
   <string name="details_schedule">Тиждень</string>

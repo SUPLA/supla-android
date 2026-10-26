@@ -17,8 +17,6 @@ package org.supla.android.ui.views
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.content.Context
-import android.util.AttributeSet
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,13 +34,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.AbstractComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -60,31 +54,6 @@ interface SegmentedComponentItem {
 
 enum class BoxSize {
   Custom, Identical
-}
-
-class SegmentedComponent @JvmOverloads constructor(
-  context: Context,
-  attrs: AttributeSet? = null,
-  defStyleAttr: Int = 0
-) : AbstractComposeView(context, attrs, defStyleAttr) {
-
-  var selectedItemListener: (TimerTargetAction) -> Unit = { }
-
-  var items by mutableStateOf(listOf<TimerTargetAction>())
-  var activeItem by mutableStateOf<TimerTargetAction?>(null)
-  var disabled by mutableStateOf(false)
-
-  @Composable
-  override fun Content() {
-    SuplaTheme {
-      SegmentedComponent(items, activeItem = activeItem, enabled = !disabled) {
-        if (disabled.not()) {
-          activeItem = it
-          selectedItemListener(it)
-        }
-      }
-    }
-  }
 }
 
 @Composable

@@ -37,6 +37,7 @@ fun SettingsColumnScope.SettingTextFieldItem(
   value: String,
   modifier: Modifier = Modifier,
   description: String? = null,
+  prefix: String? = null,
   unit: String? = null,
   incorrectValue: Boolean = false,
   onValueChanged: (String) -> Unit
@@ -60,6 +61,7 @@ fun SettingsColumnScope.SettingTextFieldItem(
       value = value,
       onValueChange = onValueChanged,
       textStyle = MaterialTheme.typography.bodyMedium.copy(textAlign = TextAlign.End),
+      prefix = prefix?.let { { UnitText(it) } },
       suffix = unit?.let { { UnitText(it) } },
       contentPadding = PaddingValues(horizontal = Distance.small, vertical = Distance.tiny),
       modifier = Modifier.width(80.dp),
