@@ -24,6 +24,7 @@ import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.SceneRepository
+import org.supla.android.data.source.remote.rest.schedule.ScheduleClosestExecutionDto
 import org.supla.android.data.source.remote.rest.schedule.ScheduleDto
 import org.supla.android.data.source.remote.rest.schedule.ScheduleSubjectDto
 import org.supla.android.images.ImageId
@@ -32,6 +33,7 @@ import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.infrastructure.LocalizedString
+import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -40,20 +42,20 @@ data class ScheduleVo(
   val profileId: Long,
   val userCaption: String,
   val caption: LocalizedString,
-  val icon: ImageId,
-  val enabled: Boolean
+  val enabled: Boolean,
+  val lastExecution: ScheduleExecutionVo?,
+  val nextExecution: ScheduleExecutionVo?
+)
+
+data class ScheduleExecutionVo(
+  val plannedTimestamp: LocalDateTime?,
+  val failed: Boolean?
 )
 
 @Singleton
-class ScheduleDtoToListItemMapper @Inject constructor(
-  private val channelRepository: ChannelRepository,
-  private val channelGroupRepository: ChannelGroupRepository,
-  private val sceneRepository: SceneRepository,
-  private val getChannelIconUseCase: GetChannelIconUseCase,
-  private val getSceneIconUseCase: GetSceneIconUseCase
-) {
+class ScheduleDtoToListItemMapper @Inject constructor() {
 
-  suspend operator fun invoke(schedule: ScheduleDto, profileId: Long): ScheduleVo {
+  operator fun invoke(schedule: ScheduleDto, profileId: Long): ScheduleVo {
     val remoteId = schedule.id ?: 0
 
     return ScheduleVo(
@@ -61,71 +63,15 @@ class ScheduleDtoToListItemMapper @Inject constructor(
       profileId = profileId,
       userCaption = schedule.caption ?: "",
       caption = schedule.captionString,
-      icon = resolveIcon(schedule, profileId),
-      enabled = schedule.enabled == true
+      enabled = schedule.enabled == true,
+      lastExecution = schedule.closestExecutions?.past?.lastOrNull()?.toVo(),
+      nextExecution = schedule.closestExecutions?.future?.firstOrNull()?.toVo()
     )
   }
 
-  private suspend fun resolveIcon(schedule: ScheduleDto, profileId: Long): ImageId {
-    val subjectType = schedule.subjectType ?: return unknownIcon()
-    val subjectIcon = schedule.subject?.let { resolveIconFromDto(subjectType, it, profileId) }
-    if (subjectIcon != null) return subjectIcon
-
-    return resolveIconFromLocalData(subjectType, schedule.subjectId, profileId) ?: unknownIcon()
-  }
-
-  private fun resolveIconFromDto(
-    subjectType: SubjectType,
-    subject: ScheduleSubjectDto,
-    profileId: Long
-  ): ImageId? {
-    return when (subjectType) {
-      SubjectType.SCENE -> {
-        if (subject.altIcon == null && subject.userIconId == null) {
-          null
-        } else {
-          getSceneIconUseCase(subject.altIcon, subject.userIconId, profileId)
-        }
-      }
-      SubjectType.GROUP, SubjectType.CHANNEL -> {
-        val functionId = subject.function?.id ?: subject.functionId ?: return null
-        val function = SuplaFunction.from(functionId)
-        if (function == SuplaFunction.UNKNOWN) {
-          null
-        } else {
-          val icon = getChannelIconUseCase.forCloudSubject(function, subject.altIcon, subject.userIconId, profileId)
-          icon.takeUnless { it.id == R.drawable.ic_unknown_channel }
-        }
-      }
-    }
-  }
-
-  private suspend fun resolveIconFromLocalData(
-    subjectType: SubjectType,
-    subjectId: Int?,
-    profileId: Long
-  ): ImageId? {
-    subjectId ?: return null
-
-    return when (subjectType) {
-      SubjectType.SCENE -> {
-        val scene = sceneRepository.findProfileScenes(profileId).await()
-          .firstOrNull { it.remoteId == subjectId }
-          ?.sceneEntity
-        scene?.let(getSceneIconUseCase::invoke)
-      }
-      SubjectType.GROUP -> {
-        val group = channelGroupRepository.findProfileGroups(profileId).await()
-          .firstOrNull { it.remoteId == subjectId }
-          ?.channelGroupEntity
-        group?.let { getChannelIconUseCase.forState(it, ChannelState.active(it.function)) }
-      }
-      SubjectType.CHANNEL -> {
-        val channel = channelRepository.findByRemoteId(profileId, subjectId).awaitSingleOrNull()
-        channel?.let { getChannelIconUseCase.forState(it, ChannelState.active(it.function)) }
-      }
-    }
-  }
-
-  private fun unknownIcon() = ImageId(R.drawable.ic_unknown_channel)
+  private fun ScheduleClosestExecutionDto.toVo() =
+    ScheduleExecutionVo(
+      plannedTimestamp = plannedTimestamp,
+      failed = failed
+    )
 }
