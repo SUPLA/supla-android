@@ -48,8 +48,9 @@ import org.supla.android.data.source.local.entity.ChannelStateEntity
 import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.forms.TextField
 import org.supla.android.ui.views.forms.TextFieldLabel
+import org.supla.android.ui.views.settings.SettingBlock
 import org.supla.android.ui.views.settings.SettingCheckboxItem
-import org.supla.android.ui.views.settings.SettingsList
+import org.supla.android.ui.views.settings.SettingsBlock
 import org.supla.android.usecases.developerinfo.TableDetail
 
 data class DeveloperInfoViewState(
@@ -94,22 +95,26 @@ fun DeveloperInfoScope.View(
       .verticalScroll(rememberScrollState())
   ) {
     HeaderLarge(text = stringResource(R.string.developer_info_settings))
-    SettingsList {
-      SettingCheckboxItem(
-        label = stringResource(R.string.developer_option),
-        checked = viewState.developerOptions
-      ) { setDeveloperOptionEnabled(it) }
-      SettingCheckboxItem(
-        label = stringResource(R.string.developer_info_screen_orientation),
-        checked = viewState.rotationEnabled
-      ) { setRotationEnabled(it) }
+    SettingsBlock {
+      item {
+        SettingCheckboxItem(
+          label = stringResource(R.string.developer_option),
+          checked = viewState.developerOptions,
+        ) { setDeveloperOptionEnabled(it) }
+      }
+      item {
+        SettingCheckboxItem(
+          label = stringResource(R.string.developer_info_screen_orientation),
+          checked = viewState.rotationEnabled
+        ) { setRotationEnabled(it) }
+      }
     }
 
     HeaderLarge(
       text = "Logging",
       modifier = Modifier.padding(top = Distance.small)
     )
-    SettingsList {
+    SettingBlock {
       SettingCheckboxItem(
         label = "Debug logging",
         checked = viewState.debugLoggingEnabled,

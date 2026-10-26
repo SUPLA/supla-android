@@ -37,9 +37,11 @@ import org.supla.android.data.model.settings.ListValueAggregation
 import org.supla.android.data.model.settings.eletricitymeter.ElectricityMeterBalanceType
 import org.supla.android.data.model.settings.eletricitymeter.ElectricityMeterMeasurementType
 import org.supla.android.tools.SuplaPreview
+import org.supla.android.ui.views.settings.SettingBlock
 import org.supla.android.ui.views.settings.SettingRow
+import org.supla.android.ui.views.settings.SettingsBlock
+import org.supla.android.ui.views.settings.SettingsColumnScope
 import org.supla.android.ui.views.settings.SettingsHeader
-import org.supla.android.ui.views.settings.SettingsList
 import org.supla.android.ui.views.spinner.SpinnerItem
 import org.supla.android.ui.views.spinner.TextSpinner
 import org.supla.core.shared.infrastructure.LocalizedString
@@ -71,7 +73,7 @@ fun ElectricityMeterSettingsScope.View(
   ) {
     SettingsHeader(stringResource(id = R.string.details_settings_title, state.channelName(LocalContext.current)))
     state.currentMonthBalancing?.let { balancingOptions ->
-      SettingsList {
+      SettingBlock {
         Selector(options = balancingOptions, onOptionSelected = { onCurrentMonthBalancingChanged(it) })
       }
     }
@@ -80,33 +82,39 @@ fun ElectricityMeterSettingsScope.View(
       stringResource(R.string.details_em_on_list),
       modifier = Modifier.padding(top = Distance.default)
     )
-    SettingsList {
+    SettingsBlock {
       state.metricOnList?.let { options ->
-        SettingRow {
-          TextSpinner(
-            options = options,
-            onOptionSelected = { onMetricOnListChange(it) },
-            labelTextColor = MaterialTheme.colorScheme.onSurfaceVariant
-          )
-        }
-
-        state.metricOnListAggregation?.let { options ->
+        item {
           SettingRow {
             TextSpinner(
               options = options,
-              onOptionSelected = { onMetricOnListAggregationChanged(it) },
+              onOptionSelected = { onMetricOnListChange(it) },
               labelTextColor = MaterialTheme.colorScheme.onSurfaceVariant
             )
           }
         }
 
+        state.metricOnListAggregation?.let { options ->
+          item {
+            SettingRow {
+              TextSpinner(
+                options = options,
+                onOptionSelected = { onMetricOnListAggregationChanged(it) },
+                labelTextColor = MaterialTheme.colorScheme.onSurfaceVariant
+              )
+            }
+          }
+        }
+
         state.metricOnListBalancing?.let { options ->
-          SettingRow {
-            TextSpinner(
-              options = options,
-              onOptionSelected = { onMetricOnListBalancingChanged(it) },
-              labelTextColor = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+          item {
+            SettingRow {
+              TextSpinner(
+                options = options,
+                onOptionSelected = { onMetricOnListBalancingChanged(it) },
+                labelTextColor = MaterialTheme.colorScheme.onSurfaceVariant
+              )
+            }
           }
         }
       }
@@ -115,7 +123,7 @@ fun ElectricityMeterSettingsScope.View(
 }
 
 @Composable
-private fun <T : SpinnerItem> Selector(options: SingleSelectionList<T>, onOptionSelected: (T) -> Unit) =
+private fun <T : SpinnerItem> SettingsColumnScope.Selector(options: SingleSelectionList<T>, onOptionSelected: (T) -> Unit) =
   SettingRow {
     TextSpinner(options = options, onOptionSelected = onOptionSelected, labelTextColor = MaterialTheme.colorScheme.onSurfaceVariant)
   }
