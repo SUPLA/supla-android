@@ -28,13 +28,21 @@ import org.supla.android.data.source.remote.rest.schedule.ScheduleDto
 import org.supla.android.data.source.remote.rest.schedule.ScheduleSubjectDto
 import org.supla.android.images.ImageId
 import org.supla.android.lib.actions.SubjectType
-import org.supla.android.ui.lists.ListItem
-import org.supla.android.ui.views.list.ListItemStatus
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.infrastructure.LocalizedString
 import javax.inject.Inject
 import javax.inject.Singleton
+
+data class ScheduleVo(
+  val remoteId: Int,
+  val profileId: Long,
+  val userCaption: String,
+  val caption: LocalizedString,
+  val icon: ImageId,
+  val enabled: Boolean
+)
 
 @Singleton
 class ScheduleDtoToListItemMapper @Inject constructor(
@@ -45,16 +53,16 @@ class ScheduleDtoToListItemMapper @Inject constructor(
   private val getSceneIconUseCase: GetSceneIconUseCase
 ) {
 
-  suspend operator fun invoke(schedule: ScheduleDto, profileId: Long): ListItem.Schedule {
+  suspend operator fun invoke(schedule: ScheduleDto, profileId: Long): ScheduleVo {
     val remoteId = schedule.id ?: 0
 
-    return ListItem.Schedule(
+    return ScheduleVo(
       remoteId = remoteId,
       profileId = profileId,
       userCaption = schedule.caption ?: "",
       caption = schedule.captionString,
-      status = ListItemStatus.Schedule(enabled = schedule.enabled == true),
-      icon = resolveIcon(schedule, profileId)
+      icon = resolveIcon(schedule, profileId),
+      enabled = schedule.enabled == true
     )
   }
 

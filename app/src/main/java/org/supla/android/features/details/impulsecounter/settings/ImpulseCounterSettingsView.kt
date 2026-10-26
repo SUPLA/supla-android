@@ -31,9 +31,9 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.model.general.SingleSelectionList
 import org.supla.android.data.model.settings.ListValueAggregation
 import org.supla.android.tools.SuplaPreview
+import org.supla.android.ui.views.settings.SettingBlock
 import org.supla.android.ui.views.settings.SettingRow
 import org.supla.android.ui.views.settings.SettingsHeader
-import org.supla.android.ui.views.settings.SettingsList
 import org.supla.android.ui.views.spinner.TextSpinner
 import org.supla.core.shared.infrastructure.LocalizedString
 
@@ -52,7 +52,7 @@ fun ImpulseCounterSettingsViewScope.View(
       .fillMaxWidth()
   ) {
     SettingsHeader(state.title())
-    SettingsList {
+    SettingBlock {
       SettingRow {
         TextSpinner(options = state.listValueAggregationOptions, onOptionSelected = { onListValueChanged(it) })
       }
