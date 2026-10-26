@@ -761,6 +761,8 @@
   <string name="schedules_list_title">Ütemezések</string>
   <string name="schedule_name">Ütemezés neve</string>
   <string name="schedule_default_caption">Ütemezés ID%1$s</string>
+  <string name="schedule_last_execution">Utolsó végrehajtás: %1$s</string>
+  <string name="schedule_next_execution">Következő végrehajtás: %1$s</string>
   <string name="schedules_login_required">Bejelentkezés szükséges</string>
   <string name="nfc_list_add">NFC-címke hozzáadása</string>
   <string name="edit_nfc_tag_name">Címke neve</string>

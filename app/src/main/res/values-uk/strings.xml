@@ -741,6 +741,8 @@
   <string name="schedules_list_title">Розклади</string>
   <string name="schedule_name">Назва розкладу</string>
   <string name="schedule_default_caption">Розклад ID%1$s</string>
+  <string name="schedule_last_execution">Останнє виконання: %1$s</string>
+  <string name="schedule_next_execution">Наступне виконання: %1$s</string>
   <string name="schedules_login_required">Потрібно увійти</string>
   <string name="nfc_list_add">Додати NFC-мітку</string>
   <string name="edit_nfc_tag_name">Назва мітки</string>
