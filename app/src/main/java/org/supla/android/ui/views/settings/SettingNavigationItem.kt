@@ -19,6 +19,7 @@ package org.supla.android.ui.views.settings
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -32,6 +33,7 @@ import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.tools.SuplaPreview
+import org.supla.android.ui.views.Image
 
 @Composable
 fun SettingsColumnScope.SettingNavigationItem(
@@ -54,12 +56,13 @@ fun SettingsColumnScope.SettingNavigationItem(
     }
 
     SettingLabel(label, modifier = Modifier.weight(1f))
-    Text(
-      text = "›",
-      color = MaterialTheme.colorScheme.primary,
-      fontSize = 28.sp,
-      lineHeight = 28.sp,
-      modifier = Modifier.padding(start = dimensionResource(R.dimen.distance_tiny))
+
+    Image(
+      drawableId = R.drawable.ic_arrow_right,
+      modifier = Modifier
+        .padding(vertical = Distance.tiny)
+        .padding(start = Distance.small)
+        .size(dimensionResource(R.dimen.icon_small_size))
     )
   }
 }
