@@ -1,4 +1,4 @@
-package org.supla.android.data.source.remote.channel
+package org.supla.core.shared.data.model.channel
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -52,7 +52,8 @@ enum class SuplaChannelFlag(val rawValue: Long) {
   RELAY_MODE_START_SUPPORTED(0x200000000),
   RELAY_MODE_FORCED_SUPPORTED(0x400000000),
   RELAY_MODE_AUTOMATIC_SUPPORTED(0x800000000),
-  RELAY_MODE_NOT_SET_SUPPORTED(0x1000000000);
+  RELAY_MODE_NOT_SET_SUPPORTED(0x1000000000),
+  BUTTON_TEMPORARY_UNLOCK_SUPPORTED(0x2000000000);
 
   infix fun inside(flags: Long): Boolean = (flags and rawValue) > 0L
 
@@ -61,7 +62,7 @@ enum class SuplaChannelFlag(val rawValue: Long) {
   companion object {
     fun from(value: Long): List<SuplaChannelFlag> =
       mutableListOf<SuplaChannelFlag>().apply {
-        SuplaChannelFlag.entries.forEach {
+        entries.forEach {
           if (it.rawValue.and(value) > 0) {
             add(it)
           }

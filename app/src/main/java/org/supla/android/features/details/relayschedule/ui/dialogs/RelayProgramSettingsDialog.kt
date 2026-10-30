@@ -36,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
+import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.source.remote.hvac.SuplaRelayMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
@@ -152,18 +153,10 @@ private fun DurationControlRow(
   Label(
     text = headerText,
     color = if (disabled) MaterialTheme.colorScheme.outline else colorResource(id = R.color.on_surface_variant),
-    modifier = Modifier.padding(
-      start = dimensionResource(id = R.dimen.distance_default) + 12.dp,
-      top = dimensionResource(id = R.dimen.distance_default),
-      end = dimensionResource(id = R.dimen.distance_default) + 12.dp
-    )
+    modifier = Modifier.padding(start = Distance.default + 12.dp, top = Distance.default, end = Distance.default + 12.dp)
   )
   Row(
-    modifier = Modifier.padding(
-      start = dimensionResource(id = R.dimen.distance_default),
-      top = dimensionResource(id = R.dimen.distance_tiny),
-      end = dimensionResource(id = R.dimen.distance_default)
-    ),
+    modifier = Modifier.padding(start = Distance.default, top = Distance.tiny, end = Distance.default),
     horizontalArrangement = Arrangement.spacedBy(8.dp),
     verticalAlignment = Alignment.CenterVertically
   ) {

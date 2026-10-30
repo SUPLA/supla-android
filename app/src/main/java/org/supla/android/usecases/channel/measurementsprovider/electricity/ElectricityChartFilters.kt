@@ -24,12 +24,12 @@ import org.supla.android.R
 import org.supla.android.data.model.chart.ChartDataSpec
 import org.supla.android.data.model.chart.ChartState
 import org.supla.android.data.model.chart.ElectricityChartState
-import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 import org.supla.android.data.source.remote.channel.suplaElectricityMeterMeasuredTypes
 import org.supla.android.features.details.detailbase.history.ui.CheckboxItem
 import org.supla.android.features.details.electricitymeterdetail.history.ElectricityMeterChartType
 import org.supla.android.lib.SuplaChannelElectricityMeterValue
+import org.supla.core.shared.data.model.channel.SuplaChannelFlag
 import org.supla.core.shared.data.model.rest.channel.ElectricityMeterConfigDto
 import org.supla.core.shared.extensions.forTrue
 

@@ -175,7 +175,8 @@ class GetChannelStateUseCase @Inject constructor(
       SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
       SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
       SuplaFunction.GENERAL_PURPOSE_MEASUREMENT,
-      SuplaFunction.GENERAL_PURPOSE_METER -> ChannelState.Default(ChannelState.Value.NOT_USED)
+      SuplaFunction.GENERAL_PURPOSE_METER,
+      SuplaFunction.ACTION_TRIGGER -> ChannelState.Default(ChannelState.Value.NOT_USED)
     }
   }
 
@@ -287,7 +288,8 @@ class GetChannelStateUseCase @Inject constructor(
         SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
         SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
         SuplaFunction.GENERAL_PURPOSE_MEASUREMENT,
-        SuplaFunction.GENERAL_PURPOSE_METER -> ChannelState.Default(ChannelState.Value.NOT_USED)
+        SuplaFunction.GENERAL_PURPOSE_METER,
+        SuplaFunction.ACTION_TRIGGER -> ChannelState.Default(ChannelState.Value.NOT_USED)
       }
     }
 
@@ -395,7 +397,8 @@ class GetChannelStateUseCase @Inject constructor(
         SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
         SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
         SuplaFunction.GENERAL_PURPOSE_MEASUREMENT,
-        SuplaFunction.GENERAL_PURPOSE_METER -> ChannelState.Default(ChannelState.Value.NOT_USED)
+        SuplaFunction.GENERAL_PURPOSE_METER,
+        SuplaFunction.ACTION_TRIGGER -> ChannelState.Default(ChannelState.Value.NOT_USED)
       }
     }
   }

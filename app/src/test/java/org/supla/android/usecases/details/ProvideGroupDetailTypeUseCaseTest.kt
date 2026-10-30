@@ -149,6 +149,11 @@ class ProvideGroupDetailTypeUseCaseTest {
   }
 
   @Test
+  fun `should not provide detail for action trigger group`() {
+    testDetailType(SuplaFunction.ACTION_TRIGGER, null)
+  }
+
+  @Test
   fun `should not provide detail for unsupported channel function`() {
     testDetailType(SuplaFunction.DEPTH_SENSOR, null)
   }

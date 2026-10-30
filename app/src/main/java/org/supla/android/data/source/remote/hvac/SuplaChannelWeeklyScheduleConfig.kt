@@ -37,7 +37,8 @@ data class SuplaWeeklyScheduleProgram( /* aka TWeeklyScheduleProgram */
   val relayMode: SuplaRelayMode? = null,
   val relayModeDurationS: Int? = null,
   val relayOppositeModeDurationS: Int? = null,
-  val buttonMode: SuplaButtonMode? = null
+  val buttonMode: SuplaButtonMode? = null,
+  val buttonTemporaryUnlockDurationS: Int? = null
 ) {
   companion object
 }

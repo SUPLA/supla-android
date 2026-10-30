@@ -980,6 +980,13 @@
   <string name="general_clear_search">Clear search</string>
   <string name="general_open_drawer">Open menu</string>
   <string name="general_back">Back</string>
+  <string name="general_lock">lock</string>
+  <string name="general_unlock">unlock</string>
+  <string name="general_locked">locked</string>
+  <string name="action_trigger_schedule_temporary_unlock_duration">Temporary unlock duration</string>
+  <string name="general_unlocked">unlocked</string>
+  <string name="at_allow_temporary_unlock">Allow temporary unlock</string>
+  <string name="at_locked_temporary_unlock_allowed">Locked with temporary unlock allowed</string>
   <string name="wizard_result_certificate_untrusted">The device certificate is not trusted. Make sure you are connecting to the right device and that its software is up to date.</string>
   <string name="wizard_result_certificate_expired">The device certificate has expired. Update the device software or contact support. Also check that the date and time on your phone are correct.</string>
   <string name="wizard_result_certificate_not_yet_valid">The device certificate is not valid yet. Check the date and time on your phone and device, then try again.</string>
@@ -991,6 +998,7 @@
   <string name="channel_caption_smoke_sensor">Smoke sensor</string>
   <string name="channel_caption_carbon_monoxide_sensor">Carbon monoxide sensor</string>
   <string name="channel_caption_gas_sensor">Gas sensor</string>
+  <string name="channel_caption_action_trigger">Action trigger</string>
   <string name="schedule_program_default">Default</string>
   <string name="schedule_program_turn_on_seconds">Turn on %1$ds</string>
   <string name="schedule_program_turn_off_seconds">Turn off %1$ds</string>

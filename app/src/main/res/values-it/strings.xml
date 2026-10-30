@@ -859,6 +859,14 @@
   <string name="general_search">Cerca</string>
   <string name="general_open_drawer">Apri menu</string>
   <string name="general_back">Indietro</string>
+  <string name="general_lock">Blocca</string>
+  <string name="general_unlock">Sblocca</string>
+  <string name="general_locked">Bloccato</string>
+  <string name="general_unlocked">Sbloccato</string>
+  <string name="at_allow_temporary_unlock">Consenti lo sblocco temporaneo</string>
+  <string name="at_locked_temporary_unlock_allowed">Bloccato con possibilità di sblocco temporaneo</string>
+  <string name="action_trigger_schedule_temporary_unlock_duration">Durata dello sblocco temporaneo</string>
+  <string name="channel_caption_action_trigger">Attivatore di azione</string>
   <string name="toolbar_search_hint">Inserisci almeno 2 caratteri…</string>
   <string name="details_timer_select_program">Seleziona un programma</string>
   <string name="details_recuperator_ventilation">Ventilazione</string>

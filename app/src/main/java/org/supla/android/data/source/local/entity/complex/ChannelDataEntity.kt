@@ -29,13 +29,13 @@ import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.batteryInfo
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
-import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelExtendedValue
 import org.supla.android.db.ChannelValue
 import org.supla.android.lib.SuplaChannelExtendedValue
 import org.supla.android.usecases.channel.GetChannelStateUseCase
 import org.supla.core.shared.data.model.battery.BatteryInfo
+import org.supla.core.shared.data.model.channel.SuplaChannelFlag
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.extensions.forTrue
 
