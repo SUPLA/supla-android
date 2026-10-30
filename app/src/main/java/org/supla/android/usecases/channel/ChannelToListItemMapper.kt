@@ -35,6 +35,7 @@ import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.lists.onlineState
 import org.supla.android.ui.views.list.ListItemStatus
 import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.core.shared.data.model.channel.suplaFlags
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.GetCaptionUseCase
@@ -134,13 +135,16 @@ class ChannelToListItemMapper @Inject constructor(
       SuplaFunction.DIMMER_CCT,
       SuplaFunction.VALVE_OPEN_CLOSE,
       SuplaFunction.VALVE_PERCENTAGE,
-      SuplaFunction.HVAC_HRV -> toChannelItem(channelWithChildren)
+      SuplaFunction.HVAC_HRV,
+      SuplaFunction.ACTION_TRIGGER -> toChannelItem(channelWithChildren)
     }
 
   private fun toDoubleValueItem(
     channelWithChildren: ChannelWithChildren
-  ): ListItem.DoubleValueItem =
-    ListItem.DoubleValueItem(
+  ): ListItem.DoubleValueItem {
+    val flags = channelWithChildren.flags.suplaFlags
+
+    return ListItem.DoubleValueItem(
       remoteId = channelWithChildren.remoteId,
       profileId = channelWithChildren.profileId,
       function = channelWithChildren.function,
@@ -155,11 +159,12 @@ class ChannelToListItemMapper @Inject constructor(
       processing = false,
       estimatedTimerEndDate = channelWithChildren.channel.channelExtendedValueEntity?.getSuplaValue()?.TimerStateValue?.countdownEndsAt,
       infoSupported = channelWithChildren.showInfo,
-      leftButtonString = getChannelActionStringUseCase.leftButton(channelWithChildren.function)?.let { localizedString(it) },
-      rightButtonString = getChannelActionStringUseCase.rightButton(channelWithChildren.function)?.let { localizedString(it) },
+      leftButtonString = getChannelActionStringUseCase.leftButton(channelWithChildren.function, flags)?.let { localizedString(it) },
+      rightButtonString = getChannelActionStringUseCase.rightButton(channelWithChildren.function, flags)?.let { localizedString(it) },
       secondIcon = getChannelIconUseCase(channelWithChildren, IconType.SECOND),
       secondValue = getChannelValueStringUseCase.valueOrNull(channelWithChildren, ListSecondValue, withUnit = false)
     )
+  }
 
   private fun toHeatpolThermostatItem(channelWithChildren: ChannelWithChildren): ListItem.HeatpolThermostatItem {
     val channel = channelWithChildren.channel
@@ -212,8 +217,10 @@ class ChannelToListItemMapper @Inject constructor(
     )
   }
 
-  private fun toChannelItem(channelWithChildren: ChannelWithChildren): ListItem.DefaultItem =
-    ListItem.DefaultItem(
+  private fun toChannelItem(channelWithChildren: ChannelWithChildren): ListItem.DefaultItem {
+    val flags = channelWithChildren.flags.suplaFlags
+
+    return ListItem.DefaultItem(
       remoteId = channelWithChildren.remoteId,
       profileId = channelWithChildren.profileId,
       function = channelWithChildren.function,
@@ -228,7 +235,8 @@ class ChannelToListItemMapper @Inject constructor(
       processing = downloadEventsManager.getLastChannelDownloadState(channelWithChildren.remoteId).inProgress,
       estimatedTimerEndDate = channelWithChildren.channel.channelExtendedValueEntity?.getSuplaValue()?.TimerStateValue?.countdownEndsAt,
       infoSupported = channelWithChildren.showInfo,
-      leftButtonString = getChannelActionStringUseCase.leftButton(channelWithChildren.function)?.let { localizedString(it) },
-      rightButtonString = getChannelActionStringUseCase.rightButton(channelWithChildren.function)?.let { localizedString(it) }
+      leftButtonString = getChannelActionStringUseCase.leftButton(channelWithChildren.function, flags)?.let { localizedString(it) },
+      rightButtonString = getChannelActionStringUseCase.rightButton(channelWithChildren.function, flags)?.let { localizedString(it) }
     )
+  }
 }

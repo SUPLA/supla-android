@@ -31,6 +31,10 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.GENERAL_REVEAL -> R.string.channel_btn_reveal
     LocalizedStringId.GENERAL_COLLAPSE -> R.string.channel_btn_collapse
     LocalizedStringId.GENERAL_EXPAND -> R.string.channel_btn_expand
+    LocalizedStringId.GENERAL_LOCK -> R.string.general_lock
+    LocalizedStringId.GENERAL_UNLOCK -> R.string.general_unlock
+    LocalizedStringId.GENERAL_LOCKED -> R.string.general_locked
+    LocalizedStringId.GENERAL_UNLOCKED -> R.string.general_unlocked
     LocalizedStringId.GENERAL_YES -> R.string.yes
     LocalizedStringId.GENERAL_NO -> R.string.no
     LocalizedStringId.CHANNEL_CAPTION_OPEN_SENSOR_GATEWAY -> R.string.channel_caption_gatewayopeningsensor
@@ -95,6 +99,7 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.CHANNEL_CAPTION_SMOKE_SENSOR -> R.string.channel_caption_smoke_sensor
     LocalizedStringId.CHANNEL_CAPTION_CARBON_MONOXIDE_SENSOR -> R.string.channel_caption_carbon_monoxide_sensor
     LocalizedStringId.CHANNEL_CAPTION_GAS_SENSOR -> R.string.channel_caption_gas_sensor
+    LocalizedStringId.CHANNEL_CAPTION_ACTION_TRIGGER -> R.string.channel_caption_action_trigger
     LocalizedStringId.CHANNEL_STATUS_AWAITING -> R.string.channel_status_awaiting
     LocalizedStringId.CHANNEL_STATUS_UPDATING -> R.string.channel_status_updating
     LocalizedStringId.CHANNEL_STATUS_NOT_AVAILABLE -> R.string.channel_not_available

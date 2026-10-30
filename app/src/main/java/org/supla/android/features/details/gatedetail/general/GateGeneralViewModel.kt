@@ -30,7 +30,7 @@ import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStat
 import org.supla.android.data.source.remote.hvac.SuplaRelayMode
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DeviceConfigEventsManager
-import org.supla.android.features.details.relayschedule.BaseRelayGeneralViewModel
+import org.supla.android.features.details.detailbase.relay.BaseRelayGeneralViewModel
 import org.supla.android.features.details.relayschedule.OperatingMode
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaThreading
