@@ -19,7 +19,7 @@ package org.supla.android.data.source.local.entity.custom
 
 import androidx.annotation.StringRes
 import org.supla.android.R
-import org.supla.android.data.source.remote.channel.SuplaChannelFlag
+import org.supla.core.shared.data.model.channel.SuplaChannelFlag
 
 enum class Phase(val value: Int, @param:StringRes val label: Int) {
   PHASE_1(1, R.string.details_em_phase1), PHASE_2(2, R.string.details_em_phase2), PHASE_3(3, R.string.details_em_phase3);

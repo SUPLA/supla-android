@@ -155,7 +155,8 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
       SuplaFunction.DIMMER_CCT,
       SuplaFunction.RGB_LIGHTING,
       SuplaFunction.DIMMER_AND_RGB_LIGHTING,
-      SuplaFunction.DIMMER_CCT_AND_RGB -> true
+      SuplaFunction.DIMMER_CCT_AND_RGB,
+      SuplaFunction.ACTION_TRIGGER -> true
       SuplaFunction.UNKNOWN,
       SuplaFunction.NONE,
       SuplaFunction.OPEN_SENSOR_GATEWAY,

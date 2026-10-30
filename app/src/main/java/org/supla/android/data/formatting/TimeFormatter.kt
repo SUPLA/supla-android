@@ -21,8 +21,8 @@ import androidx.compose.runtime.compositionLocalOf
 import org.supla.android.extensions.HOUR_IN_SEC
 import org.supla.android.extensions.MINUTE_IN_SEC
 
-class TimeFormatter {
-  fun format(timeInSeconds: Int): String {
+object TimeFormatter {
+  fun format(timeInSeconds: Int, useShortForm: Boolean = false): String {
     val hours = timeInSeconds.div(HOUR_IN_SEC)
     val minutes = timeInSeconds.mod(HOUR_IN_SEC).div(MINUTE_IN_SEC)
     val seconds = timeInSeconds.mod(MINUTE_IN_SEC)
@@ -31,8 +31,16 @@ class TimeFormatter {
     val minutesString = if (minutes < 10) "0$minutes" else "$minutes"
     val secondsString = if (seconds < 10) "0$seconds" else "$seconds"
 
-    return "$hoursString:$minutesString:$secondsString"
+    return if (useShortForm) {
+      when {
+        hours > 0 -> "$hours:$minutesString:$secondsString"
+        minutes > 0 -> "$minutes:$secondsString"
+        else -> "$seconds"
+      }
+    } else {
+      "$hoursString:$minutesString:$secondsString"
+    }
   }
 }
 
-val LocalTimeFormatter = compositionLocalOf { TimeFormatter() }
+val LocalTimeFormatter = compositionLocalOf { TimeFormatter }

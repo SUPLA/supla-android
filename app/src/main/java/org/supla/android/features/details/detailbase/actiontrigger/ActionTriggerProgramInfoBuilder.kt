@@ -1,4 +1,4 @@
-package org.supla.android.features.details.relayschedule.data
+package org.supla.android.features.details.detailbase.actiontrigger
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -23,11 +23,12 @@ import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.local.calendar.QuarterOfHour
 import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
+import org.supla.android.features.details.actiontrigger.schedule.data.ActionTriggerScheduleProgram
 import org.supla.android.ui.views.channelstate.ChannelProgramData
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 
-class RelayProgramInfoBuilder(
+class ActionTriggerProgramInfoBuilder(
   private val weeklyScheduleConfig: SuplaChannelWeeklyScheduleConfig,
   private val dateProvider: DateProvider
 ) {
@@ -60,7 +61,6 @@ class RelayProgramInfoBuilder(
     }
 
     val nextDescription = nextProgram?.let(::description)
-
     val currentInfo = ChannelProgramData(
       type = ChannelProgramData.Type.CURRENT,
       time = nextDescription?.let {
@@ -74,17 +74,16 @@ class RelayProgramInfoBuilder(
     }
 
     val nextInfo = nextDescription?.let { ChannelProgramData(type = ChannelProgramData.Type.NEXT, description = it) }
-
     return listOfNotNull(currentInfo, nextInfo)
   }
 
   private fun description(program: SuplaScheduleProgram): LocalizedString? =
     if (program == SuplaScheduleProgram.OFF) {
-      RelayScheduleProgram.DEFAULT.label
+      ActionTriggerScheduleProgram.DEFAULT.label
     } else {
       weeklyScheduleConfig.programConfigurations
         .firstOrNull { it.program == program }
-        ?.let { RelayScheduleProgram(it) }
+        ?.let { ActionTriggerScheduleProgram(it) }
         ?.label
     }
 }

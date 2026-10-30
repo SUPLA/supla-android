@@ -41,7 +41,6 @@ import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.remote.SuplaEventType
-import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.db.room.measurements.MeasurementsDatabase
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.tools.SuplaThreading
@@ -49,6 +48,7 @@ import org.supla.android.usecases.db.MakeAnonymizedDatabaseCopyUseCase
 import org.supla.android.usecases.developerinfo.LoadDatabaseDetailsUseCase
 import org.supla.android.usecases.developerinfo.TableDetail
 import org.supla.android.usecases.developerinfo.TableDetailType
+import org.supla.core.shared.data.model.channel.SuplaChannelFlag
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 import timber.log.Timber

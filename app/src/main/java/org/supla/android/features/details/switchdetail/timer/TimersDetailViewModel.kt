@@ -42,7 +42,7 @@ import org.supla.android.data.source.remote.isAutomaticTimeSyncDisabled
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.extensions.subscribeBy
-import org.supla.android.features.details.relayschedule.data.RelayProgramInfoBuilder
+import org.supla.android.features.details.detailbase.relay.RelayProgramInfoBuilder
 import org.supla.android.images.ImageId
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType

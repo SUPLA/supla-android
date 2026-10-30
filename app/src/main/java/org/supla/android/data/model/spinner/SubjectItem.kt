@@ -276,7 +276,8 @@ interface SubjectItemConversionScope {
       SuplaFunction.NONE,
       SuplaFunction.SMOKE_SENSOR,
       SuplaFunction.CARBON_MONOXIDE_SENSOR,
-      SuplaFunction.GAS_SENSOR -> emptyList()
+      SuplaFunction.GAS_SENSOR,
+      SuplaFunction.ACTION_TRIGGER -> emptyList()
       SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
       SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK -> listOf(ActionId.OPEN)
       SuplaFunction.CONTROLLING_THE_GATE,

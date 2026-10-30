@@ -86,6 +86,10 @@ enum class DetailPage(val item: DetailBottomItem) {
   GATE_GENERAL(DetailBottomItem.GENERAL),
   GATE_SCHEDULE(DetailBottomItem.SCHEDULE),
 
+  // Action trigger
+  ACTION_TRIGGER_GENERAL(DetailBottomItem.GENERAL),
+  ACTION_TRIGGER_SCHEDULE(DetailBottomItem.SCHEDULE),
+
   // RGB and Dimmer
   RGB(DetailBottomItem.RGB),
   DIMMER(DetailBottomItem.DIMMER),

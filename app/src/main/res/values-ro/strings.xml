@@ -851,6 +851,14 @@
   <string name="general_search">Căutare</string>
   <string name="general_open_drawer">Deschide meniul</string>
   <string name="general_back">Înapoi</string>
+  <string name="general_lock">Blochează</string>
+  <string name="general_unlock">Deblochează</string>
+  <string name="general_locked">Blocat</string>
+  <string name="general_unlocked">Deblocat</string>
+  <string name="at_allow_temporary_unlock">Permite deblocarea temporară</string>
+  <string name="at_locked_temporary_unlock_allowed">Blocat cu posibilitatea de deblocare temporară</string>
+  <string name="action_trigger_schedule_temporary_unlock_duration">Durata deblocării temporare</string>
+  <string name="channel_caption_action_trigger">Declanșator de acțiune</string>
   <string name="toolbar_search_hint">Introduceți cel puțin 2 caractere…</string>
   <string name="details_timer_select_program">Selectați un program</string>
   <string name="details_recuperator_ventilation">Ventilație</string>

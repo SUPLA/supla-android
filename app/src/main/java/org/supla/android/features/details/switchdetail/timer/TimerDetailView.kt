@@ -67,8 +67,7 @@ import org.supla.android.ui.views.buttons.OutlinedButton
 import org.supla.android.ui.views.channelstate.ChannelCurrentData
 import org.supla.android.ui.views.channelstate.ChannelProgramData
 import org.supla.android.ui.views.channelstate.ChannelState
-import org.supla.android.ui.views.forms.NumberPicker
-import org.supla.android.ui.views.forms.NumberPickerHighlight
+import org.supla.android.ui.views.forms.TimePicker
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 import java.util.Date
@@ -478,40 +477,6 @@ private fun timerInfoText(state: TimersDetailViewState): String {
       timeString,
       pluralStringResource(id = R.plurals.details_timer_info_off, count = 2)
     )
-  }
-}
-
-@Composable
-private fun TimePicker(timeInSeconds: Int, onTimeChanged: (Int) -> Unit, modifier: Modifier = Modifier) {
-  val values = TimeValues.of(timeInSeconds.toLong())
-
-  Box(modifier = modifier) {
-    NumberPickerHighlight()
-    Row(
-      horizontalArrangement = Arrangement.spacedBy(Distance.default),
-      modifier = Modifier
-        .align(Alignment.Center)
-        .clip(MaterialTheme.shapes.extraSmall)
-    ) {
-      NumberPicker(
-        range = IntRange(0, 23),
-        selectedValue = values.hours,
-        formatter = { context, i -> context.resources.getQuantityString(R.plurals.hour_pattern, i, i) },
-        onValueChanged = { onTimeChanged(it.times(3600) + values.minutes.times(60) + values.seconds) }
-      )
-      NumberPicker(
-        range = IntRange(0, 59),
-        selectedValue = values.minutes,
-        formatter = { context, i -> context.resources.getQuantityString(R.plurals.minute_pattern, i, i) },
-        onValueChanged = { onTimeChanged(values.hours.times(3600) + it.times(60) + values.seconds) }
-      )
-      NumberPicker(
-        range = IntRange(0, 59),
-        selectedValue = values.seconds,
-        formatter = { context, i -> context.resources.getQuantityString(R.plurals.second_pattern, i, i) },
-        onValueChanged = { onTimeChanged(values.hours.times(3600) + values.minutes.times(60) + it) }
-      )
-    }
   }
 }
 

@@ -28,13 +28,13 @@ import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.features.details.detailbase.base.DetailPage
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
 import org.supla.android.lib.SuplaConst.SUPLA_MFR_DOYLETRATT
 import org.supla.android.lib.SuplaConst.SUPLA_MFR_ZAMEL
 import org.supla.android.lib.SuplaConst.ZAM_PRODID_DIW_01
+import org.supla.core.shared.data.model.channel.SuplaChannelFlag
 import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
@@ -325,6 +325,22 @@ class ProvideChannelDetailTypeUseCaseTest {
     testDetailType(SuplaFunction.CONTROLLING_THE_GARAGE_DOOR, StandardDetailType(listOf(DetailPage.GATE_GENERAL)), withoutFlags)
     testDetailType(SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK, StandardDetailType(listOf(DetailPage.GATE_GENERAL)), withoutFlags)
     testDetailType(SuplaFunction.CONTROLLING_THE_DOOR_LOCK, StandardDetailType(listOf(DetailPage.GATE_GENERAL)), withoutFlags)
+  }
+
+  @Test
+  fun `should provide detail for action trigger`() {
+    val flagsCallback: (ChannelDataEntity) -> Unit = { every { it.flags } returns 0 }
+    testDetailType(SuplaFunction.ACTION_TRIGGER, StandardDetailType(listOf(DetailPage.ACTION_TRIGGER_GENERAL)), flagsCallback)
+  }
+
+  @Test
+  fun `should provide detail for action trigger with schedule`() {
+    val flagsCallback: (ChannelDataEntity) -> Unit = { every { it.flags } returns SuplaChannelFlag.WEEKLY_SCHEDULE.rawValue }
+    testDetailType(
+      SuplaFunction.ACTION_TRIGGER,
+      StandardDetailType(listOf(DetailPage.ACTION_TRIGGER_GENERAL, DetailPage.ACTION_TRIGGER_SCHEDULE)),
+      flagsCallback
+    )
   }
 
   @Test

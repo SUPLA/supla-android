@@ -18,13 +18,17 @@ package org.supla.android.data.source.remote.hvac
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-enum class SuplaButtonMode(val value: Int) {
+enum class SuplaButtonMode(val rawValue: Byte) {
   NOT_SET(0),
   LOCKED(1),
   CMD_WEEKLY_SCHEDULE(4),
-  CMD_SWITCH_TO_MANUAL(5);
+  CMD_SWITCH_TO_MANUAL(5),
+  LOCKED_TEMPORARY_UNLOCK_ALLOWED(6),
+  CMD_TEMPORARY_UNLOCK(7);
+
+  val value: Int = rawValue.toInt()
 
   companion object {
-    fun from(value: Int): SuplaButtonMode = entries.firstOrNull { it.value == value } ?: NOT_SET
+    fun from(value: Byte): SuplaButtonMode = entries.firstOrNull { it.rawValue == value } ?: NOT_SET
   }
 }

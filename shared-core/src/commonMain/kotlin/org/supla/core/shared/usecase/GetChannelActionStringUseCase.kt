@@ -17,11 +17,13 @@ package org.supla.core.shared.usecase
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.core.shared.data.model.channel.SuplaChannelFlag
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.infrastructure.LocalizedStringId
 
 class GetChannelActionStringUseCase {
-  fun rightButton(function: SuplaFunction): LocalizedStringId? =
+  fun rightButton(function: SuplaFunction, flags: List<SuplaChannelFlag>): LocalizedStringId? =
     when (function) {
       SuplaFunction.CONTROLLING_THE_ROOF_WINDOW,
       SuplaFunction.ROLLER_GARAGE_DOOR,
@@ -52,6 +54,7 @@ class GetChannelActionStringUseCase {
       SuplaFunction.HVAC_HRV,
       SuplaFunction.PUMP_SWITCH,
       SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH -> LocalizedStringId.GENERAL_TURN_ON
+      SuplaFunction.ACTION_TRIGGER -> flags.contains(SuplaChannelFlag.BUTTON_MODE_SUPPORTED).forTrue { LocalizedStringId.GENERAL_LOCK }
       SuplaFunction.UNKNOWN,
       SuplaFunction.NONE,
       SuplaFunction.THERMOMETER,
@@ -99,7 +102,7 @@ class GetChannelActionStringUseCase {
       SuplaFunction.GAS_SENSOR -> null
     }
 
-  fun leftButton(function: SuplaFunction): LocalizedStringId? =
+  fun leftButton(function: SuplaFunction, flags: List<SuplaChannelFlag>): LocalizedStringId? =
     when (function) {
       SuplaFunction.CONTROLLING_THE_ROOF_WINDOW,
       SuplaFunction.ROLLER_GARAGE_DOOR,
@@ -126,6 +129,7 @@ class GetChannelActionStringUseCase {
       SuplaFunction.HVAC_HRV,
       SuplaFunction.PUMP_SWITCH,
       SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH -> LocalizedStringId.GENERAL_TURN_OFF
+      SuplaFunction.ACTION_TRIGGER -> flags.contains(SuplaChannelFlag.BUTTON_MODE_SUPPORTED).forTrue { LocalizedStringId.GENERAL_UNLOCK }
       SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
       SuplaFunction.CONTROLLING_THE_GATE,
       SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,

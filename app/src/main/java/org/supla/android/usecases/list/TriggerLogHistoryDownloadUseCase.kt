@@ -28,8 +28,8 @@ import org.supla.android.data.source.ImpulseCounterLogRepository
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
+import org.supla.core.shared.data.model.channel.SuplaChannelFlag
 import org.supla.core.shared.data.model.general.SuplaFunction
 import timber.log.Timber
 import java.util.Date

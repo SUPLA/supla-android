@@ -28,6 +28,7 @@ import org.supla.android.data.source.local.entity.ChannelValueEntity.Companion.T
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.lib.SuplaChannelValue
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELVALUE_SIZE
+import org.supla.core.shared.data.model.function.actiontrigger.ActionTriggerValue
 import org.supla.core.shared.data.model.function.container.ContainerValue
 import org.supla.core.shared.data.model.function.digiglass.DigiglassValue
 import org.supla.core.shared.data.model.function.facadeblind.FacadeBlindValue
@@ -81,6 +82,8 @@ data class ChannelValueEntity(
   fun asContainerValue() = ContainerValue.from(status, getValueAsByteArray())
 
   fun asRgbwwValue() = RgbwwValue.from(status, getValueAsByteArray())
+
+  fun asAtValue() = ActionTriggerValue.from(status, getValueAsByteArray())
 
   fun getSubValueHi(): Int =
     getSubValueAsByteArray().let {

@@ -21,11 +21,11 @@ import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.isElectricityMeter
 import org.supla.android.data.source.local.entity.isImpulseCounter
-import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.features.details.detailbase.base.DetailPage
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
 import org.supla.core.shared.data.model.channel.ChannelRelationType
+import org.supla.core.shared.data.model.channel.SuplaChannelFlag
 import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -35,6 +35,7 @@ class ProvideChannelDetailTypeUseCase @Inject constructor() : BaseDetailTypeProv
 
   operator fun invoke(channelWithChildren: ChannelWithChildren): DetailType? =
     when (val function = channelWithChildren.channel.function) {
+      SuplaFunction.ACTION_TRIGGER -> StandardDetailType(getActionTriggerDetailPages(channelWithChildren))
       SuplaFunction.LIGHTSWITCH,
       SuplaFunction.POWER_SWITCH,
       SuplaFunction.STAIRCASE_TIMER,
@@ -95,6 +96,13 @@ class ProvideChannelDetailTypeUseCase @Inject constructor() : BaseDetailTypeProv
     mutableListOf(DetailPage.GATE_GENERAL).apply {
       if (SuplaChannelFlag.WEEKLY_SCHEDULE inside channelWithChildren.flags) {
         add(DetailPage.GATE_SCHEDULE)
+      }
+    }
+
+  private fun getActionTriggerDetailPages(channelWithChildren: ChannelWithChildren): List<DetailPage> =
+    mutableListOf(DetailPage.ACTION_TRIGGER_GENERAL).apply {
+      if (SuplaChannelFlag.WEEKLY_SCHEDULE inside channelWithChildren.flags) {
+        add(DetailPage.ACTION_TRIGGER_SCHEDULE)
       }
     }
 
