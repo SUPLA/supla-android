@@ -53,6 +53,7 @@ import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.core.ui.theme.gray
 import org.supla.android.tools.SuplaPreview
+import org.supla.android.tools.SuplaPreviewLandscape
 import org.supla.core.shared.infrastructure.LocalizedString
 
 /** Presentation data shared by schedule summaries across device functions. */
@@ -120,15 +121,17 @@ fun ChannelProgramState(
       val layoutWidth = if (constraints.hasBoundedWidth) {
         constraints.maxWidth
       } else {
-        (rowSizes.maxOfOrNull { it.first.width + it.second.width } ?: 0).coerceAtLeast(constraints.minWidth)
+        (rowSizes.maxOfOrNull { it.first.width + rowSpacingPx + it.second.width } ?: 0).coerceAtLeast(constraints.minWidth)
       }
       val layoutHeight = contentHeight.coerceAtMost(constraints.maxHeight).coerceAtLeast(constraints.minHeight)
+      val contentWidth = rowSizes.maxOfOrNull { it.first.width + rowSpacingPx + it.second.width } ?: 0
+      val startX = ((layoutWidth - contentWidth) / 2).coerceAtLeast(0)
 
       layout(layoutWidth, layoutHeight) {
         var y = 0
         rowSizes.forEach { (label, value) ->
-          label.placeRelative(0, y)
-          value.placeRelative(labelWidth + rowSpacingPx, y)
+          label.placeRelative(startX, y)
+          value.placeRelative(startX + labelWidth + rowSpacingPx, y)
           y += maxOf(label.height, value.height) + spacingPx
         }
       }
@@ -188,6 +191,7 @@ private fun ProgramInfoDescription(description: String) =
   )
 
 @SuplaPreview
+@SuplaPreviewLandscape
 @Composable
 private fun ChannelProgramStatePreview() {
   SuplaTheme {

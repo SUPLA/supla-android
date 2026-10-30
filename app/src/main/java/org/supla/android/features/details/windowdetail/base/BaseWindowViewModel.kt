@@ -30,7 +30,6 @@ import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.custom.GroupOnlineSummary
-import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
@@ -54,6 +53,7 @@ import org.supla.android.usecases.client.LoginUseCase
 import org.supla.android.usecases.client.SuplaClientOperation
 import org.supla.android.usecases.group.GetGroupOnlineSummaryUseCase
 import org.supla.android.usecases.group.ObserveChannelGroupByRemoteIdUseCase
+import org.supla.core.shared.data.model.channel.SuplaChannelFlag
 import org.supla.core.shared.data.model.shadingsystem.ShadingSystemValue
 import org.supla.core.shared.data.model.shadingsystem.SuplaShadingSystemFlag
 import org.supla.core.shared.extensions.guardLet

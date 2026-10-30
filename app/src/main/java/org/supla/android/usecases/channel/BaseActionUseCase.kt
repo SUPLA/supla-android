@@ -24,7 +24,6 @@ import org.supla.android.data.source.local.entity.isGarageDoorRoller
 import org.supla.android.data.source.local.entity.isProjectorScreen
 import org.supla.android.data.source.local.entity.isShadingSystem
 import org.supla.android.data.source.local.entity.isThermostat
-import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.ActionParameters
 import org.supla.android.lib.actions.IGNORE_CCT
@@ -32,6 +31,7 @@ import org.supla.android.lib.actions.IGNORE_COLOR
 import org.supla.android.lib.actions.RgbwActionParameters
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.VibrationHelper
+import org.supla.core.shared.data.model.channel.SuplaChannelFlag
 import org.supla.core.shared.data.model.general.SuplaFunction
 
 open class BaseActionUseCase<T : ChannelDataBase>(

@@ -29,7 +29,6 @@ import org.supla.android.data.source.local.calendar.QuarterOfHour
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.ConfigResult
 import org.supla.android.data.source.remote.SuplaDeviceConfig
-import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
 import org.supla.android.data.source.remote.hvac.SuplaRelayMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
@@ -55,6 +54,7 @@ import org.supla.android.ui.views.schedule.editor.WeeklyScheduleEditorState
 import org.supla.android.ui.views.schedule.editor.quartersSelectionData
 import org.supla.android.ui.views.schedule.editor.viewScheduleTableState
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
+import org.supla.core.shared.data.model.channel.SuplaChannelFlag
 import org.supla.core.shared.data.model.general.SuplaFunction
 import timber.log.Timber
 import java.util.concurrent.TimeUnit

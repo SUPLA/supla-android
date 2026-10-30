@@ -24,5 +24,6 @@ import org.supla.android.tools.UsedFromNativeCode
 class AtActionParameters(
   subjectType: SubjectType,
   subjectId: Int,
-  val mode: SuplaButtonMode
+  val mode: SuplaButtonMode,
+  var durationSec: Long?
 ) : ActionParameters(ActionId.SET_AT_PARAMETERS, subjectType, subjectId)

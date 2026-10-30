@@ -146,7 +146,8 @@ sealed interface ChannelState {
         SuplaFunction.BINARY_SENSOR,
         SuplaFunction.SMOKE_SENSOR,
         SuplaFunction.CARBON_MONOXIDE_SENSOR,
-        SuplaFunction.GAS_SENSOR -> Default(Value.NOT_USED)
+        SuplaFunction.GAS_SENSOR,
+        SuplaFunction.ACTION_TRIGGER -> Default(Value.NOT_USED)
       }
 
     fun inactive(function: SuplaFunction): ChannelState =
@@ -224,7 +225,8 @@ sealed interface ChannelState {
         SuplaFunction.BINARY_SENSOR,
         SuplaFunction.SMOKE_SENSOR,
         SuplaFunction.CARBON_MONOXIDE_SENSOR,
-        SuplaFunction.GAS_SENSOR -> Default(Value.NOT_USED)
+        SuplaFunction.GAS_SENSOR,
+        SuplaFunction.ACTION_TRIGGER -> Default(Value.NOT_USED)
       }
   }
 }

@@ -114,7 +114,8 @@ private fun getLeftButtonAction(function: SuplaFunction): ActionId? =
     SuplaFunction.BINARY_SENSOR,
     SuplaFunction.SMOKE_SENSOR,
     SuplaFunction.CARBON_MONOXIDE_SENSOR,
-    SuplaFunction.GAS_SENSOR -> null
+    SuplaFunction.GAS_SENSOR,
+    SuplaFunction.ACTION_TRIGGER -> null
     SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
     SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK -> ActionId.OPEN
     SuplaFunction.CONTROLLING_THE_GATE,
@@ -192,7 +193,8 @@ private fun getRightButtonAction(function: SuplaFunction): ActionId? =
     SuplaFunction.BINARY_SENSOR,
     SuplaFunction.SMOKE_SENSOR,
     SuplaFunction.CARBON_MONOXIDE_SENSOR,
-    SuplaFunction.GAS_SENSOR -> null
+    SuplaFunction.GAS_SENSOR,
+    SuplaFunction.ACTION_TRIGGER -> null
     SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
     SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK -> ActionId.OPEN
     SuplaFunction.CONTROLLING_THE_GATE,
@@ -293,7 +295,8 @@ private fun getDefaultAction(function: SuplaFunction): ActionId? =
     SuplaFunction.HVAC_HRV,
     SuplaFunction.TERRACE_AWNING,
     SuplaFunction.PROJECTOR_SCREEN,
-    SuplaFunction.CURTAIN -> null
+    SuplaFunction.CURTAIN,
+    SuplaFunction.ACTION_TRIGGER -> null
     SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
     SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK -> ActionId.OPEN
     SuplaFunction.CONTROLLING_THE_GATE,
@@ -349,7 +352,8 @@ private fun hasAction(function: SuplaFunction?): Boolean =
     SuplaFunction.BINARY_SENSOR,
     SuplaFunction.SMOKE_SENSOR,
     SuplaFunction.CARBON_MONOXIDE_SENSOR,
-    SuplaFunction.GAS_SENSOR -> false
+    SuplaFunction.GAS_SENSOR,
+    SuplaFunction.ACTION_TRIGGER -> false
     SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
     SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
     SuplaFunction.CONTROLLING_THE_GATE,
