@@ -136,7 +136,8 @@ class GetDefaultIconResourceUseCase @Inject constructor() {
     BinarySensorIconResourceProducer,
     SmokeSensorIconResourceProducer,
     CarbonMonoxideSensorIconResourceProducer,
-    GasSensorIconResourceProducer
+    GasSensorIconResourceProducer,
+    static(SuplaFunction.ACTION_TRIGGER, R.drawable.fnc_action_trigger)
   )
 
   @DrawableRes

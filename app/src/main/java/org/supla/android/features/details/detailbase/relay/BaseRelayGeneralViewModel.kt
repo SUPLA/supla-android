@@ -1,4 +1,4 @@
-package org.supla.android.features.details.relayschedule
+package org.supla.android.features.details.detailbase.relay
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -28,7 +28,6 @@ import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.ConfigResult
 import org.supla.android.data.source.remote.SuplaDeviceConfig
-import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
 import org.supla.android.data.source.remote.hvac.SuplaRelayMode
 import org.supla.android.data.source.remote.isAutomaticTimeSyncDisabled
@@ -36,7 +35,6 @@ import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.extensions.subscribeBy
-import org.supla.android.features.details.relayschedule.data.RelayProgramInfoBuilder
 import org.supla.android.features.details.relayschedule.ui.OperatingButtonsScope
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaThreading
@@ -46,6 +44,7 @@ import org.supla.android.usecases.client.ExecuteRelayActionUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.group.GroupWithChannels
 import org.supla.android.usecases.group.ReadGroupWithChannelsUseCase
+import org.supla.core.shared.data.model.channel.SuplaChannelFlag
 import org.supla.core.shared.data.model.function.relay.RelayValue
 import org.supla.core.shared.data.model.function.relay.SuplaRelayFlag
 import java.util.Optional

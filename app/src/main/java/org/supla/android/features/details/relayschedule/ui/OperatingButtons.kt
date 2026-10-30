@@ -116,9 +116,9 @@ fun OperatingButtonsScope.OperatingButtons(
 private fun RowScope.OperatingButton(
   style: OperatingButtonsStyle,
   text: String,
-  @DrawableRes iconRes: Int? = null,
   pressed: Boolean,
   disabled: Boolean,
+  @DrawableRes iconRes: Int? = null,
   onClick: () -> Unit
 ) {
   if (style == OperatingButtonsStyle.ICONS && iconRes != null) {

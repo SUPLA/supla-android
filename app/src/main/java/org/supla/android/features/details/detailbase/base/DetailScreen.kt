@@ -33,6 +33,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import org.supla.android.features.details.actiontrigger.general.ActionTriggerGeneralScreen
+import org.supla.android.features.details.actiontrigger.schedule.ActionTriggerScheduleScreen
 import org.supla.android.features.details.containerdetail.general.ContainerGeneralScreen
 import org.supla.android.features.details.electricitymeterdetail.general.ElectricityMeterGeneralScreen
 import org.supla.android.features.details.electricitymeterdetail.history.ElectricityMeterHistoryScreen
@@ -218,6 +220,8 @@ private fun Content(item: ItemBundle, page: DetailPage) =
     DetailPage.VALVE_GENERAL -> ValveGeneralScreen(item)
     DetailPage.GATE_GENERAL -> GateGeneralScreen(item)
     DetailPage.GATE_SCHEDULE -> GateScheduleScreen(item)
+    DetailPage.ACTION_TRIGGER_GENERAL -> ActionTriggerGeneralScreen(item)
+    DetailPage.ACTION_TRIGGER_SCHEDULE -> ActionTriggerScheduleScreen(item)
     DetailPage.RGB -> RgbDetailScreen(item)
     DetailPage.DIMMER -> DimmerDetailScreen(item)
     DetailPage.DIMMER_CCT -> DimmerCctDetailScreen(item)

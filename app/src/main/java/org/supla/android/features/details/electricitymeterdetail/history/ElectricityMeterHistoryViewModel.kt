@@ -44,8 +44,6 @@ import org.supla.android.data.model.general.SingleSelectionList
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.complex.Electricity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.data.source.remote.channel.SuplaChannelFlag
-import org.supla.android.data.source.remote.channel.suplaFlags
 import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.events.DownloadEventsManager.DataType
@@ -66,6 +64,8 @@ import org.supla.android.usecases.channel.measurementsprovider.electricity.Elect
 import org.supla.android.usecases.channel.measurementsprovider.electricity.PhaseItem
 import org.supla.android.usecases.migration.GroupingStringMigrationUseCase
 import org.supla.core.shared.data.model.channel.ChannelRelationType
+import org.supla.core.shared.data.model.channel.SuplaChannelFlag
+import org.supla.core.shared.data.model.channel.suplaFlags
 import org.supla.core.shared.data.model.rest.channel.ChannelDto
 import org.supla.core.shared.data.model.rest.channel.ElectricityChannelDto
 import org.supla.core.shared.data.model.rest.channel.ElectricityMeterConfigDto

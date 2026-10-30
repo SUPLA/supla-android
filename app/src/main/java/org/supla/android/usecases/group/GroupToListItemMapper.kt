@@ -121,7 +121,8 @@ class GroupToListItemMapper @Inject constructor(
       SuplaFunction.PROJECTOR_SCREEN,
       SuplaFunction.CURTAIN,
       SuplaFunction.VERTICAL_BLIND,
-      SuplaFunction.ROLLER_GARAGE_DOOR -> toIconValueItem(group)
+      SuplaFunction.ROLLER_GARAGE_DOOR,
+      SuplaFunction.ACTION_TRIGGER -> toIconValueItem(group)
     }
 
   fun toIconValueItem(group: ChannelGroupDataEntity): ListItem.GroupItem =
@@ -138,8 +139,8 @@ class GroupToListItemMapper @Inject constructor(
       captionProvider = getCaptionUseCase(group.shareable),
       userCaption = group.caption,
       icon = getChannelIconUseCase(group),
-      leftButtonString = localizedString(getChannelActionStringUseCase.leftButton(group.function)),
-      rightButtonString = localizedString(getChannelActionStringUseCase.rightButton(group.function))
+      leftButtonString = localizedString(getChannelActionStringUseCase.leftButton(group.function, flags = emptyList())),
+      rightButtonString = localizedString(getChannelActionStringUseCase.rightButton(group.function, flags = emptyList()))
     )
 
   fun toHeatpolThermostatItem(group: ChannelGroupDataEntity): ListItem.HeatpolThermostatItem =

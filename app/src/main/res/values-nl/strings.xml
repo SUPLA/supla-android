@@ -847,6 +847,14 @@
   <string name="general_search">Zoeken</string>
   <string name="general_open_drawer">Menu openen</string>
   <string name="general_back">Terug</string>
+  <string name="general_lock">Vergrendelen</string>
+  <string name="general_unlock">Ontgrendelen</string>
+  <string name="general_locked">Vergrendeld</string>
+  <string name="general_unlocked">Ontgrendeld</string>
+  <string name="at_allow_temporary_unlock">Tijdelijk ontgrendelen toestaan</string>
+  <string name="at_locked_temporary_unlock_allowed">Vergrendeld met mogelijkheid tot tijdelijk ontgrendelen</string>
+  <string name="action_trigger_schedule_temporary_unlock_duration">Duur van tijdelijk ontgrendelen</string>
+  <string name="channel_caption_action_trigger">Actietrigger</string>
   <string name="toolbar_search_hint">Voer minimaal 2 tekens in…</string>
   <string name="details_timer_select_program">Selecteer een programma</string>
   <string name="details_recuperator_ventilation">Ventilatie</string>

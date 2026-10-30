@@ -851,6 +851,14 @@
   <string name="general_search">Hľadať</string>
   <string name="general_open_drawer">Otvoriť menu</string>
   <string name="general_back">Späť</string>
+  <string name="general_lock">Zamknúť</string>
+  <string name="general_unlock">Odomknúť</string>
+  <string name="general_locked">Zamknutý</string>
+  <string name="general_unlocked">Odomknutý</string>
+  <string name="at_allow_temporary_unlock">Povoliť dočasné odomknutie</string>
+  <string name="at_locked_temporary_unlock_allowed">Zamknuté s možnosťou dočasného odomknutia</string>
+  <string name="action_trigger_schedule_temporary_unlock_duration">Trvanie dočasného odomknutia</string>
+  <string name="channel_caption_action_trigger">Akčný spúšťač</string>
   <string name="toolbar_search_hint">Zadajte aspoň 2 znaky…</string>
   <string name="details_timer_select_program">Vyberte program</string>
   <string name="details_recuperator_ventilation">Vetranie</string>

@@ -50,8 +50,8 @@ import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.data.source.local.entity.UserIconEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.data.source.remote.channel.FLAG_ZWAVE_BRIDGE
 import org.supla.android.lib.SuplaConst
+import org.supla.core.shared.data.model.channel.FLAG_ZWAVE_BRIDGE
 import org.supla.core.shared.data.model.general.SuplaFunction
 
 @Dao

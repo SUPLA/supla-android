@@ -40,7 +40,7 @@ import org.supla.android.features.details.detailbase.electricitymeter.Electricit
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterState
 import org.supla.android.features.details.detailbase.impulsecounter.ImpulseCounterGeneralStateHandler
 import org.supla.android.features.details.detailbase.impulsecounter.ImpulseCounterState
-import org.supla.android.features.details.relayschedule.BaseRelayGeneralViewModel
+import org.supla.android.features.details.detailbase.relay.BaseRelayGeneralViewModel
 import org.supla.android.features.details.relayschedule.OperatingMode
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaThreading
