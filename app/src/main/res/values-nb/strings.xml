@@ -846,6 +846,14 @@
   <string name="general_search">Søk</string>
   <string name="general_open_drawer">Åpne meny</string>
   <string name="general_back">Tilbake</string>
+  <string name="general_lock">Lås</string>
+  <string name="general_unlock">Lås opp</string>
+  <string name="general_locked">Låst</string>
+  <string name="general_unlocked">Ulåst</string>
+  <string name="at_allow_temporary_unlock">Tillat midlertidig opplåsing</string>
+  <string name="at_locked_temporary_unlock_allowed">Låst med mulighet for midlertidig opplåsing</string>
+  <string name="action_trigger_schedule_temporary_unlock_duration">Varighet for midlertidig opplåsing</string>
+  <string name="channel_caption_action_trigger">Handlingsutløser</string>
   <string name="toolbar_search_hint">Skriv inn minst 2 tegn…</string>
   <string name="details_timer_select_program">Velg program</string>
   <string name="details_recuperator_ventilation">Ventilasjon</string>

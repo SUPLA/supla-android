@@ -843,6 +843,14 @@
   <string name="general_search">Αναζήτηση</string>
   <string name="general_open_drawer">Άνοιγμα μενού</string>
   <string name="general_back">Πίσω</string>
+  <string name="general_lock">Κλείδωμα</string>
+  <string name="general_unlock">Ξεκλείδωμα</string>
+  <string name="general_locked">Κλειδωμένο</string>
+  <string name="general_unlocked">Ξεκλειδωμένο</string>
+  <string name="at_allow_temporary_unlock">Να επιτρέπεται το προσωρινό ξεκλείδωμα</string>
+  <string name="at_locked_temporary_unlock_allowed">Κλειδωμένο με δυνατότητα προσωρινού ξεκλειδώματος</string>
+  <string name="action_trigger_schedule_temporary_unlock_duration">Διάρκεια προσωρινού ξεκλειδώματος</string>
+  <string name="channel_caption_action_trigger">Ενεργοποιητής ενέργειας</string>
   <string name="toolbar_search_hint">Πληκτρολογήστε τουλάχιστον 2 χαρακτήρες…</string>
   <string name="details_timer_select_program">Επιλέξτε πρόγραμμα</string>
   <string name="details_recuperator_ventilation">Αερισμός</string>

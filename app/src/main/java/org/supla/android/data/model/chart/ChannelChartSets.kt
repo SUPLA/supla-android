@@ -147,7 +147,8 @@ fun SuplaFunction.hasCustomFilters(): Boolean =
     SuplaFunction.BINARY_SENSOR,
     SuplaFunction.SMOKE_SENSOR,
     SuplaFunction.CARBON_MONOXIDE_SENSOR,
-    SuplaFunction.GAS_SENSOR -> false
+    SuplaFunction.GAS_SENSOR,
+    SuplaFunction.ACTION_TRIGGER -> false
     SuplaFunction.ELECTRICITY_METER,
     SuplaFunction.POWER_SWITCH,
     SuplaFunction.LIGHTSWITCH,

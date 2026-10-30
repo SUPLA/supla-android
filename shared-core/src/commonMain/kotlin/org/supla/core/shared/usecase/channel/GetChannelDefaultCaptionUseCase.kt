@@ -18,6 +18,7 @@ package org.supla.core.shared.usecase.channel
  */
 
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_ACTION_TRIGGER
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_ALARM_ARMAMENT_SENSOR
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_BINARY_SENSOR
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_CARBON_MONOXIDE_SENSOR
@@ -159,5 +160,6 @@ class GetChannelDefaultCaptionUseCase {
       SuplaFunction.SMOKE_SENSOR -> localizedString(CHANNEL_CAPTION_SMOKE_SENSOR)
       SuplaFunction.CARBON_MONOXIDE_SENSOR -> localizedString(CHANNEL_CAPTION_CARBON_MONOXIDE_SENSOR)
       SuplaFunction.GAS_SENSOR -> localizedString(CHANNEL_CAPTION_GAS_SENSOR)
+      SuplaFunction.ACTION_TRIGGER -> localizedString(CHANNEL_CAPTION_ACTION_TRIGGER)
     }
 }

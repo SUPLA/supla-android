@@ -30,7 +30,6 @@ import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
-import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 import org.supla.android.data.source.remote.electricitymeter.ElectricityMeterPhaseSequence
 import org.supla.android.lib.SuplaChannelElectricityMeterValue
@@ -39,6 +38,7 @@ import org.supla.android.lib.SuplaChannelElectricityMeterValue.Summary
 import org.supla.android.lib.SuplaChannelExtendedValue
 import org.supla.android.ui.views.card.SummaryCardData
 import org.supla.android.usecases.channel.measurements.ElectricityMeasurements
+import org.supla.core.shared.data.model.channel.SuplaChannelFlag
 
 class ElectricityMeterGeneralStateHandlerTest {
   @MockK

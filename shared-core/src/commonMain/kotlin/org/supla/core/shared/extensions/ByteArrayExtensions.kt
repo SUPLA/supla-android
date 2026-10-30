@@ -27,7 +27,9 @@ fun ByteArray.toTemperature(first: Int = 0, second: Int = 1): Float {
   return toShort(first, second).fromSuplaTemperature()
 }
 
-@OptIn(ExperimentalStdlibApi::class)
 fun ByteArray.toHex(separator: String = ""): String = joinToString(separator = separator) {
   it.toHexString(HexFormat { })
 }
+
+fun ByteArray.toInt(first: Int = 0): Int =
+  Endian.Little.intOf(this[first], this[first + 1], this[first + 2], this[first + 3])

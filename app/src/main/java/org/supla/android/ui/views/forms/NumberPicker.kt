@@ -1,21 +1,21 @@
 package org.supla.android.ui.views.forms
 /*
-  Copyright (C) AC SOFTWARE SP. Z O.O.
+ Copyright (C) AC SOFTWARE SP. Z O.O.
 
-  This program is free software; you can redistribute it and/or
-  modify it under the terms of the GNU General Public License
-  as published by the Free Software Foundation; either version 2
-  of the License, or (at your option) any later version.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-*/
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -47,23 +47,34 @@ fun NumberPicker(
       val view = LayoutInflater.from(context).inflate(R.layout.inc_number_picker, null)
 
       val numberPicker = view.findViewById<NumberPicker>(R.id.inc_number_picker)
-      numberPicker.displayedValues =
-        mutableListOf<String>().also {
-          for (i in range) {
-            it.add(formatter(context, i))
-          }
-        }.toTypedArray()
       numberPicker.minValue = range.first
       numberPicker.maxValue = range.last
-      numberPicker.value = selectedValue
+      numberPicker.displayedValues = range.map { formatter(context, it) }.toTypedArray()
+      numberPicker.value = selectedValue.coerceIn(range)
       numberPicker.setOnValueChangedListener { _, _, newValue -> onValueChanged(newValue) }
 
       view
     },
     update = { view ->
       val numberPicker = view.findViewById<NumberPicker>(R.id.inc_number_picker)
-      if (numberPicker.value != selectedValue) {
-        numberPicker.value = selectedValue
+      val formattedValues = range.map { formatter(view.context, it) }.toTypedArray()
+      val rangeChanged = numberPicker.minValue != range.first || numberPicker.maxValue != range.last
+      val valuesChanged = numberPicker.displayedValues?.contentEquals(formattedValues) != true
+
+      numberPicker.setOnValueChangedListener { _, _, newValue -> onValueChanged(newValue) }
+
+      if (rangeChanged || valuesChanged) {
+        val temporaryMin = minOf(numberPicker.minValue, range.first)
+        val temporaryMax = maxOf(numberPicker.maxValue, range.last)
+        numberPicker.displayedValues = null
+        numberPicker.minValue = temporaryMin
+        numberPicker.maxValue = temporaryMax
+        numberPicker.value = selectedValue.coerceIn(range)
+        numberPicker.minValue = range.first
+        numberPicker.maxValue = range.last
+        numberPicker.displayedValues = formattedValues
+      } else if (numberPicker.value != selectedValue) {
+        numberPicker.value = selectedValue.coerceIn(range)
       }
     }
   )

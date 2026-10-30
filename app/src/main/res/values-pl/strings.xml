@@ -938,6 +938,13 @@
   <string name="general_search">Szukaj</string>
   <string name="general_open_drawer">Otwórz menu</string>
   <string name="general_back">Powrót</string>
+  <string name="general_lock">Zablokuj</string>
+  <string name="general_unlock">Odblokuj</string>
+  <string name="general_locked">Zablokowany</string>
+  <string name="general_unlocked">Odblokowany</string>
+  <string name="at_allow_temporary_unlock">Zezwalaj na tymczasowe odblokowanie</string>
+  <string name="at_locked_temporary_unlock_allowed">Zablokowany z możliwością chwilowego odblokowania</string>
+  <string name="channel_caption_action_trigger">Wyzwalacz akcji</string>
   <string name="toolbar_search_hint">Wpisz 2 znaki, aby wyszukać…</string>
   <string name="details_timer_select_program">Wybierz program</string>
   <string name="details_recuperator_open_window">Otw. okno</string>
@@ -981,4 +988,5 @@
   <string name="relay_schedule_program_mode_automatic">Automatyczny</string>
   <string name="relay_schedule_program_first_duration">Pierwszy czas trwania (%1$s)</string>
   <string name="relay_schedule_program_second_duration">Drugi czas trwania (%1$s)</string>
+  <string name="action_trigger_schedule_temporary_unlock_duration">Czas chwilowego odblokowania</string>
 </resources>

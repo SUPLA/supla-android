@@ -35,10 +35,10 @@ import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.remote.SuplaEventType
-import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.images.ImageId
 import org.supla.android.main.view.EventNotificationState
 import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.core.shared.data.model.channel.SuplaChannelFlag
 import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
