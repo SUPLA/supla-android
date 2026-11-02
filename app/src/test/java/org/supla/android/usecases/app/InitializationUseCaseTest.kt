@@ -38,7 +38,6 @@ import org.supla.android.core.networking.suplaclient.SuplaClientEvent
 import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.data.source.ProfileRepository
-import org.supla.android.db.DbHelper
 import org.supla.android.db.room.app.AppDatabase
 import org.supla.android.db.room.measurements.MeasurementsDatabase
 import org.supla.android.usecases.icon.LoadUserIconsIntoCacheUseCase
@@ -108,7 +107,7 @@ class InitializationUseCaseTest {
   fun `should initialize and set initialized state - database migrations fails in production`() {
     // given
     val context: Context = mockk {
-      every { deleteDatabase(DbHelper.DATABASE_NAME) } returns true
+      every { deleteDatabase(AppDatabase.NAME) } returns true
       every { deleteDatabase(MeasurementsDatabase.NAME) } returns true
     }
     every { dateProvider.currentTimestamp() } returnsMany listOf(5, 10)
@@ -127,7 +126,7 @@ class InitializationUseCaseTest {
     verify {
       stateHolder.handleEvent(SuplaClientEvent.Initialized)
       threadHandler.sleep(495)
-      context.deleteDatabase(DbHelper.DATABASE_NAME)
+      context.deleteDatabase(AppDatabase.NAME)
       context.deleteDatabase(MeasurementsDatabase.NAME)
     }
     confirmVerified(stateHolder, threadHandler, context)
@@ -137,7 +136,7 @@ class InitializationUseCaseTest {
   fun `should initialize and set initialized state - database migrations fails in production, delete fails`() {
     // given
     val context: Context = mockk {
-      every { deleteDatabase(DbHelper.DATABASE_NAME) } returns false
+      every { deleteDatabase(AppDatabase.NAME) } returns false
       every { deleteDatabase(MeasurementsDatabase.NAME) } returns true
     }
     every { dateProvider.currentTimestamp() } returnsMany listOf(5, 1010)
@@ -154,7 +153,7 @@ class InitializationUseCaseTest {
     // then
     verify {
       stateHolder.handleEvent(SuplaClientEvent.NoAccount)
-      context.deleteDatabase(DbHelper.DATABASE_NAME)
+      context.deleteDatabase(AppDatabase.NAME)
       context.deleteDatabase(MeasurementsDatabase.NAME)
     }
     confirmVerified(stateHolder, threadHandler, context)

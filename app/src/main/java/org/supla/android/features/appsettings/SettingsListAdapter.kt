@@ -25,7 +25,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import org.supla.android.R
 import org.supla.android.data.model.general.LockScreenScope
-import org.supla.android.data.model.general.NightModeSetting
 import org.supla.android.data.source.runtime.appsettings.ChannelHeight
 import org.supla.android.databinding.LiSettingsArrowButtonBinding
 import org.supla.android.databinding.LiSettingsChannelHeightBinding
@@ -38,6 +37,7 @@ import org.supla.android.databinding.LiSettingsRollerShutterBinding
 import org.supla.android.databinding.LiSettingsSwitchBinding
 import org.supla.android.databinding.LiSettingsTemperaturePrecisionBinding
 import org.supla.android.databinding.LiSettingsTemperatureUnitBinding
+import org.supla.core.shared.data.model.export.NightModeSetting
 import org.supla.core.shared.data.model.thermometer.TemperatureUnit
 import java.text.DecimalFormatSymbols
 import javax.inject.Inject
@@ -128,6 +128,7 @@ sealed class SettingItem(val viewResource: Int) {
     override fun bind(holder: SettingItemViewHolder<*>) {
       (holder.binding as LiSettingsSwitchBinding).apply {
         settingsSwitchLabel.setText(R.string.cfg_button_autohide)
+        settingsSwitch.isEnabled = true
         settingsSwitch.isChecked = active
         settingsSwitch.setOnCheckedChangeListener { _, allowed -> callback(allowed) }
       }
@@ -141,6 +142,7 @@ sealed class SettingItem(val viewResource: Int) {
     override fun bind(holder: SettingItemViewHolder<*>) {
       (holder.binding as LiSettingsSwitchBinding).apply {
         settingsSwitchLabel.setText(R.string.show_channel_info)
+        settingsSwitch.isEnabled = true
         settingsSwitch.isChecked = visible
         settingsSwitch.setOnCheckedChangeListener { _, allowed -> callback(allowed) }
       }
@@ -172,6 +174,7 @@ sealed class SettingItem(val viewResource: Int) {
     override fun bind(holder: SettingItemViewHolder<*>) {
       (holder.binding as LiSettingsSwitchBinding).apply {
         settingsSwitchLabel.setText(R.string.settings_show_bottom_menu)
+        settingsSwitch.isEnabled = true
         settingsSwitch.isChecked = visible
         settingsSwitch.setOnCheckedChangeListener { _, allowed -> callback(allowed) }
       }
@@ -185,6 +188,7 @@ sealed class SettingItem(val viewResource: Int) {
     override fun bind(holder: SettingItemViewHolder<*>) {
       (holder.binding as LiSettingsSwitchBinding).apply {
         settingsSwitchLabel.setText(R.string.settings_show_unavailable_channels)
+        settingsSwitch.isEnabled = true
         settingsSwitch.isChecked = hidden
         settingsSwitch.setOnCheckedChangeListener { _, allowed -> callback(allowed) }
       }

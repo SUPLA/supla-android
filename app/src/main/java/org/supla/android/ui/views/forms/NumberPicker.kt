@@ -20,7 +20,18 @@ package org.supla.android.ui.views.forms
 import android.content.Context
 import android.view.LayoutInflater
 import android.widget.NumberPicker
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import org.supla.android.R
 
@@ -49,3 +60,16 @@ fun NumberPicker(
     return@AndroidView view
   })
 }
+
+@Composable
+fun BoxScope.NumberPickerHighlight() =
+  Box(
+    modifier = Modifier
+      .height(40.dp)
+      .fillMaxWidth()
+      .background(
+        color = colorResource(id = R.color.gray_lighter),
+        shape = RoundedCornerShape(dimensionResource(id = R.dimen.radius_default))
+      )
+      .align(Alignment.Center)
+  )

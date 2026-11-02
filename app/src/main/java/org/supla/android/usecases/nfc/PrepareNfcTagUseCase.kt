@@ -27,7 +27,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import org.supla.android.core.infrastructure.nfc.tagUuid
 import org.supla.android.core.infrastructure.nfc.uriFromUriRecord
 import org.supla.android.core.infrastructure.nfc.uuidFromMimeRecord
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import timber.log.Timber
 import java.util.UUID
 import javax.inject.Inject
@@ -40,17 +40,17 @@ private const val URL = "https://$HOST/$PATH/"
 @Singleton
 class PrepareNfcTagUseCase @Inject constructor(
   @param:ApplicationContext private val context: Context,
-  private val schedulers: SuplaSchedulers
+  private val threading: SuplaThreading
 ) {
   suspend operator fun invoke(tag: Tag): Result {
     val ndef = Ndef.get(tag)
     if (ndef != null) {
-      return schedulers.io { ndef.prepareForSupla() }
+      return threading.io { ndef.prepareForSupla() }
     }
 
     val formatable = NdefFormatable.get(tag)
     if (formatable != null) {
-      return schedulers.io { formatable.formatForSupla() }
+      return threading.io { formatable.formatForSupla() }
     }
 
     Timber.w("Only NDEF tag can be locked!")

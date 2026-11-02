@@ -50,7 +50,7 @@ class UpdateChannelStateUseCase @Inject constructor(
 
   private fun create(state: SuplaChannelState): Maybe<ChannelStateEntity> =
     profileRepository.findActiveProfile()
-      .map { state.toEntity(it.id!!) }
+      .map { state.toEntity(it.id) }
       .toMaybe()
 }
 
@@ -59,6 +59,7 @@ private fun ChannelStateEntity.updateBy(state: SuplaChannelState): ChannelStateE
     batteryHealth = state.batteryHealth,
     batteryLevel = state.batteryLevel,
     batteryPowered = state.batteryPowered,
+    batteryState = state.batteryState,
     bridgeNodeOnline = state.bridgeNodeOnline,
     bridgeNodeSignalStrength = state.bridgeNodeSignalStrength,
     connectionUptime = state.connectionUptime,

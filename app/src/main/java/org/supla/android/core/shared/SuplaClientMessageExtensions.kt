@@ -53,12 +53,3 @@ val SuplaClientMessage.Event.event: SuplaEvent
     it.SenderID = senderId
     it.SenderName = senderName
   }
-
-val SuplaClientMessage.OAuthToken.suplaToken: SuplaOAuthToken
-  get() = SuplaOAuthToken(resultCode, timeToLive, token).also {
-    try {
-      it.url = URL(url)
-    } catch (exception: Exception) {
-      Timber.w(exception, "Could not set url")
-    }
-  }

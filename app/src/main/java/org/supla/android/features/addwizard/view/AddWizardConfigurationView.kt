@@ -139,7 +139,7 @@ private fun ProgressView(progress: Float, progressLabel: LocalizedString?) {
 
 private val previewScope = object : AddWizardConfigurationScope {
   override fun onStepFinished(step: AddWizardScreen) {}
-  override fun onClose(step: AddWizardScreen) {}
+  override fun onClose() {}
 }
 
 @Preview(backgroundColor = 0xFF12A71E, showBackground = true)

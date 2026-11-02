@@ -69,7 +69,7 @@ class CheckingRegistration(
 ) : EspConfigurationState {
 
   override val progress: Float = 0.1f
-  override val progressLabel: LocalizedString? = localizedString(LocalizedStringId.ADD_WIZARD_STATE_PREPARING)
+  override val progressLabel: LocalizedString = localizedString(LocalizedStringId.ADD_WIZARD_STATE_PREPARING)
 
   override fun handle(event: EspConfigurationEvent) {
     when (event) {
@@ -103,7 +103,7 @@ class Authorizing(
 ) : EspConfigurationState {
 
   override val progress: Float = 0.2f
-  override val progressLabel: LocalizedString? = localizedString(LocalizedStringId.ADD_WIZARD_STATE_PREPARING)
+  override val progressLabel: LocalizedString = localizedString(LocalizedStringId.ADD_WIZARD_STATE_PREPARING)
 
   override fun handle(event: EspConfigurationEvent) {
     when (event) {
@@ -133,7 +133,7 @@ class ActivatingRegistration(
 ) : EspConfigurationState {
 
   override val progress: Float = 0.3f
-  override val progressLabel: LocalizedString? = localizedString(LocalizedStringId.ADD_WIZARD_STATE_PREPARING)
+  override val progressLabel: LocalizedString = localizedString(LocalizedStringId.ADD_WIZARD_STATE_PREPARING)
 
   override fun handle(event: EspConfigurationEvent) {
     when (event) {
@@ -163,7 +163,7 @@ class NetworkSearch(
 ) : EspConfigurationState {
 
   override val progress: Float = 0.4f
-  override val progressLabel: LocalizedString? = localizedString(LocalizedStringId.ADD_WIZARD_STATE_CONNECTING)
+  override val progressLabel: LocalizedString = localizedString(LocalizedStringId.ADD_WIZARD_STATE_CONNECTING)
 
   override fun handle(event: EspConfigurationEvent) {
     when (event) {
@@ -209,7 +209,7 @@ class ChangingNetwork(
 ) : EspConfigurationState {
 
   override val progress: Float = 0.5f
-  override val progressLabel: LocalizedString? = localizedString(LocalizedStringId.ADD_WIZARD_STATE_CONNECTING)
+  override val progressLabel: LocalizedString = localizedString(LocalizedStringId.ADD_WIZARD_STATE_CONNECTING)
 
   override fun handle(event: EspConfigurationEvent) {
     when (event) {
@@ -245,7 +245,7 @@ class ConfiguringEsp(
 ) : EspConfigurationState {
 
   override val progress: Float = 0.6f
-  override val progressLabel: LocalizedString? = localizedString(LocalizedStringId.ADD_WIZARD_STATE_CONFIGURING)
+  override val progressLabel: LocalizedString = localizedString(LocalizedStringId.ADD_WIZARD_STATE_CONFIGURING)
 
   override fun handle(event: EspConfigurationEvent) {
     when (event) {
@@ -289,7 +289,7 @@ class ConfiguringPassword(
 ) : EspConfigurationState {
 
   override val progress: Float = 0.7f
-  override val progressLabel: LocalizedString? = localizedString(LocalizedStringId.ADD_WIZARD_STATE_CONFIGURING)
+  override val progressLabel: LocalizedString = localizedString(LocalizedStringId.ADD_WIZARD_STATE_CONFIGURING)
 
   override fun handle(event: EspConfigurationEvent) {
     when (event) {
@@ -324,7 +324,7 @@ class ProvidingPassword(
 ) : EspConfigurationState {
 
   override val progress: Float = 0.7f
-  override val progressLabel: LocalizedString? = localizedString(LocalizedStringId.ADD_WIZARD_STATE_CONFIGURING)
+  override val progressLabel: LocalizedString = localizedString(LocalizedStringId.ADD_WIZARD_STATE_CONFIGURING)
 
   override fun handle(event: EspConfigurationEvent) {
     when (event) {
@@ -360,7 +360,7 @@ class Reconnecting(
 ) : EspConfigurationState {
 
   override val progress: Float = 0.8f
-  override val progressLabel: LocalizedString? = localizedString(LocalizedStringId.ADD_WIZARD_STATE_FINISHING)
+  override val progressLabel: LocalizedString = localizedString(LocalizedStringId.ADD_WIZARD_STATE_FINISHING)
 
   override fun handle(event: EspConfigurationEvent) {
     when (event) {
@@ -392,7 +392,7 @@ class Canceling(
 ) : EspConfigurationState {
 
   override val progress: Float = 0.9f
-  override val progressLabel: LocalizedString? = localizedString(LocalizedStringId.ADD_WIZARD_STATE_FINISHING)
+  override val progressLabel: LocalizedString = localizedString(LocalizedStringId.ADD_WIZARD_STATE_FINISHING)
 
   override fun handle(event: EspConfigurationEvent) {
     when (event) {

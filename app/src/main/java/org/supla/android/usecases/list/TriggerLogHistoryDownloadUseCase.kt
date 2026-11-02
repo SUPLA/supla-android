@@ -17,14 +17,15 @@ package org.supla.android.usecases.list
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.rx3.awaitSingleOrNull
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.storage.UserStateHolder
 import org.supla.android.data.model.settings.ListValueAggregation
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.ElectricityMeterLogRepository
 import org.supla.android.data.source.ImpulseCounterLogRepository
 import org.supla.android.data.source.ProfileRepository
-import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
@@ -34,6 +35,7 @@ import timber.log.Timber
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.time.Duration.Companion.seconds
 
 private const val MAX_REFRESH_INTERVAL = 5 * 60 * 1000
 private const val LOG_NORMAL_REFRESH_INTERVAL = 10 * 60 * 1000 // 10 minutes
@@ -47,7 +49,7 @@ class TriggerLogHistoryDownloadUseCase @Inject constructor(
   userStateHolder: UserStateHolder,
   dateProvider: DateProvider,
   private val profileRepository: ProfileRepository,
-  private val channelRepository: RoomChannelRepository
+  private val channelRepository: ChannelRepository
 ) {
 
   private val handlers: List<ChannelHandler> = listOf(
@@ -84,6 +86,7 @@ class TriggerLogHistoryDownloadUseCase @Inject constructor(
       inner@ for (handler in handlers) {
         if (handler.canHandle(channel)) {
           handler.handle(channel)
+          delay(1.seconds)
           continue@outer
         }
       }

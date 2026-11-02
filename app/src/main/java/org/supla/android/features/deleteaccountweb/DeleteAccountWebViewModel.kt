@@ -18,16 +18,21 @@ package org.supla.android.features.deleteaccountweb
  */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
+import org.supla.android.R
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.features.webcontent.WebContentViewModel
 import org.supla.android.features.webcontent.WebContentViewState
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import javax.inject.Inject
 
 @HiltViewModel
 class DeleteAccountWebViewModel @Inject constructor(
-  schedulers: SuplaSchedulers
-) : WebContentViewModel<DeleteAccountWebViewState, DeleteAccountWebViewEvent>(DeleteAccountWebViewState(), schedulers) {
+  threading: SuplaThreading
+) : WebContentViewModel<DeleteAccountWebViewState, DeleteAccountWebViewEvent>(
+  defaultState = DeleteAccountWebViewState(),
+  threading = threading,
+  defaultTitle = R.string.app_name
+) {
 
   override fun urlLoaded(url: String?) {
     super.urlLoaded(url)

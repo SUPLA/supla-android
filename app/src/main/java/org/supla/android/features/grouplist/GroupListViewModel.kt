@@ -18,27 +18,24 @@ package org.supla.android.features.grouplist
  */
 
 import android.net.Uri
-import android.os.Bundle
-import androidx.annotation.IdRes
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.supla.android.Preferences
-import org.supla.android.R
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.rx3.awaitFirst
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
-import org.supla.android.data.model.general.ChannelDataBase
-import org.supla.android.data.source.ChannelRepository
-import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.subscribeBy
-import org.supla.android.features.details.detailbase.StandardDetailFragment
 import org.supla.android.features.details.detailbase.base.DetailPage
 import org.supla.android.features.details.detailbase.base.ItemBundle
-import org.supla.android.features.details.rgbanddimmer.RgbwDetailFragment
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.main.topbar.TopBarSearchData
+import org.supla.android.main.topbar.TopBarSearchEvent
+import org.supla.android.tools.SuplaThreading
+import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.dialogs.ActionAlertDialogState
 import org.supla.android.ui.dialogs.dialogState
 import org.supla.android.ui.lists.BaseListViewModel
@@ -49,11 +46,12 @@ import org.supla.android.usecases.channel.GroupActionUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideGroupDetailTypeUseCase
-import org.supla.android.usecases.details.RgbwDetailType
 import org.supla.android.usecases.details.StandardDetailType
-import org.supla.android.usecases.details.ThermostatDetailType
 import org.supla.android.usecases.group.CreateProfileGroupsListUseCase
+import org.supla.android.usecases.group.GroupToListItemMapper
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
+import org.supla.android.usecases.group.ReorderGroupsUseCase
+import org.supla.android.usecases.list.canMoveItemWithinSection
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 import org.supla.android.usecases.profile.CloudUrl
@@ -66,60 +64,54 @@ class GroupListViewModel @Inject constructor(
   private val provideGroupDetailTypeUseCase: ProvideGroupDetailTypeUseCase,
   private val findGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   private val executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
+  private val groupToListItemMapper: GroupToListItemMapper,
   private val toggleLocationUseCase: ToggleLocationUseCase,
+  private val reorderGroupsUseCase: ReorderGroupsUseCase,
   private val groupActionUseCase: GroupActionUseCase,
-  private val channelRepository: ChannelRepository,
   loadActiveProfileUrlUseCase: LoadActiveProfileUrlUseCase,
   updateEventsManager: UpdateEventsManager,
+  vibrationHelper: VibrationHelper,
   dateProvider: DateProvider,
-  preferences: Preferences,
-  schedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) : BaseListViewModel<GroupListViewState, GroupListViewEvent>(
-  preferences,
+  vibrationHelper,
   dateProvider,
-  schedulers,
+  threading,
   GroupListViewState(),
   loadActiveProfileUrlUseCase
-) {
-
-  override fun sendReassignEvent() = sendEvent(GroupListViewEvent.ReassignAdapter)
+),
+  GroupListScope {
 
   override fun reloadList() = loadGroups()
 
+  var searchData: TopBarSearchData = TopBarSearchData()
+    private set
+
   init {
     observeUpdates(updateEventsManager.observeGroupsUpdate())
+
+    updateEventsManager.observeAllGroups()
+      .attachSilent()
+      .flatMapMaybe { findGroupByRemoteIdUseCase(it) }
+      .map { groupToListItemMapper(it) }
+      .subscribeBy(
+        onNext = { updateDefaultItem(it) },
+        onError = defaultErrorHandler("init()")
+      )
+      .disposeBySelf()
+  }
+
+  fun handle(event: TopBarSearchEvent) {
+    searchData = searchData.handle(event)
+    loadGroups()
   }
 
   fun loadGroups() {
-    createProfileGroupsListUseCase()
+    createProfileGroupsListUseCase(searchData.query)
       .attach()
       .subscribeBy(
-        onNext = { updateState { state -> state.copy(groups = it) } },
+        onNext = { updateItems(it) },
         onError = defaultErrorHandler("loadGroups()")
-      )
-      .disposeBySelf()
-  }
-
-  fun toggleLocationCollapsed(location: LocationEntity) {
-    toggleLocationUseCase(location, CollapsedFlag.GROUP)
-      .andThen(createProfileGroupsListUseCase())
-      .attach()
-      .subscribeBy(
-        onNext = { updateState { state -> state.copy(groups = it) } },
-        onError = defaultErrorHandler("toggleLocationCollapsed($location)")
-      )
-      .disposeBySelf()
-  }
-
-  fun swapItems(firstItem: ChannelDataBase?, secondItem: ChannelDataBase?) {
-    if (firstItem == null || secondItem == null) {
-      return // nothing to swap
-    }
-
-    channelRepository.reorderChannelGroups(firstItem.id, firstItem.locationId, secondItem.id)
-      .attach()
-      .subscribeBy(
-        onError = defaultErrorHandler("swapItems(..., ...)")
       )
       .disposeBySelf()
   }
@@ -154,7 +146,7 @@ class GroupListViewModel @Inject constructor(
     }
   }
 
-  fun onAddGroupClick() {
+  override fun onAddGroupClick() {
     loadServerUrl {
       when (it) {
         is CloudUrl.DefaultCloud -> sendEvent(GroupListViewEvent.NavigateToSuplaCloud)
@@ -180,58 +172,90 @@ class GroupListViewModel @Inject constructor(
     updateState { it.copy(actionAlertDialogState = null) }
   }
 
-  fun updateGroup(remoteId: Int) {
-    if (remoteId > 0) {
-      findGroupByRemoteIdUseCase(remoteId = remoteId)
-        .attachSilent()
-        .subscribeBy(
-          onSuccess = { channel ->
-            currentState().groups
-              ?.filterIsInstance<ListItem.ChannelItem>()
-              ?.firstOrNull { it.channelBase.remoteId == channel.remoteId }
-              ?.channelBase = channel
-          },
-          onError = defaultErrorHandler("updateGroup($remoteId)")
-        )
-        .disposeBySelf()
-    }
-  }
-
   private fun openDetailsByChannelFunction(group: ChannelGroupDataEntity) {
     if (isAvailableInOffline(group).not() && group.status.offline) {
       return // do not open details for offline channels
     }
 
     when (val detailType = provideGroupDetailTypeUseCase(group)) {
-      is LegacyDetailType -> sendEvent(GroupListViewEvent.OpenLegacyDetails(group.remoteId, detailType))
-      is ThermostatDetailType -> sendEvent(GroupListViewEvent.OpenStandardDetail(ItemBundle.from(group), detailType.pages))
-      is StandardDetailType -> sendEvent(GroupListViewEvent.OpenStandardDetail(ItemBundle.from(group), detailType.pages))
-      is RgbwDetailType -> sendEvent(GroupListViewEvent.OpenRgbwDetail(ItemBundle.from(group), detailType.pages))
+      is LegacyDetailType -> sendEvent(GroupListViewEvent.OpenLegacyDetail(group.remoteId, detailType))
+      is StandardDetailType -> sendEvent(GroupListViewEvent.OpenDetail(ItemBundle.from(group), detailType.pages))
       else -> {} // no action
     }
+  }
+
+  override fun onLeftButtonClick(remoteId: Int) {
+    performAction(remoteId, ButtonType.LEFT)
+  }
+
+  override fun onRightButtonClick(remoteId: Int) {
+    performAction(remoteId, ButtonType.RIGHT)
+  }
+
+  override fun moveItems(from: Int, to: Int): Boolean {
+    if (!list.canMoveItemWithinSection(from, to) { it is ListItem.DefaultItem }) {
+      return false
+    }
+
+    listState.add(to, listState.removeAt(from))
+    return true
+  }
+
+  override fun onDragStopped(remoteId: Int) {
+    viewModelScope.launch {
+      val reorderedGroups = this@GroupListViewModel.threading.io {
+        reorderGroupsUseCase(list, remoteId)
+        createProfileGroupsListUseCase().awaitFirst()
+      }
+
+      updateItems(reorderedGroups)
+    }
+  }
+
+  override fun onLocationClick(remoteId: Int) {
+    toggleLocationUseCase(remoteId, CollapsedFlag.GROUP)
+      .andThen(createProfileGroupsListUseCase(searchData.query))
+      .attach()
+      .subscribeBy(
+        onNext = { updateItems(it) },
+        onError = defaultErrorHandler("onLocationClick($remoteId)")
+      )
+      .disposeBySelf()
+  }
+
+  override fun onItemClick(remoteId: Int) {
+    if (isEventAllowed()) {
+      findGroupByRemoteIdUseCase(remoteId)
+        .attach()
+        .subscribeBy(
+          onSuccess = { openDetailsByChannelFunction(it) },
+          onError = defaultErrorHandler("onItemClick($remoteId)")
+        )
+        .disposeBySelf()
+    }
+  }
+
+  override fun onTitleLongClick(item: ListItem) {
+    sendEvent(GroupListViewEvent.ShowGroupCaptionChangeDialog(item.remoteId, item.profileId, item.userCaption))
+  }
+
+  override fun onLocationLongClick(item: ListItem.LocationItem) {
+    sendEvent(GroupListViewEvent.ShowLocationCaptionChangeDialog(item.remoteId, item.profileId, item.userCaption))
   }
 }
 
 sealed class GroupListViewEvent : ViewEvent {
-  data class OpenLegacyDetails(val remoteId: Int, val type: LegacyDetailType) : GroupListViewEvent()
-  data object ReassignAdapter : GroupListViewEvent()
+  data class ShowLocationCaptionChangeDialog(val remoteId: Int, val profileId: Long, val caption: String) : GroupListViewEvent()
+  data class ShowGroupCaptionChangeDialog(val remoteId: Int, val profileId: Long, val caption: String) : GroupListViewEvent()
+
   data object NavigateToSuplaCloud : GroupListViewEvent()
   data object NavigateToSuplaBetaCloud : GroupListViewEvent()
   data class NavigateToPrivateCloud(val url: Uri) : GroupListViewEvent()
 
-  data class OpenStandardDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
-    BaseDetail(R.id.standard_detail_fragment, StandardDetailFragment.bundle(itemBundle, pages.toTypedArray()))
-
-  data class OpenRgbwDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
-    BaseDetail(R.id.rgbw_detail_fragment, RgbwDetailFragment.bundle(itemBundle, pages.toTypedArray()))
-
-  abstract class BaseDetail(
-    @param:IdRes val fragmentId: Int,
-    val fragmentArguments: Bundle
-  ) : GroupListViewEvent()
+  data class OpenLegacyDetail(val remoteId: Int, val type: LegacyDetailType) : GroupListViewEvent()
+  data class OpenDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) : GroupListViewEvent()
 }
 
 data class GroupListViewState(
-  val groups: List<ListItem>? = null,
   val actionAlertDialogState: ActionAlertDialogState? = null
 ) : ViewState()

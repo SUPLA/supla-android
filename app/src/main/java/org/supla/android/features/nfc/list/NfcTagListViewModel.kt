@@ -21,6 +21,7 @@ import android.nfc.NfcAdapter
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import org.supla.android.R
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
@@ -28,7 +29,7 @@ import org.supla.android.data.source.NfcTagRepository
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.complex.NfcTagDataEntity
 import org.supla.android.lib.actions.SubjectType
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.core.shared.extensions.forFalse
@@ -42,8 +43,13 @@ class NfcTagListViewModel @Inject constructor(
   private val profileRepository: ProfileRepository,
   private val getCaptionUseCase: GetCaptionUseCase,
   private val nfcTagRepository: NfcTagRepository,
-  schedulers: SuplaSchedulers
-) : BaseViewModel<NfcTagListViewModelState, NfcTagListViewEvent>(NfcTagListViewModelState(), schedulers), NfcTagListScope {
+  threading: SuplaThreading
+) : BaseViewModel<NfcTagListViewModelState, NfcTagListViewEvent>(
+  defaultState = NfcTagListViewModelState(),
+  threading = threading,
+  titleRes = R.string.nfc_list_title
+),
+  NfcTagListScope {
 
   fun onStart(nfcAdapter: NfcAdapter?) {
     val nfcState = when {

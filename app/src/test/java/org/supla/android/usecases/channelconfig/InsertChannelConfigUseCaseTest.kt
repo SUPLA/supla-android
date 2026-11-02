@@ -18,20 +18,14 @@ package org.supla.android.usecases.channelconfig
  */
 
 import androidx.room.rxjava3.EmptyResultSetException
-import io.mockk.every
-import io.mockk.mockk
+import io.mockk.*
+import io.mockk.Called
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.times
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.data.source.ChannelConfigRepository
 import org.supla.android.data.source.GeneralPurposeMeterLogRepository
 import org.supla.android.data.source.ProfileRepository
@@ -48,23 +42,27 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASURE
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_NONE
 
-@RunWith(MockitoJUnitRunner::class)
 class InsertChannelConfigUseCaseTest {
 
-  @Mock
+  @MockK
   private lateinit var channelConfigRepository: ChannelConfigRepository
 
-  @Mock
+  @MockK
   private lateinit var profileRepository: ProfileRepository
 
-  @Mock
+  @MockK
   private lateinit var generalPurposeMeterLogRepository: GeneralPurposeMeterLogRepository
 
-  @Mock
+  @MockK
   private lateinit var downloadEventsManager: DownloadEventsManager
 
-  @InjectMocks
+  @InjectMockKs
   private lateinit var useCase: InsertChannelConfigUseCase
+
+  @Before
+  fun setUp() {
+    MockKAnnotations.init(this)
+  }
 
   @Test
   fun `should do nothing when result is false`() {
@@ -76,8 +74,14 @@ class InsertChannelConfigUseCaseTest {
 
     // then
     observer.assertComplete()
-    verifyNoInteractions(channelConfigRepository, profileRepository)
-    verifyNoInteractions(generalPurposeMeterLogRepository, downloadEventsManager)
+    verify {
+      channelConfigRepository wasNot Called
+      profileRepository wasNot Called
+    }
+    verify {
+      generalPurposeMeterLogRepository wasNot Called
+      downloadEventsManager wasNot Called
+    }
   }
 
   @Test
@@ -93,19 +97,22 @@ class InsertChannelConfigUseCaseTest {
       every { id } returns profileId
     }
 
-    whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profileEntity))
-    whenever(channelConfigRepository.insertOrUpdate(profileId, config)).thenReturn(Completable.complete())
+    every { profileRepository.findActiveProfile() } returns Single.just(profileEntity)
+    every { channelConfigRepository.insertOrUpdate(profileId, config) } returns Completable.complete()
 
     // when
     val observer = useCase.invoke(config, result).test()
 
     // then
     observer.assertComplete()
-    verify(profileRepository).findActiveProfile()
-    verify(channelConfigRepository).insertOrUpdate(profileId, config)
+    verify { profileRepository.findActiveProfile() }
+    verify { channelConfigRepository.insertOrUpdate(profileId, config) }
 
-    verifyNoMoreInteractions(profileRepository, channelConfigRepository)
-    verifyNoInteractions(generalPurposeMeterLogRepository, downloadEventsManager)
+    confirmVerified(profileRepository, channelConfigRepository)
+    verify {
+      generalPurposeMeterLogRepository wasNot Called
+      downloadEventsManager wasNot Called
+    }
   }
 
   @Test
@@ -122,22 +129,25 @@ class InsertChannelConfigUseCaseTest {
       every { id } returns profileId
     }
 
-    whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profileEntity))
-    whenever(channelConfigRepository.insertOrUpdate(profileId, config)).thenReturn(Completable.complete())
-    whenever(channelConfigRepository.findChannelConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER))
-      .thenReturn(Single.error(EmptyResultSetException("")))
+    every { profileRepository.findActiveProfile() } returns Single.just(profileEntity)
+    every { channelConfigRepository.insertOrUpdate(profileId, config) } returns Completable.complete()
+    every { channelConfigRepository.findChannelConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER) } returns
+      Single.error(EmptyResultSetException(""))
 
     // when
     val observer = useCase.invoke(config, result).test()
 
     // then
     observer.assertComplete()
-    verify(profileRepository).findActiveProfile()
-    verify(channelConfigRepository).findChannelConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER)
-    verify(channelConfigRepository, times(2)).insertOrUpdate(profileId, config)
+    verify { profileRepository.findActiveProfile() }
+    verify { channelConfigRepository.findChannelConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER) }
+    verify(exactly = 2) { channelConfigRepository.insertOrUpdate(profileId, config) }
 
-    verifyNoMoreInteractions(profileRepository, channelConfigRepository)
-    verifyNoInteractions(generalPurposeMeterLogRepository, downloadEventsManager)
+    confirmVerified(profileRepository, channelConfigRepository)
+    verify {
+      generalPurposeMeterLogRepository wasNot Called
+      downloadEventsManager wasNot Called
+    }
   }
 
   @Test
@@ -156,22 +166,25 @@ class InsertChannelConfigUseCaseTest {
       every { id } returns profileId
     }
 
-    whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profileEntity))
-    whenever(channelConfigRepository.insertOrUpdate(profileId, config)).thenReturn(Completable.complete())
-    whenever(channelConfigRepository.findChannelConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER))
-      .thenReturn(Single.just(config))
+    every { profileRepository.findActiveProfile() } returns Single.just(profileEntity)
+    every { channelConfigRepository.insertOrUpdate(profileId, config) } returns Completable.complete()
+    every { channelConfigRepository.findChannelConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER) } returns
+      Single.just(config)
 
     // when
     val observer = useCase.invoke(config, result).test()
 
     // then
     observer.assertComplete()
-    verify(profileRepository).findActiveProfile()
-    verify(channelConfigRepository).findChannelConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER)
-    verify(channelConfigRepository).insertOrUpdate(profileId, config)
+    verify { profileRepository.findActiveProfile() }
+    verify { channelConfigRepository.findChannelConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER) }
+    verify { channelConfigRepository.insertOrUpdate(profileId, config) }
 
-    verifyNoMoreInteractions(profileRepository, channelConfigRepository)
-    verifyNoInteractions(generalPurposeMeterLogRepository, downloadEventsManager)
+    confirmVerified(profileRepository, channelConfigRepository)
+    verify {
+      generalPurposeMeterLogRepository wasNot Called
+      downloadEventsManager wasNot Called
+    }
   }
 
   @Test
@@ -190,24 +203,25 @@ class InsertChannelConfigUseCaseTest {
       every { id } returns profileId
     }
 
-    whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profileEntity))
-    whenever(channelConfigRepository.insertOrUpdate(profileId, config)).thenReturn(Completable.complete())
-    whenever(channelConfigRepository.findChannelConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER))
-      .thenReturn(Single.just(config))
-    whenever(generalPurposeMeterLogRepository.delete(remoteId, profileId)).thenReturn(Completable.complete())
+    every { downloadEventsManager.emitProgressState(remoteId, DownloadEventsManager.State.Refresh) } just Runs
+    every { profileRepository.findActiveProfile() } returns Single.just(profileEntity)
+    every { channelConfigRepository.insertOrUpdate(profileId, config) } returns Completable.complete()
+    every { channelConfigRepository.findChannelConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER) } returns
+      Single.just(config)
+    every { generalPurposeMeterLogRepository.delete(remoteId, profileId) } returns Completable.complete()
 
     // when
     val observer = useCase.invoke(config, result).test()
 
     // then
     observer.assertComplete()
-    verify(profileRepository).findActiveProfile()
-    verify(channelConfigRepository).findChannelConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER)
-    verify(channelConfigRepository).insertOrUpdate(profileId, config)
-    verify(generalPurposeMeterLogRepository).delete(remoteId, profileId)
-    verify(downloadEventsManager).emitProgressState(remoteId, DownloadEventsManager.State.Refresh)
+    verify { profileRepository.findActiveProfile() }
+    verify { channelConfigRepository.findChannelConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER) }
+    verify { channelConfigRepository.insertOrUpdate(profileId, config) }
+    verify { generalPurposeMeterLogRepository.delete(remoteId, profileId) }
+    verify { downloadEventsManager.emitProgressState(remoteId, DownloadEventsManager.State.Refresh) }
 
-    verifyNoMoreInteractions(profileRepository, channelConfigRepository, generalPurposeMeterLogRepository, downloadEventsManager)
+    confirmVerified(profileRepository, channelConfigRepository, generalPurposeMeterLogRepository, downloadEventsManager)
   }
 
   @Test
@@ -224,19 +238,22 @@ class InsertChannelConfigUseCaseTest {
       every { id } returns profileId
     }
 
-    whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profileEntity))
-    whenever(channelConfigRepository.delete(profileId, channelRemoteId)).thenReturn(Completable.complete())
+    every { profileRepository.findActiveProfile() } returns Single.just(profileEntity)
+    every { channelConfigRepository.delete(profileId, channelRemoteId) } returns Completable.complete()
 
     // when
     val observer = useCase.invoke(config, result).test()
 
     // then
     observer.assertComplete()
-    verify(profileRepository).findActiveProfile()
-    verify(channelConfigRepository).delete(profileId, channelRemoteId)
+    verify { profileRepository.findActiveProfile() }
+    verify { channelConfigRepository.delete(profileId, channelRemoteId) }
 
-    verifyNoMoreInteractions(profileRepository, channelConfigRepository)
-    verifyNoInteractions(generalPurposeMeterLogRepository, downloadEventsManager)
+    confirmVerified(profileRepository, channelConfigRepository)
+    verify {
+      generalPurposeMeterLogRepository wasNot Called
+      downloadEventsManager wasNot Called
+    }
   }
 
   @Test
@@ -253,7 +270,11 @@ class InsertChannelConfigUseCaseTest {
 
     // then
     observer.assertComplete()
-    verifyNoInteractions(profileRepository, channelConfigRepository)
-    verifyNoInteractions(generalPurposeMeterLogRepository, downloadEventsManager)
+    confirmVerified(
+      profileRepository,
+      channelConfigRepository,
+      generalPurposeMeterLogRepository,
+      downloadEventsManager
+    )
   }
 }

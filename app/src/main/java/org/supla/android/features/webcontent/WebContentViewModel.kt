@@ -19,15 +19,17 @@ syays GNU General Public License for more details.
 
 import android.webkit.WebResourceRequest
 import androidx.annotation.CallSuper
+import androidx.annotation.StringRes
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 
 abstract class WebContentViewModel<S : WebContentViewState, E : ViewEvent>(
   defaultState: S,
-  schedulers: SuplaSchedulers
-) : BaseViewModel<S, E>(defaultState, schedulers) {
+  threading: SuplaThreading,
+  @StringRes defaultTitle: Int
+) : BaseViewModel<S, E>(defaultState, threading, defaultTitle) {
 
   abstract fun loadingState(loading: Boolean): S
 

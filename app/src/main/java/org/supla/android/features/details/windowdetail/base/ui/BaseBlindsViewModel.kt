@@ -17,9 +17,9 @@ package org.supla.android.features.details.windowdetail.base.ui
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.Preferences
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.rollershutter.SuplaChannelFacadeBlindConfig
@@ -34,7 +34,7 @@ import org.supla.android.features.details.windowdetail.base.data.ShadingBlindWin
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.data.facadeblinds.FacadeBlindWindowState
 import org.supla.android.lib.actions.ActionId
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.channel.ObserveChannelWithChildrenUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.CallSuplaClientOperationUseCase
@@ -55,20 +55,20 @@ import kotlin.math.roundToInt
 abstract class BaseBlindsViewModel<S : BaseBlindsViewModelState>(
   private val channelConfigEventsManager: ChannelConfigEventsManager,
   private val executeShadingSystemActionUseCase: ExecuteShadingSystemActionUseCase,
-  private val suplaClientProvider: SuplaClientProvider,
+  override val suplaClientProvider: SuplaClientProvider,
   private val readGroupTiltingDetailsUseCase: ReadGroupTiltingDetailsUseCase,
   executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
   callSuplaClientOperationUseCase: CallSuplaClientOperationUseCase,
   observeChannelWithChildrenUseCase: ObserveChannelWithChildrenUseCase,
   observeChannelGroupByRemoteIdUseCase: ObserveChannelGroupByRemoteIdUseCase,
   getGroupOnlineSummaryUseCase: GetGroupOnlineSummaryUseCase,
-  preferences: Preferences,
+  preferences: ApplicationPreferences,
   dateProvider: DateProvider,
   profileRepository: ProfileRepository,
   loginUseCase: LoginUseCase,
   authorizeUseCase: AuthorizeUseCase,
   defaultState: S,
-  schedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) : BaseWindowViewModel<S>(
   executeShadingSystemActionUseCase,
   executeSimpleActionUseCase,
@@ -83,7 +83,7 @@ abstract class BaseBlindsViewModel<S : BaseBlindsViewModelState>(
   loginUseCase,
   authorizeUseCase,
   defaultState,
-  schedulers
+  threading
 ) {
 
   protected abstract fun updateWindowState(state: S, position: WindowGroupedValue, tilt: Float?, markers: List<ShadingBlindMarker>): S

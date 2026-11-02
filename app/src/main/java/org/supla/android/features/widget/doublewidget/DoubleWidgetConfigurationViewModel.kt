@@ -26,7 +26,7 @@ import org.supla.android.data.model.spinner.ProfileItem
 import org.supla.android.data.model.spinner.SubjectItem
 import org.supla.android.data.model.spinner.SubjectItemConversionScope
 import org.supla.android.data.source.ChannelGroupRepository
-import org.supla.android.data.source.RoomSceneRepository
+import org.supla.android.data.source.SceneRepository
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.extensions.subscribeBy
@@ -35,7 +35,7 @@ import org.supla.android.features.widget.shared.WidgetConfigurationScope
 import org.supla.android.features.widget.shared.WidgetConfigurationViewEvent
 import org.supla.android.features.widget.shared.subjectdetail.SubjectDetail
 import org.supla.android.lib.actions.SubjectType
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ReadAllChannelsWithChildrenUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -61,9 +61,9 @@ class DoubleWidgetConfigurationViewModel @Inject constructor(
   readAllChannelsWithChildrenUseCase: ReadAllChannelsWithChildrenUseCase,
   getChannelValueStringUseCase: GetChannelValueStringUseCase,
   channelGroupRepository: ChannelGroupRepository,
-  sceneRepository: RoomSceneRepository,
+  sceneRepository: SceneRepository,
   powerManager: PowerManager,
-  schedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) : BaseWidgetViewModel(
   readAllChannelsWithChildrenUseCase,
   getChannelValueStringUseCase,
@@ -74,7 +74,7 @@ class DoubleWidgetConfigurationViewModel @Inject constructor(
   sceneRepository,
   powerManager,
   context,
-  schedulers
+  threading
 ),
   WidgetConfigurationScope,
   SubjectItemConversionScope {
@@ -93,7 +93,7 @@ class DoubleWidgetConfigurationViewModel @Inject constructor(
   private fun loadForAdd() {
     readAllProfilesUseCase()
       .flatMapSingle { profiles ->
-        profiles.firstOrNull { it.active == true }?.id?.let { profileId ->
+        profiles.firstOrNull { it.active }?.id?.let { profileId ->
           return@flatMapSingle getSubjectsSource(profileId, SubjectType.CHANNEL).map { Pair(profiles, it) }
         }
         Single.just(Pair(profiles, emptyList()))
@@ -101,7 +101,7 @@ class DoubleWidgetConfigurationViewModel @Inject constructor(
       .attach()
       .subscribeBy(
         onNext = { (profiles, subjects) ->
-          val activeProfile = profiles.first { it.active == true }
+          val activeProfile = profiles.first { it.active }
           updateState { state ->
             state.copy(
               viewState = state.viewState.copy(

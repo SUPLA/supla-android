@@ -47,9 +47,10 @@ class ReconnectToInternetUseCase @Inject constructor(
       connectToSsidUseCase.disconnect()
       ConnectResult.SUCCESS
     } else {
+      connectToSsidUseCase.disconnect()
       networkId?.let {
         legacyEnableWifiUseCase.connect(it)
-      } ?: ConnectResult.TIMEOUT
+      } ?: ConnectResult.SUCCESS
     }
 }
 

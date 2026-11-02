@@ -25,8 +25,8 @@ android {
     applicationId = "org.supla.android"
     minSdk = libs.versions.minSdk.get().toInt()
     targetSdk = libs.versions.targetSdk.get().toInt()
-  versionCode = 327
-    versionName = "26.07"
+    versionCode = 338
+    versionName = "26.09"
 
     ndk {
       moduleName = "suplaclient"
@@ -145,6 +145,10 @@ dependencies {
   implementation(libs.androidx.room.rxjava)
   implementation(libs.androidx.room.ktx)
   implementation(libs.androidx.security.crypto)
+  implementation(libs.androidx.datastore.core)
+  implementation(libs.androidx.datastore.preferences.core)
+  implementation(libs.androidx.datastore.tink)
+  implementation(libs.tink.android)
   implementation(libs.androidx.navigation.fragment)
   implementation(libs.androidx.navigation.ui)
   implementation(libs.androidx.compose.ui)
@@ -154,6 +158,7 @@ dependencies {
   implementation(libs.androidx.compose.material.icons)
   implementation(libs.androidx.compose.material3)
   implementation(libs.androidx.compose.material3.adaptive)
+  implementation(libs.androidx.compose.material3.adaptive.navigation.suite)
   implementation(libs.androidx.compose.constraintLayout)
   implementation(libs.androidx.car.app)
   implementation(libs.androidx.glance.widget)
@@ -163,6 +168,7 @@ dependencies {
   implementation(libs.androidx.navigation3.runtime)
   implementation(libs.androidx.navigation3.ui)
   implementation(libs.androidx.navigation3.viewmodel)
+  implementation(libs.androidx.biometric.compose)
   implementation(libs.hilt.navigation.compose)
 
   implementation(libs.rxjava)
@@ -180,7 +186,8 @@ dependencies {
   implementation(libs.jsoup)
   implementation(libs.coil)
   implementation(libs.guava)
-  implementation(libs.reorderable)
+  //implementation(libs.reorderable)
+  implementation(files("libs/reorderable-release.aar"))
   implementation(libs.google.barcode.scanner)
   implementation(libs.timber)
 
@@ -195,8 +202,6 @@ dependencies {
   testImplementation(libs.testing.coroutines)
   testImplementation(libs.testing.mockk)
   testImplementation(libs.testing.assertj)
-  testImplementation(libs.testing.mockito)
-  testImplementation(libs.testing.mockito.kotlin)
   testImplementation(libs.testing.androidx)
   testImplementation(libs.testing.androidx.navigation)
   testImplementation(libs.testing.androidx.runner)
@@ -240,4 +245,3 @@ spotless {
     )
   }
 }
-

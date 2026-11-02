@@ -18,6 +18,7 @@ package org.supla.android.core.networking.suplaclient
  */
 
 import org.supla.android.lib.AndroidSuplaClientMessageHandler
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessageHandler
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -31,5 +32,9 @@ class SuplaClientMessageHandlerWrapper @Inject constructor() {
 
   fun unregisterMessageListener(listener: SuplaClientMessageHandler.Listener) {
     AndroidSuplaClientMessageHandler.getGlobalInstance().unregister(listener)
+  }
+
+  fun sendMessage(msg: SuplaClientMessage) {
+    AndroidSuplaClientMessageHandler.getGlobalInstance().sendMessage(msg)
   }
 }

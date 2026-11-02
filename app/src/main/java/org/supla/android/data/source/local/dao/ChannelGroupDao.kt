@@ -18,7 +18,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
@@ -60,6 +63,50 @@ interface ChannelGroupDao {
     """
   )
   fun findByRemoteId(remoteId: Int): Maybe<ChannelGroupEntity>
+
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  suspend fun insert(entity: ChannelGroupEntity)
+
+  @Update
+  suspend fun update(entity: ChannelGroupEntity)
+
+  @Query(
+    """
+      UPDATE $TABLE_NAME
+      SET $COLUMN_VISIBLE = :visible
+      WHERE $COLUMN_VISIBLE = :whereVisible
+        AND $COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
+    """
+  )
+  suspend fun setChannelGroupsVisible(visible: Int, whereVisible: Int): Int
+
+  @Query(
+    """
+      UPDATE $TABLE_NAME
+      SET $COLUMN_POSITION = :position
+      WHERE $COLUMN_REMOTE_ID = :remoteId
+        AND $COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
+    """
+  )
+  suspend fun updatePosition(remoteId: Int, position: Int)
+
+  @Query(
+    """
+      UPDATE $TABLE_NAME
+      SET $COLUMN_POSITION = 0
+      WHERE $COLUMN_LOCATION_ID IN (:locationRemoteIds)
+        AND $COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
+    """
+  )
+  suspend fun resetPositions(locationRemoteIds: List<Int>)
+
+  @Transaction
+  suspend fun updatePositions(locationRemoteIds: List<Int>, orderedRemoteIds: List<Int>) {
+    resetPositions(locationRemoteIds)
+    orderedRemoteIds.forEachIndexed { index, remoteId ->
+      updatePosition(remoteId, index + 1)
+    }
+  }
 
   @Query(
     """
@@ -128,6 +175,7 @@ interface ChannelGroupDao {
       FROM $TABLE_NAME channel_group
       JOIN ${LocationEntity.TABLE_NAME} location
         ON channel_group.$COLUMN_LOCATION_ID = location.${LocationEntity.COLUMN_REMOTE_ID}
+          AND channel_group.$COLUMN_PROFILE_ID = location.${LocationEntity.COLUMN_PROFILE_ID}
       WHERE channel_group.$COLUMN_REMOTE_ID = :groupRemoteId
         AND channel_group.$COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
     """

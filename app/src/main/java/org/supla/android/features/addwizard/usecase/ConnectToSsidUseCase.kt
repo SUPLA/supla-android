@@ -31,6 +31,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withLock
@@ -43,6 +44,7 @@ import org.supla.android.usecases.client.DisconnectUseCase
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 private val TIMEOUT = 60.seconds
@@ -58,7 +60,7 @@ class ConnectToSsidUseCase @Inject constructor(
 
   private val mutex = Mutex()
   private val connectivityHandler = ConnectivityHandler(connectivityManager)
-  private val legacyConnectivityHandler = LegacyConnectivityHandler(context, wifiManager)
+  private val legacyConnectivityHandler = LegacyConnectivityHandler(connectivityManager, context, wifiManager)
 
   suspend fun connect(ssid: String): ConnectResult {
     mutex.withLock {
@@ -79,7 +81,11 @@ class ConnectToSsidUseCase @Inject constructor(
   }
 
   fun disconnect() {
-    connectivityHandler.disconnect()
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      connectivityHandler.disconnect()
+    } else {
+      legacyConnectivityHandler.disconnect()
+    }
   }
 }
 
@@ -133,12 +139,17 @@ private class ConnectivityHandler(
   fun disconnect() {
     // Intentionally extracted, as after unregister the connection are not working
     connectivityManager.bindProcessToNetwork(null)
-    connectivityManager.unregisterNetworkCallback(networkCallback)
+    try {
+      connectivityManager.unregisterNetworkCallback(networkCallback)
+    } catch (exception: IllegalArgumentException) {
+      Timber.d(exception, "Network callback was not registered")
+    }
   }
 }
 
 @Suppress("DEPRECATION")
 private class LegacyConnectivityHandler(
+  private val connectivityManager: ConnectivityManager,
   private val context: Context,
   private val wifiManager: WifiManager
 ) {
@@ -181,7 +192,33 @@ private class LegacyConnectivityHandler(
       context.unregisterReceiver(changeReceiver)
     }
 
-    return changeReceiver.result ?: ConnectResult.FAILURE
+    val result = changeReceiver.result ?: ConnectResult.FAILURE
+    if (result == ConnectResult.SUCCESS) {
+      bindProcessToConnectedWifi()
+    }
+
+    return result
+  }
+
+  private suspend fun bindProcessToConnectedWifi() {
+    withTimeoutOrNull(5.seconds) {
+      do {
+        val wifiNetwork = connectivityManager.allNetworks.firstOrNull {
+          connectivityManager.getNetworkCapabilities(it)?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true
+        }
+
+        if (wifiNetwork != null && connectivityManager.bindProcessToNetwork(wifiNetwork)) {
+          Timber.i("Binding process to legacy WiFi network")
+          return@withTimeoutOrNull
+        }
+
+        delay(200.milliseconds)
+      } while (true)
+    } ?: Timber.w("Could not bind process to legacy WiFi network")
+  }
+
+  fun disconnect() {
+    connectivityManager.bindProcessToNetwork(null)
   }
 
   private val maxConfigurationPriority: Int

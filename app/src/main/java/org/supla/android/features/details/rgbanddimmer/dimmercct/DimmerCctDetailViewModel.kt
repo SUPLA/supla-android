@@ -36,7 +36,7 @@ import org.supla.android.features.details.rgbanddimmer.common.dimmer.BaseDimmerD
 import org.supla.android.features.details.rgbanddimmer.common.dimmer.DimmerDetailViewEvent
 import org.supla.android.features.details.rgbanddimmer.common.dimmer.DimmerValue
 import org.supla.android.images.ImageId
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.channel.GetChannelStateUseCase
 import org.supla.android.usecases.channel.ObserveChannelWithChildrenUseCase
 import org.supla.android.usecases.client.ExecuteRgbwActionUseCase
@@ -59,7 +59,7 @@ class DimmerCctDetailViewModel @Inject constructor(
   getChannelIconUseCase: GetChannelIconUseCase,
   loadingTimeoutManager: LoadingTimeoutManager,
   userStateHolder: UserStateHolder,
-  schedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) : BaseDimmerDetailViewModel(
   observeChannelWithChildrenUseCase,
   readGroupWithChannelsUseCase,
@@ -71,7 +71,7 @@ class DimmerCctDetailViewModel @Inject constructor(
   colorListRepository,
   userStateHolder,
   dateProvider,
-  schedulers
+  threading
 ),
   DimmerCctDetailScope {
 

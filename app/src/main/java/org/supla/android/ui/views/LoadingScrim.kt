@@ -19,8 +19,7 @@ package org.supla.android.ui.views
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,8 +31,7 @@ import org.supla.android.R
 fun LoadingScrim() =
   Box(
     modifier = Modifier
-      .fillMaxWidth()
-      .fillMaxHeight()
+      .fillMaxSize()
       .background(color = colorResource(id = R.color.dialog_scrim))
   ) {
     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))

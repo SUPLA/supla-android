@@ -21,9 +21,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.Disposable
-import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.storage.UserStateHolder
 import org.supla.android.data.model.Optional
 import org.supla.android.data.model.chart.ChannelChartSets
@@ -55,7 +55,7 @@ import org.supla.android.features.details.detailbase.history.HistoryDetailViewSt
 import org.supla.android.features.details.detailbase.history.ui.ChartDataSelectionDialogState
 import org.supla.android.features.details.detailbase.history.ui.CheckboxItem
 import org.supla.android.lib.SuplaChannelElectricityMeterValue
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.views.spinner.SpinnerItem
 import org.supla.android.usecases.channel.DeleteChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
@@ -83,13 +83,13 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
   private val suplaCloudServiceProvider: SuplaCloudService.Provider,
   private val downloadEventsManager: DownloadEventsManager,
   private val userStateHolder: UserStateHolder,
-  private val preferences: Preferences,
+  private val preferences: ApplicationPreferences,
   deleteChannelMeasurementsUseCase: DeleteChannelMeasurementsUseCase,
   readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   groupingStringMigrationUseCase: GroupingStringMigrationUseCase,
   profileRepository: ProfileRepository,
-  schedulers: SuplaSchedulers,
-  dateProvider: DateProvider
+  dateProvider: DateProvider,
+  threading: SuplaThreading
 ) : BaseHistoryDetailViewModel(
   deleteChannelMeasurementsUseCase,
   readChannelWithChildrenUseCase,
@@ -97,7 +97,7 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
   profileRepository,
   userStateHolder,
   dateProvider,
-  schedulers
+  threading
 ) {
 
   private var downloadEventsDisposable: Disposable? = null

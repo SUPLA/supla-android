@@ -18,6 +18,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import static org.supla.android.model.general.NightModeSettingAndroid.appCompatDelegateValue;
+import static org.supla.android.model.general.NightModeSettingAndroid.modeManagerValue;
+
 import android.app.Application;
 import android.app.UiModeManager;
 import android.content.Context;
@@ -48,12 +51,11 @@ import org.supla.android.core.observers.AppLifecycleObserver;
 import org.supla.android.core.storage.ApplicationPreferences;
 import org.supla.android.core.storage.EncryptedPreferences;
 import org.supla.android.data.ValuesFormatter;
-import org.supla.android.data.model.general.NightModeSetting;
-import org.supla.android.db.DbHelper;
 import org.supla.android.db.room.app.AppDatabase;
 import org.supla.android.lib.AndroidSuplaClientMessageHandler;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.widget.extended.ExtendedValueWidgetWorker;
+import org.supla.core.shared.data.model.export.NightModeSetting;
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage;
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessageHandler;
 import timber.log.Timber;
@@ -97,8 +99,6 @@ public class SuplaApp extends Application
 
     notificationsHelper.registerForToken();
     ProcessLifecycleOwner.get().getLifecycle().addObserver(appLifecycleObserver);
-
-    SuplaFormatter.sharedFormatter();
 
     AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     WorkManager.initialize(this, new Builder().setWorkerFactory(workerFactory).build());
@@ -174,13 +174,13 @@ public class SuplaApp extends Application
   private void setupNightMode() {
     NightModeSetting nightModeSetting = applicationPreferences.getNightMode();
     if (VERSION.SDK_INT < VERSION_CODES.S) {
-      AppCompatDelegate.setDefaultNightMode(nightModeSetting.appCompatDelegateValue());
+      AppCompatDelegate.setDefaultNightMode(appCompatDelegateValue(nightModeSetting));
     }
     if (nightModeSetting == NightModeSetting.UNSET) {
       applicationPreferences.setNightMode(NightModeSetting.NEVER);
       if (VERSION.SDK_INT >= VERSION_CODES.S) {
         // If unset, expected is that the app will start without night mode.
-        modeManager.setApplicationNightMode(nightModeSetting.modeManagerValue());
+        modeManager.setApplicationNightMode(modeManagerValue(nightModeSetting));
       }
     }
   }
@@ -213,7 +213,7 @@ public class SuplaApp extends Application
       }
 
       Timber.e(exception, "Could not migrate database, trying to delete it");
-      boolean result = deleteDatabase(DbHelper.DATABASE_NAME);
+      boolean result = deleteDatabase(AppDatabase.NAME);
       Timber.e("Database deletion finished with %s", (result ? "success" : "failure"));
     }
   }

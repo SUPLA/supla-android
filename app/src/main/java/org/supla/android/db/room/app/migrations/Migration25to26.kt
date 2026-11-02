@@ -19,21 +19,19 @@ package org.supla.android.db.room.app.migrations
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import org.supla.android.Preferences
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.local.entity.SceneEntity
-import org.supla.android.data.source.local.view.SceneView
 import org.supla.android.db.room.SqlExecutor
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class Migration25to26 @Inject constructor(
-  private val preferences: Preferences
+  private val preferences: ApplicationPreferences
 ) : Migration(25, 26), SqlExecutor {
 
   override fun migrate(db: SupportSQLiteDatabase) {
     preferences.setShouldShowNewGestureInfo()
     execSQL(db, SceneEntity.SQL)
-    execSQL(db, SceneView.SQL)
   }
 }

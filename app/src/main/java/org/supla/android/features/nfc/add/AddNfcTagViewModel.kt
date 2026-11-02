@@ -22,28 +22,29 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.supla.android.R
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.source.NfcTagRepository
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.features.nfc.edit.NewItemData
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.nfc.PrepareNfcTagUseCase
 import timber.log.Timber
-import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 @HiltViewModel
 class AddNfcTagViewModel @Inject constructor(
   private val prepareNfcTagUseCase: PrepareNfcTagUseCase,
   private val nfcTagRepository: NfcTagRepository,
-  schedulers: SuplaSchedulers
-) : BaseViewModel<AddNfcTagViewState, AddNfcTagViewEvent>(AddNfcTagViewState(), schedulers), AddNfcTagScope {
+  threading: SuplaThreading
+) : BaseViewModel<AddNfcTagViewState, AddNfcTagViewEvent>(
+  defaultState = AddNfcTagViewState(),
+  threading = threading,
+  titleRes = R.string.menu_nfc
+),
+  AddNfcTagScope {
 
   private var currentJob: Job? = null
-  private lateinit var fragment: WeakReference<AddNfcTagFragment>
-
-  fun attachFragment(fragment: AddNfcTagFragment) {
-    this.fragment = WeakReference(fragment)
-  }
 
   override fun onViewCreated() {
   }
@@ -100,5 +101,8 @@ class AddNfcTagViewModel @Inject constructor(
 sealed interface AddNfcTagViewEvent : ViewEvent {
   data object Close : AddNfcTagViewEvent
   data class OpenExisting(val tagId: Long) : AddNfcTagViewEvent
-  data class ConfigureNewTag(val uuid: String, val readOnly: Boolean) : AddNfcTagViewEvent
+  data class ConfigureNewTag(val uuid: String, val readOnly: Boolean) : AddNfcTagViewEvent {
+    val data: NewItemData
+      get() = NewItemData(uuid, readOnly)
+  }
 }

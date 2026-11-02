@@ -17,8 +17,10 @@ package org.supla.core.shared.data.model.thermometer
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import kotlinx.serialization.Serializable
 import org.supla.core.shared.usecase.channel.valueformatter.types.ValueUnit
 
+@Serializable
 enum class TemperatureUnit(val rawValue: String, val valueUnit: ValueUnit) {
   CELSIUS("C", ValueUnit.TEMPERATURE_CELSIUS),
   FAHRENHEIT("F", ValueUnit.TEMPERATURE_FAHRENHEIT);

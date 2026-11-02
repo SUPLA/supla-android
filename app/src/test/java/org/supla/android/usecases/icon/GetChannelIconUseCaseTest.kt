@@ -17,16 +17,13 @@ package org.supla.android.usecases.icon
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import io.mockk.every
-import io.mockk.mockk
+import io.mockk.*
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.whenever
 import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.model.general.IconType
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
@@ -44,20 +41,24 @@ import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.data.model.general.suplaFunction
 
 @Suppress("SameParameterValue")
-@RunWith(MockitoJUnitRunner::class)
 class GetChannelIconUseCaseTest {
 
-  @Mock
+  @MockK
   private lateinit var getChannelStateUseCase: GetChannelStateUseCase
 
-  @Mock
+  @MockK
   private lateinit var getDefaultIconResourceUseCase: GetDefaultIconResourceUseCase
 
-  @Mock
+  @MockK
   private lateinit var imageCacheProxy: ImageCacheProxy
 
-  @InjectMocks
+  @InjectMockKs
   private lateinit var useCase: GetChannelIconUseCase
+
+  @Before
+  fun setUp() {
+    MockKAnnotations.init(this)
+  }
 
   @Test
   fun `should return null when wrong icon type asked`() {
@@ -102,8 +103,8 @@ class GetChannelIconUseCaseTest {
     val channelBase = mockChannelBase(function, userIconId, altIcon, 0)
 
     val iconData = IconData(function.suplaFunction(), altIcon, channelState)
-    whenever(getDefaultIconResourceUseCase(iconData)).thenReturn(resourceId)
-    whenever(getChannelStateUseCase(channelBase)).thenReturn(channelState)
+    every { getDefaultIconResourceUseCase(iconData) } returns resourceId
+    every { getChannelStateUseCase(channelBase) } returns channelState
 
     // when
     val imageId = useCase.invoke(channelBase)
@@ -127,8 +128,8 @@ class GetChannelIconUseCaseTest {
     val channelDataEntity = mockChannelDataEntity(function, userIconId, altIcon, 0)
 
     val iconData = IconData(function, altIcon, channelState)
-    whenever(getDefaultIconResourceUseCase(iconData)).thenReturn(resourceId)
-    whenever(getChannelStateUseCase(channelDataEntity)).thenReturn(channelState)
+    every { getDefaultIconResourceUseCase(iconData) } returns resourceId
+    every { getChannelStateUseCase(channelDataEntity) } returns channelState
 
     // when
     val imageId = useCase.invoke(channelDataEntity)
@@ -151,9 +152,9 @@ class GetChannelIconUseCaseTest {
 
     val channelBase = mockChannelBase(function, userIconId, altIcon, profileId)
 
-    whenever(getChannelStateUseCase(channelBase)).thenReturn(channelState)
+    every { getChannelStateUseCase(channelBase) } returns channelState
     val expectedImageId = ImageId(userIconId, 2, profileId)
-    whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
+    every { imageCacheProxy.bitmapExists(expectedImageId) } returns true
 
     // when
     val imageId = useCase.invoke(channelBase)
@@ -176,9 +177,9 @@ class GetChannelIconUseCaseTest {
 
     val channelDataEntity = mockChannelDataEntity(function, userIconId, altIcon, profileId)
 
-    whenever(getChannelStateUseCase(channelDataEntity)).thenReturn(channelState)
+    every { getChannelStateUseCase(channelDataEntity) } returns channelState
     val expectedImageId = ImageId(userIconId, 2, profileId)
-    whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
+    every { imageCacheProxy.bitmapExists(expectedImageId) } returns true
 
     // when
     val imageId = useCase(channelDataEntity)
@@ -201,9 +202,9 @@ class GetChannelIconUseCaseTest {
 
     val channelBase = mockChannelBase(function, userIconId, altIcon, profileId)
 
-    whenever(getChannelStateUseCase(channelBase)).thenReturn(channelState)
+    every { getChannelStateUseCase(channelBase) } returns channelState
     val expectedImageId = ImageId(userIconId, 1, profileId)
-    whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
+    every { imageCacheProxy.bitmapExists(expectedImageId) } returns true
 
     // when
     val imageId = useCase.invoke(channelBase)
@@ -226,9 +227,9 @@ class GetChannelIconUseCaseTest {
 
     val channelDataEntity = mockChannelDataEntity(function, userIconId, altIcon, profileId)
 
-    whenever(getChannelStateUseCase(channelDataEntity)).thenReturn(channelState)
+    every { getChannelStateUseCase(channelDataEntity) } returns channelState
     val expectedImageId = ImageId(userIconId, 1, profileId)
-    whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
+    every { imageCacheProxy.bitmapExists(expectedImageId) } returns true
 
     // when
     val imageId = useCase(channelDataEntity)
@@ -252,9 +253,9 @@ class GetChannelIconUseCaseTest {
     val stateWrapper: ValueStateWrapper = mockk()
     val channelBase = mockChannelBase(function, userIconId, altIcon, profileId)
 
-    whenever(getChannelStateUseCase(channelBase)).thenReturn(channelState)
+    every { getChannelStateUseCase(channelBase) } returns channelState
     val expectedImageId = ImageId(userIconId, 2, profileId)
-    whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
+    every { imageCacheProxy.bitmapExists(expectedImageId) } returns true
 
     // when
     val imageId = useCase.invoke(channelBase)
@@ -277,9 +278,9 @@ class GetChannelIconUseCaseTest {
 
     val channelDataEntity = mockChannelDataEntity(function, userIconId, altIcon, profileId)
 
-    whenever(getChannelStateUseCase(channelDataEntity)).thenReturn(channelState)
+    every { getChannelStateUseCase(channelDataEntity) } returns channelState
     val expectedImageId = ImageId(userIconId, 2, profileId)
-    whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
+    every { imageCacheProxy.bitmapExists(expectedImageId) } returns true
 
     // when
     val imageId = useCase(channelDataEntity)
@@ -302,9 +303,9 @@ class GetChannelIconUseCaseTest {
 
     val channelBase = mockChannelBase(function, userIconId, altIcon, profileId)
 
-    whenever(getChannelStateUseCase(channelBase)).thenReturn(channelState)
+    every { getChannelStateUseCase(channelBase) } returns channelState
     val expectedImageId = ImageId(userIconId, 1, profileId)
-    whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
+    every { imageCacheProxy.bitmapExists(expectedImageId) } returns true
 
     // when
     val imageId = useCase.invoke(channelBase, type = IconType.SECOND)
@@ -327,9 +328,9 @@ class GetChannelIconUseCaseTest {
 
     val channelDataEntity = mockChannelDataEntity(function, userIconId, altIcon, profileId)
 
-    whenever(getChannelStateUseCase(channelDataEntity)).thenReturn(channelState)
+    every { getChannelStateUseCase(channelDataEntity) } returns channelState
     val expectedImageId = ImageId(userIconId, 1, profileId)
-    whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
+    every { imageCacheProxy.bitmapExists(expectedImageId) } returns true
 
     // when
     val imageId = useCase(channelDataEntity, type = IconType.SECOND)
@@ -352,9 +353,9 @@ class GetChannelIconUseCaseTest {
 
     val channelBase = mockChannelBase(function, userIconId, altIcon, profileId)
 
-    whenever(getChannelStateUseCase(channelBase)).thenReturn(channelState)
+    every { getChannelStateUseCase(channelBase) } returns channelState
     val expectedImageId = ImageId(userIconId, 1, profileId)
-    whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
+    every { imageCacheProxy.bitmapExists(expectedImageId) } returns true
 
     // when
     val imageId = useCase.invoke(channelBase)
@@ -377,9 +378,9 @@ class GetChannelIconUseCaseTest {
 
     val channelDataEntity = mockChannelDataEntity(function, userIconId, altIcon, profileId)
 
-    whenever(getChannelStateUseCase(channelDataEntity)).thenReturn(channelState)
+    every { getChannelStateUseCase(channelDataEntity) } returns channelState
     val expectedImageId = ImageId(userIconId, 1, profileId)
-    whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
+    every { imageCacheProxy.bitmapExists(expectedImageId) } returns true
 
     // when
     val imageId = useCase(channelDataEntity)
@@ -402,9 +403,9 @@ class GetChannelIconUseCaseTest {
 
     val channelBase = mockChannelBase(function, userIconId, altIcon, profileId)
 
-    whenever(getChannelStateUseCase(channelBase)).thenReturn(channelState)
+    every { getChannelStateUseCase(channelBase) } returns channelState
     val expectedImageId = ImageId(userIconId, 2, profileId)
-    whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
+    every { imageCacheProxy.bitmapExists(expectedImageId) } returns true
 
     // when
     val imageId = useCase.invoke(channelBase)
@@ -427,9 +428,9 @@ class GetChannelIconUseCaseTest {
 
     val channelDataEntity = mockChannelDataEntity(function, userIconId, altIcon, profileId)
 
-    whenever(getChannelStateUseCase(channelDataEntity)).thenReturn(channelState)
+    every { getChannelStateUseCase(channelDataEntity) } returns channelState
     val expectedImageId = ImageId(userIconId, 2, profileId)
-    whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
+    every { imageCacheProxy.bitmapExists(expectedImageId) } returns true
 
     // when
     val imageId = useCase(channelDataEntity)
@@ -452,9 +453,9 @@ class GetChannelIconUseCaseTest {
 
     val channelBase = mockChannelBase(function, userIconId, altIcon, profileId)
 
-    whenever(getChannelStateUseCase(channelBase)).thenReturn(channelState)
+    every { getChannelStateUseCase(channelBase) } returns channelState
     val expectedImageId = ImageId(userIconId, 1, profileId)
-    whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
+    every { imageCacheProxy.bitmapExists(expectedImageId) } returns true
 
     // when
     val imageId = useCase.invoke(channelBase)
@@ -477,9 +478,9 @@ class GetChannelIconUseCaseTest {
 
     val channelDataEntity = mockChannelDataEntity(function, userIconId, altIcon, profileId)
 
-    whenever(getChannelStateUseCase(channelDataEntity)).thenReturn(channelState)
+    every { getChannelStateUseCase(channelDataEntity) } returns channelState
     val expectedImageId = ImageId(userIconId, 1, profileId)
-    whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
+    every { imageCacheProxy.bitmapExists(expectedImageId) } returns true
 
     // when
     val imageId = useCase(channelDataEntity)
@@ -502,9 +503,9 @@ class GetChannelIconUseCaseTest {
 
     val channelBase = mockChannelBase(function, userIconId, altIcon, profileId)
 
-    whenever(getChannelStateUseCase(channelBase)).thenReturn(channelState)
+    every { getChannelStateUseCase(channelBase) } returns channelState
     val expectedImageId = ImageId(userIconId, 3, profileId)
-    whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
+    every { imageCacheProxy.bitmapExists(expectedImageId) } returns true
 
     // when
     val imageId = useCase.invoke(channelBase)
@@ -527,9 +528,9 @@ class GetChannelIconUseCaseTest {
 
     val channelDataEntity = mockChannelDataEntity(function, userIconId, altIcon, profileId)
 
-    whenever(getChannelStateUseCase(channelDataEntity)).thenReturn(channelState)
+    every { getChannelStateUseCase(channelDataEntity) } returns channelState
     val expectedImageId = ImageId(userIconId, 3, profileId)
-    whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
+    every { imageCacheProxy.bitmapExists(expectedImageId) } returns true
 
     // when
     val imageId = useCase(channelDataEntity)
@@ -551,9 +552,9 @@ class GetChannelIconUseCaseTest {
 
     val channelDataEntity = mockChannelDataEntity(function, userIconId, 0, profileId)
 
-    whenever(getChannelStateUseCase(channelDataEntity)).thenReturn(channelState)
+    every { getChannelStateUseCase(channelDataEntity) } returns channelState
     val expectedImageId = ImageId(userIconId, 1, profileId)
-    whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
+    every { imageCacheProxy.bitmapExists(expectedImageId) } returns true
 
     // when
     val imageId = useCase(channelDataEntity)
@@ -575,9 +576,9 @@ class GetChannelIconUseCaseTest {
 
     val channelDataEntity = mockChannelDataEntity(function, userIconId, 0, profileId)
 
-    whenever(getChannelStateUseCase(channelDataEntity)).thenReturn(channelState)
+    every { getChannelStateUseCase(channelDataEntity) } returns channelState
     val expectedImageId = ImageId(userIconId, 2, profileId)
-    whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
+    every { imageCacheProxy.bitmapExists(expectedImageId) } returns true
 
     // when
     val imageId = useCase(channelDataEntity)
@@ -599,9 +600,9 @@ class GetChannelIconUseCaseTest {
 
     val channelDataEntity = mockChannelDataEntity(function, userIconId, 0, profileId)
 
-    whenever(getChannelStateUseCase(channelDataEntity)).thenReturn(channelState)
+    every { getChannelStateUseCase(channelDataEntity) } returns channelState
     val expectedImageId = ImageId(userIconId, 3, profileId)
-    whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
+    every { imageCacheProxy.bitmapExists(expectedImageId) } returns true
 
     // when
     val imageId = useCase(channelDataEntity)
@@ -623,9 +624,9 @@ class GetChannelIconUseCaseTest {
 
     val channelDataEntity = mockChannelDataEntity(function, userIconId, 0, profileId)
 
-    whenever(getChannelStateUseCase(channelDataEntity)).thenReturn(channelState)
+    every { getChannelStateUseCase(channelDataEntity) } returns channelState
     val expectedImageId = ImageId(userIconId, 4, profileId)
-    whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
+    every { imageCacheProxy.bitmapExists(expectedImageId) } returns true
 
     // when
     val imageId = useCase(channelDataEntity)
@@ -647,9 +648,9 @@ class GetChannelIconUseCaseTest {
 
     val channelDataEntity = mockChannelDataEntity(function, userIconId, 0, profileId)
 
-    whenever(getChannelStateUseCase(channelDataEntity)).thenReturn(channelState)
+    every { getChannelStateUseCase(channelDataEntity) } returns channelState
     val expectedImageId = ImageId(userIconId, 4, profileId)
-    whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
+    every { imageCacheProxy.bitmapExists(expectedImageId) } returns true
 
     // when
     val imageId = useCase(channelDataEntity)

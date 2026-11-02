@@ -24,19 +24,23 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import javax.inject.Inject;
 import org.supla.android.SuplaApp;
+import org.supla.android.data.source.ChannelGroupRepository;
+import org.supla.android.data.source.ChannelRepository;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
-import org.supla.android.db.DbHelper;
 import org.supla.android.lib.SuplaClient;
 
 public abstract class DetailLayout extends FrameLayout {
 
-  protected DbHelper DBH;
   private ChannelBase channelBase;
   private View mContentView;
   private int mRemoteId;
   private boolean Group;
+
+  @Inject protected ChannelRepository channelRepository;
+  @Inject protected ChannelGroupRepository channelGroupRepository;
 
   public DetailLayout(Context context) {
     super(context);
@@ -63,7 +67,6 @@ public abstract class DetailLayout extends FrameLayout {
     mRemoteId = 0;
     channelBase = null;
 
-    DBH = DbHelper.getInstance(getContext());
     mContentView = inflateContentView();
 
     if (mContentView != null) {
@@ -101,7 +104,9 @@ public abstract class DetailLayout extends FrameLayout {
   public ChannelBase getChannelFromDatabase() {
 
     if (getRemoteId() != 0) {
-      return isGroup() ? DBH.getChannelGroup(mRemoteId) : DBH.getChannel(getRemoteId());
+      return isGroup()
+          ? channelGroupRepository.findGroupDataEntity(mRemoteId).blockingFirst().getLegacyGroup()
+          : channelRepository.findChannelDataEntity(mRemoteId).blockingFirst().getLegacyChannel();
     }
 
     return null;

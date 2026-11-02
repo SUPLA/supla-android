@@ -28,12 +28,12 @@ import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.spinner.SubjectItem
 import org.supla.android.data.model.spinner.SubjectItemConversionScope
 import org.supla.android.data.source.ChannelGroupRepository
-import org.supla.android.data.source.RoomSceneRepository
+import org.supla.android.data.source.SceneRepository
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.features.widget.shared.subjectdetail.SubjectDetail
 import org.supla.android.lib.actions.SubjectType
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ReadAllChannelsWithChildrenUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -49,13 +49,13 @@ abstract class BaseWidgetViewModel(
   override val getChannelIconUseCase: GetChannelIconUseCase,
   override val getSceneIconUseCase: GetSceneIconUseCase,
   override val getCaptionUseCase: GetCaptionUseCase,
-  private val sceneRepository: RoomSceneRepository,
+  private val sceneRepository: SceneRepository,
   private val powerManager: PowerManager,
   @param:ApplicationContext private val context: Context,
-  schedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) : BaseViewModel<WidgetConfigurationViewModelState, WidgetConfigurationViewEvent>(
   WidgetConfigurationViewModelState(),
-  schedulers
+  threading
 ),
   SubjectItemConversionScope {
 

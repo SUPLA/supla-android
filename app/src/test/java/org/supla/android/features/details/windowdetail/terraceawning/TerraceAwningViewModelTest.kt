@@ -29,10 +29,10 @@ import io.reactivex.rxjava3.core.Observable
 import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
-import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
@@ -49,7 +49,7 @@ import org.supla.android.features.details.windowdetail.base.data.TerraceAwningSt
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemPositionPresentation
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.usecases.channel.ObserveChannelWithChildrenUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
@@ -95,7 +95,7 @@ class TerraceAwningViewModelTest : BaseViewModelTest<TerraceAwningViewModelState
   lateinit var vibrationHelper: VibrationHelper
 
   @RelaxedMockK
-  lateinit var preferences: Preferences
+  lateinit var preferences: ApplicationPreferences
 
   @RelaxedMockK
   lateinit var dateProvider: DateProvider
@@ -113,7 +113,7 @@ class TerraceAwningViewModelTest : BaseViewModelTest<TerraceAwningViewModelState
   lateinit var authorizeUseCase: AuthorizeUseCase
 
   @RelaxedMockK
-  override lateinit var schedulers: SuplaSchedulers
+  override lateinit var threading: SuplaThreading
 
   @InjectMockKs
   override lateinit var viewModel: TerraceAwningViewModel

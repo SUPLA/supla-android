@@ -17,6 +17,7 @@ package org.supla.android.lib
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.core.shared.data.model.battery.BatteryState
 import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.extensions.localizedString
 import org.supla.core.shared.infrastructure.LocalizedString
@@ -30,6 +31,7 @@ interface SuplaChannelStatePrintable {
   val macAddress: String?
   val batteryLevelForPrintable: Int?
   val batteryPoweredForPrintable: Boolean?
+  val batteryStateForPrintable: BatteryState?
   val wifiRssiForPrintable: Int?
   val wifiSignalStrengthForPrintable: Int?
   val bridgeNodeOnlineForPrintable: Boolean?
@@ -44,7 +46,7 @@ interface SuplaChannelStatePrintable {
   val lightSourceOperatingTimeForPrintable: Int?
 }
 
-val SuplaChannelStatePrintable.channelIdString: LocalizedString?
+val SuplaChannelStatePrintable.channelIdString: LocalizedString
   get() = LocalizedString.Constant("$channelId")
 
 val SuplaChannelStatePrintable.batteryLevelString: LocalizedString?
@@ -52,6 +54,9 @@ val SuplaChannelStatePrintable.batteryLevelString: LocalizedString?
 
 val SuplaChannelStatePrintable.batteryPoweredString: LocalizedString?
   get() = batteryPoweredString(batteryPoweredForPrintable)
+
+val SuplaChannelStatePrintable.batteryStateString: LocalizedString?
+  get() = batteryStateString(batteryStateForPrintable)
 
 val SuplaChannelStatePrintable.wifiRssiString: LocalizedString?
   get() = wifiRssiString(wifiRssiForPrintable)
@@ -107,6 +112,14 @@ private fun percentageString(batteryLevel: Int?): LocalizedString? =
 private fun batteryPoweredString(batteryPowered: Boolean?): LocalizedString? =
   batteryPowered?.let {
     localizedString(if (it) LocalizedStringId.CHANNEL_STATE_BATTERY_POWERED else LocalizedStringId.CHANNEL_STATE_MAINS_POWERED)
+  }
+
+private fun batteryStateString(batteryState: BatteryState?): LocalizedString? =
+  batteryState?.let {
+    when (it) {
+      BatteryState.NORMAL -> localizedString(LocalizedStringId.CHANNEL_STATE_BATTERY_NORMAL_VALUE)
+      BatteryState.LOW -> localizedString(LocalizedStringId.CHANNEL_STATE_BATTERY_LOW_VALUE)
+    }
   }
 
 private fun wifiRssiString(wifiRssi: Int?): LocalizedString? =

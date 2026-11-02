@@ -36,25 +36,22 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description
-import org.mockito.kotlin.whenever
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.extensions.isNotNull
 import org.supla.android.testhelpers.StdoutTree
-import org.supla.android.tools.SuplaSchedulers
 import timber.log.Timber
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.isAccessible
 
 @OptIn(ExperimentalCoroutinesApi::class)
 abstract class BaseViewModelTest<S : ViewState, E : ViewEvent, VM : BaseViewModel<S, E>>(
-  private val mockSchedulers: MockSchedulers = MockSchedulers.MOCK
-) {
+  private val mockSchedulers: MockSchedulers = MockSchedulers.MOCKK
+) : CoroutineTest {
 
-  protected abstract val schedulers: SuplaSchedulers
   protected abstract val viewModel: VM
-  open val mainDispatcherRule: MainDispatcherRule? = null
+  override val mainDispatcherRule: MainDispatcherRule? = null
 
   protected val states = mutableListOf<S>()
   protected val events = mutableListOf<E>()
@@ -62,20 +59,16 @@ abstract class BaseViewModelTest<S : ViewState, E : ViewEvent, VM : BaseViewMode
   protected val testScheduler = TestScheduler()
 
   @CallSuper
-  open fun setUp() {
+  override fun setUp() {
     Timber.uprootAll()
     Timber.plant(StdoutTree())
     states.clear()
     events.clear()
 
     when (mockSchedulers) {
-      MockSchedulers.MOCK -> {
-        whenever(schedulers.io).thenReturn(Schedulers.trampoline())
-        whenever(schedulers.ui).thenReturn(Schedulers.trampoline())
-      }
       MockSchedulers.MOCKK -> {
-        every { schedulers.io } returns Schedulers.trampoline()
-        every { schedulers.ui } returns Schedulers.trampoline()
+        every { threading.schedulers.io } returns Schedulers.trampoline()
+        every { threading.schedulers.ui } returns Schedulers.trampoline()
       }
       MockSchedulers.NONE -> {} // No mocks
     }
@@ -90,11 +83,15 @@ abstract class BaseViewModelTest<S : ViewState, E : ViewEvent, VM : BaseViewMode
       .launchIn(CoroutineScope(mainDispatcherRule?.testDispatcher ?: UnconfinedTestDispatcher(TestCoroutineScheduler())))
 
     if (mainDispatcherRule.isNotNull) {
-      coEvery { schedulers.io<Any?>(any()) } answers {
+      coEvery { threading.io<Any?>(any()) } answers {
         val block = arg<suspend CoroutineScope.() -> Any?>(0)
         kotlinx.coroutines.runBlocking { block(this) }
       }
-      coEvery { schedulers.ui<Any?>(any()) } answers {
+      coEvery { threading.ui<Any?>(any()) } answers {
+        val block = arg<suspend CoroutineScope.() -> Any?>(0)
+        kotlinx.coroutines.runBlocking { block(this) }
+      }
+      coEvery { threading.low<Any?>(any()) } answers {
         val block = arg<suspend CoroutineScope.() -> Any?>(0)
         kotlinx.coroutines.runBlocking { block(this) }
       }
@@ -102,7 +99,7 @@ abstract class BaseViewModelTest<S : ViewState, E : ViewEvent, VM : BaseViewMode
   }
 
   enum class MockSchedulers {
-    MOCK, MOCKK, NONE
+    MOCKK, NONE
   }
 
   @Suppress("UNCHECKED_CAST")

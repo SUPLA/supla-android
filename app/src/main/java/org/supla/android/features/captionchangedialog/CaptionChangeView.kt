@@ -18,18 +18,13 @@ package org.supla.android.features.captionchangedialog
  */
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import org.supla.android.ui.dialogs.AuthorizationDialog
 
 @Composable
-fun CaptionChangeViewModel.View() {
-  val modelState by getViewState().collectAsState()
-
+fun CaptionChangeViewModel.View(modelState: CaptionChangeViewModelState) {
   modelState.viewState?.let {
     Dialog(state = it)
   }
-
   modelState.authorizationDialogState?.let {
     AuthorizationDialog(state = it)
   }

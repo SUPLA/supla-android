@@ -25,9 +25,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import org.supla.android.BuildConfig
-import org.supla.android.data.source.ChannelRepository
-import org.supla.android.data.source.SceneRepository
-import org.supla.android.db.DbHelper
 import org.supla.android.db.room.EmptyMigration
 import org.supla.android.db.room.app.AppDatabase
 import org.supla.android.db.room.app.AppDatabaseCallback
@@ -49,9 +46,12 @@ import org.supla.android.db.room.app.migrations.MIGRATION_43_44
 import org.supla.android.db.room.app.migrations.MIGRATION_44_45
 import org.supla.android.db.room.app.migrations.MIGRATION_45_46
 import org.supla.android.db.room.app.migrations.MIGRATION_46_47
+import org.supla.android.db.room.app.migrations.MIGRATION_48_49
+import org.supla.android.db.room.app.migrations.MIGRATION_49_50
 import org.supla.android.db.room.app.migrations.Migration25to26
 import org.supla.android.db.room.app.migrations.Migration26to27
 import org.supla.android.db.room.app.migrations.Migration27to28
+import org.supla.android.db.room.app.migrations.Migration47to48
 import org.supla.android.db.room.measurements.MeasurementsDatabase
 import org.supla.android.db.room.measurements.migrations.MEASUREMENTS_DB_MIGRATION_31_32
 import org.supla.android.db.room.measurements.migrations.MEASUREMENTS_DB_MIGRATION_32_33
@@ -60,6 +60,7 @@ import org.supla.android.db.room.measurements.migrations.MEASUREMENTS_DB_MIGRATI
 import org.supla.android.db.room.measurements.migrations.MEASUREMENTS_DB_MIGRATION_35_36
 import org.supla.android.db.room.measurements.migrations.MeasurementsDbMigration29to30
 import org.supla.android.db.room.measurements.migrations.MeasurementsDbMigration36to37
+import java.util.concurrent.Executor
 import javax.inject.Singleton
 
 @Module
@@ -71,11 +72,16 @@ class DatabaseModule {
   fun provideAppDatabase(
     @ApplicationContext context: Context,
     callback: AppDatabaseCallback,
+    @AppDbQueryExecutor queryExecutor: Executor,
+    @AppDbTransactionExecutor transactionExecutor: Executor,
     migration25to26: Migration25to26,
     migration26to27: Migration26to27,
-    migration27to28: Migration27to28
+    migration27to28: Migration27to28,
+    migration47to48: Migration47to48
   ) =
-    Room.databaseBuilder(context, AppDatabase::class.java, DbHelper.DATABASE_NAME)
+    Room.databaseBuilder(context, AppDatabase::class.java, AppDatabase.NAME)
+      .setQueryExecutor(queryExecutor)
+      .setTransactionExecutor(transactionExecutor)
       .let {
         if (!BuildConfig.DEBUG) {
           // Destructive migration should be activated only in production. For development, we need to know about all migration failures
@@ -108,7 +114,10 @@ class DatabaseModule {
         MIGRATION_43_44,
         MIGRATION_44_45,
         MIGRATION_45_46,
-        MIGRATION_46_47
+        MIGRATION_46_47,
+        migration47to48,
+        MIGRATION_48_49,
+        MIGRATION_49_50
       )
       .build()
 
@@ -206,9 +215,13 @@ class DatabaseModule {
   @Singleton
   fun provideMeasurementsDatabase(
     @ApplicationContext context: Context,
+    @MeasurementsDbQueryExecutor queryExecutor: Executor,
+    @MeasurementsDbTransactionExecutor transactionExecutor: Executor,
     migration29to30: MeasurementsDbMigration29to30
   ) =
     Room.databaseBuilder(context, MeasurementsDatabase::class.java, MeasurementsDatabase.NAME)
+      .setQueryExecutor(queryExecutor)
+      .setTransactionExecutor(transactionExecutor)
       .let {
         if (!BuildConfig.DEBUG) {
           // Destructive migration should be activated only in production. For the development we need to know about all migration failures
@@ -288,19 +301,4 @@ class DatabaseModule {
   @Singleton
   fun thermostatHeatpolLogDao(measurementsDatabase: MeasurementsDatabase) =
     measurementsDatabase.homePlusThermostatLogDao()
-
-  @Provides
-  @Singleton
-  fun provideDbHelper(@ApplicationContext context: Context) =
-    DbHelper.getInstance(context)
-
-  @Provides
-  @Singleton
-  fun provideChannelRepository(dbHelper: DbHelper): ChannelRepository =
-    dbHelper.channelRepository
-
-  @Provides
-  @Singleton
-  fun provideScenesRepository(dbHelper: DbHelper): SceneRepository =
-    dbHelper.sceneRepository
 }

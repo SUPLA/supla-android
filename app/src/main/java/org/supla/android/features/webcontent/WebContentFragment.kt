@@ -26,15 +26,20 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.annotation.CallSuper
 import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.lifecycleScope
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.supla.android.R
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.databinding.FragmentWebContentBinding
+import kotlin.time.Duration
 
 abstract class WebContentFragment<S : WebContentViewState, E : ViewEvent> : BaseFragment<S, E>(R.layout.fragment_web_content) {
 
   protected abstract val url: String
+  protected open val initialUrlLoadDelayMillis: Duration? = null
 
   abstract override val viewModel: WebContentViewModel<S, E>
   protected val binding by viewBinding(FragmentWebContentBinding::bind)
@@ -75,7 +80,11 @@ abstract class WebContentFragment<S : WebContentViewState, E : ViewEvent> : Base
       caProgressBar.progressDrawable = ResourcesCompat.getDrawable(resources, R.drawable.progressbar, null)
 
       webBrowser.webViewClient = client
-      webBrowser.loadUrl(url)
+
+      viewLifecycleOwner.lifecycleScope.launch {
+        initialUrlLoadDelayMillis?.let { delay(it) }
+        webBrowser.loadUrl(url)
+      }
     }
   }
 

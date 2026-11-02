@@ -34,6 +34,9 @@
   <string name="channel_caption_thermometer">Thermometer</string>
   <string name="channel_caption_humidity">Vochtigheid</string>
   <string name="channel_caption_humidityandtemperature">Temperatuur en luchtvochtigheid</string>
+  <string name="channel_caption_smoke_sensor">Rooksensor</string>
+  <string name="channel_caption_carbon_monoxide_sensor">Koolmonoxidesensor</string>
+  <string name="channel_caption_gas_sensor">Gassensor</string>
   <string name="channel_caption_windsensor">Windsnelheid</string>
   <string name="channel_caption_pressuresensor">Druksensor</string>
   <string name="channel_caption_rainsensor">Neerslag meting</string>
@@ -93,7 +96,7 @@
 
   <string name="add_wizard_step_3_message_3"><![CDATA[Druk op de knop <b>START</b> om de configuratie te starten.]]></string>
 
-  <string name="wizard_no_internetwifi">Voordat u begint, maakt u verbinding met internet via een WiFi-netwerk, dat ook door de uitvoerende apparaten wordt gebruikt om verbinding te maken met de server.</string>
+  <string name="wizard_no_internetwifi">Controleer voordat u begint of Wi-Fi is ingeschakeld.</string>
   <string name="wizard_wifi_error">Het WiFi-netwerk is uitgeschakeld of de ID of naam kan niet worden gelezen!</string>
   <string name="wizard_location_error">De wizard Toevoegen werkt alleen correct als de Locatieservice op dit toestel is ingeschakeld. Ga naar je systeeminstellingen, selecteer dan "Locatie" en vergewis je ervan dat de optie ingeschakeld is.</string>
   <string name="wizard_scan_timeout">Wachttijd overschreden wachten op WiFi zoeken voltooid!</string>
@@ -651,6 +654,11 @@
   <string name="settings_battery_level_warning">Waarschuwing lage batterij</string>
   <string name="channel_battery_level">Batterijniveau: %1$d%%</string>
   <string name="channel_battery_level_with_info">Batterijniveau (%1$d - %2$s): %3$d%%</string>
+  <string name="battery_state">Batterijstatus</string>
+  <string name="channel_battery_low">Batterijniveau laag</string>
+  <string name="channel_battery_low_with_info">Batterijniveau laag (%1$d - %2$s)</string>
+  <string name="channel_battery_state_low_value">laag</string>
+  <string name="channel_battery_state_normal_value">normaal</string>
   <string name="channel_btn_stop">Stoppen</string>
   <string name="android_auto_action">Actie: %1$s</string>
   <string name="android_auto_empty_header">Configuratie vereist</string>
@@ -823,8 +831,17 @@
   <string name="scene_inactive">De scène is inactief</string>
   <string name="nfc_detail_action_added">Toegevoegd aan de app</string>
   <string name="general_search">Zoeken</string>
+  <string name="general_open_drawer">Menu openen</string>
+  <string name="general_back">Terug</string>
   <string name="toolbar_search_hint">Voer minimaal 2 tekens in…</string>
   <string name="details_timer_select_program">Selecteer een programma</string>
+  <string name="details_recuperator_ventilation">Ventilatie</string>
+  <string name="details_recuperator_empty_house">Leeg huis</string>
+  <string name="details_recuperator_open_window">Raam openen</string>
+  <string name="channel_caption_hvac_hrv">Warmteterugwinning-ventilatie</string>
+  <string name="details_recuperator_manual_mode_label">Handmatige modus</string>
+  <string name="profile_selected">Geselecteerd profiel</string>
+  <string name="general_clear_search">Zoekopdracht wissen</string>
   <string name="settings_show_unavailable_channels">Verberg kanalen die niet beschikbaar zijn vanwege de apparaatconfiguratie</string>
   <string name="details_em_active_energy_balance">Balans van actieve energie</string>
   <string name="details_em_settings_list_metric">Geselecteerde waarde</string>
@@ -837,4 +854,12 @@
   <string name="details_em_on_list_balance">Methode voor energiebalancering</string>
   <string name="details_em_on_list_value">Gegevensbereik</string>
   <string name="details_em_on_list">Weergave in de kanalenlijst</string>
+  <string name="wizard_result_certificate_untrusted">Het certificaat van het apparaat wordt niet vertrouwd. Controleer of u verbinding maakt met het juiste apparaat en of de software up-to-date is.</string>
+  <string name="wizard_result_certificate_expired">Het certificaat van het apparaat is verlopen. Werk de apparaatsoftware bij of neem contact op met ondersteuning. Controleer ook of de datum en tijd op de telefoon juist zijn.</string>
+  <string name="wizard_result_certificate_not_yet_valid">Het certificaat van het apparaat is nog niet geldig. Controleer de datum en tijd op de telefoon en het apparaat en probeer het opnieuw.</string>
+  <string name="wizard_result_certificate_revoked">Het certificaat van het apparaat is ingetrokken. Om veiligheidsredenen kan de verbinding niet worden gemaakt. Werk de apparaatsoftware bij of neem contact op met ondersteuning.</string>
+  <string name="wizard_result_certificate_host_mismatch">Het certificaat komt niet overeen met dit apparaat. Controleer of de app verbinding maakt met het juiste apparaat.</string>
+  <string name="wizard_result_certificate_pin_mismatch">Het certificaat van het apparaat wijkt af van het verwachte certificaat. Werk de app en de apparaatsoftware bij en probeer het opnieuw.</string>
+  <string name="wizard_result_certificate_unsupported_security">Het apparaat gebruikt beveiligingsinstellingen die niet worden ondersteund. Werk de apparaatsoftware bij en probeer het opnieuw.</string>
+  <string name="wizard_result_certificate_different_names">Het apparaat heeft een onjuist certificaat - de namen komen niet overeen (certificaat: %1$s, apparaat: %2$s)</string>
 </resources>

@@ -22,9 +22,7 @@ import android.os.Looper
 import android.os.NetworkOnMainThreadException
 import androidx.annotation.WorkerThread
 import androidx.room.rxjava3.EmptyResultSetException
-import dagger.hilt.android.qualifiers.ApplicationContext
 import org.supla.android.core.infrastructure.NativeLoader
-import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_ACCESSID_DISABLED
 import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_ACCESSID_INACTIVE
@@ -39,9 +37,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_RESULT_HOST_NOT_FOUND
 import org.supla.android.lib.SuplaConst.SUPLA_RESULT_RESPONSE_TIMEOUT
 import org.supla.android.lib.actions.ActionParameters
 import org.supla.android.lib.dto.AuthDataDto
-import org.supla.android.profile.NoSuchProfileException
-import javax.inject.Inject
-import javax.inject.Singleton
+import org.supla.android.lib.singlecall.NoSuchProfileException
 
 /**
  * Class designed to making request, without the need to change active profile.
@@ -49,10 +45,10 @@ import javax.inject.Singleton
  * Used mainly in widget's workers. Single calls are supported by the protocol version> = 19
  */
 
-class SingleCall private constructor(
+class SingleCall(
   var context: Context,
   var profileId: Long,
-  var profileRepository: ProfileRepository
+  var authDataProvider: () -> AuthDataDto,
 ) {
 
   private external fun executeAction(
@@ -85,7 +81,7 @@ class SingleCall private constructor(
     }
 
     return try {
-      profileRepository.findProfile(profileId).blockingGet().authDataDto
+      authDataProvider()
     } catch (_: EmptyResultSetException) {
       throw NoSuchProfileException(profileId)
     }
@@ -114,14 +110,6 @@ class SingleCall private constructor(
   @Throws(NoSuchProfileException::class, ResultException::class)
   fun registerPushNotificationClientToken(appId: Int, token: String, profile: ProfileEntity) {
     registerPushNotificationClientToken(context, getAuthData(), appId, token, profile.name, CONNECTION_NO_TIMEOUT)
-  }
-
-  @Singleton
-  class Provider @Inject constructor(
-    private val profileRepository: ProfileRepository,
-    @param:ApplicationContext private val context: Context
-  ) {
-    fun provide(profileId: Long) = SingleCall(context, profileId, profileRepository)
   }
 
   sealed interface Result {

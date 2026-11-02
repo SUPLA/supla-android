@@ -18,7 +18,8 @@ package org.supla.android.features.androidauto
  */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.supla.android.Preferences
+import org.supla.android.R
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
@@ -26,7 +27,7 @@ import org.supla.android.data.source.AndroidAutoItemRepository
 import org.supla.android.data.source.local.entity.complex.AndroidAutoDataEntity
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.subscribeBy
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import javax.inject.Inject
@@ -37,9 +38,13 @@ class AndroidAutoItemsViewModel @Inject constructor(
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val getSceneIconUseCase: GetSceneIconUseCase,
   private val updateEventsManager: UpdateEventsManager,
-  private val preferences: Preferences,
-  schedulers: SuplaSchedulers
-) : BaseViewModel<AndroidAutoItemsViewModelState, AndroidAutoItemsViewEvent>(AndroidAutoItemsViewModelState(), schedulers),
+  private val preferences: ApplicationPreferences,
+  threading: SuplaThreading
+) : BaseViewModel<AndroidAutoItemsViewModelState, AndroidAutoItemsViewEvent>(
+  defaultState = AndroidAutoItemsViewModelState(),
+  threading = threading,
+  titleRes = R.string.settings_android_auto_label
+),
   AndroidAutoItemsViewScope {
 
   override fun onViewCreated() {

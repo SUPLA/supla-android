@@ -24,7 +24,7 @@ import androidx.room.PrimaryKey
 import org.supla.android.data.source.local.entity.LocationEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.LocationEntity.Companion.COLUMN_REMOTE_ID
 import org.supla.android.data.source.local.entity.LocationEntity.Companion.TABLE_NAME
-import org.supla.android.db.Location
+import org.supla.android.data.source.local.entity.custom.LocationSortingType
 import org.supla.android.usecases.location.CollapsedFlag
 
 @Entity(
@@ -46,7 +46,7 @@ data class LocationEntity(
   @ColumnInfo(name = COLUMN_CAPTION) val caption: String,
   @ColumnInfo(name = COLUMN_VISIBLE) val visible: Int,
   @ColumnInfo(name = COLUMN_COLLAPSED) val collapsed: Int,
-  @ColumnInfo(name = COLUMN_SORTING, defaultValue = "DEFAULT") val sorting: Location.SortingType,
+  @ColumnInfo(name = COLUMN_SORTING, defaultValue = "DEFAULT") val sorting: LocationSortingType,
   @ColumnInfo(name = COLUMN_SORT_ORDER, defaultValue = "-1") val sortOrder: Int,
   @ColumnInfo(name = COLUMN_PROFILE_ID) val profileId: Long,
 ) {

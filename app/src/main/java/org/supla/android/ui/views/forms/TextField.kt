@@ -38,13 +38,17 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -58,6 +62,71 @@ fun TextField(
   value: String,
   modifier: Modifier = Modifier,
   onValueChange: (String) -> Unit = { },
+  onClicked: (() -> Unit)? = null,
+  keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+  keyboardActions: KeyboardActions = KeyboardActions.Default,
+  visualTransformation: VisualTransformation = VisualTransformation.None,
+  enabled: Boolean = true,
+  readOnly: Boolean = false,
+  isError: Boolean = false,
+  textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
+  singleLine: Boolean = false,
+  label: @Composable (() -> Unit)? = null,
+  placeholder: @Composable (() -> Unit)? = null,
+  leadingIcon: @Composable (() -> Unit)? = null,
+  trailingIcon: @Composable (() -> Unit)? = null,
+  prefix: @Composable (() -> Unit)? = null,
+  suffix: @Composable (() -> Unit)? = null,
+  focusedColor: Color? = null,
+  contentPadding: PaddingValues =
+    if (label == null) {
+      TextFieldDefaults.contentPaddingWithoutLabel()
+    } else {
+      TextFieldDefaults.contentPaddingWithLabel()
+    }
+) {
+  var textFieldValue by remember { mutableStateOf(value.textFieldValueAtEnd()) }
+
+  LaunchedEffect(value) {
+    if (textFieldValue.text != value) {
+      textFieldValue = value.textFieldValueAtEnd()
+    }
+  }
+
+  TextField(
+    value = textFieldValue,
+    modifier = modifier,
+    onValueChange = {
+      textFieldValue = it
+      if (it.text != value) {
+        onValueChange(it.text)
+      }
+    },
+    onClicked = onClicked,
+    keyboardOptions = keyboardOptions,
+    keyboardActions = keyboardActions,
+    visualTransformation = visualTransformation,
+    enabled = enabled,
+    readOnly = readOnly,
+    isError = isError,
+    textStyle = textStyle,
+    singleLine = singleLine,
+    label = label,
+    placeholder = placeholder,
+    leadingIcon = leadingIcon,
+    trailingIcon = trailingIcon,
+    prefix = prefix,
+    suffix = suffix,
+    focusedColor = focusedColor,
+    contentPadding = contentPadding
+  )
+}
+
+@Composable
+fun TextField(
+  value: TextFieldValue,
+  modifier: Modifier = Modifier,
+  onValueChange: (TextFieldValue) -> Unit = { },
   onClicked: (() -> Unit)? = null,
   keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
   keyboardActions: KeyboardActions = KeyboardActions.Default,
@@ -146,7 +215,7 @@ fun TextField(
     decorationBox = @Composable { innerTextField ->
       // places leading icon, text field with label and placeholder, trailing icon
       TextFieldDefaults.DecorationBox(
-        value = value,
+        value = value.text,
         visualTransformation = visualTransformation,
         innerTextField = innerTextField,
         placeholder = placeholder,
@@ -166,6 +235,9 @@ fun TextField(
     }
   )
 }
+
+private fun String.textFieldValueAtEnd() =
+  TextFieldValue(text = this, selection = TextRange(length))
 
 @Preview
 @Composable

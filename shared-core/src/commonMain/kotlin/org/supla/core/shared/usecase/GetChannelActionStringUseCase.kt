@@ -49,6 +49,7 @@ class GetChannelActionStringUseCase {
       SuplaFunction.HVAC_THERMOSTAT,
       SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
       SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
+      SuplaFunction.HVAC_HRV,
       SuplaFunction.PUMP_SWITCH,
       SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH -> LocalizedStringId.GENERAL_TURN_ON
       SuplaFunction.UNKNOWN,
@@ -92,7 +93,10 @@ class GetChannelActionStringUseCase {
       SuplaFunction.CONTAINER_LEVEL_SENSOR,
       SuplaFunction.FLOOD_SENSOR,
       SuplaFunction.MOTION_SENSOR,
-      SuplaFunction.BINARY_SENSOR -> null
+      SuplaFunction.BINARY_SENSOR,
+      SuplaFunction.SMOKE_SENSOR,
+      SuplaFunction.CARBON_MONOXIDE_SENSOR,
+      SuplaFunction.GAS_SENSOR -> null
     }
 
   fun leftButton(function: SuplaFunction): LocalizedStringId? =
@@ -119,6 +123,7 @@ class GetChannelActionStringUseCase {
       SuplaFunction.HVAC_THERMOSTAT,
       SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
       SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
+      SuplaFunction.HVAC_HRV,
       SuplaFunction.PUMP_SWITCH,
       SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH -> LocalizedStringId.GENERAL_TURN_OFF
       SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
@@ -166,6 +171,9 @@ class GetChannelActionStringUseCase {
       SuplaFunction.CONTAINER_LEVEL_SENSOR,
       SuplaFunction.FLOOD_SENSOR,
       SuplaFunction.MOTION_SENSOR,
-      SuplaFunction.BINARY_SENSOR -> null
+      SuplaFunction.BINARY_SENSOR,
+      SuplaFunction.SMOKE_SENSOR,
+      SuplaFunction.CARBON_MONOXIDE_SENSOR,
+      SuplaFunction.GAS_SENSOR -> null
     }
 }

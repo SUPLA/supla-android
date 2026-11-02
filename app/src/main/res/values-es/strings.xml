@@ -34,6 +34,9 @@
   <string name="channel_caption_thermometer">Termómetro</string>
   <string name="channel_caption_humidity">Humedad</string>
   <string name="channel_caption_humidityandtemperature">Temperatura y humedad</string>
+  <string name="channel_caption_smoke_sensor">Sensor de humo</string>
+  <string name="channel_caption_carbon_monoxide_sensor">Sensor de monóxido de carbono</string>
+  <string name="channel_caption_gas_sensor">Sensor de gas</string>
   <string name="channel_caption_dimmer">Atenuador</string>
   <string name="channel_caption_rgblighting">Alumbrado RGB</string>
   <string name="channel_caption_dimmerandrgblighting">Atenuador y alumbrado RGB</string>
@@ -98,7 +101,7 @@
   <string name="wizard_result_compat_error">¡El dispositivo con el que se ha establecido la conexión no es compatible con este asistente!</string>
   <string name="add_wizard_step_1_welcome">Bienvenido al asistente de adición de dispositivos, que le ayudará a añadir nuevos dispositivos al sistema de forma sencilla y rápida.</string>
   <string name="device_reg_request_timeout">¡Se ha superado el tiempo de espera para la información sobre la disponibilidad de registro de dispositivos!</string>
-  <string name="wizard_no_internetwifi">Antes de empezar, acceda a internet conectándose a la red Wi-Fi que será la utilizada por el actuador para conectarse al servidor.</string>
+  <string name="wizard_no_internetwifi">Antes de empezar, asegúrese de que el Wi-Fi esté activado.</string>
   <string name="wizard_not_enought_permissions">La aplicación no tiene permisos suficientes. Pase al administrador de aplicaciones en los ajustes del sistema. A continuación, busque la aplicación %1$s y active todos los permisos que exija.</string>
   <string name="help">Ayuda</string>
   <string name="channel_caption_staircasetimer">Automático de escalera</string>
@@ -638,6 +641,11 @@
   <string name="settings_battery_level_warning">Alerta de batería baja</string>
   <string name="channel_battery_level">Nivel de batería: %1$d%%</string>
   <string name="channel_battery_level_with_info">Nivel de batería (%1$d - %2$s): %3$d%%</string>
+  <string name="battery_state">Estado de la batería</string>
+  <string name="channel_battery_low">Nivel de batería bajo</string>
+  <string name="channel_battery_low_with_info">Nivel de batería bajo (%1$d - %2$s)</string>
+  <string name="channel_battery_state_low_value">bajo</string>
+  <string name="channel_battery_state_normal_value">normal</string>
   <string name="channel_btn_stop">Parar</string>
   <string name="android_auto_action">Acción: %1$s</string>
   <string name="android_auto_empty_header">Configuración necesaria</string>
@@ -810,8 +818,17 @@
   <string name="scene_inactive">La escena está inactiva</string>
   <string name="nfc_detail_action_added">Añadido a la aplicación</string>
   <string name="general_search">Buscar</string>
+  <string name="general_open_drawer">Abrir menú</string>
+  <string name="general_back">Atrás</string>
   <string name="toolbar_search_hint">Introduce al menos 2 caracteres…</string>
   <string name="details_timer_select_program">Selecciona un programa</string>
+  <string name="details_recuperator_ventilation">Ventilación</string>
+  <string name="details_recuperator_empty_house">Casa vacía</string>
+  <string name="details_recuperator_open_window">Abrir ventana</string>
+  <string name="channel_caption_hvac_hrv">Ventilación de recuperación de calor</string>
+  <string name="details_recuperator_manual_mode_label">Modo manual</string>
+  <string name="profile_selected">Perfil seleccionado</string>
+  <string name="general_clear_search">Borrar búsqueda</string>
   <string name="settings_show_unavailable_channels">Ocultar los canales que no están disponibles debido a la configuración del dispositivo</string>
   <string name="details_em_active_energy_balance">Balance de energía activa</string>
   <string name="details_em_settings_list_metric">Valor seleccionado</string>
@@ -824,4 +841,12 @@
   <string name="details_em_on_list_balance">Método de balance energético</string>
   <string name="details_em_on_list_value">Rango de datos</string>
   <string name="details_em_on_list">Mostrar en la lista de canales</string>
+  <string name="wizard_result_certificate_untrusted">El certificado del dispositivo no es de confianza. Asegúrese de conectarse al dispositivo correcto y de que su software esté actualizado.</string>
+  <string name="wizard_result_certificate_expired">El certificado del dispositivo ha caducado. Actualice el software del dispositivo o contacte con soporte. Compruebe también que la fecha y la hora del teléfono sean correctas.</string>
+  <string name="wizard_result_certificate_not_yet_valid">El certificado del dispositivo aún no es válido. Compruebe la fecha y la hora del teléfono y del dispositivo, y vuelva a intentarlo.</string>
+  <string name="wizard_result_certificate_revoked">El certificado del dispositivo ha sido revocado. Por motivos de seguridad, no se puede establecer la conexión. Actualice el software del dispositivo o contacte con soporte.</string>
+  <string name="wizard_result_certificate_host_mismatch">El certificado no coincide con este dispositivo. Asegúrese de que la aplicación se conecta al dispositivo correcto.</string>
+  <string name="wizard_result_certificate_pin_mismatch">El certificado del dispositivo difiere del esperado. Actualice la aplicación y el software del dispositivo, y vuelva a intentarlo.</string>
+  <string name="wizard_result_certificate_unsupported_security">El dispositivo usa ajustes de seguridad no compatibles. Actualice el software del dispositivo y vuelva a intentarlo.</string>
+  <string name="wizard_result_certificate_different_names">El dispositivo tiene un certificado incorrecto - los nombres no coinciden (certificado: %1$s, dispositivo: %2$s)</string>
 </resources>

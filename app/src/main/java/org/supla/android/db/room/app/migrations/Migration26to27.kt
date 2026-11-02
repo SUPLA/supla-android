@@ -26,13 +26,10 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import org.supla.android.data.source.local.entity.LegacyScene
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_ACCESS_ID
-import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_ACCESS_ID_PASSWORD
 import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_ACTIVE
 import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_ADVANCED_MODE
-import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_AUTH_KEY
 import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_EMAIL
 import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_EMAIL_AUTH
-import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_GUID
 import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_ID
 import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_NAME
 import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_PREFERRED_PROTOCOL_VERSION
@@ -40,11 +37,12 @@ import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN
 import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_SERVER_FOR_ACCESS_ID
 import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_SERVER_FOR_EMAIL
 import org.supla.android.data.source.local.entity.SceneEntity
-import org.supla.android.data.source.local.view.SceneView
 import org.supla.android.db.room.SqlExecutor
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
+
+private const val SCENE_VIEW_NAME = "scene_view"
 
 @Singleton
 class Migration26to27 @Inject constructor() : Migration(26, 27), SqlExecutor {
@@ -86,9 +84,8 @@ class Migration26to27 @Inject constructor() : Migration(26, 27), SqlExecutor {
     val allScenes = getAllScenes(db)
 
     db.execSQL("DROP TABLE ${SceneEntity.TABLE_NAME}")
-    db.execSQL("DROP VIEW ${SceneView.NAME}")
+    db.execSQL("DROP VIEW $SCENE_VIEW_NAME")
     execSQL(db, SceneEntity.SQL)
-    execSQL(db, SceneView.SQL)
 
     for (legacyScene in allScenes) {
       db.insert(SceneEntity.TABLE_NAME, CONFLICT_REPLACE, legacyScene.getScene().contentValues)
@@ -115,8 +112,35 @@ class Migration26to27 @Inject constructor() : Migration(26, 27), SqlExecutor {
   }
 
   private fun sceneCursor(db: SupportSQLiteDatabase): Cursor =
-    db.query("SELECT ${SceneView.ALL_COLUMNS.joinToString(", ")} FROM ${SceneView.NAME}")
+    db.query("SELECT ${SCENE_VIEW_ALL_COLUMNS.joinToString(", ")} FROM $SCENE_VIEW_NAME")
 }
+
+const val COLUMN_SCENE_VIEW_LOCATION_NAME = "location_name"
+const val COLUMN_SCENE_VIEW_LOCATION_SORT_ORDER = "location_sort_order"
+const val COLUMN_SCENE_VIEW_LOCATION_VISIBLE = "location_visible"
+
+private val SCENE_VIEW_ALL_COLUMNS = arrayOf(
+  SceneEntity.COLUMN_ID,
+  SceneEntity.COLUMN_REMOTE_ID,
+  SceneEntity.COLUMN_LOCATION_ID,
+  SceneEntity.COLUMN_ALT_ICON,
+  SceneEntity.COLUMN_USER_ICON,
+  SceneEntity.COLUMN_CAPTION,
+  SceneEntity.COLUMN_STARTED_AT,
+  SceneEntity.COLUMN_ESTIMATED_END_DATE,
+  SceneEntity.COLUMN_INITIATOR_ID,
+  SceneEntity.COLUMN_INITIATOR_NAME,
+  SceneEntity.COLUMN_SORT_ORDER,
+  SceneEntity.COLUMN_PROFILE_ID,
+  SceneEntity.COLUMN_VISIBLE,
+  COLUMN_SCENE_VIEW_LOCATION_NAME,
+  COLUMN_SCENE_VIEW_LOCATION_SORT_ORDER,
+  COLUMN_SCENE_VIEW_LOCATION_VISIBLE
+)
+
+private const val COLUMN_GUID = "guid"
+private const val COLUMN_AUTH_KEY = "auth_key"
+private const val COLUMN_ACCESS_ID_PASSWORD = "access_id_pwd"
 
 private const val PROFILE_ALL_COLUMNS_VERSION_26 =
   "$COLUMN_ID,$COLUMN_NAME,$COLUMN_EMAIL,$COLUMN_SERVER_FOR_ACCESS_ID,$COLUMN_SERVER_FOR_EMAIL," +

@@ -20,9 +20,10 @@ package org.supla.android.usecases.channel
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
-import org.supla.android.data.source.RoomChannelRepository
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.lib.SuplaConst
+import org.supla.android.tools.VibrationHelper
 import org.supla.core.shared.data.model.function.relay.SuplaRelayFlag
 import org.supla.core.shared.data.model.valve.SuplaValveFlag
 import javax.inject.Inject
@@ -30,9 +31,10 @@ import javax.inject.Singleton
 
 @Singleton
 class ChannelActionUseCase @Inject constructor(
-  private val channelRepository: RoomChannelRepository,
-  suplaClientProvider: SuplaClientProvider
-) : BaseActionUseCase<ChannelDataEntity>(suplaClientProvider) {
+  private val channelRepository: ChannelRepository,
+  suplaClientProvider: SuplaClientProvider,
+  vibrationHelper: VibrationHelper
+) : BaseActionUseCase<ChannelDataEntity>(suplaClientProvider, vibrationHelper) {
 
   operator fun invoke(channelId: Int, buttonType: ButtonType): Completable =
     getChannel(channelId).flatMapCompletable { performActionCompletable(it, buttonType, false) }

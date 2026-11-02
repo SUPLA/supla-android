@@ -20,6 +20,7 @@ package org.supla.android.usecases.icon
 import io.reactivex.rxjava3.core.Completable
 import org.supla.android.data.source.RoomUserIconRepository
 import org.supla.android.data.source.local.entity.UserIconEntity
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.images.ImageCacheProxy
 import org.supla.android.images.ImageId
 import org.supla.android.widget.WidgetManager
@@ -30,6 +31,7 @@ import javax.inject.Singleton
 @Singleton
 class LoadUserIconsIntoCacheUseCase @Inject constructor(
   private val userIconRepository: RoomUserIconRepository,
+  private val updateEventsManager: UpdateEventsManager,
   private val imageCacheProxy: ImageCacheProxy,
   private val widgetManager: WidgetManager
 ) {
@@ -48,6 +50,9 @@ class LoadUserIconsIntoCacheUseCase @Inject constructor(
 
           if (imageCacheProxy.size() > 0 && initialSum != imageCacheProxy.sum()) {
             widgetManager.updateAllWidgets()
+            updateEventsManager.emitChannelsUpdate()
+            updateEventsManager.emitGroupsUpdate()
+            updateEventsManager.emitScenesUpdate()
           }
           Timber.d("Icons loading finished")
         }

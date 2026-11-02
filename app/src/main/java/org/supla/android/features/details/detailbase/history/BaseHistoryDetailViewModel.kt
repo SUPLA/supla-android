@@ -75,7 +75,7 @@ import org.supla.android.features.details.detailbase.history.ui.ChartDataSelecti
 import org.supla.android.features.details.detailbase.history.ui.CheckboxItem
 import org.supla.android.features.details.detailbase.history.ui.HistoryDetailScope
 import org.supla.android.features.details.electricitymeterdetail.history.IntroductionPage
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.views.spinner.SpinnerItem
 import org.supla.android.usecases.channel.DeleteChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
@@ -97,8 +97,8 @@ abstract class BaseHistoryDetailViewModel(
   private val profileRepository: ProfileRepository,
   private val userStateHolder: UserStateHolder,
   private val dateProvider: DateProvider,
-  schedulers: SuplaSchedulers
-) : BaseViewModel<HistoryDetailViewState, HistoryDetailViewEvent>(HistoryDetailViewState(), schedulers), HistoryDetailScope {
+  threading: SuplaThreading
+) : BaseViewModel<HistoryDetailViewState, HistoryDetailViewEvent>(HistoryDetailViewState(), threading), HistoryDetailScope {
 
   open fun loadData(remoteId: Int) {
     updateState { state ->

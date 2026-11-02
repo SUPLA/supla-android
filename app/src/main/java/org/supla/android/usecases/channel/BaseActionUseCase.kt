@@ -31,10 +31,12 @@ import org.supla.android.lib.actions.IGNORE_CCT
 import org.supla.android.lib.actions.IGNORE_COLOR
 import org.supla.android.lib.actions.RgbwActionParameters
 import org.supla.android.lib.actions.SubjectType
+import org.supla.android.tools.VibrationHelper
 import org.supla.core.shared.data.model.general.SuplaFunction
 
 open class BaseActionUseCase<T : ChannelDataBase>(
-  private val suplaClientProvider: SuplaClientProvider
+  private val suplaClientProvider: SuplaClientProvider,
+  private val vibrationHelper: VibrationHelper
 ) {
 
   protected fun performActionCompletable(channelBase: T, buttonType: ButtonType, forGroup: Boolean): Completable =
@@ -42,6 +44,8 @@ open class BaseActionUseCase<T : ChannelDataBase>(
 
   protected open fun performAction(channelBase: T, buttonType: ButtonType, forGroup: Boolean) {
     val client = suplaClientProvider.provide() ?: return
+    vibrationHelper.vibrate()
+
     if (isRGBW(channelBase.function)) {
       client.executeAction(getRgbwParameters(buttonType, forGroup, channelBase.remoteId))
     } else if (channelBase.isShadingSystem() || channelBase.isProjectorScreen() || channelBase.isGarageDoorRoller()) {

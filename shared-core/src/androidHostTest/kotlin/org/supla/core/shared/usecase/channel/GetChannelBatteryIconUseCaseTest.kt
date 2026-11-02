@@ -24,6 +24,7 @@ import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.supla.core.shared.data.model.battery.BatteryState
 import org.supla.core.shared.data.model.channel.ChannelWithChildren
 import org.supla.core.shared.data.model.lists.IssueIcon
 
@@ -63,6 +64,7 @@ class GetChannelBatteryIconUseCaseTest {
         every { batteryInfo } returns mockk {
           every { batteryPowered } returns true
           every { level } returns 87
+          every { state } returns null
         }
       }
     }
@@ -82,6 +84,7 @@ class GetChannelBatteryIconUseCaseTest {
         every { batteryInfo } returns mockk {
           every { batteryPowered } returns true
           every { level } returns 72
+          every { state } returns null
         }
       }
     }
@@ -101,6 +104,7 @@ class GetChannelBatteryIconUseCaseTest {
         every { batteryInfo } returns mockk {
           every { batteryPowered } returns true
           every { level } returns 48
+          every { state } returns null
         }
       }
     }
@@ -120,6 +124,7 @@ class GetChannelBatteryIconUseCaseTest {
         every { batteryInfo } returns mockk {
           every { batteryPowered } returns true
           every { level } returns 18
+          every { state } returns null
         }
       }
     }
@@ -132,13 +137,34 @@ class GetChannelBatteryIconUseCaseTest {
   }
 
   @Test
-  fun `should get battery low battery`() {
+  fun `should get battery low battery for level`() {
     // given
     val channelWithChildren: ChannelWithChildren = mockk {
       every { channel } returns mockk {
         every { batteryInfo } returns mockk {
           every { batteryPowered } returns true
           every { level } returns 5
+          every { state } returns null
+        }
+      }
+    }
+
+    // when
+    val icon = useCase.invoke(channelWithChildren)
+
+    // then
+    assertThat(icon).isEqualTo(IssueIcon.Battery0)
+  }
+
+  @Test
+  fun `should get battery low battery for state`() {
+    // given
+    val channelWithChildren: ChannelWithChildren = mockk {
+      every { channel } returns mockk {
+        every { batteryInfo } returns mockk {
+          every { batteryPowered } returns null
+          every { level } returns null
+          every { state } returns BatteryState.LOW
         }
       }
     }
@@ -158,6 +184,7 @@ class GetChannelBatteryIconUseCaseTest {
         every { batteryInfo } returns mockk {
           every { batteryPowered } returns true
           every { level } returns null
+          every { state } returns null
         }
       }
     }
@@ -177,6 +204,7 @@ class GetChannelBatteryIconUseCaseTest {
         every { batteryInfo } returns mockk {
           every { batteryPowered } returns null
           every { level } returns 50
+          every { state } returns null
         }
       }
     }
@@ -186,5 +214,25 @@ class GetChannelBatteryIconUseCaseTest {
 
     // then
     assertThat(icon).isEqualTo(IssueIcon.Battery50)
+  }
+
+  @Test
+  fun `should get battery icon when battery state normal`() {
+    // given
+    val channelWithChildren: ChannelWithChildren = mockk {
+      every { channel } returns mockk {
+        every { batteryInfo } returns mockk {
+          every { batteryPowered } returns null
+          every { level } returns null
+          every { state } returns BatteryState.NORMAL
+        }
+      }
+    }
+
+    // when
+    val icon = useCase.invoke(channelWithChildren)
+
+    // then
+    assertThat(icon).isEqualTo(IssueIcon.Battery)
   }
 }

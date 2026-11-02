@@ -1,64 +1,73 @@
 package org.supla.android.usecases.profile
 /*
-Copyright (C) AC SOFTWARE SP. Z O.O.
+ Copyright (C) AC SOFTWARE SP. Z O.O.
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-*/
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
 import android.content.Context
 import io.mockk.MockKAnnotations
+import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
+import io.mockk.just
 import io.mockk.mockk
-import io.mockk.mockkObject
-import io.mockk.mockkStatic
 import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
-import org.supla.android.Encryption
-import org.supla.android.Preferences
 import org.supla.android.R
-import org.supla.android.SuplaApp
+import org.supla.android.core.MainDispatcherRule
+import org.supla.android.core.storage.EncryptedPreferences
+import org.supla.android.data.model.settings.ProfileCredentials
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
-import org.supla.android.profile.ProfileIdHolder
 import org.supla.android.testhelpers.extensions.mock
 import org.supla.android.testhelpers.extensions.mockWithEmail
-import kotlin.random.Random
+import org.supla.android.tools.SuplaThreading
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class SaveProfileUseCaseTest {
+
+  @get:Rule
+  val mainDispatcherRule = MainDispatcherRule()
+
   @MockK
   private lateinit var deleteProfileRelatedDataUseCase: DeleteProfileRelatedDataUseCase
+
+  @MockK
+  private lateinit var encryptedPreferences: EncryptedPreferences
 
   @MockK
   private lateinit var profileRepository: ProfileRepository
 
   @MockK
-  private lateinit var profileIdHolder: ProfileIdHolder
-
-  @MockK
-  private lateinit var randomGenerator: Random
-
-  @MockK
   private lateinit var context: Context
+
+  @MockK
+  private lateinit var threading: SuplaThreading
 
   @InjectMockKs
   private lateinit var useCase: SaveProfileUseCase
@@ -66,25 +75,26 @@ class SaveProfileUseCaseTest {
   @Before
   fun setUp() {
     MockKAnnotations.init(this)
+    every { threading.dispatchers } returns mockk {
+      every { io } returns UnconfinedTestDispatcher()
+    }
   }
 
   @Test
   fun `should create new active profile when there is no other profile`() {
     // given
-    val (guid, authKey) = mockAuthorizationData()
-
     val profileId = 123L
     val defaultName = "default"
-    val inputProfile = ProfileEntity.mockWithEmail()
-    val insertedProfile = inputProfile.copy(active = true, name = defaultName, guid = guid, authKey = authKey)
+    val inputProfile = ProfileDto.mockWithEmail()
+    val insertedProfile = inputProfile.entity.copy(active = true, name = defaultName)
 
     every { profileRepository.findAllProfiles() } returns Observable.just(emptyList())
     every { profileRepository.insert(insertedProfile) } returns Single.just(profileId)
-    every { profileIdHolder.profileId = profileId } answers {}
     every { context.getString(R.string.profile_default_name) } returns defaultName
+    coEvery { encryptedPreferences.getProfileCredentials(profileId) } returns mockk { every { accessIdPassword } returns "" }
 
     // when
-    val testObserver = useCase(inputProfile).test()
+    val testObserver = useCase.invoke(inputProfile).test()
 
     // then
     testObserver.assertComplete()
@@ -93,26 +103,22 @@ class SaveProfileUseCaseTest {
     verify {
       profileRepository.findAllProfiles()
       profileRepository.insert(insertedProfile)
-      profileIdHolder.profileId = profileId
       context.getString(R.string.profile_default_name)
     }
-    verify(exactly = 2) {
-      randomGenerator.nextBytes(16)
-    }
-    confirmVerified(profileRepository, profileIdHolder, deleteProfileRelatedDataUseCase, randomGenerator, context)
+    coVerify { encryptedPreferences.getProfileCredentials(profileId) }
+    confirmVerified(profileRepository, deleteProfileRelatedDataUseCase, context, encryptedPreferences)
   }
 
   @Test
   fun `should create new active profile when there is no profile with same id`() {
     // given
-    val (guid, authKey) = mockAuthorizationData()
-
     val profileId = 123L
-    val inputProfile = ProfileEntity.mockWithEmail(id = profileId, name = "other name")
-    val insertedProfile = inputProfile.copy(guid = guid, authKey = authKey)
+    val inputProfile = ProfileDto.mockWithEmail(id = profileId, name = "other name")
+    val insertedProfile = inputProfile.entity.copy()
 
     every { profileRepository.findAllProfiles() } returns Observable.just(listOf(ProfileEntity.mockWithEmail(id = 1)))
     every { profileRepository.insert(insertedProfile) } returns Single.just(profileId)
+    coEvery { encryptedPreferences.getProfileCredentials(profileId) } returns mockk { every { accessIdPassword } returns "" }
 
     // when
     val testObserver = useCase(inputProfile).test()
@@ -125,10 +131,8 @@ class SaveProfileUseCaseTest {
       profileRepository.findAllProfiles()
       profileRepository.insert(insertedProfile)
     }
-    verify(exactly = 2) {
-      randomGenerator.nextBytes(16)
-    }
-    confirmVerified(profileRepository, profileIdHolder, deleteProfileRelatedDataUseCase, randomGenerator, context)
+    coVerify { encryptedPreferences.getProfileCredentials(profileId) }
+    confirmVerified(profileRepository, deleteProfileRelatedDataUseCase, context, encryptedPreferences)
   }
 
   @Test
@@ -136,14 +140,16 @@ class SaveProfileUseCaseTest {
     // given
     val profileId = 123L
     val newName = "default"
-    val inputProfile = ProfileEntity.mockWithEmail(id = profileId, active = true)
-    val updatedProfile = inputProfile.copy(name = newName)
+    val profile = ProfileDto.mockWithEmail(id = profileId, active = true)
+    val inputProfile = profile.copy(name = newName)
+    val updatedProfile = inputProfile.entity.copy(name = newName)
 
-    every { profileRepository.findAllProfiles() } returns Observable.just(listOf(inputProfile))
+    every { profileRepository.findAllProfiles() } returns Observable.just(listOf(inputProfile.entity))
     every { profileRepository.update(updatedProfile) } returns Completable.complete()
+    coEvery { encryptedPreferences.getProfileCredentials(profileId) } returns mockk { every { accessIdPassword } returns "" }
 
     // when
-    val testObserver = useCase(updatedProfile).test()
+    val testObserver = useCase(inputProfile).test()
 
     // then
     testObserver.assertComplete()
@@ -153,7 +159,7 @@ class SaveProfileUseCaseTest {
       profileRepository.findAllProfiles()
       profileRepository.update(updatedProfile)
     }
-    confirmVerified(profileRepository, profileIdHolder, deleteProfileRelatedDataUseCase, randomGenerator, context)
+    confirmVerified(profileRepository, deleteProfileRelatedDataUseCase, context)
   }
 
   @Test
@@ -161,16 +167,17 @@ class SaveProfileUseCaseTest {
     // given
     val profileId = 123L
     val newName = "default"
-    val inputProfile = ProfileEntity.mockWithEmail(id = profileId, active = true)
-    val updatedProfile = inputProfile.copy(name = newName, email = "another@supla.org")
+    val profile = ProfileDto.mockWithEmail(id = profileId, active = true)
+    val inputProfile = profile.copy(name = newName, email = "another@supla.org")
+    val updatedProfile = inputProfile.entity.copy(name = newName)
 
-    every { profileRepository.findAllProfiles() } returns Observable.just(listOf(inputProfile))
+    every { profileRepository.findAllProfiles() } returns Observable.just(listOf(profile.entity))
     every { profileRepository.update(updatedProfile) } returns Completable.complete()
-    every { profileIdHolder.profileId = profileId } answers {}
     every { deleteProfileRelatedDataUseCase.invoke(profileId) } returns Completable.complete()
+    coEvery { encryptedPreferences.getProfileCredentials(profileId) } returns mockk { every { accessIdPassword } returns "" }
 
     // when
-    val testObserver = useCase(updatedProfile).test()
+    val testObserver = useCase.invoke(inputProfile).test()
 
     // then
     testObserver.assertComplete()
@@ -179,10 +186,45 @@ class SaveProfileUseCaseTest {
     verify {
       profileRepository.findAllProfiles()
       profileRepository.update(updatedProfile)
-      profileIdHolder.profileId = profileId
       deleteProfileRelatedDataUseCase.invoke(profileId)
     }
-    confirmVerified(profileRepository, profileIdHolder, deleteProfileRelatedDataUseCase, randomGenerator, context)
+    confirmVerified(profileRepository, deleteProfileRelatedDataUseCase, context)
+  }
+
+  @Test
+  fun `should update profile with access id password change`() {
+    // given
+    val profileId = 123L
+    val accessIdPassword = "*****"
+    val profile = ProfileDto.mock(id = profileId, active = true)
+    val inputProfile = profile.copy(emailAuth = false, accessId = 123, accessIdPassword = accessIdPassword)
+    val updatedProfile = inputProfile.entity
+    val credentials = ProfileCredentials("", byteArrayOf(), byteArrayOf())
+    val updatedCredentials = credentials.copy(accessIdPassword = accessIdPassword)
+
+    every { profileRepository.findAllProfiles() } returns Observable.just(listOf(profile.entity))
+    every { profileRepository.update(updatedProfile) } returns Completable.complete()
+    every { deleteProfileRelatedDataUseCase.invoke(profileId) } returns Completable.complete()
+    coEvery { encryptedPreferences.getProfileCredentials(profileId) } returns credentials
+    coEvery { encryptedPreferences.setProfileCredentials(profileId, updatedCredentials) } just Runs
+
+    // when
+    val testObserver = useCase.invoke(inputProfile).test()
+
+    // then
+    testObserver.assertComplete()
+    testObserver.assertResult(SaveProfileUseCase.Result(profileId, true))
+
+    verify {
+      profileRepository.findAllProfiles()
+      profileRepository.update(updatedProfile)
+      deleteProfileRelatedDataUseCase.invoke(profileId)
+    }
+    coVerify {
+      encryptedPreferences.getProfileCredentials(profileId)
+      encryptedPreferences.setProfileCredentials(profileId, updatedCredentials)
+    }
+    confirmVerified(profileRepository, deleteProfileRelatedDataUseCase, context)
   }
 
   @Test
@@ -190,20 +232,22 @@ class SaveProfileUseCaseTest {
     // given
     val profileId = 123L
     val name = "default"
-    val inputProfile = ProfileEntity.mock(
+    val profile = ProfileDto.mock(
       id = profileId,
       name = name,
       emailAuth = true,
       email = "test@supla.org",
       serverForEmail = "supla.org",
-      serverAutoDetect = false
+      serverAutoDetect = false,
+      accessIdPassword = ""
     )
-    val updatedProfile = inputProfile.copy(serverAutoDetect = true)
-    val readyToSaveProfile = updatedProfile.copy(serverForEmail = "")
+    val updatedProfile = profile.copy(serverAutoDetect = true)
+    val readyToSaveProfile = updatedProfile.entity.copy(serverForEmail = "")
 
-    every { profileRepository.findAllProfiles() } returns Observable.just(listOf(inputProfile))
+    every { profileRepository.findAllProfiles() } returns Observable.just(listOf(profile.entity))
     every { profileRepository.update(readyToSaveProfile) } returns Completable.complete()
     every { deleteProfileRelatedDataUseCase.invoke(profileId) } returns Completable.complete()
+    coEvery { encryptedPreferences.getProfileCredentials(profileId) } returns mockk { every { accessIdPassword } returns "" }
 
     // when
     val testObserver = useCase(updatedProfile).test()
@@ -217,16 +261,14 @@ class SaveProfileUseCaseTest {
       profileRepository.update(readyToSaveProfile)
       deleteProfileRelatedDataUseCase.invoke(profileId)
     }
-    confirmVerified(profileRepository, profileIdHolder, deleteProfileRelatedDataUseCase, randomGenerator, context)
+    confirmVerified(profileRepository, deleteProfileRelatedDataUseCase, context)
   }
 
   @Test
   fun `should throw when name is empty`() {
     // given
-    val (guid, authKey) = mockAuthorizationData()
-
-    val profile = ProfileEntity.mockWithEmail(name = "")
-    val insertedProfile = profile.copy(guid = guid, authKey = authKey)
+    val profile = ProfileDto.mockWithEmail(name = "")
+    val insertedProfile = profile.entity
     var insertPerformed = false
 
     every { profileRepository.findAllProfiles() } returns Observable.just(listOf(ProfileEntity.mockWithEmail()))
@@ -247,16 +289,14 @@ class SaveProfileUseCaseTest {
       profileRepository.findAllProfiles()
       profileRepository.insert(insertedProfile)
     }
-    confirmVerified(profileRepository, profileIdHolder)
+    confirmVerified(profileRepository)
   }
 
   @Test
   fun `should throw when name is duplicated`() {
     // given
-    val (guid, authKey) = mockAuthorizationData()
-
-    val profile = ProfileEntity.mockWithEmail()
-    val insertedProfile = profile.copy(guid = guid, authKey = authKey)
+    val profile = ProfileDto.mockWithEmail()
+    val insertedProfile = profile.entity
     var insertPerformed = false
 
     every { profileRepository.findAllProfiles() } returns Observable.just(listOf(ProfileEntity.mockWithEmail(id = 123L)))
@@ -277,16 +317,14 @@ class SaveProfileUseCaseTest {
       profileRepository.findAllProfiles()
       profileRepository.insert(insertedProfile)
     }
-    confirmVerified(profileRepository, profileIdHolder)
+    confirmVerified(profileRepository)
   }
 
   @Test
   fun `should throw when name is duplicated - trimming`() {
     // given
-    val (guid, authKey) = mockAuthorizationData()
-
-    val profile = ProfileEntity.mockWithEmail()
-    val insertedProfile = profile.copy(guid = guid, authKey = authKey)
+    val profile = ProfileDto.mockWithEmail()
+    val insertedProfile = profile.entity
     var insertPerformed = false
 
     every { profileRepository.findAllProfiles() } returns
@@ -308,16 +346,14 @@ class SaveProfileUseCaseTest {
       profileRepository.findAllProfiles()
       profileRepository.insert(insertedProfile)
     }
-    confirmVerified(profileRepository, profileIdHolder)
+    confirmVerified(profileRepository)
   }
 
   @Test
   fun `should throw when auth data is not complete`() {
     // given
-    val (guid, authKey) = mockAuthorizationData()
-
-    val profile = ProfileEntity.mockWithEmail(id = 2, email = "")
-    val insertedProfile = profile.copy(guid = guid, authKey = authKey)
+    val profile = ProfileDto.mockWithEmail(id = 2, email = "")
+    val insertedProfile = profile.entity
     var insertPerformed = false
 
     every { profileRepository.findAllProfiles() } returns
@@ -339,29 +375,6 @@ class SaveProfileUseCaseTest {
       profileRepository.findAllProfiles()
       profileRepository.insert(insertedProfile)
     }
-    confirmVerified(profileRepository, profileIdHolder)
-  }
-
-  private fun mockAuthorizationData(): Pair<ByteArray, ByteArray> {
-    val guid = byteArrayOf(1)
-    val authKey = byteArrayOf(2)
-    val encryptedGuid = byteArrayOf(3)
-    val encryptedAuthKey = byteArrayOf(4)
-
-    val appMock: SuplaApp = mockk()
-    mockkStatic(SuplaApp::class)
-    every { SuplaApp.getApp() } returns appMock
-
-    val deviceId = "some id"
-    mockkObject(Preferences.Companion)
-    every { Preferences.getDeviceID(appMock) } returns deviceId
-
-    mockkStatic(Encryption::class)
-    every { Encryption.encryptDataWithNullOnException(guid, deviceId) } returns encryptedGuid
-    every { Encryption.encryptDataWithNullOnException(authKey, deviceId) } returns encryptedAuthKey
-
-    every { randomGenerator.nextBytes(16) } returnsMany listOf(guid, authKey)
-
-    return Pair(encryptedGuid, encryptedAuthKey)
+    confirmVerified(profileRepository)
   }
 }

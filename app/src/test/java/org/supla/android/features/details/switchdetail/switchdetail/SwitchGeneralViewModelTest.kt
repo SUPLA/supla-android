@@ -22,6 +22,7 @@ import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
+import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.mockk
 import io.mockk.verify
 import io.reactivex.rxjava3.core.Maybe
@@ -30,10 +31,11 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.tuple
 import org.junit.Before
 import org.junit.Test
-import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
+import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
@@ -50,10 +52,9 @@ import org.supla.android.features.details.switchdetail.general.SwitchGeneralView
 import org.supla.android.images.ImageId
 import org.supla.android.lib.SuplaChannelExtendedValue
 import org.supla.android.testhelpers.extensions.mockShareable
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.GetChannelStateUseCase
-import org.supla.android.usecases.channel.GetChannelValueUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.channel.measurements.electricitymeter.LoadElectricityMeterMeasurementsUseCase
 import org.supla.android.usecases.channel.measurements.impulsecounter.LoadImpulseCounterMeasurementsUseCase
@@ -100,16 +101,13 @@ class SwitchGeneralViewModelTest :
   private lateinit var getAllChannelIssuesUseCase: GetAllChannelIssuesUseCase
 
   @MockK
-  private lateinit var getChannelValueUseCase: GetChannelValueUseCase
-
-  @MockK
   private lateinit var downloadEventsManager: DownloadEventsManager
 
   @MockK
   private lateinit var dateProvider: DateProvider
 
   @MockK
-  private lateinit var preferences: Preferences
+  private lateinit var preferences: ApplicationPreferences
 
   @MockK
   private lateinit var getChannelStateUseCase: GetChannelStateUseCase
@@ -120,8 +118,11 @@ class SwitchGeneralViewModelTest :
   @MockK
   private lateinit var getCaptionUseCase: GetCaptionUseCase
 
+  @RelaxedMockK
+  private lateinit var suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper
+
   @MockK
-  override lateinit var schedulers: SuplaSchedulers
+  override lateinit var threading: SuplaThreading
 
   @InjectMockKs
   override lateinit var viewModel: SwitchGeneralViewModel

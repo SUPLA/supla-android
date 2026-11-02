@@ -40,6 +40,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.min
 import org.supla.android.R
@@ -92,7 +93,7 @@ private fun RowScope.TemperatureAndHumidityCell(temperature: MeasurementValue, w
     val size = if (small) min(24.dp, availableWidthDp.div(4).dp) else min(36.dp, availableWidthDp.div(4).dp)
     ThermometerIcon(
       icon = temperature.imageId,
-      modifier = Modifier.size(size)
+      size = size
     )
 
     Spacer(modifier = Modifier.width(8.dp))
@@ -116,10 +117,10 @@ private fun RowScope.TemperatureAndHumidityCell(temperature: MeasurementValue, w
   }
 
 @Composable
-private fun ThermometerIcon(icon: ImageId, modifier: Modifier = Modifier.size(48.dp)) = Image(
+private fun ThermometerIcon(icon: ImageId, size: Dp) = Image(
   imageId = icon,
   contentDescription = "",
-  modifier = modifier,
+  size = size,
   contentScale = ContentScale.Inside
 )
 

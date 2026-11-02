@@ -33,6 +33,9 @@
   <string name="channel_caption_thermometer">Termometru</string>
   <string name="channel_caption_humidity">Umiditate</string>
   <string name="channel_caption_humidityandtemperature">Temperatură și umiditate</string>
+  <string name="channel_caption_smoke_sensor">Senzor de fum</string>
+  <string name="channel_caption_carbon_monoxide_sensor">Senzor de monoxid de carbon</string>
+  <string name="channel_caption_gas_sensor">Senzor de gaz</string>
   <string name="channel_caption_windsensor">Viteza vântului</string>
   <string name="channel_caption_pressuresensor">Senzor de presiune</string>
   <string name="channel_caption_rainsensor">Măsurarea precipitațiilor</string>
@@ -92,7 +95,7 @@
 
   <string name="add_wizard_step_3_message_3"><![CDATA[Apăsați butonul<b>START</b>pentru a începe configurarea.]]></string>
 
-  <string name="wizard_no_internetwifi">Înainte de a începe, conectați-vă la Internet printr-o rețea Wi-Fi, careva fi folosită și de dispozitivele de acționare pentru a se conecta la server.</string>
+  <string name="wizard_no_internetwifi">Înainte de a începe, asigurați-vă că Wi-Fi este activat.</string>
   <string name="wizard_wifi_error">Rețeaua Wi-Fi este dezactivată sau identificatorul sau numele acesteia nu poate fi citit!</string>
   <string name="wizard_location_error">Pentru funcționarea corectă al asistentului de adăugare, serviciul de localizare trebuie să fie activat pe acest dispozitiv. Accesați setările sistemului, apoi selectați opțiunea „Locație” și vă asigurați că este pornită.</string>
   <string name="wizard_scan_timeout">Timpul de așteptare pentru finalizarea căutării rețelei Wi-Fi a fost depășit!</string>
@@ -652,6 +655,11 @@
   <string name="settings_battery_level_warning">Alertă baterie descărcată</string>
   <string name="channel_battery_level">Nivelul bateriei: %1$d%%</string>
   <string name="channel_battery_level_with_info">Nivelul bateriei (%1$d - %2$s): %3$d%%</string>
+  <string name="battery_state">Starea bateriei</string>
+  <string name="channel_battery_low">Nivelul bateriei este scăzut</string>
+  <string name="channel_battery_low_with_info">Nivelul bateriei este scăzut (%1$d - %2$s)</string>
+  <string name="channel_battery_state_low_value">scăzut</string>
+  <string name="channel_battery_state_normal_value">normal</string>
   <string name="channel_btn_stop">Oprește</string>
   <string name="android_auto_action">Acțiune: %1$s</string>
   <string name="android_auto_empty_header">Configurare necesară</string>
@@ -827,8 +835,17 @@
   <string name="scene_inactive">Scena este inactivă</string>
   <string name="nfc_detail_action_added">Adăugat în aplicație</string>
   <string name="general_search">Căutare</string>
+  <string name="general_open_drawer">Deschide meniul</string>
+  <string name="general_back">Înapoi</string>
   <string name="toolbar_search_hint">Introduceți cel puțin 2 caractere…</string>
   <string name="details_timer_select_program">Selectați un program</string>
+  <string name="details_recuperator_ventilation">Ventilație</string>
+  <string name="details_recuperator_empty_house">Casă goală</string>
+  <string name="details_recuperator_open_window">Deschide fereastra</string>
+  <string name="channel_caption_hvac_hrv">Ventilație cu recuperare de căldură</string>
+  <string name="details_recuperator_manual_mode_label">Mod manual</string>
+  <string name="profile_selected">Profil selectat</string>
+  <string name="general_clear_search">Șterge căutarea</string>
   <string name="settings_show_unavailable_channels">Ascunde canalele care nu sunt disponibile din cauza configurației dispozitivului</string>
   <string name="details_em_active_energy_balance">Bilanțul energiei active</string>
   <string name="details_em_settings_list_metric">Valoare selectată</string>
@@ -841,4 +858,12 @@
   <string name="details_em_on_list_balance">Metodă de echilibrare a energiei</string>
   <string name="details_em_on_list_value">Interval de date</string>
   <string name="details_em_on_list">Afișare în lista canalelor</string>
+  <string name="wizard_result_certificate_untrusted">Certificatul dispozitivului nu este de încredere. Asigurați-vă că vă conectați la dispozitivul corect și că software-ul acestuia este actualizat.</string>
+  <string name="wizard_result_certificate_expired">Certificatul dispozitivului a expirat. Actualizați software-ul dispozitivului sau contactați asistența. Verificați și dacă data și ora de pe telefon sunt corecte.</string>
+  <string name="wizard_result_certificate_not_yet_valid">Certificatul dispozitivului nu este încă valabil. Verificați data și ora pe telefon și pe dispozitiv, apoi încercați din nou.</string>
+  <string name="wizard_result_certificate_revoked">Certificatul dispozitivului a fost revocat. Din motive de securitate, conexiunea nu poate fi stabilită. Actualizați software-ul dispozitivului sau contactați asistența.</string>
+  <string name="wizard_result_certificate_host_mismatch">Certificatul nu se potrivește cu acest dispozitiv. Asigurați-vă că aplicația se conectează la dispozitivul corect.</string>
+  <string name="wizard_result_certificate_pin_mismatch">Certificatul dispozitivului diferă de cel așteptat. Actualizați aplicația și software-ul dispozitivului, apoi încercați din nou.</string>
+  <string name="wizard_result_certificate_unsupported_security">Dispozitivul utilizează setări de securitate neacceptate. Actualizați software-ul dispozitivului și încercați din nou.</string>
+  <string name="wizard_result_certificate_different_names">Dispozitivul are un certificat incorect - numele nu se potrivesc (certificat: %1$s, dispozitiv: %2$s)</string>
 </resources>

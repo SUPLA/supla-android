@@ -39,6 +39,7 @@ import org.supla.android.core.MainDispatcherRule
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.infrastructure.NativeLoader
 import org.supla.android.core.infrastructure.UriProxy
+import org.supla.android.core.infrastructure.suplaclient.SingleCallProvider
 import org.supla.android.data.source.NfcCallRepository
 import org.supla.android.data.source.NfcTagRepository
 import org.supla.android.data.source.local.entity.NfcCallResult
@@ -47,18 +48,18 @@ import org.supla.android.data.source.local.entity.complex.NfcTagDataEntity
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.lib.singlecall.SingleCall
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.usecase.GetCaptionUseCase
 
 class CallActionViewModelTest :
-  BaseViewModelTest<CallActionViewModelState, CallActionViewEvent, CallActionViewModel>(MockSchedulers.MOCKK) {
+  BaseViewModelTest<CallActionScreenState, CallActionViewEvent, CallActionViewModel>(MockSchedulers.MOCKK) {
 
   @get:Rule
   override val mainDispatcherRule = MainDispatcherRule()
 
   @MockK
-  private lateinit var singleCallProvider: SingleCall.Provider
+  private lateinit var singleCallProvider: SingleCallProvider
 
   @MockK
   private lateinit var getCaptionUseCase: GetCaptionUseCase
@@ -76,7 +77,7 @@ class CallActionViewModelTest :
   private lateinit var dateProvider: DateProvider
 
   @MockK
-  override lateinit var schedulers: SuplaSchedulers
+  override lateinit var threading: SuplaThreading
 
   @InjectMockKs
   override lateinit var viewModel: CallActionViewModel
@@ -94,8 +95,8 @@ class CallActionViewModelTest :
 
     // then
     assertThat(states).containsExactly(
-      CallActionViewModelState(
-        screenState = CallActionScreenState(step = TagProcessingStep.Failure(TagProcessingStep.FailureType.IllegalIntent))
+      CallActionScreenState(
+        step = TagProcessingStep.Failure(TagProcessingStep.FailureType.IllegalIntent)
       )
     )
   }
@@ -107,8 +108,8 @@ class CallActionViewModelTest :
 
     // then
     assertThat(states).containsExactly(
-      CallActionViewModelState(
-        screenState = CallActionScreenState(step = TagProcessingStep.Failure(TagProcessingStep.FailureType.UnknownUrl))
+      CallActionScreenState(
+        step = TagProcessingStep.Failure(TagProcessingStep.FailureType.UnknownUrl)
       )
     )
   }
@@ -132,10 +133,8 @@ class CallActionViewModelTest :
 
     // then
     assertThat(states).containsExactly(
-      CallActionViewModelState(screenState = CallActionScreenState(step = TagProcessingStep.Processing)),
-      CallActionViewModelState(
-        screenState = CallActionScreenState(step = TagProcessingStep.Failure(TagProcessingStep.FailureType.TagNotFound(tagUuid)))
-      )
+      CallActionScreenState(step = TagProcessingStep.Processing),
+      CallActionScreenState(step = TagProcessingStep.Failure(TagProcessingStep.FailureType.TagNotFound(tagUuid)))
     )
   }
 
@@ -172,12 +171,10 @@ class CallActionViewModelTest :
     // then
 
     assertThat(states).contains(
-      CallActionViewModelState(screenState = CallActionScreenState(step = TagProcessingStep.Processing)),
-      CallActionViewModelState(
-        screenState = CallActionScreenState(
-          step = TagProcessingStep.Failure(TagProcessingStep.FailureType.TagNotConfigured(tagId)),
-          tagData = CallActionScreenState.TagData(tagName, null, LocalizedString.Empty)
-        )
+      CallActionScreenState(step = TagProcessingStep.Processing),
+      CallActionScreenState(
+        step = TagProcessingStep.Failure(TagProcessingStep.FailureType.TagNotConfigured(tagId)),
+        tagData = CallActionScreenState.TagData(tagName, null, LocalizedString.Empty)
       )
     )
   }
@@ -222,18 +219,14 @@ class CallActionViewModelTest :
 
     // then
     assertThat(states).containsExactly(
-      CallActionViewModelState(screenState = CallActionScreenState(step = TagProcessingStep.Processing)),
-      CallActionViewModelState(
-        screenState = CallActionScreenState(
-          step = TagProcessingStep.Processing,
-          tagData = CallActionScreenState.TagData(tagName, null, LocalizedString.Empty)
-        )
+      CallActionScreenState(step = TagProcessingStep.Processing),
+      CallActionScreenState(
+        step = TagProcessingStep.Processing,
+        tagData = CallActionScreenState.TagData(tagName, null, LocalizedString.Empty)
       ),
-      CallActionViewModelState(
-        screenState = CallActionScreenState(
-          step = TagProcessingStep.Success,
-          tagData = CallActionScreenState.TagData(tagName, null, LocalizedString.Empty)
-        )
+      CallActionScreenState(
+        step = TagProcessingStep.Success,
+        tagData = CallActionScreenState.TagData(tagName, null, LocalizedString.Empty)
       )
     )
 
@@ -291,18 +284,14 @@ class CallActionViewModelTest :
 
     // then
     assertThat(states).containsExactly(
-      CallActionViewModelState(screenState = CallActionScreenState(step = TagProcessingStep.Processing)),
-      CallActionViewModelState(
-        screenState = CallActionScreenState(
-          step = TagProcessingStep.Processing,
-          tagData = CallActionScreenState.TagData(tagName, null, LocalizedString.Empty)
-        )
+      CallActionScreenState(step = TagProcessingStep.Processing),
+      CallActionScreenState(
+        step = TagProcessingStep.Processing,
+        tagData = CallActionScreenState.TagData(tagName, null, LocalizedString.Empty)
       ),
-      CallActionViewModelState(
-        screenState = CallActionScreenState(
-          step = TagProcessingStep.Success,
-          tagData = CallActionScreenState.TagData(tagName, null, LocalizedString.Empty)
-        )
+      CallActionScreenState(
+        step = TagProcessingStep.Success,
+        tagData = CallActionScreenState.TagData(tagName, null, LocalizedString.Empty)
       )
     )
 

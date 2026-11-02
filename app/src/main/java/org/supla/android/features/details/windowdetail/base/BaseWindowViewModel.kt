@@ -17,10 +17,14 @@ package org.supla.android.features.details.windowdetail.base
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.lifecycle.viewModelScope
 import io.reactivex.rxjava3.core.Completable
-import org.supla.android.Preferences
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
+import org.supla.android.core.storage.ApplicationPreferences
+import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
@@ -36,11 +40,11 @@ import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemActi
 import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemPositionPresentation
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
 import org.supla.android.lib.actions.ActionId
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
-import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModel
+import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModelScope
 import org.supla.android.usecases.channel.ObserveChannelWithChildrenUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.CallSuplaClientOperationUseCase
@@ -64,22 +68,19 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
   private val observeChannelWithChildrenUseCase: ObserveChannelWithChildrenUseCase,
   private val observeChannelGroupByRemoteIdUseCase: ObserveChannelGroupByRemoteIdUseCase,
   private val getGroupOnlineSummaryUseCase: GetGroupOnlineSummaryUseCase,
-  private val preferences: Preferences,
+  private val preferences: ApplicationPreferences,
   private val dateProvider: DateProvider,
-  suplaClientProvider: SuplaClientProvider,
-  profileRepository: ProfileRepository,
-  loginUseCase: LoginUseCase,
-  authorizeUseCase: AuthorizeUseCase,
+  override val suplaClientProvider: SuplaClientProvider,
+  override val profileRepository: ProfileRepository,
+  override val loginUseCase: LoginUseCase,
+  override val authorizeUseCase: AuthorizeUseCase,
   defaultState: S,
-  schedulers: SuplaSchedulers
-) : BaseAuthorizationViewModel<S, BaseWindowViewEvent>(
-  suplaClientProvider,
-  profileRepository,
-  loginUseCase,
-  authorizeUseCase,
+  override val threading: SuplaThreading
+) : BaseViewModel<S, BaseWindowViewEvent>(
   defaultState,
-  schedulers
-) {
+  threading
+),
+  BaseAuthorizationViewModelScope {
 
   protected val positionTextFormat: WindowGroupedValueFormat
     get() =
@@ -170,6 +171,13 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
 
   override fun updateAuthorizationDialogState(updater: (AuthorizationDialogState?) -> AuthorizationDialogState?) {
     updateState { stateCopy(it, authorizationDialogState = updater(it.authorizationDialogState)) }
+  }
+
+  override fun getAuthorizationDialogState(): AuthorizationDialogState? =
+    currentState().authorizationDialogState
+
+  override fun launch(launcher: suspend CoroutineScope.() -> Unit) {
+    viewModelScope.launch { launcher() }
   }
 
   override fun onAuthorized(reason: AuthorizationReason) {

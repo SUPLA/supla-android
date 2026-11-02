@@ -19,7 +19,7 @@ package org.supla.android.usecases.channel
 
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.ChannelRelationRepository
-import org.supla.android.data.source.RoomChannelRepository
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
@@ -30,7 +30,7 @@ import javax.inject.Singleton
 @Singleton
 class ReadAllChannelsWithChildrenUseCase @Inject constructor(
   private val channelRelationRepository: ChannelRelationRepository,
-  private val channelRepository: RoomChannelRepository,
+  private val channelRepository: ChannelRepository,
   private val getChannelChildrenTreeUseCase: GetChannelChildrenTreeUseCase
 ) {
   operator fun invoke(profileId: Long): Observable<List<ChannelWithChildren>> =

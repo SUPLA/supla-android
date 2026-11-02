@@ -24,7 +24,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import org.supla.android.core.SuplaAppProvider
 import org.supla.android.extensions.subscribeBy
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -34,15 +34,15 @@ import javax.inject.Singleton
 class SuplaClientStateHolder @Inject constructor(
   @param:ApplicationContext private val applicationContext: Context,
   private val suplaAppProvider: SuplaAppProvider,
-  suplaSchedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) {
 
   private var stateSubject: BehaviorSubject<SuplaClientState> = BehaviorSubject.createDefault(SuplaClientState.Initialization)
 
   init {
     stateSubject
-      .subscribeOn(suplaSchedulers.io)
-      .observeOn(suplaSchedulers.io)
+      .subscribeOn(threading.schedulers.io)
+      .observeOn(threading.schedulers.io)
       .subscribeBy(
         onNext = {
           Timber.i("Supla client state: $it")

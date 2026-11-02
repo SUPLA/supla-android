@@ -32,7 +32,7 @@ import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.data.model.general.LockScreenScope
 import org.supla.android.data.model.general.LockScreenSettings
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.lock.CheckPinUseCase
 import java.util.Date
 
@@ -49,7 +49,7 @@ class LockScreenViewModelTest : BaseViewModelTest<LockScreenViewModelState, Lock
   private lateinit var checkPinUseCase: CheckPinUseCase
 
   @MockK
-  override lateinit var schedulers: SuplaSchedulers
+  override lateinit var threading: SuplaThreading
 
   @InjectMockKs
   override lateinit var viewModel: LockScreenViewModel
@@ -159,7 +159,7 @@ class LockScreenViewModelTest : BaseViewModelTest<LockScreenViewModelState, Lock
       LockScreenViewModelState(loading = true),
       LockScreenViewModelState()
     )
-    assertThat(events).isEmpty()
+    assertThat(events).containsExactly(LockScreenViewEvent.Close)
     verify {
       checkPinUseCase.invoke(UnlockAction.AuthorizeApplication, CheckPinUseCase.PinAction.BiometricGranted)
     }

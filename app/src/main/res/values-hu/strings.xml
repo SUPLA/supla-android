@@ -34,6 +34,9 @@
   <string name="channel_caption_thermometer">Hőmérő</string>
   <string name="channel_caption_humidity">Nedvességtartalom</string>
   <string name="channel_caption_humidityandtemperature">Hőmérséklet és páratartalom</string>
+  <string name="channel_caption_smoke_sensor">Füstérzékelő</string>
+  <string name="channel_caption_carbon_monoxide_sensor">Szén-monoxid-érzékelő</string>
+  <string name="channel_caption_gas_sensor">Gázérzékelő</string>
   <string name="channel_caption_windsensor">Szélsebesség</string>
   <string name="channel_caption_pressuresensor">Nyomásérzékelő</string>
   <string name="channel_caption_rainsensor">Csapadék mérése</string>
@@ -93,7 +96,7 @@
 
   <string name="add_wizard_step_3_message_3"><![CDATA[A konfiguráció elindításához nyomja meg a <b> START </b> gombot.]]></string>
 
-  <string name="wizard_no_internetwifi">Mielőtt elkezdené, csatlakozzon az internethez egy WiFi-hálózaton keresztül, amelyet a végrehajtó eszközök is használnak a szerverhez történő csatlakozáshoz.</string>
+  <string name="wizard_no_internetwifi">Mielőtt elkezdené, győződjön meg arról, hogy a Wi-Fi be van kapcsolva.</string>
   <string name="wizard_wifi_error">A Wi-Fi hálózat ki van kapcsolva, vagy az azonosítója vagy a neve nem olvasható!</string>
   <string name="wizard_location_error">Ahhoz, hogy a hozzáadási varázsló megfelelően működjön, engedélyezni kell a helyinformációt ezen az eszközön. Lépjen a rendszerbeállításokba, majd válassza a „Helyinformáció” lehetőséget, és győződjön meg róla, hogy engedélyezve van.</string>
   <string name="wizard_scan_timeout">A Wi-Fi halózat keresése a várakozási időt túllépte!</string>
@@ -650,6 +653,11 @@
   <string name="settings_battery_level_warning">Alacsony akkumulátor figyelmeztetés</string>
   <string name="channel_battery_level">Az akkumulátor töltöttségi szintje: %1$d%%</string>
   <string name="channel_battery_level_with_info">Az akkumulátor töltöttségi szintje (%1$d - %2$s): %3$d%%</string>
+  <string name="battery_state">Akkumulátor állapota</string>
+  <string name="channel_battery_low">Az akkumulátor töltöttségi szintje alacsony</string>
+  <string name="channel_battery_low_with_info">Az akkumulátor töltöttségi szintje alacsony (%1$d - %2$s)</string>
+  <string name="channel_battery_state_low_value">alacsony</string>
+  <string name="channel_battery_state_normal_value">normál</string>
   <string name="channel_btn_stop">Állj</string>
   <string name="android_auto_action">Akció: %1$s</string>
   <string name="android_auto_empty_header">Konfiguráció szükséges</string>
@@ -822,8 +830,17 @@
   <string name="scene_inactive">A jelenet inaktív</string>
   <string name="nfc_detail_action_added">Hozzáadva az alkalmazáshoz</string>
   <string name="general_search">Keresés</string>
+  <string name="general_open_drawer">Menü megnyitása</string>
+  <string name="general_back">Vissza</string>
   <string name="toolbar_search_hint">Írjon be legalább 2 karaktert…</string>
   <string name="details_timer_select_program">Program kiválasztása</string>
+  <string name="details_recuperator_ventilation">Szellőztetés</string>
+  <string name="details_recuperator_empty_house">Üres ház</string>
+  <string name="details_recuperator_open_window">Ablak nyitása</string>
+  <string name="channel_caption_hvac_hrv">Hővisszanyerős szellőzés</string>
+  <string name="details_recuperator_manual_mode_label">Kézi mód</string>
+  <string name="profile_selected">Kiválasztott profil</string>
+  <string name="general_clear_search">Keresés törlése</string>
   <string name="settings_show_unavailable_channels">Az eszköz konfigurációja miatt nem elérhető csatornák elrejtése</string>
   <string name="details_em_active_energy_balance">Hatásos energia egyenleg</string>
   <string name="details_em_settings_list_metric">Kiválasztott érték</string>
@@ -836,4 +853,12 @@
   <string name="details_em_on_list_balance">Energiamérlegelési módszer</string>
   <string name="details_em_on_list_value">Adattartomány</string>
   <string name="details_em_on_list">Megjelenítés a csatornalistában</string>
+  <string name="wizard_result_certificate_untrusted">Az eszköz tanúsítványa nem megbízható. Győződjön meg arról, hogy a megfelelő eszközhöz csatlakozik, és hogy annak szoftvere naprakész.</string>
+  <string name="wizard_result_certificate_expired">Az eszköz tanúsítványa lejárt. Frissítse az eszköz szoftverét, vagy lépjen kapcsolatba a támogatással. Ellenőrizze azt is, hogy a telefon dátuma és ideje helyes-e.</string>
+  <string name="wizard_result_certificate_not_yet_valid">Az eszköz tanúsítványa még nem érvényes. Ellenőrizze a dátumot és az időt a telefonon és az eszközön, majd próbálja újra.</string>
+  <string name="wizard_result_certificate_revoked">Az eszköz tanúsítványát visszavonták. Biztonsági okokból a kapcsolat nem hozható létre. Frissítse az eszköz szoftverét, vagy lépjen kapcsolatba a támogatással.</string>
+  <string name="wizard_result_certificate_host_mismatch">A tanúsítvány nem illik ehhez az eszközhöz. Győződjön meg arról, hogy az alkalmazás a megfelelő eszközhöz csatlakozik.</string>
+  <string name="wizard_result_certificate_pin_mismatch">Az eszköz tanúsítványa eltér a várt tanúsítványtól. Frissítse az alkalmazást és az eszköz szoftverét, majd próbálja újra.</string>
+  <string name="wizard_result_certificate_unsupported_security">Az eszköz nem támogatott biztonsági beállításokat használ. Frissítse az eszköz szoftverét, majd próbálja újra.</string>
+  <string name="wizard_result_certificate_different_names">Az eszköz tanúsítványa hibás - a nevek nem egyeznek (tanúsítvány: %1$s, eszköz: %2$s)</string>
 </resources>

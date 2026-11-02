@@ -48,6 +48,9 @@
   <string name="channel_caption_thermometer">Termometr</string>
   <string name="channel_caption_humidity">Rütubət</string>
   <string name="channel_caption_humidityandtemperature">Temperatur və rütubət</string>
+  <string name="channel_caption_smoke_sensor">Tüstü sensoru</string>
+  <string name="channel_caption_carbon_monoxide_sensor">Dəm qazı sensoru</string>
+  <string name="channel_caption_gas_sensor">Qaz sensoru</string>
   <string name="channel_caption_windsensor">Külək sensoru</string>
   <string name="channel_caption_pressuresensor">Təzyiq sensoru</string>
   <string name="channel_caption_rainsensor">Yağış sensoru</string>
@@ -131,7 +134,7 @@
   <string name="add_wizard_remember_passwd">Şifrəni yadda saxla</string>
   <string name="add_wizard_step_3_message_3"><![CDATA[Konfiqurasiyaya başlamaq üçün <b>BAŞLAT</b>-a basın.]]></string>
 
-  <string name="wizard_no_internetwifi">Başlamazdan əvvəl, serverə qoşularkən I/O cihazının da istifadə etdiyi Wi-Fi ilə İnternet bağlantınızı qurun.</string>
+  <string name="wizard_no_internetwifi">Başlamazdan əvvəl Wi-Fi-nin aktiv olduğuna əmin olun.</string>
   <string name="wizard_wifi_error">Wi-Fi şəbəkəsi deaktivdir və ya onun identifikatorunu və ya adını oxumaq mümkün deyil!</string>
   <string name="wizard_location_error">Add Device Wizard düzgün işləməsi üçün, bu cihazda Yer xidməti aktiv olmalıdır. Sistem tənzimləmələrinə gedin, sonra „Yer” seçin və onun aktiv olduğundan əmin olun.</string>
   <string name="wizard_scan_timeout">Wi-Fi şəbəkə skanlamasının vaxt limiti bitdi!</string>
@@ -674,6 +677,11 @@
   <string name="settings_battery_level_warning" translatable="false">Aşağı batareya xəbərdarlığı</string>
   <string name="channel_battery_level">Batareya səviyyəsi: %1$d%%</string>
   <string name="channel_battery_level_with_info">Batareya səviyyəsi (%1$d - %2$s): %3$d%%</string>
+  <string name="battery_state">Batareya vəziyyəti</string>
+  <string name="channel_battery_low">Batareya səviyyəsi aşağıdır</string>
+  <string name="channel_battery_low_with_info">Batareya səviyyəsi aşağıdır (%1$d - %2$s)</string>
+  <string name="channel_battery_state_low_value">aşağı</string>
+  <string name="channel_battery_state_normal_value">normal</string>
   <string name="counter_photo_counter_area" translatable="false">Sayğac sahəsi</string>
   <string name="counter_photo_original_photo" translatable="false">Orijinal foto</string>
   <string name="counter_photo_settings" translatable="false">Bulud konfiqurasiyası</string>
@@ -906,8 +914,17 @@
   <string name="nfc_tag_name">Teq \"%1$s\"</string>
   <string name="nfc_detail_action_added">Tətbiqə əlavə edildi</string>
   <string name="general_search">Axtar</string>
+  <string name="general_open_drawer">Menyunu aç</string>
+  <string name="general_back">Geri</string>
   <string name="toolbar_search_hint">Ən azı 2 simvol daxil edin…</string>
   <string name="details_timer_select_program">Proqram seçin</string>
+  <string name="details_recuperator_ventilation">Ventilyasiya</string>
+  <string name="details_recuperator_empty_house">Boş ev</string>
+  <string name="details_recuperator_open_window">Pəncərəni aç</string>
+  <string name="channel_caption_hvac_hrv">İstilik bərpası ilə havalandırma</string>
+  <string name="details_recuperator_manual_mode_label">Əl rejimi</string>
+  <string name="profile_selected">Seçilmiş profil</string>
+  <string name="general_clear_search">Axtarışı sil</string>
   <string name="settings_show_unavailable_channels">Cihaz konfiqurasiyasına görə əlçatan olmayan kanalları gizlət</string>
   <string name="details_em_active_energy_balance">Aktiv enerji balansı</string>
   <string name="details_em_settings_list_metric">Seçilmiş dəyər</string>
@@ -920,4 +937,12 @@
   <string name="details_em_on_list_balance">Enerji balanslama üsulu</string>
   <string name="details_em_on_list_value">Məlumat aralığı</string>
   <string name="details_em_on_list">Kanallar siyahısında göstərmə</string>
+  <string name="wizard_result_certificate_untrusted">Cihaz sertifikatına etibar edilmir. Düzgün cihaza qoşulduğunuzdan və onun proqram təminatının aktual olduğundan əmin olun.</string>
+  <string name="wizard_result_certificate_expired">Cihaz sertifikatının müddəti bitib. Cihazın proqram təminatını yeniləyin və ya dəstək xidməti ilə əlaqə saxlayın. Telefonda tarix və saatın düzgün olduğunu da yoxlayın.</string>
+  <string name="wizard_result_certificate_not_yet_valid">Cihaz sertifikatı hələ etibarlı deyil. Telefonda və cihazda tarix və saatı yoxlayın, sonra yenidən cəhd edin.</string>
+  <string name="wizard_result_certificate_revoked">Cihaz sertifikatı ləğv edilib. Təhlükəsizlik səbəbi ilə bağlantı qurula bilmir. Cihazın proqram təminatını yeniləyin və ya dəstək xidməti ilə əlaqə saxlayın.</string>
+  <string name="wizard_result_certificate_host_mismatch">Sertifikat bu cihaza uyğun deyil. Tətbiqin düzgün cihaza qoşulduğundan əmin olun.</string>
+  <string name="wizard_result_certificate_pin_mismatch">Cihaz sertifikatı gözləniləndən fərqlidir. Tətbiqi və cihazın proqram təminatını yeniləyin, sonra yenidən cəhd edin.</string>
+  <string name="wizard_result_certificate_unsupported_security">Cihaz dəstəklənməyən təhlükəsizlik parametrlərindən istifadə edir. Cihazın proqram təminatını yeniləyin və yenidən cəhd edin.</string>
+  <string name="wizard_result_certificate_different_names">Cihazın sertifikatı yanlışdır - adlar eyni deyil (sertifikat: %1$s, cihaz: %2$s)</string>
 </resources>

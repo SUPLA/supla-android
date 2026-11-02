@@ -31,24 +31,159 @@ import org.supla.android.core.shared.invoke
 import org.supla.core.shared.infrastructure.LocalizedString
 
 @Composable
-fun HeadlineSmall(stringRes: Int, color: Color = MaterialTheme.colorScheme.onSurface) =
-  Text(
-    text = stringResource(id = stringRes),
-    style = MaterialTheme.typography.headlineSmall,
-    color = color
+fun HeadlineLarge(
+  stringRes: Int,
+  modifier: Modifier = Modifier,
+  color: Color = MaterialTheme.colorScheme.onSurface,
+  maxLines: Int = Int.MAX_VALUE
+) =
+  HeadlineLarge(
+    text = stringResource(stringRes),
+    modifier = modifier,
+    color = color,
+    maxLines = maxLines
   )
 
 @Composable
-fun LabelLarge(@StringRes stringRes: Int, color: Color = MaterialTheme.colorScheme.onSurface, textAlign: TextAlign = TextAlign.Start) =
-  LabelLarge(text = stringResource(id = stringRes), color = color, textAlign = textAlign)
+fun HeadlineLarge(
+  text: String,
+  modifier: Modifier = Modifier,
+  color: Color = MaterialTheme.colorScheme.onSurface,
+  maxLines: Int = Int.MAX_VALUE
+) =
+  Text(
+    text = text,
+    style = MaterialTheme.typography.headlineLarge,
+    color = color,
+    modifier = modifier,
+    maxLines = maxLines
+  )
 
 @Composable
-fun LabelLarge(text: String, color: Color = MaterialTheme.colorScheme.onSurface, textAlign: TextAlign = TextAlign.Start) =
+fun HeadlineMedium(
+  stringRes: Int,
+  modifier: Modifier = Modifier,
+  color: Color = MaterialTheme.colorScheme.onSurface,
+  maxLines: Int = Int.MAX_VALUE
+) =
+  HeadlineMedium(
+    text = stringResource(stringRes),
+    modifier = modifier,
+    color = color,
+    maxLines = maxLines
+  )
+
+@Composable
+fun HeadlineMedium(
+  text: String,
+  modifier: Modifier = Modifier,
+  color: Color = MaterialTheme.colorScheme.onSurface,
+  maxLines: Int = Int.MAX_VALUE
+) =
+  Text(
+    text = text,
+    style = MaterialTheme.typography.headlineMedium,
+    color = color,
+    modifier = modifier,
+    maxLines = maxLines
+  )
+
+@Composable
+fun HeadlineSmall(
+  stringRes: Int,
+  modifier: Modifier = Modifier,
+  color: Color = MaterialTheme.colorScheme.onSurface,
+  maxLines: Int = Int.MAX_VALUE,
+  overflow: TextOverflow = TextOverflow.Ellipsis,
+  textAlign: TextAlign? = null
+) =
+  HeadlineSmall(
+    text = stringResource(stringRes),
+    color = color,
+    modifier = modifier,
+    maxLines = maxLines,
+    overflow = overflow,
+    textAlign = textAlign
+  )
+
+@Composable
+fun HeadlineSmall(
+  text: String,
+  modifier: Modifier = Modifier,
+  color: Color = MaterialTheme.colorScheme.onSurface,
+  maxLines: Int = Int.MAX_VALUE,
+  overflow: TextOverflow = TextOverflow.Ellipsis,
+  textAlign: TextAlign? = null
+) =
+  Text(
+    text = text,
+    style = MaterialTheme.typography.headlineSmall,
+    color = color,
+    modifier = modifier,
+    maxLines = maxLines,
+    overflow = overflow,
+    textAlign = textAlign
+  )
+
+@Composable
+fun LabelLarge(
+  @StringRes stringRes: Int,
+  modifier: Modifier = Modifier,
+  color: Color = MaterialTheme.colorScheme.onSurface,
+  textAlign: TextAlign = TextAlign.Start
+) =
+  LabelLarge(text = stringResource(id = stringRes), color = color, textAlign = textAlign, modifier = modifier)
+
+@Composable
+fun LabelLarge(
+  text: String,
+  modifier: Modifier = Modifier,
+  color: Color = MaterialTheme.colorScheme.onSurface,
+  textAlign: TextAlign = TextAlign.Start
+) =
   Text(
     text = text,
     style = MaterialTheme.typography.labelLarge,
     color = color,
-    textAlign = textAlign
+    textAlign = textAlign,
+    modifier = modifier
+  )
+
+@Composable
+fun LabelMedium(
+  @StringRes stringRes: Int,
+  modifier: Modifier = Modifier,
+  color: Color = MaterialTheme.colorScheme.onSurface,
+  textAlign: TextAlign? = null,
+  overflow: TextOverflow = TextOverflow.Ellipsis,
+  maxLines: Int = Int.MAX_VALUE
+) =
+  LabelMedium(
+    text = stringResource(id = stringRes),
+    modifier = modifier,
+    color = color,
+    textAlign = textAlign,
+    overflow = overflow,
+    maxLines = maxLines
+  )
+
+@Composable
+fun LabelMedium(
+  text: String,
+  modifier: Modifier = Modifier,
+  color: Color = MaterialTheme.colorScheme.onSurface,
+  textAlign: TextAlign? = null,
+  overflow: TextOverflow = TextOverflow.Ellipsis,
+  maxLines: Int = Int.MAX_VALUE
+) =
+  Text(
+    text = text,
+    style = MaterialTheme.typography.labelMedium,
+    color = color,
+    textAlign = textAlign,
+    modifier = modifier,
+    overflow = overflow,
+    maxLines = maxLines
   )
 
 @Composable
@@ -150,9 +285,15 @@ fun BodyLarge(
   )
 
 @Composable
-fun BodyMedium(stringRes: Int, color: Color = MaterialTheme.colorScheme.onSurface, textAlign: TextAlign = TextAlign.Center) =
+fun BodyMedium(
+  stringRes: Int,
+  modifier: Modifier = Modifier,
+  color: Color = MaterialTheme.colorScheme.onSurface,
+  textAlign: TextAlign = TextAlign.Center
+) =
   BodyMedium(
     text = stringResource(id = stringRes),
+    modifier = modifier,
     color = color,
     textAlign = textAlign
   )
@@ -160,13 +301,15 @@ fun BodyMedium(stringRes: Int, color: Color = MaterialTheme.colorScheme.onSurfac
 @Composable
 fun BodyMedium(
   localizedString: LocalizedString,
+  modifier: Modifier = Modifier,
   color: Color = MaterialTheme.colorScheme.onSurface,
   textAlign: TextAlign = TextAlign.Center
 ) =
   BodyMedium(
     text = localizedString(LocalContext.current),
     color = color,
-    textAlign = textAlign
+    textAlign = textAlign,
+    modifier = modifier
   )
 
 @Composable
@@ -191,8 +334,22 @@ fun BodySmall(
   color: Color = MaterialTheme.colorScheme.onSurface,
   textAlign: TextAlign = TextAlign.Center
 ) =
+  BodySmall(
+    text = stringResource(stringRes),
+    modifier = modifier,
+    color = color,
+    textAlign = textAlign
+  )
+
+@Composable
+fun BodySmall(
+  text: String,
+  modifier: Modifier = Modifier,
+  color: Color = MaterialTheme.colorScheme.onSurface,
+  textAlign: TextAlign = TextAlign.Center
+) =
   Text(
-    text = stringResource(id = stringRes),
+    text = text,
     style = MaterialTheme.typography.bodySmall,
     color = color,
     textAlign = textAlign,

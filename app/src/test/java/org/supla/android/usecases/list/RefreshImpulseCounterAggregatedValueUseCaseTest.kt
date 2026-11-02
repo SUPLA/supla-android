@@ -38,8 +38,8 @@ import org.supla.android.data.model.settings.ListValueAggregation
 import org.supla.android.data.source.ChannelExtendedValueRepository
 import org.supla.android.data.source.ChannelValueRepository
 import org.supla.android.data.source.ImpulseCounterLogRepository
+import org.supla.android.data.source.local.dao.measurements.ImpulseCounterCalculatedValueSum
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
-import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.lib.SuplaChannelExtendedValue
 import org.supla.android.lib.SuplaChannelImpulseCounterValue
@@ -116,43 +116,18 @@ class RefreshImpulseCounterAggregatedValueUseCaseTest {
   }
 
   @Test
-  fun `should update with NO_VALUE_TEXT when filtered entries are empty`() = runTest {
-    // given
-    val now = ZonedDateTime.parse("2023-10-10T10:00:00Z")
-    val settings = ImpulseCounterSettings(showOnList = ListValueAggregation.CURRENT_HOUR)
-    every { updateEventsManager.emitChannelUpdate(remoteId) } answers {}
-    every { userStateHolder.getImpulseCounterSettings(profileId, remoteId) } returns settings
-    every { dateProvider.currentDate() } returns Date(now.toInstant().toEpochMilli())
-    every { dateProvider.currentDateTime } returns now
-    every { impulseCounterLogRepository.findOldestEntity(remoteId, profileId) } returns Maybe.just(mockk())
-    every { impulseCounterLogRepository.findMeasurements(remoteId, profileId, any(), any()) } returns Observable.just(emptyList())
-    coEvery { channelValueRepository.updateAggregatedValue(profileId, remoteId, NO_VALUE_TEXT) } returns Unit
-
-    // when
-    useCase.invoke(profileId, remoteId)
-
-    // then
-    coVerify {
-      channelValueRepository.updateAggregatedValue(profileId, remoteId, NO_VALUE_TEXT)
-    }
-  }
-
-  @Test
   fun `should update with formatted aggregated value when entries are present`() = runTest {
     // given
     val now = ZonedDateTime.parse("2023-10-10T10:30:00Z")
     val settings = ImpulseCounterSettings(showOnList = ListValueAggregation.CURRENT_HOUR)
-    val entries = listOf(
-      mockk<ImpulseCounterLogEntity> { every { calculatedValue } returns 10f },
-      mockk<ImpulseCounterLogEntity> { every { calculatedValue } returns 20.5f }
-    )
 
     every { updateEventsManager.emitChannelUpdate(remoteId) } answers {}
     every { userStateHolder.getImpulseCounterSettings(profileId, remoteId) } returns settings
     every { dateProvider.currentDate() } returns Date(now.toInstant().toEpochMilli())
     every { dateProvider.currentDateTime } returns now
     every { impulseCounterLogRepository.findOldestEntity(remoteId, profileId) } returns Maybe.just(mockk())
-    every { impulseCounterLogRepository.findMeasurements(remoteId, profileId, any(), any()) } returns Observable.just(entries)
+    every { impulseCounterLogRepository.findCalculatedValueSum(remoteId, profileId, any(), any()) } returns
+      Observable.just(ImpulseCounterCalculatedValueSum(count = 1, value = 30.5f))
 
     val extendedValueEntity = mockk<ChannelExtendedValueEntity>()
     val impulseCounterValue = mockk<SuplaChannelImpulseCounterValue>()
@@ -176,6 +151,31 @@ class RefreshImpulseCounterAggregatedValueUseCaseTest {
   }
 
   @Test
+  fun `should update with no value text when selected range has no entries`() = runTest {
+    // given
+    val now = ZonedDateTime.parse("2023-10-10T10:30:00Z")
+    val settings = ImpulseCounterSettings(showOnList = ListValueAggregation.CURRENT_HOUR)
+
+    every { updateEventsManager.emitChannelUpdate(remoteId) } answers {}
+    every { userStateHolder.getImpulseCounterSettings(profileId, remoteId) } returns settings
+    every { dateProvider.currentDate() } returns Date(now.toInstant().toEpochMilli())
+    every { dateProvider.currentDateTime } returns now
+    every { impulseCounterLogRepository.findOldestEntity(remoteId, profileId) } returns Maybe.just(mockk())
+    every { impulseCounterLogRepository.findCalculatedValueSum(remoteId, profileId, any(), any()) } returns
+      Observable.just(ImpulseCounterCalculatedValueSum(count = 0, value = 0f))
+    coEvery { channelExtendedValueRepository.findBy(profileId, remoteId) } returns null
+    coEvery { channelValueRepository.updateAggregatedValue(profileId, remoteId, any()) } returns Unit
+
+    // when
+    useCase.invoke(profileId, remoteId)
+
+    // then
+    coVerify {
+      channelValueRepository.updateAggregatedValue(profileId, remoteId, NO_VALUE_TEXT)
+    }
+  }
+
+  @Test
   fun `should use correct start date for CURRENT_DAY`() = runTest {
     // given
     val now = ZonedDateTime.parse("2023-10-10T10:30:00Z")
@@ -188,17 +188,18 @@ class RefreshImpulseCounterAggregatedValueUseCaseTest {
     every { dateProvider.currentDateTime } returns now
     every { impulseCounterLogRepository.findOldestEntity(remoteId, profileId) } returns Maybe.just(mockk())
     every {
-      impulseCounterLogRepository.findMeasurements(remoteId, profileId, Date(expectedStartDate.toEpochSecond() * 1000), any())
+      impulseCounterLogRepository.findCalculatedValueSum(remoteId, profileId, Date(expectedStartDate.toEpochSecond() * 1000), any())
     } returns
-      Observable.just(emptyList())
+      Observable.just(ImpulseCounterCalculatedValueSum(count = 1, value = 0f))
     coEvery { channelValueRepository.updateAggregatedValue(any(), any(), any()) } returns Unit
+    coEvery { channelExtendedValueRepository.findBy(profileId, remoteId) } returns null
 
     // when
     useCase.invoke(profileId, remoteId)
 
     // then
     verify {
-      impulseCounterLogRepository.findMeasurements(remoteId, profileId, Date(expectedStartDate.toEpochSecond() * 1000), any())
+      impulseCounterLogRepository.findCalculatedValueSum(remoteId, profileId, Date(expectedStartDate.toEpochSecond() * 1000), any())
     }
   }
 
@@ -216,17 +217,18 @@ class RefreshImpulseCounterAggregatedValueUseCaseTest {
     every { dateProvider.currentDateTime } returns now
     every { impulseCounterLogRepository.findOldestEntity(remoteId, profileId) } returns Maybe.just(mockk())
     every {
-      impulseCounterLogRepository.findMeasurements(remoteId, profileId, Date(expectedStartDate.toEpochSecond() * 1000), any())
+      impulseCounterLogRepository.findCalculatedValueSum(remoteId, profileId, Date(expectedStartDate.toEpochSecond() * 1000), any())
     } returns
-      Observable.just(emptyList())
+      Observable.just(ImpulseCounterCalculatedValueSum(count = 1, value = 0f))
     coEvery { channelValueRepository.updateAggregatedValue(any(), any(), any()) } returns Unit
+    coEvery { channelExtendedValueRepository.findBy(profileId, remoteId) } returns null
 
     // when
     useCase.invoke(profileId, remoteId)
 
     // then
     verify {
-      impulseCounterLogRepository.findMeasurements(remoteId, profileId, Date(expectedStartDate.toEpochSecond() * 1000), any())
+      impulseCounterLogRepository.findCalculatedValueSum(remoteId, profileId, Date(expectedStartDate.toEpochSecond() * 1000), any())
     }
   }
 
@@ -243,17 +245,18 @@ class RefreshImpulseCounterAggregatedValueUseCaseTest {
     every { dateProvider.currentDateTime } returns now
     every { impulseCounterLogRepository.findOldestEntity(remoteId, profileId) } returns Maybe.just(mockk())
     every {
-      impulseCounterLogRepository.findMeasurements(remoteId, profileId, Date(expectedStartDate.toEpochSecond() * 1000), any())
+      impulseCounterLogRepository.findCalculatedValueSum(remoteId, profileId, Date(expectedStartDate.toEpochSecond() * 1000), any())
     } returns
-      Observable.just(emptyList())
+      Observable.just(ImpulseCounterCalculatedValueSum(count = 1, value = 0f))
     coEvery { channelValueRepository.updateAggregatedValue(any(), any(), any()) } returns Unit
+    coEvery { channelExtendedValueRepository.findBy(profileId, remoteId) } returns null
 
     // when
     useCase.invoke(profileId, remoteId)
 
     // then
     verify {
-      impulseCounterLogRepository.findMeasurements(remoteId, profileId, Date(expectedStartDate.toEpochSecond() * 1000), any())
+      impulseCounterLogRepository.findCalculatedValueSum(remoteId, profileId, Date(expectedStartDate.toEpochSecond() * 1000), any())
     }
   }
 }

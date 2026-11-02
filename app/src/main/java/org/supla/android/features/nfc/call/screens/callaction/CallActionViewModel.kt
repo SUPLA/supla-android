@@ -24,9 +24,9 @@ import kotlinx.coroutines.launch
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.infrastructure.UriProxy
 import org.supla.android.core.infrastructure.nfc.tagUuid
+import org.supla.android.core.infrastructure.suplaclient.SingleCallProvider
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
-import org.supla.android.core.ui.ViewModelState
 import org.supla.android.data.source.NfcCallRepository
 import org.supla.android.data.source.NfcTagRepository
 import org.supla.android.data.source.local.entity.NfcCallResult
@@ -34,7 +34,7 @@ import org.supla.android.data.source.local.entity.NfcTagEntity
 import org.supla.android.data.source.local.entity.complex.NfcTagDataEntity
 import org.supla.android.lib.actions.ActionParameters
 import org.supla.android.lib.singlecall.SingleCall
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import timber.log.Timber
 import javax.inject.Inject
@@ -44,21 +44,23 @@ private const val SUCCESS_DELAY_MS: Long = 2000
 
 @HiltViewModel
 class CallActionViewModel @Inject constructor(
-  private val singleCallProvider: SingleCall.Provider,
+  private val singleCallProvider: SingleCallProvider,
   private val getCaptionUseCase: GetCaptionUseCase,
   private val nfcCallRepository: NfcCallRepository,
   private val nfcTagRepository: NfcTagRepository,
   private val dateProvider: DateProvider,
   private val uriProxy: UriProxy,
-  schedulers: SuplaSchedulers,
-) : BaseViewModel<CallActionViewModelState, CallActionViewEvent>(CallActionViewModelState(), schedulers), CallActionScreenScope {
+  threading: SuplaThreading,
+) : BaseViewModel<CallActionScreenState, CallActionViewEvent>(CallActionScreenState(), threading), CallActionScreenScope {
+
+  private var readOnly: Boolean = false
 
   override fun close() {
     sendEvent(CallActionViewEvent.Close)
   }
 
   override fun addNewTag(uuid: String) {
-    sendEvent(CallActionViewEvent.SaveNewNfcTag(uuid, currentState().readOnly))
+    sendEvent(CallActionViewEvent.SaveNewNfcTag(uuid, readOnly))
   }
 
   override fun configureTag(id: Long) {
@@ -66,7 +68,7 @@ class CallActionViewModel @Inject constructor(
   }
 
   fun onLaunchWithUrl(url: String?, readOnly: Boolean) {
-    updateState { it.copy(readOnly = readOnly) }
+    this.readOnly = readOnly
 
     if (url == null) {
       Timber.e("Url not found!")
@@ -86,7 +88,7 @@ class CallActionViewModel @Inject constructor(
   }
 
   fun onLaunchWithId(tagId: String?, readOnly: Boolean) {
-    updateState { it.copy(readOnly = readOnly) }
+    this.readOnly = readOnly
 
     if (tagId == null) {
       Timber.e("Tag id not found!")
@@ -100,15 +102,15 @@ class CallActionViewModel @Inject constructor(
   }
 
   private suspend fun performAction(tagUuid: String) {
-    if (currentState().screenState.step != TagProcessingStep.Pending) {
+    if (currentState().step != TagProcessingStep.Pending) {
       Timber.w("Tag processing already in progress!")
       return
     }
     setState(TagProcessingStep.Processing)
 
     val currentTime = dateProvider.currentTimestamp()
-    val tag = schedulers.io { nfcTagRepository.findByUuidWithDependencies(tagUuid) }
-    updateState { it.copy(screenState = it.screenState.copy(tagData = tag?.tagData)) }
+    val tag = this@CallActionViewModel.threading.io { nfcTagRepository.findByUuidWithDependencies(tagUuid) }
+    updateState { it.copy(tagData = tag?.tagData) }
 
     if (tag == null) {
       setErrorState(TagProcessingStep.FailureType.TagNotFound(tagUuid))
@@ -123,7 +125,7 @@ class CallActionViewModel @Inject constructor(
     }
 
     val singleCall = singleCallProvider.provide(configuration.profileId)
-    val result = schedulers.io { singleCall.executeAction(configuration.actionParameters) }
+    val result = this@CallActionViewModel.threading.io { singleCall.executeAction(configuration.actionParameters) }
     nfcCallRepository.insert(tag.tagEntity.id, result.toNfcCallResult)
 
     delayIfNeeded(currentTime)
@@ -157,7 +159,7 @@ class CallActionViewModel @Inject constructor(
     setState(TagProcessingStep.Failure(type))
 
   private fun setState(step: TagProcessingStep) =
-    updateState { it.copy(screenState = it.screenState.copy(step = step)) }
+    updateState { it.copy(step = step) }
 
   private suspend fun delayIfNeeded(currentTime: Long) {
     val stepTime = dateProvider.currentTimestamp() - currentTime
@@ -195,8 +197,3 @@ sealed class CallActionViewEvent : ViewEvent {
   data class EditMissingAction(val id: Long) : CallActionViewEvent()
   data class SaveNewNfcTag(val uuid: String, val readOnly: Boolean) : CallActionViewEvent()
 }
-
-data class CallActionViewModelState(
-  val readOnly: Boolean = false,
-  override val screenState: CallActionScreenState = CallActionScreenState()
-) : ViewModelState<CallActionScreenState>()

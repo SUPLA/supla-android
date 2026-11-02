@@ -25,7 +25,7 @@ import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class DateTimeFormatter {
+object DateTimeFormatter {
   private val defaultFormatter = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm")
 
   fun format(dateTime: LocalDateTime): LocalizedString {
@@ -41,6 +41,18 @@ class DateTimeFormatter {
       else -> LocalizedString.Constant(dateTime.format(defaultFormatter))
     }
   }
+
+  fun time(dateTime: LocalDateTime): String {
+    val second = dateTime.second
+    val minute = dateTime.minute
+    val hour = dateTime.hour
+
+    val secondString = if (second < 10) "0$second" else second
+    val minuteString = if (minute < 10) "0$minute" else minute
+    val hourString = if (hour < 10) "0$hour" else hour
+
+    return "$hourString:$minuteString:$secondString"
+  }
 }
 
-val LocalDateTimeFormatter = compositionLocalOf { DateTimeFormatter() }
+val LocalDateTimeFormatter = compositionLocalOf { DateTimeFormatter }

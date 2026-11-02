@@ -22,18 +22,20 @@ import io.reactivex.rxjava3.core.Maybe
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
+import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.db.ChannelBase
 import org.supla.android.extensions.subscribeBy
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import javax.inject.Inject
 
 @HiltViewModel
 class LegacyDetailViewModel @Inject constructor(
+  private val channelGroupRepository: ChannelGroupRepository,
   private val channelRepository: ChannelRepository,
-  schedulers: SuplaSchedulers
-) : BaseViewModel<LegacyDetailViewState, LegacyDetailViewEvent>(LegacyDetailViewState(), schedulers) {
+  threading: SuplaThreading
+) : BaseViewModel<LegacyDetailViewState, LegacyDetailViewEvent>(LegacyDetailViewState(), threading) {
 
   fun loadData(remoteId: Int, itemType: ItemType) {
     getDataSource(remoteId, itemType)
@@ -45,9 +47,9 @@ class LegacyDetailViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  private fun getDataSource(remoteId: Int, itemType: ItemType) = when (itemType) {
-    ItemType.CHANNEL -> Maybe.fromCallable { channelRepository.getChannel(remoteId) }
-    ItemType.GROUP -> Maybe.fromCallable { channelRepository.getChannelGroup(remoteId) }
+  private fun getDataSource(remoteId: Int, itemType: ItemType): Maybe<ChannelBase> = when (itemType) {
+    ItemType.CHANNEL -> channelRepository.findChannelDataEntity(remoteId).firstElement().map { it.getLegacyChannel() }
+    ItemType.GROUP -> channelGroupRepository.findGroupDataEntity(remoteId).firstElement().map { it.getLegacyGroup() }
   }
 }
 

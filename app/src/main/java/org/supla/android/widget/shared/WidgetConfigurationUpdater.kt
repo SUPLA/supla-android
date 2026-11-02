@@ -18,6 +18,7 @@ package org.supla.android.widget.shared
  */
 
 import jakarta.inject.Inject
+import org.supla.android.core.infrastructure.suplaclient.SingleCallProvider
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeBaseConfig
 import org.supla.android.data.source.remote.gpm.toValueFormat
 import org.supla.android.di.FORMATTER_GPM
@@ -45,7 +46,7 @@ import javax.inject.Singleton
 
 @Singleton
 class WidgetConfigurationUpdater @Inject constructor(
-  private val singleCallProvider: SingleCall.Provider,
+  private val singleCallProvider: SingleCallProvider,
   private val loadChannelConfigUseCase: LoadChannelConfigUseCase,
   @param:Named(FORMATTER_GPM) private val gpmValueFormatter: ValueFormatter,
   @param:Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter,

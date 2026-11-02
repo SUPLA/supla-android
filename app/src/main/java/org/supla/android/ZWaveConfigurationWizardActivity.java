@@ -40,8 +40,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import javax.inject.Inject;
 import org.supla.android.core.shared.SuplaChannelBasicCfgExtensionsKt;
 import org.supla.android.core.shared.ZWaveNodeExtensionsKt;
+import org.supla.android.data.source.ChannelRepository;
 import org.supla.android.db.Channel;
 import org.supla.android.lib.SuplaChannelBasicCfg;
 import org.supla.android.lib.SuplaClient;
@@ -118,6 +120,8 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
   private ZWaveWakeupSettingsDialog wakeupSettingsDialog;
   private TextView mTvWakeUpInfo;
   private Button mBtnWakeUpSettings;
+
+  @Inject ChannelRepository channelRepository;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -241,7 +245,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
     setBtnNextEnabled(false);
 
     mDeviceList.clear();
-    mChannelList = getDbHelper().getZWaveBridgeChannels();
+    mChannelList = getZWaveBridgeChannels();
 
     for (Channel channel : mChannelList) {
       boolean exists = false;
@@ -258,6 +262,15 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
     }
 
     fetchChannelBasicCfg(null);
+  }
+
+  private List<Channel> getZWaveBridgeChannels() {
+    try {
+      return channelRepository.getZWaveBridgeChannels().blockingGet();
+    } catch (Exception ex) {
+      Timber.e(ex, "Could not load ZWave channels");
+      return new ArrayList<>();
+    }
   }
 
   private void loadDeviceListSpinner() {
@@ -486,7 +499,11 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
 
   private void updateSelectedChannel() {
     if (mSelectedCahnnel != null) {
-      mSelectedCahnnel = getDbHelper().getChannel(mSelectedCahnnel.getChannelId());
+      mSelectedCahnnel =
+          channelRepository
+              .findChannelDataEntity(mSelectedCahnnel.getChannelId())
+              .blockingFirst()
+              .getLegacyChannel();
     }
   }
 
@@ -973,7 +990,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
     }
 
     setBtnNextPreloaderVisible(false);
-    showMain(this);
+    finish();
   }
 
   private void showError(String message, int iconResId) {

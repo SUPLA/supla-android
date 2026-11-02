@@ -20,6 +20,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.dao.ChannelGroupRelationDao
+import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity
+import org.supla.android.usecases.channel.VisibilityChange
 import org.supla.android.usecases.developerinfo.CountProvider
 import org.supla.android.usecases.profile.DeleteProfileUseCase
 import javax.inject.Inject
@@ -34,6 +36,17 @@ class ChannelGroupRelationRepository @Inject constructor(
   fun findGroupRelationsData(remoteId: Int) = channelGroupRelationDao.findGroupRelationsData(remoteId)
 
   fun findGroupRelations(remoteId: Int) = channelGroupRelationDao.findGroupRelations(remoteId)
+
+  suspend fun findByGroupAndChannel(groupId: Int, channelId: Int): ChannelGroupRelationEntity? =
+    channelGroupRelationDao.findByGroupAndChannel(groupId, channelId)
+
+  suspend fun insert(entity: ChannelGroupRelationEntity) = channelGroupRelationDao.insert(entity)
+
+  suspend fun updateEntity(entity: ChannelGroupRelationEntity) =
+    channelGroupRelationDao.update(entity)
+
+  suspend fun setChannelGroupRelationsVisible(change: VisibilityChange): Boolean =
+    channelGroupRelationDao.setChannelGroupRelationsVisible(change.newVisibility, change.applyForVisibility) > 0
 
   override fun count(): Observable<Int> = channelGroupRelationDao.count()
 

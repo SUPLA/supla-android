@@ -38,10 +38,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.infrastructure.TextToSpeechHelper
+import org.supla.android.core.infrastructure.suplaclient.SingleCallProvider
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.AndroidAutoItemRepository
 import org.supla.android.data.source.local.entity.AndroidAutoItemEntity
 import org.supla.android.data.source.local.entity.complex.AndroidAutoDataEntity
@@ -51,7 +52,7 @@ import org.supla.android.extensions.ucFirst
 import org.supla.android.images.ImageCache
 import org.supla.android.lib.actions.ActionParameters
 import org.supla.android.lib.singlecall.SingleCall
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import timber.log.Timber
@@ -61,9 +62,9 @@ class MainScreen(
   private val androidAutoItemRepository: AndroidAutoItemRepository,
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val getSceneIconUseCase: GetSceneIconUseCase,
-  private val singleCallProvider: SingleCall.Provider,
-  private val schedulers: SuplaSchedulers,
-  private val preferences: Preferences,
+  private val singleCallProvider: SingleCallProvider,
+  private val preferences: ApplicationPreferences,
+  private val threading: SuplaThreading,
   updateEventsManager: UpdateEventsManager,
   dateProvider: DateProvider,
   carContext: CarContext
@@ -97,14 +98,14 @@ class MainScreen(
 
     disposables.add(
       updateEventsManager.observeScenesUpdate()
-        .subscribeOn(schedulers.io)
-        .observeOn(schedulers.ui)
+        .subscribeOn(threading.schedulers.io)
+        .observeOn(threading.schedulers.ui)
         .subscribe { load() }
     )
     disposables.add(
       updateEventsManager.observeAndroidAutoUpdates()
-        .subscribeOn(schedulers.io)
-        .observeOn(schedulers.ui)
+        .subscribeOn(threading.schedulers.io)
+        .observeOn(threading.schedulers.ui)
         .subscribe { load() }
     )
   }
@@ -114,8 +115,8 @@ class MainScreen(
     invalidate()
     disposables.add(
       androidAutoItemRepository.findAll().firstOrError()
-        .subscribeOn(schedulers.io)
-        .observeOn(schedulers.ui)
+        .subscribeOn(threading.schedulers.io)
+        .observeOn(threading.schedulers.ui)
         .subscribeBy(
           onSuccess = { items ->
             state.items = items

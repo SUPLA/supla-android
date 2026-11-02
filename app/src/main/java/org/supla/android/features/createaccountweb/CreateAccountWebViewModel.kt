@@ -18,16 +18,21 @@ package org.supla.android.features.createaccountweb
  */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
+import org.supla.android.R
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.features.webcontent.WebContentViewModel
 import org.supla.android.features.webcontent.WebContentViewState
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import javax.inject.Inject
 
 @HiltViewModel
 class CreateAccountWebViewModel @Inject constructor(
-  schedulers: SuplaSchedulers
-) : WebContentViewModel<CreateAccountWebViewState, CreateAccountWebViewEvent>(CreateAccountWebViewState(), schedulers) {
+  threading: SuplaThreading
+) : WebContentViewModel<CreateAccountWebViewState, CreateAccountWebViewEvent>(
+  defaultState = CreateAccountWebViewState(),
+  threading = threading,
+  defaultTitle = R.string.app_name
+) {
 
   override fun loadingState(loading: Boolean) = currentState().copy(loading = loading)
 

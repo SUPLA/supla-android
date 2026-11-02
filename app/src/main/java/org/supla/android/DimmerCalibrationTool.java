@@ -35,7 +35,7 @@ import androidx.core.content.res.ResourcesCompat;
 import java.util.Timer;
 import java.util.TimerTask;
 import org.supla.android.lib.AndroidSuplaClientMessageHandler;
-import org.supla.android.navigator.MainNavigator;
+import org.supla.android.main.MainComposeNavigator;
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage;
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage.CallConfigResult;
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessageHandler;
@@ -64,10 +64,11 @@ public abstract class DimmerCalibrationTool
   private Timer delayTimer1 = null;
   private Timer delayTimer2 = null;
   private boolean settingsChanged;
+  private boolean closing = false;
 
-  protected final MainNavigator mainNavigator;
+  private final MainComposeNavigator mainNavigator;
 
-  public DimmerCalibrationTool(ChannelDetailRGBW detailRGB, MainNavigator navigator) {
+  public DimmerCalibrationTool(ChannelDetailRGBW detailRGB, MainComposeNavigator navigator) {
     if (detailRGB == null || !(detailRGB.getContext() instanceof ContextWrapper)) {
       throw new IllegalArgumentException("The detailRGB pattern is invalid");
     }
@@ -91,7 +92,7 @@ public abstract class DimmerCalibrationTool
   @Override
   public void authorizationCanceled() {
     mSuperuserAuthorizationStarted = false;
-    mainNavigator.back();
+    close();
   }
 
   protected void setImgViews(int imgOnResId, int imgOffResId, int imgAlwaysOffResId) {
@@ -393,7 +394,7 @@ public abstract class DimmerCalibrationTool
     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
     builder.setMessage(R.string.save_without_saving);
 
-    builder.setPositiveButton(R.string.yes, (dialog, id) -> mainNavigator.back());
+    builder.setPositiveButton(R.string.yes, (dialog, id) -> close());
 
     builder.setNeutralButton(R.string.no, (dialog, id) -> dialog.cancel());
 
@@ -443,6 +444,13 @@ public abstract class DimmerCalibrationTool
 
   protected void onSaveNegativeClick(DialogInterface dialog) {
     dialog.cancel();
+  }
+
+  protected void close() {
+    if (!closing) {
+      closing = true;
+      mainNavigator.back();
+    }
   }
 
   public void onClick(View v) {

@@ -16,29 +16,33 @@ package org.supla.android.features.createaccount
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.launch
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.data.source.ProfileRepository
-import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.deleteaccountweb.DeleteAccountWebFragment
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.client.ReconnectUseCase
-import org.supla.android.usecases.profile.DeleteProfileUseCase
+import org.supla.android.usecases.profile.LoadProfileWithCredentialsUseCase
+import org.supla.android.usecases.profile.ProfileDto
+import org.supla.android.usecases.profile.ProfileSessionManager
+import org.supla.android.usecases.profile.ProfileWithCredentials
 import org.supla.android.usecases.profile.SaveProfileUseCase
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class CreateAccountViewModel @Inject constructor(
+  private val loadProfileWithCredentialsUseCase: LoadProfileWithCredentialsUseCase,
+  private val profileSessionManager: ProfileSessionManager,
   private val saveProfileUseCase: SaveProfileUseCase,
-  private val deleteProfileUseCase: DeleteProfileUseCase,
   private val profileRepository: ProfileRepository,
   private val reconnectUseCase: ReconnectUseCase,
-  schedulers: SuplaSchedulers
-) : BaseViewModel<CreateAccountViewState, CreateAccountViewEvent>(CreateAccountViewState(), schedulers) {
+  threading: SuplaThreading
+) : BaseViewModel<CreateAccountViewState, CreateAccountViewEvent>(CreateAccountViewState(), threading) {
 
   fun loadProfile(profileId: Long?) {
     profileRepository.findAllProfiles()
@@ -56,30 +60,26 @@ class CreateAccountViewModel @Inject constructor(
       .disposeBySelf()
 
     if (profileId != null) {
-      profileRepository.findProfile(profileId)
-        .attach()
-        .subscribeBy(
-          onSuccess = this::onProfileLoaded,
-          onError = { throwable ->
-            Timber.e(throwable, "Could not find profile")
-          }
-        )
-        .disposeBySelf()
+      viewModelScope.launch {
+        this@CreateAccountViewModel.threading.io { loadProfileWithCredentialsUseCase(profileId) }?.let {
+          this@CreateAccountViewModel.threading.ui { onProfileLoaded(it) }
+        }
+      }
     }
   }
 
-  private fun onProfileLoaded(profile: ProfileEntity) = profile.apply {
+  private fun onProfileLoaded(profileWithCredentials: ProfileWithCredentials) = profileWithCredentials.profileEntity.apply {
     updateState {
       it.copy(
-        advancedMode = advancedMode == true,
+        advancedMode = advancedMode,
         accountName = name,
-        emailAddress = email ?: "",
+        emailAddress = email,
         authorizeByEmail = emailAuth,
         autoServerAddress = serverAutoDetect,
-        emailAddressServer = serverForEmail ?: "",
-        accessIdentifier = accessId?.toAccessIdentifierString() ?: "0",
-        accessIdentifierPassword = accessIdPassword ?: "",
-        accessIdentifierServer = serverForAccessId ?: ""
+        emailAddressServer = serverForEmail,
+        accessIdentifier = accessId.toAccessIdentifierString(),
+        accessIdentifierPassword = profileWithCredentials.profileCredentials.accessIdPassword,
+        accessIdentifierServer = serverForAccessId
       )
     }
   }
@@ -167,12 +167,12 @@ class CreateAccountViewModel @Inject constructor(
     updateState { it.copy(loading = loading) }
   }
 
-  private fun getSaveSingle(profileId: Long?): Single<ProfileEntity> =
+  private fun getSaveSingle(profileId: Long?): Single<ProfileDto> =
     if (profileId == null) {
-      Single.just(currentState().toProfileItem())
+      Single.just(currentState().toProfileDto())
     } else {
       profileRepository.findProfile(profileId)
-        .map { currentState().updateProfile(it) }
+        .map { currentState().profileDtoFrom(it) }
     }
 
   private fun handleSaveError(error: Throwable) = when (error) {
@@ -191,56 +191,51 @@ class CreateAccountViewModel @Inject constructor(
 
   fun deleteProfile(profileId: Long?) {
     profileId?.let { id ->
-      profileRepository.findProfile(id)
-        .flatMap(this::deleteAndGetReturnInfo)
-        .attachLoadable()
-        .subscribeBy(
-          onSuccess = {
-            if (it.noAccountsRegistered) {
-              sendEvent(CreateAccountViewEvent.RestartFlow)
-            } else {
-              sendEvent(CreateAccountViewEvent.Close)
-            }
-          },
-          onError = { sendEvent(CreateAccountViewEvent.ShowRemovalFailureDialog) }
-        )
+      setLoading(true)
+      profileSessionManager.deleteProfile(
+        id = id,
+        onSuccess = {
+          setLoading(false)
+          if (it.noAccountsRegistered) {
+            sendEvent(CreateAccountViewEvent.RestartFlow)
+          } else {
+            sendEvent(CreateAccountViewEvent.Close)
+          }
+        },
+        onError = {
+          setLoading(false)
+          sendEvent(CreateAccountViewEvent.ShowRemovalFailureDialog)
+        }
+      )
     }
   }
 
   fun deleteProfileWithCloud(profileId: Long?) {
     profileId?.let { id ->
-      profileRepository.findProfile(id)
-        .flatMap(this::deleteAndGetReturnInfo)
-        .attach()
-        .subscribeBy(
-          onSuccess = {
-            val destination = if (it.noAccountsRegistered) {
-              DeleteAccountWebFragment.EndDestination.RESTART
-            } else {
-              DeleteAccountWebFragment.EndDestination.CLOSE
-            }
+      setLoading(true)
+      profileSessionManager.deleteProfile(
+        id = id,
+        onSuccess = {
+          setLoading(false)
+          val destination = if (it.noAccountsRegistered) {
+            DeleteAccountWebFragment.EndDestination.RESTART
+          } else {
+            DeleteAccountWebFragment.EndDestination.CLOSE
+          }
 
-            sendEvent(CreateAccountViewEvent.NavigateToWebRemoval(it.serverAddress, destination))
-          },
-          onError = { sendEvent(CreateAccountViewEvent.ShowRemovalFailureDialog) }
-        )
+          sendEvent(CreateAccountViewEvent.NavigateToWebRemoval(it.serverAddress, destination))
+        },
+        onError = {
+          setLoading(false)
+          sendEvent(CreateAccountViewEvent.ShowRemovalFailureDialog)
+        }
+      )
     }
   }
-
-  private fun deleteAndGetReturnInfo(profile: ProfileEntity): Single<RemovalBackInfo> =
-    deleteProfileUseCase(profile)
-      .andThen(profileRepository.findAllProfiles())
-      .map { RemovalBackInfo(profile.serverForCurrentAuthMethod, it.isEmpty()) }
-      .firstOrError()
 
   private fun Int.toAccessIdentifierString(): String = if (this == 0) {
     ""
   } else {
     this.toString()
   }
-
-  private data class RemovalBackInfo(
-    val serverAddress: String?,
-    val noAccountsRegistered: Boolean
-  )
 }

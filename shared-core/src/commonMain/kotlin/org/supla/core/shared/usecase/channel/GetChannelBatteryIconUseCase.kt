@@ -17,6 +17,7 @@ package org.supla.core.shared.usecase.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.core.shared.data.model.battery.BatteryState
 import org.supla.core.shared.data.model.channel.ChannelWithChildren
 import org.supla.core.shared.data.model.general.Channel
 import org.supla.core.shared.data.model.lists.IssueIcon
@@ -30,12 +31,14 @@ class GetChannelBatteryIconUseCase {
 
     return when {
       batteryInfo?.batteryPowered == false -> IssueIcon.BatteryNotUsed
+      batteryInfo?.state == BatteryState.LOW -> IssueIcon.Battery0
       batteryInfo?.level?.let { it > 75 } ?: false -> IssueIcon.Battery100
       batteryInfo?.level?.let { it > 50 } ?: false -> IssueIcon.Battery75
       batteryInfo?.level?.let { it > 25 } ?: false -> IssueIcon.Battery50
       batteryInfo?.level?.let { it > 10 } ?: false -> IssueIcon.Battery25
       batteryInfo?.level?.let { it > 0 } ?: false -> IssueIcon.Battery0
       batteryInfo?.batteryPowered == true -> IssueIcon.Battery
+      batteryInfo?.state == BatteryState.NORMAL -> IssueIcon.Battery
       else -> null
     }
   }

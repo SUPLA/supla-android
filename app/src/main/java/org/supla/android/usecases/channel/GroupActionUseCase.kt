@@ -22,14 +22,16 @@ import io.reactivex.rxjava3.core.Maybe
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
+import org.supla.android.tools.VibrationHelper
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class GroupActionUseCase @Inject constructor(
   private val channelGroupRepository: ChannelGroupRepository,
-  suplaClientProvider: SuplaClientProvider
-) : BaseActionUseCase<ChannelGroupDataEntity>(suplaClientProvider) {
+  suplaClientProvider: SuplaClientProvider,
+  vibrationHelper: VibrationHelper
+) : BaseActionUseCase<ChannelGroupDataEntity>(suplaClientProvider, vibrationHelper) {
 
   operator fun invoke(groupId: Int, buttonType: ButtonType): Completable =
     getGroup(groupId).flatMapCompletable { performActionCompletable(it, buttonType, true) }

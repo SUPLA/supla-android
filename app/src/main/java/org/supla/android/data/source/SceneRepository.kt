@@ -1,5 +1,4 @@
 package org.supla.android.data.source
-
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -18,18 +17,56 @@ package org.supla.android.data.source
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.data.source.local.entity.Scene
-import org.supla.android.db.Location
-import org.supla.android.lib.SuplaScene
-import org.supla.android.lib.SuplaSceneState
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
+import org.supla.android.data.source.local.dao.SceneDao
+import org.supla.android.data.source.local.entity.SceneEntity
+import org.supla.android.usecases.captionchange.CaptionChangeUseCase
+import org.supla.android.usecases.channel.VisibilityChange
+import org.supla.android.usecases.developerinfo.CountProvider
+import org.supla.android.usecases.profile.DeleteProfileUseCase
+import org.supla.android.usecases.scene.RemoveHiddenScenesUseCase
+import javax.inject.Inject
+import javax.inject.Singleton
 
-interface SceneRepository {
+@Singleton
+class SceneRepository @Inject constructor(
+  private val sceneDao: SceneDao
+) : CountProvider, CaptionChangeUseCase.Updater, RemoveHiddenScenesUseCase.ScenesDeletable, DeleteProfileUseCase.ProfileRemover {
 
-  fun getAllScenesForProfile(profileId: Long): List<Pair<Scene, Location>>
-  fun getSceneUserIconIdsToDownload(): List<Int>
-  fun getScene(id: Int): Scene?
-  fun updateScene(scene: Scene): Boolean
-  fun updateSuplaScene(suplaScene: SuplaScene): Boolean
-  fun updateSuplaSceneState(suplaSceneState: SuplaSceneState): Boolean
-  fun setScenesVisible(visible: Int, whereVisible: Int): Boolean
+  fun findByRemoteId(remoteId: Int) = sceneDao.findByRemoteId(remoteId)
+
+  suspend fun findByRemoteIdKtx(remoteId: Int) = sceneDao.findByRemoteIdKtx(remoteId)
+
+  fun findSceneData(remoteId: Int) = sceneDao.findSceneData(remoteId)
+
+  suspend fun insert(scene: SceneEntity) = sceneDao.insert(scene)
+
+  suspend fun update(scene: SceneEntity) = sceneDao.update(scene)
+
+  suspend fun findHiddenScenes() = sceneDao.findHiddenScenes()
+
+  fun findList() = sceneDao.findList()
+
+  fun update(scenes: List<SceneEntity>) = sceneDao.update(scenes)
+
+  suspend fun updatePositions(locationRemoteIds: List<Int>, orderedRemoteIds: List<Int>) =
+    sceneDao.updatePositions(locationRemoteIds, orderedRemoteIds)
+
+  suspend fun setScenesVisible(change: VisibilityChange): Boolean =
+    sceneDao.setScenesVisible(change.newVisibility, change.applyForVisibility) > 0
+
+  fun findProfileScenes(profileId: Long) = sceneDao.findProfileScenes(profileId)
+
+  suspend fun findIconIdsToDownload(profileId: Long) = sceneDao.findIconIdsToDownload(profileId)
+
+  override fun count(): Observable<Int> = sceneDao.count()
+
+  override fun updateCaption(caption: String, remoteId: Int, profileId: Long): Completable =
+    sceneDao.updateCaption(caption, remoteId, profileId)
+
+  override suspend fun deleteScenesRelated(remoteId: Int, profileId: Long) =
+    sceneDao.deleteScene(profileId, remoteId)
+
+  override fun deleteByProfile(profileId: Long): Completable = sceneDao.deleteByProfile(profileId)
 }

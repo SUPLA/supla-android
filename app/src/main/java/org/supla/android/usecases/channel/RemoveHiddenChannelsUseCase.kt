@@ -25,6 +25,7 @@ import org.supla.android.data.source.AndroidAutoItemRepository
 import org.supla.android.data.source.ChannelConfigRepository
 import org.supla.android.data.source.ChannelExtendedValueRepository
 import org.supla.android.data.source.ChannelRelationRepository
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.ChannelStateRepository
 import org.supla.android.data.source.ChannelValueRepository
 import org.supla.android.data.source.ColorListRepository
@@ -36,7 +37,6 @@ import org.supla.android.data.source.HomePlusThermostatLogRepository
 import org.supla.android.data.source.HumidityLogRepository
 import org.supla.android.data.source.ImpulseCounterLogRepository
 import org.supla.android.data.source.PowerActiveLogRepository
-import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.TemperatureAndHumidityLogRepository
 import org.supla.android.data.source.TemperatureLogRepository
 import org.supla.android.data.source.VoltageLogRepository
@@ -46,7 +46,7 @@ import javax.inject.Singleton
 
 @Singleton
 class RemoveHiddenChannelsUseCase @Inject constructor(
-  private val channelRepository: RoomChannelRepository,
+  private val channelRepository: ChannelRepository,
   channelConfigRepository: ChannelConfigRepository,
   channelExtendedValueRepository: ChannelExtendedValueRepository,
   channelRelationRepository: ChannelRelationRepository,

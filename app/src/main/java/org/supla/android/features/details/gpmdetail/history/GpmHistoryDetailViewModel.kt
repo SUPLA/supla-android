@@ -21,6 +21,7 @@ import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.core.infrastructure.DateProvider
+import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
 import org.supla.android.core.storage.UserStateHolder
 import org.supla.android.data.model.Optional
 import org.supla.android.data.model.chart.ChannelChartSets
@@ -47,7 +48,7 @@ import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.details.detailbase.history.BaseHistoryDetailViewModel
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.channel.DeleteChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.LoadChannelMeasurementsDataRangeUseCase
@@ -57,6 +58,7 @@ import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
 import org.supla.android.usecases.migration.GroupingStringMigrationUseCase
 import org.supla.core.shared.data.model.rest.channel.ChannelDto
 import org.supla.core.shared.extensions.ifLet
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -69,12 +71,13 @@ class GpmHistoryDetailViewModel @Inject constructor(
   private val loadChannelConfigUseCase: LoadChannelConfigUseCase,
   private val downloadEventsManager: DownloadEventsManager,
   @param:Named(GSON_FOR_REPO) private val gson: Gson,
+  suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper,
   deleteChannelMeasurementsUseCase: DeleteChannelMeasurementsUseCase,
   readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   groupingStringMigrationUseCase: GroupingStringMigrationUseCase,
   profileRepository: ProfileRepository,
   userStateHolder: UserStateHolder,
-  schedulers: SuplaSchedulers,
+  threading: SuplaThreading,
   dateProvider: DateProvider
 ) : BaseHistoryDetailViewModel(
   deleteChannelMeasurementsUseCase,
@@ -83,8 +86,20 @@ class GpmHistoryDetailViewModel @Inject constructor(
   profileRepository,
   userStateHolder,
   dateProvider,
-  schedulers
+  threading
 ) {
+
+  init {
+    setupSuplaClientMessageHandler(suplaClientMessageHandlerWrapper)
+  }
+
+  override fun handleSuplaMessage(message: SuplaClientMessage) {
+    (message as? SuplaClientMessage.ChannelDataChanged)?.let {
+      if (it.channelId == currentState().remoteId) {
+        reloadMeasurements()
+      }
+    }
+  }
 
   override fun loadData(remoteId: Int) {
     super.loadData(remoteId)

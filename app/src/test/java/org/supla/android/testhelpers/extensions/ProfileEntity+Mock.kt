@@ -3,7 +3,7 @@ package org.supla.android.testhelpers.extensions
 import org.supla.android.data.source.local.entity.ProfileEntity
 
 fun ProfileEntity.Companion.mock(
-  id: Long? = null,
+  id: Long = 0,
   name: String = "",
   email: String = "",
   serverForAccessId: String = "",
@@ -11,13 +11,10 @@ fun ProfileEntity.Companion.mock(
   serverAutoDetect: Boolean = false,
   emailAuth: Boolean = false,
   accessId: Int = 0,
-  accessIdPassword: String = "",
   preferredProtocolVersion: Int = 0,
   active: Boolean = false,
   advancedMode: Boolean = false,
   position: Int = 0,
-  guid: ByteArray = byteArrayOf(),
-  authKey: ByteArray = byteArrayOf()
 ): ProfileEntity =
   ProfileEntity(
     id = id,
@@ -28,17 +25,14 @@ fun ProfileEntity.Companion.mock(
     serverAutoDetect = serverAutoDetect,
     emailAuth = emailAuth,
     accessId = accessId,
-    accessIdPassword = accessIdPassword,
     preferredProtocolVersion = preferredProtocolVersion,
     active = active,
     advancedMode = advancedMode,
-    position = position,
-    guid = guid,
-    authKey = authKey
+    position = position
   )
 
 fun ProfileEntity.Companion.mockWithEmail(
-  id: Long? = null,
+  id: Long = 0,
   name: String = "test name",
   email: String = "test@supla.org",
   active: Boolean = false,

@@ -20,12 +20,15 @@ package org.supla.android.features.notificationslog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.disposables.Disposable
+import org.supla.android.R
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.local.entity.NotificationEntity
 import org.supla.android.extensions.subscribeBy
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.main.topbar.TopBarSearchData
+import org.supla.android.main.topbar.TopBarSearchEvent
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.notifications.DeleteNotificationUseCase
 import org.supla.android.usecases.notifications.DeleteNotificationsUseCase
 import org.supla.android.usecases.notifications.LoadAllNotificationsUseCase
@@ -38,17 +41,28 @@ const val DELETE_DELAY_SECS = 5L
 @HiltViewModel
 class NotificationsLogViewModel @Inject constructor(
   private val loadAllNotificationsUseCase: LoadAllNotificationsUseCase,
-  private val deleteNotificationUseCase: DeleteNotificationUseCase,
   private val deleteNotificationsUseCase: DeleteNotificationsUseCase,
-  schedulers: SuplaSchedulers
-) : BaseViewModel<NotificationsLogViewState, NotificationsLogViewEvent>(NotificationsLogViewState(), schedulers),
+  private val deleteNotificationUseCase: DeleteNotificationUseCase,
+  threading: SuplaThreading
+) : BaseViewModel<NotificationsLogViewState, NotificationsLogViewEvent>(
+  defaultState = NotificationsLogViewState(),
+  threading = threading,
+  titleRes = R.string.menu_notifications
+),
   NotificationsLogViewScope {
 
   private val deletionDisposablesMap: MutableMap<Long, Disposable> = mutableMapOf()
-  private var lastFilterString: String? = null
+
+  var searchData: TopBarSearchData = TopBarSearchData()
+    private set
 
   override fun onViewCreated() {
-    loadAll()
+    loadAllNotificationsUseCase.observe()
+      .attach()
+      .subscribeBy(
+        onNext = this::setItems,
+      )
+      .disposeBySelf()
   }
 
   override fun delete(entity: NotificationEntity) {
@@ -62,29 +76,11 @@ class NotificationsLogViewModel @Inject constructor(
     invalidateItems()
   }
 
-  fun loadAll() {
-    loadAllNotificationsUseCase()
-      .attach()
-      .subscribeBy(
-        onNext = this::setItems
-      )
-      .disposeBySelf()
-  }
+  fun handle(event: TopBarSearchEvent) {
+    searchData = searchData.handle(event)
 
-  fun search(filterString: String) {
-    if (filterString.trim().length > 1) {
-      if (filterString != lastFilterString) {
-        loadAllNotificationsUseCase(filterString)
-          .attach()
-          .subscribeBy(
-            onNext = this::setItems
-          )
-          .disposeBySelf()
-      }
-      lastFilterString = filterString
-    } else if (lastFilterString != null) {
-      lastFilterString = null
-      loadAll()
+    if (event is TopBarSearchEvent.QueryChange) {
+      loadAllNotificationsUseCase.filter(event.query)
     }
   }
 

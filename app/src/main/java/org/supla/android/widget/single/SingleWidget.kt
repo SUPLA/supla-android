@@ -32,7 +32,6 @@ import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.Scene
 import org.supla.android.extensions.mapRedrawToUpdateEvent
 import org.supla.android.images.ImageCache
-import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -41,7 +40,6 @@ import org.supla.android.widget.shared.WidgetAction
 import org.supla.android.widget.shared.WidgetProviderBase
 import org.supla.android.widget.shared.isValueWidget
 import org.supla.android.widget.shared.isWidgetValid
-import org.supla.core.shared.data.model.general.SuplaFunction
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -97,6 +95,10 @@ class SingleWidget : WidgetProviderBase() {
     appWidgetManager.updateAppWidget(widgetId, views)
   }
 
+  override fun updateWidgets(context: Context, widgetIds: IntArray) {
+    updateSingleWidgets(context, widgetIds)
+  }
+
   override fun onReceive(context: Context, intent: Intent?) {
     Timber.i("[SingleWidget] Got intent with action: ${intent?.action}")
     if (intent.mapRedrawToUpdateEvent(context) { super.onReceive(context, it) }) {
@@ -116,7 +118,9 @@ class SingleWidget : WidgetProviderBase() {
       return
     }
 
-    WidgetAction.from(intent.action)?.let { SingleWidgetCommandWorker.enqueue(widgetIds, it, workManagerProxy) }
+    provideWidgetAction(context, intent, widgetIds) { widgetAction ->
+      SingleWidgetCommandWorker.enqueue(widgetIds, widgetAction, workManagerProxy)
+    }
   }
 
   private fun setChannelIcons(
@@ -151,26 +155,26 @@ class SingleWidget : WidgetProviderBase() {
       views.setViewVisibility(R.id.single_widget_text, View.GONE)
     }
   }
-}
 
-internal fun buildWidget(context: Context, widgetId: Int, configuration: WidgetConfiguration?): RemoteViews {
-  val views = RemoteViews(context.packageName, R.layout.single_widget)
-  val action = WidgetAction.getSingleButtonAction(configuration?.subjectType, configuration?.subjectFunction)
-  val turnOnPendingIntent = pendingIntent(context, action.string, widgetId)
-  views.setOnClickPendingIntent(R.id.single_widget_button, turnOnPendingIntent)
-  views.setOnClickPendingIntent(R.id.single_widget_button_night_mode, turnOnPendingIntent)
-  views.setOnClickPendingIntent(R.id.single_widget_text, turnOnPendingIntent)
+  private fun buildWidget(context: Context, widgetId: Int, configuration: WidgetConfiguration?): RemoteViews {
+    val views = RemoteViews(context.packageName, R.layout.single_widget)
+    val action = WidgetAction.getSingleButtonAction(configuration?.subjectType, configuration?.subjectFunction)
+    val turnOnPendingIntent = pendingIntent(context, action.string, widgetId)
+    views.setOnClickPendingIntent(R.id.single_widget_button, turnOnPendingIntent)
+    views.setOnClickPendingIntent(R.id.single_widget_button_night_mode, turnOnPendingIntent)
+    views.setOnClickPendingIntent(R.id.single_widget_text, turnOnPendingIntent)
 
-  return views
-}
+    return views
+  }
 
-internal fun pendingIntent(context: Context, intentAction: String, widgetId: Int): PendingIntent {
-  return PendingIntent.getBroadcast(
-    context,
-    widgetId,
-    intent(context, intentAction, widgetId),
-    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-  )
+  internal fun pendingIntent(context: Context, intentAction: String, widgetId: Int): PendingIntent {
+    return PendingIntent.getBroadcast(
+      context,
+      widgetId,
+      intent(context, intentAction, widgetId).applyActionToken(widgetId),
+      PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+    )
+  }
 }
 
 internal fun turnOnOrClose(configuration: WidgetConfiguration): Boolean =
@@ -189,7 +193,6 @@ fun intent(context: Context, intentAction: String, widgetId: Int): Intent =
   intent(context, intentAction, intArrayOf(widgetId))
 
 fun intent(context: Context, intentAction: String, widgetIds: IntArray): Intent {
-  Timber.d("Creating intent with action: $intentAction")
   return Intent(context, SingleWidget::class.java).apply {
     action = intentAction
     flags = Intent.FLAG_RECEIVER_FOREGROUND

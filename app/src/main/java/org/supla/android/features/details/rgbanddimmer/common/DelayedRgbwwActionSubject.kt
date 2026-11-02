@@ -23,7 +23,7 @@ import org.supla.android.core.networking.suplaclient.DelayedCommandSubject
 import org.supla.android.extensions.HsvColor
 import org.supla.android.features.details.rgbanddimmer.rgb.RgbDetailModelState
 import org.supla.android.lib.actions.SubjectType
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.client.ExecuteRgbwActionUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -33,8 +33,8 @@ private const val DELAY_MS = 250L
 @Singleton
 class DelayedRgbwwActionSubject @Inject constructor(
   private val executeRgbwActionUseCase: ExecuteRgbwActionUseCase,
-  schedulers: SuplaSchedulers
-) : DelayedCommandSubject<State>(schedulers, DELAY_MS, Mode.SAMPLE) {
+  threading: SuplaThreading
+) : DelayedCommandSubject<State>(threading, DELAY_MS, Mode.SAMPLE) {
 
   override fun execute(state: State): Completable =
     executeRgbwActionUseCase(

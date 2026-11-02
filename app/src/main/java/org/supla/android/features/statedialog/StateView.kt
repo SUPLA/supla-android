@@ -18,18 +18,12 @@ package org.supla.android.features.statedialog
  */
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import org.supla.android.ui.dialogs.AuthorizationDialog
 
 @Composable
-fun StateDialogViewModel.View() {
-  val modelState by getViewState().collectAsState()
-
-  modelState.viewState?.let {
-    Dialog(state = it)
-  }
-
+fun StateDialogViewModel.View(modelState: StateDialogViewModelState) {
+  modelState.viewState?.let { Dialog(state = it) }
+  modelState.lifespanDialogViewState?.let { LifespanDialog(it) }
   modelState.authorizationDialogState?.let {
     AuthorizationDialog(state = it)
   }

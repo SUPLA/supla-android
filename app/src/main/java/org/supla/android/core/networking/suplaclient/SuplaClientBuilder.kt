@@ -30,8 +30,9 @@ import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.channelscleanup.RemoveHiddenChannelsManager
 import org.supla.android.features.scenescleanup.RemoveHiddenScenesManager
 import org.supla.android.lib.SuplaClient
-import org.supla.android.profile.ProfileIdHolder
 import org.supla.android.usecases.channel.ChannelToRootRelationHolderUseCase
+import org.supla.android.usecases.channel.SetChannelsOfflineUseCase
+import org.supla.android.usecases.channel.SetChannelsVisibleUseCase
 import org.supla.android.usecases.channel.UpdateChannelExtendedValueUseCase
 import org.supla.android.usecases.channel.UpdateChannelUseCase
 import org.supla.android.usecases.channel.UpdateChannelValueUseCase
@@ -39,8 +40,16 @@ import org.supla.android.usecases.channelconfig.InsertChannelConfigUseCase
 import org.supla.android.usecases.channelrelation.DeleteRemovableChannelRelationsUseCase
 import org.supla.android.usecases.channelrelation.InsertChannelRelationForProfileUseCase
 import org.supla.android.usecases.channelrelation.MarkChannelRelationsAsRemovableUseCase
+import org.supla.android.usecases.channelrelation.SetChannelGroupRelationsVisibleUseCase
+import org.supla.android.usecases.channelrelation.UpdateChannelGroupRelationUseCase
 import org.supla.android.usecases.channelstate.UpdateChannelStateUseCase
+import org.supla.android.usecases.group.SetChannelGroupsVisibleUseCase
 import org.supla.android.usecases.group.UpdateChannelGroupTotalValueUseCase
+import org.supla.android.usecases.group.UpdateChannelGroupUseCase
+import org.supla.android.usecases.location.UpdateLocationUseCase
+import org.supla.android.usecases.scene.SetScenesVisibleUseCase
+import org.supla.android.usecases.scene.UpdateSceneStateUseCase
+import org.supla.android.usecases.scene.UpdateSceneUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -63,17 +72,26 @@ data class SuplaClientDependencies @Inject constructor(
   val markChannelRelationsAsRemovableUseCase: MarkChannelRelationsAsRemovableUseCase,
   val insertChannelRelationForProfileUseCase: InsertChannelRelationForProfileUseCase,
   val deleteRemovableChannelRelationsUseCase: DeleteRemovableChannelRelationsUseCase,
+  val updateChannelGroupRelationUseCase: UpdateChannelGroupRelationUseCase,
+  val setChannelGroupRelationsVisibleUseCase: SetChannelGroupRelationsVisibleUseCase,
 
   val insertChannelConfigUseCase: InsertChannelConfigUseCase,
 
+  val updateLocationUseCase: UpdateLocationUseCase,
   val updateChannelUseCase: UpdateChannelUseCase,
   val updateChannelValueUseCase: UpdateChannelValueUseCase,
   val updateChannelExtendedValueUseCase: UpdateChannelExtendedValueUseCase,
   val updateChannelStateUseCase: UpdateChannelStateUseCase,
+  val updateChannelGroupUseCase: UpdateChannelGroupUseCase,
+  val setChannelsVisibleUseCase: SetChannelsVisibleUseCase,
+  val setChannelsOfflineUseCase: SetChannelsOfflineUseCase,
+  val setChannelGroupsVisibleUseCase: SetChannelGroupsVisibleUseCase,
+  val setScenesVisibleUseCase: SetScenesVisibleUseCase,
+  val updateSceneUseCase: UpdateSceneUseCase,
+  val updateSceneStateUseCase: UpdateSceneStateUseCase,
 
   val appDatabase: AppDatabase,
   val measurementsDatabase: MeasurementsDatabase,
-  val profileIdHolder: ProfileIdHolder,
 
   val updateChannelGroupTotalValueUseCase: UpdateChannelGroupTotalValueUseCase,
   val channelToRootRelationHolderUseCase: ChannelToRootRelationHolderUseCase,

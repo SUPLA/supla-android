@@ -29,6 +29,7 @@ import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity.Companion.ALL_COLUMNS
 import org.supla.android.data.source.local.entity.ChannelValueEntity.Companion.COLUMN_AGGREGATED_VALUE
 import org.supla.android.data.source.local.entity.ChannelValueEntity.Companion.COLUMN_CHANNEL_REMOTE_ID
+import org.supla.android.data.source.local.entity.ChannelValueEntity.Companion.COLUMN_ONLINE
 import org.supla.android.data.source.local.entity.ChannelValueEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.ChannelValueEntity.Companion.TABLE_NAME
 import org.supla.android.data.source.local.entity.ProfileEntity.Companion.SUBQUERY_ACTIVE
@@ -51,6 +52,16 @@ interface ChannelValueDao {
 
   @Insert(onConflict = REPLACE)
   fun insert(entity: ChannelValueEntity): Completable
+
+  @Query(
+    """
+      UPDATE $TABLE_NAME
+      SET $COLUMN_ONLINE = 0
+      WHERE $COLUMN_ONLINE != 0
+        AND $COLUMN_PROFILE_ID = $SUBQUERY_ACTIVE
+    """
+  )
+  suspend fun setChannelsOffline(): Int
 
   @Query("SELECT COUNT($COLUMN_PROFILE_ID) FROM $TABLE_NAME")
   fun count(): Observable<Int>

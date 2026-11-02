@@ -18,9 +18,9 @@ package org.supla.android.features.details.windowdetail.rollershutter
  */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.supla.android.Preferences
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
@@ -29,7 +29,7 @@ import org.supla.android.features.details.windowdetail.base.BaseWindowViewModelS
 import org.supla.android.features.details.windowdetail.base.data.RollerShutterWindowState
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.usecases.channel.ObserveChannelWithChildrenUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
@@ -51,13 +51,13 @@ class RollerShutterViewModel @Inject constructor(
   observeChannelWithChildrenUseCase: ObserveChannelWithChildrenUseCase,
   observeChannelGroupByRemoteIdUseCase: ObserveChannelGroupByRemoteIdUseCase,
   getGroupOnlineSummaryUseCase: GetGroupOnlineSummaryUseCase,
-  preferences: Preferences,
+  preferences: ApplicationPreferences,
   dateProvider: DateProvider,
   suplaClientProvider: SuplaClientProvider,
   profileRepository: ProfileRepository,
   loginUseCase: LoginUseCase,
   authorizeUseCase: AuthorizeUseCase,
-  schedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) : BaseWindowViewModel<RollerShutterViewModelState>(
   executeShadingSystemActionUseCase,
   executeSimpleActionUseCase,
@@ -72,7 +72,7 @@ class RollerShutterViewModel @Inject constructor(
   loginUseCase,
   authorizeUseCase,
   RollerShutterViewModelState(),
-  schedulers
+  threading
 ) {
 
   override fun updatePosition(state: RollerShutterViewModelState, position: Float) =

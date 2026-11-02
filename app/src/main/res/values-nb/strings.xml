@@ -34,6 +34,9 @@
   <string name="channel_caption_thermometer">Termometer</string>
   <string name="channel_caption_humidity">Fuktighet</string>
   <string name="channel_caption_humidityandtemperature">Temperatur og fuktighet</string>
+  <string name="channel_caption_smoke_sensor">Røyksensor</string>
+  <string name="channel_caption_carbon_monoxide_sensor">Karbonmonoksidsensor</string>
+  <string name="channel_caption_gas_sensor">Gassensor</string>
   <string name="channel_caption_windsensor">Vindhastighet</string>
   <string name="channel_caption_pressuresensor">Trykksensor</string>
   <string name="channel_caption_rainsensor">Nedbørsmåling</string>
@@ -93,7 +96,7 @@
 
   <string name="add_wizard_step_3_message_3"><![CDATA[Trykk på knappen <b>START</b> for å starte konfigurasjonen.]]></string>
 
-  <string name="wizard_no_internetwifi">Før du begynner må du koble til Internett via trådløs nettverk. Det trådløse nettverket blir også brukt av enheter for tilkobling til serveren.</string>
+  <string name="wizard_no_internetwifi">Før du begynner, må du kontrollere at Wi-Fi er slått på.</string>
   <string name="wizard_wifi_error">Trådløs nettverket er skrudd av eller så er det ikke mulig å avlese dens identifikator eller navn!</string>
   <string name="wizard_location_error">For at veiviseren for å legge til nye enheter skal fungere ordentlig, må Posisjon være aktivert på denne enheten. Gå til systeminnstillinger, deretter velg «Posisjon» og kontroller at den er slått på.</string>
   <string name="wizard_scan_timeout">Ventetiden for avslutning av trådløs nettverk søket er overskredet!</string>
@@ -650,6 +653,11 @@
   <string name="settings_battery_level_warning">Varsel om lavt batteri</string>
   <string name="channel_battery_level">Batterinivå: %1$d%%</string>
   <string name="channel_battery_level_with_info">Batterinivå (%1$d - %2$s): %3$d%%</string>
+  <string name="battery_state">Batteristatus</string>
+  <string name="channel_battery_low">Lavt batterinivå</string>
+  <string name="channel_battery_low_with_info">Lavt batterinivå (%1$d - %2$s)</string>
+  <string name="channel_battery_state_low_value">lav</string>
+  <string name="channel_battery_state_normal_value">normal</string>
   <string name="channel_btn_stop">Stopp</string>
   <string name="android_auto_action">Handling: %1$s</string>
   <string name="android_auto_empty_header">Konfigurasjon kreves</string>
@@ -822,8 +830,17 @@
   <string name="scene_inactive">Scenen er inaktiv</string>
   <string name="nfc_detail_action_added">Lagt til i appen</string>
   <string name="general_search">Søk</string>
+  <string name="general_open_drawer">Åpne meny</string>
+  <string name="general_back">Tilbake</string>
   <string name="toolbar_search_hint">Skriv inn minst 2 tegn…</string>
   <string name="details_timer_select_program">Velg program</string>
+  <string name="details_recuperator_ventilation">Ventilasjon</string>
+  <string name="details_recuperator_empty_house">Tomt hus</string>
+  <string name="details_recuperator_open_window">Åpne vindu</string>
+  <string name="channel_caption_hvac_hrv">Varmegjenvinningsventilasjon</string>
+  <string name="details_recuperator_manual_mode_label">Manuell modus</string>
+  <string name="profile_selected">Valgt profil</string>
+  <string name="general_clear_search">Tøm søk</string>
   <string name="settings_show_unavailable_channels">Skjul kanaler som ikke er tilgjengelige på grunn av enhetskonfigurasjonen</string>
   <string name="details_em_active_energy_balance">Balanse for aktiv energi</string>
   <string name="details_em_settings_list_metric">Valgt verdi</string>
@@ -836,4 +853,12 @@
   <string name="details_em_on_list_balance">Metode for energibalansering</string>
   <string name="details_em_on_list_value">Dataområde</string>
   <string name="details_em_on_list">Visning i kanallisten</string>
+  <string name="wizard_result_certificate_untrusted">Enhetens sertifikat er ikke klarert. Kontroller at du kobler til riktig enhet og at programvaren er oppdatert.</string>
+  <string name="wizard_result_certificate_expired">Enhetens sertifikat er utløpt. Oppdater enhetens programvare eller kontakt brukerstøtte. Kontroller også at dato og klokkeslett på telefonen er riktig.</string>
+  <string name="wizard_result_certificate_not_yet_valid">Enhetens sertifikat er ikke gyldig ennå. Kontroller dato og klokkeslett på telefonen og enheten, og prøv igjen.</string>
+  <string name="wizard_result_certificate_revoked">Enhetens sertifikat er tilbakekalt. Av sikkerhetsgrunner kan forbindelsen ikke opprettes. Oppdater enhetens programvare eller kontakt brukerstøtte.</string>
+  <string name="wizard_result_certificate_host_mismatch">Sertifikatet samsvarer ikke med denne enheten. Kontroller at appen kobler til riktig enhet.</string>
+  <string name="wizard_result_certificate_pin_mismatch">Enhetens sertifikat er forskjellig fra det forventede. Oppdater appen og enhetens programvare, og prøv igjen.</string>
+  <string name="wizard_result_certificate_unsupported_security">Enheten bruker sikkerhetsinnstillinger som ikke støttes. Oppdater enhetens programvare og prøv igjen.</string>
+  <string name="wizard_result_certificate_different_names">Enheten har feil sertifikat - navnene samsvarer ikke (sertifikat: %1$s, enhet: %2$s)</string>
 </resources>

@@ -20,7 +20,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.database.Cursor;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
@@ -33,7 +32,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import javax.inject.Inject;
+import org.supla.android.data.source.local.entity.complex.ChannelDataEntity;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.lib.SuplaChannelThermostatValue;
@@ -41,8 +40,7 @@ import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaThermostatScheduleCfg;
 import org.supla.android.listview.DetailLayout;
-import org.supla.android.listview.ThermostatHPListViewCursorAdapter;
-import org.supla.android.profile.ProfileIdHolder;
+import org.supla.android.listview.ThermostatHPArrayAdapter;
 import timber.log.Timber;
 
 @AndroidEntryPoint
@@ -80,8 +78,6 @@ public class ChannelDetailThermostatHP extends DetailLayout
   private Handler uiHandler;
   private ListView lvChannelList;
   private TextView tvErrorMessage;
-
-  @Inject ProfileIdHolder profileIdHolder;
 
   public ChannelDetailThermostatHP(Context context) {
     super(context);
@@ -320,7 +316,8 @@ public class ChannelDetailThermostatHP extends DetailLayout
   }
 
   private void OnChannelGroupDataChanged() {
-    ChannelGroup channelGroup = DBH.getChannelGroup(getRemoteId());
+    ChannelGroup channelGroup =
+        channelGroupRepository.findGroupDataEntity(getRemoteId()).blockingFirst().getLegacyGroup();
 
     Double t = channelGroup.getMinimumPresetTemperature();
     presetTemperatureMin = t == null ? 0 : t.intValue();
@@ -350,7 +347,8 @@ public class ChannelDetailThermostatHP extends DetailLayout
       return;
     }
 
-    Channel channel = DBH.getChannel(getRemoteId());
+    Channel channel =
+        channelRepository.findChannelDataEntity(getRemoteId()).blockingFirst().getLegacyChannel();
 
     tvErrorMessage.setVisibility(GONE);
     tvErrorMessage.setText("");
@@ -673,22 +671,23 @@ public class ChannelDetailThermostatHP extends DetailLayout
       return;
     }
 
-    Cursor cursor = DBH.getChannelListCursorForGroup(getRemoteId());
+    List<ChannelDataEntity> channels = channelRepository.findChannelListForGroup(getRemoteId());
 
     if (refreshLock <= System.currentTimeMillis()) {
 
-      if (cursor.moveToFirst()) {
-        ThermostatHP thermostat = new ThermostatHP(cursor);
+      if (!channels.isEmpty()) {
+        int setBtnOnOff = BTN_SET_ON;
+        int setBtnNormal = BTN_SET_ON;
+        int setBtnEco = BTN_SET_ON;
+        int setBtnTurbo = BTN_SET_ON;
+        int setBtnAuto = BTN_SET_ON;
 
-        int setBtnOnOff = thermostat.isThermostatOn() ? BTN_SET_ON : BTN_SET_OFF;
-        int setBtnNormal = thermostat.isNormalOn() ? BTN_SET_ON : BTN_SET_OFF;
-        int setBtnEco = thermostat.isEcoRecuctionApplied() ? BTN_SET_ON : BTN_SET_OFF;
-        int setBtnTurbo = thermostat.isTurboOn() ? BTN_SET_ON : BTN_SET_OFF;
-        int setBtnAuto = thermostat.isAutoOn() ? BTN_SET_ON : BTN_SET_OFF;
+        for (ChannelDataEntity channelDataEntity : channels) {
+          ThermostatHP thermostat = new ThermostatHP();
+          Channel channel = channelDataEntity.getLegacyChannel();
 
-        do {
-          if (thermostat == null) {
-            thermostat = new ThermostatHP(cursor);
+          if (!thermostat.assign(channel)) {
+            continue;
           }
 
           if (setBtnOnOff != BTN_SET_OFF_UNKNOWN
@@ -715,10 +714,7 @@ public class ChannelDetailThermostatHP extends DetailLayout
               && setBtnAuto != (thermostat.isAutoOn() ? BTN_SET_ON : BTN_SET_OFF)) {
             setBtnAuto = BTN_SET_OFF_UNKNOWN;
           }
-
-          thermostat = null;
-
-        } while (cursor.moveToNext());
+        }
 
         setBtnAppearance(btnOnOff, setBtnOnOff, R.string.hp_on, R.string.hp_off);
         setBtnAppearance(btnNormal, setBtnNormal);
@@ -728,14 +724,14 @@ public class ChannelDetailThermostatHP extends DetailLayout
       }
     }
 
-    cursor.moveToFirst();
-
     if (lvChannelList.getAdapter() != null) {
-      ((ThermostatHPListViewCursorAdapter) lvChannelList.getAdapter()).swapCursor(cursor);
+      ThermostatHPArrayAdapter adapter = (ThermostatHPArrayAdapter) lvChannelList.getAdapter();
+      adapter.clear();
+      adapter.addAll(channels);
+      adapter.notifyDataSetChanged();
     } else {
-      ThermostatHPListViewCursorAdapter adapter =
-          new ThermostatHPListViewCursorAdapter(
-              this.getContext(), R.layout.homeplus_channel_row, cursor, 0);
+      ThermostatHPArrayAdapter adapter =
+          new ThermostatHPArrayAdapter(getContext(), R.layout.homeplus_channel_row, channels);
 
       lvChannelList.setAdapter(adapter);
     }

@@ -34,6 +34,9 @@
   <string name="channel_caption_thermometer">Termometer</string>
   <string name="channel_caption_humidity">Vlažnost</string>
   <string name="channel_caption_humidityandtemperature">Temperatura in vlažnost</string>
+  <string name="channel_caption_smoke_sensor">Senzor dima</string>
+  <string name="channel_caption_carbon_monoxide_sensor">Senzor ogljikovega monoksida</string>
+  <string name="channel_caption_gas_sensor">Senzor plina</string>
   <string name="channel_caption_windsensor">Hitrost vetra</string>
   <string name="channel_caption_pressuresensor">Tlačni senzor</string>
   <string name="channel_caption_rainsensor">Merjenje padavin</string>
@@ -90,7 +93,7 @@
 
   <string name="add_wizard_step_3_message_3"><![CDATA[Pritisnite tipko <b>START</b> da začnete konfiguracijo.]]></string>
 
-  <string name="wizard_no_internetwifi">Preden začnete, se povežite z internetom prek omrežja Wi-Fi, ki ga bodo tudi izvršne naprave uporabile za povezavo s strežnikom.</string>
+  <string name="wizard_no_internetwifi">Preden začnete, se prepričajte, da je Wi-Fi vklopljen.</string>
   <string name="wizard_wifi_error">Omrežje Wi-Fi je izklopljeno ali njegovega identifikatorja ali imena ni mogoče prebrati!</string>
   <string name="wizard_location_error">Za pravilno delovanje čarovnika za dodajanje mora biti v tej napravi omogočena storitev lokacije. Pojdite v sistemske nastavitve, nato izberite »Lokacija« in se prepričajte, da je ta vklopljena.</string>
   <string name="wizard_scan_timeout">Čakalna doba za dokončanje iskanja Wi-Fi je prekoračena!</string>
@@ -648,6 +651,11 @@
   <string name="settings_battery_level_warning">Opozorilo o nizki bateriji</string>
   <string name="channel_battery_level">Raven baterije: %1$d%%</string>
   <string name="channel_battery_level_with_info">Raven baterije (%1$d - %2$s): %3$d%%</string>
+  <string name="battery_state">Stanje baterije</string>
+  <string name="channel_battery_low">Nizka raven baterije</string>
+  <string name="channel_battery_low_with_info">Nizka raven baterije (%1$d - %2$s)</string>
+  <string name="channel_battery_state_low_value">nizko</string>
+  <string name="channel_battery_state_normal_value">normalno</string>
   <string name="channel_btn_stop">Ustavi</string>
   <string name="android_auto_action">Dejanje: %1$s</string>
   <string name="android_auto_empty_header">Zahtevana je konfiguracija</string>
@@ -826,8 +834,17 @@
   <string name="scene_inactive">Scena je neaktivna</string>
   <string name="nfc_detail_action_added">Dodano v aplikacijo</string>
   <string name="general_search">Iskanje</string>
+  <string name="general_open_drawer">Odpri meni</string>
+  <string name="general_back">Nazaj</string>
   <string name="toolbar_search_hint">Vnesite vsaj 2 znaka…</string>
   <string name="details_timer_select_program">Izberite program</string>
+  <string name="details_recuperator_ventilation">Prezračevanje</string>
+  <string name="details_recuperator_empty_house">Prazna hiša</string>
+  <string name="details_recuperator_open_window">Odpri okno</string>
+  <string name="channel_caption_hvac_hrv">Prezračevanje z rekuperacijo toplote</string>
+  <string name="details_recuperator_manual_mode_label">Ročni način</string>
+  <string name="profile_selected">Izbran profil</string>
+  <string name="general_clear_search">Počisti iskanje</string>
   <string name="settings_show_unavailable_channels">Skrij kanale, ki niso na voljo zaradi konfiguracije naprave</string>
   <string name="details_em_active_energy_balance">Bilanca aktivne energije</string>
   <string name="details_em_settings_list_metric">Izbrana vrednost</string>
@@ -840,4 +857,12 @@
   <string name="details_em_on_list_balance">Metoda uravnoteženja energije</string>
   <string name="details_em_on_list_value">Obseg podatkov</string>
   <string name="details_em_on_list">Prikaz na seznamu kanalov</string>
+  <string name="wizard_result_certificate_untrusted">Potrdilo naprave ni zaupanja vredno. Preverite, ali se povezujete s pravo napravo in ali je njena programska oprema posodobljena.</string>
+  <string name="wizard_result_certificate_expired">Potrdilo naprave je poteklo. Posodobite programsko opremo naprave ali se obrnite na podporo. Preverite tudi, ali sta datum in ura v telefonu pravilna.</string>
+  <string name="wizard_result_certificate_not_yet_valid">Potrdilo naprave še ni veljavno. Preverite datum in uro v telefonu ter napravi, nato poskusite znova.</string>
+  <string name="wizard_result_certificate_revoked">Potrdilo naprave je bilo preklicano. Iz varnostnih razlogov povezave ni mogoče vzpostaviti. Posodobite programsko opremo naprave ali se obrnite na podporo.</string>
+  <string name="wizard_result_certificate_host_mismatch">Potrdilo se ne ujema s to napravo. Preverite, ali se aplikacija povezuje s pravo napravo.</string>
+  <string name="wizard_result_certificate_pin_mismatch">Potrdilo naprave se razlikuje od pričakovanega. Posodobite aplikacijo in programsko opremo naprave, nato poskusite znova.</string>
+  <string name="wizard_result_certificate_unsupported_security">Naprava uporablja nepodprte varnostne nastavitve. Posodobite programsko opremo naprave in poskusite znova.</string>
+  <string name="wizard_result_certificate_different_names">Naprava ima napačno potrdilo - imena se ne ujemajo (potrdilo: %1$s, naprava: %2$s)</string>
 </resources>

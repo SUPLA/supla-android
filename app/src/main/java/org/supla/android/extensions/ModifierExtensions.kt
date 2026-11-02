@@ -21,7 +21,10 @@ import android.graphics.BlurMaskFilter
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -36,6 +39,7 @@ import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
@@ -265,4 +269,12 @@ private fun Modifier.innerShadowForButtonBackground(
   }
 
   drawContent()
+}
+
+@Composable
+fun Modifier.suplaCard(): Modifier {
+  val shape = RoundedCornerShape(dimensionResource(id = R.dimen.radius_default))
+  return this then Modifier
+    .background(MaterialTheme.colorScheme.surface, shape)
+    .border(1.dp, MaterialTheme.colorScheme.outline, shape)
 }

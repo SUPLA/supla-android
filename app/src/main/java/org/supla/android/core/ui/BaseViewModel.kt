@@ -17,25 +17,25 @@ package org.supla.android.core.ui
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.lifecycle.ViewModel
+import androidx.annotation.StringRes
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import org.supla.android.extensions.subscribeBy
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 import timber.log.Timber
 
 interface BaseViewProxy<S : ViewState> {
@@ -44,25 +44,23 @@ interface BaseViewProxy<S : ViewState> {
 
 abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
   defaultState: S,
-  protected open val schedulers: SuplaSchedulers
-) : ViewModel() {
+  protected open val threading: SuplaThreading,
+  defaultTitle: LocalizedString = LocalizedString.Empty,
+  manageScreenTitle: Boolean = false
+) : EventBasedViewModel<E>(defaultTitle, manageScreenTitle) {
+
+  constructor(defaultState: S, threading: SuplaThreading, @StringRes titleRes: Int) : this(
+    defaultState = defaultState,
+    threading = threading,
+    defaultTitle = localizedString(titleRes),
+    manageScreenTitle = true
+  )
 
   private val loadingState: MutableStateFlow<Boolean> = MutableStateFlow(false)
   private val viewState: MutableStateFlow<S> = MutableStateFlow(defaultState)
   fun getViewState(): StateFlow<S> = viewState
 
-  private val viewEvents: MutableSharedFlow<Event<E?>> =
-    MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
-
-  fun getViewEvents(): Flow<E> = viewEvents
-    .filter { it.item != null }
-    .filter { it.processed.not() }
-    .map {
-      it.run {
-        it.processed = true
-        it.item!!
-      }
-    }
+  private val compositeDisposable = CompositeDisposable()
 
   @FlowPreview
   fun isLoadingEvent(): Flow<Boolean> = loadingState
@@ -70,18 +68,13 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
     .distinctUntilChanged()
     .debounce(timeoutMillis = 350)
 
-  private val compositeDisposable = CompositeDisposable()
-
   override fun onCleared() {
+    super.onCleared()
     compositeDisposable.clear()
   }
 
   protected fun updateState(updater: (S) -> S) {
     viewState.tryEmit(updater(viewState.value))
-  }
-
-  protected fun sendEvent(event: E) {
-    viewEvents.tryEmit(Event(event))
   }
 
   protected fun currentState(): S {
@@ -91,10 +84,6 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
   protected open fun setLoading(loading: Boolean) {
     throw IllegalStateException("Using `attachLoadable()` needs to override this method!")
   }
-
-  open fun onViewCreated() {}
-  open fun onStart() {}
-  open fun onStop() {}
 
   fun Disposable.disposeBySelf() {
     compositeDisposable.add(this)
@@ -126,6 +115,15 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
     )
   }
 
+  protected suspend fun CoroutineScope.withLoader(block: suspend CoroutineScope.() -> Unit) {
+    loadingState.emit(true)
+    try {
+      block()
+    } finally {
+      loadingState.emit(false)
+    }
+  }
+
   fun <T : Any> Maybe<T>.attach(): Maybe<T> {
     return attachSilent()
       .doOnSubscribe { loadingState.tryEmit(true) }
@@ -135,16 +133,16 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
   fun <T : Any> Maybe<T>.attachSilent(): Maybe<T> {
     val calledAt = findStackEntryString(Thread.currentThread().stackTrace)
 
-    return subscribeOn(schedulers.io)
-      .observeOn(schedulers.ui)
+    return subscribeOn(threading.schedulers.io)
+      .observeOn(threading.schedulers.ui)
       .doOnError { Timber.e(it, errorMessage("Maybe", calledAt, it.message)) }
   }
 
   fun Completable.attach(): Completable {
     val calledAt = findStackEntryString(Thread.currentThread().stackTrace)
 
-    return subscribeOn(schedulers.io)
-      .observeOn(schedulers.ui)
+    return subscribeOn(threading.schedulers.io)
+      .observeOn(threading.schedulers.ui)
       .doOnError { Timber.e(it, errorMessage("Completable", calledAt, it.message)) }
       .doOnSubscribe { loadingState.tryEmit(true) }
       .doOnTerminate { loadingState.tryEmit(false) }
@@ -153,16 +151,16 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
   fun Completable.attachSilent(): Completable {
     val calledAt = findStackEntryString(Thread.currentThread().stackTrace)
 
-    return subscribeOn(schedulers.io)
-      .observeOn(schedulers.ui)
+    return subscribeOn(threading.schedulers.io)
+      .observeOn(threading.schedulers.ui)
       .doOnError { Timber.e(it, errorMessage("Completable", calledAt, it.message)) }
   }
 
   fun <T : Any> Single<T>.attach(): Single<T> {
     val calledAt = findStackEntryString(Thread.currentThread().stackTrace)
 
-    return subscribeOn(schedulers.io)
-      .observeOn(schedulers.ui)
+    return subscribeOn(threading.schedulers.io)
+      .observeOn(threading.schedulers.ui)
       .doOnError { Timber.e(it, errorMessage("Single", calledAt, it.message)) }
       .doOnSubscribe { loadingState.tryEmit(true) }
       .doOnTerminate { loadingState.tryEmit(false) }
@@ -171,8 +169,8 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
   fun <T : Any> Single<T>.attachSilent(): Single<T> {
     val calledAt = findStackEntryString(Thread.currentThread().stackTrace)
 
-    return subscribeOn(schedulers.io)
-      .observeOn(schedulers.ui)
+    return subscribeOn(threading.schedulers.io)
+      .observeOn(threading.schedulers.ui)
       .doOnError { Timber.e(it, errorMessage("Maybe", calledAt, it.message)) }
   }
 
@@ -186,8 +184,8 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
   fun <T : Any> Observable<T>.attachSilent(): Observable<T> {
     val calledAt = findStackEntryString(Thread.currentThread().stackTrace)
 
-    return subscribeOn(schedulers.io)
-      .observeOn(schedulers.ui)
+    return subscribeOn(threading.schedulers.io)
+      .observeOn(threading.schedulers.ui)
       .doOnError { Timber.e(it, errorMessage("Observable", calledAt, it.message)) }
   }
 
@@ -228,9 +226,4 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
 
     return null
   }
-
-  data class Event<T>(
-    val item: T,
-    var processed: Boolean = false
-  )
 }

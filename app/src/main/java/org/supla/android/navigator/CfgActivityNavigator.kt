@@ -9,11 +9,11 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
-import org.supla.android.MainActivity
 import org.supla.android.NavigationActivity
 import org.supla.android.R
 import org.supla.android.cfg.CfgActivity
 import org.supla.android.features.deleteaccountweb.DeleteAccountWebFragment
+import org.supla.android.main.MainActivity
 import javax.inject.Inject
 
 @ActivityScoped

@@ -25,6 +25,7 @@ import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.supla.core.shared.data.model.battery.BatteryState
 import org.supla.core.shared.data.model.channel.ChannelChild
 import org.supla.core.shared.data.model.channel.ChannelWithChildren
 import org.supla.core.shared.data.model.general.Channel
@@ -83,6 +84,78 @@ class GetChannelLowBatteryIssueUseCaseTest {
       listOf(
         localizedString(LocalizedStringId.CHANNEL_BATTERY_LEVEL_WITH_INFO, 1, LocalizedString.Constant("Main"), 4),
         localizedString(LocalizedStringId.CHANNEL_BATTERY_LEVEL_WITH_INFO, 2, LocalizedString.Constant("Child"), 5)
+      )
+    )
+    assertThat(issue?.priority).isEqualTo(4)
+  }
+
+  @Test
+  fun `should get low battery for channel and children`() {
+    // given
+    val mainChannel = mockChannelWithBatteryLevel(1, null, BatteryState.LOW)
+    val childChannel = mockChannelWithBatteryLevel(2, null, BatteryState.LOW)
+    val channelWithChildren: ChannelWithChildren = mockk {
+      every { channel } returns mainChannel
+      every { children } returns listOf(
+        mockk {
+          every { channel } returns childChannel
+          every { children } returns emptyList()
+        },
+        mockk {
+          every { channel } returns mockChannelWithBatteryLevel(2, 50)
+          every { children } returns emptyList()
+        }
+      )
+    }
+
+    every { getCaptionUseCase.invoke(mainChannel) } returns LocalizedString.Constant("Main")
+    every { getCaptionUseCase.invoke(childChannel) } returns LocalizedString.Constant("Child")
+    every { applicationPreferences.batteryWarningLevel } returns 10
+
+    // when
+    val issue = useCase(channelWithChildren)
+
+    // then
+    assertThat(issue?.icon).isEqualTo(IssueIcon.Battery0)
+    assertThat(issue?.messages).isEqualTo(
+      listOf(
+        localizedString(LocalizedStringId.CHANNEL_BATTERY_LOW_WITH_INFO, 1, LocalizedString.Constant("Main")),
+        localizedString(LocalizedStringId.CHANNEL_BATTERY_LOW_WITH_INFO, 2, LocalizedString.Constant("Child"))
+      )
+    )
+    assertThat(issue?.priority).isEqualTo(4)
+  }
+
+  @Test
+  fun `should get low battery for main channel only`() {
+    // given
+    val mainChannel = mockChannelWithBatteryLevel(1, null, BatteryState.LOW)
+    val childChannel = mockChannelWithBatteryLevel(2, null, null)
+    val channelWithChildren: ChannelWithChildren = mockk {
+      every { channel } returns mainChannel
+      every { children } returns listOf(
+        mockk {
+          every { channel } returns childChannel
+          every { children } returns emptyList()
+        },
+        mockk {
+          every { channel } returns mockChannelWithBatteryLevel(2, 50)
+          every { children } returns emptyList()
+        }
+      )
+    }
+
+    every { getCaptionUseCase.invoke(mainChannel) } returns LocalizedString.Constant("Main")
+    every { applicationPreferences.batteryWarningLevel } returns 10
+
+    // when
+    val issue = useCase(channelWithChildren)
+
+    // then
+    assertThat(issue?.icon).isEqualTo(IssueIcon.Battery0)
+    assertThat(issue?.messages).isEqualTo(
+      listOf(
+        localizedString(LocalizedStringId.CHANNEL_BATTERY_LOW),
       )
     )
     assertThat(issue?.priority).isEqualTo(4)
@@ -154,11 +227,12 @@ class GetChannelLowBatteryIssueUseCaseTest {
     assertThat(issue?.priority).isEqualTo(4)
   }
 
-  private fun mockChannelWithBatteryLevel(id: Int, batteryLevel: Int): Channel =
+  private fun mockChannelWithBatteryLevel(id: Int, batteryLevel: Int?, batteryState: BatteryState? = null): Channel =
     mockk {
       every { remoteId } returns id
       every { batteryInfo } returns mockk {
         every { level } returns batteryLevel
+        every { state } returns batteryState
       }
     }
 }

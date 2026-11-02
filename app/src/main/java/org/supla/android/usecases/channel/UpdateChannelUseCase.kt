@@ -20,12 +20,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.data.model.general.EntityUpdateResult
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.LocationRepository
 import org.supla.android.data.source.ProfileRepository
-import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.LocationEntity
-import org.supla.android.db.Location
 import org.supla.android.lib.SuplaChannel
 import org.supla.android.usecases.channelconfig.RequestChannelConfigUseCase
 import org.supla.android.widget.WidgetManager
@@ -39,27 +38,26 @@ import javax.inject.Singleton
 class UpdateChannelUseCase @Inject constructor(
   private val requestChannelConfigUseCase: RequestChannelConfigUseCase,
   private val profileRepository: ProfileRepository,
-  private val channelRepository: RoomChannelRepository,
+  private val channelRepository: ChannelRepository,
   private val locationRepository: LocationRepository,
   private val widgetPreferences: WidgetPreferences,
   private val widgetManager: WidgetManager
 ) {
 
   operator fun invoke(suplaChannel: SuplaChannel): Single<EntityUpdateResult> =
-    checkLocation(suplaChannel.LocationID) { locationEntity ->
+    checkLocation(suplaChannel.LocationID) { _ ->
       channelRepository.findByRemoteId(suplaChannel.Id)
         .toSingle()
         .flatMap { channelEntity ->
 
           if (channelEntity.differsFrom(suplaChannel) || channelEntity.visible != 1) {
-            updateChannel(locationEntity, channelEntity, suplaChannel)
+            updateChannel(channelEntity, suplaChannel)
           } else {
             Single.just(EntityUpdateResult.NOP)
           }
         }.onErrorResumeNext { throwable ->
-          throwable.printStackTrace()
           if (throwable is NoSuchElementException) {
-            insertChannel(locationEntity, suplaChannel)
+            insertChannel(suplaChannel)
           } else {
             Timber.e(throwable, "Channel update failed!")
             Single.just(EntityUpdateResult.ERROR)
@@ -67,35 +65,24 @@ class UpdateChannelUseCase @Inject constructor(
         }
     }
 
-  private fun updateChannel(locationEntity: LocationEntity, channelEntity: ChannelEntity, suplaChannel: SuplaChannel) =
-    updatePosition(locationEntity, channelEntity.updatedBy(suplaChannel), channelEntity.locationChanged(suplaChannel))
+  private fun updateChannel(channelEntity: ChannelEntity, suplaChannel: SuplaChannel) =
+    channelEntity.updatedBy(suplaChannel)
+      .resetPositionIf(channelEntity.locationChanged(suplaChannel))
       .flatMapCompletable(channelRepository::update)
       .andThen(requestChannelConfigUseCase(suplaChannel))
       .andThen(checkWidgetUpdateNeeded(channelEntity.profileId, suplaChannel))
       .andThen(Single.just(EntityUpdateResult.UPDATED))
 
-  private fun insertChannel(locationEntity: LocationEntity, suplaChannel: SuplaChannel) =
+  private fun insertChannel(suplaChannel: SuplaChannel) =
     profileRepository.findActiveProfile()
       .flatMapCompletable {
-        updatePosition(locationEntity, ChannelEntity.from(suplaChannel, it.id!!), false)
-          .flatMapCompletable(channelRepository::insert)
+        channelRepository.insert(ChannelEntity.from(suplaChannel, it.id))
       }
       .andThen(requestChannelConfigUseCase(suplaChannel))
       .andThen(Single.just(EntityUpdateResult.UPDATED))
 
-  private fun updatePosition(locationEntity: LocationEntity, channelEntity: ChannelEntity, locationChanged: Boolean) =
-    if (locationEntity.sorting == Location.SortingType.USER_DEFINED && (channelEntity.id == null || locationChanged)) {
-      channelRepository.findMaxPositionInLocation(locationEntity.remoteId)
-        .onErrorReturnItem(0)
-        .map { count ->
-          Timber.i("Updating channel position to `$count`")
-          return@map channelEntity.copy(position = count + 1)
-        }
-    } else if (locationEntity.sorting == Location.SortingType.DEFAULT && channelEntity.position != 0) {
-      Single.just(channelEntity.copy(position = 0))
-    } else {
-      Single.just(channelEntity)
-    }
+  private fun ChannelEntity.resetPositionIf(condition: Boolean): Single<ChannelEntity> =
+    Single.just(if (condition) copy(position = 0) else this)
 
   private fun checkWidgetUpdateNeeded(profileId: Long, suplaChannel: SuplaChannel) =
     Completable.fromRunnable {

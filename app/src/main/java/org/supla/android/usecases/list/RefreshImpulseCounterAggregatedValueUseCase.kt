@@ -63,21 +63,19 @@ class RefreshImpulseCounterAggregatedValueUseCase @Inject constructor(
     val entriesStartDate = settings.showOnList.aggregationStartDate(dateProvider.currentDateTime)?.toEpochSecond()
     val entriesProviderQuery =
       if (entriesStartDate == null) {
-        impulseCounterLogRepository.findMeasurements(remoteId, profileId)
+        impulseCounterLogRepository.findCalculatedValueSum(remoteId, profileId)
       } else {
-        impulseCounterLogRepository.findMeasurements(remoteId, profileId, Date(entriesStartDate * 1000), currentDate)
+        impulseCounterLogRepository.findCalculatedValueSum(remoteId, profileId, Date(entriesStartDate * 1000), currentDate)
       }
 
-    val entries: List<ImpulseCounterLogEntity>? = entriesProviderQuery.awaitFirstOrNull()
-    if (entries.isNullOrEmpty()) {
-      Timber.i("No entries found")
-      channelValueRepository.updateAggregatedValue(profileId, remoteId, NO_VALUE_TEXT)
-      return
-    }
-
     val unit = channelExtendedValueRepository.findBy(profileId, remoteId)?.getSuplaValue()?.ImpulseCounterValue?.unit
-    val aggregatedValue = entries.fold(0f) { acc, entity -> acc + entity.calculatedValue }
-    val formatted = formatter.format(aggregatedValue, withUnit(unit, showNoValueText = false))
+    val aggregatedValue = entriesProviderQuery.awaitFirstOrNull()
+    val formatted =
+      if (aggregatedValue == null || aggregatedValue.count == 0) {
+        NO_VALUE_TEXT
+      } else {
+        formatter.format(aggregatedValue.value, withUnit(unit, showNoValueText = false))
+      }
 
     Timber.d("Aggregated value set to $formatted")
     channelValueRepository.updateAggregatedValue(profileId, remoteId, formatted)

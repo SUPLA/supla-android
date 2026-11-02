@@ -51,6 +51,7 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.CHANNEL_CAPTION_THERMOMETER -> R.string.channel_caption_thermometer
     LocalizedStringId.CHANNEL_CAPTION_HUMIDITY -> R.string.channel_caption_humidity
     LocalizedStringId.CHANNEL_CAPTION_HUMIDITY_AND_TEMPERATURE -> R.string.channel_caption_humidityandtemperature
+    LocalizedStringId.CHANNEL_CAPTION_HVAC_HRV -> R.string.channel_caption_hvac_hrv
     LocalizedStringId.CHANNEL_CAPTION_WIND_SENSOR -> R.string.channel_caption_windsensor
     LocalizedStringId.CHANNEL_CAPTION_PRESSURE_SENSOR -> R.string.channel_caption_pressuresensor
     LocalizedStringId.CHANNEL_CAPTION_RAIN_SENSOR -> R.string.channel_caption_rainsensor
@@ -91,11 +92,18 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.CHANNEL_CAPTION_UNKNOWN -> R.string.channel_not_supported
     LocalizedStringId.CHANNEL_CAPTION_MOTION_SENSOR -> R.string.channel_caption_motion_sensor
     LocalizedStringId.CHANNEL_CAPTION_BINARY_SENSOR -> R.string.channel_caption_binary_sensor
+    LocalizedStringId.CHANNEL_CAPTION_SMOKE_SENSOR -> R.string.channel_caption_smoke_sensor
+    LocalizedStringId.CHANNEL_CAPTION_CARBON_MONOXIDE_SENSOR -> R.string.channel_caption_carbon_monoxide_sensor
+    LocalizedStringId.CHANNEL_CAPTION_GAS_SENSOR -> R.string.channel_caption_gas_sensor
     LocalizedStringId.CHANNEL_STATUS_AWAITING -> R.string.channel_status_awaiting
     LocalizedStringId.CHANNEL_STATUS_UPDATING -> R.string.channel_status_updating
     LocalizedStringId.CHANNEL_STATUS_NOT_AVAILABLE -> R.string.channel_not_available
     LocalizedStringId.CHANNEL_BATTERY_LEVEL -> R.string.channel_battery_level
     LocalizedStringId.CHANNEL_BATTERY_LEVEL_WITH_INFO -> R.string.channel_battery_level_with_info
+    LocalizedStringId.CHANNEL_BATTERY_LOW -> R.string.channel_battery_low
+    LocalizedStringId.CHANNEL_BATTERY_LOW_WITH_INFO -> R.string.channel_battery_low_with_info
+    LocalizedStringId.CHANNEL_STATE_BATTERY_LOW_VALUE -> R.string.channel_battery_state_low_value
+    LocalizedStringId.CHANNEL_STATE_BATTERY_NORMAL_VALUE -> R.string.channel_battery_state_normal_value
     LocalizedStringId.MOTOR_PROBLEM -> R.string.motor_problem
     LocalizedStringId.CALIBRATION_LOST -> R.string.calibration_lost
     LocalizedStringId.CALIBRATION_FAILED -> R.string.calibration_failed
@@ -126,10 +134,18 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.ADD_WIZARD_RESULT_FAILED -> R.string.wizard_result_failed
     LocalizedStringId.ADD_WIZARD_RECONNECT_TIMEOUT -> R.string.wizard_reconnect_timeout
     LocalizedStringId.ADD_WIZARD_DEVICE_TEMPORARILY_LOCKED -> R.string.add_wizard_device_temporarily_locked
+    LocalizedStringId.ADD_WIZARD_CERTIFICATE_ERROR_UNTRUSTED -> R.string.wizard_result_certificate_untrusted
+    LocalizedStringId.ADD_WIZARD_CERTIFICATE_ERROR_EXPIRED -> R.string.wizard_result_certificate_expired
+    LocalizedStringId.ADD_WIZARD_CERTIFICATE_ERROR_NOT_YET_VALID -> R.string.wizard_result_certificate_not_yet_valid
+    LocalizedStringId.ADD_WIZARD_CERTIFICATE_ERROR_REVOKED -> R.string.wizard_result_certificate_revoked
+    LocalizedStringId.ADD_WIZARD_CERTIFICATE_ERROR_HOST_MISMATCH -> R.string.wizard_result_certificate_host_mismatch
+    LocalizedStringId.ADD_WIZARD_CERTIFICATE_ERROR_PIN_MISMATCH -> R.string.wizard_result_certificate_pin_mismatch
+    LocalizedStringId.ADD_WIZARD_CERTIFICATE_ERROR_UNSUPPORTED_SECURITY -> R.string.wizard_result_certificate_unsupported_security
     LocalizedStringId.ADD_WIZARD_STATE_PREPARING -> R.string.wizard_state_preparing
     LocalizedStringId.ADD_WIZARD_STATE_CONNECTING -> R.string.wizard_state_connecting
     LocalizedStringId.ADD_WIZARD_STATE_CONFIGURING -> R.string.wizard_state_configuring
     LocalizedStringId.ADD_WIZARD_STATE_FINISHING -> R.string.wizard_state_finishing
+    LocalizedStringId.ADD_WIZARD_CERTIFICATE_ERROR_DIFFERENT_NAMES -> R.string.wizard_result_certificate_different_names
     LocalizedStringId.CHANNEL_STATE_UPTIME -> R.string.channel_state_uptime
     LocalizedStringId.CHANNEL_STATE_BATTERY_POWERED -> R.string.channel_state_battery_powered
     LocalizedStringId.CHANNEL_STATE_MAINS_POWERED -> R.string.channel_state_main_powered

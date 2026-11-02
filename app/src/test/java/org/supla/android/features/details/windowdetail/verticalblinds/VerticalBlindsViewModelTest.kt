@@ -30,10 +30,10 @@ import io.reactivex.rxjava3.core.Observable
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
@@ -59,7 +59,7 @@ import org.supla.android.features.details.windowdetail.base.ui.windowview.Shadin
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.channel.ObserveChannelWithChildrenUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.CallSuplaClientOperationUseCase
@@ -105,7 +105,7 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
   private lateinit var getGroupOnlineSummaryUseCase: GetGroupOnlineSummaryUseCase
 
   @RelaxedMockK
-  private lateinit var preferences: Preferences
+  private lateinit var preferences: ApplicationPreferences
 
   @RelaxedMockK
   private lateinit var dateProvider: DateProvider
@@ -120,7 +120,7 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
   private lateinit var authorizeUseCase: AuthorizeUseCase
 
   @RelaxedMockK
-  override lateinit var schedulers: SuplaSchedulers
+  override lateinit var threading: SuplaThreading
 
   @InjectMockKs
   override lateinit var viewModel: VerticalBlindsViewModel

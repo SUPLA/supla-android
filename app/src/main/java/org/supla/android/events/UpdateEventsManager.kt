@@ -22,8 +22,8 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
-import org.supla.android.data.source.ChannelRepository
-import org.supla.android.data.source.RoomSceneRepository
+import org.supla.android.data.source.ChannelGroupRepository
+import org.supla.android.data.source.SceneRepository
 import org.supla.android.data.source.local.entity.SceneEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.db.ChannelGroup
@@ -35,8 +35,8 @@ import javax.inject.Singleton
 
 @Singleton
 class UpdateEventsManager @Inject constructor(
-  private val channelRepository: ChannelRepository,
-  private val sceneRepository: RoomSceneRepository,
+  private val channelGroupRepository: ChannelGroupRepository,
+  private val sceneRepository: SceneRepository,
   private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   private val channelToRootRelationHolderUseCase: ChannelToRootRelationHolderUseCase
 ) {
@@ -47,6 +47,8 @@ class UpdateEventsManager @Inject constructor(
   private val groupUpdatesSubject: BehaviorSubject<Any> = BehaviorSubject.create()
   private val sceneUpdatesSubject: BehaviorSubject<Any> = BehaviorSubject.create()
 
+  private val updatesSubject: BehaviorSubject<Id> = BehaviorSubject.create()
+
   private val androidAutoReloadSubject = PublishSubject.create<Unit>()
 
   @Synchronized
@@ -56,20 +58,24 @@ class UpdateEventsManager @Inject constructor(
 
   fun emitSceneUpdate(sceneId: Int) {
     getSubjectForScene(sceneId).onNext(State.Scene)
+    updatesSubject.onNext(Id(IdType.SCENE, sceneId))
   }
 
   fun emitChannelUpdate(channelId: Int) {
     getSubjectForChannel(channelId).onNext(State.Channel)
+    updatesSubject.onNext(Id(IdType.CHANNEL, channelId))
 
     channelToRootRelationHolderUseCase.getParents(channelId)?.let { parents ->
       parents.forEach {
         getSubjectForChannel(it).onNext(State.Channel)
+        updatesSubject.onNext(Id(IdType.CHANNEL, it))
       }
     }
   }
 
   fun emitGroupUpdate(groupId: Int) {
     getSubjectForChannelGroup(groupId).onNext(State.Group)
+    updatesSubject.onNext(Id(IdType.GROUP, groupId))
   }
 
   fun emitChannelsUpdate() {
@@ -84,6 +90,24 @@ class UpdateEventsManager @Inject constructor(
     sceneUpdatesSubject.onNext(Any())
   }
 
+  fun observeAllChannels(): Observable<Int> =
+    updatesSubject
+      .filter { it.type == IdType.CHANNEL }
+      .map { it.id }
+      .hide()
+
+  fun observeAllGroups(): Observable<Int> =
+    updatesSubject
+      .filter { it.type == IdType.GROUP }
+      .map { it.id }
+      .hide()
+
+  fun observeAllScenes(): Observable<Int> =
+    updatesSubject
+      .filter { it.type == IdType.SCENE }
+      .map { it.id }
+      .hide()
+
   fun observerScene(sceneId: Int): Observable<SceneEntity> {
     return getSubjectForScene(sceneId).hide()
       .observeOn(Schedulers.io())
@@ -95,14 +119,10 @@ class UpdateEventsManager @Inject constructor(
       .flatMap { readChannelWithChildrenUseCase(channelId).toObservable() }
   }
 
-  fun observeChannelEvents(channelId: Int): Observable<State> = getSubjectForChannel(channelId).hide()
-
   fun observeGroup(groupId: Int): Observable<ChannelGroup> {
     return getSubjectForChannelGroup(groupId).hide()
-      .map { channelRepository.getChannelGroup(groupId) }
+      .flatMapMaybe { channelGroupRepository.findGroupDataEntity(groupId).map { it.getLegacyGroup() }.firstElement() }
   }
-
-  fun observeGroupEvents(groupId: Int): Observable<State> = getSubjectForChannelGroup(groupId).hide()
 
   fun observeChannelsUpdate(): Observable<Any> = channelUpdatesSubject.hide().debounce(200, TimeUnit.MILLISECONDS)
   fun observeGroupsUpdate(): Observable<Any> = groupUpdatesSubject.hide().debounce(200, TimeUnit.MILLISECONDS)

@@ -18,8 +18,9 @@ package org.supla.android.features.details.electricitymeterdetail.general
  */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.supla.android.Preferences
 import org.supla.android.core.infrastructure.DateProvider
+import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
@@ -29,11 +30,12 @@ import org.supla.android.extensions.monthStart
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterGeneralStateHandler
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterState
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.channel.measurements.ElectricityMeasurements
 import org.supla.android.usecases.channel.measurements.electricitymeter.LoadElectricityMeterMeasurementsUseCase
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,12 +46,25 @@ class ElectricityMeterGeneralViewModel @Inject constructor(
   private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   private val downloadEventsManager: DownloadEventsManager,
   private val dateProvider: DateProvider,
-  private val preferences: Preferences,
-  schedulers: SuplaSchedulers
+  private val preferences: ApplicationPreferences,
+  suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper,
+  threading: SuplaThreading
 ) : BaseViewModel<ElectricityMeterGeneralViewModelState, ElectricityMeterGeneralViewEvent>(
   ElectricityMeterGeneralViewModelState(),
-  schedulers
+  threading
 ) {
+
+  init {
+    setupSuplaClientMessageHandler(suplaClientMessageHandlerWrapper)
+  }
+
+  override fun handleSuplaMessage(message: SuplaClientMessage) {
+    (message as? SuplaClientMessage.ChannelDataChanged)?.let {
+      if (it.channelId == currentState().remoteId) {
+        loadData(currentState().remoteId)
+      }
+    }
+  }
 
   fun onViewCreated(remoteId: Int) {
     observeDownload(remoteId)

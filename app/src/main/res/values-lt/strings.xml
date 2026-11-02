@@ -31,6 +31,9 @@
   <string name="channel_caption_thermometer">Termometras</string>
   <string name="channel_caption_humidity">Drėgmė</string>
   <string name="channel_caption_humidityandtemperature">Temperatūra ir drėgmė</string>
+  <string name="channel_caption_smoke_sensor">Dūmų jutiklis</string>
+  <string name="channel_caption_carbon_monoxide_sensor">Anglies monoksido jutiklis</string>
+  <string name="channel_caption_gas_sensor">Dujų jutiklis</string>
   <string name="channel_caption_dimmer">Dimmer</string>
   <string name="channel_caption_rgblighting">RGB apšvietimas</string>
   <string name="channel_caption_dimmerandrgblighting">Šviesos srauto reguliatorius ir RGB apšvietimas</string>
@@ -74,7 +77,7 @@
   <string name="start">STARTAS</string>
   <string name="add_wizard_remember_passwd">Išsaugoti slaptažodį</string>
   <string name="add_wizard_step_3_message_3"><![CDATA[Paspauskite mygtuką <b>START</b>, kad pradėti konfigūravimą.]]></string>
-  <string name="wizard_no_internetwifi">Prieš pradedami prisijunkite prie interneto Wi-Fi tinklo pagalba, kurį taip pat naudos vykdomasis įrenginys prisijungimui prie serverio.</string>
+  <string name="wizard_no_internetwifi">Prieš pradėdami įsitikinkite, kad Wi-Fi įjungtas.</string>
   <string name="wizard_wifi_error">Wi-Fi tinklas yra išjungtas arba negalima atpažinti jo identifikatoriaus arba pavadinimo!</string>
   <string name="wizard_location_error">Kad pridėjimo vedlys veiktų tinkamai, šiame įrenginyje turi būti įjungta Vietos paslauga. Eikite į sistemos nustatymus, tada pasirinkite „Vieta“ ir įsitikinkite, kad įjungta.</string>
   <string name="wizard_scan_timeout">Viršytas Wi-Fi tinklo paieškos pabaigimo laukimo laikas!</string>
@@ -628,6 +631,11 @@
   <string name="settings_battery_level_warning">Silpnos baterijos įspėjimas</string>
   <string name="channel_battery_level">Baterijos lygis: %1$d%%</string>
   <string name="channel_battery_level_with_info">Baterijos lygis (%1$d - %2$s): %3$d%%</string>
+  <string name="battery_state">Baterijos būsena</string>
+  <string name="channel_battery_low">Žemas baterijos lygis</string>
+  <string name="channel_battery_low_with_info">Žemas baterijos lygis (%1$d - %2$s)</string>
+  <string name="channel_battery_state_low_value">žema</string>
+  <string name="channel_battery_state_normal_value">normali</string>
   <string name="channel_btn_stop">Sustabdyti</string>
   <string name="android_auto_action">Veiksmas: %1$s</string>
   <string name="android_auto_empty_header">Reikalinga konfigūracija</string>
@@ -804,8 +812,17 @@
   <string name="scene_inactive">Scena neaktyvi</string>
   <string name="nfc_detail_action_added">Pridėta prie programėlės</string>
   <string name="general_search">Ieškoti</string>
+  <string name="general_open_drawer">Atverti meniu</string>
+  <string name="general_back">Atgal</string>
   <string name="toolbar_search_hint">Įveskite bent 2 simbolius…</string>
   <string name="details_timer_select_program">Pasirinkite programą</string>
+  <string name="details_recuperator_ventilation">Vėdinimas</string>
+  <string name="details_recuperator_empty_house">Tušti namai</string>
+  <string name="details_recuperator_open_window">Atidaryti langą</string>
+  <string name="channel_caption_hvac_hrv">Šilumos grąžinimo vėdinimas</string>
+  <string name="details_recuperator_manual_mode_label">Rankinis režimas</string>
+  <string name="profile_selected">Pasirinktas profilis</string>
+  <string name="general_clear_search">Išvalyti paiešką</string>
   <string name="settings_show_unavailable_channels">Slėpti kanalus, kurie nepasiekiami dėl įrenginio konfigūracijos</string>
   <string name="details_em_active_energy_balance">Aktyviosios energijos balansas</string>
   <string name="details_em_settings_list_metric">Pasirinkta reikšmė</string>
@@ -818,4 +835,12 @@
   <string name="details_em_on_list_balance">Energijos balansavimo metodas</string>
   <string name="details_em_on_list_value">Duomenų diapazonas</string>
   <string name="details_em_on_list">Rodymas kanalų sąraše</string>
+  <string name="wizard_result_certificate_untrusted">Įrenginio sertifikatas nėra patikimas. Įsitikinkite, kad jungiatės prie tinkamo įrenginio ir kad jo programinė įranga yra atnaujinta.</string>
+  <string name="wizard_result_certificate_expired">Įrenginio sertifikato galiojimas baigėsi. Atnaujinkite įrenginio programinę įrangą arba susisiekite su pagalba. Taip pat patikrinkite, ar telefone teisinga data ir laikas.</string>
+  <string name="wizard_result_certificate_not_yet_valid">Įrenginio sertifikatas dar negalioja. Patikrinkite datą ir laiką telefone bei įrenginyje, tada bandykite dar kartą.</string>
+  <string name="wizard_result_certificate_revoked">Įrenginio sertifikatas buvo atšauktas. Saugumo sumetimais ryšio užmegzti negalima. Atnaujinkite įrenginio programinę įrangą arba susisiekite su pagalba.</string>
+  <string name="wizard_result_certificate_host_mismatch">Sertifikatas neatitinka šio įrenginio. Įsitikinkite, kad programa jungiasi prie tinkamo įrenginio.</string>
+  <string name="wizard_result_certificate_pin_mismatch">Įrenginio sertifikatas skiriasi nuo tikėtino. Atnaujinkite programą ir įrenginio programinę įrangą, tada bandykite dar kartą.</string>
+  <string name="wizard_result_certificate_unsupported_security">Įrenginys naudoja nepalaikomus saugumo nustatymus. Atnaujinkite įrenginio programinę įrangą ir bandykite dar kartą.</string>
+  <string name="wizard_result_certificate_different_names">Įrenginio sertifikatas neteisingas - pavadinimai nesutampa (sertifikatas: %1$s, įrenginys: %2$s)</string>
 </resources>

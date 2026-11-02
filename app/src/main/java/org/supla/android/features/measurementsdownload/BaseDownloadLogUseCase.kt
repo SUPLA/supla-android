@@ -95,13 +95,13 @@ abstract class BaseDownloadLogUseCase<T : Measurement, U : BaseLogEntity>(
         return true
       } else {
         val entriesWithoutGroupingString = try {
-          baseMeasurementRepository.findCountWithoutGroupingString(remoteId, profileId).blockingGet()
+          baseMeasurementRepository.hasEmptyGroupingString(remoteId, profileId).blockingGet()
         } catch (ex: Exception) {
           Timber.e(ex, "Could not load count of entries without grouping string")
           return true
         }
-        if (entriesWithoutGroupingString > 0) {
-          Timber.w("Found $entriesWithoutGroupingString entries without grouping string - cleaning")
+        if (entriesWithoutGroupingString) {
+          Timber.w("Found entries without grouping string - cleaning")
           return true
         }
 

@@ -46,6 +46,8 @@ import org.supla.android.extensions.setStatusBarColor
 import org.supla.android.features.nfc.call.screens.Navigator
 import org.supla.android.features.nfc.call.screens.callaction.CallActionScreen
 import org.supla.android.features.nfc.call.screens.configureaction.ConfigureActionScreen
+import org.supla.android.main.scaffold.EmptyScreenScaffold
+import org.supla.android.main.topbar.topBarEntryProvider
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -89,12 +91,14 @@ class CallTagActionActivity : ComponentActivity() {
           rememberSaveableStateHolderNavEntryDecorator(),
           rememberViewModelStoreNavEntryDecorator(),
         ),
-        entryProvider = entryProvider {
-          entry<CallActionFromUrl> { CallActionScreen(it, navigator) }
-          entry<CallActionFromData> { CallActionScreen(it, navigator) }
-          entry<EditMissingAction> { ConfigureActionScreen(it.id, navigator) }
-          entry<SaveNewNfcTag> { ConfigureActionScreen(it.uuid, it.readOnly, navigator) }
-        }
+        entryProvider = topBarEntryProvider(
+          entryProvider {
+            entry<CallActionFromUrl> { EmptyScreenScaffold { CallActionScreen(it, navigator) } }
+            entry<CallActionFromData> { EmptyScreenScaffold { CallActionScreen(it, navigator) } }
+            entry<EditMissingAction> { EmptyScreenScaffold { ConfigureActionScreen(it.id, navigator) } }
+            entry<SaveNewNfcTag> { EmptyScreenScaffold { ConfigureActionScreen(it.uuid, it.readOnly, navigator) } }
+          }
+        )
       )
     }
   }

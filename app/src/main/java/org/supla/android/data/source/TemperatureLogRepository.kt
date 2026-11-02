@@ -56,8 +56,8 @@ class TemperatureLogRepository @Inject constructor(
       profileId = profileId
     )
 
-  override fun findCountWithoutGroupingString(remoteId: Int, profileId: Long): Single<Int> =
-    temperatureLogDao.emptyGroupingStringCount(remoteId, profileId)
+  override fun hasEmptyGroupingString(remoteId: Int, profileId: Long): Single<Boolean> =
+    temperatureLogDao.hasEmptyGroupingString(remoteId, profileId)
 
   override fun getInitialMeasurements(cloudService: SuplaCloudService, remoteId: Int): Response<List<TemperatureMeasurement>> =
     cloudService.getInitialThermometerMeasurements(remoteId).execute()

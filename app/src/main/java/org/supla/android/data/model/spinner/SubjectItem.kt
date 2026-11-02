@@ -155,7 +155,7 @@ interface SubjectItemConversionScope {
     }
 
   fun List<ProfileEntity>.asSingleSelectionList(selectedId: Long? = null): SingleOptionalSelectionList<ProfileItem>? =
-    map { ProfileItem(it.id!!, LocalizedString.Constant(it.name), it.active ?: false) }
+    map { ProfileItem(it.id, LocalizedString.Constant(it.name), it.active) }
       .asSingleSelectionList(R.string.widget_configure_profile_label)
       ?.let { list ->
         list.copy(selected = list.items.firstOrNull { it.id == selectedId } ?: list.items.first { it.active })
@@ -273,7 +273,10 @@ interface SubjectItemConversionScope {
       SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH,
       SuplaFunction.MOTION_SENSOR,
       SuplaFunction.BINARY_SENSOR,
-      SuplaFunction.NONE -> emptyList()
+      SuplaFunction.NONE,
+      SuplaFunction.SMOKE_SENSOR,
+      SuplaFunction.CARBON_MONOXIDE_SENSOR,
+      SuplaFunction.GAS_SENSOR -> emptyList()
       SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
       SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK -> listOf(ActionId.OPEN)
       SuplaFunction.CONTROLLING_THE_GATE,
@@ -294,7 +297,8 @@ interface SubjectItemConversionScope {
       SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS,
       SuplaFunction.HVAC_THERMOSTAT,
       SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
-      SuplaFunction.HVAC_DOMESTIC_HOT_WATER -> listOf(ActionId.TURN_ON, ActionId.TURN_OFF, ActionId.TOGGLE)
+      SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
+      SuplaFunction.HVAC_HRV, -> listOf(ActionId.TURN_ON, ActionId.TURN_OFF, ActionId.TOGGLE)
       SuplaFunction.VALVE_OPEN_CLOSE,
       SuplaFunction.VALVE_PERCENTAGE -> listOf(ActionId.OPEN, ActionId.CLOSE)
       SuplaFunction.TERRACE_AWNING,

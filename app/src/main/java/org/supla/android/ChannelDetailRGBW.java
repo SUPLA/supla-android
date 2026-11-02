@@ -28,12 +28,12 @@ import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.listview.DetailLayout;
-import org.supla.android.navigator.MainNavigator;
+import org.supla.android.main.MainComposeNavigator;
 
 @AndroidEntryPoint
 public class ChannelDetailRGBW extends DetailLayout {
 
-  @Inject MainNavigator mainNavigator;
+  @Inject MainComposeNavigator mainNavigator;
   private DimmerCalibrationTool dimmerCalibrationTool = null;
 
   public ChannelDetailRGBW(Context context) {

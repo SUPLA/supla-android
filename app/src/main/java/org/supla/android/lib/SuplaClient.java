@@ -56,15 +56,14 @@ import org.supla.android.core.notifications.NotificationsHelper;
 import org.supla.android.core.shared.SuplaClientMessageExtensionsKt;
 import org.supla.android.core.storage.EncryptedPreferences;
 import org.supla.android.data.model.general.EntityUpdateResult;
+import org.supla.android.data.model.settings.ProfileCredentials;
 import org.supla.android.data.source.ProfileRepository;
-import org.supla.android.data.source.SceneRepository;
 import org.supla.android.data.source.local.entity.ProfileEntity;
 import org.supla.android.data.source.remote.ChannelConfigType;
 import org.supla.android.data.source.remote.ConfigResult;
 import org.supla.android.data.source.remote.FieldType;
 import org.supla.android.data.source.remote.SuplaChannelConfig;
 import org.supla.android.data.source.remote.SuplaDeviceConfig;
-import org.supla.android.db.DbHelper;
 import org.supla.android.db.room.app.AppDatabase;
 import org.supla.android.db.room.measurements.MeasurementsDatabase;
 import org.supla.android.events.ChannelConfigEventsManager;
@@ -77,18 +76,28 @@ import org.supla.android.features.scenescleanup.RemoveHiddenScenesManager;
 import org.supla.android.lib.actions.ActionId;
 import org.supla.android.lib.actions.ActionParameters;
 import org.supla.android.lib.actions.SubjectType;
-import org.supla.android.profile.ProfileIdHolder;
 import org.supla.android.usecases.channel.ChannelToRootRelationHolderUseCase;
+import org.supla.android.usecases.channel.SetChannelsOfflineUseCase;
+import org.supla.android.usecases.channel.SetChannelsVisibleUseCase;
 import org.supla.android.usecases.channel.UpdateChannelExtendedValueUseCase;
 import org.supla.android.usecases.channel.UpdateChannelUseCase;
 import org.supla.android.usecases.channel.UpdateChannelValueUseCase;
 import org.supla.android.usecases.channel.UpdateExtendedValueResult;
+import org.supla.android.usecases.channel.VisibilityChange;
 import org.supla.android.usecases.channelconfig.InsertChannelConfigUseCase;
 import org.supla.android.usecases.channelrelation.DeleteRemovableChannelRelationsUseCase;
 import org.supla.android.usecases.channelrelation.InsertChannelRelationForProfileUseCase;
 import org.supla.android.usecases.channelrelation.MarkChannelRelationsAsRemovableUseCase;
+import org.supla.android.usecases.channelrelation.SetChannelGroupRelationsVisibleUseCase;
+import org.supla.android.usecases.channelrelation.UpdateChannelGroupRelationUseCase;
 import org.supla.android.usecases.channelstate.UpdateChannelStateUseCase;
+import org.supla.android.usecases.group.SetChannelGroupsVisibleUseCase;
 import org.supla.android.usecases.group.UpdateChannelGroupTotalValueUseCase;
+import org.supla.android.usecases.group.UpdateChannelGroupUseCase;
+import org.supla.android.usecases.location.UpdateLocationUseCase;
+import org.supla.android.usecases.scene.SetScenesVisibleUseCase;
+import org.supla.android.usecases.scene.UpdateSceneStateUseCase;
+import org.supla.android.usecases.scene.UpdateSceneUseCase;
 import org.supla.core.shared.data.model.suplaclient.SuplaResultCode;
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage;
 import timber.log.Timber;
@@ -112,7 +121,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private long _supla_client_ptr = 0;
   private long _supla_client_ptr_counter = 0;
   private boolean _canceled = false;
-  private DbHelper DbH = null;
   private int regTryCounter = 0; // supla-server v1.0 for Raspberry Compatibility fix
   private long lastTokenRequest = 0;
   private boolean superUserAuthorized = false;
@@ -127,15 +135,24 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private final MarkChannelRelationsAsRemovableUseCase markChannelRelationsAsRemovableUseCase;
   private final InsertChannelRelationForProfileUseCase insertChannelRelationForProfileUseCase;
   private final DeleteRemovableChannelRelationsUseCase deleteRemovableChannelRelationsUseCase;
+  private final UpdateChannelGroupRelationUseCase updateChannelGroupRelationUseCase;
+  private final SetChannelGroupRelationsVisibleUseCase setChannelGroupRelationsVisibleUseCase;
   private final SuplaCloudConfigHolder suplaCloudConfigHolder;
   private final InsertChannelConfigUseCase insertChannelConfigUseCase;
+  private final UpdateLocationUseCase updateLocationUseCase;
   private final UpdateChannelUseCase updateChannelUseCase;
   private final UpdateChannelValueUseCase updateChannelValueUseCase;
   private final UpdateChannelExtendedValueUseCase updateChannelExtendedValueUseCase;
   private final UpdateChannelStateUseCase updateChannelStateUseCase;
+  private final UpdateChannelGroupUseCase updateChannelGroupUseCase;
+  private final SetChannelsVisibleUseCase setChannelsVisibleUseCase;
+  private final SetChannelsOfflineUseCase setChannelsOfflineUseCase;
+  private final SetChannelGroupsVisibleUseCase setChannelGroupsVisibleUseCase;
+  private final SetScenesVisibleUseCase setScenesVisibleUseCase;
+  private final UpdateSceneUseCase updateSceneUseCase;
+  private final UpdateSceneStateUseCase updateSceneStateUseCase;
   private final AppDatabase appDatabase;
   private final MeasurementsDatabase measurementsDatabase;
-  private final ProfileIdHolder profileIdHolder;
   private final UpdateChannelGroupTotalValueUseCase updateChannelGroupTotalValueUseCase;
   private final SuplaClientStateHolder suplaClientStateHolder;
   private final ChannelToRootRelationHolderUseCase channelToRootRelationHolderUseCase;
@@ -161,15 +178,25 @@ public class SuplaClient extends Thread implements SuplaClientApi {
         dependencies.getInsertChannelRelationForProfileUseCase();
     this.deleteRemovableChannelRelationsUseCase =
         dependencies.getDeleteRemovableChannelRelationsUseCase();
+    this.updateChannelGroupRelationUseCase = dependencies.getUpdateChannelGroupRelationUseCase();
+    this.setChannelGroupRelationsVisibleUseCase =
+        dependencies.getSetChannelGroupRelationsVisibleUseCase();
     this.suplaCloudConfigHolder = dependencies.getSuplaCloudConfigHolder();
     this.insertChannelConfigUseCase = dependencies.getInsertChannelConfigUseCase();
     this.updateChannelUseCase = dependencies.getUpdateChannelUseCase();
+    this.updateLocationUseCase = dependencies.getUpdateLocationUseCase();
     this.updateChannelValueUseCase = dependencies.getUpdateChannelValueUseCase();
     this.updateChannelExtendedValueUseCase = dependencies.getUpdateChannelExtendedValueUseCase();
     this.updateChannelStateUseCase = dependencies.getUpdateChannelStateUseCase();
+    this.updateChannelGroupUseCase = dependencies.getUpdateChannelGroupUseCase();
+    this.setChannelsVisibleUseCase = dependencies.getSetChannelsVisibleUseCase();
+    this.setChannelsOfflineUseCase = dependencies.getSetChannelsOfflineUseCase();
+    this.setChannelGroupsVisibleUseCase = dependencies.getSetChannelGroupsVisibleUseCase();
+    this.setScenesVisibleUseCase = dependencies.getSetScenesVisibleUseCase();
+    this.updateSceneUseCase = dependencies.getUpdateSceneUseCase();
+    this.updateSceneStateUseCase = dependencies.getUpdateSceneStateUseCase();
     this.appDatabase = dependencies.getAppDatabase();
     this.measurementsDatabase = dependencies.getMeasurementsDatabase();
-    this.profileIdHolder = dependencies.getProfileIdHolder();
     this.updateChannelGroupTotalValueUseCase =
         dependencies.getUpdateChannelGroupTotalValueUseCase();
     this.channelToRootRelationHolderUseCase = dependencies.getChannelToRootRelationHolderUseCase();
@@ -884,7 +911,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     if (versionError.RemoteVersion >= 7
         && versionError.Version > versionError.RemoteVersion
         && profile != null
-        && profile.getPreferredProtocolVersion() != null
         && profile.getPreferredProtocolVersion() != versionError.RemoteVersion) {
 
       // set preferred to lower
@@ -917,7 +943,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
   private void onConnected() {
     Timber.d("connected");
-    DbH = DbHelper.getInstance(_context);
   }
 
   private void onDisconnected() {
@@ -941,10 +966,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
     int maxVersionSupportedByLibrary = getMaxProtoVersion();
     int serverVersion = registerResult.Version;
-    Integer storedVersion = profile.getPreferredProtocolVersion();
-    if (storedVersion == null) {
-      return;
-    }
+    int storedVersion = profile.getPreferredProtocolVersion();
     if (maxVersionSupportedByLibrary > 0
         && storedVersion < maxVersionSupportedByLibrary
         && serverVersion > storedVersion) {
@@ -965,13 +987,16 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     Timber.d("registerResult.ChannelCount=%d", registerResult.ChannelCount);
     Timber.d("registerResult.ChannelGroupCount=%d", registerResult.ChannelGroupCount);
 
-    if (registerResult.ChannelCount == 0 && DbH.setChannelsVisible(0, 2)) {
+    if (registerResult.ChannelCount == 0
+        && setChannelsVisibleUseCase.invoke(VisibilityChange.PROCESSING_TO_HIDE)) {
       updateEventsManager.emitChannelsUpdate();
     }
-    if (registerResult.ChannelGroupCount == 0 && DbH.setChannelGroupsVisible(0, 2)) {
+    if (registerResult.ChannelGroupCount == 0
+        && setChannelGroupsVisibleUseCase.invoke(VisibilityChange.PROCESSING_TO_HIDE)) {
       updateEventsManager.emitGroupsUpdate();
     }
-    if (registerResult.SceneCount == 0 && DbH.getSceneRepository().setScenesVisible(0, 2)) {
+    if (registerResult.SceneCount == 0
+        && setScenesVisibleUseCase.invoke(VisibilityChange.PROCESSING_TO_HIDE)) {
       updateEventsManager.emitScenesUpdate();
     }
 
@@ -1021,7 +1046,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private void locationUpdate(SuplaLocation location) {
     Timber.d("Location %d %s", location.Id, location.Caption);
 
-    if (DbH.updateLocation(location)) {
+    if (updateLocationUseCase.invoke(location)) {
       Timber.d("Location updated");
     }
   }
@@ -1056,7 +1081,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     }
 
     if (channel.EOL) {
-      _DataChanged = DbH.setChannelsVisible(0, 2);
+      _DataChanged = setChannelsVisibleUseCase.invoke(VisibilityChange.PROCESSING_TO_HIDE);
       removeHiddenChannelsManager.start();
       updateEventsManager.emitChannelsUpdate();
       DownloadUserIconsWorker.Companion.start(_context);
@@ -1089,13 +1114,13 @@ public class SuplaClient extends Thread implements SuplaClientApi {
         channel_group.AltIcon,
         channel_group.UserIcon);
 
-    if (DbH.updateChannelGroup(channel_group)) {
+    if (updateChannelGroupUseCase.invoke(channel_group)) {
       _DataChanged = true;
     }
 
     if (channel_group.EOL) {
       updateEventsManager.emitGroupsUpdate();
-      _DataChanged = DbH.setChannelGroupsVisible(0, 2);
+      _DataChanged = setChannelGroupsVisibleUseCase.invoke(VisibilityChange.PROCESSING_TO_HIDE);
     }
 
     if (channel_group.EOL) {
@@ -1133,11 +1158,12 @@ public class SuplaClient extends Thread implements SuplaClientApi {
         "Channel Group Relation group ID: %d channel ID: %d",
         channelgroup_relation.ChannelGroupID, channelgroup_relation.ChannelID);
 
-    if (DbH.updateChannelGroupRelation(channelgroup_relation)) {
+    if (updateChannelGroupRelationUseCase.invoke(channelgroup_relation)) {
       _DataChanged = true;
     }
 
-    if (channelgroup_relation.EOL && DbH.setChannelGroupRelationsVisible(0, 2)) {
+    if (channelgroup_relation.EOL
+        && setChannelGroupRelationsVisibleUseCase.invoke(VisibilityChange.PROCESSING_TO_HIDE)) {
       _DataChanged = true;
     }
 
@@ -1163,21 +1189,19 @@ public class SuplaClient extends Thread implements SuplaClientApi {
         scene.getCaption(),
         scene.isEol());
 
-    SceneRepository sr = DbH.getSceneRepository();
-    if (sr.updateSuplaScene(scene)) {
+    if (updateSceneUseCase.invoke(scene)) {
       updateEventsManager.emitSceneUpdate(scene.getId());
     }
 
     if (scene.isEol()) {
       updateEventsManager.emitScenesUpdate();
-      sr.setScenesVisible(0, 2);
+      setScenesVisibleUseCase.invoke(VisibilityChange.PROCESSING_TO_HIDE);
       removeHiddenScenesManager.start();
     }
   }
 
   private void sceneStateUpdate(SuplaSceneState state) {
-    SceneRepository sr = DbH.getSceneRepository();
-    if (sr.updateSuplaSceneState(state)) {
+    if (updateSceneStateUseCase.invoke(state)) {
       Timber.d(
           "Scene State sceneId: %d isDuringExecution: %b initiatorId: %d initiatorName: %s EOL: %b",
           state.getSceneId(),
@@ -1438,23 +1462,23 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     boolean emitChannelsUpdate = false;
     boolean emitGroupsUpdate = false;
 
-    if (DbH.setChannelsVisible(2, 1)) {
+    if (setChannelsVisibleUseCase.invoke(VisibilityChange.VISIBLE_TO_PROCESSING)) {
       emitChannelsUpdate = true;
     }
 
-    if (DbH.setChannelGroupsVisible(2, 1)) {
+    if (setChannelGroupsVisibleUseCase.invoke(VisibilityChange.VISIBLE_TO_PROCESSING)) {
       emitGroupsUpdate = true;
     }
 
-    if (DbH.setChannelGroupRelationsVisible(2, 1)) {
+    if (setChannelGroupRelationsVisibleUseCase.invoke(VisibilityChange.VISIBLE_TO_PROCESSING)) {
       emitGroupsUpdate = true;
     }
 
-    if (DbH.getSceneRepository().setScenesVisible(2, 1)) {
+    if (setScenesVisibleUseCase.invoke(VisibilityChange.VISIBLE_TO_PROCESSING)) {
       updateEventsManager.emitScenesUpdate();
     }
 
-    if (DbH.setChannelsOffline()) {
+    if (setChannelsOfflineUseCase.invoke()) {
       emitChannelsUpdate = true;
     }
 
@@ -1471,12 +1495,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     // Needed to trigger database migration through Room.
     appDatabase.getOpenHelper().getReadableDatabase();
     measurementsDatabase.getOpenHelper().getReadableDatabase();
-
-    // After database is ready - set current profile id
-    ProfileEntity currentProfile = profileRepository.findActiveProfile().blockingGet();
-    profileIdHolder.setProfileId(currentProfile.getId());
-
-    DbH = DbHelper.getInstance(_context);
 
     while (!canceled()) {
 
@@ -1498,18 +1516,18 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
           ProfileEntity profile = getActiveProfile();
           if (profile != null) {
+            ProfileCredentials profileData =
+                preferences.getProfileCredentialsBlocking(profile.getId());
+
             cfg.Host = profile.getServerForCurrentAuthMethod();
-            cfg.clientGUID = profile.getDecryptedGuid(_context);
-            cfg.AuthKey = profile.getDecryptedAuthKey(_context);
+            cfg.clientGUID = profileData.getGuid();
+            cfg.AuthKey = profileData.getAuthKey();
             cfg.Name = Build.MANUFACTURER + " " + Build.MODEL;
             cfg.SoftVer = "Android" + Build.VERSION.RELEASE + "/" + BuildConfig.VERSION_NAME;
 
             if (isAccessIDAuthentication(profile)) {
-              Integer accessId = profile.getAccessId();
-              if (accessId != null) {
-                cfg.AccessID = accessId;
-              }
-              cfg.AccessIDpwd = profile.getAccessIdPassword();
+              cfg.AccessID = profile.getAccessId();
+              cfg.AccessIDpwd = profileData.getAccessIdPassword();
 
               if (regTryCounter >= 2) {
                 // supla-server v1.0 for Raspberry Compatibility fix
@@ -1518,10 +1536,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
             } else {
               cfg.Email = profile.getEmail();
-              if (cfg.Email != null
-                  && !cfg.Email.isEmpty()
-                  && cfg.Host.isEmpty()
-                  && shouldAutodiscoverHost()) {
+              if (!cfg.Email.isEmpty() && cfg.Host.isEmpty() && shouldAutodiscoverHost()) {
                 cfg.Host = autodiscoverGetHost(cfg.Email);
 
                 if (hasNetworkConnection() && cfg.Host.isEmpty()) {
@@ -1535,10 +1550,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
             }
 
             oneTimePassword = "";
-            Integer protocolVersion = profile.getPreferredProtocolVersion();
-            if (protocolVersion != null) {
-              cfg.protocol_version = protocolVersion;
-            }
+            cfg.protocol_version = profile.getPreferredProtocolVersion();
             init(cfg);
           }
         }

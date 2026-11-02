@@ -17,8 +17,8 @@ package org.supla.android.features.details.detailbase.electricitymeter
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.Preferences
 import org.supla.android.R
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.local.entity.complex.Electricity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.custom.Phase
@@ -52,7 +52,7 @@ import javax.inject.Singleton
 @Singleton
 class ElectricityMeterGeneralStateHandler @Inject constructor(
   private val noExtendedValueStateHandler: NoExtendedValueStateHandler,
-  private val preferences: Preferences
+  private val preferences: ApplicationPreferences
 ) {
 
   val defaultFormatter = DefaultValueFormatter

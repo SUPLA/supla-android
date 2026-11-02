@@ -19,10 +19,11 @@ package org.supla.android.features.details.switchdetail.general
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Maybe
-import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
+import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
 import org.supla.android.core.shared.shareable
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
@@ -38,7 +39,7 @@ import org.supla.android.features.details.detailbase.electricitymeter.Electricit
 import org.supla.android.features.details.detailbase.impulsecounter.ImpulseCounterGeneralStateHandler
 import org.supla.android.features.details.detailbase.impulsecounter.ImpulseCounterState
 import org.supla.android.lib.actions.ActionId
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.lists.sensordata.RelatedChannelData
 import org.supla.android.ui.views.DeviceStateData
 import org.supla.android.ui.views.buttons.SwitchButtonState
@@ -61,6 +62,7 @@ import org.supla.core.shared.data.model.lists.ChannelIssueItem
 import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetAllChannelIssuesUseCase
 import java.util.Date
@@ -79,20 +81,44 @@ class SwitchGeneralViewModel @Inject constructor(
   private val getAllChannelIssuesUseCase: GetAllChannelIssuesUseCase,
   private val downloadEventsManager: DownloadEventsManager,
   private val dateProvider: DateProvider,
-  private val preferences: Preferences,
+  private val preferences: ApplicationPreferences,
   override val getChannelStateUseCase: GetChannelStateUseCase,
   override val getChannelIconUseCase: GetChannelIconUseCase,
   override val getCaptionUseCase: GetCaptionUseCase,
-  schedulers: SuplaSchedulers
-) : BaseViewModel<SwitchGeneralViewState, SwitchGeneralViewEvent>(SwitchGeneralViewState(), schedulers),
+  suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper,
+  threading: SuplaThreading
+) : BaseViewModel<SwitchGeneralViewState, SwitchGeneralViewEvent>(SwitchGeneralViewState(), threading),
   SwitchGeneralScope,
   ChannelGroupRelationDataEntityConvertible {
+
+  private var remoteId = 0
+  private var itemType = ItemType.CHANNEL
+
+  init {
+    setupSuplaClientMessageHandler(suplaClientMessageHandlerWrapper)
+  }
 
   fun onViewCreated(remoteId: Int) {
     observeDownload(remoteId)
   }
 
+  override fun handleSuplaMessage(message: SuplaClientMessage) {
+    (message as? SuplaClientMessage.ChannelDataChanged)?.let {
+      if (it.channelId == remoteId && itemType == ItemType.CHANNEL) {
+        loadData(remoteId, itemType)
+      }
+    }
+    (message as? SuplaClientMessage.GroupDataChanged)?.let {
+      if (it.groupId == remoteId && itemType == ItemType.GROUP) {
+        loadData(remoteId, itemType)
+      }
+    }
+  }
+
   fun loadData(remoteId: Int, itemType: ItemType, cleanupDownloading: Boolean = false) {
+    this.remoteId = remoteId
+    this.itemType = itemType
+
     when (itemType) {
       ItemType.CHANNEL -> loadChannel(remoteId, cleanupDownloading)
       ItemType.GROUP -> loadGroup(remoteId)

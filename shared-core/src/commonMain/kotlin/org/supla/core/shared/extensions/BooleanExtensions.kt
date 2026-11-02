@@ -39,10 +39,16 @@ fun <T> Boolean.forTrue(valueProvider: () -> T): T? = if (this) {
   null
 }
 
-fun <T> Boolean.forFalse(value: T): T? = if (this.not()) {
-  value
-} else {
+fun <T> Boolean.forFalse(value: T): T? = if (this) {
   null
+} else {
+  value
+}
+
+fun <T> Boolean.forFalse(valueProvider: () -> T): T? = if (this) {
+  null
+} else {
+  valueProvider()
 }
 
 fun <T> ifTrue(value: Boolean, callback: () -> T): T? =

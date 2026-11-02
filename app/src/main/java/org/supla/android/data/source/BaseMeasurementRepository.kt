@@ -28,7 +28,7 @@ import retrofit2.Response
 import timber.log.Timber
 
 interface GroupingStringMigratorDao {
-  fun emptyGroupingStringCount(remoteId: Int, profileId: Long): Single<Int>
+  fun hasEmptyGroupingString(remoteId: Int, profileId: Long): Single<Boolean>
   fun migrateGroupingString(remoteId: Int, profileId: Long): Completable
 }
 
@@ -40,7 +40,7 @@ abstract class BaseMeasurementRepository<T : Measurement, U : BaseLogEntity>(pri
 
   abstract fun map(entry: T, groupingString: String, remoteId: Int, profileId: Long): U
 
-  abstract fun findCountWithoutGroupingString(remoteId: Int, profileId: Long): Single<Int>
+  abstract fun hasEmptyGroupingString(remoteId: Int, profileId: Long): Single<Boolean>
 
   abstract fun findMinTimestamp(remoteId: Int, profileId: Long): Single<Long>
 
@@ -55,10 +55,10 @@ abstract class BaseMeasurementRepository<T : Measurement, U : BaseLogEntity>(pri
   abstract fun insert(entries: List<U>): Completable
 
   fun migrateGroupingString(remoteId: Int, profileId: Long): Completable =
-    dao.emptyGroupingStringCount(remoteId, profileId)
+    dao.hasEmptyGroupingString(remoteId, profileId)
       .flatMapCompletable {
         Timber.d("Found $it entries to migrate (channel id: $remoteId, profile id: $profileId)")
-        if (it > 0) {
+        if (it) {
           dao.migrateGroupingString(remoteId, profileId)
             .doOnComplete {
               Timber.d("Migration finished (channel id: $remoteId, profile id: $profileId)")

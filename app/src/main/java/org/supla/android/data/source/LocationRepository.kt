@@ -34,7 +34,11 @@ class LocationRepository @Inject constructor(
 
   fun findByRemoteId(remoteId: Int) = locationDao.findByRemoteId(remoteId)
 
+  suspend fun insert(locationEntity: LocationEntity) = locationDao.insert(locationEntity)
+
   fun updateLocation(locationEntity: LocationEntity) = locationDao.updateLocation(locationEntity)
+
+  suspend fun getAllLocations(): List<LocationEntity> = locationDao.getLocations()
 
   override fun count(): Observable<Int> = locationDao.count()
 

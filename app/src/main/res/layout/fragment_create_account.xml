@@ -32,7 +32,8 @@
         android:fontFamily="@font/open_sans_regular"
         android:text="@string/advanced_settings"
         android:textSize="@dimen/default_text_size"
-        app:theme="@style/Switch" />
+        app:thumbTint="@color/settings_switch_thumb"
+        app:trackTint="@color/settings_switch_track" />
 
       <FrameLayout
         android:layout_width="match_parent"

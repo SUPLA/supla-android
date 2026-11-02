@@ -36,4 +36,6 @@ data class ElectricityMeasurement(
   @SerializedName("phase3_rre") val phase3Rre: Long?,
   @SerializedName("fae_balanced") val faeBalanced: Long?,
   @SerializedName("rae_balanced") val raeBalanced: Long?
-) : Measurement
+) : Measurement {
+  companion object
+}

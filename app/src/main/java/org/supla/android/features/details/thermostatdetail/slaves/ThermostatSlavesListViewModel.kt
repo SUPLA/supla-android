@@ -18,9 +18,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.supla.android.Preferences
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.shared.shareable
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
@@ -35,12 +35,13 @@ import org.supla.android.di.FORMATTER_THERMOMETER
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.details.detailbase.base.DetailPage
 import org.supla.android.features.details.detailbase.base.ItemBundle
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.extensions.forTrue
+import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetChannelIssuesForSlavesUseCase
 import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
@@ -55,13 +56,13 @@ class ThermostatSlavesListViewModel @Inject constructor(
   private val getChannelIssuesForSlavesUseCase: GetChannelIssuesForSlavesUseCase,
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
-  private val preferences: Preferences,
+  private val preferences: ApplicationPreferences,
   val getCaptionUseCase: GetCaptionUseCase,
   val dateProvider: DateProvider,
-  schedulers: SuplaSchedulers,
+  threading: SuplaThreading,
 ) : BaseViewModel<ThermostatSlavesListViewModelState, ThermostatSlavesListViewEvent>(
   ThermostatSlavesListViewModelState(),
-  schedulers
+  threading
 ),
   ThermostatSlavesListScope {
 
@@ -91,6 +92,7 @@ class ThermostatSlavesListViewModel @Inject constructor(
     sendEvent(
       ThermostatSlavesListViewEvent.OpenDetails(
         bundle = ItemBundle(slave.channelId, slave.deviceId, slave.profileId, ItemType.CHANNEL, slave.function),
+        title = slave.caption,
         pages = listOf(DetailPage.THERMOSTAT, DetailPage.THERMOSTAT_HISTORY)
       )
     )
@@ -166,7 +168,7 @@ class ThermostatSlavesListViewModel @Inject constructor(
 sealed interface ThermostatSlavesListViewEvent : ViewEvent {
   data class ShowInfo(val data: ThermostatData) : ThermostatSlavesListViewEvent
   data class ChangeCaption(val data: ThermostatData) : ThermostatSlavesListViewEvent
-  data class OpenDetails(val bundle: ItemBundle, val pages: List<DetailPage>) : ThermostatSlavesListViewEvent
+  data class OpenDetails(val bundle: ItemBundle, val title: LocalizedString, val pages: List<DetailPage>) : ThermostatSlavesListViewEvent
 }
 
 data class ThermostatSlavesListViewModelState(

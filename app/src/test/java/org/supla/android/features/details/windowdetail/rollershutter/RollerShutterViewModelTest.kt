@@ -30,11 +30,13 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
-import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
+import org.supla.android.core.MainDispatcherRule
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
@@ -55,7 +57,7 @@ import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemPosi
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.AuthorizationReason
@@ -77,6 +79,9 @@ import org.supla.core.shared.infrastructure.LocalizedStringId
 
 class RollerShutterViewModelTest :
   BaseViewModelTest<RollerShutterViewModelState, BaseWindowViewEvent, RollerShutterViewModel>(MockSchedulers.MOCKK) {
+
+  @get:Rule
+  override val mainDispatcherRule = MainDispatcherRule()
 
   @RelaxedMockK
   lateinit var loadingTimeoutManager: LoadingTimeoutManager
@@ -103,7 +108,7 @@ class RollerShutterViewModelTest :
   lateinit var vibrationHelper: VibrationHelper
 
   @RelaxedMockK
-  lateinit var preferences: Preferences
+  lateinit var preferences: ApplicationPreferences
 
   @RelaxedMockK
   lateinit var dateProvider: DateProvider
@@ -121,7 +126,7 @@ class RollerShutterViewModelTest :
   lateinit var authorizeUseCase: AuthorizeUseCase
 
   @RelaxedMockK
-  override lateinit var schedulers: SuplaSchedulers
+  override lateinit var threading: SuplaThreading
 
   @InjectMockKs
   override lateinit var viewModel: RollerShutterViewModel

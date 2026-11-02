@@ -17,61 +17,28 @@ package org.supla.android.db.room.app
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.database.sqlite.SQLiteDatabase
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import org.supla.android.data.source.local.entity.ProfileEntity
-import org.supla.android.data.source.local.view.ChannelView
-import org.supla.android.data.source.local.view.SceneView
 import org.supla.android.db.room.SqlExecutor
-import org.supla.android.db.room.app.migrations.CHANNEL_GROUP_VALUE_VIEW_NAME
-import org.supla.android.profile.ProfileMigrator
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AppDatabaseCallback @Inject constructor(
-  private val profileMigrator: ProfileMigrator
-) : RoomDatabase.Callback(), SqlExecutor {
+class AppDatabaseCallback @Inject constructor() : RoomDatabase.Callback(), SqlExecutor {
 
   private var destructivelyMigrated = false
 
-  override fun onCreate(db: SupportSQLiteDatabase) {
-    execSQL(db, SceneView.SQL)
-    execSQL(db, ChannelView.SQL)
-  }
+  override fun onCreate(db: SupportSQLiteDatabase) {}
 
   override fun onOpen(db: SupportSQLiteDatabase) {
     if (!destructivelyMigrated) {
       return
     }
-    Timber.i("Destructively migrated - trying to restore profile")
-
-    val profile = profileMigrator.makeProfileUsingPreferences() ?: return
-    try {
-      db.insert(ProfileEntity.TABLE_NAME, SQLiteDatabase.CONFLICT_IGNORE, profile.contentValues)
-      Timber.i("Destructively migrated - profile restored")
-    } catch (exception: Exception) {
-      Timber.w(exception, "Profile restore failed - ${exception.message}")
-    }
+    Timber.i("Destructively migrated")
   }
 
   override fun onDestructiveMigration(db: SupportSQLiteDatabase) {
     destructivelyMigrated = true
-
-    silentSql(db, "DROP VIEW ${SceneView.NAME}")
-    silentSql(db, "DROP VIEW $CHANNEL_GROUP_VALUE_VIEW_NAME")
-    silentSql(db, "DROP VIEW ${ChannelView.NAME}")
-    execSQL(db, SceneView.SQL)
-    execSQL(db, ChannelView.SQL)
-  }
-
-  private fun silentSql(db: SupportSQLiteDatabase, sqlString: String) {
-    try {
-      execSQL(db, sqlString)
-    } catch (exception: Exception) {
-      Timber.w(exception, "Failed by `$sqlString` - ${exception.message}")
-    }
   }
 }

@@ -30,6 +30,7 @@ import org.junit.Before
 import org.junit.Test
 import org.supla.android.data.source.RoomUserIconRepository
 import org.supla.android.data.source.local.entity.UserIconEntity
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.images.ImageCacheProxy
 import org.supla.android.images.ImageId
 import org.supla.android.widget.WidgetManager
@@ -38,6 +39,9 @@ class LoadUserIconsIntoCacheUseCaseTest {
 
   @MockK
   private lateinit var userIconRepository: RoomUserIconRepository
+
+  @MockK
+  private lateinit var updateEventsManager: UpdateEventsManager
 
   @MockK
   private lateinit var imageCacheProxy: ImageCacheProxy
@@ -54,7 +58,7 @@ class LoadUserIconsIntoCacheUseCaseTest {
   }
 
   @Test
-  fun `should add image when available and update all widges`() {
+  fun `should add image when available and update all widgets`() {
     // given
     val iconRemoteId = 234
     val profileId = 345L
@@ -74,13 +78,16 @@ class LoadUserIconsIntoCacheUseCaseTest {
       null,
       profileId
     )
-    every { imageCacheProxy.addImage(ImageId(iconRemoteId, 1, profileId), firstImage) } just Runs
-    every { imageCacheProxy.addImage(ImageId(iconRemoteId, 3, profileId), thirdImage) } just Runs
-    every { imageCacheProxy.addImage(ImageId(iconRemoteId, 1, profileId).setNightMode(true), nightImage) } just Runs
+    every { imageCacheProxy.addImage(ImageId(iconRemoteId, 1, profileId), firstImage) } returns true
+    every { imageCacheProxy.addImage(ImageId(iconRemoteId, 3, profileId), thirdImage) } returns true
+    every { imageCacheProxy.addImage(ImageId(iconRemoteId, 1, profileId).setNightMode(true), nightImage) } returns true
     every { imageCacheProxy.sum() } returnsMany listOf(0, 3)
     every { imageCacheProxy.size() } returns 3
     every { userIconRepository.loadAllIcons() } returns Observable.just(listOf(entity))
     every { widgetManager.updateAllWidgets() } just Runs
+    every { updateEventsManager.emitChannelsUpdate() } just Runs
+    every { updateEventsManager.emitGroupsUpdate() } just Runs
+    every { updateEventsManager.emitScenesUpdate() } just Runs
 
     // when
     val testObserver = useCase.invoke().test()
@@ -94,11 +101,14 @@ class LoadUserIconsIntoCacheUseCaseTest {
       imageCacheProxy.size()
       userIconRepository.loadAllIcons()
       widgetManager.updateAllWidgets()
+      updateEventsManager.emitChannelsUpdate()
+      updateEventsManager.emitGroupsUpdate()
+      updateEventsManager.emitScenesUpdate()
     }
     verify(exactly = 2) {
       imageCacheProxy.sum()
     }
-    confirmVerified(imageCacheProxy, userIconRepository, widgetManager)
+    confirmVerified(imageCacheProxy, userIconRepository, widgetManager, updateEventsManager)
   }
 
   @Test
@@ -120,6 +130,6 @@ class LoadUserIconsIntoCacheUseCaseTest {
     verify(exactly = 2) {
       imageCacheProxy.sum()
     }
-    confirmVerified(imageCacheProxy, userIconRepository, widgetManager)
+    confirmVerified(imageCacheProxy, userIconRepository, widgetManager, updateEventsManager)
   }
 }

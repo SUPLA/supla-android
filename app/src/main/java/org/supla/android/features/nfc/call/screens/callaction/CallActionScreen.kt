@@ -41,13 +41,14 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.supla.android.R
 import org.supla.android.core.shared.invoke
+import org.supla.android.core.ui.ViewState
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.nfc.call.CallActionFromData
 import org.supla.android.features.nfc.call.CallActionFromUrl
 import org.supla.android.features.nfc.call.screens.Navigator
-import org.supla.android.features.nfc.call.screens.ScreenScaffold
 import org.supla.android.lib.actions.ActionId
+import org.supla.android.main.ViewModelHost
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.DotsLoadingIndicator
 import org.supla.android.ui.views.Image
@@ -67,7 +68,7 @@ interface CallActionScreenScope {
 data class CallActionScreenState(
   val step: TagProcessingStep = TagProcessingStep.Pending,
   val tagData: TagData? = null
-) {
+) : ViewState() {
   data class TagData(
     val name: String,
     val actionId: ActionId?,
@@ -82,7 +83,7 @@ fun CallActionScreen(
   viewModel: CallActionViewModel = hiltViewModel()
 ) {
   LaunchedEffect(key.url) { viewModel.onLaunchWithUrl(key.url, key.readOnly) }
-  ScreenScaffold(
+  ViewModelHost(
     viewModel = viewModel,
     eventHandler = { handleEvent(it, navigator) },
     content = { viewModel.View(it) }
@@ -96,7 +97,7 @@ fun CallActionScreen(
   viewModel: CallActionViewModel = hiltViewModel()
 ) {
   LaunchedEffect(key.id) { viewModel.onLaunchWithId(key.id, key.readOnly) }
-  ScreenScaffold(
+  ViewModelHost(
     viewModel = viewModel,
     eventHandler = { handleEvent(it, navigator) },
     content = { viewModel.View(it) }

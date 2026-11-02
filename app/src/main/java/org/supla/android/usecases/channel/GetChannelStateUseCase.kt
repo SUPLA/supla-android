@@ -117,7 +117,11 @@ class GetChannelStateUseCase @Inject constructor(
       SuplaFunction.CONTAINER_LEVEL_SENSOR,
       SuplaFunction.FLOOD_SENSOR,
       SuplaFunction.MOTION_SENSOR,
-      SuplaFunction.BINARY_SENSOR -> getOnOff(value.isClosed)
+      SuplaFunction.BINARY_SENSOR,
+      SuplaFunction.SMOKE_SENSOR,
+      SuplaFunction.CARBON_MONOXIDE_SENSOR,
+      SuplaFunction.GAS_SENSOR,
+      SuplaFunction.HVAC_HRV -> getOnOff(value.isClosed)
       SuplaFunction.DIMMER, SuplaFunction.DIMMER_CCT -> getOnOff(value.brightness > 0)
       SuplaFunction.RGB_LIGHTING -> getOnOff(value.colorBrightness > 0)
       SuplaFunction.DIMMER_AND_RGB_LIGHTING,
@@ -241,7 +245,11 @@ class GetChannelStateUseCase @Inject constructor(
         SuplaFunction.CONTAINER_LEVEL_SENSOR,
         SuplaFunction.FLOOD_SENSOR,
         SuplaFunction.MOTION_SENSOR,
-        SuplaFunction.BINARY_SENSOR -> ChannelState.Default(ChannelState.Value.OFF)
+        SuplaFunction.BINARY_SENSOR,
+        SuplaFunction.SMOKE_SENSOR,
+        SuplaFunction.CARBON_MONOXIDE_SENSOR,
+        SuplaFunction.GAS_SENSOR,
+        SuplaFunction.HVAC_HRV -> ChannelState.Default(ChannelState.Value.OFF)
         SuplaFunction.DIMMER_AND_RGB_LIGHTING,
         SuplaFunction.DIMMER_CCT_AND_RGB ->
           ChannelState.RgbAndDimmer(ChannelState.Value.OFF, ChannelState.Value.OFF)
@@ -336,7 +344,11 @@ class GetChannelStateUseCase @Inject constructor(
         SuplaFunction.CONTAINER_LEVEL_SENSOR,
         SuplaFunction.FLOOD_SENSOR,
         SuplaFunction.MOTION_SENSOR,
-        SuplaFunction.BINARY_SENSOR ->
+        SuplaFunction.BINARY_SENSOR,
+        SuplaFunction.SMOKE_SENSOR,
+        SuplaFunction.CARBON_MONOXIDE_SENSOR,
+        SuplaFunction.GAS_SENSOR,
+        SuplaFunction.HVAC_HRV ->
           if (actionId == ActionId.TURN_OFF) {
             ChannelState.Default(ChannelState.Value.OFF)
           } else {
@@ -456,7 +468,7 @@ private class ChannelGroupEntityStateWrapper(
   override val shadingSystemReversedClosed: Boolean
     get() = getActivePercentage() < 100
   override val containerValue: ContainerValue
-    get() = ContainerValue(SuplaChannelAvailabilityStatus.Companion.from(group.online > 0), emptyList(), 0)
+    get() = ContainerValue(SuplaChannelAvailabilityStatus.from(group.online > 0), emptyList(), 0)
 
   private fun getActivePercentage(valueIndex: Int = 0) =
     getGroupActivePercentageUseCase(group, valueIndex)
@@ -490,7 +502,7 @@ private class ChannelValueStateWrapper(private val value: ChannelValue?) : Value
     }
   override val containerValue: ContainerValue
     get() = value?.asContainerValue() ?: ContainerValue(
-      SuplaChannelAvailabilityStatus.Companion.from(value?.onLine ?: false),
+      SuplaChannelAvailabilityStatus.from(value?.onLine ?: false),
       emptyList(),
       0
     )
@@ -519,7 +531,7 @@ private class ChannelGroupStateWrapper(
   override val shadingSystemReversedClosed: Boolean
     get() = getActivePercentage() <= 0
   override val containerValue: ContainerValue
-    get() = ContainerValue(SuplaChannelAvailabilityStatus.Companion.from(group.onLine), emptyList(), 0)
+    get() = ContainerValue(SuplaChannelAvailabilityStatus.from(group.onLine), emptyList(), 0)
 
   private fun getActivePercentage(valueIndex: Int = 0) =
     getGroupActivePercentageUseCase(group, valueIndex)

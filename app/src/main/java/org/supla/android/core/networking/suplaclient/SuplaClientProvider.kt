@@ -74,4 +74,6 @@ interface SuplaClientApi : SuplaClientSharedApi {
   fun setLocationCaption(remoteId: Int, caption: String): Boolean
 
   fun setSceneCaption(remoteId: Int, caption: String): Boolean
+
+  fun setLightsourceLifespan(remoteId: Int, resetCounter: Boolean, setTime: Boolean, lifespan: Int): Boolean
 }

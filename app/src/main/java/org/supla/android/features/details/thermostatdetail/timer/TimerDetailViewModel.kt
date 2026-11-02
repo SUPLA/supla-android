@@ -19,11 +19,13 @@ package org.supla.android.features.details.thermostatdetail.timer
 
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import androidx.compose.ui.unit.dp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
+import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
@@ -55,9 +57,11 @@ import org.supla.android.extensions.shift
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.extensions.yearNo
 import org.supla.android.features.details.thermostatdetail.timer.ui.ThermostatTimerViewScope
-import org.supla.android.features.details.thermostatdetail.ui.TimerHeaderState
+import org.supla.android.features.details.thermostatdetail.ui.TimerHeaderHelper
+import org.supla.android.images.ImageId
 import org.supla.android.lib.actions.SubjectType
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
+import org.supla.android.ui.views.DeviceStateData
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.client.ExecuteThermostatActionUseCase
 import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
@@ -66,6 +70,7 @@ import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import java.util.Date
 import javax.inject.Inject
@@ -73,32 +78,44 @@ import javax.inject.Named
 
 @HiltViewModel
 class TimerDetailViewModel @Inject constructor(
+  private val executeThermostatActionUseCase: ExecuteThermostatActionUseCase,
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   private val channelConfigEventsManager: ChannelConfigEventsManager,
-  private val executeThermostatActionUseCase: ExecuteThermostatActionUseCase,
+  private val loadingTimeoutManager: LoadingTimeoutManager,
   private val suplaClientProvider: SuplaClientProvider,
   private val dateProvider: DateProvider,
-  private val loadingTimeoutManager: LoadingTimeoutManager,
   @param:Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter,
-  schedulers: SuplaSchedulers
-) : BaseViewModel<TimerDetailViewState, TimerDetailViewEvent>(TimerDetailViewState(thermometerValueFormatter), schedulers),
+  suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper,
+  threading: SuplaThreading
+) : BaseViewModel<TimerDetailViewState, TimerDetailViewEvent>(TimerDetailViewState(thermometerValueFormatter), threading),
   ThermostatTimerViewScope {
 
+  private var remoteId = 0
   private val channelSubject: PublishSubject<ChannelDataEntity> = PublishSubject.create()
+
+  init {
+    setupSuplaClientMessageHandler(suplaClientMessageHandlerWrapper)
+  }
 
   override fun onViewCreated() {
     loadingTimeoutManager.watch({ currentState().loadingState }) {
       updateState { state ->
-        state.remoteId?.let {
-          loadData(it)
-        }
+        loadData()
 
         state.copy(loadingState = state.loadingState.changingLoading(false, dateProvider))
       }
     }.disposeBySelf()
   }
 
-  fun loadData(remoteId: Int) {
+  override fun handleSuplaMessage(message: SuplaClientMessage) {
+    (message as? SuplaClientMessage.ChannelDataChanged)?.let {
+      if (it.channelId == remoteId && (it.timerValueChanged || !it.extendedValueChanged)) {
+        loadData()
+      }
+    }
+  }
+
+  fun loadData() {
     readChannelByRemoteIdUseCase.invoke(remoteId)
       .attach()
       .subscribeBy(
@@ -110,6 +127,7 @@ class TimerDetailViewModel @Inject constructor(
   }
 
   fun observeData(remoteId: Int) {
+    this.remoteId = remoteId
     Observable.combineLatest(
       channelSubject.hide(),
       channelConfigEventsManager.observerConfig(remoteId)
@@ -236,7 +254,6 @@ class TimerDetailViewModel @Inject constructor(
   override fun onStartTimer() {
     val state = currentState()
 
-    val (remoteId) = guardLet(state.remoteId) { return }
     val (duration) = guardLet(state.getTimerDuration(dateProvider.currentDate())) { return }
 
     updateState {
@@ -274,8 +291,6 @@ class TimerDetailViewModel @Inject constructor(
   }
 
   override fun cancelTimerStartManual() {
-    val (remoteId) = guardLet(currentState().remoteId) { return }
-
     updateState { it.copy(loadingState = it.loadingState.changingLoading(true, dateProvider)) }
 
     executeThermostatActionUseCase.invoke(
@@ -288,8 +303,6 @@ class TimerDetailViewModel @Inject constructor(
   }
 
   override fun cancelTimerStartProgram() {
-    val (remoteId) = guardLet(currentState().remoteId) { return }
-
     updateState { it.copy(loadingState = it.loadingState.changingLoading(true, dateProvider)) }
 
     executeThermostatActionUseCase.invoke(
@@ -355,7 +368,6 @@ class TimerDetailViewModel @Inject constructor(
 
     updateState {
       it.copy(
-        remoteId = channel.remoteId,
         currentMode = thermostatValue.mode,
         currentDate = currentDate,
         channelFunction = channel.function.value,
@@ -400,7 +412,6 @@ class TimerDetailViewModel @Inject constructor(
 
 data class TimerDetailViewState(
   val thermometerValueFormatter: ValueFormatter,
-  val remoteId: Int? = null,
   val currentMode: SuplaHvacMode? = null,
   val currentDate: Date? = null,
   val channelFunction: Int? = null,
@@ -430,7 +441,7 @@ data class TimerDetailViewState(
   // In progress state
   val timerEndDate: Date? = null
 
-) : ViewState(), TimerHeaderState {
+) : ViewState() {
 
   // Temperature
   val temperaturesRange: ClosedFloatingPointRange<Float>
@@ -497,21 +508,18 @@ data class TimerDetailViewState(
       }
     }
 
-  override val endDateText: LocalizedString
-    get() = TimerHeaderState.endDateText(timerEndDate)
-
-  override val currentStateIcon: Int?
-    get() = TimerHeaderState.currentStateIcon(currentMode)
-
-  override val currentStateIconColor: Int
-    get() = TimerHeaderState.currentStateIconColor(currentMode)
-
-  override val currentStateValue: LocalizedString =
-    TimerHeaderState.currentStateValue(
-      currentMode,
-      temperature?.setpointHeat,
-      temperature?.setpointCool,
-      thermometerValueFormatter
+  val deviceState: DeviceStateData
+    get() = DeviceStateData(
+      label = TimerHeaderHelper.endDateText(timerEndDate),
+      icon = TimerHeaderHelper.currentStateIcon(currentMode)?.let { ImageId(it) },
+      value = TimerHeaderHelper.currentStateValue(
+        currentMode,
+        temperature?.setpointHeat,
+        temperature?.setpointCool,
+        thermometerValueFormatter
+      ),
+      iconTint = TimerHeaderHelper.currentStateIconColor(currentMode),
+      iconSize = 16.dp
     )
 
   val startEnabled: Boolean =

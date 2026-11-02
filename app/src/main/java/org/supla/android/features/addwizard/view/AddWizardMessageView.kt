@@ -59,7 +59,7 @@ fun AddWizardMessageScope.AddWizardMessageView(
 
 private val previewScope = object : AddWizardMessageScope {
   override fun onStepFinished(step: AddWizardScreen) {}
-  override fun onClose(step: AddWizardScreen) {}
+  override fun onClose() {}
   override fun onAgain() {}
 }
 

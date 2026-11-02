@@ -89,8 +89,8 @@ class TemperatureAndHumidityLogRepository @Inject constructor(
       profileId = profileId
     )
 
-  override fun findCountWithoutGroupingString(remoteId: Int, profileId: Long): Single<Int> =
-    temperatureAndHumidityLogDao.emptyGroupingStringCount(remoteId, profileId)
+  override fun hasEmptyGroupingString(remoteId: Int, profileId: Long): Single<Boolean> =
+    temperatureAndHumidityLogDao.hasEmptyGroupingString(remoteId, profileId)
 
   override fun count(): Observable<Int> = temperatureAndHumidityLogDao.count()
 

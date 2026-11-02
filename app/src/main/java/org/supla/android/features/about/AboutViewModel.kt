@@ -19,12 +19,13 @@ package org.supla.android.features.about
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.BuildConfig
+import org.supla.android.R
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.formatting.DateFormatter
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import java.util.Date
 import javax.inject.Inject
 
@@ -32,8 +33,12 @@ import javax.inject.Inject
 class AboutViewModel @Inject constructor(
   private val dateFormatter: DateFormatter,
   private val encryptedPreferences: EncryptedPreferences,
-  suplaSchedulers: SuplaSchedulers
-) : BaseViewModel<AboutViewModelState, AboutViewEvent>(AboutViewModelState(), suplaSchedulers) {
+  threading: SuplaThreading
+) : BaseViewModel<AboutViewModelState, AboutViewEvent>(
+  defaultState = AboutViewModelState(),
+  threading = threading,
+  titleRes = R.string.about
+) {
 
   private var versionClickCount: Int = 0
 

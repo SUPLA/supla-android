@@ -24,7 +24,7 @@ import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.source.ChannelGroupRelationRepository
 import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.ChannelRelationRepository
-import org.supla.android.data.source.RoomChannelRepository
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
@@ -50,7 +50,7 @@ import javax.inject.Singleton
 @Singleton
 class ReadGroupWithChannelsUseCase @Inject constructor(
   private val channelGroupRepository: ChannelGroupRepository,
-  private val channelRepository: RoomChannelRepository,
+  private val channelRepository: ChannelRepository,
   private val channelRelationRepository: ChannelRelationRepository,
   private val channelGroupRelationRepository: ChannelGroupRelationRepository,
   private val getChannelChildrenTreeUseCase: GetChannelChildrenTreeUseCase

@@ -19,17 +19,16 @@ package org.supla.android.widget.single
 
 import android.content.Context
 import androidx.hilt.work.HiltWorker
-import androidx.work.Constraints
 import androidx.work.ExistingWorkPolicy
-import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import org.supla.android.core.infrastructure.WorkManagerProxy
+import org.supla.android.core.infrastructure.suplaclient.SingleCallProvider
 import org.supla.android.core.notifications.NotificationsHelper
 import org.supla.android.core.notifications.SINGLE_WIDGET_NOTIFICATION_ID
-import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.widget.WidgetPreferences
 import org.supla.android.widget.shared.WidgetAction
@@ -44,7 +43,7 @@ private const val WORK_ID_PREFIX = "SINGLE_WIDGET_"
 class SingleWidgetCommandWorker @AssistedInject constructor(
   widgetConfigurationUpdater: WidgetConfigurationUpdater,
   notificationsHelper: NotificationsHelper,
-  singleCallProvider: SingleCall.Provider,
+  singleCallProvider: SingleCallProvider,
   widgetPreferences: WidgetPreferences,
   vibrationHelper: VibrationHelper,
   @Assisted appContext: Context,
@@ -67,10 +66,6 @@ class SingleWidgetCommandWorker @AssistedInject constructor(
   override fun valueWithUnit(): Boolean = false
 
   companion object {
-    val constraint = Constraints.Builder()
-      .setRequiredNetworkType(NetworkType.CONNECTED)
-      .build()
-
     fun enqueue(widgetIds: IntArray, widgetAction: WidgetAction, workManagerProxy: WorkManagerProxy) {
       val workName = getWorkId(WORK_ID_PREFIX, widgetIds)
       Timber.d("Enqueueing single widget command worker $workName")
@@ -78,7 +73,7 @@ class SingleWidgetCommandWorker @AssistedInject constructor(
 
       val widgetsWork = OneTimeWorkRequestBuilder<SingleWidgetCommandWorker>()
         .setInputData(inputData)
-        .setConstraints(constraint)
+        .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
         .build()
 
       // Work for widget ID is unique, so no other worker for the same ID will be started

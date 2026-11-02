@@ -34,6 +34,9 @@
   <string name="channel_caption_thermometer">Teplomer</string>
   <string name="channel_caption_humidity">Vlhkosť</string>
   <string name="channel_caption_humidityandtemperature">Teplota a vlhkosť</string>
+  <string name="channel_caption_smoke_sensor">Snímač dymu</string>
+  <string name="channel_caption_carbon_monoxide_sensor">Snímač oxidu uhoľnatého</string>
+  <string name="channel_caption_gas_sensor">Snímač plynu</string>
   <string name="channel_caption_windsensor">Rýchlosť vetra</string>
   <string name="channel_caption_pressuresensor">Snímač tlaku</string>
   <string name="channel_caption_rainsensor">Meranie zrážok</string>
@@ -93,7 +96,7 @@
 
   <string name="add_wizard_step_3_message_3"><![CDATA[Stlačte tlačidlo <b>ŠTART</b> a začnite konfiguráciu.]]></string>
 
-  <string name="wizard_no_internetwifi">Predtým, ako začnete, pripojte sa k internetu cez Wi-Fi sieť, ktorá bude používať aj vykonávacie zariadenia na pripojenie k serveru.</string>
+  <string name="wizard_no_internetwifi">Predtým, ako začnete, uistite sa, že Wi-Fi je zapnuté.</string>
   <string name="wizard_wifi_error">Wi-Fi sieť je vypnutá alebo sa nedá načítať jej identifikátor alebo názov!</string>
   <string name="wizard_location_error">Ak má sprievodca pridávania fungovať správne, musí byť na danom zariadení zapnutá služba lokalizácie. Prejdite na nastavenia systému, následne si vyberte možnosť „Lokalizácia” a uistite sa, že je zapnutá.</string>
   <string name="wizard_scan_timeout">Bola prekročená lehota čakana na dokončenie vyhľadávania Wi-Fi sietí!</string>
@@ -651,6 +654,11 @@
   <string name="settings_battery_level_warning">Upozornenie na slabú batériu</string>
   <string name="channel_battery_level">Úroveň batérie: %1$d%%</string>
   <string name="channel_battery_level_with_info">Úroveň batérie (%1$d - %2$s): %3$d%%</string>
+  <string name="battery_state">Stav batérie</string>
+  <string name="channel_battery_low">Nízka úroveň batérie</string>
+  <string name="channel_battery_low_with_info">Nízka úroveň batérie (%1$d - %2$s)</string>
+  <string name="channel_battery_state_low_value">nízka</string>
+  <string name="channel_battery_state_normal_value">normálna</string>
   <string name="channel_btn_stop">Zastaviť</string>
   <string name="android_auto_action">Činnosť: %1$s</string>
   <string name="android_auto_empty_header">Vyžaduje sa konfigurácia</string>
@@ -827,8 +835,17 @@
   <string name="scene_inactive">Scéna je neaktívna</string>
   <string name="nfc_detail_action_added">Pridané do aplikácie</string>
   <string name="general_search">Hľadať</string>
+  <string name="general_open_drawer">Otvoriť menu</string>
+  <string name="general_back">Späť</string>
   <string name="toolbar_search_hint">Zadajte aspoň 2 znaky…</string>
   <string name="details_timer_select_program">Vyberte program</string>
+  <string name="details_recuperator_ventilation">Vetranie</string>
+  <string name="details_recuperator_empty_house">Prázdny dom</string>
+  <string name="details_recuperator_open_window">Otvoriť okno</string>
+  <string name="channel_caption_hvac_hrv">Vetranie s rekuperáciou tepla</string>
+  <string name="details_recuperator_manual_mode_label">Ručný režim</string>
+  <string name="profile_selected">Vybraný profil</string>
+  <string name="general_clear_search">Vymazať vyhľadávanie</string>
   <string name="settings_show_unavailable_channels">Skryť kanály, ktoré nie sú dostupné z dôvodu konfigurácie zariadenia</string>
   <string name="details_em_active_energy_balance">Bilancia činnej energie</string>
   <string name="details_em_settings_list_metric">Vybraná hodnota</string>
@@ -841,4 +858,12 @@
   <string name="details_em_on_list_balance">Metóda bilancovania energie</string>
   <string name="details_em_on_list_value">Rozsah dát</string>
   <string name="details_em_on_list">Zobrazenie v zozname kanálov</string>
+  <string name="wizard_result_certificate_untrusted">Certifikát zariadenia nie je dôveryhodný. Uistite sa, že sa pripájate k správnemu zariadeniu a že jeho softvér je aktuálny.</string>
+  <string name="wizard_result_certificate_expired">Platnosť certifikátu zariadenia vypršala. Aktualizujte softvér zariadenia alebo kontaktujte podporu. Skontrolujte tiež, či je v telefóne správny dátum a čas.</string>
+  <string name="wizard_result_certificate_not_yet_valid">Certifikát zariadenia ešte nie je platný. Skontrolujte dátum a čas v telefóne a zariadení a skúste to znova.</string>
+  <string name="wizard_result_certificate_revoked">Certifikát zariadenia bol odvolaný. Z bezpečnostných dôvodov nie je možné nadviazať spojenie. Aktualizujte softvér zariadenia alebo kontaktujte podporu.</string>
+  <string name="wizard_result_certificate_host_mismatch">Certifikát nezodpovedá tomuto zariadeniu. Uistite sa, že sa aplikácia pripája k správnemu zariadeniu.</string>
+  <string name="wizard_result_certificate_pin_mismatch">Certifikát zariadenia sa líši od očakávaného. Aktualizujte aplikáciu aj softvér zariadenia a skúste to znova.</string>
+  <string name="wizard_result_certificate_unsupported_security">Zariadenie používa nepodporované nastavenia zabezpečenia. Aktualizujte softvér zariadenia a skúste to znova.</string>
+  <string name="wizard_result_certificate_different_names">Zariadenie má nesprávny certifikát - názvy sa nezhodujú (certifikát: %1$s, zariadenie: %2$s)</string>
 </resources>

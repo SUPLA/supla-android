@@ -19,6 +19,7 @@ package org.supla.android.core.networking.suplacloud
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.supla.android.BuildConfig
 import javax.inject.Inject
 import javax.inject.Singleton
 import javax.net.ssl.X509TrustManager
@@ -35,7 +36,11 @@ class OkHttpClientProvider @Inject constructor(
       .addInterceptor(oauthInterceptor)
       .addInterceptor(
         HttpLoggingInterceptor().also {
-          it.level = HttpLoggingInterceptor.Level.BODY
+          if (BuildConfig.DEBUG) {
+            it.level = HttpLoggingInterceptor.Level.BODY
+          } else {
+            it.level = HttpLoggingInterceptor.Level.BASIC
+          }
         }
       )
       .authenticator(tokenAuthenticator)

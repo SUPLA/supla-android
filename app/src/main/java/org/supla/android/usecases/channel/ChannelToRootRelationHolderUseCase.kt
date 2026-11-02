@@ -18,7 +18,7 @@ package org.supla.android.usecases.channel
  */
 
 import org.supla.android.data.source.ChannelRelationRepository
-import org.supla.android.data.source.RoomChannelRepository
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import javax.inject.Inject
@@ -26,7 +26,7 @@ import javax.inject.Singleton
 
 @Singleton
 class ChannelToRootRelationHolderUseCase @Inject constructor(
-  private val channelRepository: RoomChannelRepository,
+  private val channelRepository: ChannelRepository,
   private val channelRelationRepository: ChannelRelationRepository
 ) {
 

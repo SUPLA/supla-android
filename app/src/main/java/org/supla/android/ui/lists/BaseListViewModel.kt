@@ -17,53 +17,75 @@ package org.supla.android.ui.lists
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener
-import androidx.annotation.CallSuper
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import io.reactivex.rxjava3.core.Observable
-import org.supla.android.PREF_CHANNEL_HEIGHT
-import org.supla.android.Preferences
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.extensions.subscribeBy
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
+import org.supla.android.tools.VibrationHelper
 import org.supla.android.usecases.profile.CloudUrl
 import org.supla.android.usecases.profile.LoadActiveProfileUrlUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
+import timber.log.Timber
 
 private const val CLICK_EVENT_DELAY_MS = 250
 
 abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
-  private val preferences: Preferences,
+  private val vibrationHelper: VibrationHelper,
   private val dateProvider: DateProvider,
-  schedulers: SuplaSchedulers,
+  threading: SuplaThreading,
   defaultState: S,
   private val loadActiveProfileUrlUseCase: LoadActiveProfileUrlUseCase? = null,
-) : BaseViewModel<S, E>(defaultState, schedulers) {
+) : BaseViewModel<S, E>(defaultState, threading) {
 
   protected var lastItemOpenTime: Long = 0
 
-  private val preferencesChangeListener = OnSharedPreferenceChangeListener { _, key ->
-    if (key.equals(PREF_CHANNEL_HEIGHT)) {
-      sendReassignEvent()
+  var listLoaded by mutableStateOf(false)
+    private set
+
+  protected val listState = mutableStateListOf<ListItem>()
+  val list: List<ListItem> = listState
+
+  open fun onDragStarted(remoteId: Int) {
+    vibrationHelper.vibrate()
+  }
+
+  protected abstract fun reloadList()
+
+  protected fun updateDefaultItem(item: ListItem) {
+    updateItem(item) { it is ListItem.DefaultItem }
+  }
+
+  protected fun updateSceneItem(item: ListItem) {
+    updateItem(item) { it is ListItem.SceneItem }
+  }
+
+  private fun updateItem(item: ListItem, matcher: (ListItem) -> Boolean) {
+    try {
+      val index = listState.indexOfFirst { matcher(it) && it.remoteId == item.remoteId }
+      if (index >= 0 && listState[index] != item) {
+        listState[index] = item
+      }
+    } catch (ex: Exception) {
+      Timber.e(ex, "Item update failed! (id: `${item.remoteId}`)")
     }
   }
 
-  init {
-    preferences.registerChangeListener(preferencesChangeListener)
+  protected fun updateItems(items: List<ListItem>) {
+    if (!listLoaded) {
+      listLoaded = true
+    }
+
+    listState.clear()
+    listState.addAll(items)
   }
-
-  @CallSuper
-  override fun onCleared() {
-    preferences.unregisterChangeListener(preferencesChangeListener)
-    super.onCleared()
-  }
-
-  protected abstract fun sendReassignEvent()
-
-  protected abstract fun reloadList()
 
   protected fun observeUpdates(updatesObservable: Observable<Any>) {
     updatesObservable
@@ -95,6 +117,7 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
       SuplaFunction.HVAC_THERMOSTAT,
       SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
       SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
+      SuplaFunction.HVAC_HRV,
       SuplaFunction.IC_HEAT_METER,
       SuplaFunction.GENERAL_PURPOSE_MEASUREMENT,
       SuplaFunction.GENERAL_PURPOSE_METER,
@@ -155,7 +178,10 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
       SuplaFunction.CONTAINER_LEVEL_SENSOR,
       SuplaFunction.FLOOD_SENSOR,
       SuplaFunction.MOTION_SENSOR,
-      SuplaFunction.BINARY_SENSOR -> false
+      SuplaFunction.BINARY_SENSOR,
+      SuplaFunction.SMOKE_SENSOR,
+      SuplaFunction.CARBON_MONOXIDE_SENSOR,
+      SuplaFunction.GAS_SENSOR -> false
     }
 
   protected fun loadServerUrl(handler: (CloudUrl) -> Unit) {

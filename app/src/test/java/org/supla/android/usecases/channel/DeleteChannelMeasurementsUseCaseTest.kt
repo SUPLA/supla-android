@@ -17,19 +17,14 @@ package org.supla.android.usecases.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import io.mockk.every
-import io.mockk.mockk
+import io.mockk.*
+import io.mockk.Called
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.data.source.CurrentLogRepository
 import org.supla.android.data.source.ElectricityMeterLogRepository
 import org.supla.android.data.source.GeneralPurposeMeasurementLogRepository
@@ -47,47 +42,51 @@ import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.data.model.general.SuplaFunction
 
-@RunWith(MockitoJUnitRunner::class)
 class DeleteChannelMeasurementsUseCaseTest {
 
-  @Mock
+  @MockK
   private lateinit var readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase
 
-  @Mock
+  @MockK
   private lateinit var temperatureLogRepository: TemperatureLogRepository
 
-  @Mock
+  @MockK
   private lateinit var temperatureAndHumidityLogUseCase: TemperatureAndHumidityLogRepository
 
-  @Mock
+  @MockK
   private lateinit var generalPurposeMeasurementLogRepository: GeneralPurposeMeasurementLogRepository
 
-  @Mock
+  @MockK
   private lateinit var generalPurposeMeterLogRepository: GeneralPurposeMeterLogRepository
 
-  @Mock
+  @MockK
   private lateinit var electricityMeterLogRepository: ElectricityMeterLogRepository
 
-  @Mock
+  @MockK
   private lateinit var humidityLogRepository: HumidityLogRepository
 
-  @Mock
+  @MockK
   private lateinit var impulseCounterLogRepository: ImpulseCounterLogRepository
 
-  @Mock
+  @MockK
   private lateinit var voltageLogRepository: VoltageLogRepository
 
-  @Mock
+  @MockK
   private lateinit var currentLogRepository: CurrentLogRepository
 
-  @Mock
+  @MockK
   private lateinit var powerActiveLogRepository: PowerActiveLogRepository
 
-  @Mock
+  @MockK
   private lateinit var homePlusThermostatLogRepository: HomePlusThermostatLogRepository
 
-  @InjectMocks
+  @InjectMockKs
   private lateinit var useCase: DeleteChannelMeasurementsUseCase
+
+  @Before
+  fun setUp() {
+    MockKAnnotations.init(this)
+  }
 
   @Test
   fun `should delete temperature history`() {
@@ -100,8 +99,8 @@ class DeleteChannelMeasurementsUseCaseTest {
       every { this@mockk.remoteId } returns remoteId
     }
 
-    whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
-    whenever(temperatureLogRepository.delete(remoteId, profileId)).thenReturn(Completable.complete())
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channel)
+    every { temperatureLogRepository.delete(remoteId, profileId) } returns Completable.complete()
 
     // when
     val observer = useCase.invoke(remoteId).test()
@@ -109,15 +108,15 @@ class DeleteChannelMeasurementsUseCaseTest {
     // then
     observer.assertComplete()
 
-    verify(readChannelWithChildrenUseCase).invoke(remoteId)
-    verify(temperatureLogRepository).delete(remoteId, profileId)
-    verifyNoMoreInteractions(readChannelWithChildrenUseCase, temperatureLogRepository)
-    verifyNoInteractions(
-      temperatureAndHumidityLogUseCase,
-      generalPurposeMeterLogRepository,
-      generalPurposeMeasurementLogRepository,
-      electricityMeterLogRepository
-    )
+    verify { readChannelWithChildrenUseCase.invoke(remoteId) }
+    verify { temperatureLogRepository.delete(remoteId, profileId) }
+    confirmVerified(readChannelWithChildrenUseCase, temperatureLogRepository)
+    verify {
+      temperatureAndHumidityLogUseCase wasNot Called
+      generalPurposeMeterLogRepository wasNot Called
+      generalPurposeMeasurementLogRepository wasNot Called
+      electricityMeterLogRepository wasNot Called
+    }
   }
 
   @Test
@@ -131,8 +130,8 @@ class DeleteChannelMeasurementsUseCaseTest {
       every { this@mockk.remoteId } returns remoteId
     }
 
-    whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
-    whenever(temperatureAndHumidityLogUseCase.delete(remoteId, profileId)).thenReturn(Completable.complete())
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channel)
+    every { temperatureAndHumidityLogUseCase.delete(remoteId, profileId) } returns Completable.complete()
 
     // when
     val observer = useCase.invoke(remoteId).test()
@@ -140,15 +139,15 @@ class DeleteChannelMeasurementsUseCaseTest {
     // then
     observer.assertComplete()
 
-    verify(readChannelWithChildrenUseCase).invoke(remoteId)
-    verify(temperatureAndHumidityLogUseCase).delete(remoteId, profileId)
-    verifyNoMoreInteractions(readChannelWithChildrenUseCase, temperatureAndHumidityLogUseCase)
-    verifyNoInteractions(
-      temperatureLogRepository,
-      generalPurposeMeterLogRepository,
-      generalPurposeMeasurementLogRepository,
-      electricityMeterLogRepository
-    )
+    verify { readChannelWithChildrenUseCase.invoke(remoteId) }
+    verify { temperatureAndHumidityLogUseCase.delete(remoteId, profileId) }
+    confirmVerified(readChannelWithChildrenUseCase, temperatureAndHumidityLogUseCase)
+    verify {
+      temperatureLogRepository wasNot Called
+      generalPurposeMeterLogRepository wasNot Called
+      generalPurposeMeasurementLogRepository wasNot Called
+      electricityMeterLogRepository wasNot Called
+    }
   }
 
   @Test
@@ -162,8 +161,8 @@ class DeleteChannelMeasurementsUseCaseTest {
       every { this@mockk.remoteId } returns remoteId
     }
 
-    whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
-    whenever(generalPurposeMeasurementLogRepository.delete(remoteId, profileId)).thenReturn(Completable.complete())
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channel)
+    every { generalPurposeMeasurementLogRepository.delete(remoteId, profileId) } returns Completable.complete()
 
     // when
     val observer = useCase.invoke(remoteId).test()
@@ -171,15 +170,15 @@ class DeleteChannelMeasurementsUseCaseTest {
     // then
     observer.assertComplete()
 
-    verify(readChannelWithChildrenUseCase).invoke(remoteId)
-    verify(generalPurposeMeasurementLogRepository).delete(remoteId, profileId)
-    verifyNoMoreInteractions(readChannelWithChildrenUseCase, generalPurposeMeasurementLogRepository)
-    verifyNoInteractions(
-      temperatureLogRepository,
-      generalPurposeMeterLogRepository,
-      temperatureAndHumidityLogUseCase,
-      electricityMeterLogRepository
-    )
+    verify { readChannelWithChildrenUseCase.invoke(remoteId) }
+    verify { generalPurposeMeasurementLogRepository.delete(remoteId, profileId) }
+    confirmVerified(readChannelWithChildrenUseCase, generalPurposeMeasurementLogRepository)
+    verify {
+      temperatureLogRepository wasNot Called
+      generalPurposeMeterLogRepository wasNot Called
+      temperatureAndHumidityLogUseCase wasNot Called
+      electricityMeterLogRepository wasNot Called
+    }
   }
 
   @Test
@@ -193,8 +192,8 @@ class DeleteChannelMeasurementsUseCaseTest {
       every { this@mockk.remoteId } returns remoteId
     }
 
-    whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
-    whenever(generalPurposeMeterLogRepository.delete(remoteId, profileId)).thenReturn(Completable.complete())
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channel)
+    every { generalPurposeMeterLogRepository.delete(remoteId, profileId) } returns Completable.complete()
 
     // when
     val observer = useCase.invoke(remoteId).test()
@@ -202,15 +201,15 @@ class DeleteChannelMeasurementsUseCaseTest {
     // then
     observer.assertComplete()
 
-    verify(readChannelWithChildrenUseCase).invoke(remoteId)
-    verify(generalPurposeMeterLogRepository).delete(remoteId, profileId)
-    verifyNoMoreInteractions(readChannelWithChildrenUseCase, generalPurposeMeterLogRepository)
-    verifyNoInteractions(
-      temperatureLogRepository,
-      generalPurposeMeasurementLogRepository,
-      temperatureAndHumidityLogUseCase,
-      electricityMeterLogRepository
-    )
+    verify { readChannelWithChildrenUseCase.invoke(remoteId) }
+    verify { generalPurposeMeterLogRepository.delete(remoteId, profileId) }
+    confirmVerified(readChannelWithChildrenUseCase, generalPurposeMeterLogRepository)
+    verify {
+      temperatureLogRepository wasNot Called
+      generalPurposeMeasurementLogRepository wasNot Called
+      temperatureAndHumidityLogUseCase wasNot Called
+      electricityMeterLogRepository wasNot Called
+    }
   }
 
   @Test
@@ -225,11 +224,11 @@ class DeleteChannelMeasurementsUseCaseTest {
       every { this@mockk.remoteId } returns remoteId
     }
 
-    whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
-    whenever(voltageLogRepository.delete(remoteId, profileId)).thenReturn(Completable.complete())
-    whenever(currentLogRepository.delete(remoteId, profileId)).thenReturn(Completable.complete())
-    whenever(powerActiveLogRepository.delete(remoteId, profileId)).thenReturn(Completable.complete())
-    whenever(electricityMeterLogRepository.delete(remoteId, profileId)).thenReturn(Completable.complete())
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channel)
+    every { voltageLogRepository.delete(remoteId, profileId) } returns Completable.complete()
+    every { currentLogRepository.delete(remoteId, profileId) } returns Completable.complete()
+    every { powerActiveLogRepository.delete(remoteId, profileId) } returns Completable.complete()
+    every { electricityMeterLogRepository.delete(remoteId, profileId) } returns Completable.complete()
 
     // when
     val observer = useCase.invoke(remoteId).test()
@@ -237,15 +236,15 @@ class DeleteChannelMeasurementsUseCaseTest {
     // then
     observer.assertComplete()
 
-    verify(readChannelWithChildrenUseCase).invoke(remoteId)
-    verify(electricityMeterLogRepository).delete(remoteId, profileId)
-    verifyNoMoreInteractions(readChannelWithChildrenUseCase, electricityMeterLogRepository)
-    verifyNoInteractions(
-      temperatureLogRepository,
-      generalPurposeMeasurementLogRepository,
-      temperatureAndHumidityLogUseCase,
-      generalPurposeMeterLogRepository
-    )
+    verify { readChannelWithChildrenUseCase.invoke(remoteId) }
+    verify { electricityMeterLogRepository.delete(remoteId, profileId) }
+    confirmVerified(readChannelWithChildrenUseCase, electricityMeterLogRepository)
+    verify {
+      temperatureLogRepository wasNot Called
+      generalPurposeMeasurementLogRepository wasNot Called
+      temperatureAndHumidityLogUseCase wasNot Called
+      generalPurposeMeterLogRepository wasNot Called
+    }
   }
 
   @Test
@@ -277,9 +276,9 @@ class DeleteChannelMeasurementsUseCaseTest {
       }
     }
 
-    whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelWithChildren))
-    whenever(temperatureLogRepository.delete(111, profileId)).thenReturn(Completable.complete())
-    whenever(temperatureAndHumidityLogUseCase.delete(222, profileId)).thenReturn(Completable.complete())
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channelWithChildren)
+    every { temperatureLogRepository.delete(111, profileId) } returns Completable.complete()
+    every { temperatureAndHumidityLogUseCase.delete(222, profileId) } returns Completable.complete()
 
     // when
     val observer = useCase.invoke(remoteId).test()
@@ -287,15 +286,15 @@ class DeleteChannelMeasurementsUseCaseTest {
     // then
     observer.assertComplete()
 
-    verify(readChannelWithChildrenUseCase).invoke(remoteId)
-    verify(temperatureLogRepository).delete(111, profileId)
-    verify(temperatureAndHumidityLogUseCase).delete(222, profileId)
-    verifyNoMoreInteractions(readChannelWithChildrenUseCase, temperatureLogRepository, temperatureAndHumidityLogUseCase)
-    verifyNoInteractions(
-      generalPurposeMeasurementLogRepository,
-      generalPurposeMeterLogRepository,
-      electricityMeterLogRepository
-    )
+    verify { readChannelWithChildrenUseCase.invoke(remoteId) }
+    verify { temperatureLogRepository.delete(111, profileId) }
+    verify { temperatureAndHumidityLogUseCase.delete(222, profileId) }
+    confirmVerified(readChannelWithChildrenUseCase, temperatureLogRepository, temperatureAndHumidityLogUseCase)
+    verify {
+      generalPurposeMeasurementLogRepository wasNot Called
+      generalPurposeMeterLogRepository wasNot Called
+      electricityMeterLogRepository wasNot Called
+    }
   }
 
   private fun mockChannelChild(

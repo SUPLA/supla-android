@@ -20,7 +20,6 @@ package org.supla.android.features.devicecatalog
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
-import android.widget.FrameLayout
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -30,8 +29,10 @@ import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.extensions.visibleIf
 import org.supla.android.features.webcontent.WebContentFragment
-import org.supla.android.navigator.MainNavigator
+import org.supla.android.main.MainComposeNavigator
 import javax.inject.Inject
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
 private const val JS_MOBILE_CLASS = "document.body.classList.add('mobile'); "
 private const val JS_NIGHT_CLASS = "document.body.classList.add('darkTheme'); "
@@ -40,10 +41,11 @@ private const val JS_NIGHT_CLASS = "document.body.classList.add('darkTheme'); "
 class DeviceCatalogFragment : WebContentFragment<DeviceCatalogViewState, DeviceCatalogViewEvent>() {
 
   override val url: String by lazy { getString(R.string.devices_list_url) }
+  override val initialUrlLoadDelayMillis: Duration = 500.milliseconds
   override val viewModel: DeviceCatalogViewModel by viewModels()
 
   @Inject
-  internal lateinit var navigator: MainNavigator
+  internal lateinit var navigator: MainComposeNavigator
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

@@ -53,6 +53,7 @@ import org.supla.android.features.details.rgbanddimmer.common.ui.dimmer.ValueRow
 import org.supla.android.features.details.rgbanddimmer.rgb.model.RgbDetailViewState
 import org.supla.android.features.details.rgbanddimmer.rgb.model.RgbValue
 import org.supla.android.images.ImageId
+import org.supla.android.main.view.detailHorizontalPadding
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.tools.SuplaPreviewLandscape
 import org.supla.android.tools.SuplaSizeClassPreview
@@ -110,11 +111,13 @@ private fun RgbDetailScope.Landscape(
     color = state.value.hsv
   }
 
-  Row {
+  Row(
+    modifier = Modifier.detailHorizontalPadding()
+  ) {
     Column(
       modifier = Modifier.weight(1f)
     ) {
-      state.deviceStateData?.let { DeviceState(data = it) }
+      state.deviceStateData?.let { DeviceState(data = it, modifier = Modifier.padding(vertical = Distance.vertical)) }
       state.channelIssues?.let { issues -> ChannelIssuesView(issues) }
 
       ColorAndBrightnessBox(color, state.value, !state.offline)

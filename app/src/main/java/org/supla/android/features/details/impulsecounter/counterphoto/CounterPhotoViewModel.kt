@@ -26,7 +26,7 @@ import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.extensions.subscribeBy
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.ocr.LoadLatestOcrPhotoUseCase
 import org.supla.android.usecases.ocr.LoadOcrPhotosUseCase
@@ -42,8 +42,8 @@ class CounterPhotoViewModel @Inject constructor(
   private val loadLatestOcrPhotoUseCase: LoadLatestOcrPhotoUseCase,
   private val loadOcrPhotosUseCase: LoadOcrPhotosUseCase,
   private val uriProxy: UriProxy,
-  schedulers: SuplaSchedulers
-) : BaseViewModel<CounterPhotoViewModelState, CounterPhotoViewEvent>(CounterPhotoViewModelState(), schedulers) {
+  threading: SuplaThreading
+) : BaseViewModel<CounterPhotoViewModelState, CounterPhotoViewEvent>(CounterPhotoViewModelState(), threading) {
 
   fun loadData(remoteId: Int) {
     updateState { it.copy(viewState = it.viewState.copy(refreshing = true)) }

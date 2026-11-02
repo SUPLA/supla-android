@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.res.ResourcesCompat;
 import org.supla.android.lib.SuplaConst;
-import org.supla.android.navigator.MainNavigator;
+import org.supla.android.main.MainComposeNavigator;
 import timber.log.Timber;
 
 public class DiwCalibrationTool extends DimmerCalibrationTool
@@ -33,7 +33,7 @@ public class DiwCalibrationTool extends DimmerCalibrationTool
   private final Button btnInputBistable;
   private final AppCompatImageView imgInputOption;
 
-  public DiwCalibrationTool(ChannelDetailRGBW detailRGB, MainNavigator navigator) {
+  public DiwCalibrationTool(ChannelDetailRGBW detailRGB, MainComposeNavigator navigator) {
     super(detailRGB, navigator);
 
     calibrationWheel = getMainView().findViewById(R.id.diwCfgCalibrationWheel);

@@ -42,6 +42,7 @@ import org.supla.android.data.model.chart.ChannelChartSets
 import org.supla.android.data.model.chart.ChartDataAggregation
 import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.HistoryDataSet
+import org.supla.android.extensions.asSize
 import org.supla.android.images.ImageId
 import org.supla.android.tools.SuplaComponentPreview
 import org.supla.android.ui.views.Image
@@ -75,9 +76,9 @@ fun DataSetContainerRow(
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
+      data.icon?.let { DataSetIcon(it, null) }
       data.dataSets.forEach { set ->
         DataSetItemsRow(
-          channelIcon = data.icon,
           label = set.label,
           active = set.active,
           historyEnabled = showHistory,
@@ -141,7 +142,6 @@ fun DataSetContainerColumn(
 
 @Composable
 private fun DataSetItemsRow(
-  channelIcon: ImageId?,
   label: HistoryDataSet.Label,
   active: Boolean,
   historyEnabled: Boolean,
@@ -166,7 +166,6 @@ private fun DataSetItemsRow(
       }
 
   ) {
-    channelIcon?.let { DataSetIcon(it, null) }
     when (label) {
       is HistoryDataSet.Label.Single -> DataSetItem(
         value = label.value,
@@ -278,7 +277,7 @@ private fun DataSetIcon(imageId: ImageId, @DimenRes iconSize: Int?) =
     imageId = imageId,
     contentDescription = null,
     alignment = Alignment.Center,
-    modifier = Modifier.size(dimensionResource(id = iconSize ?: R.dimen.button_small_height))
+    size = dimensionResource(id = iconSize ?: R.dimen.button_small_height).asSize()
   )
 
 @Composable

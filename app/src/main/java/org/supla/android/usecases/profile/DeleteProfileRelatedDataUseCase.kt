@@ -17,7 +17,6 @@ package org.supla.android.usecases.profile
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.util.Log
 import io.reactivex.rxjava3.core.Completable
 import org.supla.android.data.source.AndroidAutoItemRepository
 import org.supla.android.data.source.ChannelConfigRepository
@@ -25,6 +24,7 @@ import org.supla.android.data.source.ChannelExtendedValueRepository
 import org.supla.android.data.source.ChannelGroupRelationRepository
 import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.ChannelRelationRepository
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.ChannelStateRepository
 import org.supla.android.data.source.ChannelValueRepository
 import org.supla.android.data.source.ColorListRepository
@@ -37,9 +37,8 @@ import org.supla.android.data.source.HumidityLogRepository
 import org.supla.android.data.source.ImpulseCounterLogRepository
 import org.supla.android.data.source.LocationRepository
 import org.supla.android.data.source.PowerActiveLogRepository
-import org.supla.android.data.source.RoomChannelRepository
-import org.supla.android.data.source.RoomSceneRepository
 import org.supla.android.data.source.RoomUserIconRepository
+import org.supla.android.data.source.SceneRepository
 import org.supla.android.data.source.TemperatureAndHumidityLogRepository
 import org.supla.android.data.source.TemperatureLogRepository
 import org.supla.android.data.source.VoltageLogRepository
@@ -50,7 +49,7 @@ import javax.inject.Singleton
 @Singleton
 class DeleteProfileRelatedDataUseCase @Inject constructor(
   androidAutoItemRepository: AndroidAutoItemRepository,
-  channelRepository: RoomChannelRepository,
+  channelRepository: ChannelRepository,
   channelConfigRepository: ChannelConfigRepository,
   channelExtendedValueRepository: ChannelExtendedValueRepository,
   channelRelationRepository: ChannelRelationRepository,
@@ -60,7 +59,7 @@ class DeleteProfileRelatedDataUseCase @Inject constructor(
   channelGroupRelationRepository: ChannelGroupRelationRepository,
   colorListRepository: ColorListRepository,
   locationRepository: LocationRepository,
-  sceneRepository: RoomSceneRepository,
+  sceneRepository: SceneRepository,
   userIconRepository: RoomUserIconRepository,
   currentLogRepository: CurrentLogRepository,
   electricityMeterLogRepository: ElectricityMeterLogRepository,

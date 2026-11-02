@@ -20,22 +20,22 @@ package org.supla.android.features.nfc.shared.edit
 import androidx.lifecycle.viewModelScope
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.launch
+import org.supla.android.R
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
-import org.supla.android.core.ui.ViewModelState
 import org.supla.android.data.model.spinner.ProfileItem
 import org.supla.android.data.model.spinner.SubjectItem
 import org.supla.android.data.model.spinner.SubjectItemConversionScope
 import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.NfcCallRepository
 import org.supla.android.data.source.NfcTagRepository
-import org.supla.android.data.source.RoomSceneRepository
+import org.supla.android.data.source.SceneRepository
 import org.supla.android.data.source.local.entity.NfcCallResult
 import org.supla.android.data.source.local.entity.NfcTagEntity
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ReadAllChannelsWithChildrenUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -51,16 +51,23 @@ open class BaseEditNfcTagViewModel(
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
   private val readAllProfilesUseCase: ReadAllProfilesUseCase,
   private val channelGroupRepository: ChannelGroupRepository,
-  private val sceneRepository: RoomSceneRepository,
+  private val sceneRepository: SceneRepository,
   private val nfcCallRepository: NfcCallRepository,
   private val nfcTagRepository: NfcTagRepository,
   override val getChannelIconUseCase: GetChannelIconUseCase,
   override val getSceneIconUseCase: GetSceneIconUseCase,
   override val getCaptionUseCase: GetCaptionUseCase,
-  schedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) :
-  BaseViewModel<EditNfcTagViewModelState, EditNfcTagViewEvent>(EditNfcTagViewModelState(), schedulers),
+  BaseViewModel<EditNfcTagViewState, EditNfcTagViewEvent>(
+    defaultState = EditNfcTagViewState(),
+    threading = threading,
+    manageScreenTitle = true
+  ),
   SubjectItemConversionScope {
+
+  private var mode: Mode = Mode.Unknown
+  private var selections: Set<Selection> = emptySet()
 
   fun onViewCreated(id: Long) {
     viewModelScope.launch {
@@ -90,14 +97,14 @@ open class BaseEditNfcTagViewModel(
 
   fun onSave() {
     val state = currentState()
-    val tagName = state.screenState.tagName
+    val tagName = state.tagName
 
     if (tagName.trim().isEmpty()) {
-      updateState { it.copy(screenState = it.screenState.copy(isError = true)) }
+      updateState { it.copy(isError = true) }
       return
     }
 
-    when (val mode = state.mode) {
+    when (val mode = mode) {
       is Mode.Edit -> edit(state, mode.id)
       is Mode.Insert -> insert(state, mode.uuid, mode.readOnly)
       Mode.Unknown -> sendEvent(EditNfcTagViewEvent.Close)
@@ -105,22 +112,20 @@ open class BaseEditNfcTagViewModel(
   }
 
   fun onProfileSelected(profileItem: ProfileItem) {
-    val subjectType = currentState().lastSubjectType(profileItem.id) ?: currentState().screenState.subjectType
+    val subjectType = lastSubjectType(profileItem.id) ?: currentState().subjectType
     getSubjectsSource(profileItem.id, subjectType)
       .attach()
       .subscribeBy(
         onSuccess = { subjects ->
           updateState { state ->
-            val lastSubjectId = state.lastSubjectId(profileItem.id, subjectType)
-            val lastActionId = state.lastActionId(profileItem.id, subjectType, lastSubjectId)
+            val lastSubjectId = lastSubjectId(profileItem.id, subjectType)
+            val lastActionId = lastActionId(profileItem.id, subjectType, lastSubjectId)
             val subjectsList = subjects.asSingleSelectionList(subjectType, lastSubjectId)
             state.copy(
-              screenState = state.screenState.copy(
-                profiles = state.screenState.profiles?.copy(selected = profileItem),
-                subjectType = subjectType,
-                subjects = subjectsList,
-                actions = subjectsList?.selected?.actionsList(lastActionId)
-              ),
+              profiles = state.profiles?.copy(selected = profileItem),
+              subjectType = subjectType,
+              subjects = subjectsList,
+              actions = subjectsList?.selected?.actionsList(lastActionId)
             )
           }
         }
@@ -129,21 +134,19 @@ open class BaseEditNfcTagViewModel(
   }
 
   fun onSubjectTypeSelected(subjectType: SubjectType) {
-    val (profile) = guardLet(currentState().screenState.profiles?.selected) { return }
+    val (profile) = guardLet(currentState().profiles?.selected) { return }
     getSubjectsSource(profile.id, subjectType)
       .attach()
       .subscribeBy(
         onSuccess = { subjects ->
           updateState { state ->
-            val lastSubjectId = state.lastSubjectId(profile.id, subjectType)
-            val lastActionId = state.lastActionId(profile.id, subjectType, lastSubjectId)
+            val lastSubjectId = lastSubjectId(profile.id, subjectType)
+            val lastActionId = lastActionId(profile.id, subjectType, lastSubjectId)
             val subjectsList = subjects.asSingleSelectionList(subjectType, lastSubjectId)
             state.copy(
-              screenState = state.screenState.copy(
-                subjectType = subjectType,
-                subjects = subjectsList,
-                actions = subjectsList?.selected?.actionsList(lastActionId)
-              ),
+              subjectType = subjectType,
+              subjects = subjectsList,
+              actions = subjectsList?.selected?.actionsList(lastActionId)
             )
           }
         }
@@ -153,29 +156,26 @@ open class BaseEditNfcTagViewModel(
 
   fun onSubjectSelected(subjectItem: SubjectItem) {
     updateState { state ->
-      val profileId = state.screenState.profiles?.selected?.id
-      val lastActionId = state.lastActionId(profileId, state.screenState.subjectType, subjectItem.id)
+      selections = state.updateSelections(subjectItem.id)
+
+      val profileId = state.profiles?.selected?.id
+      val lastActionId = lastActionId(profileId, state.subjectType, subjectItem.id)
       state.copy(
-        screenState = state.screenState.copy(
-          subjects = state.screenState.subjects?.copy(selected = subjectItem),
-          actions = subjectItem.actionsList(lastActionId)
-        ),
-        selections = state.updateSelections(subjectItem.id)
+        subjects = state.subjects?.copy(selected = subjectItem),
+        actions = subjectItem.actionsList(lastActionId)
       )
     }
   }
 
   fun onCaptionChange(caption: String) {
-    updateState { it.copy(screenState = it.screenState.copy(tagName = caption)) }
+    updateState { it.copy(tagName = caption) }
   }
 
   fun onActionChange(actionId: ActionId) {
     updateState { state ->
+      selections = state.updateSelections(actionId)
       state.copy(
-        screenState = state.screenState.copy(
-          actions = state.screenState.actions?.copy(selected = actionId)
-        ),
-        selections = state.updateSelections(actionId)
+        actions = state.actions?.copy(selected = actionId)
       )
     }
   }
@@ -190,69 +190,66 @@ open class BaseEditNfcTagViewModel(
     name: String = "",
     id: Long? = null
   ) {
-    val profiles = schedulers.io { runCatching { readAllProfilesUseCase().blockingFirst() }.getOrNull() }
+    val profiles = this@BaseEditNfcTagViewModel.threading.io { runCatching { readAllProfilesUseCase().blockingFirst() }.getOrNull() }
     if (profiles == null) {
       Timber.w("Something wrong - no profiles found")
       sendEvent(EditNfcTagViewEvent.Close)
       return
     }
-    val profileId = profileId ?: profiles.firstOrNull { it.active == true }?.id
+    val profileId = profileId ?: profiles.firstOrNull { it.active }?.id
     val subjectType = subjectType ?: SubjectType.CHANNEL
 
-    val subjects = schedulers.io {
+    val subjects = this@BaseEditNfcTagViewModel.threading.io {
       profileId?.let { runCatching { getSubjectsSource(it, subjectType).blockingGet() }.getOrNull() } ?: emptyList()
     }
     val subjectsList = subjects.asSingleSelectionList(subjectType, subjectId)
-    val mode = id?.let { Mode.Edit(it) } ?: Mode.Insert(uuid, readOnly)
+    mode = id?.let { Mode.Edit(it) } ?: Mode.Insert(uuid, readOnly)
 
     updateState { state ->
       state.copy(
-        screenState = state.screenState.copy(
-          tagName = name,
-          tagUuid = uuid,
-          profiles = profiles.asSingleSelectionList(profileId),
-          subjects = subjectsList,
-          subjectType = subjectType,
-          actions = subjectsList?.selected?.actionsList(actionId),
-          newTag = mode is Mode.Insert
-        ),
-        mode = mode
+        tagName = name,
+        tagUuid = uuid,
+        profiles = profiles.asSingleSelectionList(profileId),
+        subjects = subjectsList,
+        subjectType = subjectType,
+        actions = subjectsList?.selected?.actionsList(actionId),
+        newTag = mode is Mode.Insert
       )
     }
 
     when (mode) {
-      is Mode.Edit -> sendEvent(EditNfcTagViewEvent.SetEditTagTitle(name))
-      is Mode.Insert -> sendEvent(EditNfcTagViewEvent.SetNewTagTitle)
+      is Mode.Edit -> setScreenTitle(name)
+      is Mode.Insert -> setScreenTitle(R.string.edit_nfc_new_tag_header)
       else -> {} // No title change needed
     }
   }
 
-  private fun edit(state: EditNfcTagViewModelState, id: Long) {
+  private fun edit(state: EditNfcTagViewState, id: Long) {
     viewModelScope.launch {
       val tag = nfcTagRepository.findById(id) ?: return@launch
       nfcTagRepository.save(
         entity = tag.copy(
-          name = state.screenState.tagName,
-          profileId = state.screenState.profiles?.selected?.id,
-          subjectType = state.screenState.subjectType,
-          subjectId = state.screenState.subjects?.selected?.id,
-          actionId = state.screenState.actions?.selected
+          name = state.tagName,
+          profileId = state.profiles?.selected?.id,
+          subjectType = state.subjectType,
+          subjectId = state.subjects?.selected?.id,
+          actionId = state.actions?.selected
         )
       )
       sendEvent(EditNfcTagViewEvent.Close)
     }
   }
 
-  private fun insert(state: EditNfcTagViewModelState, uuid: String, readOnly: Boolean) {
+  private fun insert(state: EditNfcTagViewState, uuid: String, readOnly: Boolean) {
     viewModelScope.launch {
       val id = nfcTagRepository.save(
         entity = NfcTagEntity(
           uuid = uuid,
-          name = state.screenState.tagName,
-          profileId = state.screenState.profiles?.selected?.id,
-          subjectType = state.screenState.subjectType,
-          subjectId = state.screenState.subjects?.selected?.id,
-          actionId = state.screenState.actions?.selected,
+          name = state.tagName,
+          profileId = state.profiles?.selected?.id,
+          subjectType = state.subjectType,
+          subjectId = state.subjects?.selected?.id,
+          actionId = state.actions?.selected,
           readOnly = readOnly
         )
       )
@@ -275,38 +272,25 @@ open class BaseEditNfcTagViewModel(
         sceneRepository.findProfileScenes(profileId)
           .map { scenes -> scenesSubjectItems(scenes) }
     }
-}
 
-sealed interface EditNfcTagViewEvent : ViewEvent {
-  data object Close : EditNfcTagViewEvent
-  data object SetNewTagTitle : EditNfcTagViewEvent
-  data class SetEditTagTitle(val name: String) : EditNfcTagViewEvent
-}
-
-data class EditNfcTagViewModelState(
-  val mode: Mode = Mode.Unknown,
-  val selections: Set<Selection> = emptySet(),
-  override val screenState: EditNfcTagViewState = EditNfcTagViewState()
-) : ViewModelState<EditNfcTagViewState>() {
-
-  fun updateSelections(subjectId: Int): Set<Selection> =
+  private fun EditNfcTagViewState.updateSelections(subjectId: Int): Set<Selection> =
     mutableSetOf<Selection>().apply {
       addAll(selections)
-      val profileId = screenState.profiles?.selected?.id
+      val profileId = profiles?.selected?.id
 
       if (profileId != null) {
-        addOrReplace(Selection(profileId, screenState.subjectType, subjectId, null))
+        addOrReplace(Selection(profileId, subjectType, subjectId, null))
       }
     }
 
-  fun updateSelections(actionId: ActionId): Set<Selection> =
+  private fun EditNfcTagViewState.updateSelections(actionId: ActionId): Set<Selection> =
     mutableSetOf<Selection>().apply {
       addAll(selections)
-      val profileId = screenState.profiles?.selected?.id
-      val subjectId = screenState.subjects?.selected?.id
+      val profileId = profiles?.selected?.id
+      val subjectId = subjects?.selected?.id
 
       if (profileId != null && subjectId != null) {
-        addOrReplace(Selection(profileId, screenState.subjectType, subjectId, actionId))
+        addOrReplace(Selection(profileId, subjectType, subjectId, actionId))
       }
     }
 
@@ -318,13 +302,17 @@ data class EditNfcTagViewModelState(
 
   fun lastActionId(profileId: Long?, subjectType: SubjectType, subjectId: Int?): ActionId? =
     selections.lastOrNull { it.profileId == profileId && it.subjectType == subjectType && it.subjectId == subjectId }?.action
+}
 
-  private fun MutableSet<Selection>.addOrReplace(selection: Selection) {
-    if (contains(selection)) {
-      remove(selection)
-    }
-    add(selection)
+sealed interface EditNfcTagViewEvent : ViewEvent {
+  data object Close : EditNfcTagViewEvent
+}
+
+private fun MutableSet<Selection>.addOrReplace(selection: Selection) {
+  if (contains(selection)) {
+    remove(selection)
   }
+  add(selection)
 }
 
 data class Selection(

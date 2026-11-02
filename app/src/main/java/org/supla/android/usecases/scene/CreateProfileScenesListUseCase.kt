@@ -18,36 +18,50 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import io.reactivex.rxjava3.core.Observable
-import org.supla.android.data.source.RoomSceneRepository
-import org.supla.android.data.source.local.entity.LocationEntity
+import org.supla.android.data.source.SceneRepository
+import org.supla.android.main.topbar.searchable
 import org.supla.android.ui.lists.ListItem
+import org.supla.android.ui.lists.locationItem
+import org.supla.android.ui.lists.sceneItem
+import org.supla.android.usecases.icon.GetSceneIconUseCase
+import org.supla.android.usecases.list.toLocationSections
 import org.supla.android.usecases.location.CollapsedFlag
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class CreateProfileScenesListUseCase @Inject constructor(
-  private val roomSceneRepository: RoomSceneRepository
+  private val getSceneIconUseCase: GetSceneIconUseCase,
+  private val sceneRepository: SceneRepository
 ) {
-  operator fun invoke(): Observable<List<ListItem>> =
-    roomSceneRepository.findList().map { entities ->
+  operator fun invoke(filterString: String = ""): Observable<List<ListItem>> =
+    sceneRepository.findList().map { entities ->
       val result = mutableListOf<ListItem>()
 
-      var location: LocationEntity? = null
-      entities.forEach {
-        val currentLocation = location
-        if (currentLocation == null || currentLocation.remoteId != it.locationEntity.remoteId) {
-          val newLocation = it.locationEntity
-
-          if (currentLocation == null || newLocation.caption != currentLocation.caption) {
-            location = newLocation
-            result.add(ListItem.LocationItem(newLocation))
+      entities.toLocationSections(
+        locationOf = { it.locationEntity },
+        positionOf = { it.sceneEntity.sortOrder }
+      ).forEach { section ->
+        val visibleScenes = section.items.filter {
+          if (!filterString.searchable) {
+            return@filter true
           }
+
+          val captionContains = it.sceneEntity.caption.contains(filterString, ignoreCase = true)
+          val locationContains = it.locationEntity.caption.contains(filterString, ignoreCase = true)
+          captionContains || locationContains
         }
 
-        location.let { locationEntity ->
-          if (!locationEntity.isCollapsed(CollapsedFlag.SCENE)) {
-            result.add(ListItem.SceneItem(it))
+        if (visibleScenes.isEmpty()) {
+          return@forEach
+        }
+
+        val location = visibleScenes.minBy { it.locationEntity.sortOrder }.locationEntity
+        result.add(location.locationItem(CollapsedFlag.SCENE))
+
+        if (!location.isCollapsed(CollapsedFlag.SCENE) || filterString.searchable) {
+          visibleScenes.forEach {
+            result.add(it.sceneItem(getSceneIconUseCase))
           }
         }
       }

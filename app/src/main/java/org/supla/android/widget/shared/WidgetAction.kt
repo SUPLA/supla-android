@@ -111,7 +111,10 @@ private fun getLeftButtonAction(function: SuplaFunction): ActionId? =
     SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH,
     SuplaFunction.NONE,
     SuplaFunction.MOTION_SENSOR,
-    SuplaFunction.BINARY_SENSOR -> null
+    SuplaFunction.BINARY_SENSOR,
+    SuplaFunction.SMOKE_SENSOR,
+    SuplaFunction.CARBON_MONOXIDE_SENSOR,
+    SuplaFunction.GAS_SENSOR -> null
     SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
     SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK -> ActionId.OPEN
     SuplaFunction.CONTROLLING_THE_GATE,
@@ -134,7 +137,8 @@ private fun getLeftButtonAction(function: SuplaFunction): ActionId? =
     SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS,
     SuplaFunction.HVAC_THERMOSTAT,
     SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
-    SuplaFunction.HVAC_DOMESTIC_HOT_WATER -> ActionId.TURN_OFF
+    SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
+    SuplaFunction.HVAC_HRV -> ActionId.TURN_OFF
     SuplaFunction.TERRACE_AWNING,
     SuplaFunction.PROJECTOR_SCREEN,
     SuplaFunction.CURTAIN -> ActionId.COLLAPSE
@@ -185,7 +189,10 @@ private fun getRightButtonAction(function: SuplaFunction): ActionId? =
     SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH,
     SuplaFunction.NONE,
     SuplaFunction.MOTION_SENSOR,
-    SuplaFunction.BINARY_SENSOR -> null
+    SuplaFunction.BINARY_SENSOR,
+    SuplaFunction.SMOKE_SENSOR,
+    SuplaFunction.CARBON_MONOXIDE_SENSOR,
+    SuplaFunction.GAS_SENSOR -> null
     SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
     SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK -> ActionId.OPEN
     SuplaFunction.CONTROLLING_THE_GATE,
@@ -208,7 +215,8 @@ private fun getRightButtonAction(function: SuplaFunction): ActionId? =
     SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS,
     SuplaFunction.HVAC_THERMOSTAT,
     SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
-    SuplaFunction.HVAC_DOMESTIC_HOT_WATER -> ActionId.TURN_ON
+    SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
+    SuplaFunction.HVAC_HRV -> ActionId.TURN_ON
     SuplaFunction.TERRACE_AWNING,
     SuplaFunction.PROJECTOR_SCREEN,
     SuplaFunction.CURTAIN -> ActionId.EXPAND
@@ -260,6 +268,9 @@ private fun getDefaultAction(function: SuplaFunction): ActionId? =
     SuplaFunction.NONE,
     SuplaFunction.MOTION_SENSOR,
     SuplaFunction.BINARY_SENSOR,
+    SuplaFunction.SMOKE_SENSOR,
+    SuplaFunction.CARBON_MONOXIDE_SENSOR,
+    SuplaFunction.GAS_SENSOR,
     SuplaFunction.VALVE_OPEN_CLOSE,
     SuplaFunction.VALVE_PERCENTAGE,
     SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER,
@@ -279,6 +290,7 @@ private fun getDefaultAction(function: SuplaFunction): ActionId? =
     SuplaFunction.HVAC_THERMOSTAT,
     SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
     SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
+    SuplaFunction.HVAC_HRV,
     SuplaFunction.TERRACE_AWNING,
     SuplaFunction.PROJECTOR_SCREEN,
     SuplaFunction.CURTAIN -> null
@@ -334,7 +346,10 @@ private fun hasAction(function: SuplaFunction?): Boolean =
     SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH,
     SuplaFunction.NONE,
     SuplaFunction.MOTION_SENSOR,
-    SuplaFunction.BINARY_SENSOR -> false
+    SuplaFunction.BINARY_SENSOR,
+    SuplaFunction.SMOKE_SENSOR,
+    SuplaFunction.CARBON_MONOXIDE_SENSOR,
+    SuplaFunction.GAS_SENSOR -> false
     SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
     SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
     SuplaFunction.CONTROLLING_THE_GATE,
@@ -358,6 +373,7 @@ private fun hasAction(function: SuplaFunction?): Boolean =
     SuplaFunction.HVAC_THERMOSTAT,
     SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
     SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
+    SuplaFunction.HVAC_HRV,
     SuplaFunction.TERRACE_AWNING,
     SuplaFunction.PROJECTOR_SCREEN,
     SuplaFunction.CURTAIN -> true

@@ -133,8 +133,8 @@ private fun DeviceState(icon: ImageId?, stateValue: String?, offline: Boolean) {
       Image(
         imageId = it,
         contentDescription = null,
-        modifier = Modifier.size(60.dp),
-        tint = if (offline) MaterialTheme.colorScheme.outline else null
+        tint = if (offline) MaterialTheme.colorScheme.outline else null,
+        size = 60.dp
       )
     }
   }

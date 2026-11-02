@@ -27,14 +27,22 @@ import org.supla.android.data.source.remote.esp.EspConfigurationSession
 import org.supla.android.data.source.remote.esp.EspDeviceProtocol
 import org.supla.android.data.source.remote.esp.EspPostData
 import org.supla.android.data.source.remote.esp.EspService
+import org.supla.android.data.source.remote.esp.SuplaCertificateException
 import org.supla.android.extensions.isNotNull
 import org.supla.android.extensions.locationHeader
 import org.supla.android.features.addwizard.model.EspConfigResult
 import org.supla.android.features.addwizard.model.EspHtmlParser
+import org.supla.core.shared.data.model.addwizard.CertificateErrorType
 import retrofit2.HttpException
 import timber.log.Timber
+import java.security.cert.CertPathValidatorException
+import java.security.cert.CertificateExpiredException
+import java.security.cert.CertificateNotYetValidException
 import javax.inject.Inject
 import javax.inject.Singleton
+import javax.net.ssl.SSLHandshakeException
+import javax.net.ssl.SSLPeerUnverifiedException
+import javax.net.ssl.SSLProtocolException
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
@@ -67,6 +75,10 @@ class ConfigureEspUseCase @Inject constructor(
       null -> {
         Timber.w("Could not connect to the ESP device")
         Result.ConnectionError
+      }
+      is GetResult.CertificateError -> {
+        Timber.w("Certificate error - ${getResult.type.message}")
+        Result.CertificateError(getResult.type)
       }
       is GetResult.CredentialsNeeded -> {
         Timber.w("Configuration broken, credentials needed")
@@ -164,8 +176,16 @@ class ConfigureEspUseCase @Inject constructor(
       }
       return null
     } catch (exception: Exception) {
-      Timber.e(exception, "Request failed")
-      return null
+      if (exception !is IOException) {
+        Timber.e(exception, "Request failed")
+        return null
+      }
+      val certificateErrorType = exception.toCertificateErrorType()
+      if (certificateErrorType == null) {
+        Timber.e(exception, "Request failed")
+        return null
+      }
+      return GetResult.CertificateError(certificateErrorType)
     }
   }
 
@@ -207,6 +227,7 @@ class ConfigureEspUseCase @Inject constructor(
     data object SetupNeeded : Result
     data object CredentialsNeeded : Result
     data object TemporarilyLocked : Result
+    data class CertificateError(val type: CertificateErrorType) : Result
   }
 
   private sealed interface GetResult {
@@ -214,8 +235,54 @@ class ConfigureEspUseCase @Inject constructor(
     data object SetupNeeded : GetResult
     data object CredentialsNeeded : GetResult
     data object TemporarilyLocked : GetResult
+    data class CertificateError(val type: CertificateErrorType) : GetResult
   }
 }
 
 private val EspConfigResult.isCompatible: Boolean
   get() = deviceFirmwareVersion?.isNotEmpty() == true
+
+private fun Throwable.toCertificateErrorType(): CertificateErrorType? {
+  findCause<SuplaCertificateException>()?.let { return it.type }
+  findCause<CertificateExpiredException>()?.let { return CertificateErrorType.CertificateExpired }
+  findCause<CertificateNotYetValidException>()?.let { return CertificateErrorType.CertificateNotYetValid }
+
+  findCause<CertPathValidatorException>()?.let { exception ->
+    return when (exception.reason) {
+      CertPathValidatorException.BasicReason.EXPIRED -> CertificateErrorType.CertificateExpired
+      CertPathValidatorException.BasicReason.NOT_YET_VALID -> CertificateErrorType.CertificateNotYetValid
+      CertPathValidatorException.BasicReason.REVOKED -> CertificateErrorType.CertificateRevoked
+      CertPathValidatorException.BasicReason.ALGORITHM_CONSTRAINED -> CertificateErrorType.UnsupportedSecurity
+      else -> CertificateErrorType.UntrustedCertificate
+    }
+  }
+
+  findCause<SSLPeerUnverifiedException>()?.let { exception ->
+    val message = exception.message.orEmpty().lowercase()
+    return if (message.contains("certificate pinning failure")) {
+      CertificateErrorType.CertificatePinMismatch
+    } else {
+      CertificateErrorType.CertificateHostMismatch
+    }
+  }
+
+  findCause<SSLProtocolException>()?.let { return CertificateErrorType.UnsupportedSecurity }
+
+  findCause<SSLHandshakeException>()?.let { exception ->
+    val message = exception.message.orEmpty().lowercase()
+    return if (
+      message.contains("protocol") ||
+      message.contains("cipher") ||
+      message.contains("algorithm")
+    ) {
+      CertificateErrorType.UnsupportedSecurity
+    } else {
+      CertificateErrorType.UntrustedCertificate
+    }
+  }
+
+  return null
+}
+
+private inline fun <reified T : Throwable> Throwable.findCause(): T? =
+  generateSequence(this as Throwable?) { it.cause }.firstOrNull { it is T } as? T

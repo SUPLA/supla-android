@@ -18,81 +18,93 @@ package org.supla.android.features.scenelist
  */
 
 import android.net.Uri
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.supla.android.Preferences
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.rx3.awaitFirst
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
-import org.supla.android.data.source.local.entity.LocationEntity
-import org.supla.android.data.source.local.entity.complex.SceneDataEntity
+import org.supla.android.data.source.SceneRepository
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.subscribeBy
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.lib.actions.ActionId
+import org.supla.android.lib.actions.SubjectType
+import org.supla.android.main.topbar.TopBarSearchData
+import org.supla.android.main.topbar.TopBarSearchEvent
+import org.supla.android.tools.SuplaThreading
+import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.lists.BaseListViewModel
 import org.supla.android.ui.lists.ListItem
+import org.supla.android.ui.lists.sceneItem
+import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
+import org.supla.android.usecases.icon.GetSceneIconUseCase
+import org.supla.android.usecases.list.canMoveItemWithinSection
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 import org.supla.android.usecases.profile.CloudUrl
 import org.supla.android.usecases.profile.LoadActiveProfileUrlUseCase
 import org.supla.android.usecases.scene.CreateProfileScenesListUseCase
-import org.supla.android.usecases.scene.UpdateSceneOrderUseCase
+import org.supla.android.usecases.scene.ReorderScenesUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class SceneListViewModel @Inject constructor(
   private val createProfileScenesListUseCase: CreateProfileScenesListUseCase,
-  private val updateSceneOrderUseCase: UpdateSceneOrderUseCase,
+  private val executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
+  private val reorderScenesUseCase: ReorderScenesUseCase,
   private val toggleLocationUseCase: ToggleLocationUseCase,
+  private val getSceneIconUseCase: GetSceneIconUseCase,
+  private val sceneRepository: SceneRepository,
   loadActiveProfileUrlUseCase: LoadActiveProfileUrlUseCase,
   updateEventsManager: UpdateEventsManager,
-  schedulers: SuplaSchedulers,
+  vibrationHelper: VibrationHelper,
+  threading: SuplaThreading,
   dateProvider: DateProvider,
-  preferences: Preferences
 ) : BaseListViewModel<SceneListViewState, SceneListViewEvent>(
-  preferences,
+  vibrationHelper,
   dateProvider,
-  schedulers,
-  SceneListViewState(),
+  threading,
+  SceneListViewState,
   loadActiveProfileUrlUseCase
-) {
+),
+  SceneListScope {
 
-  override fun sendReassignEvent() = sendEvent(SceneListViewEvent.ReassignAdapter)
+  var searchData: TopBarSearchData = TopBarSearchData()
+    private set
 
   override fun reloadList() = loadScenes()
 
   init {
     observeUpdates(updateEventsManager.observeScenesUpdate())
+
+    updateEventsManager.observeAllScenes()
+      .attachSilent()
+      .flatMapMaybe { sceneRepository.findSceneData(it) }
+      .map { it.sceneItem(getSceneIconUseCase) }
+      .subscribeBy(
+        onNext = { updateSceneItem(it) },
+        onError = defaultErrorHandler("init()")
+      )
+      .disposeBySelf()
+  }
+
+  fun handle(event: TopBarSearchEvent) {
+    searchData = searchData.handle(event)
+    loadScenes()
   }
 
   fun loadScenes() {
-    createProfileScenesListUseCase()
+    createProfileScenesListUseCase(searchData.query)
       .attach()
       .subscribeBy(
-        onNext = { updateState { state -> state.copy(scenes = it) } },
+        onNext = { updateItems(it) },
         onError = defaultErrorHandler("loadScenes()")
       )
       .disposeBySelf()
   }
 
-  fun onSceneOrderUpdate(scenes: List<SceneDataEntity>) {
-    updateSceneOrderUseCase(scenes)
-      .attachSilent()
-      .subscribeBy(onError = defaultErrorHandler("onSceneOrderUpdate()"))
-      .disposeBySelf()
-  }
-
-  fun toggleLocationCollapsed(location: LocationEntity) {
-    toggleLocationUseCase(location, CollapsedFlag.SCENE)
-      .andThen(createProfileScenesListUseCase())
-      .attach()
-      .subscribeBy(
-        onNext = { updateState { state -> state.copy(scenes = it) } },
-        onError = defaultErrorHandler("toggleLocationCollapsed($location)")
-      )
-      .disposeBySelf()
-  }
-
-  fun onAddGroupClick() {
+  override fun onAddGroupClick() {
     loadServerUrl {
       when (it) {
         is CloudUrl.DefaultCloud -> sendEvent(SceneListViewEvent.NavigateToSuplaCloud)
@@ -100,15 +112,69 @@ class SceneListViewModel @Inject constructor(
       }
     }
   }
+
+  override fun onLeftButtonClick(remoteId: Int) {
+    executeSimpleActionUseCase.invoke(ActionId.INTERRUPT, SubjectType.SCENE, remoteId)
+      .attach()
+      .subscribeBy(onError = defaultErrorHandler("onRightButtonClick($remoteId)"))
+      .disposeBySelf()
+  }
+
+  override fun onRightButtonClick(remoteId: Int) {
+    executeSimpleActionUseCase.invoke(ActionId.EXECUTE, SubjectType.SCENE, remoteId)
+      .attach()
+      .subscribeBy(onError = defaultErrorHandler("onRightButtonClick($remoteId)"))
+      .disposeBySelf()
+  }
+
+  override fun moveItems(from: Int, to: Int): Boolean {
+    if (!list.canMoveItemWithinSection(from, to) { it is ListItem.SceneItem }) {
+      return false
+    }
+
+    listState.add(to, listState.removeAt(from))
+    return true
+  }
+
+  override fun onDragStopped(remoteId: Int) {
+    viewModelScope.launch {
+      val reorderedScenes = this@SceneListViewModel.threading.io {
+        reorderScenesUseCase(list, remoteId)
+        createProfileScenesListUseCase().awaitFirst()
+      }
+
+      updateItems(reorderedScenes)
+    }
+  }
+
+  override fun onLocationClick(remoteId: Int) {
+    toggleLocationUseCase(remoteId, CollapsedFlag.SCENE)
+      .andThen(createProfileScenesListUseCase(searchData.query))
+      .attach()
+      .subscribeBy(
+        onNext = { updateItems(it) },
+        onError = defaultErrorHandler("onLocationClick($remoteId)")
+      )
+      .disposeBySelf()
+  }
+
+  override fun onItemClick(remoteId: Int) {} // Not used yet
+
+  override fun onTitleLongClick(item: ListItem) {
+    sendEvent(SceneListViewEvent.ShowSceneCaptionChangeDialog(item.remoteId, item.profileId, item.userCaption))
+  }
+
+  override fun onLocationLongClick(item: ListItem.LocationItem) {
+    sendEvent(SceneListViewEvent.ShowLocationCaptionChangeDialog(item.remoteId, item.profileId, item.userCaption))
+  }
 }
 
 sealed class SceneListViewEvent : ViewEvent {
-  data object ReassignAdapter : SceneListViewEvent()
+  data class ShowLocationCaptionChangeDialog(val remoteId: Int, val profileId: Long, val caption: String) : SceneListViewEvent()
+  data class ShowSceneCaptionChangeDialog(val remoteId: Int, val profileId: Long, val caption: String) : SceneListViewEvent()
   data object NavigateToSuplaCloud : SceneListViewEvent()
   data object NavigateToSuplaBetaCloud : SceneListViewEvent()
   data class NavigateToPrivateCloud(val url: Uri) : SceneListViewEvent()
 }
 
-data class SceneListViewState(
-  val scenes: List<ListItem>? = null
-) : ViewState()
+data object SceneListViewState : ViewState()

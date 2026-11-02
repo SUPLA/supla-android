@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.buttons.TextButton
 
@@ -67,7 +68,7 @@ fun AlertDialogCritical(
 }
 
 @Composable
-@Preview
+@SuplaPreview
 private fun PreviewCritical() {
   SuplaTheme {
     AlertDialogCritical(

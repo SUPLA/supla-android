@@ -26,7 +26,7 @@ class ReleaseLoggingTree : Timber.Tree() {
   override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
     if (priority == Log.ERROR) {
       Log.e(tag, message, t)
-    } else if (priority == Log.DEBUG) {
+    } else if (priority == Log.WARN) {
       Log.w(tag, message, t)
     }
   }

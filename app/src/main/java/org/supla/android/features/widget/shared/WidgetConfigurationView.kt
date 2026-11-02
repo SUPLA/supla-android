@@ -24,9 +24,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -100,11 +104,11 @@ fun WidgetConfigurationScope.View(
     onCaptionChange(viewState.subjects.selected.caption(LocalContext.current))
   }
 
-  Box {
+  Box(modifier = Modifier.systemBarsPadding().fillMaxHeight()) {
     Column(
       modifier = Modifier
         .padding(Distance.default)
-        .padding(bottom = 80.dp)
+        .padding(bottom = 64.dp)
         .verticalScroll(state = rememberScrollState()),
       verticalArrangement = Arrangement.spacedBy(Distance.small),
       horizontalAlignment = Alignment.CenterHorizontally

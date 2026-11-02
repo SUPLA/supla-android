@@ -23,13 +23,13 @@ import androidx.car.app.Screen
 import androidx.car.app.Session
 import androidx.car.app.validation.HostValidator
 import dagger.hilt.android.AndroidEntryPoint
-import org.supla.android.Preferences
 import org.supla.android.automotive.screen.MainScreen
 import org.supla.android.core.infrastructure.DateProvider
+import org.supla.android.core.infrastructure.suplaclient.SingleCallProvider
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.AndroidAutoItemRepository
 import org.supla.android.events.UpdateEventsManager
-import org.supla.android.lib.singlecall.SingleCall
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import javax.inject.Inject
@@ -41,13 +41,13 @@ class SuplaCarAppService : CarAppService() {
   lateinit var updateEventsManager: UpdateEventsManager
 
   @Inject
-  lateinit var schedulers: SuplaSchedulers
+  lateinit var threading: SuplaThreading
 
   @Inject
   lateinit var getSceneIconUseCase: GetSceneIconUseCase
 
   @Inject
-  lateinit var singleCallProvider: SingleCall.Provider
+  lateinit var singleCallProvider: SingleCallProvider
 
   @Inject
   lateinit var androidAutoItemRepository: AndroidAutoItemRepository
@@ -59,7 +59,7 @@ class SuplaCarAppService : CarAppService() {
   lateinit var dateProvider: DateProvider
 
   @Inject
-  lateinit var preferences: Preferences
+  lateinit var preferences: ApplicationPreferences
 
   override fun createHostValidator(): HostValidator {
     return HostValidator.ALLOW_ALL_HOSTS_VALIDATOR
@@ -72,7 +72,7 @@ class SuplaCarAppService : CarAppService() {
       getSceneIconUseCase,
       updateEventsManager,
       singleCallProvider,
-      schedulers,
+      threading,
       dateProvider,
       preferences
     )
@@ -84,10 +84,10 @@ class SuplaSession(
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val getSceneIconUseCase: GetSceneIconUseCase,
   private val updateEventsManager: UpdateEventsManager,
-  private val singleCallProvider: SingleCall.Provider,
-  private val schedulers: SuplaSchedulers,
+  private val singleCallProvider: SingleCallProvider,
+  private val threading: SuplaThreading,
   private val dateProvider: DateProvider,
-  private val preferences: Preferences,
+  private val preferences: ApplicationPreferences,
 ) : Session() {
 
   override fun onCreateScreen(intent: Intent): Screen {
@@ -97,7 +97,7 @@ class SuplaSession(
       updateEventsManager = updateEventsManager,
       getSceneIconUseCase = getSceneIconUseCase,
       singleCallProvider = singleCallProvider,
-      schedulers = schedulers,
+      threading = threading,
       carContext = carContext,
       dateProvider = dateProvider,
       preferences = preferences

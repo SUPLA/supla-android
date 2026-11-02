@@ -21,17 +21,17 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
-import org.supla.android.data.source.RoomChannelRepository
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.extensions.subscribeBy
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import javax.inject.Inject
 
 @HiltViewModel
 class LegacyDimmerSettingsViewModel @Inject constructor(
-  private val channelRepository: RoomChannelRepository,
-  schedulers: SuplaSchedulers
-) : BaseViewModel<LegacyDimmerSettingsViewState, LegacyDimmerSettingsViewEvent>(LegacyDimmerSettingsViewState(), schedulers) {
+  private val channelRepository: ChannelRepository,
+  threading: SuplaThreading
+) : BaseViewModel<LegacyDimmerSettingsViewState, LegacyDimmerSettingsViewEvent>(LegacyDimmerSettingsViewState(), threading) {
 
   fun loadData(remoteId: Int) {
     channelRepository.findChannelDataEntity(remoteId)
@@ -41,6 +41,7 @@ class LegacyDimmerSettingsViewModel @Inject constructor(
         onSuccess = { sendEvent(LegacyDimmerSettingsViewEvent.LoadView(it)) },
         onError = defaultErrorHandler("loadData($remoteId)")
       )
+      .disposeBySelf()
   }
 }
 

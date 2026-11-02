@@ -17,31 +17,31 @@ package org.supla.android.usecases.client
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import io.mockk.*
+import io.mockk.Called
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.core.networking.suplaclient.SuplaClientApi
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.tools.VibrationHelper
 
-@RunWith(MockitoJUnitRunner::class)
 class StartTimerUseCaseTest {
 
-  @Mock
+  @MockK
   private lateinit var suplaClientProvider: SuplaClientProvider
 
-  @Mock
+  @MockK
   private lateinit var vibrationHelper: VibrationHelper
 
-  @InjectMocks
+  @InjectMockKs
   private lateinit var useCase: StartTimerUseCase
+
+  @Before
+  fun setUp() {
+    MockKAnnotations.init(this)
+  }
 
   @Test
   fun `should arm timer and vibrate`() {
@@ -51,10 +51,10 @@ class StartTimerUseCaseTest {
     val duration = 151
     val durationMs = duration.times(1000)
 
-    val suplaClient: SuplaClientApi = mock()
-    whenever(suplaClient.timerArm(remoteId, turnOn, durationMs)).thenReturn(true)
-
-    whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
+    val suplaClient: SuplaClientApi = mockk()
+    every { suplaClient.timerArm(remoteId, turnOn, durationMs) } returns true
+    every { vibrationHelper.vibrate() } just Runs
+    every { suplaClientProvider.provide() } returns suplaClient
 
     // when
     val observer = useCase.invoke(remoteId, turnOn, duration).test()
@@ -62,10 +62,12 @@ class StartTimerUseCaseTest {
     // then
     observer.assertComplete()
 
-    verify(suplaClient).timerArm(remoteId, turnOn, durationMs)
-    verify(suplaClientProvider).provide()
-    verify(vibrationHelper).vibrate()
-    verifyNoMoreInteractions(suplaClient, suplaClientProvider, vibrationHelper)
+    verify {
+      suplaClient.timerArm(remoteId, turnOn, durationMs)
+      suplaClientProvider.provide()
+      vibrationHelper.vibrate()
+    }
+    confirmVerified(suplaClient, suplaClientProvider, vibrationHelper)
   }
 
   @Test
@@ -74,14 +76,16 @@ class StartTimerUseCaseTest {
     val remoteId = 123
     val turnOn = false
     val duration = 0
-    val durationMs = duration.times(1000)
 
     // when
     val observer = useCase.invoke(remoteId, turnOn, duration).test()
 
     // then
     observer.assertFailure(StartTimerUseCase.InvalidTimeException::class.java)
-    verifyNoInteractions(suplaClientProvider, vibrationHelper)
+    verify {
+      suplaClientProvider wasNot Called
+      vibrationHelper wasNot Called
+    }
   }
 
   @Test
@@ -92,10 +96,10 @@ class StartTimerUseCaseTest {
     val duration = 151
     val durationMs = duration.times(1000)
 
-    val suplaClient: SuplaClientApi = mock()
-    whenever(suplaClient.timerArm(remoteId, turnOn, durationMs)).thenReturn(false)
+    val suplaClient: SuplaClientApi = mockk()
+    every { suplaClient.timerArm(remoteId, turnOn, durationMs) } returns false
 
-    whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
+    every { suplaClientProvider.provide() } returns suplaClient
 
     // when
     val observer = useCase.invoke(remoteId, turnOn, duration).test()
@@ -103,10 +107,12 @@ class StartTimerUseCaseTest {
     // then
     observer.assertComplete()
 
-    verify(suplaClient).timerArm(remoteId, turnOn, durationMs)
-    verify(suplaClientProvider).provide()
-    verifyNoMoreInteractions(suplaClient, suplaClientProvider)
-    verifyNoInteractions(vibrationHelper)
+    verify { suplaClient.timerArm(remoteId, turnOn, durationMs) }
+    verify { suplaClientProvider.provide() }
+    confirmVerified(suplaClient, suplaClientProvider)
+    verify {
+      vibrationHelper wasNot Called
+    }
   }
 
   @Test
@@ -116,7 +122,7 @@ class StartTimerUseCaseTest {
     val turnOn = false
     val duration = 151
 
-    whenever(suplaClientProvider.provide()).thenReturn(null)
+    every { suplaClientProvider.provide() } returns null
 
     // when
     val observer = useCase.invoke(remoteId, turnOn, duration).test()
@@ -124,8 +130,10 @@ class StartTimerUseCaseTest {
     // then
     observer.assertComplete()
 
-    verify(suplaClientProvider).provide()
-    verifyNoMoreInteractions(suplaClientProvider)
-    verifyNoInteractions(vibrationHelper)
+    verify { suplaClientProvider.provide() }
+    confirmVerified(suplaClientProvider)
+    verify {
+      vibrationHelper wasNot Called
+    }
   }
 }

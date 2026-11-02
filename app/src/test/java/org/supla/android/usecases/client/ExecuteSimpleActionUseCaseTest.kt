@@ -17,35 +17,33 @@ package org.supla.android.usecases.client
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import io.mockk.*
+import io.mockk.Called
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.any
-import org.mockito.kotlin.argThat
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.core.networking.suplaclient.SuplaClientApi
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.VibrationHelper
 
-@RunWith(MockitoJUnitRunner::class)
 class ExecuteSimpleActionUseCaseTest {
 
-  @Mock
+  @MockK
   private lateinit var suplaClientProvider: SuplaClientProvider
 
-  @Mock
+  @MockK
   private lateinit var vibrationHelper: VibrationHelper
 
-  @InjectMocks
+  @InjectMockKs
   private lateinit var useCase: ExecuteSimpleActionUseCase
+
+  @Before
+  fun setUp() {
+    MockKAnnotations.init(this)
+  }
 
   @Test
   fun `should execute action and vibrate`() {
@@ -54,10 +52,10 @@ class ExecuteSimpleActionUseCaseTest {
     val type = SubjectType.CHANNEL
     val remoteId = 123
 
-    val suplaClient: SuplaClientApi = mock()
-    whenever(suplaClient.executeAction(any())).thenReturn(true)
-
-    whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
+    val suplaClient: SuplaClientApi = mockk()
+    every { suplaClient.executeAction(any()) } returns true
+    every { vibrationHelper.vibrate() } just Runs
+    every { suplaClientProvider.provide() } returns suplaClient
 
     // when
     val observer = useCase.invoke(actionId, type, remoteId).test()
@@ -65,14 +63,16 @@ class ExecuteSimpleActionUseCaseTest {
     // then
     observer.assertComplete()
 
-    verify(suplaClient).executeAction(
-      argThat { parameters ->
-        parameters.action == actionId && parameters.subjectType == type && parameters.subjectId == remoteId
-      }
-    )
-    verify(suplaClientProvider).provide()
-    verify(vibrationHelper).vibrate()
-    verifyNoMoreInteractions(suplaClient, suplaClientProvider, vibrationHelper)
+    verify {
+      suplaClient.executeAction(
+        match { parameters ->
+          parameters.action == actionId && parameters.subjectType == type && parameters.subjectId == remoteId
+        }
+      )
+      suplaClientProvider.provide()
+      vibrationHelper.vibrate()
+    }
+    confirmVerified(suplaClient, suplaClientProvider, vibrationHelper)
   }
 
   @Test
@@ -82,10 +82,10 @@ class ExecuteSimpleActionUseCaseTest {
     val type = SubjectType.CHANNEL
     val remoteId = 123
 
-    val suplaClient: SuplaClientApi = mock()
-    whenever(suplaClient.executeAction(any())).thenReturn(false)
+    val suplaClient: SuplaClientApi = mockk()
+    every { suplaClient.executeAction(any()) } returns false
 
-    whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
+    every { suplaClientProvider.provide() } returns suplaClient
 
     // when
     val observer = useCase.invoke(actionId, type, remoteId).test()
@@ -93,14 +93,18 @@ class ExecuteSimpleActionUseCaseTest {
     // then
     observer.assertComplete()
 
-    verify(suplaClient).executeAction(
-      argThat { parameters ->
-        parameters.action == actionId && parameters.subjectType == type && parameters.subjectId == remoteId
-      }
-    )
-    verify(suplaClientProvider).provide()
-    verifyNoMoreInteractions(suplaClient, suplaClientProvider)
-    verifyNoInteractions(vibrationHelper)
+    verify {
+      suplaClient.executeAction(
+        match { parameters ->
+          parameters.action == actionId && parameters.subjectType == type && parameters.subjectId == remoteId
+        }
+      )
+    }
+    verify { suplaClientProvider.provide() }
+    confirmVerified(suplaClient, suplaClientProvider)
+    verify {
+      vibrationHelper wasNot Called
+    }
   }
 
   @Test
@@ -110,7 +114,7 @@ class ExecuteSimpleActionUseCaseTest {
     val type = SubjectType.CHANNEL
     val remoteId = 123
 
-    whenever(suplaClientProvider.provide()).thenReturn(null)
+    every { suplaClientProvider.provide() } returns null
 
     // when
     val observer = useCase.invoke(actionId, type, remoteId).test()
@@ -118,8 +122,10 @@ class ExecuteSimpleActionUseCaseTest {
     // then
     observer.assertComplete()
 
-    verify(suplaClientProvider).provide()
-    verifyNoMoreInteractions(suplaClientProvider)
-    verifyNoInteractions(vibrationHelper)
+    verify { suplaClientProvider.provide() }
+    confirmVerified(suplaClientProvider)
+    verify {
+      vibrationHelper wasNot Called
+    }
   }
 }

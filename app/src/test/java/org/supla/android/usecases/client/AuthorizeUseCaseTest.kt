@@ -17,19 +17,17 @@ package org.supla.android.usecases.client
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import io.mockk.MockKAnnotations
+import io.mockk.Runs
+import io.mockk.confirmVerified
 import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.verify
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.any
-import org.mockito.kotlin.doAnswer
-import org.mockito.kotlin.times
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.R
 import org.supla.android.core.infrastructure.ThreadHandler
 import org.supla.android.core.networking.suplaclient.SuplaClientApi
@@ -42,20 +40,24 @@ import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessageHandler
 
-@RunWith(MockitoJUnitRunner::class)
 class AuthorizeUseCaseTest {
 
-  @Mock
+  @MockK
   private lateinit var suplaClientProvider: SuplaClientProvider
 
-  @Mock
+  @MockK
   private lateinit var suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper
 
-  @Mock
+  @MockK
   private lateinit var threadHandler: ThreadHandler
 
-  @InjectMocks
+  @InjectMockKs
   private lateinit var useCase: AuthorizeUseCase
+
+  @Before
+  fun setUp() {
+    MockKAnnotations.init(this)
+  }
 
   @Test
   fun `should authorize with timeout`() {
@@ -66,12 +68,14 @@ class AuthorizeUseCaseTest {
     val suplaClient: SuplaClientApi = mockk {
       every { superUserAuthorizationRequest(userName, password) } answers {}
     }
-    whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
+    every { suplaClientProvider.provide() } returns suplaClient
 
     var listener: SuplaClientMessageHandler.Listener? = null
-    doAnswer {
-      listener = it.arguments[0] as SuplaClientMessageHandler.Listener
-    }.whenever(suplaClientMessageHandlerWrapper).registerMessageListener(any())
+    every { suplaClientMessageHandlerWrapper.registerMessageListener(any()) } answers {
+      listener = it.invocation.args[0] as SuplaClientMessageHandler.Listener
+    }
+    every { suplaClientMessageHandlerWrapper.unregisterMessageListener(any()) } just Runs
+    every { threadHandler.sleep(1000) } just Runs
 
     // when
     val observer = useCase.invoke(userName, password).test()
@@ -79,10 +83,10 @@ class AuthorizeUseCaseTest {
     // then
     observer.assertError(AuthorizationException.WithResource(R.string.time_exceeded))
 
-    verify(suplaClientProvider).provide()
-    verify(suplaClientMessageHandlerWrapper).registerMessageListener(listener!!)
-    verify(suplaClientMessageHandlerWrapper).unregisterMessageListener(listener)
-    verifyNoMoreInteractions(suplaClientProvider, suplaClientMessageHandlerWrapper)
+    verify { suplaClientProvider.provide() }
+    verify { suplaClientMessageHandlerWrapper.registerMessageListener(listener!!) }
+    verify { suplaClientMessageHandlerWrapper.unregisterMessageListener(listener!!) }
+    confirmVerified(suplaClientProvider, suplaClientMessageHandlerWrapper)
   }
 
   @Test
@@ -94,24 +98,25 @@ class AuthorizeUseCaseTest {
     val suplaClient: SuplaClientApi = mockk {
       every { superUserAuthorizationRequest(userName, password) } answers {}
     }
-    whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
+    every { suplaClientProvider.provide() } returns suplaClient
 
     val message = SuplaClientMessage.AuthorizationResult(true, SuplaResultCode.TRUE)
     var listener: SuplaClientMessageHandler.Listener? = null
-    doAnswer {
-      listener = it.arguments[0] as SuplaClientMessageHandler.Listener
+    every { suplaClientMessageHandlerWrapper.registerMessageListener(any()) } answers {
+      listener = it.invocation.args[0] as SuplaClientMessageHandler.Listener
       listener.onReceived(message)
-    }.whenever(suplaClientMessageHandlerWrapper).registerMessageListener(any())
+    }
+    every { suplaClientMessageHandlerWrapper.unregisterMessageListener(any()) } just Runs
 
     // when
     val observer = useCase.invoke(userName, password).test()
 
     // then
     observer.assertComplete()
-    verify(suplaClientProvider).provide()
-    verify(suplaClientMessageHandlerWrapper).registerMessageListener(listener!!)
-    verify(suplaClientMessageHandlerWrapper, times(2)).unregisterMessageListener(listener)
-    verifyNoMoreInteractions(suplaClientProvider, suplaClientMessageHandlerWrapper)
+    verify { suplaClientProvider.provide() }
+    verify { suplaClientMessageHandlerWrapper.registerMessageListener(listener!!) }
+    verify(exactly = 2) { suplaClientMessageHandlerWrapper.unregisterMessageListener(listener!!) }
+    confirmVerified(suplaClientProvider, suplaClientMessageHandlerWrapper)
   }
 
   @Test
@@ -141,13 +146,14 @@ class AuthorizeUseCaseTest {
     val suplaClient: SuplaClientApi = mockk {
       every { superUserAuthorizationRequest(userName, password) } answers {}
     }
-    whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
+    every { suplaClientProvider.provide() } returns suplaClient
 
     var listener: SuplaClientMessageHandler.Listener? = null
-    doAnswer {
-      listener = it.arguments[0] as SuplaClientMessageHandler.Listener
+    every { suplaClientMessageHandlerWrapper.registerMessageListener(any()) } answers {
+      listener = it.invocation.args[0] as SuplaClientMessageHandler.Listener
       listener.onReceived(message)
-    }.whenever(suplaClientMessageHandlerWrapper).registerMessageListener(any())
+    }
+    every { suplaClientMessageHandlerWrapper.unregisterMessageListener(any()) } just Runs
 
     // when
     val observer = useCase.invoke(userName, password).test()
@@ -155,9 +161,9 @@ class AuthorizeUseCaseTest {
     // then
     observer.assertError(AuthorizationException.WithLocalizedString(errorMessage))
 
-    verify(suplaClientProvider).provide()
-    verify(suplaClientMessageHandlerWrapper).registerMessageListener(listener!!)
-    verify(suplaClientMessageHandlerWrapper, times(2)).unregisterMessageListener(listener)
-    verifyNoMoreInteractions(suplaClientProvider, suplaClientMessageHandlerWrapper)
+    verify { suplaClientProvider.provide() }
+    verify { suplaClientMessageHandlerWrapper.registerMessageListener(listener!!) }
+    verify(exactly = 2) { suplaClientMessageHandlerWrapper.unregisterMessageListener(listener!!) }
+    confirmVerified(suplaClientProvider, suplaClientMessageHandlerWrapper)
   }
 }

@@ -21,7 +21,7 @@ import android.annotation.SuppressLint
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import org.supla.android.extensions.subscribeBy
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
@@ -29,7 +29,7 @@ private const val DELAYED_COMMAND_DELAY_MS = 2000L
 
 @SuppressLint("CheckResult")
 abstract class DelayedCommandSubject<T : DelayableState>(
-  schedulers: SuplaSchedulers,
+  threading: SuplaThreading,
   delayMs: Long = DELAYED_COMMAND_DELAY_MS,
   mode: Mode = Mode.DEBOUNCE
 ) {
@@ -51,7 +51,7 @@ abstract class DelayedCommandSubject<T : DelayableState>(
           Completable.complete()
         }
       }
-      .subscribeOn(schedulers.io)
+      .subscribeOn(threading.schedulers.io)
       .subscribeBy(
         onError = { Timber.e(it, "Could not execute delayed request") }
       )

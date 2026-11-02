@@ -17,29 +17,28 @@ package org.supla.android.features.channellist
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.os.Bundle
-import androidx.annotation.IdRes
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.supla.android.Preferences
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.rx3.awaitFirst
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
-import org.supla.android.data.model.general.ChannelDataBase
-import org.supla.android.data.source.ChannelRepository
-import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.subscribeBy
-import org.supla.android.features.details.detailbase.StandardDetailFragment
 import org.supla.android.features.details.detailbase.base.DetailPage
 import org.supla.android.features.details.detailbase.base.ItemBundle
-import org.supla.android.features.details.impulsecounter.ImpulseCounterDetailFragment
-import org.supla.android.features.details.rgbanddimmer.RgbwDetailFragment
-import org.supla.android.features.details.thermostatdetail.ThermostatDetailFragment
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.main.topbar.TopBarSearchData
+import org.supla.android.main.topbar.TopBarSearchEvent
+import org.supla.android.tools.SuplaThreading
+import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.dialogs.ActionAlertDialogState
 import org.supla.android.ui.dialogs.dialogState
 import org.supla.android.ui.lists.BaseListViewModel
@@ -47,82 +46,104 @@ import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.ActionException
 import org.supla.android.usecases.channel.ButtonType
 import org.supla.android.usecases.channel.ChannelActionUseCase
+import org.supla.android.usecases.channel.ChannelToListItemMapper
 import org.supla.android.usecases.channel.CreateProfileChannelsListUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
+import org.supla.android.usecases.channel.ReorderChannelsUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
-import org.supla.android.usecases.details.GpmDetailType
-import org.supla.android.usecases.details.HumidityDetailType
-import org.supla.android.usecases.details.IcDetailType
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideChannelDetailTypeUseCase
-import org.supla.android.usecases.details.RgbwDetailType
 import org.supla.android.usecases.details.StandardDetailType
-import org.supla.android.usecases.details.ThermometerDetailType
-import org.supla.android.usecases.details.ThermostatDetailType
+import org.supla.android.usecases.list.TriggerLogHistoryDownloadUseCase
+import org.supla.android.usecases.list.canMoveItemWithinSection
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class ChannelListViewModel @Inject constructor(
   private val createProfileChannelsListUseCase: CreateProfileChannelsListUseCase,
+  private val triggerLogHistoryDownloadUseCase: TriggerLogHistoryDownloadUseCase,
   private val provideChannelDetailTypeUseCase: ProvideChannelDetailTypeUseCase,
   private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   private val executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
+  private val channelToListItemMapper: ChannelToListItemMapper,
+  private val reorderChannelsUseCase: ReorderChannelsUseCase,
   private val toggleLocationUseCase: ToggleLocationUseCase,
   private val channelActionUseCase: ChannelActionUseCase,
-  private val channelRepository: ChannelRepository,
   updateEventsManager: UpdateEventsManager,
+  vibrationHelper: VibrationHelper,
   dateProvider: DateProvider,
-  preferences: Preferences,
-  schedulers: SuplaSchedulers
+  threading: SuplaThreading
 ) : BaseListViewModel<ChannelListViewState, ChannelListViewEvent>(
-  preferences,
+  vibrationHelper,
   dateProvider,
-  schedulers,
+  threading,
   ChannelListViewState()
-) {
-
-  override fun sendReassignEvent() = sendEvent(ChannelListViewEvent.ReassignAdapter)
+),
+  ChannelListScope {
 
   override fun reloadList() = loadChannels()
 
+  var searchData: TopBarSearchData = TopBarSearchData()
+    private set
+
+  private var downloadJob: Job? = null
+
   init {
     observeUpdates(updateEventsManager.observeChannelsUpdate())
+
+    updateEventsManager.observeAllChannels()
+      .attachSilent()
+      .flatMapMaybe { readChannelWithChildrenUseCase(it) }
+      .map { channelToListItemMapper(it) }
+      .subscribeBy(
+        onNext = { updateDefaultItem(it) },
+        onError = defaultErrorHandler("init()")
+      )
+      .disposeBySelf()
+  }
+
+  fun handle(event: TopBarSearchEvent) {
+    searchData = searchData.handle(event)
+    loadChannels()
+  }
+
+  override fun onStart() {
+    loadChannels()
+    startLogHistoryDownload()
+  }
+
+  override fun onStop() {
+    stopLogHistoryDownload()
   }
 
   fun loadChannels() {
-    createProfileChannelsListUseCase()
+    createProfileChannelsListUseCase(filterString = searchData.query)
       .attach()
       .subscribeBy(
-        onNext = { updateState { state -> state.copy(channels = it) } },
+        onNext = { updateItems(it) },
         onError = defaultErrorHandler("loadChannels()")
       )
       .disposeBySelf()
   }
 
-  fun toggleLocationCollapsed(location: LocationEntity) {
-    toggleLocationUseCase(location, CollapsedFlag.CHANNEL)
-      .andThen(createProfileChannelsListUseCase())
-      .attach()
-      .subscribeBy(
-        onNext = { updateState { state -> state.copy(channels = it) } },
-        onError = defaultErrorHandler("toggleLocationCollapsed($location)")
-      )
-      .disposeBySelf()
+  fun startLogHistoryDownload() {
+    if (downloadJob?.isActive == true) return
+
+    downloadJob = viewModelScope.launch(threading.dispatchers.io) {
+      delay(5.seconds)
+      while (isActive) {
+        triggerLogHistoryDownloadUseCase()
+        delay(30.seconds)
+      }
+    }
   }
 
-  fun swapItems(firstItem: ChannelDataBase?, secondItem: ChannelDataBase?) {
-    if (firstItem == null || secondItem == null) {
-      return // nothing to swap
-    }
-
-    channelRepository.reorderChannels(firstItem.id, firstItem.locationId, secondItem.id)
-      .attach()
-      .subscribeBy(
-        onError = defaultErrorHandler("swapItems(..., ...)")
-      )
-      .disposeBySelf()
+  fun stopLogHistoryDownload() {
+//    downloadJob?.cancel()
+//    downloadJob = null
   }
 
   fun performAction(channelId: Int, buttonType: ButtonType) {
@@ -143,18 +164,6 @@ class ChannelListViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  fun onListItemClick(remoteId: Int) {
-    if (isEventAllowed()) {
-      readChannelWithChildrenUseCase(remoteId)
-        .attach()
-        .subscribeBy(
-          onSuccess = { openDetailsByChannelFunction(it) },
-          onError = defaultErrorHandler("onListItemClick($remoteId)")
-        )
-        .disposeBySelf()
-    }
-  }
-
   fun forceAction(remoteId: Int?, actionId: ActionId?) {
     updateState { it.copy(actionAlertDialogState = null) }
 
@@ -172,7 +181,71 @@ class ChannelListViewModel @Inject constructor(
     updateState { it.copy(actionAlertDialogState = null) }
   }
 
-  fun showAlert(message: String) {
+  private fun openDetailsByChannelFunction(data: ChannelWithChildren) {
+    val channel = data.channel
+    if (isAvailableInOffline(channel).not() && channel.status.offline) {
+      return // do not open details for offline channels
+    }
+
+    when (val detailType = provideChannelDetailTypeUseCase(data)) {
+      is StandardDetailType -> sendEvent(ChannelListViewEvent.OpenDetail(ItemBundle.from(channel), detailType.pages))
+      is LegacyDetailType -> sendEvent(ChannelListViewEvent.OpenLegacyDetail(channel.remoteId, detailType))
+      null -> {} // no action
+    }
+  }
+
+  override fun onDeviceCatalogClick() {
+    sendEvent(ChannelListViewEvent.NavigateToDeviceCatalog)
+  }
+
+  override fun onAddDeviceClick() {
+    sendEvent(ChannelListViewEvent.NavigateToAddDevice)
+  }
+
+  override fun onLeftButtonClick(remoteId: Int) {
+    performAction(remoteId, ButtonType.LEFT)
+  }
+
+  override fun onRightButtonClick(remoteId: Int) {
+    performAction(remoteId, ButtonType.RIGHT)
+  }
+
+  override fun moveItems(from: Int, to: Int): Boolean {
+    if (!list.canMoveItemWithinSection(from, to) { it is ListItem.DefaultItem }) {
+      return false
+    }
+
+    listState.add(to, listState.removeAt(from))
+    return true
+  }
+
+  override fun onDragStopped(remoteId: Int) {
+    viewModelScope.launch {
+      val reorderedChannels = threading.io {
+        reorderChannelsUseCase(list, remoteId)
+        createProfileChannelsListUseCase().awaitFirst()
+      }
+
+      updateItems(reorderedChannels)
+    }
+  }
+
+  override fun onLocationClick(remoteId: Int) {
+    toggleLocationUseCase(remoteId, CollapsedFlag.CHANNEL)
+      .andThen(createProfileChannelsListUseCase(filterString = searchData.query))
+      .attach()
+      .subscribeBy(
+        onNext = { updateItems(it) },
+        onError = defaultErrorHandler("onLocationClick($remoteId)")
+      )
+      .disposeBySelf()
+  }
+
+  override fun onInfoClick(remoteId: Int) {
+    sendEvent(ChannelListViewEvent.ShowInfoDialog(remoteId))
+  }
+
+  override fun onIssueClick(message: String) {
     updateState {
       it.copy(
         actionAlertDialogState = ActionAlertDialogState(
@@ -183,53 +256,37 @@ class ChannelListViewModel @Inject constructor(
     }
   }
 
-  private fun openDetailsByChannelFunction(data: ChannelWithChildren) {
-    val channel = data.channel
-    if (isAvailableInOffline(channel).not() && channel.status.offline) {
-      return // do not open details for offline channels
+  override fun onItemClick(remoteId: Int) {
+    if (isEventAllowed()) {
+      readChannelWithChildrenUseCase(remoteId)
+        .attach()
+        .subscribeBy(
+          onSuccess = { openDetailsByChannelFunction(it) },
+          onError = defaultErrorHandler("onItemClick($remoteId)")
+        )
+        .disposeBySelf()
     }
+  }
 
-    when (val detailType = provideChannelDetailTypeUseCase(data)) {
-      is ThermometerDetailType -> sendEvent(ChannelListViewEvent.OpenSingleHistoryDetail(ItemBundle.from(channel), detailType.pages))
-      is GpmDetailType -> sendEvent(ChannelListViewEvent.OpenSingleHistoryDetail(ItemBundle.from(channel), detailType.pages))
-      is HumidityDetailType -> sendEvent(ChannelListViewEvent.OpenSingleHistoryDetail(ItemBundle.from(channel), detailType.pages))
-      is StandardDetailType -> sendEvent(ChannelListViewEvent.OpenStandardDetail(ItemBundle.from(channel), detailType.pages))
-      is ThermostatDetailType -> sendEvent(ChannelListViewEvent.OpenThermostatDetail(ItemBundle.from(channel), detailType.pages))
-      is IcDetailType -> sendEvent(ChannelListViewEvent.OpenIcDetail(ItemBundle.from(channel), detailType.pages))
-      is RgbwDetailType -> sendEvent(ChannelListViewEvent.OpenRgbwDetail(ItemBundle.from(channel), detailType.pages))
-      is LegacyDetailType -> sendEvent(ChannelListViewEvent.OpenLegacyDetails(channel.remoteId, detailType))
-      null -> {} // no action
-    }
+  override fun onTitleLongClick(item: ListItem) {
+    sendEvent(ChannelListViewEvent.ShowChannelCaptionChangeDialog(item.remoteId, item.profileId, item.userCaption))
+  }
+
+  override fun onLocationLongClick(item: ListItem.LocationItem) {
+    sendEvent(ChannelListViewEvent.ShowLocationCaptionChangeDialog(item.remoteId, item.profileId, item.userCaption))
   }
 }
 
 sealed class ChannelListViewEvent : ViewEvent {
-  data class OpenLegacyDetails(val remoteId: Int, val type: LegacyDetailType) : ChannelListViewEvent()
-
-  data class OpenThermostatDetail(private val itemBundle: ItemBundle, private val pages: List<DetailPage>) :
-    BaseDetail(R.id.thermostat_detail_fragment, ThermostatDetailFragment.bundle(itemBundle, pages.toTypedArray()))
-
-  data class OpenIcDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
-    BaseDetail(R.id.impulse_counter_detail_fragment, ImpulseCounterDetailFragment.bundle(itemBundle, pages.toTypedArray()))
-
-  data class OpenStandardDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
-    BaseDetail(R.id.standard_detail_fragment, StandardDetailFragment.bundle(itemBundle, pages.toTypedArray()))
-
-  data class OpenSingleHistoryDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
-    BaseDetail(R.id.single_history_detail_fragment, StandardDetailFragment.bundle(itemBundle, pages.toTypedArray()))
-
-  data class OpenRgbwDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
-    BaseDetail(R.id.rgbw_detail_fragment, RgbwDetailFragment.bundle(itemBundle, pages.toTypedArray()))
-
-  data object ReassignAdapter : ChannelListViewEvent()
-
-  abstract class BaseDetail(
-    @param:IdRes val fragmentId: Int,
-    val fragmentArguments: Bundle
-  ) : ChannelListViewEvent()
+  data object NavigateToDeviceCatalog : ChannelListViewEvent()
+  data object NavigateToAddDevice : ChannelListViewEvent()
+  data class ShowLocationCaptionChangeDialog(val remoteId: Int, val profileId: Long, val caption: String) : ChannelListViewEvent()
+  data class ShowChannelCaptionChangeDialog(val remoteId: Int, val profileId: Long, val caption: String) : ChannelListViewEvent()
+  data class ShowInfoDialog(val remoteId: Int) : ChannelListViewEvent()
+  data class OpenLegacyDetail(val remoteId: Int, val type: LegacyDetailType) : ChannelListViewEvent()
+  data class OpenDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) : ChannelListViewEvent()
 }
 
 data class ChannelListViewState(
-  val channels: List<ListItem>? = null,
   val actionAlertDialogState: ActionAlertDialogState? = null
 ) : ViewState()

@@ -90,8 +90,8 @@ class PowerActiveLogRepository @Inject constructor(
       profileId = profileId
     )
 
-  override fun findCountWithoutGroupingString(remoteId: Int, profileId: Long): Single<Int> =
-    powerActiveLogDao.emptyGroupingStringCount(remoteId, profileId)
+  override fun hasEmptyGroupingString(remoteId: Int, profileId: Long): Single<Boolean> =
+    powerActiveLogDao.hasEmptyGroupingString(remoteId, profileId)
 
   override fun count(): Observable<Int> = powerActiveLogDao.count()
 

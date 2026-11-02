@@ -27,14 +27,13 @@ import org.supla.android.data.model.spinner.SubjectItem
 import org.supla.android.data.model.spinner.SubjectItemConversionScope
 import org.supla.android.data.source.AndroidAutoItemRepository
 import org.supla.android.data.source.ChannelGroupRepository
-import org.supla.android.data.source.RoomChannelRepository
-import org.supla.android.data.source.RoomSceneRepository
+import org.supla.android.data.source.SceneRepository
 import org.supla.android.data.source.local.entity.AndroidAutoItemEntity
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ReadAllChannelsWithChildrenUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -56,9 +55,9 @@ class AddAndroidAutoItemViewModel @Inject constructor(
   override val getSceneIconUseCase: GetSceneIconUseCase,
   private val updateEventsManager: UpdateEventsManager,
   override val getCaptionUseCase: GetCaptionUseCase,
-  private val sceneRepository: RoomSceneRepository,
-  schedulers: SuplaSchedulers
-) : BaseViewModel<AddAndroidAutoItemViewModelState, AddAndroidAutoItemViewEvent>(AddAndroidAutoItemViewModelState(), schedulers),
+  private val sceneRepository: SceneRepository,
+  threading: SuplaThreading
+) : BaseViewModel<AddAndroidAutoItemViewModelState, AddAndroidAutoItemViewEvent>(AddAndroidAutoItemViewModelState(), threading),
   AddAndroidAutoItemScope,
   SubjectItemConversionScope {
 
@@ -73,7 +72,7 @@ class AddAndroidAutoItemViewModel @Inject constructor(
   private fun loadForAdd() {
     readAllProfilesUseCase()
       .flatMapSingle { profiles ->
-        profiles.firstOrNull { it.active == true }?.id?.let { profileId ->
+        profiles.firstOrNull { it.active }?.id?.let { profileId ->
           return@flatMapSingle getSubjectsSource(profileId, SubjectType.CHANNEL).map { Pair(profiles, it) }
         }
         Single.just(Pair(profiles, emptyList()))
@@ -81,7 +80,7 @@ class AddAndroidAutoItemViewModel @Inject constructor(
       .attach()
       .subscribeBy(
         onNext = { (profiles, subjects) ->
-          val activeProfile = profiles.first { it.active == true }
+          val activeProfile = profiles.first { it.active }
           updateState { state ->
             val subjectsList = subjects.asSingleSelectionList(SubjectType.CHANNEL)
             state.copy(

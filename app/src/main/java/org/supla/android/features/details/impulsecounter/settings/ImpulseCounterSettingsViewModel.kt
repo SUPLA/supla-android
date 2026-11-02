@@ -29,7 +29,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.details.detailbase.base.ItemBundle
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.list.RefreshImpulseCounterAggregatedValueUseCase
 import org.supla.core.shared.infrastructure.localizedString
@@ -42,8 +42,8 @@ class ImpulseCounterSettingsViewModel @Inject constructor(
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   private val getCaptionUseCase: GetCaptionUseCase,
   private val userStateHolder: UserStateHolder,
-  schedulers: SuplaSchedulers
-) : BaseViewModel<ImpulseCounterSettingsViewState, ImpulseCounterSettingsViewEvent>(ImpulseCounterSettingsViewState(), schedulers),
+  threading: SuplaThreading
+) : BaseViewModel<ImpulseCounterSettingsViewState, ImpulseCounterSettingsViewEvent>(ImpulseCounterSettingsViewState(), threading),
   ImpulseCounterSettingsViewScope {
 
   private lateinit var item: ItemBundle
@@ -82,7 +82,7 @@ class ImpulseCounterSettingsViewModel @Inject constructor(
 
   private fun updateSettings(listValueAggregation: ListValueAggregation? = null) {
     viewModelScope.launch {
-      schedulers.io {
+      this@ImpulseCounterSettingsViewModel.threading.io {
         val settings = userStateHolder.getImpulseCounterSettings(item.profileId, item.remoteId)
 
         userStateHolder.setImpulseCounterSettings(

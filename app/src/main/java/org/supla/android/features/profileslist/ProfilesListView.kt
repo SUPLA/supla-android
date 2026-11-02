@@ -90,9 +90,9 @@ fun ProfilesListScope.View(state: ProfilesListViewState) {
       ) {
         items(
           items = state.profiles,
-          key = { it.id!! }
+          key = { it.id }
         ) { profile ->
-          ReorderableItem(reorderableLazyListState, key = profile.id!!) {
+          ReorderableItem(reorderableLazyListState, key = profile.id) {
             if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT) {
               ProfileRowPortrait(profile = profile, scope = this)
             } else {
@@ -150,15 +150,15 @@ private fun ProfilesListScope.ProfileRowPortrait(
       .background(color = MaterialTheme.colorScheme.surface)
       .clickable(onClick = { onProfileSelected(profile) })
   ) {
-    ProfileIcon(profile.active == true)
+    ProfileIcon(profile.active)
     Text(
       text = profile.name,
       style = MaterialTheme.typography.bodyMedium,
       modifier = Modifier.weight(1f)
     )
-    profile.active?.ifTrue { ActiveLabel() }
+    profile.active.ifTrue { ActiveLabel() }
     Row {
-      EditButton(profile.id!!)
+      EditButton(profile.id)
       Image(
         drawableId = R.drawable.move_holder,
         modifier = with(scope) {
@@ -180,20 +180,20 @@ private fun ProfilesListScope.ProfileRowLandscape(
       .background(color = MaterialTheme.colorScheme.surface)
       .clickable(onClick = { onProfileSelected(profile) })
   ) {
-    ProfileIcon(profile.active == true)
+    ProfileIcon(profile.active)
     Text(
       text = profile.name,
       style = MaterialTheme.typography.bodyMedium,
     )
     if (profile.emailAuth) {
-      profile.email?.let { ProfileDetail(it) }
+      ProfileDetail(profile.email)
     } else {
-      profile.accessId?.let { ProfileDetail("ID: $it") }
+      ProfileDetail("ID: ${profile.accessId}")
     }
-    profile.active?.ifTrue { ActiveLabel() }
+    profile.active.ifTrue { ActiveLabel() }
 
     Row {
-      EditButton(profile.id!!)
+      EditButton(profile.id)
       Image(
         drawableId = R.drawable.move_holder,
         modifier = with(scope) {
@@ -263,16 +263,13 @@ private fun mockProfile(id: Long, name: String, active: Boolean): ProfileEntity 
     id = id,
     name = name,
     email = "test@email.pl",
-    serverForAccessId = null,
-    serverForEmail = null,
+    serverForAccessId = "",
+    serverForEmail = "",
     serverAutoDetect = false,
     emailAuth = true,
-    accessId = null,
-    accessIdPassword = null,
-    preferredProtocolVersion = null,
+    accessId = 0,
+    preferredProtocolVersion = 0,
     active = active,
     advancedMode = false,
-    position = 0,
-    guid = null,
-    authKey = null,
+    position = 0
   )

@@ -24,6 +24,7 @@ import org.supla.android.data.source.local.dao.ChannelGroupDao
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.usecases.captionchange.CaptionChangeUseCase
+import org.supla.android.usecases.channel.VisibilityChange
 import org.supla.android.usecases.developerinfo.CountProvider
 import org.supla.android.usecases.profile.DeleteProfileUseCase
 import javax.inject.Inject
@@ -45,6 +46,16 @@ class ChannelGroupRepository @Inject constructor(
   fun findProfileGroups(profileId: Long): Single<List<ChannelGroupDataEntity>> = channelGroupDao.findProfileGroups(profileId)
 
   fun update(groups: List<ChannelGroupEntity>) = channelGroupDao.update(groups)
+
+  suspend fun updatePositions(locationRemoteIds: List<Int>, orderedRemoteIds: List<Int>) =
+    channelGroupDao.updatePositions(locationRemoteIds, orderedRemoteIds)
+
+  suspend fun setChannelGroupsVisible(change: VisibilityChange): Boolean =
+    channelGroupDao.setChannelGroupsVisible(change.newVisibility, change.applyForVisibility) > 0
+
+  suspend fun insert(entity: ChannelGroupEntity) = channelGroupDao.insert(entity)
+
+  suspend fun updateEntity(entity: ChannelGroupEntity) = channelGroupDao.update(entity)
 
   suspend fun findIconIdsToDownload(profileId: Long) = channelGroupDao.findIconIdsToDownload(profileId)
 

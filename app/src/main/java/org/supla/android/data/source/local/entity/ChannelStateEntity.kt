@@ -21,6 +21,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import org.supla.android.lib.SuplaChannelStatePrintable
 import org.supla.core.shared.data.model.battery.BatteryInfo
+import org.supla.core.shared.data.model.battery.BatteryState
 import org.supla.core.shared.extensions.forTrue
 
 @Entity(
@@ -31,6 +32,7 @@ data class ChannelStateEntity(
   @ColumnInfo(name = COLUMN_BATTERY_HEALTH) val batteryHealth: Int?,
   @ColumnInfo(name = COLUMN_BATTERY_LEVEL) val batteryLevel: Int?,
   @ColumnInfo(name = COLUMN_BATTERY_POWERED) val batteryPowered: Boolean?,
+  @ColumnInfo(name = COLUMN_BATTERY_STATE) val batteryState: BatteryState?,
   @ColumnInfo(name = COLUMN_BRIDGE_NODE_ONLINE) val bridgeNodeOnline: Boolean?,
   @ColumnInfo(name = COLUMN_BRIDGE_NODE_SIGNAL_STRENGTH) val bridgeNodeSignalStrength: Int?,
   @ColumnInfo(name = COLUMN_CONNECTION_UPTIME) val connectionUptime: Int?,
@@ -51,6 +53,8 @@ data class ChannelStateEntity(
     get() = batteryLevel
   override val batteryPoweredForPrintable: Boolean?
     get() = batteryPowered
+  override val batteryStateForPrintable: BatteryState?
+    get() = batteryState
   override val wifiRssiForPrintable: Int?
     get() = wifiRssi
   override val wifiSignalStrengthForPrintable: Int?
@@ -81,6 +85,7 @@ data class ChannelStateEntity(
     const val COLUMN_BATTERY_HEALTH = "battery_health"
     const val COLUMN_BATTERY_LEVEL = "battery_level"
     const val COLUMN_BATTERY_POWERED = "batter_powered"
+    const val COLUMN_BATTERY_STATE = "battery_state"
     const val COLUMN_BRIDGE_NODE_ONLINE = "bridge_node_online"
     const val COLUMN_BRIDGE_NODE_SIGNAL_STRENGTH = "bridge_node_signal_strength"
     const val COLUMN_CONNECTION_UPTIME = "connection_uptime"
@@ -97,8 +102,8 @@ data class ChannelStateEntity(
     const val COLUMN_PROFILE_ID = "profile_id"
 
     const val ALL_COLUMNS = "$COLUMN_BATTERY_HEALTH, $COLUMN_BATTERY_LEVEL, $COLUMN_BATTERY_POWERED, " +
-      "$COLUMN_BRIDGE_NODE_ONLINE, $COLUMN_BRIDGE_NODE_SIGNAL_STRENGTH, $COLUMN_CONNECTION_UPTIME, " +
-      "$COLUMN_IP_V4, $COLUMN_LAST_CONNECTION_RESET_CAUSE, $COLUMN_LIGHT_SOURCE_LIFESPAN, " +
+      "$COLUMN_BATTERY_STATE, $COLUMN_BRIDGE_NODE_ONLINE, $COLUMN_BRIDGE_NODE_SIGNAL_STRENGTH, " +
+      "$COLUMN_CONNECTION_UPTIME, $COLUMN_IP_V4, $COLUMN_LAST_CONNECTION_RESET_CAUSE, $COLUMN_LIGHT_SOURCE_LIFESPAN, " +
       "$COLUMN_LIGHT_SOURCE_LIFESPAN_LEFT, $COLUMN_LIGHT_SOURCE_OPERATING_TIME, $COLUMN_MAC_ADDRESS, " +
       "$COLUMN_UPTIME, $COLUMN_WIFI_RSSI, $COLUMN_WIFI_SIGNAL_STRENGTH, $COLUMN_CHANNEL_ID, $COLUMN_PROFILE_ID"
 
@@ -107,6 +112,7 @@ data class ChannelStateEntity(
         state.$COLUMN_BATTERY_HEALTH state_$COLUMN_BATTERY_HEALTH,
         state.$COLUMN_BATTERY_LEVEL state_$COLUMN_BATTERY_LEVEL,
         state.$COLUMN_BATTERY_POWERED state_$COLUMN_BATTERY_POWERED,
+        state.$COLUMN_BATTERY_STATE state_$COLUMN_BATTERY_STATE,
         state.$COLUMN_BRIDGE_NODE_ONLINE state_$COLUMN_BRIDGE_NODE_ONLINE,
         state.$COLUMN_BRIDGE_NODE_SIGNAL_STRENGTH state_$COLUMN_BRIDGE_NODE_SIGNAL_STRENGTH,
         state.$COLUMN_CONNECTION_UPTIME state_$COLUMN_CONNECTION_UPTIME,
@@ -127,6 +133,7 @@ data class ChannelStateEntity(
         batteryHealth = null,
         batteryLevel = null,
         batteryPowered = null,
+        batteryState = null,
         bridgeNodeOnline = null,
         bridgeNodeSignalStrength = null,
         connectionUptime = null,
@@ -145,6 +152,6 @@ data class ChannelStateEntity(
 
 val ChannelStateEntity.batteryInfo: BatteryInfo?
   get() =
-    (batteryPowered != null || batteryLevel != null).forTrue {
-      BatteryInfo(batteryPowered, batteryLevel, batteryHealth)
+    (batteryPowered != null || batteryLevel != null || batteryState != null).forTrue {
+      BatteryInfo(batteryPowered, batteryLevel, batteryHealth, batteryState)
     }

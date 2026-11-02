@@ -33,6 +33,9 @@
   <string name="channel_caption_thermometer">Thermomètre</string>
   <string name="channel_caption_humidity">Humidité</string>
   <string name="channel_caption_humidityandtemperature">Température et humidité</string>
+  <string name="channel_caption_smoke_sensor">Détecteur de fumée</string>
+  <string name="channel_caption_carbon_monoxide_sensor">Détecteur de monoxyde de carbone</string>
+  <string name="channel_caption_gas_sensor">Détecteur de gaz</string>
   <string name="channel_caption_dimmer">Variateur de luminosité</string>
   <string name="channel_caption_rgblighting">Éclairage RGB</string>
   <string name="channel_caption_dimmerandrgblighting">Variateur de luminosité et éclairage RGB</string>
@@ -97,7 +100,7 @@
   <string name="wizard_result_compat_error">Le dispositif connecté n\'est pas compatible avec cet assistant!</string>
   <string name="add_wizard_step_1_welcome">Bienvenue dans l\'assistant d\'ajout des dispositifs qui vous aidera d\'une manière simple et rapide à ajouter un nouveau dispositif au système.</string>
   <string name="device_reg_request_timeout">Le délai d\'attente pour des informations sur la disponibilité d\'enregistrement des dispositifs est dépassé !</string>
-  <string name="wizard_no_internetwifi">Avant de commencer, connectez-vous à Internet par le biais du réseau Wi-Fi qui sera également utilisé par votre actionneur pour vous connecter au serveur.</string>
+  <string name="wizard_no_internetwifi">Avant de commencer, assurez-vous que le Wi-Fi est activé.</string>
   <string name="wizard_not_enought_permissions">Cette application n\'a pas d\'autorisations suffisantes. Accédez à la gestion des applications dans les paramètres du système. Ensuite, trouvez l\'application %1$s et activez toutes les autorisations qu\'elle exige.</string>
   <string name="help">Aide</string>
   <string name="channel_caption_staircasetimer">Minuterie d\'escalier</string>
@@ -638,6 +641,11 @@
   <string name="settings_battery_level_warning">Alerte batterie faible</string>
   <string name="channel_battery_level">Niveau de batterie: %1$d%%</string>
   <string name="channel_battery_level_with_info">Niveau de batterie (%1$d - %2$s): %3$d%%</string>
+  <string name="battery_state">État de la batterie</string>
+  <string name="channel_battery_low">Niveau de batterie faible</string>
+  <string name="channel_battery_low_with_info">Niveau de batterie faible (%1$d - %2$s)</string>
+  <string name="channel_battery_state_low_value">faible</string>
+  <string name="channel_battery_state_normal_value">normal</string>
   <string name="channel_btn_stop">Arrêter</string>
   <string name="android_auto_action">Action: %1$s</string>
   <string name="android_auto_empty_header">Configuration requise</string>
@@ -810,8 +818,17 @@
   <string name="scene_inactive">La scène est inactive</string>
   <string name="nfc_detail_action_added">Ajouté à l’application</string>
   <string name="general_search">Rechercher</string>
+  <string name="general_open_drawer">Ouvrir le menu</string>
+  <string name="general_back">Retour</string>
   <string name="toolbar_search_hint">Saisissez au moins 2 caractères…</string>
   <string name="details_timer_select_program">Sélectionnez un programme</string>
+  <string name="details_recuperator_ventilation">Ventilation</string>
+  <string name="details_recuperator_empty_house">Maison vide</string>
+  <string name="details_recuperator_open_window">Ouvrir la fenêtre</string>
+  <string name="channel_caption_hvac_hrv">Ventilation avec récupération de chaleur</string>
+  <string name="details_recuperator_manual_mode_label">Mode manuel</string>
+  <string name="profile_selected">Profil sélectionné</string>
+  <string name="general_clear_search">Effacer la recherche</string>
   <string name="settings_show_unavailable_channels">Masquer les canaux indisponibles en raison de la configuration de l’appareil</string>
   <string name="details_em_active_energy_balance">Bilan de l’énergie active</string>
   <string name="details_em_settings_list_metric">Valeur sélectionnée</string>
@@ -824,4 +841,12 @@
   <string name="details_em_on_list_balance">Méthode d’équilibrage énergétique</string>
   <string name="details_em_on_list_value">Plage de données</string>
   <string name="details_em_on_list">Affichage dans la liste des canaux</string>
+  <string name="wizard_result_certificate_untrusted">Le certificat du dispositif n’est pas approuvé. Assurez-vous de vous connecter au bon dispositif et que son logiciel est à jour.</string>
+  <string name="wizard_result_certificate_expired">Le certificat du dispositif a expiré. Mettez à jour le logiciel du dispositif ou contactez l’assistance. Vérifiez aussi que la date et l’heure du téléphone sont correctes.</string>
+  <string name="wizard_result_certificate_not_yet_valid">Le certificat du dispositif n’est pas encore valide. Vérifiez la date et l’heure du téléphone et du dispositif, puis réessayez.</string>
+  <string name="wizard_result_certificate_revoked">Le certificat du dispositif a été révoqué. Pour des raisons de sécurité, la connexion ne peut pas être établie. Mettez à jour le logiciel du dispositif ou contactez l’assistance.</string>
+  <string name="wizard_result_certificate_host_mismatch">Le certificat ne correspond pas à ce dispositif. Assurez-vous que l’application se connecte au bon dispositif.</string>
+  <string name="wizard_result_certificate_pin_mismatch">Le certificat du dispositif diffère de celui attendu. Mettez à jour l’application et le logiciel du dispositif, puis réessayez.</string>
+  <string name="wizard_result_certificate_unsupported_security">Le dispositif utilise des paramètres de sécurité non pris en charge. Mettez à jour le logiciel du dispositif et réessayez.</string>
+  <string name="wizard_result_certificate_different_names">Le dispositif possède un certificat incorrect - les noms ne correspondent pas (certificat : %1$s, dispositif : %2$s)</string>
 </resources>

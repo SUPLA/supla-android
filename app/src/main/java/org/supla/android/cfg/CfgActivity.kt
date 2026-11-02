@@ -35,7 +35,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.supla.android.NavigationActivity.INTENT_SENDER
 import org.supla.android.NavigationActivity.INTENT_SENDER_MAIN
-import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.core.networking.suplaclient.SuplaClientEvent
@@ -71,9 +70,6 @@ class CfgActivity : BaseActivity() {
 
   @Inject
   lateinit var getProfilesCountUseCase: GetProfilesCountUseCase
-
-  @Inject
-  lateinit var preferences: Preferences
 
   @Inject
   lateinit var applicationPreferences: ApplicationPreferences
@@ -140,6 +136,7 @@ class CfgActivity : BaseActivity() {
 
       val appBarHeight = resources.getDimension(R.dimen.top_bar_height).roundToInt()
       binding.incToolbar.appBarLayout.setPadding(0, bars.top, 0, 0)
+      binding.incToolbar.suplaToolbar.layoutParams.height = appBarHeight
       binding.navHostContainer.layoutParams = (binding.navHostContainer.layoutParams as CoordinatorLayout.LayoutParams)
         .apply { topMargin = bars.top + appBarHeight }
 

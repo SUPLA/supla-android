@@ -43,19 +43,35 @@ import org.supla.android.ui.views.buttons.BlueTextButton
 import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.buttons.OutlinedButton
 import org.supla.android.ui.views.texts.BodyMedium
-import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
-
-data class StatusViewState(
-  val stateText: StatusViewStateText = StatusViewStateText.INITIALIZING,
-  val errorDescription: LocalizedString? = null,
-)
 
 enum class StatusViewStateText(val stringRes: Int, val showAccountButton: Boolean) {
   INITIALIZING(R.string.status_initializing, false),
   CONNECTING(R.string.status_connecting, true),
   DISCONNECTING(R.string.status_disconnecting, false),
   AWAITING_NETWORK(R.string.status_awaiting_network, true)
+}
+
+interface StatusViewScope {
+  fun onCancelAndGoToProfilesClick()
+  fun onTryAgain()
+}
+
+@Composable
+fun StatusViewScope.View(viewState: StatusViewState) {
+  when (viewState.viewType) {
+    StatusViewState.ViewType.CONNECTING ->
+      ConnectionStatusView(
+        viewState = viewState,
+        onCancelAndGoToProfilesClick = { onCancelAndGoToProfilesClick() }
+      )
+    StatusViewState.ViewType.ERROR ->
+      ErrorStatusView(
+        viewState = viewState,
+        onTryAgainClick = { onTryAgain() },
+        onProfilesClick = { onCancelAndGoToProfilesClick() }
+      )
+  }
 }
 
 @Composable

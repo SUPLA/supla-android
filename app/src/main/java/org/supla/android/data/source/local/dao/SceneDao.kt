@@ -18,13 +18,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import androidx.room.Dao
+import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
-import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.data.source.local.entity.SceneEntity
@@ -78,14 +79,7 @@ interface SceneDao {
         scene.$COLUMN_SORT_ORDER scene_$COLUMN_SORT_ORDER,
         scene.$COLUMN_VISIBLE scene_$COLUMN_VISIBLE,
         scene.$COLUMN_PROFILE_ID scene_$COLUMN_PROFILE_ID,
-        location.${LocationEntity.COLUMN_ID} location_${LocationEntity.COLUMN_ID},
-        location.${LocationEntity.COLUMN_REMOTE_ID} location_${LocationEntity.COLUMN_REMOTE_ID},
-        location.${LocationEntity.COLUMN_CAPTION} location_${LocationEntity.COLUMN_CAPTION},
-        location.${LocationEntity.COLUMN_VISIBLE} location_${LocationEntity.COLUMN_VISIBLE},
-        location.${LocationEntity.COLUMN_COLLAPSED} location_${LocationEntity.COLUMN_COLLAPSED},
-        location.${LocationEntity.COLUMN_SORTING} location_${LocationEntity.COLUMN_SORTING},
-        location.${LocationEntity.COLUMN_SORT_ORDER} location_${LocationEntity.COLUMN_SORT_ORDER},
-        location.${LocationEntity.COLUMN_PROFILE_ID} location_${LocationEntity.COLUMN_PROFILE_ID}
+        ${LocationEntity.JOIN_COLUMNS}
       FROM $TABLE_NAME scene
       JOIN ${LocationEntity.TABLE_NAME} location
         ON scene.$COLUMN_LOCATION_ID = location.${LocationEntity.COLUMN_REMOTE_ID}
@@ -117,14 +111,7 @@ interface SceneDao {
         scene.$COLUMN_SORT_ORDER scene_$COLUMN_SORT_ORDER,
         scene.$COLUMN_VISIBLE scene_$COLUMN_VISIBLE,
         scene.$COLUMN_PROFILE_ID scene_$COLUMN_PROFILE_ID,
-        location.${LocationEntity.COLUMN_ID} location_${LocationEntity.COLUMN_ID},
-        location.${LocationEntity.COLUMN_REMOTE_ID} location_${LocationEntity.COLUMN_REMOTE_ID},
-        location.${LocationEntity.COLUMN_CAPTION} location_${LocationEntity.COLUMN_CAPTION},
-        location.${LocationEntity.COLUMN_VISIBLE} location_${LocationEntity.COLUMN_VISIBLE},
-        location.${LocationEntity.COLUMN_COLLAPSED} location_${LocationEntity.COLUMN_COLLAPSED},
-        location.${LocationEntity.COLUMN_SORTING} location_${LocationEntity.COLUMN_SORTING},
-        location.${LocationEntity.COLUMN_SORT_ORDER} location_${LocationEntity.COLUMN_SORT_ORDER},
-        location.${LocationEntity.COLUMN_PROFILE_ID} location_${LocationEntity.COLUMN_PROFILE_ID}
+        ${LocationEntity.JOIN_COLUMNS}
       FROM $TABLE_NAME scene
       JOIN ${LocationEntity.TABLE_NAME} location
         ON scene.$COLUMN_LOCATION_ID = location.${LocationEntity.COLUMN_REMOTE_ID}
@@ -140,8 +127,89 @@ interface SceneDao {
   )
   fun findProfileScenes(profileId: Long): Single<List<SceneDataEntity>>
 
+  @Query(
+    """
+      SELECT
+        scene.$COLUMN_ID scene_$COLUMN_ID,
+        scene.$COLUMN_REMOTE_ID scene_$COLUMN_REMOTE_ID, 
+        scene.$COLUMN_LOCATION_ID scene_$COLUMN_LOCATION_ID, 
+        scene.$COLUMN_ALT_ICON scene_$COLUMN_ALT_ICON, 
+        scene.$COLUMN_USER_ICON scene_$COLUMN_USER_ICON, 
+        scene.$COLUMN_CAPTION scene_$COLUMN_CAPTION,
+        scene.$COLUMN_STARTED_AT scene_$COLUMN_STARTED_AT,
+        scene.$COLUMN_ESTIMATED_END_DATE scene_$COLUMN_ESTIMATED_END_DATE,
+        scene.$COLUMN_INITIATOR_ID scene_$COLUMN_INITIATOR_ID,
+        scene.$COLUMN_INITIATOR_NAME scene_$COLUMN_INITIATOR_NAME,
+        scene.$COLUMN_SORT_ORDER scene_$COLUMN_SORT_ORDER,
+        scene.$COLUMN_VISIBLE scene_$COLUMN_VISIBLE,
+        scene.$COLUMN_PROFILE_ID scene_$COLUMN_PROFILE_ID,
+        ${LocationEntity.JOIN_COLUMNS}
+      FROM $TABLE_NAME scene
+      JOIN ${LocationEntity.TABLE_NAME} location
+        ON scene.$COLUMN_LOCATION_ID = location.${LocationEntity.COLUMN_REMOTE_ID}
+          AND scene.$COLUMN_PROFILE_ID = location.${LocationEntity.COLUMN_PROFILE_ID}
+      WHERE scene.$COLUMN_REMOTE_ID = :remoteId AND 
+        scene.$COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
+    """
+  )
+  fun findSceneData(remoteId: Int): Maybe<SceneDataEntity>
+
+  @Query(
+    """
+    SELECT $ALL_COLUMNS FROM $TABLE_NAME
+    WHERE
+      $COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
+      AND $COLUMN_REMOTE_ID = :remoteId
+    """
+  )
+  suspend fun findByRemoteIdKtx(remoteId: Int): SceneEntity?
+
+  @Insert
+  suspend fun insert(scene: SceneEntity)
+
+  @Update
+  suspend fun update(scene: SceneEntity)
+
   @Update
   fun update(scenes: List<SceneEntity>): Completable
+
+  @Query(
+    """
+      UPDATE $TABLE_NAME
+      SET $COLUMN_SORT_ORDER = :position
+      WHERE $COLUMN_REMOTE_ID = :remoteId
+        AND $COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
+    """
+  )
+  suspend fun updatePosition(remoteId: Int, position: Int)
+
+  @Query(
+    """
+      UPDATE $TABLE_NAME
+      SET $COLUMN_SORT_ORDER = 0
+      WHERE $COLUMN_LOCATION_ID IN (:locationRemoteIds)
+        AND $COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
+    """
+  )
+  suspend fun resetPositions(locationRemoteIds: List<Int>)
+
+  @Transaction
+  suspend fun updatePositions(locationRemoteIds: List<Int>, orderedRemoteIds: List<Int>) {
+    resetPositions(locationRemoteIds)
+    orderedRemoteIds.forEachIndexed { index, remoteId ->
+      updatePosition(remoteId, index + 1)
+    }
+  }
+
+  @Query(
+    """
+      UPDATE $TABLE_NAME
+      SET $COLUMN_VISIBLE = :visible
+      WHERE $COLUMN_VISIBLE = :whereVisible
+        AND $COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
+    """
+  )
+  suspend fun setScenesVisible(visible: Int, whereVisible: Int): Int
 
   @Query("SELECT COUNT($COLUMN_ID) FROM $TABLE_NAME")
   fun count(): Observable<Int>

@@ -20,12 +20,12 @@ package org.supla.android.db.room
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import org.supla.android.db.DbHelper
+import org.supla.android.db.room.app.AppDatabase
 import timber.log.Timber
 
 interface SqlExecutor {
 
-  fun getDatabaseNameForLog() = DbHelper.DATABASE_NAME
+  fun getDatabaseNameForLog() = AppDatabase.NAME
 
   fun execSQL(db: SupportSQLiteDatabase, sql: String) {
     Timber.d("sql-statements/%s: %s", getDatabaseNameForLog(), sql)
@@ -44,5 +44,13 @@ interface SqlExecutor {
 
   fun execSQL(db: SupportSQLiteDatabase, queries: Array<String>) {
     queries.forEach { execSQL(db, it) }
+  }
+
+  fun silentSql(db: SupportSQLiteDatabase, sqlString: String) {
+    try {
+      execSQL(db, sqlString)
+    } catch (exception: Exception) {
+      Timber.w(exception, "Failed by `$sqlString` - ${exception.message}")
+    }
   }
 }

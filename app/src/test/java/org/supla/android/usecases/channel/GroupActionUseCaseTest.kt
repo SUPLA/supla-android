@@ -18,10 +18,12 @@ package org.supla.android.usecases.channel
  */
 
 import io.mockk.MockKAnnotations
+import io.mockk.Runs
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
+import io.mockk.just
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
@@ -36,6 +38,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.ActionParameters
 import org.supla.android.lib.actions.SubjectType
+import org.supla.android.tools.VibrationHelper
 import org.supla.core.shared.data.model.general.SuplaFunction
 
 class GroupActionUseCaseTest {
@@ -44,6 +47,9 @@ class GroupActionUseCaseTest {
 
   @MockK
   private lateinit var suplaClientProvider: SuplaClientProvider
+
+  @MockK
+  private lateinit var vibrationHelper: VibrationHelper
 
   @InjectMockKs
   private lateinit var useCase: GroupActionUseCase
@@ -141,6 +147,7 @@ class GroupActionUseCaseTest {
     every { suplaClient.executeAction(capture(parametersSlot)) } returns true
 
     every { suplaClientProvider.provide() } returns suplaClient
+    every { vibrationHelper.vibrate() } just Runs
 
     // when
     val testObserver = useCase(groupId, buttonType).test()
@@ -153,8 +160,9 @@ class GroupActionUseCaseTest {
     verify {
       channelGroupRepository.findGroupDataEntity(groupId)
       suplaClientProvider.provide()
+      vibrationHelper.vibrate()
     }
-    confirmVerified(channelGroupRepository, suplaClientProvider)
+    confirmVerified(channelGroupRepository, suplaClientProvider, vibrationHelper)
   }
 
   private fun testOpenClose(groupId: Int, channelFunc: SuplaFunction, buttonType: ButtonType, openValue: Int) {
@@ -169,6 +177,7 @@ class GroupActionUseCaseTest {
     every { suplaClient.open(groupId, true, openValue) } returns true
 
     every { suplaClientProvider.provide() } returns suplaClient
+    every { vibrationHelper.vibrate() } just Runs
 
     // when
     val testObserver = useCase(groupId, buttonType).test()
@@ -179,7 +188,8 @@ class GroupActionUseCaseTest {
     verify {
       channelGroupRepository.findGroupDataEntity(groupId)
       suplaClientProvider.provide()
+      vibrationHelper.vibrate()
     }
-    confirmVerified(channelGroupRepository, suplaClientProvider)
+    confirmVerified(channelGroupRepository, suplaClientProvider, vibrationHelper)
   }
 }

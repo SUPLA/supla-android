@@ -24,40 +24,57 @@ import androidx.work.ExistingWorkPolicy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.rx3.await
 import kotlinx.coroutines.withContext
+import org.supla.android.R
 import org.supla.android.core.infrastructure.WorkManagerProxy
 import org.supla.android.core.infrastructure.storage.DebugFileLoggingTree
 import org.supla.android.core.infrastructure.storage.FileUtils
+import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
 import org.supla.android.core.notifications.NotificationsHelper
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
+import org.supla.android.data.source.ChannelRepository
+import org.supla.android.data.source.remote.SuplaEventType
+import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.db.room.measurements.MeasurementsDatabase
 import org.supla.android.extensions.subscribeBy
-import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.db.MakeAnonymizedDatabaseCopyUseCase
 import org.supla.android.usecases.developerinfo.LoadDatabaseDetailsUseCase
 import org.supla.android.usecases.developerinfo.TableDetail
 import org.supla.android.usecases.developerinfo.TableDetailType
+import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 import timber.log.Timber
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class DeveloperInfoViewModel @Inject constructor(
   private val makeAnonymizedDatabaseCopyUseCase: MakeAnonymizedDatabaseCopyUseCase,
+  private val suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper,
   private val loadDatabaseDetailsUseCase: LoadDatabaseDetailsUseCase,
   private val applicationPreferences: ApplicationPreferences,
   private val encryptedPreferences: EncryptedPreferences,
   private val debugFileLoggingTree: DebugFileLoggingTree,
   private val notificationsHelper: NotificationsHelper,
+  private val channelRepository: ChannelRepository,
   private val workManagerProxy: WorkManagerProxy,
   private val fileUtils: FileUtils,
   @param:ApplicationContext private val context: Context,
-  suplaSchedulers: SuplaSchedulers
-) : BaseViewModel<DeveloperInfoViewModelState, DeveloperInfoViewEvent>(DeveloperInfoViewModelState(), suplaSchedulers),
+  threading: SuplaThreading
+) : BaseViewModel<DeveloperInfoViewModelState, DeveloperInfoViewEvent>(
+  defaultState = DeveloperInfoViewModelState(),
+  threading = threading,
+  titleRes = R.string.developer_option
+),
   DeveloperInfoScope {
 
   private var notificationId = 0
@@ -86,6 +103,13 @@ class DeveloperInfoViewModel @Inject constructor(
       .attach()
       .subscribeBy(
         onNext = this::handleMeasurementsData
+      )
+      .disposeBySelf()
+
+    channelRepository.isZWaveBridgeChannelAvailable()
+      .attach()
+      .subscribeBy(
+        onSuccess = { updateState { state -> state.copy(state = state.state.copy(zwaveAvailable = it)) } }
       )
       .disposeBySelf()
   }
@@ -170,6 +194,42 @@ class DeveloperInfoViewModel @Inject constructor(
     )
   }
 
+  override fun sendChannelEvent() {
+    viewModelScope.launch {
+      val channel = channelRepository.findList().await()
+        .firstOrNull { it.function == SuplaFunction.LIGHTSWITCH || it.function == SuplaFunction.POWER_SWITCH } ?: return@launch
+
+      suplaClientMessageHandlerWrapper.sendMessage(
+        SuplaClientMessage.Event(
+          owner = false,
+          type = SuplaEventType.LIGHT_ON_OFF,
+          channelId = channel.channelEntity.remoteId,
+          duration = 1000.milliseconds,
+          senderId = 13,
+          senderName = "Some phone"
+        )
+      )
+    }
+  }
+
+  override fun sendZwaveErrorEvent() {
+    viewModelScope.launch {
+      val channel = channelRepository.findList().await()
+        .firstOrNull { SuplaChannelFlag.ZWAVE_BRIDGE inside it.flags } ?: return@launch
+
+      suplaClientMessageHandlerWrapper.sendMessage(
+        SuplaClientMessage.Event(
+          owner = true,
+          type = SuplaEventType.SET_BRIDGE_VALUE_FAILED,
+          channelId = channel.channelEntity.remoteId,
+          duration = 1000.milliseconds,
+          senderId = 0,
+          senderName = null
+        )
+      )
+    }
+  }
+
   override fun exportSuplaDatabase() {
     viewModelScope.launch {
       val dbPrepared = withContext(Dispatchers.IO) { makeAnonymizedDatabaseCopyUseCase() }
@@ -198,6 +258,14 @@ class DeveloperInfoViewModel @Inject constructor(
 
   override fun exportMeasurementsDatabase() {
     sendEvent(DeveloperInfoViewEvent.ExportMeasurementsDatabase)
+  }
+
+  override fun showLoading() {
+    viewModelScope.launch {
+      withLoader {
+        delay(5.seconds)
+      }
+    }
   }
 
   fun writeMeasurementsDatabaseFile(uri: Uri?) {

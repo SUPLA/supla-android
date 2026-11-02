@@ -27,7 +27,6 @@ import org.supla.android.ValuesFormatterProvider;
 import org.supla.android.core.shared.LocalizedStringExtensionsKt;
 import org.supla.android.data.ValuesFormatter;
 import org.supla.android.extensions.ContextExtensionsKt;
-import org.supla.android.lib.SuplaChannelBase;
 import org.supla.core.shared.data.model.general.SuplaFunction;
 
 public abstract class ChannelBase extends DbItem {
@@ -127,10 +126,6 @@ public abstract class ChannelBase extends DbItem {
     return Caption;
   }
 
-  public boolean hasCustomCaption() {
-    return !Caption.trim().isEmpty();
-  }
-
   public int getVisible() {
     return Visible;
   }
@@ -209,27 +204,5 @@ public abstract class ChannelBase extends DbItem {
 
   protected ValuesFormatter getTemperaturePresenter() {
     return valuesFormatterProvider.getValuesFormatter();
-  }
-
-  public void Assign(SuplaChannelBase base, int profileId) {
-
-    setRemoteId(base.Id);
-    setLocationId(base.LocationID);
-    setCaption(base.Caption);
-    setFunc(base.Func);
-    setFlags(base.Flags);
-    setAltIcon(base.AltIcon);
-    setUserIconId(base.UserIcon);
-    setProfileId(profileId);
-  }
-
-  public boolean Diff(SuplaChannelBase base) {
-
-    return base.Id != getRemoteId()
-        || !base.Caption.equals(getCaption())
-        || base.getStatus().getOnline() != getOnLine()
-        || base.Flags != getFlags()
-        || base.AltIcon != getAltIcon()
-        || base.UserIcon != getUserIconId();
   }
 }

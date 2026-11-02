@@ -41,6 +41,9 @@
   <string name="channel_caption_thermometer">Термометр</string>
   <string name="channel_caption_humidity">Вологість</string>
   <string name="channel_caption_humidityandtemperature">Температура і вологість</string>
+  <string name="channel_caption_smoke_sensor">Датчик диму</string>
+  <string name="channel_caption_carbon_monoxide_sensor">Датчик чадного газу</string>
+  <string name="channel_caption_gas_sensor">Датчик газу</string>
   <string name="channel_caption_windsensor">Швидкість вітру</string>
   <string name="channel_caption_pressuresensor">Датчик тиску</string>
   <string name="channel_caption_rainsensor">Вимірювання опадів</string>
@@ -99,7 +102,7 @@
   <string name="next">Далі</string>
   <string name="add_wizard_step_3_message_3"><![CDATA[Натисніть кнопку <b>СТАРТ</b>, щоб почати налаштування.]]></string>
   <string name="add_wizard_step_1_continue"><![CDATA[Натисніть <b>Далі</b>, щоб продовжити.]]></string>
-  <string name="wizard_no_internetwifi">Перш ніж почати, підключіться до Інтернету через Wi-Fi, який також використовуватиметься виконуючими пристроями для підключення до сервера.</string>
+  <string name="wizard_no_internetwifi">Перш ніж почати, переконайтеся, що Wi-Fi увімкнено.</string>
   <string name="wizard_wifi_error">Wi-Fi вимкнено або не може прочитати свій ідентифікатор чи назву!</string>
   <string name="wizard_location_error">Для коректної роботи майстра додавання повинна бути ввімкнена функція Місцезнаходження на цьому пристрої. Перейдіть до налаштувань системи, оберіть опцію "Місцезнаходження" та переконайтеся, що вона увімкнена.</string>
   <string name="wizard_scan_timeout">Минув час очікування завершення сканування мережі Wi-Fi!</string>
@@ -624,6 +627,11 @@
   <string name="settings_battery_level_warning">Попередження про низький заряд батареї</string>
   <string name="channel_battery_level">Рівень заряду батареї: %1$d%%</string>
   <string name="channel_battery_level_with_info">Рівень заряду батареї (%1$d - %2$s): %3$d%%</string>
+  <string name="battery_state">Стан батареї</string>
+  <string name="channel_battery_low">Низький рівень заряду батареї</string>
+  <string name="channel_battery_low_with_info">Низький рівень заряду батареї (%1$d - %2$s)</string>
+  <string name="channel_battery_state_low_value">низький</string>
+  <string name="channel_battery_state_normal_value">нормальний</string>
   <string name="channel_btn_stop">Зупинити</string>
   <string name="android_auto_action">Подія: %1$s</string>
   <string name="android_auto_empty_header">Потрібна конфігурація</string>
@@ -802,8 +810,17 @@
   <string name="scene_inactive">Сцена неактивна</string>
   <string name="nfc_detail_action_added">Додано до застосунку</string>
   <string name="general_search">Пошук</string>
+  <string name="general_open_drawer">Відкрити меню</string>
+  <string name="general_back">Назад</string>
   <string name="toolbar_search_hint">Введіть щонайменше 2 символи…</string>
   <string name="details_timer_select_program">Виберіть програму</string>
+  <string name="details_recuperator_ventilation">Вентиляція</string>
+  <string name="details_recuperator_empty_house">Порожній будинок</string>
+  <string name="details_recuperator_open_window">Відкрити вікно</string>
+  <string name="channel_caption_hvac_hrv">Вентиляція з рекуперацією тепла</string>
+  <string name="details_recuperator_manual_mode_label">Ручний режим</string>
+  <string name="profile_selected">Вибраний профіль</string>
+  <string name="general_clear_search">Очистити пошук</string>
   <string name="settings_show_unavailable_channels">Приховати канали, які недоступні через конфігурацію пристрою</string>
   <string name="details_em_active_energy_balance">Баланс активної енергії</string>
   <string name="details_em_settings_list_metric">Вибране значення</string>
@@ -816,4 +833,12 @@
   <string name="details_em_on_list_balance">Метод балансування енергії</string>
   <string name="details_em_on_list_value">Діапазон даних</string>
   <string name="details_em_on_list">Відображення у списку каналів</string>
+  <string name="wizard_result_certificate_untrusted">Сертифікат пристрою не є довіреним. Переконайтеся, що ви підключаєтеся до правильного пристрою і що його програмне забезпечення оновлене.</string>
+  <string name="wizard_result_certificate_expired">Термін дії сертифіката пристрою закінчився. Оновіть програмне забезпечення пристрою або зверніться до служби підтримки. Також перевірте, чи правильно встановлені дата й час на телефоні.</string>
+  <string name="wizard_result_certificate_not_yet_valid">Сертифікат пристрою ще не дійсний. Перевірте дату й час на телефоні та пристрої, а потім спробуйте ще раз.</string>
+  <string name="wizard_result_certificate_revoked">Сертифікат пристрою було відкликано. З міркувань безпеки з’єднання неможливо встановити. Оновіть програмне забезпечення пристрою або зверніться до служби підтримки.</string>
+  <string name="wizard_result_certificate_host_mismatch">Сертифікат не відповідає цьому пристрою. Переконайтеся, що застосунок підключається до правильного пристрою.</string>
+  <string name="wizard_result_certificate_pin_mismatch">Сертифікат пристрою відрізняється від очікуваного. Оновіть застосунок і програмне забезпечення пристрою, а потім спробуйте ще раз.</string>
+  <string name="wizard_result_certificate_unsupported_security">Пристрій використовує непідтримувані налаштування безпеки. Оновіть програмне забезпечення пристрою і спробуйте ще раз.</string>
+  <string name="wizard_result_certificate_different_names">Пристрій має неправильний сертифікат - імена не збігаються (сертифікат: %1$s, пристрій: %2$s)</string>
 </resources>

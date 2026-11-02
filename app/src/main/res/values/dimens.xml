@@ -23,7 +23,7 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="channel_section_height">50dp</dimen>
+    <dimen name="channel_section_height">48dp</dimen>
     <dimen name="channel_layout_height">120dp</dimen>
     <dimen name="channel_separator_height">1dp</dimen>
     <dimen name="channel_layout_button_width">100dp</dimen>
@@ -44,18 +44,11 @@
     <dimen name="channel_distanceimg_height">15dp</dimen>
     <dimen name="wizard_btnnextl_width">15dp</dimen>
     <dimen name="wizard_btnnextr_width">40dp</dimen>
-    <dimen name="menuitem_height">50dp</dimen>
-    <dimen name="menuitem_iamge_margin">10dp</dimen>
-    <dimen name="menuitem_separator_height">0.25dp</dimen>
-    <dimen name="menuitem_text_size">15sp</dimen>
-    <dimen name="menuitem_homepage_text_size">12sp</dimen>
-    <dimen name="menuitem_padding">2dp</dimen>
     <dimen name="default_text_size">14sp</dimen>
 
     <!-- layout element dimensions, from new design -->
     <dimen name="top_bar_height">44dp</dimen>
-    <dimen name="bottom_bar_height">56dp</dimen>
-    <dimen name="bottom_bar_without_label_height">44dp</dimen>
+    <dimen name="bottom_bar_height">44dp</dimen>
     <dimen name="form_label_spacing">27dp</dimen>
     <dimen name="form_field_spacing">47dp</dimen>
     <dimen name="shrink_field_spacing">-27dp</dimen>

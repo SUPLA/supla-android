@@ -51,13 +51,7 @@ abstract class AndroidAutoItemDao {
   @Query("SELECT MAX($COLUMN_ORDER) FROM $TABLE_NAME")
   abstract fun lastOrderNo(): Single<Int>
 
-  @Query(
-    """
-      SELECT $ALL_COLUMNS
-      FROM $TABLE_NAME
-      WHERE $COLUMN_ID == :id
-    """
-  )
+  @Query("SELECT $ALL_COLUMNS FROM $TABLE_NAME WHERE $COLUMN_ID == :id")
   abstract fun findById(id: Long): Observable<AndroidAutoItemEntity>
 
   @Query(

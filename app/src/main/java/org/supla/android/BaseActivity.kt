@@ -21,7 +21,6 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import org.supla.android.core.shared.event
-import org.supla.android.db.DbHelper
 import org.supla.android.extensions.setStatusBarColor
 import org.supla.android.lib.AndroidSuplaClientMessageHandler
 import org.supla.android.lib.SuplaChannelBasicCfg
@@ -33,8 +32,6 @@ import org.supla.core.shared.infrastructure.messaging.SuplaClientMessageHandler
 
 @SuppressLint("registered")
 open class BaseActivity : AppCompatActivity(), SuplaClientMessageHandler.Listener {
-  private var dbHelper: DbHelper? = null
-
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setStatusBarColor(R.color.primary_container, R.color.surface, false)
@@ -42,7 +39,6 @@ open class BaseActivity : AppCompatActivity(), SuplaClientMessageHandler.Listene
 
   override fun onResume() {
     super.onResume()
-    invalidateDbHelper()
   }
 
   override fun onReceived(message: SuplaClientMessage) {
@@ -111,19 +107,4 @@ open class BaseActivity : AppCompatActivity(), SuplaClientMessageHandler.Listene
   protected open fun onZWaveWakeUpSettingsReport(result: Int, settings: ZWaveWakeUpSettings?) {}
 
   protected open fun onZwaveSetWakeUpTimeResult(result: Int) {}
-
-  protected fun getDbHelper(): DbHelper {
-    val helper = dbHelper
-    if (helper != null) {
-      return helper
-    }
-
-    val instance = DbHelper.getInstance(this)
-    dbHelper = instance
-    return instance
-  }
-
-  protected fun invalidateDbHelper() {
-    dbHelper = null
-  }
 }
