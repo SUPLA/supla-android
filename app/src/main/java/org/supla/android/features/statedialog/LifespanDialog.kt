@@ -31,7 +31,7 @@ import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.dialogs.Dialog
-import org.supla.android.ui.dialogs.DialogDoubleButtons
+import org.supla.android.ui.dialogs.DialogButtons
 import org.supla.android.ui.dialogs.DialogHeader
 import org.supla.android.ui.views.forms.Checkbox
 import org.supla.android.ui.views.forms.TextField
@@ -97,7 +97,7 @@ fun LifespanDialogScope.LifespanDialog(
       )
     }
 
-    DialogDoubleButtons(
+    DialogButtons(
       onNegativeClick = { onLifespanDialogDismiss() },
       onPositiveClick = { onLifespanDialogOk() },
       positiveEnabled = state.saveEnabled,

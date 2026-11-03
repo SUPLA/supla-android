@@ -866,6 +866,8 @@
   <string name="at_allow_temporary_unlock">Consenti lo sblocco temporaneo</string>
   <string name="at_locked_temporary_unlock_allowed">Bloccato con possibilità di sblocco temporaneo</string>
   <string name="action_trigger_schedule_temporary_unlock_duration">Durata dello sblocco temporaneo</string>
+  <string name="action_trigger_unlock_dialog_title">Sblocca il trigger dell’azione</string>
+  <string name="action_trigger_unlock_temporarily">Sblocca temporaneamente</string>
   <string name="channel_caption_action_trigger">Attivatore di azione</string>
   <string name="toolbar_search_hint">Inserisci almeno 2 caratteri…</string>
   <string name="details_timer_select_program">Seleziona un programma</string>

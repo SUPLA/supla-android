@@ -24,8 +24,10 @@ import org.supla.android.data.source.local.entity.isGarageDoorRoller
 import org.supla.android.data.source.local.entity.isProjectorScreen
 import org.supla.android.data.source.local.entity.isShadingSystem
 import org.supla.android.data.source.local.entity.isThermostat
+import org.supla.android.data.source.remote.hvac.SuplaButtonMode
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.ActionParameters
+import org.supla.android.lib.actions.AtActionParameters
 import org.supla.android.lib.actions.IGNORE_CCT
 import org.supla.android.lib.actions.IGNORE_COLOR
 import org.supla.android.lib.actions.RgbwActionParameters
@@ -46,22 +48,27 @@ open class BaseActionUseCase<T : ChannelDataBase>(
     val client = suplaClientProvider.provide() ?: return
     vibrationHelper.vibrate()
 
-    if (isRGBW(channelBase.function)) {
-      client.executeAction(getRgbwParameters(buttonType, forGroup, channelBase.remoteId))
-    } else if (channelBase.isShadingSystem() || channelBase.isProjectorScreen() || channelBase.isGarageDoorRoller()) {
-      if (SuplaChannelFlag.RS_SBS_AND_STOP_ACTIONS inside channelBase.flags) {
-        client.executeAction(ActionParameters(getRevealShutStopActionId(buttonType), getSubjectType(forGroup), channelBase.remoteId))
-      } else {
-        client.executeAction(ActionParameters(getRevealShutActionId(buttonType), getSubjectType(forGroup), channelBase.remoteId))
-      }
-    } else if (channelBase.isThermostat()) {
-      if (buttonType == ButtonType.RIGHT) {
-        client.executeAction(ActionParameters(ActionId.TURN_ON, getSubjectType(forGroup), channelBase.remoteId))
-      } else {
-        client.executeAction(ActionParameters(ActionId.TURN_OFF, getSubjectType(forGroup), channelBase.remoteId))
-      }
-    } else {
-      client.open(channelBase.remoteId, forGroup, getOnOffValue(buttonType))
+    when {
+      isRGBW(channelBase.function) -> client.executeAction(getRgbwParameters(buttonType, forGroup, channelBase.remoteId))
+      channelBase.isShadingSystem() || channelBase.isProjectorScreen() || channelBase.isGarageDoorRoller() ->
+        if (SuplaChannelFlag.RS_SBS_AND_STOP_ACTIONS inside channelBase.flags) {
+          client.executeAction(ActionParameters(getRevealShutStopActionId(buttonType), getSubjectType(forGroup), channelBase.remoteId))
+        } else {
+          client.executeAction(ActionParameters(getRevealShutActionId(buttonType), getSubjectType(forGroup), channelBase.remoteId))
+        }
+      channelBase.isThermostat() ->
+        if (buttonType == ButtonType.RIGHT) {
+          client.executeAction(ActionParameters(ActionId.TURN_ON, getSubjectType(forGroup), channelBase.remoteId))
+        } else {
+          client.executeAction(ActionParameters(ActionId.TURN_OFF, getSubjectType(forGroup), channelBase.remoteId))
+        }
+      channelBase.function == SuplaFunction.ACTION_TRIGGER ->
+        if (buttonType == ButtonType.RIGHT) {
+          client.executeAction(AtActionParameters(getSubjectType(forGroup), channelBase.remoteId, SuplaButtonMode.LOCKED))
+        } else {
+          client.executeAction(AtActionParameters(getSubjectType(forGroup), channelBase.remoteId, SuplaButtonMode.NOT_SET))
+        }
+      else -> client.open(channelBase.remoteId, forGroup, getOnOffValue(buttonType))
     }
   }
 

@@ -838,6 +838,8 @@
   <string name="at_allow_temporary_unlock">Povolit dočasné odemknutí</string>
   <string name="at_locked_temporary_unlock_allowed">Zamčeno s možností dočasného odemknutí</string>
   <string name="action_trigger_schedule_temporary_unlock_duration">Doba dočasného odemknutí</string>
+  <string name="action_trigger_unlock_dialog_title">Odemknout akční spouštěč</string>
+  <string name="action_trigger_unlock_temporarily">Dočasně odemknout</string>
   <string name="channel_caption_action_trigger">Akční spouštěč</string>
   <string name="toolbar_search_hint">Zadejte alespoň 2 znaky…</string>
   <string name="details_timer_select_program">Vyberte program</string>

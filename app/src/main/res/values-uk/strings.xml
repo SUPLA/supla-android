@@ -833,6 +833,8 @@
   <string name="at_allow_temporary_unlock">Дозволити тимчасове розблокування</string>
   <string name="at_locked_temporary_unlock_allowed">Заблоковано з можливістю тимчасового розблокування</string>
   <string name="action_trigger_schedule_temporary_unlock_duration">Тривалість тимчасового розблокування</string>
+  <string name="action_trigger_unlock_dialog_title">Розблокувати тригер дії</string>
+  <string name="action_trigger_unlock_temporarily">Розблокувати тимчасово</string>
   <string name="channel_caption_action_trigger">Тригер дії</string>
   <string name="toolbar_search_hint">Введіть щонайменше 2 символи…</string>
   <string name="details_timer_select_program">Виберіть програму</string>

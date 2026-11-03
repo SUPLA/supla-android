@@ -49,6 +49,9 @@ class ThermostatIssuesProvider : ChannelIssuesProvider {
     if (flags.contains(SuplaThermostatFlag.CALIBRATION_ERROR)) {
       issues.add(ChannelIssueItem.Error(LocalizedStringId.THERMOSTAT_CALIBRATION_ERROR))
     }
+    if (flags.contains(SuplaThermostatFlag.WEEKLY_SCHEDULE)) {
+      issues.add(ChannelIssueItem.Schedule)
+    }
 
     return issues
   }

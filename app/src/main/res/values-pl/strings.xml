@@ -989,4 +989,6 @@
   <string name="relay_schedule_program_first_duration">Pierwszy czas trwania (%1$s)</string>
   <string name="relay_schedule_program_second_duration">Drugi czas trwania (%1$s)</string>
   <string name="action_trigger_schedule_temporary_unlock_duration">Czas chwilowego odblokowania</string>
+  <string name="action_trigger_unlock_dialog_title">Odblokuj wyzwalacz akcji</string>
+  <string name="action_trigger_unlock_temporarily">Odblokuj tymczasowo</string>
 </resources>

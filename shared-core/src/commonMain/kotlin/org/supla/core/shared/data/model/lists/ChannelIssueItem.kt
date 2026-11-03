@@ -37,6 +37,7 @@ sealed class ChannelIssueItem(
       is Warning -> Warning(messages.firstOrNull()?.let { localizedString("%s (%d - %s)", it, remoteId, name) })
       is SoundAlarm -> SoundAlarm(messages.firstOrNull()?.let { localizedString("%s (%d - %s)", it, remoteId, name) })
       is LowBattery -> LowBattery(messages.map { localizedString("%s (%d - %s)", it, remoteId, name) })
+      is Schedule -> Schedule
     }
 
   data class Error(private val string: LocalizedString? = null) : ChannelIssueItem(IssueIcon.Error) {
@@ -78,6 +79,11 @@ sealed class ChannelIssueItem(
   data class LowBattery(override val messages: List<LocalizedString>) : ChannelIssueItem(IssueIcon.Battery0) {
     override val priority: Int
       get() = 4
+  }
+
+  data object Schedule : ChannelIssueItem(IssueIcon.Schedule) {
+    override val messages: List<LocalizedString> = emptyList()
+    override val priority: Int = 5
   }
 
   companion object
