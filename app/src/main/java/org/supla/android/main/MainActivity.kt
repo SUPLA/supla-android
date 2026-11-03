@@ -38,6 +38,7 @@ import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.storage.LocalApplicationPreferences
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.extensions.setupOrientationLock
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.lockscreen.UnlockAction
 import org.supla.android.features.nfc.NfcHost
@@ -70,9 +71,10 @@ class MainActivity : FragmentActivity(), NfcHost {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    navigator.setActivity(this@MainActivity)
-
+    setupOrientationLock(applicationPreferences)
     enableEdgeToEdge()
+
+    navigator.setActivity(this@MainActivity)
 
     setContent {
       MainContent()
