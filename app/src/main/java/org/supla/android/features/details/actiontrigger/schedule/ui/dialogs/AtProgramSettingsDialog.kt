@@ -17,15 +17,12 @@ package org.supla.android.features.details.actiontrigger.schedule.ui.dialogs
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,14 +34,13 @@ import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.source.remote.hvac.SuplaButtonMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
+import org.supla.android.extensions.ucFirst
 import org.supla.android.features.details.actiontrigger.schedule.data.AtProgramSettingsData
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.tools.SuplaPreviewLandscape
 import org.supla.android.ui.dialogs.Dialog
-import org.supla.android.ui.dialogs.DialogButtonsColumn
-import org.supla.android.ui.dialogs.DialogButtonsRow
-import org.supla.android.ui.views.buttons.Button
-import org.supla.android.ui.views.buttons.TextButton
+import org.supla.android.ui.dialogs.DialogButtons
+import org.supla.android.ui.extensions.isPhoneLandscape
 import org.supla.android.ui.views.forms.TimePicker
 import org.supla.android.ui.views.schedule.ScheduleProgramDialogHeader
 import org.supla.android.ui.views.spinner.Spinner
@@ -64,25 +60,19 @@ interface AtProgramSettingsScope {
 @Composable
 fun AtProgramSettingsScope.AtProgramSettingsDialog(state: AtProgramSettingsViewState) {
   val modeLabels = linkedMapOf(
-    SuplaButtonMode.NOT_SET to stringResource(R.string.schedule_program_default),
-    SuplaButtonMode.LOCKED to stringResource(R.string.general_locked),
-    SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED to stringResource(R.string.at_locked_temporary_unlock_allowed)
+    SuplaButtonMode.NOT_SET to stringResource(R.string.general_unlocked).ucFirst(),
+    SuplaButtonMode.LOCKED to stringResource(R.string.general_locked).ucFirst(),
+    SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED to stringResource(R.string.at_locked_temporary_unlock_allowed).ucFirst()
   )
 
-  val landscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
-  val maxWidth = if (state.data.selectedMode == SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED) 580.dp else 320.dp
-  Dialog(
-    onDismiss = ::onAtProgramSettingsDismiss,
-    usePlatformDefaultWidth = !landscape,
-    modifier = Modifier.widthIn(max = maxWidth)
-  ) {
+  Dialog(onDismiss = ::onAtProgramSettingsDismiss) {
     ScheduleProgramDialogHeader(program = state.data.program)
-    if (landscape) {
+    if (LocalConfiguration.current.isPhoneLandscape) {
       LandscapeSettings(state, modeLabels)
-      DialogButtonsRow { Buttons(Modifier.weight(1f)) }
+      Buttons()
     } else {
       PortraitSettings(state, modeLabels)
-      DialogButtonsColumn { Buttons(Modifier.fillMaxWidth()) }
+      Buttons()
     }
   }
 }
@@ -155,7 +145,7 @@ private fun AtProgramSettingsScope.TemporaryUnlockDurationPicker(
     modifier = Modifier.padding(labelPadding)
   )
   TimePicker(
-    timeInSeconds = state.data.buttonTemporaryUnlockDurationS.coerceIn(0, 64_800),
+    timeInSeconds = state.data.buttonTemporaryUnlockDurationS?.coerceIn(0, 64_800) ?: 0,
     maxTimeInSeconds = 64_800,
     onTimeChanged = { onAtProgramSettingsDurationChange(it.coerceIn(0, 64_800)) },
     modifier = Modifier.padding(pickerPadding)
@@ -163,19 +153,12 @@ private fun AtProgramSettingsScope.TemporaryUnlockDurationPicker(
 }
 
 @Composable
-private fun AtProgramSettingsScope.Buttons(modifier: Modifier) {
-  TextButton(
-    text = stringResource(R.string.cancel),
-    onClick = ::onAtProgramSettingsDismiss,
-    singleLine = true,
-    color = MaterialTheme.colorScheme.onSurface,
-    modifier = modifier
-  )
-  Button(
-    text = stringResource(R.string.save),
-    onClick = ::onAtProgramSettingsSave,
-    singleLine = true,
-    modifier = modifier
+private fun AtProgramSettingsScope.Buttons() {
+  DialogButtons(
+    onNegativeClick = ::onAtProgramSettingsDismiss,
+    onPositiveClick = ::onAtProgramSettingsSave,
+    negativeTextRes = R.string.cancel,
+    positiveTextRes = R.string.save
   )
 }
 

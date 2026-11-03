@@ -24,6 +24,7 @@ import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
+import org.supla.android.data.source.local.calendar.QuarterOfHour
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.ConfigResult
@@ -46,6 +47,7 @@ import org.supla.android.usecases.client.ExecuteActionTriggerActionUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.core.shared.data.model.channel.SuplaChannelFlag
 import org.supla.core.shared.data.model.function.actiontrigger.SuplaActionTriggerFlag
+import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.infrastructure.localizedString
 import java.util.Optional
 import java.util.concurrent.TimeUnit
@@ -66,6 +68,7 @@ class ActionTriggerGeneralViewModel @Inject constructor(
 
   private var remoteId: Int? = null
   private var mode: SuplaButtonMode? = null
+  private var currentTemporaryUnlockDurationS: Int? = null
 
   fun observeData(remoteId: Int, deviceId: Int) {
     this.remoteId = remoteId
@@ -118,12 +121,48 @@ class ActionTriggerGeneralViewModel @Inject constructor(
   override fun onLock() {
     performAtAction(SuplaButtonMode.LOCKED)
   }
+
   override fun onUnlock() {
     if (mode == SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED) {
-      performAtAction(SuplaButtonMode.CMD_TEMPORARY_UNLOCK)
+      updateState { state ->
+        state.copy(
+          unlockDialog = UnlockDialogState(
+            temporaryUnlockDurationS = currentTemporaryUnlockDurationS ?: 0,
+            unlockTemporaryAllowed = currentTemporaryUnlockDurationS?.let { it > 0 } ?: false
+          ),
+        )
+      }
     } else {
       performAtAction(SuplaButtonMode.NOT_SET)
     }
+  }
+
+  override fun onUnlockDialogDurationChange(value: Int) {
+    updateState { state ->
+      val newValue = value.coerceIn(0, 64_800)
+      state.copy(
+        unlockDialog = state.unlockDialog?.copy(
+          temporaryUnlockDurationS = newValue,
+          unlockTemporaryAllowed = currentTemporaryUnlockDurationS?.let { it > 0 } ?: (newValue > 0)
+        ),
+      )
+    }
+  }
+
+  override fun onUnlockDialogDismiss() {
+    updateState { it.copy(unlockDialog = null) }
+  }
+
+  override fun onUnlockDialogUnlock() {
+    performAtAction(SuplaButtonMode.NOT_SET)
+    onUnlockDialogDismiss()
+  }
+
+  override fun onUnlockDialogTemporaryUnlock() {
+    currentState().unlockDialog?.temporaryUnlockDurationS?.let { seconds ->
+      performAtAction(SuplaButtonMode.CMD_TEMPORARY_UNLOCK, seconds)
+    }
+    onUnlockDialogDismiss()
   }
 
   override fun onAllowTemporaryUnlockChanged(allow: Boolean) {
@@ -143,10 +182,10 @@ class ActionTriggerGeneralViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  private fun performAtAction(mode: SuplaButtonMode) {
+  private fun performAtAction(mode: SuplaButtonMode, durationSec: Int? = null) {
     val currentRemoteId = remoteId ?: return
 
-    executeActionTriggerActionUseCase(SubjectType.CHANNEL, currentRemoteId, mode)
+    executeActionTriggerActionUseCase(SubjectType.CHANNEL, currentRemoteId, mode, durationSec?.toLong())
       .attach()
       .subscribeBy(onError = defaultErrorHandler("performRelayAction($mode, $currentRemoteId)"))
       .disposeBySelf()
@@ -165,7 +204,8 @@ class ActionTriggerGeneralViewModel @Inject constructor(
     } else {
       emptyList()
     }
-    val lockButtonState = lockButtonState(actionTriggerValue.buttonMode, weeklyActive)
+    val temporaryUnlockActive = SuplaActionTriggerFlag.TEMPORARY_UNLOCK_ACTIVE in actionTriggerValue.flags
+    val lockButtonState = lockButtonState(actionTriggerValue.buttonMode, weeklyActive, temporaryUnlockActive)
     val showAllowTemporaryUnlock =
       SuplaChannelFlag.BUTTON_TEMPORARY_UNLOCK_SUPPORTED inside channel.flags &&
         actionTriggerValue.buttonMode in setOf(
@@ -174,6 +214,7 @@ class ActionTriggerGeneralViewModel @Inject constructor(
         )
 
     mode = actionTriggerValue.buttonMode
+    currentTemporaryUnlockDurationS = weeklyActive.forTrue { scheduleConfig?.let(::currentProgramTemporaryUnlockDuration) }
 
     return ActionTriggerGeneralViewState(
       deviceStateData = currentStateData(weeklyActive, actionTriggerValue.buttonMode),
@@ -189,8 +230,21 @@ class ActionTriggerGeneralViewModel @Inject constructor(
       unlockButtonActive = lockButtonState.unlockActive,
       lockButtonDisabled = lockButtonState.lockDisabled,
       unlockButtonDisabled = lockButtonState.unlockDisabled,
-      showTemporaryUnlockIcon = lockButtonState.showTemporaryUnlockIcon
+      showTemporaryUnlockIcon = lockButtonState.showTemporaryUnlockIcon,
+      unlockDialog = currentState().unlockDialog
     )
+  }
+
+  private fun currentProgramTemporaryUnlockDuration(scheduleConfig: SuplaChannelWeeklyScheduleConfig): Int? {
+    val currentEntry = scheduleConfig.schedule.firstOrNull { entry ->
+      entry.dayOfWeek == dateProvider.currentDayOfWeek() &&
+        entry.hour == dateProvider.currentHour() &&
+        entry.quarterOfHour == QuarterOfHour.from(dateProvider.currentMinute())
+    } ?: return null
+
+    return scheduleConfig.programConfigurations
+      .firstOrNull { it.program == currentEntry.program }
+      ?.buttonTemporaryUnlockDurationS
   }
 
   internal fun operatingMode(channelFlags: Long, weeklyActive: Boolean): OperatingMode? {
@@ -207,16 +261,20 @@ class ActionTriggerGeneralViewModel @Inject constructor(
     )
   }
 
-  internal fun lockButtonState(buttonMode: SuplaButtonMode, weeklyActive: Boolean = false): ActionTriggerLockButtonState {
+  internal fun lockButtonState(
+    buttonMode: SuplaButtonMode,
+    weeklyActive: Boolean = false,
+    temporaryUnlockActive: Boolean
+  ): ActionTriggerLockButtonState {
     val buttonState = when (buttonMode) {
       SuplaButtonMode.LOCKED -> ActionTriggerLockButtonState(
-        lockActive = true,
-        unlockActive = false,
+        lockActive = !temporaryUnlockActive,
+        unlockActive = temporaryUnlockActive,
         showTemporaryUnlockIcon = false
       )
       SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED -> ActionTriggerLockButtonState(
-        lockActive = true,
-        unlockActive = false,
+        lockActive = !temporaryUnlockActive,
+        unlockActive = temporaryUnlockActive,
         showTemporaryUnlockIcon = true
       )
       else -> ActionTriggerLockButtonState(

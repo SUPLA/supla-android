@@ -39,6 +39,9 @@ class RelayIssuesProvider : ChannelIssuesProvider {
     if (flags.contains(SuplaRelayFlag.OVERCURRENT_RELAY_OFF)) {
       issues.add(ChannelIssueItem.Error(LocalizedStringId.OVERCURRENT_WARNING))
     }
+    if (flags.contains(SuplaRelayFlag.WEEKLY_SCHEDULE_ENABLED)) {
+      issues.add(ChannelIssueItem.Schedule)
+    }
 
     return issues
   }

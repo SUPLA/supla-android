@@ -853,6 +853,8 @@
   <string name="at_allow_temporary_unlock">Ideiglenes feloldás engedélyezése</string>
   <string name="at_locked_temporary_unlock_allowed">Zárolva ideiglenes feloldási lehetőséggel</string>
   <string name="action_trigger_schedule_temporary_unlock_duration">Ideiglenes feloldás időtartama</string>
+  <string name="action_trigger_unlock_dialog_title">Műveletindító feloldása</string>
+  <string name="action_trigger_unlock_temporarily">Ideiglenes feloldás</string>
   <string name="channel_caption_action_trigger">Műveletindító</string>
   <string name="toolbar_search_hint">Írjon be legalább 2 karaktert…</string>
   <string name="details_timer_select_program">Program kiválasztása</string>

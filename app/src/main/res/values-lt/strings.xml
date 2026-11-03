@@ -835,6 +835,8 @@
   <string name="at_allow_temporary_unlock">Leisti laikinai atrakinti</string>
   <string name="at_locked_temporary_unlock_allowed">Užrakinta su galimybe laikinai atrakinti</string>
   <string name="action_trigger_schedule_temporary_unlock_duration">Laikino atrakinimo trukmė</string>
+  <string name="action_trigger_unlock_dialog_title">Atrakinti veiksmo aktyviklį</string>
+  <string name="action_trigger_unlock_temporarily">Laikinai atrakinti</string>
   <string name="channel_caption_action_trigger">Veiksmų aktyviklis</string>
   <string name="toolbar_search_hint">Įveskite bent 2 simbolius…</string>
   <string name="details_timer_select_program">Pasirinkite programą</string>

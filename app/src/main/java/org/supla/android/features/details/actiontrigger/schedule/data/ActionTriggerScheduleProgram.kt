@@ -63,7 +63,7 @@ data class ActionTriggerScheduleProgram(
     val DEFAULT = ActionTriggerScheduleProgram(
       program = SuplaScheduleProgram.OFF,
       buttonMode = SuplaButtonMode.NOT_SET,
-      buttonTemporaryUnlockDurationS = 0,
+      buttonTemporaryUnlockDurationS = null,
       label = SuplaButtonMode.NOT_SET.label
     )
   }

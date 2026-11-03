@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -38,6 +39,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -47,20 +49,24 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
+import org.supla.android.extensions.ucFirst
+import org.supla.android.ui.extensions.isPhoneLandscape
 import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.buttons.OutlinedButton
 
 @Composable
 fun Dialog(
   modifier: Modifier = Modifier,
-  usePlatformDefaultWidth: Boolean = true,
+  usePlatformDefaultWidth: Boolean = !LocalConfiguration.current.isPhoneLandscape,
   horizontalAlignment: Alignment.Horizontal = Alignment.Start,
   onDismiss: () -> Unit,
   content: @Composable ColumnScope.() -> Unit
 ) {
   Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = usePlatformDefaultWidth)) {
     Card(
-      modifier = modifier,
+      modifier = Modifier
+        .widthIn(max = 580.dp)
+        .then(modifier),
       colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
       shape = RoundedCornerShape(dimensionResource(id = R.dimen.radius_default))
     ) {
@@ -110,36 +116,102 @@ fun DialogButtonsColumn(
   )
 
 @Composable
-fun DialogDoubleButtons(
+fun DialogButtons(
   onNegativeClick: () -> Unit,
   onPositiveClick: () -> Unit,
   processing: Boolean = false,
   positiveEnabled: Boolean = true,
   @StringRes negativeTextRes: Int = R.string.cancel,
   @StringRes positiveTextRes: Int = R.string.ok
-) =
-  DialogButtonsRow {
-    OutlinedButton(
-      onClick = onNegativeClick,
-      text = stringResource(id = negativeTextRes),
-      modifier = Modifier.weight(1f),
-      enabled = processing.not()
-    )
-
-    if (processing) {
-      Box(modifier = Modifier.weight(1f)) {
-        CircularProgressIndicator(
-          modifier = Modifier
-            .align(Alignment.Center)
-            .size(32.dp)
-        )
-      }
-    } else {
-      Button(
-        onClick = onPositiveClick,
-        text = stringResource(id = positiveTextRes),
-        enabled = positiveEnabled,
-        modifier = Modifier.weight(1f)
+) {
+  if (LocalConfiguration.current.isPhoneLandscape) {
+    DialogButtonsRow {
+      DialogButtonComponents(
+        onNegativeClick = onNegativeClick,
+        onPositiveClick = onPositiveClick,
+        modifier = Modifier.weight(1f),
+        processing = processing,
+        positiveEnabled = positiveEnabled,
+        negativeTextRes = negativeTextRes,
+        positiveTextRes = positiveTextRes
+      )
+    }
+  } else {
+    DialogButtonsColumn {
+      DialogButtonComponents(
+        onNegativeClick = onNegativeClick,
+        onPositiveClick = onPositiveClick,
+        processing = processing,
+        modifier = Modifier.fillMaxWidth(),
+        positiveEnabled = positiveEnabled,
+        negativeTextRes = negativeTextRes,
+        positiveTextRes = positiveTextRes
       )
     }
   }
+}
+
+@Composable
+private fun DialogButtonComponents(
+  onNegativeClick: () -> Unit,
+  onPositiveClick: () -> Unit,
+  modifier: Modifier = Modifier,
+  processing: Boolean = false,
+  positiveEnabled: Boolean = true,
+  @StringRes negativeTextRes: Int = R.string.cancel,
+  @StringRes positiveTextRes: Int = R.string.ok
+) {
+  DialogNegativeButton(
+    onClick = onNegativeClick,
+    modifier = modifier,
+    enabled = !processing,
+    textRes = negativeTextRes
+  )
+
+  if (processing) {
+    Box(modifier = modifier) {
+      CircularProgressIndicator(
+        modifier = Modifier
+          .align(Alignment.Center)
+          .size(32.dp)
+      )
+    }
+  } else {
+    DialogPositiveButton(
+      onClick = onPositiveClick,
+      modifier = modifier,
+      enabled = positiveEnabled,
+      textRes = positiveTextRes
+    )
+  }
+}
+
+@Composable
+fun DialogNegativeButton(
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+  enabled: Boolean = true,
+  @StringRes textRes: Int = R.string.cancel,
+) =
+  OutlinedButton(
+    onClick = onClick,
+    text = stringResource(id = textRes).ucFirst(),
+    modifier = modifier,
+    enabled = enabled,
+    singleLine = true
+  )
+
+@Composable
+fun DialogPositiveButton(
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+  enabled: Boolean = true,
+  @StringRes textRes: Int = R.string.ok
+) =
+  Button(
+    onClick = onClick,
+    text = stringResource(id = textRes).ucFirst(),
+    enabled = enabled,
+    modifier = modifier,
+    singleLine = true
+  )

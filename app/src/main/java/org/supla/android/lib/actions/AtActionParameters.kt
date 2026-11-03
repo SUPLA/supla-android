@@ -25,5 +25,9 @@ class AtActionParameters(
   subjectType: SubjectType,
   subjectId: Int,
   val mode: SuplaButtonMode,
-  var durationSec: Long?
-) : ActionParameters(ActionId.SET_AT_PARAMETERS, subjectType, subjectId)
+  var durationSec: Long? = null
+) : ActionParameters(ActionId.SET_AT_PARAMETERS, subjectType, subjectId) {
+  override fun toString(): String {
+    return "RelayActionParameters(mode=$mode, durationSec=$durationSec, super=${super.toString()})"
+  }
+}

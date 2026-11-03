@@ -854,6 +854,8 @@
   <string name="at_allow_temporary_unlock">Tijdelijk ontgrendelen toestaan</string>
   <string name="at_locked_temporary_unlock_allowed">Vergrendeld met mogelijkheid tot tijdelijk ontgrendelen</string>
   <string name="action_trigger_schedule_temporary_unlock_duration">Duur van tijdelijk ontgrendelen</string>
+  <string name="action_trigger_unlock_dialog_title">Actietrigger ontgrendelen</string>
+  <string name="action_trigger_unlock_temporarily">Tijdelijk ontgrendelen</string>
   <string name="channel_caption_action_trigger">Actietrigger</string>
   <string name="toolbar_search_hint">Voer minimaal 2 tekens in…</string>
   <string name="details_timer_select_program">Selecteer een programma</string>

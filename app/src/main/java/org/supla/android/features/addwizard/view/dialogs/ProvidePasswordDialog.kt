@@ -40,7 +40,7 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.addwizard.view.components.InstructionText
 import org.supla.android.features.addwizard.view.components.SsidText
 import org.supla.android.ui.dialogs.Dialog
-import org.supla.android.ui.dialogs.DialogDoubleButtons
+import org.supla.android.ui.dialogs.DialogButtons
 import org.supla.android.ui.dialogs.DialogHeader
 import org.supla.android.ui.views.Separator
 import org.supla.android.ui.views.SeparatorStyle
@@ -91,7 +91,7 @@ fun ProvidePasswordScope.ProvidePasswordDialog(state: ProvidePasswordState) {
     )
     InstructionText(R.string.add_wizard_password_instruction)
     Separator(style = SeparatorStyle.LIGHT)
-    DialogDoubleButtons(
+    DialogButtons(
       onNegativeClick = {
         autofillManager?.cancel()
         closeProvidePasswordDialog()

@@ -20,39 +20,39 @@ package org.supla.android.features.details.thermostatdetail.schedule.ui.dialogs
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
+import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.model.temperature.TemperatureCorrection
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.features.details.thermostatdetail.schedule.data.ProgramSettingsData
 import org.supla.android.tools.SuplaPreview
+import org.supla.android.tools.SuplaPreviewLandscape
 import org.supla.android.ui.dialogs.Dialog
-import org.supla.android.ui.dialogs.DialogButtonsRow
-import org.supla.android.ui.views.Separator
-import org.supla.android.ui.views.SeparatorStyle
-import org.supla.android.ui.views.buttons.Button
+import org.supla.android.ui.dialogs.DialogButtons
+import org.supla.android.ui.extensions.isPhoneLandscape
 import org.supla.android.ui.views.buttons.MinusIconButton
-import org.supla.android.ui.views.buttons.OutlinedButton
 import org.supla.android.ui.views.buttons.PlusIconButton
 import org.supla.android.ui.views.forms.TextField
 import org.supla.android.ui.views.schedule.ScheduleProgramDialogHeader
 import org.supla.android.ui.views.spinner.Spinner
+import org.supla.android.ui.views.texts.Label
 import org.supla.core.shared.data.model.thermometer.TemperatureUnit
 
 interface ProgramSettingsScope {
@@ -69,84 +69,154 @@ fun ProgramSettingsScope.ProgramDialog(
 ) {
   Dialog(onDismiss = { onProgramSettingsDismiss() }) {
     ScheduleProgramDialogHeader(program = data.program)
-    Separator(style = SeparatorStyle.LIGHT)
+
+    if (LocalConfiguration.current.isPhoneLandscape) {
+      LandscapeViewComponents(data)
+    } else {
+      PortraitViewComponents(data)
+    }
+
+    DialogButtons(
+      onNegativeClick = ::onProgramSettingsDismiss,
+      onPositiveClick = ::onProgramSettingsSave,
+      positiveTextRes = R.string.save,
+      positiveEnabled =
+      when (data.selectedMode) {
+        SuplaHvacMode.HEAT -> data.temperatureHeatCorrect
+        SuplaHvacMode.COOL -> data.temperatureCoolCorrect
+        SuplaHvacMode.HEAT_COOL -> data.temperatureHeatCorrect && data.temperatureCoolCorrect
+        else -> false
+      }
+    )
+  }
+}
+
+@Composable
+private fun ProgramSettingsScope.PortraitViewComponents(data: ProgramSettingsData) {
+  if (data.modes.size > 1) {
+    Spinner(
+      label = stringResource(id = R.string.schedule_detail_program_dialog_program),
+      options = data.spinnerModes(),
+      selectedOption = data.selectedMode,
+      onOptionSelected = { onProgramSettingsModeChange(it) },
+      modifier = Modifier
+        .padding(
+          start = dimensionResource(id = R.dimen.distance_default),
+          top = dimensionResource(id = R.dimen.distance_default),
+          end = dimensionResource(id = R.dimen.distance_default)
+        )
+        .fillMaxWidth()
+    )
+  }
+
+  if (data.selectedMode == SuplaHvacMode.HEAT_COOL) {
+    TemperatureControlRow(
+      headerTextRes = SuplaHvacMode.HEAT.temperatureTextRes(),
+      temperature = data.setpointTemperatureHeatString!!,
+      isError = data.temperatureHeatCorrect.not(),
+      plusAllowed = data.setpointTemperatureHeatPlusAllowed,
+      minusAllowed = data.setpointTemperatureHeatMinusAllowed,
+      unit = data.temperatureUnit,
+      onDownClicked = { onProgramSettingsTemperatureClickChange(SuplaHvacMode.HEAT, TemperatureCorrection.DOWN) },
+      onUpClicked = { onProgramSettingsTemperatureClickChange(SuplaHvacMode.HEAT, TemperatureCorrection.UP) },
+      onValueChanged = { onProgramSettingsTemperatureManualChange(SuplaHvacMode.HEAT, it) }
+    )
+    TemperatureControlRow(
+      headerTextRes = SuplaHvacMode.COOL.temperatureTextRes(),
+      temperature = data.setpointTemperatureCoolString!!,
+      isError = data.temperatureCoolCorrect.not(),
+      plusAllowed = data.setpointTemperatureCoolPlusAllowed,
+      minusAllowed = data.setpointTemperatureCoolMinusAllowed,
+      unit = data.temperatureUnit,
+      onDownClicked = { onProgramSettingsTemperatureClickChange(SuplaHvacMode.COOL, TemperatureCorrection.DOWN) },
+      onUpClicked = { onProgramSettingsTemperatureClickChange(SuplaHvacMode.COOL, TemperatureCorrection.UP) },
+      onValueChanged = { onProgramSettingsTemperatureManualChange(SuplaHvacMode.COOL, it) }
+    )
+  } else {
+    val mode = data.selectedMode
+    val temperature = if (mode == SuplaHvacMode.COOL) data.setpointTemperatureCoolString!! else data.setpointTemperatureHeatString!!
+    val temperatureCorrect = if (mode == SuplaHvacMode.COOL) data.temperatureCoolCorrect else data.temperatureHeatCorrect
+    val plus = if (mode == SuplaHvacMode.COOL) data.setpointTemperatureCoolPlusAllowed else data.setpointTemperatureHeatPlusAllowed
+    val minus = if (mode == SuplaHvacMode.COOL) data.setpointTemperatureCoolMinusAllowed else data.setpointTemperatureHeatMinusAllowed
+
+    TemperatureControlRow(
+      headerTextRes = data.selectedMode.temperatureTextRes(),
+      temperature = temperature,
+      isError = temperatureCorrect.not(),
+      plusAllowed = plus,
+      minusAllowed = minus,
+      unit = data.temperatureUnit,
+      onDownClicked = { onProgramSettingsTemperatureClickChange(data.selectedMode, TemperatureCorrection.DOWN) },
+      onUpClicked = { onProgramSettingsTemperatureClickChange(data.selectedMode, TemperatureCorrection.UP) },
+      onValueChanged = { onProgramSettingsTemperatureManualChange(data.selectedMode, it) }
+    )
+  }
+}
+
+@Composable
+private fun ProgramSettingsScope.LandscapeViewComponents(data: ProgramSettingsData) {
+  Row(
+    horizontalArrangement = Arrangement.spacedBy(Distance.default),
+    modifier = Modifier.padding(horizontal = Distance.horizontal)
+  ) {
     if (data.modes.size > 1) {
       Spinner(
         label = stringResource(id = R.string.schedule_detail_program_dialog_program),
         options = data.spinnerModes(),
         selectedOption = data.selectedMode,
         onOptionSelected = { onProgramSettingsModeChange(it) },
-        modifier = Modifier
-          .padding(
-            start = dimensionResource(id = R.dimen.distance_default),
-            top = dimensionResource(id = R.dimen.distance_default),
-            end = dimensionResource(id = R.dimen.distance_default)
-          )
-          .fillMaxWidth()
-      )
-    }
-
-    if (data.selectedMode == SuplaHvacMode.HEAT_COOL) {
-      TemperatureControlRow(
-        headerTextRes = SuplaHvacMode.HEAT.temperatureTextRes(),
-        temperature = data.setpointTemperatureHeatString!!,
-        isError = data.temperatureHeatCorrect.not(),
-        plusAllowed = data.setpointTemperatureHeatPlusAllowed,
-        minusAllowed = data.setpointTemperatureHeatMinusAllowed,
-        unit = data.temperatureUnit,
-        onDownClicked = { onProgramSettingsTemperatureClickChange(SuplaHvacMode.HEAT, TemperatureCorrection.DOWN) },
-        onUpClicked = { onProgramSettingsTemperatureClickChange(SuplaHvacMode.HEAT, TemperatureCorrection.UP) },
-        onValueChanged = { onProgramSettingsTemperatureManualChange(SuplaHvacMode.HEAT, it) }
-      )
-      TemperatureControlRow(
-        headerTextRes = SuplaHvacMode.COOL.temperatureTextRes(),
-        temperature = data.setpointTemperatureCoolString!!,
-        isError = data.temperatureCoolCorrect.not(),
-        plusAllowed = data.setpointTemperatureCoolPlusAllowed,
-        minusAllowed = data.setpointTemperatureCoolMinusAllowed,
-        unit = data.temperatureUnit,
-        onDownClicked = { onProgramSettingsTemperatureClickChange(SuplaHvacMode.COOL, TemperatureCorrection.DOWN) },
-        onUpClicked = { onProgramSettingsTemperatureClickChange(SuplaHvacMode.COOL, TemperatureCorrection.UP) },
-        onValueChanged = { onProgramSettingsTemperatureManualChange(SuplaHvacMode.COOL, it) }
-      )
-    } else {
-      val mode = data.selectedMode
-      val temperature = if (mode == SuplaHvacMode.COOL) data.setpointTemperatureCoolString!! else data.setpointTemperatureHeatString!!
-      val temperatureCorrect = if (mode == SuplaHvacMode.COOL) data.temperatureCoolCorrect else data.temperatureHeatCorrect
-      val plus = if (mode == SuplaHvacMode.COOL) data.setpointTemperatureCoolPlusAllowed else data.setpointTemperatureHeatPlusAllowed
-      val minus = if (mode == SuplaHvacMode.COOL) data.setpointTemperatureCoolMinusAllowed else data.setpointTemperatureHeatMinusAllowed
-
-      TemperatureControlRow(
-        headerTextRes = data.selectedMode.temperatureTextRes(),
-        temperature = temperature,
-        isError = temperatureCorrect.not(),
-        plusAllowed = plus,
-        minusAllowed = minus,
-        unit = data.temperatureUnit,
-        onDownClicked = { onProgramSettingsTemperatureClickChange(data.selectedMode, TemperatureCorrection.DOWN) },
-        onUpClicked = { onProgramSettingsTemperatureClickChange(data.selectedMode, TemperatureCorrection.UP) },
-        onValueChanged = { onProgramSettingsTemperatureManualChange(data.selectedMode, it) }
-      )
-    }
-
-    Separator(style = SeparatorStyle.LIGHT, modifier = Modifier.padding(top = dimensionResource(id = R.dimen.distance_default)))
-    DialogButtonsRow {
-      OutlinedButton(
-        text = stringResource(id = R.string.cancel),
-        onClick = { onProgramSettingsDismiss() },
         modifier = Modifier.weight(1f)
       )
-      Button(
-        onClick = { onProgramSettingsSave() },
-        text = stringResource(id = R.string.save),
-        enabled = when (data.selectedMode) {
-          SuplaHvacMode.HEAT -> data.temperatureHeatCorrect
-          SuplaHvacMode.COOL -> data.temperatureCoolCorrect
-          SuplaHvacMode.HEAT_COOL -> data.temperatureHeatCorrect && data.temperatureCoolCorrect
-          else -> false
-        },
-        modifier = Modifier.weight(1f)
-      )
+    }
+    Column(modifier = Modifier.weight(1f)) {
+      if (data.selectedMode == SuplaHvacMode.HEAT_COOL) {
+        TemperatureControlRow(
+          headerTextRes = SuplaHvacMode.HEAT.temperatureTextRes(),
+          temperature = data.setpointTemperatureHeatString!!,
+          isError = data.temperatureHeatCorrect.not(),
+          plusAllowed = data.setpointTemperatureHeatPlusAllowed,
+          minusAllowed = data.setpointTemperatureHeatMinusAllowed,
+          unit = data.temperatureUnit,
+          labelPadding = PaddingValues.Zero,
+          valuePadding = PaddingValues(top = Distance.tiny),
+          onDownClicked = { onProgramSettingsTemperatureClickChange(SuplaHvacMode.HEAT, TemperatureCorrection.DOWN) },
+          onUpClicked = { onProgramSettingsTemperatureClickChange(SuplaHvacMode.HEAT, TemperatureCorrection.UP) },
+          onValueChanged = { onProgramSettingsTemperatureManualChange(SuplaHvacMode.HEAT, it) }
+        )
+        TemperatureControlRow(
+          headerTextRes = SuplaHvacMode.COOL.temperatureTextRes(),
+          temperature = data.setpointTemperatureCoolString!!,
+          isError = data.temperatureCoolCorrect.not(),
+          plusAllowed = data.setpointTemperatureCoolPlusAllowed,
+          minusAllowed = data.setpointTemperatureCoolMinusAllowed,
+          unit = data.temperatureUnit,
+          labelPadding = PaddingValues(top = Distance.small),
+          valuePadding = PaddingValues(top = Distance.tiny),
+          onDownClicked = { onProgramSettingsTemperatureClickChange(SuplaHvacMode.COOL, TemperatureCorrection.DOWN) },
+          onUpClicked = { onProgramSettingsTemperatureClickChange(SuplaHvacMode.COOL, TemperatureCorrection.UP) },
+          onValueChanged = { onProgramSettingsTemperatureManualChange(SuplaHvacMode.COOL, it) }
+        )
+      } else {
+        val mode = data.selectedMode
+        val temperature = if (mode == SuplaHvacMode.COOL) data.setpointTemperatureCoolString!! else data.setpointTemperatureHeatString!!
+        val temperatureCorrect = if (mode == SuplaHvacMode.COOL) data.temperatureCoolCorrect else data.temperatureHeatCorrect
+        val plus = if (mode == SuplaHvacMode.COOL) data.setpointTemperatureCoolPlusAllowed else data.setpointTemperatureHeatPlusAllowed
+        val minus = if (mode == SuplaHvacMode.COOL) data.setpointTemperatureCoolMinusAllowed else data.setpointTemperatureHeatMinusAllowed
+
+        TemperatureControlRow(
+          headerTextRes = data.selectedMode.temperatureTextRes(),
+          temperature = temperature,
+          isError = temperatureCorrect.not(),
+          plusAllowed = plus,
+          minusAllowed = minus,
+          unit = data.temperatureUnit,
+          labelPadding = PaddingValues.Zero,
+          valuePadding = PaddingValues(top = Distance.tiny),
+          onDownClicked = { onProgramSettingsTemperatureClickChange(data.selectedMode, TemperatureCorrection.DOWN) },
+          onUpClicked = { onProgramSettingsTemperatureClickChange(data.selectedMode, TemperatureCorrection.UP) },
+          onValueChanged = { onProgramSettingsTemperatureManualChange(data.selectedMode, it) }
+        )
+      }
     }
   }
 }
@@ -159,25 +229,18 @@ private fun TemperatureControlRow(
   plusAllowed: Boolean,
   minusAllowed: Boolean,
   unit: TemperatureUnit,
+  labelPadding: PaddingValues = PaddingValues(start = Distance.default, top = Distance.default, end = Distance.default),
+  valuePadding: PaddingValues = PaddingValues(start = Distance.default, top = Distance.tiny, end = Distance.default),
   onDownClicked: () -> Unit,
   onUpClicked: () -> Unit,
   onValueChanged: (String) -> Unit
 ) {
-  Text(
+  Label(
     text = stringResource(id = headerTextRes),
-    modifier = Modifier.padding(
-      start = dimensionResource(id = R.dimen.distance_default),
-      top = dimensionResource(id = R.dimen.distance_default),
-      end = dimensionResource(id = R.dimen.distance_default)
-    ),
-    style = MaterialTheme.typography.headlineSmall
+    modifier = Modifier.padding(labelPadding),
   )
   Row(
-    modifier = Modifier.padding(
-      start = dimensionResource(id = R.dimen.distance_default),
-      top = dimensionResource(id = R.dimen.distance_tiny),
-      end = dimensionResource(id = R.dimen.distance_default)
-    ),
+    modifier = Modifier.padding(valuePadding),
     horizontalArrangement = Arrangement.spacedBy(8.dp),
     verticalAlignment = Alignment.CenterVertically
   ) {
@@ -211,6 +274,7 @@ private val previewScope = object : ProgramSettingsScope {
 }
 
 @SuplaPreview
+@SuplaPreviewLandscape
 @Composable
 private fun PreviewAuto() {
   Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -221,6 +285,7 @@ private fun PreviewAuto() {
 }
 
 @SuplaPreview
+@SuplaPreviewLandscape
 @Composable
 private fun PreviewHeat() {
   Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {

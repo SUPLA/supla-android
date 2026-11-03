@@ -850,6 +850,8 @@
   <string name="at_allow_temporary_unlock">Να επιτρέπεται το προσωρινό ξεκλείδωμα</string>
   <string name="at_locked_temporary_unlock_allowed">Κλειδωμένο με δυνατότητα προσωρινού ξεκλειδώματος</string>
   <string name="action_trigger_schedule_temporary_unlock_duration">Διάρκεια προσωρινού ξεκλειδώματος</string>
+  <string name="action_trigger_unlock_dialog_title">Ξεκλείδωμα ενεργοποιητή ενέργειας</string>
+  <string name="action_trigger_unlock_temporarily">Προσωρινό ξεκλείδωμα</string>
   <string name="channel_caption_action_trigger">Ενεργοποιητής ενέργειας</string>
   <string name="toolbar_search_hint">Πληκτρολογήστε τουλάχιστον 2 χαρακτήρες…</string>
   <string name="details_timer_select_program">Επιλέξτε πρόγραμμα</string>

@@ -51,6 +51,7 @@ import org.supla.android.ui.views.schedule.editor.ScheduleTableBox
 import org.supla.android.ui.views.schedule.editor.WeeklyScheduleEditorState
 import org.supla.android.ui.views.schedule.editor.quartersSelectionData
 import org.supla.android.ui.views.schedule.editor.viewScheduleTableState
+import org.supla.core.shared.extensions.forTrue
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -147,7 +148,7 @@ class ActionTriggerScheduleViewModel @Inject constructor(
       val data = AtProgramSettingsData(
         program = program,
         selectedMode = programConfiguration.buttonMode,
-        buttonTemporaryUnlockDurationS = programConfiguration.buttonTemporaryUnlockDurationS ?: 0
+        buttonTemporaryUnlockDurationS = programConfiguration.buttonTemporaryUnlockDurationS
       )
 
       state.copy(programSettings = AtProgramSettingsViewState(data))
@@ -163,11 +164,8 @@ class ActionTriggerScheduleViewModel @Inject constructor(
 
       val data = settings.data.copy(
         selectedMode = mode,
-        buttonTemporaryUnlockDurationS = if (mode == SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED) {
-          settings.data.buttonTemporaryUnlockDurationS
-        } else {
-          0
-        }
+        buttonTemporaryUnlockDurationS = (mode == SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED)
+          .forTrue { settings.data.buttonTemporaryUnlockDurationS }
       )
       state.copy(programSettings = AtProgramSettingsViewState(data))
     }

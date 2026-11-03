@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
+import org.supla.android.extensions.ucFirst
 import org.supla.android.images.ImageId
 import org.supla.android.ui.views.Image
 import org.supla.core.shared.infrastructure.LocalizedString
@@ -88,7 +89,7 @@ fun ChannelCurrentState(
       )
     }
     Text(
-      text = stateValue,
+      text = stateValue.ucFirst(),
       style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
     )
     Spacer(modifier = Modifier.weight(1f))

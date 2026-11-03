@@ -841,6 +841,8 @@
   <string name="at_allow_temporary_unlock">Autoriser le déverrouillage temporaire</string>
   <string name="at_locked_temporary_unlock_allowed">Verrouillé avec possibilité de déverrouillage temporaire</string>
   <string name="action_trigger_schedule_temporary_unlock_duration">Durée du déverrouillage temporaire</string>
+  <string name="action_trigger_unlock_dialog_title">Déverrouiller le déclencheur d’action</string>
+  <string name="action_trigger_unlock_temporarily">Déverrouiller temporairement</string>
   <string name="channel_caption_action_trigger">Déclencheur d’action</string>
   <string name="toolbar_search_hint">Saisissez au moins 2 caractères…</string>
   <string name="details_timer_select_program">Sélectionnez un programme</string>

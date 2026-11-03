@@ -25,5 +25,5 @@ const val MAX_TEMPORARY_UNLOCK_DURATION_S = 64_800
 data class AtProgramSettingsData(
   val program: SuplaScheduleProgram,
   val selectedMode: SuplaButtonMode,
-  val buttonTemporaryUnlockDurationS: Int = 0
+  val buttonTemporaryUnlockDurationS: Int? = null
 )

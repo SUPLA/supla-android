@@ -25,8 +25,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,6 +41,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -48,17 +50,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.supla.android.R
 import org.supla.android.core.shared.invoke
+import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.source.local.calendar.DayOfWeek
 import org.supla.android.data.source.local.calendar.QuarterOfHour
 import org.supla.android.data.source.local.calendar.toHour
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.tools.SuplaPreview
+import org.supla.android.tools.SuplaPreviewLandscape
 import org.supla.android.ui.dialogs.Dialog
-import org.supla.android.ui.dialogs.DialogButtonsRow
+import org.supla.android.ui.dialogs.DialogButtons
 import org.supla.android.ui.dialogs.DialogHeader
-import org.supla.android.ui.views.buttons.Button
-import org.supla.android.ui.views.buttons.OutlinedButton
+import org.supla.android.ui.extensions.isPhoneLandscape
 import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxKey
 import org.supla.android.ui.views.schedule.colorRes
 import org.supla.core.shared.infrastructure.LocalizedString
@@ -76,11 +79,73 @@ fun QuartersSelectionDialogScope.QuartersDialog(
   programs: List<WeeklyScheduleProgram>
 ) {
   val key = data.entryKey
+
+  Dialog(onDismiss = { onQuartersSelectionDismiss() }) {
+    DialogHeader(title = stringResource(id = R.string.schedule_detail_quarters_dialog_header, key.hour))
+
+    if (LocalConfiguration.current.isPhoneLandscape) {
+      LandscapeViewComponents(data, programs)
+    } else {
+      PortraitViewComponents(data, programs)
+    }
+
+    DialogButtons(
+      onNegativeClick = ::onQuartersSelectionDismiss,
+      onPositiveClick = ::onQuartersSelectionFinish,
+      negativeTextRes = R.string.cancel,
+      positiveTextRes = R.string.save
+    )
+  }
+}
+
+@Composable
+private fun QuartersSelectionDialogScope.PortraitViewComponents(
+  data: QuartersSelectionData,
+  programs: List<WeeklyScheduleProgram>
+) {
+  val key = data.entryKey
   val value = data.entryValue
 
-  Dialog(onDismiss = { onQuartersSelectionDismiss() }, usePlatformDefaultWidth = true) {
-    DialogHeader(title = stringResource(id = R.string.schedule_detail_quarters_dialog_header, key.hour))
-    ScheduleProgramsRow {
+  ScheduleProgramsRow(modifier = Modifier.fillMaxWidth()) {
+    for (program in programs) {
+      ScheduleProgramButton(
+        contentColor = colorResource(id = program.program.colorRes()),
+        text = program.label(),
+        iconRes = program.iconRes,
+        modifier = Modifier.padding(vertical = 4.dp),
+        active = program.program == data.activeProgram,
+        onClick = { onQuartersSelectionProgramChange(program.program) },
+        onLongClick = {}
+      )
+    }
+  }
+
+  DayLabel(textRes = key.dayOfWeek.fullText)
+
+  QuarterRow(key = key, program = value.firstQuarterProgram, quarterOfHour = QuarterOfHour.FIRST)
+  QuarterRow(key = key, program = value.secondQuarterProgram, quarterOfHour = QuarterOfHour.SECOND)
+  QuarterRow(key = key, program = value.thirdQuarterProgram, quarterOfHour = QuarterOfHour.THIRD)
+  QuarterRow(key = key, program = value.fourthQuarterProgram, quarterOfHour = QuarterOfHour.FOURTH)
+}
+
+@Composable
+private fun QuartersSelectionDialogScope.LandscapeViewComponents(
+  data: QuartersSelectionData,
+  programs: List<WeeklyScheduleProgram>
+) {
+  val key = data.entryKey
+  val value = data.entryValue
+
+  DayLabel(
+    textRes = key.dayOfWeek.fullText,
+    padding = PaddingValues(bottom = Distance.small)
+  )
+
+  Row(
+    horizontalArrangement = Arrangement.spacedBy(Distance.small),
+    modifier = Modifier.padding(horizontal = Distance.horizontal)
+  ) {
+    ScheduleProgramsRow(modifier = Modifier.weight(1f)) {
       for (program in programs) {
         ScheduleProgramButton(
           contentColor = colorResource(id = program.program.colorRes()),
@@ -94,23 +159,25 @@ fun QuartersSelectionDialogScope.QuartersDialog(
       }
     }
 
-    DayLabel(textRes = key.dayOfWeek.fullText)
-
-    QuarterRow(key = key, program = value.firstQuarterProgram, quarterOfHour = QuarterOfHour.FIRST)
-    QuarterRow(key = key, program = value.secondQuarterProgram, quarterOfHour = QuarterOfHour.SECOND)
-    QuarterRow(key = key, program = value.thirdQuarterProgram, quarterOfHour = QuarterOfHour.THIRD)
-    QuarterRow(key = key, program = value.fourthQuarterProgram, quarterOfHour = QuarterOfHour.FOURTH)
-
-    DialogButtonsRow {
-      OutlinedButton(
-        onClick = { onQuartersSelectionDismiss() },
-        text = stringResource(id = R.string.cancel),
-        modifier = Modifier.weight(1f)
+    Column(modifier = Modifier.weight(1f)) {
+      QuarterRow(key = key, program = value.firstQuarterProgram, quarterOfHour = QuarterOfHour.FIRST, padding = PaddingValues.Zero)
+      QuarterRow(
+        key = key,
+        program = value.secondQuarterProgram,
+        quarterOfHour = QuarterOfHour.SECOND,
+        padding = PaddingValues(top = Distance.tiny)
       )
-      Button(
-        onClick = { onQuartersSelectionFinish() },
-        text = stringResource(id = R.string.save),
-        modifier = Modifier.weight(1f)
+      QuarterRow(
+        key = key,
+        program = value.thirdQuarterProgram,
+        quarterOfHour = QuarterOfHour.THIRD,
+        padding = PaddingValues(top = Distance.tiny)
+      )
+      QuarterRow(
+        key = key,
+        program = value.fourthQuarterProgram,
+        quarterOfHour = QuarterOfHour.FOURTH,
+        padding = PaddingValues(top = Distance.tiny)
       )
     }
   }
@@ -120,13 +187,10 @@ fun QuartersSelectionDialogScope.QuartersDialog(
 private fun QuartersSelectionDialogScope.QuarterRow(
   key: ScheduleDetailEntryBoxKey,
   program: SuplaScheduleProgram,
-  quarterOfHour: QuarterOfHour
+  quarterOfHour: QuarterOfHour,
+  padding: PaddingValues = PaddingValues(start = Distance.default, top = Distance.tiny, end = Distance.default)
 ) = Row(
-  modifier = Modifier.padding(
-    start = dimensionResource(id = R.dimen.distance_default),
-    top = dimensionResource(id = R.dimen.distance_tiny),
-    end = dimensionResource(id = R.dimen.distance_default)
-  ),
+  modifier = Modifier.padding(padding),
   horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.distance_default)),
   verticalAlignment = Alignment.CenterVertically
 ) {
@@ -152,24 +216,24 @@ private fun ScheduleHourCaption(hour: Short, withQuarter: QuarterOfHour) = Text(
 )
 
 @Composable
-private fun DayLabel(@StringRes textRes: Int) = Text(
+private fun DayLabel(
+  @StringRes textRes: Int,
+  padding: PaddingValues = PaddingValues(start = Distance.default, top = Distance.default, end = Distance.default)
+) = Text(
   text = stringResource(id = textRes).uppercase(),
   style = MaterialTheme.typography.bodyMedium,
   textAlign = TextAlign.Center,
   modifier = Modifier
-    .padding(
-      start = dimensionResource(id = R.dimen.distance_default),
-      top = dimensionResource(id = R.dimen.distance_default),
-      end = dimensionResource(id = R.dimen.distance_default)
-    )
+    .padding(padding)
     .fillMaxWidth()
 )
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun ScheduleProgramsRow(content: @Composable RowScope.() -> Unit) = FlowRow(
-  modifier = Modifier
-    .fillMaxWidth()
+private fun ScheduleProgramsRow(
+  modifier: Modifier,
+  content: @Composable RowScope.() -> Unit
+) = FlowRow(
+  modifier = modifier
     .background(color = colorResource(id = R.color.gray_lighter))
     .padding(
       horizontal = dimensionResource(id = R.dimen.distance_default),
@@ -200,6 +264,7 @@ private val previewScope = object : QuartersSelectionDialogScope {
 }
 
 @SuplaPreview
+@SuplaPreviewLandscape
 @Composable
 private fun Preview() {
   SuplaTheme {
