@@ -913,6 +913,8 @@
   <string name="at_allow_temporary_unlock">Temporäres Entsperren erlauben</string>
   <string name="at_locked_temporary_unlock_allowed">Gesperrt mit Möglichkeit zur vorübergehenden Entsperrung</string>
   <string name="action_trigger_schedule_temporary_unlock_duration">Dauer der vorübergehenden Entsperrung</string>
+  <string name="action_trigger_unlock_dialog_title">Aktionstrigger entsperren</string>
+  <string name="action_trigger_unlock_temporarily">Vorübergehend entsperren</string>
   <string name="channel_caption_action_trigger">Aktionsauslöser</string>
   <string name="toolbar_search_hint">Geben Sie mindestens 2 Zeichen ein…</string>
   <string name="details_timer_select_program">Programm auswählen</string>

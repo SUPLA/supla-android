@@ -32,7 +32,7 @@ class ActionTriggerScheduleProgramTest {
   fun `should use labels for supported action trigger modes`() {
     assertThat(
       program(SuplaButtonMode.NOT_SET).label
-    ).isEqualTo(LocalizedString.WithResourceAndArguments(R.string.schedule_program_default))
+    ).isEqualTo(LocalizedString.WithResourceAndArguments(R.string.general_unlocked))
     assertThat(program(SuplaButtonMode.LOCKED).label).isEqualTo(LocalizedString.WithResourceAndArguments(R.string.general_locked))
     assertThat(program(SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED).label)
       .isEqualTo(LocalizedString.WithFormat("%s ⏱️", listOf(LocalizedString.WithResourceAndArguments(R.string.general_locked))))

@@ -20,6 +20,8 @@ package org.supla.android.features.details.relayschedule.ui.dialogs
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -30,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -44,12 +47,12 @@ import org.supla.android.features.details.relayschedule.data.MAX_PROGRAM_DURATIO
 import org.supla.android.features.details.relayschedule.data.RelayProgramDuration
 import org.supla.android.features.details.relayschedule.data.RelayProgramSettingsData
 import org.supla.android.tools.SuplaPreview
+import org.supla.android.tools.SuplaPreviewLandscape
 import org.supla.android.ui.dialogs.Dialog
-import org.supla.android.ui.dialogs.DialogButtonsRow
-import org.supla.android.ui.views.buttons.Button
+import org.supla.android.ui.dialogs.DialogButtons
+import org.supla.android.ui.extensions.isPhoneLandscape
 import org.supla.android.ui.views.buttons.MinusIconButton
 import org.supla.android.ui.views.buttons.PlusIconButton
-import org.supla.android.ui.views.buttons.TextButton
 import org.supla.android.ui.views.forms.TextField
 import org.supla.android.ui.views.schedule.ScheduleProgramDialogHeader
 import org.supla.android.ui.views.spinner.Spinner
@@ -83,58 +86,115 @@ fun RelayProgramSettingsScope.RelayProgramDialog(state: RelayProgramSettingsView
   val data = state.data
   Dialog(onDismiss = { onProgramSettingsDismiss() }) {
     ScheduleProgramDialogHeader(program = data.program)
+
+    if (LocalConfiguration.current.isPhoneLandscape) {
+      LandscapeViewComponents(state, data)
+    } else {
+      PortraitViewComponents(state, data)
+    }
+
+    DialogButtons(
+      onNegativeClick = ::onProgramSettingsDismiss,
+      onPositiveClick = ::onProgramSettingsSave,
+      negativeTextRes = R.string.cancel,
+      positiveTextRes = R.string.save
+    )
+  }
+}
+
+@Composable
+private fun RelayProgramSettingsScope.PortraitViewComponents(
+  state: RelayProgramSettingsViewState,
+  data: RelayProgramSettingsData
+) {
+  Spinner(
+    label = stringResource(id = R.string.relay_schedule_program_operation_type),
+    options = state.spinnerModes(),
+    selectedOption = data.selectedMode,
+    onOptionSelected = { onProgramSettingsModeChange(it) },
+    modifier = Modifier
+      .padding(horizontal = dimensionResource(id = R.dimen.distance_default))
+      .fillMaxWidth()
+  )
+  if (state.durationSupported) {
+    DurationControlRow(
+      headerText = stringResource(
+        id = R.string.relay_schedule_program_first_duration,
+        data.selectedMode.relayModeStateLabel()
+      ),
+      duration = state.relayDurationSString,
+      minusDisabled = state.relayDurationMinusDisabled,
+      plusDisabled = state.relayDurationPlusDisabled,
+      onMinusClicked = { onProgramSettingsDurationMinusClick(RelayProgramDuration.RELAY_MODE) },
+      onPlusClicked = { onProgramSettingsDurationPlusClick(RelayProgramDuration.RELAY_MODE) },
+      onValueChanged = { onProgramSettingsDurationManualChange(RelayProgramDuration.RELAY_MODE, it) }
+    )
+    if (state.oppositeDurationSupported) {
+      DurationControlRow(
+        headerText = stringResource(
+          id = R.string.relay_schedule_program_second_duration,
+          data.selectedMode.oppositeModeStateLabel()
+        ),
+        duration = state.relayOppositeDurationSString,
+        disabled = state.relayOppositeDurationDisabled,
+        minusDisabled = state.relayOppositeDurationMinusDisabled,
+        plusDisabled = state.relayOppositeDurationPlusDisabled,
+        onMinusClicked = { onProgramSettingsDurationMinusClick(RelayProgramDuration.OPPOSITE_MODE) },
+        onPlusClicked = { onProgramSettingsDurationPlusClick(RelayProgramDuration.OPPOSITE_MODE) },
+        onValueChanged = { onProgramSettingsDurationManualChange(RelayProgramDuration.OPPOSITE_MODE, it) }
+      )
+    }
+  }
+}
+
+@Composable
+private fun RelayProgramSettingsScope.LandscapeViewComponents(
+  state: RelayProgramSettingsViewState,
+  data: RelayProgramSettingsData
+) {
+  Row(horizontalArrangement = Arrangement.spacedBy(Distance.small)) {
     Spinner(
       label = stringResource(id = R.string.relay_schedule_program_operation_type),
       options = state.spinnerModes(),
       selectedOption = data.selectedMode,
       onOptionSelected = { onProgramSettingsModeChange(it) },
-      modifier = Modifier
-        .padding(horizontal = dimensionResource(id = R.dimen.distance_default))
-        .fillMaxWidth()
+      modifier = Modifier.padding(horizontal = Distance.default).weight(1f)
     )
+
     if (state.durationSupported) {
-      DurationControlRow(
-        headerText = stringResource(
-          id = R.string.relay_schedule_program_first_duration,
-          data.selectedMode.relayModeStateLabel()
-        ),
-        duration = state.relayDurationSString,
-        minusDisabled = state.relayDurationMinusDisabled,
-        plusDisabled = state.relayDurationPlusDisabled,
-        onMinusClicked = { onProgramSettingsDurationMinusClick(RelayProgramDuration.RELAY_MODE) },
-        onPlusClicked = { onProgramSettingsDurationPlusClick(RelayProgramDuration.RELAY_MODE) },
-        onValueChanged = { onProgramSettingsDurationManualChange(RelayProgramDuration.RELAY_MODE, it) }
-      )
-      if (state.oppositeDurationSupported) {
+      Column(modifier = Modifier.weight(1f)) {
         DurationControlRow(
           headerText = stringResource(
-            id = R.string.relay_schedule_program_second_duration,
-            data.selectedMode.oppositeModeStateLabel()
+            id = R.string.relay_schedule_program_first_duration,
+            data.selectedMode.relayModeStateLabel()
           ),
-          duration = state.relayOppositeDurationSString,
-          disabled = state.relayOppositeDurationDisabled,
-          minusDisabled = state.relayOppositeDurationMinusDisabled,
-          plusDisabled = state.relayOppositeDurationPlusDisabled,
-          onMinusClicked = { onProgramSettingsDurationMinusClick(RelayProgramDuration.OPPOSITE_MODE) },
-          onPlusClicked = { onProgramSettingsDurationPlusClick(RelayProgramDuration.OPPOSITE_MODE) },
-          onValueChanged = { onProgramSettingsDurationManualChange(RelayProgramDuration.OPPOSITE_MODE, it) }
+          duration = state.relayDurationSString,
+          minusDisabled = state.relayDurationMinusDisabled,
+          plusDisabled = state.relayDurationPlusDisabled,
+          labelPadding = PaddingValues(start = 12.dp, end = 12.dp),
+          valuePadding = PaddingValues(top = Distance.tiny),
+          onMinusClicked = { onProgramSettingsDurationMinusClick(RelayProgramDuration.RELAY_MODE) },
+          onPlusClicked = { onProgramSettingsDurationPlusClick(RelayProgramDuration.RELAY_MODE) },
+          onValueChanged = { onProgramSettingsDurationManualChange(RelayProgramDuration.RELAY_MODE, it) }
         )
+        if (state.oppositeDurationSupported) {
+          DurationControlRow(
+            headerText = stringResource(
+              id = R.string.relay_schedule_program_second_duration,
+              data.selectedMode.oppositeModeStateLabel()
+            ),
+            duration = state.relayOppositeDurationSString,
+            disabled = state.relayOppositeDurationDisabled,
+            minusDisabled = state.relayOppositeDurationMinusDisabled,
+            plusDisabled = state.relayOppositeDurationPlusDisabled,
+            labelPadding = PaddingValues(start = 12.dp, top = Distance.small, end = 12.dp),
+            valuePadding = PaddingValues(top = Distance.tiny),
+            onMinusClicked = { onProgramSettingsDurationMinusClick(RelayProgramDuration.OPPOSITE_MODE) },
+            onPlusClicked = { onProgramSettingsDurationPlusClick(RelayProgramDuration.OPPOSITE_MODE) },
+            onValueChanged = { onProgramSettingsDurationManualChange(RelayProgramDuration.OPPOSITE_MODE, it) }
+          )
+        }
       }
-    }
-    DialogButtonsRow {
-      TextButton(
-        text = stringResource(id = R.string.cancel),
-        onClick = { onProgramSettingsDismiss() },
-        singleLine = true,
-        color = MaterialTheme.colorScheme.onSurface,
-        modifier = Modifier.weight(1f)
-      )
-      Button(
-        text = stringResource(id = R.string.save),
-        onClick = { onProgramSettingsSave() },
-        singleLine = true,
-        modifier = Modifier.weight(1f)
-      )
     }
   }
 }
@@ -146,6 +206,8 @@ private fun DurationControlRow(
   disabled: Boolean = false,
   minusDisabled: Boolean,
   plusDisabled: Boolean,
+  labelPadding: PaddingValues = PaddingValues(start = Distance.default + 12.dp, top = Distance.default, end = Distance.default + 12.dp),
+  valuePadding: PaddingValues = PaddingValues(start = Distance.default, top = Distance.tiny, end = Distance.default),
   onMinusClicked: () -> Unit,
   onPlusClicked: () -> Unit,
   onValueChanged: (String) -> Unit
@@ -153,10 +215,10 @@ private fun DurationControlRow(
   Label(
     text = headerText,
     color = if (disabled) MaterialTheme.colorScheme.outline else colorResource(id = R.color.on_surface_variant),
-    modifier = Modifier.padding(start = Distance.default + 12.dp, top = Distance.default, end = Distance.default + 12.dp)
+    modifier = Modifier.padding(labelPadding)
   )
   Row(
-    modifier = Modifier.padding(start = Distance.default, top = Distance.tiny, end = Distance.default),
+    modifier = Modifier.padding(valuePadding),
     horizontalArrangement = Arrangement.spacedBy(8.dp),
     verticalAlignment = Alignment.CenterVertically
   ) {
@@ -216,6 +278,7 @@ private val previewScope = object : RelayProgramSettingsScope {
 }
 
 @SuplaPreview
+@SuplaPreviewLandscape
 @Composable
 private fun Preview() {
   SuplaTheme {

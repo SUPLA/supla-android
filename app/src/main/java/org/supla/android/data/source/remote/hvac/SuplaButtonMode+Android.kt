@@ -24,7 +24,7 @@ import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
 
 val SuplaButtonMode.label: LocalizedString
   get() = when (this) {
-    SuplaButtonMode.NOT_SET -> localizedString(R.string.schedule_program_default)
+    SuplaButtonMode.NOT_SET -> localizedString(R.string.general_unlocked)
     SuplaButtonMode.LOCKED, SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED -> localizedString(R.string.general_locked)
     else -> LocalizedString.Constant(NO_VALUE_TEXT)
   }

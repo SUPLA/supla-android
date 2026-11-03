@@ -17,6 +17,7 @@ package org.supla.core.shared.data.model.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.core.shared.data.model.function.actiontrigger.ActionTriggerValue
 import org.supla.core.shared.data.model.function.container.ContainerValue
 import org.supla.core.shared.data.model.function.digiglass.DigiglassValue
 import org.supla.core.shared.data.model.function.facadeblind.FacadeBlindValue
@@ -46,3 +47,6 @@ val Channel.relayValue: RelayValue?
 
 val Channel.digiglassValue: DigiglassValue?
   get() = value?.let { DigiglassValue.from(status, it) }
+
+val Channel.actionTriggerValue: ActionTriggerValue?
+  get() = value?.let { ActionTriggerValue.from(status, it) }

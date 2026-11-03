@@ -841,6 +841,8 @@
   <string name="at_allow_temporary_unlock">Permitir desbloqueo temporal</string>
   <string name="at_locked_temporary_unlock_allowed">Bloqueado con posibilidad de desbloqueo temporal</string>
   <string name="action_trigger_schedule_temporary_unlock_duration">Duración del desbloqueo temporal</string>
+  <string name="action_trigger_unlock_dialog_title">Desbloquear activador de acción</string>
+  <string name="action_trigger_unlock_temporarily">Desbloquear temporalmente</string>
   <string name="channel_caption_action_trigger">Activador de acciones</string>
   <string name="toolbar_search_hint">Introduce al menos 2 caracteres…</string>
   <string name="details_timer_select_program">Selecciona un programa</string>
