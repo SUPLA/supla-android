@@ -987,6 +987,8 @@
   <string name="general_unlocked">unlocked</string>
   <string name="at_allow_temporary_unlock">Allow temporary unlock</string>
   <string name="at_locked_temporary_unlock_allowed">Locked with temporary unlock allowed</string>
+  <string name="action_trigger_unlock_dialog_title">Unlock Action Trigger</string>
+  <string name="action_trigger_unlock_temporarily">Unlock temporarily</string>
   <string name="wizard_result_certificate_untrusted">The device certificate is not trusted. Make sure you are connecting to the right device and that its software is up to date.</string>
   <string name="wizard_result_certificate_expired">The device certificate has expired. Update the device software or contact support. Also check that the date and time on your phone are correct.</string>
   <string name="wizard_result_certificate_not_yet_valid">The device certificate is not valid yet. Check the date and time on your phone and device, then try again.</string>

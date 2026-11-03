@@ -857,6 +857,8 @@
   <string name="at_allow_temporary_unlock">Dovoli začasno odklepanje</string>
   <string name="at_locked_temporary_unlock_allowed">Zaklenjeno z možnostjo začasnega odklepanja</string>
   <string name="action_trigger_schedule_temporary_unlock_duration">Trajanje začasnega odklepanja</string>
+  <string name="action_trigger_unlock_dialog_title">Odkleni sprožilec dejanja</string>
+  <string name="action_trigger_unlock_temporarily">Začasno odkleni</string>
   <string name="channel_caption_action_trigger">Sprožilec dejanja</string>
   <string name="toolbar_search_hint">Vnesite vsaj 2 znaka…</string>
   <string name="details_timer_select_program">Izberite program</string>

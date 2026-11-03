@@ -52,6 +52,7 @@ import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.core.ui.theme.gray
+import org.supla.android.extensions.ucFirst
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.tools.SuplaPreviewLandscape
 import org.supla.core.shared.infrastructure.LocalizedString
@@ -184,7 +185,7 @@ private fun ProgramInfoIcon(@DrawableRes icon: Int, @ColorRes color: Int) =
 @Composable
 private fun ProgramInfoDescription(description: String) =
   Text(
-    text = description,
+    text = description.ucFirst(),
     style = MaterialTheme.typography.bodyMedium,
     fontWeight = FontWeight.SemiBold,
     color = MaterialTheme.colorScheme.onBackground
