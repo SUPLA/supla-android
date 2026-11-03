@@ -37,7 +37,7 @@ fun ActionTriggerScheduleViewState.toWeeklyScheduleConfigChange(remoteId: Int) =
     SuplaWeeklyScheduleProgram(
       program = it.program,
       buttonMode = it.buttonMode,
-      buttonTemporaryUnlockDurationS = it.buttonTemporaryUnlockDurationS ?: 0
+      buttonTemporaryUnlockDurationS = it.buttonTemporaryUnlockDurationS
     )
   },
   schedule = editorState.scheduleTableState.toSuplaScheduleEntries()

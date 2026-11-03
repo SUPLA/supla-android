@@ -49,7 +49,7 @@ class ActionTriggerGeneralViewModelTest {
     assertThat(stateData).isNotNull
     assertThat(stateData!!.icon).isNull()
     assertThat(stateData.label).isEqualTo(LocalizedString.WithResourceAndArguments(R.string.details_timer_state_label))
-    assertThat(stateData.value).isEqualTo(LocalizedString.WithResourceAndArguments(R.string.schedule_program_default))
+    assertThat(stateData.value).isEqualTo(LocalizedString.WithResourceAndArguments(R.string.general_unlocked))
   }
 
   @Test
@@ -84,7 +84,7 @@ class ActionTriggerGeneralViewModelTest {
 
   @Test
   fun `should mark lock as active for locked mode`() {
-    val buttonState = viewModel.lockButtonState(SuplaButtonMode.LOCKED)
+    val buttonState = viewModel.lockButtonState(SuplaButtonMode.LOCKED, temporaryUnlockActive = false)
 
     assertThat(buttonState.lockActive).isTrue()
     assertThat(buttonState.unlockActive).isFalse()
@@ -93,7 +93,10 @@ class ActionTriggerGeneralViewModelTest {
 
   @Test
   fun `should mark lock active and use temporary unlock icon when temporary unlock is allowed`() {
-    val buttonState = viewModel.lockButtonState(SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED)
+    val buttonState = viewModel.lockButtonState(
+      SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED,
+      temporaryUnlockActive = false
+    )
 
     assertThat(buttonState.lockActive).isTrue()
     assertThat(buttonState.unlockActive).isFalse()
@@ -102,10 +105,62 @@ class ActionTriggerGeneralViewModelTest {
 
   @Test
   fun `should mark unlock as active for other modes`() {
-    val buttonState = viewModel.lockButtonState(SuplaButtonMode.NOT_SET)
+    val buttonState = viewModel.lockButtonState(SuplaButtonMode.NOT_SET, temporaryUnlockActive = false)
 
     assertThat(buttonState.lockActive).isFalse()
     assertThat(buttonState.unlockActive).isTrue()
     assertThat(buttonState.showTemporaryUnlockIcon).isFalse()
+  }
+
+  @Test
+  fun `should mark unlock as active while temporary unlock is active`() {
+    val buttonState = viewModel.lockButtonState(
+      SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED,
+      temporaryUnlockActive = true
+    )
+
+    assertThat(buttonState.lockActive).isFalse()
+    assertThat(buttonState.unlockActive).isTrue()
+    assertThat(buttonState.showTemporaryUnlockIcon).isTrue()
+  }
+
+  @Test
+  fun `should open unlock dialog with current schedule duration`() {
+    viewModel.setPrivateField("mode", SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED)
+    viewModel.setPrivateField("currentTemporaryUnlockDurationS", 300)
+
+    viewModel.onUnlock()
+
+    assertThat(viewModel.getViewState().value.unlockDialog)
+      .isEqualTo(UnlockDialogState(temporaryUnlockDurationS = 300, unlockTemporaryAllowed = true))
+  }
+
+  @Test
+  fun `should disable temporary unlock when current schedule duration is zero`() {
+    viewModel.setPrivateField("mode", SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED)
+    viewModel.setPrivateField("currentTemporaryUnlockDurationS", 0)
+
+    viewModel.onUnlock()
+
+    assertThat(viewModel.getViewState().value.unlockDialog)
+      .isEqualTo(UnlockDialogState(temporaryUnlockDurationS = 0, unlockTemporaryAllowed = false))
+  }
+
+  @Test
+  fun `should clamp changed duration and enable temporary unlock without schedule duration`() {
+    viewModel.setPrivateField("mode", SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED)
+    viewModel.onUnlock()
+
+    viewModel.onUnlockDialogDurationChange(70_000)
+
+    assertThat(viewModel.getViewState().value.unlockDialog)
+      .isEqualTo(UnlockDialogState(temporaryUnlockDurationS = 64_800, unlockTemporaryAllowed = true))
+  }
+
+  private fun ActionTriggerGeneralViewModel.setPrivateField(name: String, value: Any?) {
+    javaClass.getDeclaredField(name).apply {
+      isAccessible = true
+      set(this@setPrivateField, value)
+    }
   }
 }

@@ -119,7 +119,7 @@ fun AuthorizationDialogScope.AuthorizationDialog(
     )
 
     Separator(style = SeparatorStyle.LIGHT, modifier = Modifier.padding(top = Distance.small))
-    DialogDoubleButtons(
+    DialogButtons(
       onNegativeClick = {
         autofillManager?.cancel()
         onAuthorizationCancel()

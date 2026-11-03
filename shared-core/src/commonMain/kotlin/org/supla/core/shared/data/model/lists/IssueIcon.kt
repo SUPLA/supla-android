@@ -29,4 +29,5 @@ sealed class IssueIcon {
   data object BatteryNotUsed : IssueIcon()
   data object Sound : IssueIcon()
   data object Update : IssueIcon()
+  data object Schedule : IssueIcon()
 }

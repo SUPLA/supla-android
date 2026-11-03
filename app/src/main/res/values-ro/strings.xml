@@ -858,6 +858,8 @@
   <string name="at_allow_temporary_unlock">Permite deblocarea temporară</string>
   <string name="at_locked_temporary_unlock_allowed">Blocat cu posibilitatea de deblocare temporară</string>
   <string name="action_trigger_schedule_temporary_unlock_duration">Durata deblocării temporare</string>
+  <string name="action_trigger_unlock_dialog_title">Deblochează declanșatorul acțiunii</string>
+  <string name="action_trigger_unlock_temporarily">Deblochează temporar</string>
   <string name="channel_caption_action_trigger">Declanșator de acțiune</string>
   <string name="toolbar_search_hint">Introduceți cel puțin 2 caractere…</string>
   <string name="details_timer_select_program">Selectați un program</string>

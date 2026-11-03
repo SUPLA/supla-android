@@ -30,7 +30,7 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.extensions.toColorOrNull
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.dialogs.Dialog
-import org.supla.android.ui.dialogs.DialogDoubleButtons
+import org.supla.android.ui.dialogs.DialogButtons
 import org.supla.android.ui.dialogs.DialogHeader
 import org.supla.android.ui.views.Separator
 import org.supla.android.ui.views.SeparatorStyle
@@ -68,7 +68,7 @@ fun RgbColorDialogScope.ColorDialog(
       trailingIcon = { ColorBox(color) }
     )
     Separator(style = SeparatorStyle.LIGHT)
-    DialogDoubleButtons(
+    DialogButtons(
       onPositiveClick = { onColorDialogConfirm() },
       onNegativeClick = { onColorDialogDismiss() },
       positiveEnabled = color != null
