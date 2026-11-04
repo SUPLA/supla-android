@@ -18,6 +18,7 @@ package org.supla.android.usecases.client
  */
 
 import androidx.annotation.StringRes
+import io.reactivex.rxjava3.core.SingleEmitter
 import org.supla.android.R
 import org.supla.android.core.infrastructure.ThreadHandler
 import org.supla.core.shared.extensions.ifLet
@@ -28,9 +29,15 @@ import timber.log.Timber
 private const val WAIT_TIME_MS: Long = 1000
 
 open class BaseCredentialsUseCase(private val threadHandler: ThreadHandler) {
-  protected fun waitForResponse(authorizedProvider: () -> Boolean?, errorMessageProvider: () -> LocalizedString?) {
+  protected fun waitForResponse(
+    authorizedProvider: () -> Boolean?,
+    errorMessageProvider: () -> LocalizedString?,
+    emitter: SingleEmitter<*>
+  ) {
     try {
-      for (i in 0 until 10) {
+      repeat(10) {
+        if (emitter.isDisposed) return
+
         val authorized = authorizedProvider()
         val errorMessage = errorMessageProvider()
 
