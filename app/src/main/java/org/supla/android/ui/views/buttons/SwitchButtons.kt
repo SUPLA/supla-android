@@ -121,7 +121,7 @@ private fun SwitchButtonsLayout(
   Layout(modifier = modifier, content = content) { measurables, constraints ->
     val spacing = defaultDistance.toPx().toInt()
     val buttonMaxWidth = 300.dp.toPx().toInt()
-    val possibleWidth = min(constraints.maxWidth, screenWidth)
+    val possibleWidth = min(constraints.maxWidth, screenWidth.takeIf { it > 0 } ?: constraints.maxWidth)
 
     if (measurables.size == 1) {
       val buttonWidth = min(possibleWidth, buttonMaxWidth)
@@ -133,7 +133,7 @@ private fun SwitchButtonsLayout(
         placeable.placeRelative(padding, 0)
       }
     } else if (measurables.size == 2) {
-      val buttonWidth = min(possibleWidth.minus(spacing).div(2), buttonMaxWidth)
+      val buttonWidth = min(possibleWidth.minus(spacing).div(2), buttonMaxWidth).coerceAtLeast(0)
       val padding = possibleWidth.minus(buttonWidth.times(2).plus(spacing)).div(2)
       val modifiedConstraint = constraints.copy(minWidth = buttonWidth, maxWidth = buttonWidth)
       val placeable1 = measurables[0].measure(modifiedConstraint)
