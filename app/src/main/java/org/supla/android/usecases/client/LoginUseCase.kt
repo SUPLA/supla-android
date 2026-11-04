@@ -39,9 +39,10 @@ class LoginUseCase @Inject constructor(
 ) : BaseCredentialsUseCase(threadHandler) {
 
   operator fun invoke(userName: String, password: String): Single<Result> =
-    Single.fromCallable {
+    Single.create { emitter ->
       val (client) = guardLet(suplaAppProvider.provide().SuplaClientInitIfNeed(applicationContext, password)) {
-        throw IllegalStateException("SuplaClient is null")
+        emitter.tryOnError(IllegalStateException("SuplaClient is null"))
+        return@create
       }
 
       var authorized: Boolean? = null
@@ -52,22 +53,21 @@ class LoginUseCase @Inject constructor(
         onError = { error = it }
       )
 
-      suplaClientMessageHandlerWrapper.registerMessageListener(listener)
-      client.superUserAuthorizationRequest(userName, password)
-
       try {
+        suplaClientMessageHandlerWrapper.registerMessageListener(listener)
+        client.superUserAuthorizationRequest(userName, password)
         waitForResponse(
           authorizedProvider = { authorized },
           errorMessageProvider = { error },
+          emitter = emitter
         )
+        if (!emitter.isDisposed) {
+          emitter.onSuccess(if (authorized == true) Result.Authorized else Result.Unauthorized)
+        }
+      } catch (exception: Exception) {
+        emitter.tryOnError(exception)
       } finally {
         suplaClientMessageHandlerWrapper.unregisterMessageListener(listener)
-      }
-
-      return@fromCallable if (authorized == true) {
-        Result.Authorized
-      } else {
-        Result.Unauthorized
       }
     }
 
