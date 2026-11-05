@@ -96,7 +96,7 @@ class ProfilesListViewModel @Inject constructor(
   }
 
   override fun onMoveFinished() {
-    profileRepository.setItemsOrder(currentState().viewState.profiles.map { it.id!! })
+    profileRepository.setItemsOrder(currentState().viewState.profiles.map { it.id })
       .attach()
       .subscribeBy(onError = defaultErrorHandler("onMoveFinished"))
       .disposeBySelf()

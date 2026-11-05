@@ -44,6 +44,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.nativePaint
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.onSizeChanged
@@ -183,7 +184,7 @@ private fun DrawScope.drawLogo(
 }
 
 private object ProjectorScreenDrawer {
-  private val paint = Paint().asFrameworkPaint()
+  private val paint = Paint().nativePaint
 
   fun drawTopRectWithShadow(scope: DrawScope, windowDimens: RuntimeDimens, colors: ProjectorScreenColors) {
     with(scope) {

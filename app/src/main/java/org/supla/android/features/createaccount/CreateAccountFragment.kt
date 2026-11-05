@@ -22,17 +22,14 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import androidx.annotation.StringRes
-import androidx.core.os.bundleOf
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.databinding.FragmentCreateAccountBinding
 import org.supla.android.extensions.getLongOrNull
-import org.supla.android.extensions.toPx
 import org.supla.android.extensions.visibleIf
 import org.supla.android.features.createaccount.dialogs.RemoveConfirmationDialogFragment
 import org.supla.android.navigator.CfgActivityNavigator
@@ -72,9 +69,6 @@ class CreateAccountFragment : BaseFragment<CreateAccountViewState, CreateAccount
     binding.viewModel = viewModel
     binding.cfgAdvanced.viewModel = viewModel
     binding.cfgBasic.viewModel = viewModel
-
-    lifecycleScope.launchWhenStarted { viewModel.getViewEvents().collect { event -> handleEvents(event) } }
-    lifecycleScope.launchWhenStarted { viewModel.getViewState().collect { state -> handleViewState(state) } }
 
     setupView()
   }

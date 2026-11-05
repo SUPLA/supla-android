@@ -4,7 +4,6 @@ import java.util.Date
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.spotless)
-  alias(libs.plugins.kotlin.android)
   alias(libs.plugins.google.services)
   alias(libs.plugins.hilt)
   alias(libs.plugins.kotlin.compose)

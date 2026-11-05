@@ -23,8 +23,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.lifecycle.lifecycleScope
 import org.supla.android.R
+import org.supla.android.extensions.launchWhenStarted
 import org.supla.android.extensions.setStatusBarColor
 
 abstract class BaseComposeActivity<S : ViewState, E : ViewEvent> : ComponentActivity() {
@@ -41,7 +41,7 @@ abstract class BaseComposeActivity<S : ViewState, E : ViewEvent> : ComponentActi
 
     viewModel.onViewCreated()
 
-    lifecycleScope.launchWhenStarted { viewModel.getViewEvents().collect { event -> handleEvent(event) } }
+    launchWhenStarted { viewModel.getViewEvents().collect { event -> handleEvent(event) } }
   }
 
   @Composable

@@ -17,6 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import android.graphics.Paint
 import android.view.MotionEvent
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -35,7 +36,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.NativePaint
 import androidx.compose.ui.graphics.asAndroidPath
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -261,7 +261,7 @@ private object WindowDrawer : WindowDrawerBase<RuntimeDimens, VerticalBlindWindo
   }
 }
 
-private fun DrawScope.applyForSlat(paint: NativePaint, colors: VerticalBlindColors) {
+private fun DrawScope.applyForSlat(paint: Paint, colors: VerticalBlindColors) {
   with(paint) {
     style = android.graphics.Paint.Style.FILL
     strokeCap = android.graphics.Paint.Cap.SQUARE

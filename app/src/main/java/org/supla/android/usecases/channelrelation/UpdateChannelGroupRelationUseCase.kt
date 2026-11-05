@@ -70,7 +70,7 @@ class UpdateChannelGroupRelationUseCase @Inject constructor(
         groupId = suplaChannelGroupRelation.ChannelGroupID,
         channelId = suplaChannelGroupRelation.ChannelID,
         visible = 1,
-        profileId = profile.id!!
+        profileId = profile.id
       )
     )
     return true
