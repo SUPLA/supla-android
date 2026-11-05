@@ -1001,6 +1001,7 @@
   <string name="channel_caption_carbon_monoxide_sensor">Carbon monoxide sensor</string>
   <string name="channel_caption_gas_sensor">Gas sensor</string>
   <string name="channel_caption_action_trigger">Action trigger</string>
+  <string name="action_trigger_list_related_title">Related buttons</string>
   <string name="schedule_program_default">Default</string>
   <string name="schedule_program_turn_on_seconds">Turn on %1$ds</string>
   <string name="schedule_program_turn_off_seconds">Turn off %1$ds</string>
@@ -1015,4 +1016,5 @@
   <string name="relay_schedule_program_mode_automatic">Automatic</string>
   <string name="relay_schedule_program_first_duration">First duration (%1$s)</string>
   <string name="relay_schedule_program_second_duration">Second duration (%1$s)</string>
+  <string name="details_buttons">Buttons</string>
 </resources>

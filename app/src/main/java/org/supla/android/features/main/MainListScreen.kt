@@ -29,17 +29,15 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ResizeableNavigationBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -60,11 +58,12 @@ import org.supla.android.main.LocalNavigator
 import org.supla.android.main.MainComposeNavigator
 import org.supla.android.main.scaffold.LocalScaffoldPadding
 import org.supla.android.main.scaffold.withLeftPanel
+import org.supla.android.main.topbar.HandleTopBarEvent
 import org.supla.android.main.topbar.LocalTopBarController
 import org.supla.android.main.topbar.NavigationType
-import org.supla.android.main.topbar.TopBarIcon
+import org.supla.android.main.topbar.TopBarAction
+import org.supla.android.main.topbar.TopBarEvent
 import org.supla.android.main.topbar.TopBarState
-import org.supla.android.main.topbar.topBarAction
 import org.supla.android.main.view.ChannelListLabel
 import org.supla.android.main.view.GroupListLabel
 import org.supla.android.main.view.LocalDrawerState
@@ -87,15 +86,20 @@ fun MainListScreen(
   viewModel: MainListViewModel = hiltViewModel()
 ) {
   val wideScreen = LocalWindowInfo.current.containerDpSize.width >= 600.dp && LocalWindowInfo.current.containerDpSize.height >= 500.dp
+  val topBarState = remember(viewModel) {
+    TopBarState(
+      title = localizedString(R.string.app_name),
+      navigationType = NavigationType.DRAWER,
+      actions = listOf(TopBarAction.ProfileSelect)
+    )
+  }
+
+  HandleTopBarEvent(TopBarEvent.OpenProfileSelector) { viewModel.showProfilesPopup() }
 
   CompositionLocalProvider(LocalDrawerState provides drawerState) {
     EventBasedViewModelHost(
       viewModel = viewModel,
-      topBarState = TopBarState(
-        title = localizedString(R.string.app_name),
-        navigationType = NavigationType.DRAWER,
-        action = topBarAction(TopBarIcon.Profiles, viewModel::showProfilesPopup)
-      ),
+      topBarState = topBarState,
       eventHandler = { handleEvent(it, navigator) }
     ) {
       if (wideScreen || LocalConfiguration.current.isPhoneLandscape) {

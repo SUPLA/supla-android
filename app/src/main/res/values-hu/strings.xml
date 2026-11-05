@@ -655,6 +655,7 @@
   <string name="channel_caption_pump_switch">Szivattyú kapcsoló</string>
   <string name="channel_caption_heat_or_cold_sourc_switch">Hő- vagy hidegforrás kapcsoló</string>
   <string name="details_list">Lista</string>
+  <string name="details_buttons">Gombok</string>
   <string name="thermostat_detail_main_thermostat">Fő termosztát</string>
   <string name="thermostat_detail_other_thermostats">Mellék termosztátok</string>
   <string name="thermostat_battery_cover_open">Elemfedél nyitva</string>
@@ -856,6 +857,7 @@
   <string name="action_trigger_unlock_dialog_title">Műveletindító feloldása</string>
   <string name="action_trigger_unlock_temporarily">Ideiglenes feloldás</string>
   <string name="channel_caption_action_trigger">Műveletindító</string>
+  <string name="action_trigger_list_related_title">Kapcsolódó gombok</string>
   <string name="toolbar_search_hint">Írjon be legalább 2 karaktert…</string>
   <string name="details_timer_select_program">Program kiválasztása</string>
   <string name="details_recuperator_ventilation">Szellőztetés</string>

@@ -27,7 +27,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
@@ -40,7 +39,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
@@ -51,6 +49,7 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.formatting.LocalPercentageFormatter
 import org.supla.android.data.source.remote.thermostat.ThermostatIndicatorIcon
 import org.supla.android.images.ImageId
+import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.lists.ListOnlineState
 import org.supla.android.ui.lists.message
 import org.supla.android.ui.views.Image
@@ -228,7 +227,7 @@ val previewScope = object : ThermostatSlavesListScope {
 }
 
 @Composable
-@Preview(showBackground = true, backgroundColor = 0xF5F6F7)
+@SuplaPreview
 @PreviewScreenSizes
 @PreviewFontScale
 private fun Preview() {

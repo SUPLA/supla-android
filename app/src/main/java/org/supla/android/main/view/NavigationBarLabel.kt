@@ -22,6 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import org.supla.android.R
 
 @Composable
@@ -37,5 +38,7 @@ fun SceneListLabel() = NavigationBarLabel(R.string.navbar_scenes)
 fun NavigationBarLabel(@StringRes stringRes: Int) =
   Text(
     text = stringResource(stringRes),
-    style = MaterialTheme.typography.labelSmall
+    style = MaterialTheme.typography.labelSmall,
+    maxLines = 1,
+    overflow = TextOverflow.Ellipsis
   )

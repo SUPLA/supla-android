@@ -49,13 +49,12 @@ import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.main.LocalNavigator
-import org.supla.android.main.topbar.Icon
 import org.supla.android.main.topbar.LocalTopBarController
 import org.supla.android.main.topbar.MockedTopBarController
 import org.supla.android.main.topbar.NavigationType
 import org.supla.android.main.topbar.TopBarAction
+import org.supla.android.main.topbar.TopBarActions
 import org.supla.android.main.topbar.TopBarController
-import org.supla.android.main.topbar.TopBarIcon
 import org.supla.android.main.topbar.TopBarSearchData
 import org.supla.android.main.topbar.TopBarSearchState
 import org.supla.android.tools.SuplaComponentPreview
@@ -112,7 +111,10 @@ fun StandardTopBar(
       if (searchState != null && !searchState.data.visible) {
         SearchIcon(topBarController)
       }
-      topBarState.action?.Icon()
+      TopBarActions(
+        topBarState.actions,
+        searchIconVisible = searchState != null && !searchState.data.visible
+      )
     },
     colors = TopAppBarDefaults.topAppBarColors(
       containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -177,6 +179,8 @@ private fun NavigatorIcon(
 @SuplaComponentPreview
 @Composable
 private fun Preview() {
+  val previewAction = TopBarAction.DetailImpulseCounterSettings
+
   SuplaTheme {
     Column(
       modifier = Modifier.background(MaterialTheme.colorScheme.outline),
@@ -184,7 +188,7 @@ private fun Preview() {
     ) {
       MockedTopBarController(
         title = localizedString(R.string.app_name),
-        action = TopBarAction(TopBarIcon.OpenSettings)
+        actions = listOf(previewAction)
       ) {
         StandardTopBar()
       }
@@ -195,7 +199,7 @@ private fun Preview() {
           data = TopBarSearchData(),
           observer = {}
         ),
-        action = TopBarAction(TopBarIcon.OpenSettings)
+        actions = listOf(previewAction)
       ) {
         StandardTopBar()
       }
@@ -205,7 +209,7 @@ private fun Preview() {
           data = TopBarSearchData(visible = true),
           observer = {}
         ),
-        action = TopBarAction(TopBarIcon.OpenSettings)
+        actions = listOf(previewAction)
       ) {
         StandardTopBar()
       }

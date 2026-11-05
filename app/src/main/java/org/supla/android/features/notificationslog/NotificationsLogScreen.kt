@@ -21,6 +21,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -29,12 +30,12 @@ import org.supla.android.R
 import org.supla.android.main.MainComposeNavigator
 import org.supla.android.main.ViewModelHost
 import org.supla.android.main.snackbar.LocalSnackbarController
+import org.supla.android.main.topbar.HandleTopBarEvent
 import org.supla.android.main.topbar.LocalTopBarController
+import org.supla.android.main.topbar.TopBarAction
 import org.supla.android.main.topbar.TopBarEvent
-import org.supla.android.main.topbar.TopBarIcon
 import org.supla.android.main.topbar.TopBarSearchState
 import org.supla.android.main.topbar.TopBarState
-import org.supla.android.main.topbar.topBarAction
 
 @Composable
 fun NotificationsLogScreen(
@@ -47,6 +48,21 @@ fun NotificationsLogScreen(
 
   val snackbarMessage = stringResource(R.string.notification_deleted)
   val snackbarActionLabel = stringResource(R.string.cancel)
+  val topBarState = remember(viewModel) {
+    TopBarState(
+      search = TopBarSearchState(
+        data = viewModel.searchData,
+        observer = viewModel::handle
+      ),
+      actions = listOf(
+        TopBarAction.NotificationsDeleteAll,
+        TopBarAction.NotificationsDeleteOlderThanMonth
+      )
+    )
+  }
+
+  HandleTopBarEvent(TopBarEvent.DeleteAll) { viewModel.askDeleteAll() }
+  HandleTopBarEvent(TopBarEvent.DeleteLastMonth) { viewModel.askDeleteOlderThanMonth() }
 
   BackHandler {
     if (viewModel.searchData.query.isNotEmpty()) {
@@ -60,17 +76,7 @@ fun NotificationsLogScreen(
 
   ViewModelHost(
     viewModel = viewModel,
-    topBarState = TopBarState(
-      search = TopBarSearchState(
-        data = viewModel.searchData,
-        observer = viewModel::handle
-      ),
-      action = topBarAction {
-        icon = TopBarIcon.NotificationsDeletion
-        handle<TopBarEvent.DeleteAll> { viewModel.askDeleteAll() }
-        handle<TopBarEvent.DeleteLastMonth> { viewModel.askDeleteOlderThanMonth() }
-      }
-    ),
+    topBarState = topBarState,
     eventHandler = { event ->
       when (event) {
         is NotificationsLogViewEvent.ShowDeleteNotification ->

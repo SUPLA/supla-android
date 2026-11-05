@@ -20,13 +20,11 @@ package org.supla.android.features.details.thermostatdetail.general.data
 import org.supla.android.R
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.images.ImageId
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HOTELCARDSENSOR
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.data.model.function.thermostat.SuplaThermostatFlag
 import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
+import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 
@@ -63,9 +61,9 @@ data class SensorIssue(
           imageId = getChannelIconUseCase(it.channelDataEntity),
           showSensorIcon = true,
           message = when (it.function) {
-            SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW,
-            SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW -> localizedString(R.string.thermostat_detail_off_by_window)
-            SUPLA_CHANNELFNC_HOTELCARDSENSOR -> localizedString(R.string.thermostat_detail_off_by_card)
+            SuplaFunction.OPENING_SENSOR_WINDOW,
+            SuplaFunction.OPEN_SENSOR_ROOF_WINDOW -> localizedString(R.string.thermostat_detail_off_by_window)
+            SuplaFunction.HOTEL_CARD_SENSOR -> localizedString(R.string.thermostat_detail_off_by_card)
             else -> localizedString(R.string.thermostat_detail_off_by_sensor)
           }
         )

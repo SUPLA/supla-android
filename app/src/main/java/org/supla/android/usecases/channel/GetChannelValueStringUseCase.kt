@@ -105,7 +105,8 @@ class GetChannelValueStringUseCase @Inject constructor(
     NoValueStringProvider(SuplaFunction.CARBON_MONOXIDE_SENSOR),
     NoValueStringProvider(SuplaFunction.SMOKE_SENSOR),
     NoValueStringProvider(SuplaFunction.MOTION_SENSOR),
-    NoValueStringProvider(SuplaFunction.HVAC_HRV)
+    NoValueStringProvider(SuplaFunction.HVAC_HRV),
+    NoValueStringProvider(SuplaFunction.BINARY_SENSOR)
   )
 
   operator fun invoke(channel: ChannelWithChildren, valueType: ValueType = DefaultFirstValue, withUnit: Boolean = true): String {

@@ -938,7 +938,7 @@ class ThermostatGeneralViewModelTest :
       mockChannelChildEntity(ChannelRelationType.AUX_THERMOMETER_FLOOR, SuplaFunction.THERMOMETER, remoteId = 998)
     )
 
-    every { children[0].function } returns SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
+    every { children[0].function } returns SuplaFunction.THERMOMETER
     every { children[0].withChildren } returns thermometerWithChildren
     every { getChannelValueUseCase.invoke<Double>(thermometerWithChildren) } returns 15.3
 
@@ -1015,7 +1015,7 @@ class ThermostatGeneralViewModelTest :
     } ?: mockk()
 
     return mockk<ChannelChildEntity> {
-      function?.let { every { this@mockk.function } returns it.value }
+      function?.let { every { this@mockk.function } returns it }
       every { this@mockk.relationType } returns relationType
       every { this@mockk.children } returns emptyList()
       every { this@mockk.channelDataEntity } returns channelDataEntity

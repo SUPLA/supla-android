@@ -18,10 +18,12 @@ package org.supla.android.ui.lists.sensordata
  */
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
@@ -30,14 +32,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.shared.data.model.lists.resource
 import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.data.source.runtime.appsettings.ChannelHeight
 import org.supla.android.images.ImageId
+import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.lists.ListOnlineState
 import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.list.ListItemDot
@@ -87,21 +90,25 @@ fun RelatedChannelItemView(
   channel: RelatedChannelData,
   scale: Float = 1f,
   onCaptionLongPress: (RelatedChannelData) -> Unit = {},
-  onInfoClick: (RelatedChannelData) -> Unit = {}
+  onInfoClick: (RelatedChannelData) -> Unit = {},
+  onClick: ((RelatedChannelData) -> Unit)? = null
 ) {
+  val heightScale = ChannelHeight.HEIGHT_60.percent.div(100f)
   Row(
     verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier
       .fillMaxWidth()
+      .heightIn(min = dimensionResource(R.dimen.channel_layout_height).times(heightScale))
       .padding(bottom = 1.dp)
       .background(MaterialTheme.colorScheme.surface)
       .padding(start = Distance.small, end = Distance.default)
       .padding(vertical = Distance.tiny)
+      .then(onClick?.let { click -> Modifier.clickable { click(channel) } } ?: Modifier)
   ) {
     channel.icon?.let { ListItemIcon(imageId = it, scale = scale) }
     ListItemTitle(
       text = channel.caption(LocalContext.current),
-      onItemClick = {},
+      onItemClick = { onClick?.invoke(channel) },
       onLongClick = {
         if (channel is RelatedChannelData.Visible) {
           onCaptionLongPress(channel)
@@ -135,7 +142,7 @@ fun RelatedChannelItemView(
   }
 }
 
-@Preview
+@SuplaPreview
 @Composable
 private fun Preview() {
   SuplaTheme {

@@ -642,6 +642,7 @@
   <string name="channel_caption_pump_switch">Interrupteur de pompe</string>
   <string name="channel_caption_heat_or_cold_sourc_switch">Interrupteur pour la source de chaleur ou de froid</string>
   <string name="details_list">Liste</string>
+  <string name="details_buttons">Boutons</string>
   <string name="thermostat_detail_main_thermostat">Thermostat principal</string>
   <string name="thermostat_detail_other_thermostats">Thermostats dépendants</string>
   <string name="thermostat_battery_cover_open">Couvercle de batterie ouvert</string>
@@ -844,6 +845,7 @@
   <string name="action_trigger_unlock_dialog_title">Déverrouiller le déclencheur d’action</string>
   <string name="action_trigger_unlock_temporarily">Déverrouiller temporairement</string>
   <string name="channel_caption_action_trigger">Déclencheur d’action</string>
+  <string name="action_trigger_list_related_title">Boutons associés</string>
   <string name="toolbar_search_hint">Saisissez au moins 2 caractères…</string>
   <string name="details_timer_select_program">Sélectionnez un programme</string>
   <string name="details_recuperator_ventilation">Ventilation</string>
