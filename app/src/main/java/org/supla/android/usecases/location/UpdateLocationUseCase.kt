@@ -73,7 +73,7 @@ class UpdateLocationUseCase @Inject constructor(
         collapsed = 0,
         sorting = LocationSortingType.DEFAULT,
         sortOrder = 0,
-        profileId = profile.id!!
+        profileId = profile.id
       )
     )
 

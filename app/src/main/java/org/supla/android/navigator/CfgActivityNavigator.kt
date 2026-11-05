@@ -18,6 +18,7 @@ package org.supla.android.navigator
  */
 
 import android.app.Activity
+import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -77,7 +78,6 @@ class CfgActivityNavigator @Inject constructor(@param:ActivityContext private va
     val i = Intent(sender.baseContext, cls)
     i.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
     i.putExtra(NavigationActivity.INTENT_SENDER, if (sender is MainActivity) NavigationActivity.INTENT_SENDER_MAIN else "")
-    sender.startActivity(i)
-    sender.overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+    sender.startActivity(i, ActivityOptions.makeCustomAnimation(sender, R.anim.fade_in, R.anim.fade_out).toBundle())
   }
 }

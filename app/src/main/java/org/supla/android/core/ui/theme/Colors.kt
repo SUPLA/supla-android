@@ -21,6 +21,7 @@ import android.content.Context
 import androidx.annotation.ColorRes
 import androidx.compose.material3.ColorScheme
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion
 
 object SuplaColors {
   val light = ColorScheme(
@@ -59,7 +60,19 @@ object SuplaColors {
     surfaceContainerHigh = Color(0xFFFFFFFF),
     surfaceContainerHighest = Color(0xFFFFFFFF),
     surfaceContainerLow = Color(0xFFFFFFFF),
-    surfaceContainerLowest = Color(0xFFFFFFFF)
+    surfaceContainerLowest = Color(0xFFFFFFFF),
+    primaryFixed = Color.Unspecified,
+    primaryFixedDim = Color.Unspecified,
+    onPrimaryFixed = Color.Unspecified,
+    onPrimaryFixedVariant = Color.Unspecified,
+    secondaryFixed = Color.Unspecified,
+    secondaryFixedDim = Color.Unspecified,
+    onSecondaryFixed = Color.Unspecified,
+    onSecondaryFixedVariant = Color.Unspecified,
+    tertiaryFixed = Color.Unspecified,
+    tertiaryFixedDim = Color.Unspecified,
+    onTertiaryFixed = Color.Unspecified,
+    onTertiaryFixedVariant = Color.Unspecified,
   )
 
   val dark = ColorScheme(
@@ -99,6 +112,18 @@ object SuplaColors {
     surfaceContainerHighest = Color(0xFF262626),
     surfaceContainerLow = Color(0xFF262626),
     surfaceContainerLowest = Color(0xFF262626),
+    primaryFixed = Color.Unspecified,
+    primaryFixedDim = Color.Unspecified,
+    onPrimaryFixed = Color.Unspecified,
+    onPrimaryFixedVariant = Color.Unspecified,
+    secondaryFixed = Color.Unspecified,
+    secondaryFixedDim = Color.Unspecified,
+    onSecondaryFixed = Color.Unspecified,
+    onSecondaryFixedVariant = Color.Unspecified,
+    tertiaryFixed = Color.Unspecified,
+    tertiaryFixedDim = Color.Unspecified,
+    onTertiaryFixed = Color.Unspecified,
+    onTertiaryFixedVariant = Color.Unspecified,
   )
 }
 

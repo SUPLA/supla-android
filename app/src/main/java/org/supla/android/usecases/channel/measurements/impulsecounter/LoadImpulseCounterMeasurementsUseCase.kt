@@ -38,7 +38,7 @@ class LoadImpulseCounterMeasurementsUseCase @Inject constructor(
       .flatMapObservable {
         impulseCounterLogRepository.findMeasurements(
           remoteId,
-          it.id!!,
+          it.id,
           startDate ?: Date(0),
           endDate ?: dateProvider.currentDate()
         )

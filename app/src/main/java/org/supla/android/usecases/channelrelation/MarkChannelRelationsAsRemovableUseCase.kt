@@ -30,5 +30,5 @@ class MarkChannelRelationsAsRemovableUseCase @Inject constructor(
 ) {
   operator fun invoke(): Completable =
     profileRepository.findActiveProfile()
-      .flatMapCompletable { channelRelationRepository.markAsRemovable(it.id!!) }
+      .flatMapCompletable { channelRelationRepository.markAsRemovable(it.id) }
 }

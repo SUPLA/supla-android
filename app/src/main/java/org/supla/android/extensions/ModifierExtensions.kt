@@ -40,6 +40,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.nativePaint
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.Dp
@@ -96,7 +97,7 @@ fun Modifier.innerShadow(
       )
     )
     it.drawPath(shadowPath, paint)
-    val frameworkPaint = paint.asFrameworkPaint()
+    val frameworkPaint = paint.nativePaint
     frameworkPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_OUT)
     if (blur.toPx() > 0) {
       frameworkPaint.maskFilter = BlurMaskFilter(blur.toPx(), BlurMaskFilter.Blur.NORMAL)
@@ -224,7 +225,7 @@ private fun Modifier.innerShadowForButtonBackground(
         )
       )
       it.drawPath(shadowPath, paint)
-      val frameworkPaint = paint.asFrameworkPaint()
+      val frameworkPaint = paint.nativePaint
       frameworkPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_OUT)
       if (blur.toPx() > 0) {
         frameworkPaint.maskFilter = BlurMaskFilter(blur.toPx(), BlurMaskFilter.Blur.NORMAL)

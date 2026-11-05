@@ -74,7 +74,7 @@ class UpdateChannelValueUseCase @Inject constructor(
   private fun insert(suplaChannelValue: SuplaChannelValue, channelRemoteId: Int, status: SuplaChannelAvailabilityStatus) =
     profileRepository.findActiveProfile()
       .flatMapCompletable {
-        channelValueRepository.insert(ChannelValueEntity.from(suplaChannelValue, channelRemoteId, status, it.id!!))
+        channelValueRepository.insert(ChannelValueEntity.from(suplaChannelValue, channelRemoteId, status, it.id))
       }
       .andThen(Single.just(EntityUpdateResult.UPDATED))
 }

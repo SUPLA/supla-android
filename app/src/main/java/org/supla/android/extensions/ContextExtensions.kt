@@ -65,7 +65,7 @@ fun Context.allGranted(permissions: List<String>): Boolean =
 
 fun Context.showKeyboard(view: View) {
   val inputMethodManager = getSystemService(InputMethodManager::class.java)
-  inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+  inputMethodManager.showSoftInput(view, 0)
 }
 
 fun Context.hideKeyboard(view: View) {

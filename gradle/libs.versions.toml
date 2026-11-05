@@ -4,7 +4,7 @@ compileSdk = "37"
 targetSdk = "36"
 minSdk = "24"
 
-androidGradlePlugin = "9.4.1"
+androidGradlePlugin = "9.5.0"
 
 kotlin = "2.4.20"
 hilt = "2.60.1"
@@ -181,7 +181,6 @@ android-library = { id = "com.android.library", version.ref = "androidGradlePlug
 android-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "androidGradlePlugin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }

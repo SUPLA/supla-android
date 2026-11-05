@@ -17,7 +17,7 @@ package org.supla.android.main
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.app.Activity
+import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -98,8 +98,7 @@ class MainComposeNavigator @Inject constructor() {
         it.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
         it.putExtra(NavigationActivity.INTENT_SENDER, NavigationActivity.INTENT_SENDER_MAIN)
       }
-      startActivity(intent)
-      (this as? Activity)?.overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+      startActivity(intent, ActivityOptions.makeCustomAnimation(this, R.anim.fade_in, R.anim.fade_out).toBundle())
     }
   }
 
@@ -109,8 +108,7 @@ class MainComposeNavigator @Inject constructor() {
         it.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
         it.putExtra(NavigationActivity.INTENT_SENDER, NavigationActivity.INTENT_SENDER_MAIN)
       }
-      startActivity(intent)
-      (this as? Activity)?.overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out)
+      startActivity(intent, ActivityOptions.makeCustomAnimation(this, R.anim.slide_left_in, R.anim.slide_left_out).toBundle())
     }
   }
 
@@ -120,8 +118,7 @@ class MainComposeNavigator @Inject constructor() {
         it.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
         it.putExtra(NavigationActivity.INTENT_SENDER, NavigationActivity.INTENT_SENDER_MAIN)
       }
-      startActivity(intent)
-      (this as? Activity)?.overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+      startActivity(intent, ActivityOptions.makeCustomAnimation(this, R.anim.fade_in, R.anim.fade_out).toBundle())
     }
   }
 

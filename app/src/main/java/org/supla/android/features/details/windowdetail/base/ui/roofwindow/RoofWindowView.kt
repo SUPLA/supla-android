@@ -43,6 +43,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathOperation
 import androidx.compose.ui.graphics.asAndroidPath
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.nativePaint
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.onSizeChanged
@@ -71,7 +72,7 @@ private val WINDOW_DIMENS = object {
 }
 
 private val windowShadowRadius = 4.dp
-private val windowPaint = Paint().asFrameworkPaint().apply {
+private val windowPaint = Paint().nativePaint.apply {
   style = android.graphics.Paint.Style.FILL
   strokeCap = android.graphics.Paint.Cap.SQUARE
 }

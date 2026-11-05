@@ -397,14 +397,12 @@ class ScheduleDetailViewModel @Inject constructor(
             setpointTemperatureHeatMinusAllowed = newTemperature > it.configTemperatureMin,
             setpointTemperatureHeatPlusAllowed = newTemperature < it.configTemperatureMax,
             temperatureHeatCorrect = temperatureCorrect,
-            temperatureCoolCorrect = it.programSettings?.let { settings ->
-              isCoolTemperatureCorrect(
-                it,
-                settings.selectedMode,
-                newTemperature,
-                setpointTemperatureCool ?: settings.setpointTemperatureCool
-              )
-            } ?: true
+            temperatureCoolCorrect = isCoolTemperatureCorrect(
+              it,
+              it.programSettings.selectedMode,
+              newTemperature,
+              setpointTemperatureCool ?: it.programSettings.setpointTemperatureCool
+            )
           )
         )
       }
@@ -426,14 +424,12 @@ class ScheduleDetailViewModel @Inject constructor(
           else -> it
         }
       }
-      val temperatureCorrect = state.programSettings?.let { settings ->
-        isCoolTemperatureCorrect(
-          state,
-          settings.selectedMode,
-          setpointTemperatureHeat ?: settings.setpointTemperatureHeat,
-          newTemperature
-        )
-      } ?: (newTemperature >= state.configTemperatureMin && newTemperature <= state.configTemperatureMax)
+      val temperatureCorrect = isCoolTemperatureCorrect(
+        state,
+        state.programSettings.selectedMode,
+        setpointTemperatureHeat ?: state.programSettings.setpointTemperatureHeat,
+        newTemperature
+      )
 
       updateState {
         it.copy(

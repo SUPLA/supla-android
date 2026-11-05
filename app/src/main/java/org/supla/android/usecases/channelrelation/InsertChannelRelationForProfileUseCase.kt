@@ -33,7 +33,7 @@ class InsertChannelRelationForProfileUseCase @Inject constructor(
 ) {
   operator fun invoke(suplaRelation: SuplaChannelRelation): Completable =
     profileRepository.findActiveProfile()
-      .flatMapCompletable { channelRelationRepository.insertOrUpdate(ChannelRelationEntity.from(suplaRelation, it.id!!)) }
+      .flatMapCompletable { channelRelationRepository.insertOrUpdate(ChannelRelationEntity.from(suplaRelation, it.id)) }
 }
 
 fun ChannelRelationEntity.Companion.from(suplaRelation: SuplaChannelRelation, profileId: Long): ChannelRelationEntity =

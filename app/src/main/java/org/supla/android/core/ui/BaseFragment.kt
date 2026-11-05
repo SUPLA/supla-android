@@ -23,9 +23,9 @@ import android.view.View
 import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.FlowPreview
 import org.supla.android.extensions.IntConverter
+import org.supla.android.extensions.launchWhenStarted
 import org.supla.android.extensions.visibleIf
 import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.lib.AndroidSuplaClientMessageHandler
@@ -60,14 +60,14 @@ abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayo
   @OptIn(FlowPreview::class)
   @CallSuper
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    lifecycleScope.launchWhenStarted {
+    viewLifecycleOwner.launchWhenStarted {
       viewModel.isLoadingEvent().collect {
         (requireActivity() as? LoadableContent)?.getLoadingIndicator()?.visibleIf(it)
       }
     }
 
-    lifecycleScope.launchWhenStarted { viewModel.getViewEvents().collect { event -> handleEvents(event) } }
-    lifecycleScope.launchWhenStarted { viewModel.getViewState().collect { state -> handleViewState(state) } }
+    viewLifecycleOwner.launchWhenStarted { viewModel.getViewEvents().collect { event -> handleEvents(event) } }
+    viewLifecycleOwner.launchWhenStarted { viewModel.getViewState().collect { state -> handleViewState(state) } }
 
     viewModel.onViewCreated()
   }

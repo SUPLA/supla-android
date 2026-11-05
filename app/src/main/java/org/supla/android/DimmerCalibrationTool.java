@@ -296,7 +296,8 @@ public abstract class DimmerCalibrationTool
         delayTime = 1;
       }
 
-      delayTimer1.schedule(new DimmerCalibrationTool.DisplayDelayedTask(msg), delayTime, 1000);
+      delayTimer1.schedule(
+          new DimmerCalibrationTool.DisplayDelayedTask(msg, getActivity()), delayTime, 1000);
     }
   }
 
@@ -322,11 +323,12 @@ public abstract class DimmerCalibrationTool
         delayTime = 1;
       }
 
+      Activity activity = getActivity();
       delayTimer2.schedule(
           new TimerTask() {
             @Override
             public void run() {
-              getActivity().runOnUiThread(() -> displayCfgParameters(false));
+              activity.runOnUiThread(() -> displayCfgParameters(false));
             }
           },
           delayTime,
@@ -478,14 +480,16 @@ public abstract class DimmerCalibrationTool
   private class DisplayDelayedTask extends TimerTask {
 
     private final int msg;
+    private final Activity activity;
 
-    DisplayDelayedTask(int msg) {
+    DisplayDelayedTask(int msg, Activity activity) {
       this.msg = msg;
+      this.activity = activity;
     }
 
     @Override
     public void run() {
-      getActivity().runOnUiThread(() -> calCfgDelayedRequest(msg));
+      activity.runOnUiThread(() -> calCfgDelayedRequest(msg));
     }
   }
 
