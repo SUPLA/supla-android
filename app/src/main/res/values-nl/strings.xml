@@ -656,6 +656,7 @@
   <string name="channel_caption_pump_switch">Pompschakelaar</string>
   <string name="channel_caption_heat_or_cold_sourc_switch">Schakelaar voor warmte- of koudebron</string>
   <string name="details_list">Vul in</string>
+  <string name="details_buttons">Knoppen</string>
   <string name="thermostat_detail_main_thermostat">Hoofdthermostaat</string>
   <string name="thermostat_detail_other_thermostats">Afhankelijke thermostaten</string>
   <string name="thermostat_battery_cover_open">Batterijklep openen</string>
@@ -857,6 +858,7 @@
   <string name="action_trigger_unlock_dialog_title">Actietrigger ontgrendelen</string>
   <string name="action_trigger_unlock_temporarily">Tijdelijk ontgrendelen</string>
   <string name="channel_caption_action_trigger">Actietrigger</string>
+  <string name="action_trigger_list_related_title">Gerelateerde knoppen</string>
   <string name="toolbar_search_hint">Voer minimaal 2 tekens in…</string>
   <string name="details_timer_select_program">Selecteer een programma</string>
   <string name="details_recuperator_ventilation">Ventilatie</string>

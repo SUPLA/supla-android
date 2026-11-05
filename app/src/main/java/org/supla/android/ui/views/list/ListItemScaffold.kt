@@ -61,7 +61,6 @@ import org.supla.android.extensions.preferences
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.extensions.ifFalse
 import org.supla.android.ui.lists.ListOnlineState
-import org.supla.android.ui.views.Separator
 import org.supla.android.ui.views.list.components.ListItemInfoIcon
 import org.supla.android.ui.views.list.components.ListItemIssueIcon
 import org.supla.android.ui.views.list.components.ListItemMainRow

@@ -17,6 +17,9 @@ package org.supla.android.main.topbar
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -28,122 +31,115 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import org.supla.android.R
 import org.supla.android.ui.views.buttons.IconButton
 import org.supla.android.ui.views.texts.BodyMedium
 
-sealed class TopBarIcon(val event: TopBarEvent, val iconRes: Int? = null, val descriptionRes: Int? = null, val tintRes: Int? = null) {
-  data object ReloadHistory : TopBarIcon(TopBarEvent.ReloadChartHistory)
-  data object NotificationsDeletion : TopBarIcon(TopBarEvent.Empty)
-  data object OpenOcr : TopBarIcon(
-    event = TopBarEvent.OpenOcr,
-    iconRes = R.drawable.ic_ocr_photo,
-    descriptionRes = R.string.toolbar_ocr
-  )
+private const val MAX_ICONS_COUNT = 2
 
-  data object OpenSettings : TopBarIcon(
-    event = TopBarEvent.OpenSettings,
-    iconRes = R.drawable.ic_settings,
-    descriptionRes = R.string.settings
-  )
-
-  data object Profiles : TopBarIcon(
-    event = TopBarEvent.OpenProfileSelector,
-    iconRes = R.drawable.profile_unselected,
-    descriptionRes = R.string.profile_plural,
-    tintRes = R.color.primary
-  )
+enum class TopBarIcon(
+  @DrawableRes val iconRes: Int,
+  @StringRes val descriptionRes: Int,
+  @ColorRes val tintRes: Int? = null
+) {
+  OPEN_OCR(R.drawable.ic_ocr_photo, R.string.toolbar_ocr),
+  OPEN_SETTINGS(R.drawable.ic_settings, R.string.settings),
+  PROFILES(R.drawable.profile_unselected, R.string.profile_plural)
 }
 
 @Composable
-fun TopBarAction.Icon(
-  modifier: Modifier = Modifier
-) {
-  when (icon) {
-    TopBarIcon.ReloadHistory -> DeleteChartHistory(modifier)
-    TopBarIcon.NotificationsDeletion -> DeleteNotifications(modifier)
-    else -> SingleIcon(modifier)
+fun TopBarActions(actions: List<TopBarAction>, searchIconVisible: Boolean) {
+  val layout = layoutTopBarActions(actions, searchIconVisible)
+
+  layout.icons.forEach { action ->
+    TopBarActionIcon(action)
+  }
+
+  if (layout.overflow.isNotEmpty()) {
+    TopBarOverflow(layout.overflow)
   }
 }
 
 @Composable
-private fun TopBarAction.DeleteChartHistory(
-  modifier: Modifier = Modifier
-) {
-  Box(modifier = modifier) {
-    var menuExpanded by remember { mutableStateOf(false) }
+private fun TopBarActionIcon(action: TopBarAction) {
+  val icon = requireNotNull(action.icon)
+  val controller = LocalTopBarController.current
+  val scope = rememberCoroutineScope()
 
-    MoreIcon { menuExpanded = true }
-
-    DropdownMenu(
-      expanded = menuExpanded,
-      onDismissRequest = { menuExpanded = false }
-    ) {
-      DropdownMenuItem(
-        text = { BodyMedium(R.string.toolbar_delete_chart_history) },
-        onClick = {
-          menuExpanded = false
-          handlers[TopBarEvent.ReloadChartHistory::class]?.invoke()
-        }
-      )
-    }
-  }
-}
-
-@Composable
-private fun TopBarAction.DeleteNotifications(
-  modifier: Modifier = Modifier
-) {
-  Box(modifier = modifier) {
-    var menuExpanded by remember { mutableStateOf(false) }
-
-    MoreIcon { menuExpanded = true }
-
-    DropdownMenu(
-      expanded = menuExpanded,
-      onDismissRequest = { menuExpanded = false }
-    ) {
-      DropdownMenuItem(
-        text = { BodyMedium(R.string.toolbar_delete_all) },
-        onClick = {
-          menuExpanded = false
-          handlers[TopBarEvent.DeleteAll::class]?.invoke()
-        }
-      )
-
-      DropdownMenuItem(
-        text = { BodyMedium(R.string.toolbar_delete_older_than_month) },
-        onClick = {
-          menuExpanded = false
-          handlers[TopBarEvent.DeleteLastMonth::class]?.invoke()
-        }
-      )
-    }
-  }
-}
-
-@Composable
-private fun TopBarAction.SingleIcon(
-  modifier: Modifier = Modifier
-) {
   IconButton(
-    icon = icon.iconRes!!,
-    onClick = { handlers[icon.event::class]?.invoke() },
-    contentDescription = icon.descriptionRes?.let { stringResource(it) },
-    modifier = modifier.size(40.dp),
-    tint = MaterialTheme.colorScheme.onPrimaryContainer
-  )
-}
-
-@Composable
-private fun MoreIcon(onClick: () -> Unit) =
-  IconButton(
-    icon = Icons.Default.MoreVert,
-    onClick = onClick,
+    icon = icon.iconRes,
+    onClick = { scope.launch { controller.emit(action.event) } },
+    contentDescription = stringResource(icon.descriptionRes),
     modifier = Modifier.size(40.dp),
-    tint = MaterialTheme.colorScheme.onPrimaryContainer
+    tint = icon.tintRes?.let { colorResource(it) } ?: MaterialTheme.colorScheme.onPrimaryContainer
   )
+}
+
+@Composable
+private fun TopBarOverflow(actions: List<TopBarAction>) {
+  var expanded by remember { mutableStateOf(false) }
+  val controller = LocalTopBarController.current
+  val scope = rememberCoroutineScope()
+
+  Box {
+    IconButton(
+      icon = Icons.Default.MoreVert,
+      onClick = { expanded = true },
+      modifier = Modifier.size(40.dp),
+      tint = MaterialTheme.colorScheme.onPrimaryContainer
+    )
+
+    DropdownMenu(
+      expanded = expanded,
+      onDismissRequest = { expanded = false }
+    ) {
+      actions.forEach { action ->
+        DropdownMenuItem(
+          text = { BodyMedium(action.titleRes) },
+          onClick = {
+            expanded = false
+            scope.launch { controller.emit(action.event) }
+          }
+        )
+      }
+    }
+  }
+}
+
+data class TopBarActionLayout(
+  val icons: List<TopBarAction>,
+  val overflow: List<TopBarAction>
+)
+
+fun layoutTopBarActions(actions: List<TopBarAction>, searchIconVisible: Boolean): TopBarActionLayout {
+  val allIcons = actions.filter { it.displayMode == TopBarDisplayMode.AUTO }
+  val hasOverflowOnlyAction = actions.any { it.displayMode == TopBarDisplayMode.OVERFLOW_ONLY }
+
+  if (searchIconVisible && hasOverflowOnlyAction) {
+    return TopBarActionLayout(icons = emptyList(), overflow = actions)
+  } else if (searchIconVisible && actions.size > 1) {
+    return TopBarActionLayout(icons = emptyList(), overflow = actions)
+  } else if (hasOverflowOnlyAction) {
+    val icon = allIcons.firstOrNull()
+
+    return TopBarActionLayout(
+      icons = listOfNotNull(icon),
+      overflow = actions.filterNot { it::class == icon?.let { selected -> selected::class } }
+    )
+  } else {
+    val icons = allIcons.take(MAX_ICONS_COUNT)
+    val iconIds = icons.mapTo(mutableSetOf()) { it::class }
+
+    return TopBarActionLayout(
+      icons = icons,
+      overflow = actions.filterNot { it::class in iconIds }
+    )
+  }
+}

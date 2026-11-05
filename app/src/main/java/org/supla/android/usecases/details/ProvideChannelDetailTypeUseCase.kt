@@ -24,6 +24,7 @@ import org.supla.android.data.source.local.entity.isImpulseCounter
 import org.supla.android.features.details.detailbase.base.DetailPage
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
+import org.supla.android.lib.SuplaConst
 import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.data.model.channel.SuplaChannelFlag
 import org.supla.core.shared.data.model.general.SuplaFunction
@@ -35,6 +36,10 @@ class ProvideChannelDetailTypeUseCase @Inject constructor() : BaseDetailTypeProv
 
   operator fun invoke(channelWithChildren: ChannelWithChildren): DetailType? =
     when (val function = channelWithChildren.channel.function) {
+      SuplaFunction.DIMMER,
+      SuplaFunction.DIMMER_CCT,
+      SuplaFunction.DIMMER_AND_RGB_LIGHTING,
+      SuplaFunction.DIMMER_CCT_AND_RGB -> StandardDetailType(getDimmerAndRgbDetailPages(channelWithChildren))
       SuplaFunction.ACTION_TRIGGER -> StandardDetailType(getActionTriggerDetailPages(channelWithChildren))
       SuplaFunction.LIGHTSWITCH,
       SuplaFunction.POWER_SWITCH,
@@ -55,6 +60,14 @@ class ProvideChannelDetailTypeUseCase @Inject constructor() : BaseDetailTypeProv
       SuplaFunction.VALVE_PERCENTAGE -> StandardDetailType(DetailPage.VALVE_GENERAL)
       SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS ->
         StandardDetailType(listOf(DetailPage.THERMOSTAT_HEATPOL_GENERAL, DetailPage.THERMOSTAT_HEATPOL_HISTORY))
+      SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER,
+      SuplaFunction.CONTROLLING_THE_ROOF_WINDOW,
+      SuplaFunction.CONTROLLING_THE_FACADE_BLIND,
+      SuplaFunction.TERRACE_AWNING,
+      SuplaFunction.PROJECTOR_SCREEN,
+      SuplaFunction.CURTAIN,
+      SuplaFunction.VERTICAL_BLIND,
+      SuplaFunction.ROLLER_GARAGE_DOOR -> attachActionTriggerList(channelWithChildren)
       else -> provide(function)
     }
 
@@ -72,6 +85,10 @@ class ProvideChannelDetailTypeUseCase @Inject constructor() : BaseDetailTypeProv
     }
     if (supportsTimer(channelWithChildren.channel)) {
       list.add(DetailPage.SWITCH_TIMER)
+    }
+
+    if (channelWithChildren.hasActionTriggers) {
+      list.add(DetailPage.ACTION_TRIGGER_LIST)
     }
 
     val meterChild = channelWithChildren.children.firstOrNull { it.relationType == ChannelRelationType.METER }
@@ -121,7 +138,50 @@ class ProvideChannelDetailTypeUseCase @Inject constructor() : BaseDetailTypeProv
     return list
   }
 
+  private fun getDimmerAndRgbDetailPages(channelWithChildren: ChannelWithChildren): List<DetailPage> {
+    val list = (provide(channelWithChildren.function) as StandardDetailType).pages.toMutableList()
+
+    if (channelWithChildren.hasActionTriggers) {
+      list.add(DetailPage.ACTION_TRIGGER_LIST)
+    }
+
+    return if (hasDimmerSettings(channelWithChildren)) {
+      list + DetailPage.DIMMER_SETTINGS
+    } else {
+      list
+    }
+  }
+
+  private fun attachActionTriggerList(channelWithChildren: ChannelWithChildren): DetailType? {
+    val list = when (val detailType = provide(channelWithChildren.function)) {
+      LegacyDetailType.THERMOSTAT_HP -> return detailType
+      LegacyDetailType.DIGIGLASS -> return detailType
+      is StandardDetailType -> detailType.pages
+      null -> return null
+    }
+
+    return if (channelWithChildren.hasActionTriggers) {
+      StandardDetailType(list + DetailPage.ACTION_TRIGGER_LIST)
+    } else {
+      StandardDetailType(list)
+    }
+  }
+
+  private fun hasDimmerSettings(channelWithChildren: ChannelWithChildren): Boolean {
+    val channel = channelWithChildren.channel.channelEntity
+    val manufacturerId = channel.manufacturerId.toInt()
+    val productId = channel.productId.toInt()
+
+    return (manufacturerId == SuplaConst.SUPLA_MFR_DOYLETRATT && productId == 1) ||
+      (manufacturerId == SuplaConst.SUPLA_MFR_DOYLETRATT && productId == 10) ||
+      (manufacturerId == SuplaConst.SUPLA_MFR_ZAMEL && productId == SuplaConst.ZAM_PRODID_DIW_01) ||
+      (manufacturerId == SuplaConst.SUPLA_MFR_COMELIT && productId == SuplaConst.COM_PRODID_WDIM100)
+  }
+
   private fun supportsTimer(channelDataBase: ChannelDataBase) =
     SuplaChannelFlag.COUNTDOWN_TIMER_SUPPORTED inside channelDataBase.flags &&
       channelDataBase.function != SuplaFunction.STAIRCASE_TIMER
+
+  private val ChannelWithChildren.hasActionTriggers: Boolean
+    get() = allDescendantFlat.any { it.relationType == ChannelRelationType.DEFAULT && it.function == SuplaFunction.ACTION_TRIGGER }
 }

@@ -668,6 +668,7 @@
   <string name="channel_caption_pump_switch">Nasos açarı</string>
   <string name="channel_caption_heat_or_cold_sourc_switch">İstilik və ya soyutma mənbəyi açarı</string>
   <string name="details_list">Siyahı</string>
+  <string name="details_buttons">Düymələr</string>
   <string name="thermostat_detail_main_thermostat">Əsas termostat</string>
   <string name="thermostat_detail_other_thermostats">Asılı termostatlar</string>
   <string name="thermostat_battery_cover_open">Batareya qapağı açıqdır</string>
@@ -940,6 +941,7 @@
   <string name="action_trigger_unlock_dialog_title">Fəaliyyət tetikleyicisinin kilidini aç</string>
   <string name="action_trigger_unlock_temporarily">Müvəqqəti olaraq kilidi aç</string>
   <string name="channel_caption_action_trigger">Fəaliyyət tetikleyicisi</string>
+  <string name="action_trigger_list_related_title">Əlaqəli düymələr</string>
   <string name="toolbar_search_hint">Ən azı 2 simvol daxil edin…</string>
   <string name="details_timer_select_program">Proqram seçin</string>
   <string name="details_recuperator_ventilation">Ventilyasiya</string>

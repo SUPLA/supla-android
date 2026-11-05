@@ -40,7 +40,9 @@ import org.supla.android.features.androidauto.AndroidAutoItemsScreen
 import org.supla.android.features.androidauto.add.AddAndroidAutoItemScreen
 import org.supla.android.features.appsettings.SettingsScreen
 import org.supla.android.features.details.detailbase.base.DetailScreen
+import org.supla.android.features.details.electricitymeterdetail.settings.ElectricityMeterSettingsScreen
 import org.supla.android.features.details.impulsecounter.counterphoto.CounterPhotoScreen
+import org.supla.android.features.details.impulsecounter.settings.ImpulseCounterSettingsScreen
 import org.supla.android.features.details.legacydetail.LegacyDetailScreen
 import org.supla.android.features.details.rgbanddimmer.legacysettings.LegacyDimmerSettingsScreen
 import org.supla.android.features.developerinfo.DeveloperInfoScreen
@@ -109,6 +111,8 @@ fun MainComposeNavHost(
           fadedEntry<MainRoute.PinSetup> { BackScaffold { PinSetupScreen(it.lockScreenScope, navigator) } }
           fadedEntry<MainRoute.CounterPhoto> { BackScaffold { CounterPhotoScreen(it.remoteId) } }
           fadedEntry<MainRoute.LegacyDimmerSettings> { BackScaffold { LegacyDimmerSettingsScreen(it.item, navigator) } }
+          fadedEntry<MainRoute.ElectricityMeterSettings> { BackScaffold { ElectricityMeterSettingsScreen(it.item) } }
+          fadedEntry<MainRoute.ImpulseCounterSettings> { BackScaffold { ImpulseCounterSettingsScreen(it.item) } }
           fadedEntry<MainRoute.LegacyDetail> { BackScaffold { LegacyDetailScreen(it, navigator) } }
         }
       )

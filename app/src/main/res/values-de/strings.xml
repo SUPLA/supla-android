@@ -624,6 +624,7 @@
   <string name="channel_caption_pump_switch">Pumpenschalter</string>
   <string name="channel_caption_heat_or_cold_sourc_switch">Wärme- oder Kältequellenschalter</string>
   <string name="details_list">Liste</string>
+  <string name="details_buttons">Schaltflächen</string>
   <string name="thermostat_detail_main_thermostat">Hauptthermostat</string>
   <string name="thermostat_detail_other_thermostats">Andere Thermostate</string>
   <string name="thermostat_battery_cover_open">Batteriefachdeckel offen</string>
@@ -916,6 +917,7 @@
   <string name="action_trigger_unlock_dialog_title">Aktionstrigger entsperren</string>
   <string name="action_trigger_unlock_temporarily">Vorübergehend entsperren</string>
   <string name="channel_caption_action_trigger">Aktionsauslöser</string>
+  <string name="action_trigger_list_related_title">Zugehörige Schaltflächen</string>
   <string name="toolbar_search_hint">Geben Sie mindestens 2 Zeichen ein…</string>
   <string name="details_timer_select_program">Programm auswählen</string>
   <string name="details_recuperator_ventilation">Lüftung</string>

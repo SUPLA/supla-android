@@ -59,8 +59,10 @@ fun RowScope.SuplaNavigationBarItem(
   ResizeableNavigationBarItem(
     selected = selected,
     onClick = {
-      clearAction.forTrue { topBarController.setAction(null) }
-      onClick()
+      if (!selected) {
+        clearAction.forTrue { topBarController.clearActions() }
+        onClick()
+      }
     },
     icon = icon,
     label = if (LocalApplicationPreferences.current.isShowBottomLabel) label else null,

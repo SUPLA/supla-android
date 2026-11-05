@@ -49,7 +49,7 @@ fun ManageTopBar(
         scope.launch {
           if (it.manageScreenTitle) {
             it.title.collect { title ->
-              controller.updateTitle(title)
+              controller.updateTitle(owner, title)
             }
           }
         }
@@ -66,7 +66,7 @@ fun ManageTopBar(
 
       scope.launch {
         viewModel.title.collect { title ->
-          controller.updateTitle(title)
+          controller.updateTitle(owner, title)
         }
       }
 
