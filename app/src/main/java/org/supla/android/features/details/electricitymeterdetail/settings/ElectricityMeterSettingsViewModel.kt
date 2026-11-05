@@ -40,6 +40,7 @@ import org.supla.android.usecases.list.RefreshElectricityMeterAggregatedValueUse
 import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import javax.inject.Inject
 
@@ -52,7 +53,8 @@ class ElectricityMeterSettingsViewModel @Inject constructor(
   threading: SuplaThreading
 ) : BaseViewModel<ElectricityMeterSettingsViewState, ElectricityMeterSettingsViewEvent>(
   ElectricityMeterSettingsViewState(),
-  threading
+  threading,
+  manageScreenTitle = true
 ),
   ElectricityMeterSettingsScope {
 
@@ -164,6 +166,8 @@ class ElectricityMeterSettingsViewModel @Inject constructor(
   private fun handleChannel(channelData: ChannelDataEntity) {
     profileId = channelData.profileId
     remoteId = channelData.remoteId
+
+    setScreenTitle(localizedString(R.string.details_settings_title, getCaptionUseCase(channelData.shareable)))
 
     val (measuredValues) = guardLet(channelData.Electricity.measuredTypes) { return }
     val settings = userStateHolder.getElectricityMeterSettings(channelData.profileId, channelData.remoteId)

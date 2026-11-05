@@ -47,7 +47,6 @@ import org.supla.android.features.details.rgbanddimmer.common.asSavedColor
 import org.supla.android.features.details.rgbanddimmer.common.cctValues
 import org.supla.android.features.details.rgbanddimmer.common.dimmerValues
 import org.supla.android.images.ImageId
-import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.views.buttons.SwitchButtonState
 import org.supla.android.ui.views.channelstate.ChannelCurrentData
@@ -316,10 +315,6 @@ abstract class BaseDimmerDetailViewModel(
         type = ItemType.CHANNEL,
         loadingState = state.loadingState.changingLoading(false, dateProvider),
         rgbColor = value.color.toHsv(value.colorBrightness),
-        hasSettings = shouldShowRgbSettings(
-          manufacturerId = channel.channelEntity.manufacturerId.toInt(),
-          productId = channel.channelEntity.productId.toInt()
-        ),
         viewState = state.viewState.copy(
           offline = channel.status.offline,
           value = DimmerValue.Single(value.brightness, value.cct),
@@ -414,12 +409,6 @@ abstract class BaseDimmerDetailViewModel(
       )
       .disposeBySelf()
   }
-
-  private fun shouldShowRgbSettings(manufacturerId: Int?, productId: Int?): Boolean =
-    (manufacturerId == SuplaConst.SUPLA_MFR_DOYLETRATT && productId == 1) ||
-      (manufacturerId == SuplaConst.SUPLA_MFR_DOYLETRATT && productId == 10) ||
-      (manufacturerId == SuplaConst.SUPLA_MFR_ZAMEL && productId == SuplaConst.ZAM_PRODID_DIW_01) ||
-      (manufacturerId == SuplaConst.SUPLA_MFR_COMELIT && productId == SuplaConst.COM_PRODID_WDIM100)
 }
 
 sealed interface DimmerDetailViewEvent : ViewEvent {
@@ -434,7 +423,6 @@ data class DimmerDetailModelState(
   val changing: Boolean = false,
   val loadingState: LoadingTimeoutManager.LoadingState = LoadingTimeoutManager.LoadingState(),
   val rgbColor: HsvColor? = null,
-  val hasSettings: Boolean = false,
   val viewState: DimmerDetailViewState = DimmerDetailViewState(),
 ) : ViewState() {
 

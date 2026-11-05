@@ -43,7 +43,11 @@ class ImpulseCounterSettingsViewModel @Inject constructor(
   private val getCaptionUseCase: GetCaptionUseCase,
   private val userStateHolder: UserStateHolder,
   threading: SuplaThreading
-) : BaseViewModel<ImpulseCounterSettingsViewState, ImpulseCounterSettingsViewEvent>(ImpulseCounterSettingsViewState(), threading),
+) : BaseViewModel<ImpulseCounterSettingsViewState, ImpulseCounterSettingsViewEvent>(
+  ImpulseCounterSettingsViewState(),
+  threading,
+  manageScreenTitle = true
+),
   ImpulseCounterSettingsViewScope {
 
   private lateinit var item: ItemBundle
@@ -61,10 +65,12 @@ class ImpulseCounterSettingsViewModel @Inject constructor(
   private fun handleChannel(channelData: ChannelDataEntity) {
     item = ItemBundle.from(channelData)
     val settings = userStateHolder.getImpulseCounterSettings(item.profileId, item.remoteId)
+    val title = localizedString(R.string.details_settings_title, getCaptionUseCase.invoke(channelData.shareable))
+    setScreenTitle(title)
 
     updateState {
       it.copy(
-        title = localizedString(R.string.details_settings_title, getCaptionUseCase.invoke(channelData.shareable)),
+        title = title,
         listValueAggregationOptions = it.listValueAggregationOptions.copy(selected = settings.showOnList),
       )
     }

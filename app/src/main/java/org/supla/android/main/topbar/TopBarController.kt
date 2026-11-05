@@ -33,6 +33,8 @@ class TopBarController(initialState: TopBarState = TopBarState()) {
   var state by mutableStateOf(initialState)
     private set
 
+  private var baseActions = initialState.actions
+  private val registeredActions = linkedSetOf<TopBarAction>()
   private val _events = MutableSharedFlow<TopBarEvent>()
   val events = _events.asSharedFlow()
 
@@ -62,8 +64,13 @@ class TopBarController(initialState: TopBarState = TopBarState()) {
       }
     }
 
+    if (current?.instance != owner.instance) {
+      registeredActions.clear()
+    }
+
     this.owner = owner
-    this.state = state
+    baseActions = state.actions
+    this.state = state.copy(actions = allActions())
   }
 
   fun updateSearchValue(value: String) {
@@ -73,12 +80,29 @@ class TopBarController(initialState: TopBarState = TopBarState()) {
     }
   }
 
-  fun updateTitle(title: LocalizedString) {
-    state = state.copy(title = title)
+  fun updateTitle(owner: TopBarOwner, title: LocalizedString) {
+    if (this.owner?.instance == owner.instance) {
+      state = state.copy(title = title)
+    }
   }
 
-  fun setAction(action: TopBarAction?) {
-    state = state.copy(action = action)
+  fun registerAction(action: TopBarAction) {
+    Timber.d("registerAction(action = $action)")
+    if (registeredActions.add(action)) {
+      updateActions()
+    }
+  }
+
+  fun unregisterAction(action: TopBarAction) {
+    if (registeredActions.remove(action)) {
+      updateActions()
+    }
+  }
+
+  fun clearActions() {
+    if (registeredActions.removeAll { it.clearTime == TopBarClearTime.TAB_CHANGE }) {
+      updateActions()
+    }
   }
 
   fun setSearch(search: TopBarSearchState?) {
@@ -88,6 +112,8 @@ class TopBarController(initialState: TopBarState = TopBarState()) {
   fun clear(owner: TopBarOwner) {
     if (this.owner?.instance == owner.instance) {
       this.owner = null
+      baseActions = emptyList()
+      registeredActions.clear()
       state = TopBarState()
     }
   }
@@ -98,6 +124,12 @@ class TopBarController(initialState: TopBarState = TopBarState()) {
       searchState.observer(TopBarSearchEvent.QueryChange(""))
       searchState.observer(TopBarSearchEvent.VisibilityChange(visible))
     }
+  }
+
+  private fun allActions(): List<TopBarAction> = baseActions + registeredActions
+
+  private fun updateActions() {
+    state = state.copy(actions = allActions())
   }
 }
 
@@ -118,7 +150,7 @@ fun MockedTopBarController(
   title: LocalizedString = LocalizedString.Empty,
   searchQuery: String = "",
   searchVisible: Boolean = false,
-  action: TopBarAction? = null,
+  actions: List<TopBarAction> = emptyList(),
   content: @Composable () -> Unit
 ) {
   MockedTopBarController(
@@ -127,7 +159,7 @@ fun MockedTopBarController(
       data = TopBarSearchData(searchQuery, searchVisible),
       observer = {}
     ),
-    action = action,
+    actions = actions,
     content = content
   )
 }
@@ -136,7 +168,7 @@ fun MockedTopBarController(
 fun MockedTopBarController(
   title: LocalizedString = LocalizedString.Empty,
   search: TopBarSearchState? = null,
-  action: TopBarAction? = null,
+  actions: List<TopBarAction> = emptyList(),
   content: @Composable () -> Unit
 ) {
   val topBarControllerWithSearch = TopBarController()
@@ -145,7 +177,7 @@ fun MockedTopBarController(
     state = TopBarState(
       title = title,
       search = search,
-      action = action
+      actions = actions
     )
   )
 

@@ -643,6 +643,7 @@
   <string name="channel_caption_pump_switch">Commutatore della pompa</string>
   <string name="channel_caption_heat_or_cold_sourc_switch">Commutatore della fonte di calore o di freddo</string>
   <string name="details_list">Elenco</string>
+  <string name="details_buttons">Pulsanti</string>
   <string name="thermostat_detail_main_thermostat">Termostato principale</string>
   <string name="thermostat_detail_other_thermostats">Termostati dipendenti</string>
   <string name="thermostat_battery_cover_open">Coperchio della batteria aperto</string>
@@ -869,6 +870,7 @@
   <string name="action_trigger_unlock_dialog_title">Sblocca il trigger dell’azione</string>
   <string name="action_trigger_unlock_temporarily">Sblocca temporaneamente</string>
   <string name="channel_caption_action_trigger">Attivatore di azione</string>
+  <string name="action_trigger_list_related_title">Pulsanti correlati</string>
   <string name="toolbar_search_hint">Inserisci almeno 2 caratteri…</string>
   <string name="details_timer_select_program">Seleziona un programma</string>
   <string name="details_recuperator_ventilation">Ventilazione</string>

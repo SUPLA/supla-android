@@ -653,6 +653,7 @@
   <string name="channel_caption_pump_switch">Stikalo črpalke</string>
   <string name="channel_caption_heat_or_cold_sourc_switch">Stikalo za vir toplote ali hladu</string>
   <string name="details_list">Seznam</string>
+  <string name="details_buttons">Gumbi</string>
   <string name="thermostat_detail_main_thermostat">Glavni termostat</string>
   <string name="thermostat_detail_other_thermostats">Odvisni termostati</string>
   <string name="thermostat_battery_cover_open">Odprt pokrov baterije</string>
@@ -860,6 +861,7 @@
   <string name="action_trigger_unlock_dialog_title">Odkleni sprožilec dejanja</string>
   <string name="action_trigger_unlock_temporarily">Začasno odkleni</string>
   <string name="channel_caption_action_trigger">Sprožilec dejanja</string>
+  <string name="action_trigger_list_related_title">Povezani gumbi</string>
   <string name="toolbar_search_hint">Vnesite vsaj 2 znaka…</string>
   <string name="details_timer_select_program">Izberite program</string>
   <string name="details_recuperator_ventilation">Prezračevanje</string>

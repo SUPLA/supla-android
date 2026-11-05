@@ -633,6 +633,7 @@
   <string name="channel_caption_pump_switch">Siurblio perjungiklis</string>
   <string name="channel_caption_heat_or_cold_sourc_switch">Šilumos arba vėsinimo šaltinio perjungiklis</string>
   <string name="details_list">Sąrašas</string>
+  <string name="details_buttons">Mygtukai</string>
   <string name="thermostat_detail_main_thermostat">Pagrindinis termostatas</string>
   <string name="thermostat_detail_other_thermostats">Priklausomi termostatai</string>
   <string name="thermostat_battery_cover_open">Baterijos dangtelis atidarytas</string>
@@ -838,6 +839,7 @@
   <string name="action_trigger_unlock_dialog_title">Atrakinti veiksmo aktyviklį</string>
   <string name="action_trigger_unlock_temporarily">Laikinai atrakinti</string>
   <string name="channel_caption_action_trigger">Veiksmų aktyviklis</string>
+  <string name="action_trigger_list_related_title">Susiję mygtukai</string>
   <string name="toolbar_search_hint">Įveskite bent 2 simbolius…</string>
   <string name="details_timer_select_program">Pasirinkite programą</string>
   <string name="details_recuperator_ventilation">Vėdinimas</string>

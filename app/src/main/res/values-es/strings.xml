@@ -643,6 +643,7 @@
   <string name="channel_caption_pump_switch">Interruptor de la bomba</string>
   <string name="channel_caption_heat_or_cold_sourc_switch">Interruptor para fuente de calor o frío</string>
   <string name="details_list">Lista</string>
+  <string name="details_buttons">Botones</string>
   <string name="thermostat_detail_main_thermostat">Termostato principal</string>
   <string name="thermostat_detail_other_thermostats">Termostatos dependientes</string>
   <string name="thermostat_battery_cover_open">Tapa de la batería abierta</string>
@@ -844,6 +845,7 @@
   <string name="action_trigger_unlock_dialog_title">Desbloquear activador de acción</string>
   <string name="action_trigger_unlock_temporarily">Desbloquear temporalmente</string>
   <string name="channel_caption_action_trigger">Activador de acciones</string>
+  <string name="action_trigger_list_related_title">Botones relacionados</string>
   <string name="toolbar_search_hint">Introduce al menos 2 caracteres…</string>
   <string name="details_timer_select_program">Selecciona un programa</string>
   <string name="details_recuperator_ventilation">Ventilación</string>

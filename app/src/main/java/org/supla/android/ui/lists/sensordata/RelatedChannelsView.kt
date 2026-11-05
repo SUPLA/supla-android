@@ -32,7 +32,8 @@ fun RelatedChannelsView(
   modifier: Modifier = Modifier,
   scale: Float = 1f,
   onInfoClick: (RelatedChannelData) -> Unit = {},
-  onCaptionLongPress: (RelatedChannelData) -> Unit = {}
+  onCaptionLongPress: (RelatedChannelData) -> Unit = {},
+  onClick: ((RelatedChannelData) -> Unit)? = null
 ) {
   if (channels.isNotEmpty()) {
     LazyColumn(
@@ -44,13 +45,15 @@ fun RelatedChannelsView(
           channel = it,
           scale = scale,
           onCaptionLongPress = onCaptionLongPress,
-          onInfoClick = onInfoClick
+          onInfoClick = onInfoClick,
+          onClick = onClick
         )
       }
     }
   } else {
     EmptyListInfoView(
-      modifier = modifier.fillMaxWidth()
+      modifier = modifier
+        .fillMaxWidth()
         .padding(Distance.default)
     )
   }
