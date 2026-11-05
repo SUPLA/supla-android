@@ -45,6 +45,7 @@ import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.nativePaint
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInteropFilter
@@ -100,10 +101,10 @@ private val configTemperatureFont = FontFamily(Font(R.font.quicksand_regular))
 
 private val controlCirclePath = Path()
 private val controlCircleHelperPath = Path()
-private val controlCirclePaint = Paint().asFrameworkPaint().apply {
+private val controlCirclePaint = Paint().nativePaint.apply {
   style = android.graphics.Paint.Style.FILL
 }
-private val temperatureCirclePaint = Paint().asFrameworkPaint().apply {
+private val temperatureCirclePaint = Paint().nativePaint.apply {
   style = android.graphics.Paint.Style.FILL
 }
 private val shaderColors = mutableListOf(Color(0xFFD2D2D2), Color.White, Color.White, Color(0xFFD2D2D2))

@@ -52,7 +52,7 @@ data class ActionTriggerScheduleProgram(
           } else {
             LocalizedString.WithFormat(
               "%s %s",
-              listOf(buttonMode.label, TimeFormatter.format(durationS ?: 0, useShortForm = true))
+              listOf(buttonMode.label, TimeFormatter.format(durationS, useShortForm = true))
             )
           }
         else -> buttonMode.label

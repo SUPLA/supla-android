@@ -17,8 +17,8 @@ package org.supla.android.features.details.windowdetail.base.ui
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.graphics.Paint
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.NativePaint
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
@@ -26,7 +26,7 @@ import org.supla.android.features.details.windowdetail.base.ui.rollershutter.sla
 
 private val windowShadowRadius = 4.dp
 
-fun NativePaint.applyForWindow(color: Color, shadow: Color, scope: DrawScope) {
+fun Paint.applyForWindow(color: Color, shadow: Color, scope: DrawScope) {
   this.style = android.graphics.Paint.Style.FILL
   this.strokeCap = android.graphics.Paint.Cap.SQUARE
   this.color = color.toArgb()
@@ -37,7 +37,7 @@ fun NativePaint.applyForWindow(color: Color, shadow: Color, scope: DrawScope) {
   }
 }
 
-fun NativePaint.applyForSlat(color: Color, shadow: Color, scope: DrawScope) {
+fun Paint.applyForSlat(color: Color, shadow: Color, scope: DrawScope) {
   this.style = android.graphics.Paint.Style.FILL
   this.strokeCap = android.graphics.Paint.Cap.SQUARE
   this.color = color.toArgb()
@@ -48,7 +48,7 @@ fun NativePaint.applyForSlat(color: Color, shadow: Color, scope: DrawScope) {
   }
 }
 
-fun NativePaint.applyForShadow(color: Color) {
+fun Paint.applyForShadow(color: Color) {
   this.style = android.graphics.Paint.Style.FILL
   this.strokeCap = android.graphics.Paint.Cap.SQUARE
   this.color = color.toArgb()
@@ -56,7 +56,7 @@ fun NativePaint.applyForShadow(color: Color) {
   setShadowLayer(0f, 0f, 0f, Color.White.toArgb())
 }
 
-fun NativePaint.applyForAwningMarker(color: Color) {
+fun Paint.applyForAwningMarker(color: Color) {
   this.style = android.graphics.Paint.Style.FILL
   this.strokeCap = android.graphics.Paint.Cap.SQUARE
   this.color = color.toArgb()

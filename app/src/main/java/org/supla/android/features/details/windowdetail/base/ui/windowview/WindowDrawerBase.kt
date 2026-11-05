@@ -24,13 +24,14 @@ import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.nativePaint
 import androidx.compose.ui.unit.dp
 import org.supla.android.features.details.windowdetail.base.data.WindowState
 import org.supla.android.features.details.windowdetail.base.ui.applyForWindow
 
 abstract class WindowDrawerBase<D : WindowDimensBase, S : WindowState, C : WindowColorsBase> {
 
-  protected val paint = Paint().asFrameworkPaint()
+  protected val paint = Paint().nativePaint
   protected val path = Path()
 
   protected abstract fun DrawScope.drawShadowingElements(windowState: S, runtimeDimens: D, colors: C)

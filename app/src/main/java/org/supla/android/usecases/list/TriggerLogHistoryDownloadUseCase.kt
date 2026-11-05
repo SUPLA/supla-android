@@ -69,7 +69,7 @@ class TriggerLogHistoryDownloadUseCase @Inject constructor(
 
   suspend operator fun invoke() {
     val activeProfile = profileRepository.findActiveProfileKtx() ?: return
-    val profileId = activeProfile.id ?: return
+    val profileId = activeProfile.id
 
     val channels = mutableListOf<ChannelDataEntity>().apply {
       addAll(channelRepository.findChannelsBy(profileId, SuplaFunction.IC_GAS_METER))
