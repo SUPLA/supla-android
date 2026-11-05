@@ -635,6 +635,7 @@
   <string name="channel_caption_pump_switch">Přepínač čerpadla</string>
   <string name="channel_caption_heat_or_cold_sourc_switch">Přepínač pro zdroj tepla nebo chladu</string>
   <string name="details_list">Seznam</string>
+  <string name="details_buttons">Tlačítka</string>
   <string name="thermostat_detail_main_thermostat">Hlavní termostat</string>
   <string name="thermostat_detail_other_thermostats">Závislé termostaty</string>
   <string name="thermostat_battery_cover_open">Otevřený kryt baterie</string>
@@ -841,6 +842,7 @@
   <string name="action_trigger_unlock_dialog_title">Odemknout akční spouštěč</string>
   <string name="action_trigger_unlock_temporarily">Dočasně odemknout</string>
   <string name="channel_caption_action_trigger">Akční spouštěč</string>
+  <string name="action_trigger_list_related_title">Související tlačítka</string>
   <string name="toolbar_search_hint">Zadejte alespoň 2 znaky…</string>
   <string name="details_timer_select_program">Vyberte program</string>
   <string name="details_recuperator_ventilation">Větrání</string>

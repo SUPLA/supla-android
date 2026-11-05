@@ -655,6 +655,7 @@
   <string name="channel_caption_pump_switch">Pumpebryter</string>
   <string name="channel_caption_heat_or_cold_sourc_switch">Bryter for varme- eller kuldekilde</string>
   <string name="details_list">Liste</string>
+  <string name="details_buttons">Knapper</string>
   <string name="thermostat_detail_main_thermostat">Hovedtermostat</string>
   <string name="thermostat_detail_other_thermostats">Avhengige termostater</string>
   <string name="thermostat_battery_cover_open">Åpne batteridekselet</string>
@@ -856,6 +857,7 @@
   <string name="action_trigger_unlock_dialog_title">Lås opp handlingsutløser</string>
   <string name="action_trigger_unlock_temporarily">Lås opp midlertidig</string>
   <string name="channel_caption_action_trigger">Handlingsutløser</string>
+  <string name="action_trigger_list_related_title">Relaterte knapper</string>
   <string name="toolbar_search_hint">Skriv inn minst 2 tegn…</string>
   <string name="details_timer_select_program">Velg program</string>
   <string name="details_recuperator_ventilation">Ventilasjon</string>

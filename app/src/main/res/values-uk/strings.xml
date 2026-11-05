@@ -629,6 +629,7 @@
   <string name="channel_caption_pump_switch">Перемикач насоса</string>
   <string name="channel_caption_heat_or_cold_sourc_switch">Перемикач джерела тепла або холоду</string>
   <string name="details_list">Список</string>
+  <string name="details_buttons">Кнопки</string>
   <string name="thermostat_detail_main_thermostat">Головний термостат</string>
   <string name="thermostat_detail_other_thermostats">Залежні термостати</string>
   <string name="thermostat_battery_cover_open">Кришка акумулятора відкрита</string>
@@ -836,6 +837,7 @@
   <string name="action_trigger_unlock_dialog_title">Розблокувати тригер дії</string>
   <string name="action_trigger_unlock_temporarily">Розблокувати тимчасово</string>
   <string name="channel_caption_action_trigger">Тригер дії</string>
+  <string name="action_trigger_list_related_title">Пов’язані кнопки</string>
   <string name="toolbar_search_hint">Введіть щонайменше 2 символи…</string>
   <string name="details_timer_select_program">Виберіть програму</string>
   <string name="details_recuperator_ventilation">Вентиляція</string>

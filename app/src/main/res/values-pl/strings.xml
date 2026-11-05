@@ -945,6 +945,7 @@
   <string name="at_allow_temporary_unlock">Zezwalaj na tymczasowe odblokowanie</string>
   <string name="at_locked_temporary_unlock_allowed">Zablokowany z możliwością chwilowego odblokowania</string>
   <string name="channel_caption_action_trigger">Wyzwalacz akcji</string>
+  <string name="action_trigger_list_related_title">Powiązane przyciski</string>
   <string name="toolbar_search_hint">Wpisz 2 znaki, aby wyszukać…</string>
   <string name="details_timer_select_program">Wybierz program</string>
   <string name="details_recuperator_open_window">Otw. okno</string>
@@ -991,4 +992,5 @@
   <string name="action_trigger_schedule_temporary_unlock_duration">Czas chwilowego odblokowania</string>
   <string name="action_trigger_unlock_dialog_title">Odblokuj wyzwalacz akcji</string>
   <string name="action_trigger_unlock_temporarily">Odblokuj tymczasowo</string>
+  <string name="details_buttons">Przyciski</string>
 </resources>

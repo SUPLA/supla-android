@@ -56,7 +56,6 @@ import org.supla.android.ui.views.list.components.ListItemProfile
 import org.supla.android.ui.views.list.components.ListItemTitle
 import org.supla.android.ui.views.settings.SettingBlock
 import org.supla.android.ui.views.settings.SettingCheckboxItem
-import org.supla.android.ui.views.settings.SettingsBlock
 import sh.calvin.reorderable.ReorderableCollectionItemScope
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState

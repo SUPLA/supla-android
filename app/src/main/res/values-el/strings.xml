@@ -651,6 +651,7 @@
   <string name="channel_caption_pump_switch">Διακόπτης αντλίας</string>
   <string name="channel_caption_heat_or_cold_sourc_switch">Διακόπτης πηγής θερμότητας ή κρύου</string>
   <string name="details_list">Λίστα</string>
+  <string name="details_buttons">Κουμπιά</string>
   <string name="thermostat_detail_main_thermostat">Κύριος θερμοστάτης</string>
   <string name="thermostat_detail_other_thermostats">Εξαρτώμενοι θερμοστάτες</string>
   <string name="thermostat_battery_cover_open">Το κάλυμμα της μπαταρίας είναι ανοιχτό</string>
@@ -853,6 +854,7 @@
   <string name="action_trigger_unlock_dialog_title">Ξεκλείδωμα ενεργοποιητή ενέργειας</string>
   <string name="action_trigger_unlock_temporarily">Προσωρινό ξεκλείδωμα</string>
   <string name="channel_caption_action_trigger">Ενεργοποιητής ενέργειας</string>
+  <string name="action_trigger_list_related_title">Σχετικά κουμπιά</string>
   <string name="toolbar_search_hint">Πληκτρολογήστε τουλάχιστον 2 χαρακτήρες…</string>
   <string name="details_timer_select_program">Επιλέξτε πρόγραμμα</string>
   <string name="details_recuperator_ventilation">Αερισμός</string>

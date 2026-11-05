@@ -34,11 +34,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.supla.android.features.details.actiontrigger.general.ActionTriggerGeneralScreen
+import org.supla.android.features.details.actiontrigger.list.ActionTriggerListScreen
 import org.supla.android.features.details.actiontrigger.schedule.ActionTriggerScheduleScreen
 import org.supla.android.features.details.containerdetail.general.ContainerGeneralScreen
 import org.supla.android.features.details.electricitymeterdetail.general.ElectricityMeterGeneralScreen
 import org.supla.android.features.details.electricitymeterdetail.history.ElectricityMeterHistoryScreen
-import org.supla.android.features.details.electricitymeterdetail.settings.ElectricityMeterSettingsScreen
 import org.supla.android.features.details.gatedetail.general.GateGeneralScreen
 import org.supla.android.features.details.gatedetail.schedule.GateScheduleScreen
 import org.supla.android.features.details.gpmdetail.history.GpmHistoryScreen
@@ -46,7 +46,6 @@ import org.supla.android.features.details.humiditydetail.history.HumidityHistory
 import org.supla.android.features.details.impulsecounter.counterphoto.CounterPhotoScreen
 import org.supla.android.features.details.impulsecounter.general.ImpulseCounterGeneralScreen
 import org.supla.android.features.details.impulsecounter.history.ImpulseCounterHistoryScreen
-import org.supla.android.features.details.impulsecounter.settings.ImpulseCounterSettingsScreen
 import org.supla.android.features.details.legacydetail.ThermostatHeatpolGeneralScreen
 import org.supla.android.features.details.recuperator.general.RecuperatorGeneralScreen
 import org.supla.android.features.details.recuperator.schedule.RecuperatorScheduleScreen
@@ -76,9 +75,12 @@ import org.supla.android.main.EventHandler
 import org.supla.android.main.LifeCycleObserver
 import org.supla.android.main.LocalNavigator
 import org.supla.android.main.MainComposeNavigator
+import org.supla.android.main.MainRoute
 import org.supla.android.main.scaffold.LocalScaffoldPadding
 import org.supla.android.main.scaffold.withLeftPanel
 import org.supla.android.main.topbar.ManageTopBar
+import org.supla.android.main.topbar.RegisterTopBarAction
+import org.supla.android.main.topbar.TopBarAction
 import org.supla.android.main.view.NavigationBarLabel
 import org.supla.android.main.view.SetDetailRailVisible
 import org.supla.android.main.view.StandardTopBar
@@ -86,6 +88,7 @@ import org.supla.android.ui.extensions.isPhoneLandscape
 import org.supla.android.ui.navigation.LeftNavigationRail
 import org.supla.android.ui.navigation.SuplaNavigationBarItem
 import org.supla.android.ui.navigation.SuplaRailItem
+import timber.log.Timber
 
 @Composable
 fun DetailScreen(
@@ -94,7 +97,8 @@ fun DetailScreen(
   viewModel: DetailViewModel = hiltViewModel()
 ) {
   val navigator = LocalNavigator.current
-  var page by remember(pages) { mutableStateOf(viewModel.firstPage(item.remoteId, pages)) }
+  val bottomTabs = remember(pages) { pages.filter { it.iconDestination == DetailPage.IconDestination.BOTTOM } }
+  var page by remember(item.remoteId, bottomTabs) { mutableStateOf(viewModel.firstPage(item.remoteId, bottomTabs)) }
 
   viewModel.LifeCycleObserver(
     onCreate = { viewModel.setup(item) }
@@ -103,10 +107,18 @@ fun DetailScreen(
   EventHandler(viewModel) { handleEvent(it, navigator) }
   ManageTopBar(viewModel)
 
+  val topActions = remember(pages) { pages.filter { it.iconDestination == DetailPage.IconDestination.TOP } }
+  topActions.forEach { topPage ->
+    RegisterTopBarAction(
+      action = topPage.topBarAction(),
+      handler = { topPage.route(item)?.let { navigator?.navigateTo(it) } }
+    )
+  }
+
   if (LocalConfiguration.current.isPhoneLandscape) {
-    LandscapeScreen(item, page, pages) { page = viewModel.onPageChanged(it, pages) }
+    LandscapeScreen(item, page, bottomTabs) { page = viewModel.onPageChanged(it, pages) }
   } else {
-    PortraitScreen(item, page, pages) { page = viewModel.onPageChanged(it, pages) }
+    PortraitScreen(item, page, bottomTabs) { page = viewModel.onPageChanged(it, pages) }
   }
 }
 
@@ -183,6 +195,25 @@ private fun DetailScreenNavigationRail(page: DetailPage, pages: List<DetailPage>
     }
   }
 
+private fun DetailPage.topBarAction(): TopBarAction =
+  when (this) {
+    DetailPage.DIMMER_SETTINGS -> TopBarAction.DetailDimmerSettings
+    DetailPage.EM_SETTINGS -> TopBarAction.DetailElectricityMeterSettings
+    DetailPage.IC_SETTINGS -> TopBarAction.DetailImpulseCounterSettings
+    else -> error("$this is not a top bar destination")
+  }
+
+private fun DetailPage.route(item: ItemBundle): MainRoute? =
+  when (this) {
+    DetailPage.DIMMER_SETTINGS -> MainRoute.LegacyDimmerSettings(item)
+    DetailPage.EM_SETTINGS -> MainRoute.ElectricityMeterSettings(item)
+    DetailPage.IC_SETTINGS -> MainRoute.ImpulseCounterSettings(item)
+    else -> {
+      Timber.e("$this is not a top bar destination")
+      return null
+    }
+  }
+
 @Composable
 private fun Content(item: ItemBundle, page: DetailPage) =
   when (page) {
@@ -211,20 +242,22 @@ private fun Content(item: ItemBundle, page: DetailPage) =
     DetailPage.GARAGE_DOOR_ROLLER -> GarageDoorScreen(item)
     DetailPage.EM_GENERAL -> ElectricityMeterGeneralScreen(item)
     DetailPage.EM_HISTORY -> ElectricityMeterHistoryScreen(item)
-    DetailPage.EM_SETTINGS -> ElectricityMeterSettingsScreen(item)
     DetailPage.CONTAINER_GENERAL -> ContainerGeneralScreen(item)
     DetailPage.IC_GENERAL -> ImpulseCounterGeneralScreen(item)
     DetailPage.IC_HISTORY -> ImpulseCounterHistoryScreen(item)
     DetailPage.IC_OCR -> CounterPhotoScreen(item.remoteId)
-    DetailPage.IC_SETTINGS -> ImpulseCounterSettingsScreen(item)
     DetailPage.VALVE_GENERAL -> ValveGeneralScreen(item)
     DetailPage.GATE_GENERAL -> GateGeneralScreen(item)
     DetailPage.GATE_SCHEDULE -> GateScheduleScreen(item)
     DetailPage.ACTION_TRIGGER_GENERAL -> ActionTriggerGeneralScreen(item)
     DetailPage.ACTION_TRIGGER_SCHEDULE -> ActionTriggerScheduleScreen(item)
+    DetailPage.ACTION_TRIGGER_LIST -> ActionTriggerListScreen(item)
     DetailPage.RGB -> RgbDetailScreen(item)
     DetailPage.DIMMER -> DimmerDetailScreen(item)
     DetailPage.DIMMER_CCT -> DimmerCctDetailScreen(item)
+    DetailPage.DIMMER_SETTINGS,
+    DetailPage.EM_SETTINGS,
+    DetailPage.IC_SETTINGS -> error("$page is not a bottom bar page")
   }
 
 private fun handleEvent(event: DetailViewEvent, navigator: MainComposeNavigator?) =

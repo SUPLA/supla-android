@@ -24,8 +24,8 @@ import org.supla.android.features.details.detailbase.impulsecounter.ImpulseCount
 import org.supla.android.main.LocalNavigator
 import org.supla.android.main.MainRoute
 import org.supla.android.main.ViewModelHost
-import org.supla.android.main.topbar.RegisterStatedTopBarIcon
-import org.supla.android.main.topbar.TopBarIcon
+import org.supla.android.main.topbar.RegisterTopBarAction
+import org.supla.android.main.topbar.TopBarAction
 
 @Composable
 fun ImpulseCounterGeneralScreen(
@@ -38,8 +38,8 @@ fun ImpulseCounterGeneralScreen(
     onCreate = { viewModel.onViewCreated(item.remoteId) },
     onStart = { viewModel.loadData(item.remoteId) },
   ) {
-    RegisterStatedTopBarIcon(
-      icon = TopBarIcon.OpenOcr,
+    RegisterTopBarAction(
+      action = TopBarAction.ImpulseCounterOpenOcr,
       visible = it.hasPhoto,
       handler = { navigator?.navigateTo(MainRoute.CounterPhoto(item.remoteId)) }
     )

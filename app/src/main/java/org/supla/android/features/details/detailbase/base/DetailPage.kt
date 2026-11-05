@@ -27,7 +27,10 @@ import kotlinx.serialization.Serializable
 import org.supla.android.R
 
 @Serializable
-enum class DetailPage(val item: DetailBottomItem) {
+enum class DetailPage(
+  val item: DetailBottomItem,
+  val iconDestination: IconDestination = IconDestination.BOTTOM
+) {
   // Switches
   SWITCH(DetailBottomItem.GENERAL),
   SWITCH_TIMER(DetailBottomItem.TIMER),
@@ -65,19 +68,19 @@ enum class DetailPage(val item: DetailBottomItem) {
   VERTICAL_BLIND(DetailBottomItem.GENERAL),
   GARAGE_DOOR_ROLLER(DetailBottomItem.GENERAL),
 
-  // EM
+  // Electricity meter
   EM_GENERAL(DetailBottomItem.GENERAL),
   EM_HISTORY(DetailBottomItem.HISTORY),
-  EM_SETTINGS(DetailBottomItem.SETTINGS),
+  EM_SETTINGS(DetailBottomItem.SETTINGS, IconDestination.TOP),
 
   // Container
   CONTAINER_GENERAL(DetailBottomItem.GENERAL),
 
-  // IC
+  // Impulse counter
   IC_GENERAL(DetailBottomItem.GENERAL),
   IC_HISTORY(DetailBottomItem.HISTORY),
   IC_OCR(DetailBottomItem.OCR),
-  IC_SETTINGS(DetailBottomItem.SETTINGS),
+  IC_SETTINGS(DetailBottomItem.SETTINGS, IconDestination.TOP),
 
   // Valve
   VALVE_GENERAL(DetailBottomItem.GENERAL),
@@ -89,11 +92,15 @@ enum class DetailPage(val item: DetailBottomItem) {
   // Action trigger
   ACTION_TRIGGER_GENERAL(DetailBottomItem.GENERAL),
   ACTION_TRIGGER_SCHEDULE(DetailBottomItem.SCHEDULE),
+  ACTION_TRIGGER_LIST(DetailBottomItem.BUTTONS),
 
   // RGB and Dimmer
   RGB(DetailBottomItem.RGB),
   DIMMER(DetailBottomItem.DIMMER),
   DIMMER_CCT(DetailBottomItem.DIMMER),
+  DIMMER_SETTINGS(DetailBottomItem.SETTINGS, IconDestination.TOP);
+
+  enum class IconDestination { BOTTOM, TOP }
 }
 
 enum class DetailBottomItem(@param:DrawableRes val iconRes: Int, @param:StringRes val stringRes: Int) {
@@ -104,6 +111,7 @@ enum class DetailBottomItem(@param:DrawableRes val iconRes: Int, @param:StringRe
   METRICS(R.drawable.ic_bottom_metrics, R.string.details_metrics),
   SETTINGS(R.drawable.ic_bottom_settings, R.string.details_settings),
   LIST(R.drawable.ic_bottom_list, R.string.details_list),
+  BUTTONS(R.drawable.ic_bottom_list, R.string.details_buttons),
   OCR(R.drawable.ic_bottom_ocr, R.string.toolbar_ocr),
   RGB(R.drawable.ic_bottom_rgb, R.string.toolbar_rgb),
   DIMMER(R.drawable.ic_bottom_dimmer, R.string.toolbar_dimmer);

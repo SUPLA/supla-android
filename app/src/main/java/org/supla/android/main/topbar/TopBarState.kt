@@ -18,13 +18,12 @@ package org.supla.android.main.topbar
  */
 
 import org.supla.core.shared.infrastructure.LocalizedString
-import kotlin.reflect.KClass
 
 data class TopBarState(
   val title: LocalizedString = LocalizedString.Empty,
   val navigationType: NavigationType = NavigationType.BACK,
   val search: TopBarSearchState? = null,
-  val action: TopBarAction? = null
+  val actions: List<TopBarAction> = emptyList()
 ) {
   val inSearch: Boolean = search != null && search.data.visible && search.data.query.isNotEmpty()
 }
@@ -52,30 +51,6 @@ data class TopBarSearchData(
 sealed interface TopBarSearchEvent {
   data class QueryChange(val query: String) : TopBarSearchEvent
   data class VisibilityChange(val visible: Boolean) : TopBarSearchEvent
-}
-
-data class TopBarAction(
-  val icon: TopBarIcon,
-  val handlers: Map<KClass<out TopBarEvent>, () -> Unit> = emptyMap()
-)
-
-fun topBarAction(icon: TopBarIcon, handler: () -> Unit) =
-  TopBarAction(icon, mapOf(icon.event::class to handler))
-
-fun topBarAction(callback: TopBarActionBuilder.() -> Unit): TopBarAction {
-  val builder = TopBarActionBuilder()
-  callback.invoke(builder)
-
-  return TopBarAction(icon = builder.icon!!, handlers = builder.handlers)
-}
-
-class TopBarActionBuilder {
-  var icon: TopBarIcon? = null
-  val handlers: MutableMap<KClass<out TopBarEvent>, () -> Unit> = mutableMapOf()
-
-  inline fun <reified T : TopBarEvent> handle(noinline handler: () -> Unit) {
-    handlers[T::class] = handler
-  }
 }
 
 val String.searchable: Boolean

@@ -150,6 +150,16 @@ sealed interface MainRoute : NavKey {
   }
 
   @Serializable
+  data class ElectricityMeterSettings(val item: ItemBundle) : MainRoute {
+    override val screenTakeoverAllowed: Boolean = true
+  }
+
+  @Serializable
+  data class ImpulseCounterSettings(val item: ItemBundle) : MainRoute {
+    override val screenTakeoverAllowed: Boolean = true
+  }
+
+  @Serializable
   data class LegacyDetail(
     val remoteId: Int,
     val itemType: ItemType,

@@ -27,6 +27,7 @@ import org.supla.android.data.source.remote.thermostat.getIndicatorIcon
 import org.supla.android.ui.lists.ListOnlineState
 import org.supla.android.ui.lists.onlineState
 import org.supla.core.shared.data.model.channel.ChannelRelationType
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 data class ChannelChildEntity @JvmOverloads constructor(
   @Embedded(prefix = "relation_") val channelRelationEntity: ChannelRelationEntity,
@@ -40,8 +41,8 @@ data class ChannelChildEntity @JvmOverloads constructor(
   val channel: ChannelEntity
     get() = channelDataEntity.channelEntity
 
-  val function: Int
-    get() = channelDataEntity.function.value
+  val function: SuplaFunction
+    get() = channelDataEntity.function
 
   val pumpSwitchChild: ChannelChildEntity?
     get() = children.firstOrNull { it.relationType == ChannelRelationType.PUMP_SWITCH }
