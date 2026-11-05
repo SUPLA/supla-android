@@ -25,8 +25,8 @@ import org.supla.android.R
 import org.supla.android.features.details.detailbase.base.ItemBundle
 import org.supla.android.features.details.detailbase.history.ui.View
 import org.supla.android.main.ViewModelHost
-import org.supla.android.main.topbar.RegisterTopBarIcon
-import org.supla.android.main.topbar.TopBarIcon
+import org.supla.android.main.topbar.RegisterTopBarAction
+import org.supla.android.main.topbar.TopBarAction
 
 @Composable
 fun HistoryDetailScreen(
@@ -41,7 +41,10 @@ fun HistoryDetailScreen(
     onResume = { viewModel.loadData(item.remoteId) },
     eventHandler = { handleEvent(it, context) }
   ) {
-    RegisterTopBarIcon(TopBarIcon.ReloadHistory) { viewModel.deleteAndDownloadData(item.remoteId) }
+    RegisterTopBarAction(
+      action = TopBarAction.HistoryReload,
+      handler = { viewModel.deleteAndDownloadData(item.remoteId) }
+    )
 
     viewModel.View(it)
 

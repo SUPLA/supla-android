@@ -18,10 +18,11 @@ package org.supla.android.main.topbar
  */
 
 sealed interface TopBarEvent {
-  data object Empty : TopBarEvent
   data object ReloadChartHistory : TopBarEvent
   data object OpenOcr : TopBarEvent
-  data object OpenSettings : TopBarEvent
+  data object DetailDimmerSettings : TopBarEvent
+  data object DetailElectricityMeterSettings : TopBarEvent
+  data object DetailImpulseCounterSettings : TopBarEvent
   data object DeleteLastMonth : TopBarEvent
   data object DeleteAll : TopBarEvent
   data object OpenProfileSelector : TopBarEvent

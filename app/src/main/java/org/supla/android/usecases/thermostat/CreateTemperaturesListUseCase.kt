@@ -26,10 +26,10 @@ import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.hvac.SuplaTemperatureControlType
 import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.images.ImageId
-import org.supla.android.lib.SuplaConst
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ListSecondValue
 import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.data.model.lists.IssueIcon
 import org.supla.core.shared.usecase.channel.GetChannelBatteryIconUseCase
 import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
@@ -70,7 +70,7 @@ class CreateTemperaturesListUseCase @Inject constructor(
 
       for (child in sortedChildren) {
         add(getTemperatureValue(child.channelDataEntity))
-        if (child.function == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
+        if (child.function == SuplaFunction.HUMIDITY_AND_TEMPERATURE) {
           add(getHumidityValue(child.channelDataEntity))
         }
       }
