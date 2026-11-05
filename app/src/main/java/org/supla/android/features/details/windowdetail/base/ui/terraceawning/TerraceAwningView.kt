@@ -42,6 +42,7 @@ import androidx.compose.ui.graphics.asAndroidPath
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.nativePaint
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.colorResource
@@ -132,7 +133,7 @@ fun TerraceAwningView(
 
 private object TerraceAwningDrawer {
 
-  private val paint = Paint().asFrameworkPaint()
+  private val paint = Paint().nativePaint
   private val path = Path()
 
   fun window(scope: DrawScope, windowDimens: RuntimeDimens, colors: TerraceAwningColors) {

@@ -17,8 +17,6 @@ package org.supla.android.core.notifications
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.Manifest
-import android.app.Activity
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -28,12 +26,9 @@ import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
-import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.work.ExistingWorkPolicy
 import com.google.firebase.messaging.FirebaseMessaging
@@ -62,7 +57,6 @@ private const val NOTIFICATION_BACKGROUND_CHANNEL_ID = BuildConfig.APPLICATION_I
 class NotificationsHelper @Inject constructor(
   @param:ApplicationContext private val context: Context,
   private val encryptedPreferences: EncryptedPreferences,
-  private val preferences: ApplicationPreferences,
   private val notificationManager: NotificationManager,
   private val workManagerProxy: WorkManagerProxy,
   private val notificationRepository: NotificationRepository
@@ -115,23 +109,6 @@ class NotificationsHelper @Inject constructor(
       UpdateTokenWorker.build("")
     }
     workManagerProxy.enqueueUniqueWork(UpdateTokenWorker.WORK_ID, ExistingWorkPolicy.KEEP, workRequest)
-  }
-
-  @RequiresApi(VERSION_CODES.TIRAMISU)
-  private fun setupNotificationPermission(activity: Activity, askPermissionCallback: () -> Unit) {
-    when {
-      ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED -> {
-        // do nothing, we have permission
-      }
-      activity.shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
-        // do nothing, user blocked notifications
-      }
-      else -> {
-        if (preferences.isNotificationsPopupDisplayed.not()) {
-          askPermissionCallback()
-        }
-      }
-    }
   }
 
   fun showNotification(context: Context, title: String, text: String, profileName: String?) {

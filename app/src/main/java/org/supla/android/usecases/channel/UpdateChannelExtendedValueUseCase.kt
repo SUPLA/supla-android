@@ -83,7 +83,7 @@ class UpdateChannelExtendedValueUseCase @Inject constructor(
             channelId = channelId,
             value = suplaChannelExtendedValue.toByteArray(),
             timerStartTime = suplaChannelExtendedValue.timerEstimatedEndDate?.let { dateProvider.currentDate() },
-            profileId = profile.id!!
+            profileId = profile.id
           )
         ).toSingle {
           UpdateExtendedValueResult(EntityUpdateResult.UPDATED, suplaChannelExtendedValue.timerEstimatedEndDate != null)

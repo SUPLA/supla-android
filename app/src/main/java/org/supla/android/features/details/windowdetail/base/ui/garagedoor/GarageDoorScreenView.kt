@@ -45,6 +45,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.nativePaint
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.onSizeChanged
@@ -135,7 +136,7 @@ fun GarageDoorScreenView(
 private object GarageDoorDrawer {
 
   private val path: Path = Path()
-  private val paint = Paint().asFrameworkPaint()
+  private val paint = Paint().nativePaint
 
   fun drawGarageBuilding(scope: DrawScope, dimens: RuntimeDimens, colors: GarageDoorScreenColors) {
     path.reset()
