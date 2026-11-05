@@ -64,7 +64,7 @@ class UpdateSceneUseCase @Inject constructor(
 
   private suspend fun insertScene(suplaScene: SuplaScene): Boolean {
     val profile = profileRepository.findActiveProfileKtx() ?: return false
-    val profileId = profile.id ?: return false
+    val profileId = profile.id
 
     sceneRepository.insert(
       SceneEntity(

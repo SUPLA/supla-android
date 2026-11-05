@@ -47,6 +47,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.nativePaint
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.AbstractComposeView
 import androidx.compose.ui.res.colorResource
@@ -77,11 +78,11 @@ class TimerProgressView @JvmOverloads constructor(
   }
 }
 
-val shadowedPaint = Paint().asFrameworkPaint().apply {
+val shadowedPaint = Paint().nativePaint.apply {
   style = android.graphics.Paint.Style.STROKE
   strokeCap = android.graphics.Paint.Cap.ROUND
 }
-val indeterminatePaint = Paint().asFrameworkPaint().apply {
+val indeterminatePaint = Paint().nativePaint.apply {
   style = android.graphics.Paint.Style.STROKE
   strokeCap = android.graphics.Paint.Cap.ROUND
 }

@@ -49,7 +49,7 @@ class LoadActiveProfileUrlUseCase @Inject constructor(
         }
 
         val serverUrl = if (profile.emailAuth) profile.serverForEmail else profile.serverForAccessId
-        if (serverUrl?.isEmpty() == false) {
+        if (serverUrl.isNotEmpty()) {
           CloudUrl.ServerUri(uriProxy.toUri("https://$serverUrl"))
         } else {
           CloudUrl.DefaultCloud

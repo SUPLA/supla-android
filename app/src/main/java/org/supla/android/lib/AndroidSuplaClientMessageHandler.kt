@@ -18,6 +18,7 @@ package org.supla.android.lib
  */
 
 import android.os.Handler
+import android.os.Looper
 import android.os.Message
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessageHandler
@@ -27,7 +28,7 @@ class AndroidSuplaClientMessageHandler : SuplaClientMessageHandler {
   private val scMsgHandler: Handler = ScMsgHandler()
   private val listeners: MutableList<SuplaClientMessageHandler.Listener> = mutableListOf()
 
-  private class ScMsgHandler : Handler() {
+  private class ScMsgHandler : Handler(Looper.getMainLooper()) {
     override fun handleMessage(msg: Message) {
       super.handleMessage(msg)
       if (msg.obj != null && msg.obj is SuplaClientMessage) {
