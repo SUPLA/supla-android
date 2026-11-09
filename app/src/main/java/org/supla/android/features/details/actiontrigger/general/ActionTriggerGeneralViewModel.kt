@@ -205,7 +205,7 @@ class ActionTriggerGeneralViewModel @Inject constructor(
       emptyList()
     }
     val temporaryUnlockActive = SuplaActionTriggerFlag.TEMPORARY_UNLOCK_ACTIVE in actionTriggerValue.flags
-    val lockButtonState = lockButtonState(actionTriggerValue.buttonMode, weeklyActive, temporaryUnlockActive)
+    val lockButtonState = lockButtonState(actionTriggerValue.buttonMode, weeklyActive, temporaryUnlockActive, offline)
     val showAllowTemporaryUnlock =
       SuplaChannelFlag.BUTTON_TEMPORARY_UNLOCK_SUPPORTED inside channel.flags &&
         actionTriggerValue.buttonMode in setOf(
@@ -217,7 +217,7 @@ class ActionTriggerGeneralViewModel @Inject constructor(
     currentTemporaryUnlockDurationS = weeklyActive.forTrue { scheduleConfig?.let(::currentProgramTemporaryUnlockDuration) }
 
     return ActionTriggerGeneralViewState(
-      deviceStateData = currentStateData(weeklyActive, actionTriggerValue.buttonMode),
+      deviceStateData = currentStateData(weeklyActive, actionTriggerValue.buttonMode, offline),
       programInfo = programInfo,
       operatingMode = operatingMode(channel.flags, weeklyActive),
       manualButtonDisabled = offline,
@@ -264,7 +264,8 @@ class ActionTriggerGeneralViewModel @Inject constructor(
   internal fun lockButtonState(
     buttonMode: SuplaButtonMode,
     weeklyActive: Boolean = false,
-    temporaryUnlockActive: Boolean
+    temporaryUnlockActive: Boolean,
+    offline: Boolean = false
   ): ActionTriggerLockButtonState {
     val buttonState = when (buttonMode) {
       SuplaButtonMode.LOCKED -> ActionTriggerLockButtonState(
@@ -284,16 +285,23 @@ class ActionTriggerGeneralViewModel @Inject constructor(
       )
     }
     return buttonState.copy(
-      lockDisabled = weeklyActive,
-      unlockDisabled = weeklyActive && buttonMode != SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED
+      lockDisabled = offline || weeklyActive,
+      unlockDisabled = offline || (weeklyActive && buttonMode != SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED)
     )
   }
 
   internal fun currentStateData(
     weeklyActive: Boolean,
-    mode: SuplaButtonMode = SuplaButtonMode.NOT_SET
+    mode: SuplaButtonMode = SuplaButtonMode.NOT_SET,
+    offline: Boolean = false
   ): ChannelCurrentData? =
-    if (weeklyActive) {
+    if (offline) {
+      ChannelCurrentData(
+        icon = null,
+        label = localizedString(R.string.details_timer_state_label),
+        value = localizedString(R.string.offline)
+      )
+    } else if (weeklyActive) {
       null
     } else {
       ChannelCurrentData(

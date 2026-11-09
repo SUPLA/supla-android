@@ -26,6 +26,7 @@ import org.supla.android.data.source.remote.hvac.SuplaButtonMode
 import org.supla.android.tools.SuplaThreading
 import org.supla.core.shared.data.model.channel.SuplaChannelFlag
 import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 
 class ActionTriggerGeneralViewModelTest {
 
@@ -55,6 +56,15 @@ class ActionTriggerGeneralViewModelTest {
   @Test
   fun `should not show current state outside manual mode`() {
     assertThat(viewModel.currentStateData(weeklyActive = true)).isNull()
+  }
+
+  @Test
+  fun `should show offline state when device is offline even with weekly schedule active`() {
+    val stateData = viewModel.currentStateData(weeklyActive = true, offline = true)
+
+    assertThat(stateData).isNotNull
+    assertThat(stateData!!.label).isEqualTo(localizedString(R.string.details_timer_state_label))
+    assertThat(stateData.value).isEqualTo(localizedString(R.string.offline))
   }
 
   @Test
@@ -122,6 +132,18 @@ class ActionTriggerGeneralViewModelTest {
     assertThat(buttonState.lockActive).isFalse()
     assertThat(buttonState.unlockActive).isTrue()
     assertThat(buttonState.showTemporaryUnlockIcon).isTrue()
+  }
+
+  @Test
+  fun `should disable lock and unlock buttons when device is offline`() {
+    val buttonState = viewModel.lockButtonState(
+      SuplaButtonMode.NOT_SET,
+      temporaryUnlockActive = false,
+      offline = true
+    )
+
+    assertThat(buttonState.lockDisabled).isTrue()
+    assertThat(buttonState.unlockDisabled).isTrue()
   }
 
   @Test
