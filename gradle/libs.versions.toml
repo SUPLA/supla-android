@@ -4,7 +4,7 @@ compileSdk = "37"
 targetSdk = "36"
 minSdk = "24"
 
-androidGradlePlugin = "9.5.0"
+androidGradlePlugin = "9.5.1"
 
 kotlin = "2.4.20"
 hilt = "2.60.1"
