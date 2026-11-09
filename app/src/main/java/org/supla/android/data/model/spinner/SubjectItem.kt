@@ -289,16 +289,16 @@ interface SubjectItemConversionScope {
       SuplaFunction.POWER_SWITCH,
       SuplaFunction.LIGHTSWITCH,
       SuplaFunction.STAIRCASE_TIMER,
-      SuplaFunction.DIMMER,
-      SuplaFunction.DIMMER_CCT,
-      SuplaFunction.RGB_LIGHTING,
-      SuplaFunction.DIMMER_AND_RGB_LIGHTING,
-      SuplaFunction.DIMMER_CCT_AND_RGB,
       SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS,
       SuplaFunction.HVAC_THERMOSTAT,
       SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
       SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
       SuplaFunction.HVAC_HRV, -> listOf(ActionId.TURN_ON, ActionId.TURN_OFF, ActionId.TOGGLE)
+      SuplaFunction.DIMMER,
+      SuplaFunction.DIMMER_CCT,
+      SuplaFunction.RGB_LIGHTING,
+      SuplaFunction.DIMMER_AND_RGB_LIGHTING,
+      SuplaFunction.DIMMER_CCT_AND_RGB -> listOf(ActionId.TURN_ON, ActionId.TURN_OFF)
       SuplaFunction.VALVE_OPEN_CLOSE,
       SuplaFunction.VALVE_PERCENTAGE -> listOf(ActionId.OPEN, ActionId.CLOSE)
       SuplaFunction.TERRACE_AWNING,

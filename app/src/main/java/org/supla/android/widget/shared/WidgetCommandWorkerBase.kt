@@ -70,6 +70,8 @@ abstract class WidgetCommandWorkerBase(
 
   protected abstract val notificationId: Int
 
+  override fun getForegroundInfo(): ForegroundInfo = createForegroundInfo()
+
   override fun doWork(): Result {
     Timber.i("Widget worker started")
 
