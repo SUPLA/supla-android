@@ -25,7 +25,7 @@ android {
     applicationId = "org.supla.android"
     minSdk = libs.versions.minSdk.get().toInt()
     targetSdk = libs.versions.targetSdk.get().toInt()
-    versionCode = 339
+    versionCode = 341
     versionName = "26.11"
 
     ndk {
