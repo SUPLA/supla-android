@@ -43,6 +43,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -213,5 +214,6 @@ fun DialogPositiveButton(
     text = stringResource(id = textRes).ucFirst(),
     enabled = enabled,
     modifier = modifier,
-    singleLine = true
+    singleLine = true,
+    textOverflow = TextOverflow.Ellipsis
   )

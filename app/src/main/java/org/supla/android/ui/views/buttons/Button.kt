@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.text.style.TextOverflow
 import org.supla.android.R
 
 @Composable
@@ -34,6 +35,7 @@ fun Button(
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
   singleLine: Boolean = true,
+  textOverflow: TextOverflow = TextOverflow.Clip,
   colors: ButtonColors = ButtonDefaults.buttonColors(contentColor = MaterialTheme.colorScheme.onPrimary),
   onClick: () -> Unit
 ) {
@@ -46,7 +48,8 @@ fun Button(
     Text(
       text = text,
       style = MaterialTheme.typography.labelLarge,
-      maxLines = if (singleLine) 1 else Int.MAX_VALUE
+      maxLines = if (singleLine) 1 else Int.MAX_VALUE,
+      overflow = textOverflow
     )
   }
 }
