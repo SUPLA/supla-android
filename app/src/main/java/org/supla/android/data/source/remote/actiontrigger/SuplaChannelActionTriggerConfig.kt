@@ -1,4 +1,4 @@
-package org.supla.android.features.details.actiontrigger.schedule.data
+package org.supla.android.data.source.remote.actiontrigger
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,13 +17,13 @@ package org.supla.android.features.details.actiontrigger.schedule.data
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.data.source.remote.hvac.SuplaButtonMode
-import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
+import org.supla.android.data.source.remote.SuplaChannelConfig
+import org.supla.android.tools.UsedFromNativeCode
 
-const val MAX_TEMPORARY_UNLOCK_DURATION_S = 64_800
-
-data class AtProgramSettingsData(
-  val program: SuplaScheduleProgram,
-  val selectedMode: SuplaButtonMode,
-  val buttonTemporaryUnlockDurationS: Int? = null
-)
+@UsedFromNativeCode
+data class SuplaChannelActionTriggerConfig(
+  override val remoteId: Int,
+  override val func: Int?,
+  override val crc32: Long,
+  val temporaryUnlockDurationSec: UShort
+) : SuplaChannelConfig(remoteId, func, crc32)

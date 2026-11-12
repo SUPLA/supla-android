@@ -42,6 +42,7 @@ import org.supla.android.ui.lists.LocalSlideableController
 import org.supla.android.ui.lists.SlideableController
 import org.supla.android.ui.lists.SlideableListItem
 import org.supla.android.ui.lists.message
+import org.supla.android.ui.views.list.listitem.ActionTriggerListItemView
 import org.supla.android.ui.views.list.listitem.DoubleIconValueListItemView
 import org.supla.android.ui.views.list.listitem.HeatpolThermostatListItemView
 import org.supla.android.ui.views.list.listitem.IconValueListItemView
@@ -189,6 +190,7 @@ fun ReorderableCollectionItemScope.DefaultItemView(
       is ListItem.HvacThermostatItem -> listScope.ThermostatListItemView(item, context)
       is ListItem.HeatpolThermostatItem -> listScope.HeatpolThermostatListItemView(item, context)
       is ListItem.DoubleValueItem -> listScope.DoubleIconValueListItemView(item, context)
+      is ListItem.ActionTriggerItem -> listScope.ActionTriggerListItemView(item, context)
       is ListItem.DefaultItem -> listScope.IconValueListItemView(item, context)
     }
   }
@@ -217,6 +219,16 @@ fun MainListScope.HeatpolThermostatListItemView(item: ListItem.HeatpolThermostat
 @Composable
 fun MainListScope.DoubleIconValueListItemView(item: ListItem.DoubleValueItem, context: Context) =
   DoubleIconValueListItemView(
+    data = item,
+    onInfoClick = { onInfoClick(item.remoteId) },
+    onIssueClick = { onIssueClick(it.message(context)) },
+    onItemClick = { onItemClick(item.remoteId) },
+    onTitleLongClick = { onTitleLongClick(item) }
+  )
+
+@Composable
+fun MainListScope.ActionTriggerListItemView(item: ListItem.ActionTriggerItem, context: Context) =
+  ActionTriggerListItemView(
     data = item,
     onInfoClick = { onInfoClick(item.remoteId) },
     onIssueClick = { onIssueClick(it.message(context)) },

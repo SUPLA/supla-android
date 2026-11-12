@@ -19,7 +19,6 @@ package org.supla.core.shared.usecase.channel
 
 import org.supla.core.shared.data.model.channel.ChannelWithChildren
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
-import org.supla.core.shared.usecase.channel.issues.ActionTriggerIssuesProvider
 import org.supla.core.shared.usecase.channel.issues.ChannelIssuesProvider
 import org.supla.core.shared.usecase.channel.issues.ContainerIssuesProvider
 import org.supla.core.shared.usecase.channel.issues.DigiglassIssuesProvider
@@ -38,8 +37,7 @@ class GetChannelSpecificIssuesUseCase {
     ValveIssuesProvider(),
     RelayIssuesProvider(),
     LifespanIssuesProvider(),
-    DigiglassIssuesProvider(),
-    ActionTriggerIssuesProvider()
+    DigiglassIssuesProvider()
   )
 
   operator fun invoke(channelWithChildren: ChannelWithChildren): List<ChannelIssueItem> {

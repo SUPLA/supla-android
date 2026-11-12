@@ -25,16 +25,21 @@ import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfi
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.features.details.actiontrigger.schedule.data.ActionTriggerScheduleProgram
 import org.supla.android.ui.views.channelstate.ChannelProgramData
+import org.supla.core.shared.data.model.function.actiontrigger.ActionTriggerValue
+import org.supla.core.shared.extensions.forFalse
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 
 class ActionTriggerProgramInfoBuilder(
   private val weeklyScheduleConfig: SuplaChannelWeeklyScheduleConfig,
-  private val dateProvider: DateProvider
+  private val dateProvider: DateProvider,
+  private val value: ActionTriggerValue
 ) {
   fun build(isAutomaticTimeSyncDisabled: Boolean = false): List<ChannelProgramData> {
     val schedule = weeklyScheduleConfig.schedule
-    if (schedule.isEmpty()) return emptyList()
+    if (schedule.isEmpty()) {
+      return emptyList()
+    }
 
     val minute = dateProvider.currentMinute()
     val currentDay = dateProvider.currentDayOfWeek()
@@ -44,10 +49,12 @@ class ActionTriggerProgramInfoBuilder(
         entry.hour == currentHour &&
         entry.quarterOfHour == QuarterOfHour.from(minute)
     }
-    if (currentEntryIndex < 0) return emptyList()
+    if (currentEntryIndex < 0) {
+      return emptyList()
+    }
 
     val currentProgram = schedule[currentEntryIndex].program
-    val currentDescription = description(currentProgram) ?: return emptyList()
+    val currentDescription = currentDescription(currentProgram) ?: return emptyList()
     var nextProgram: SuplaScheduleProgram? = null
     var quartersBeforeNextProgram = 0
 
@@ -60,12 +67,14 @@ class ActionTriggerProgramInfoBuilder(
       quartersBeforeNextProgram++
     }
 
-    val nextDescription = nextProgram?.let(::description)
+    val nextDescription = nextProgram?.let(::nextDescription)
     val currentInfo = ChannelProgramData(
       type = ChannelProgramData.Type.CURRENT,
       time = nextDescription?.let {
-        val minutesToNextProgram = quartersBeforeNextProgram * 15 + (15 - minute % 15)
-        localizedString(R.string.program_info_time, ValuesFormatter.getHourWithMinutes(minutesToNextProgram))
+        value.temporaryUnlockActive.forFalse {
+          val minutesToNextProgram = quartersBeforeNextProgram * 15 + (15 - minute % 15)
+          localizedString(R.string.program_info_time, ValuesFormatter.getHourWithMinutes(minutesToNextProgram))
+        }
       },
       description = currentDescription
     )
@@ -77,7 +86,19 @@ class ActionTriggerProgramInfoBuilder(
     return listOfNotNull(currentInfo, nextInfo)
   }
 
-  private fun description(program: SuplaScheduleProgram): LocalizedString? =
+  private fun currentDescription(program: SuplaScheduleProgram): LocalizedString? =
+    if (program == SuplaScheduleProgram.OFF) {
+      ActionTriggerScheduleProgram.DEFAULT.label
+    } else if (value.temporaryUnlockActive) {
+      localizedString(R.string.action_trigger_temporary_unlocked)
+    } else {
+      weeklyScheduleConfig.programConfigurations
+        .firstOrNull { it.program == program }
+        ?.let { ActionTriggerScheduleProgram(it) }
+        ?.label
+    }
+
+  private fun nextDescription(program: SuplaScheduleProgram): LocalizedString? =
     if (program == SuplaScheduleProgram.OFF) {
       ActionTriggerScheduleProgram.DEFAULT.label
     } else {

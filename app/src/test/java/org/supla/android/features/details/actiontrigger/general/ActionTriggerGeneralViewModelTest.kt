@@ -49,7 +49,8 @@ class ActionTriggerGeneralViewModelTest {
     // then
     assertThat(stateData).isNotNull
     assertThat(stateData!!.icon).isNull()
-    assertThat(stateData.label).isEqualTo(LocalizedString.WithResourceAndArguments(R.string.details_timer_state_label))
+    assertThat(stateData.label)
+      .isEqualTo(LocalizedString.WithFormat("%s:", listOf(localizedString(R.string.action_trigger_schedule_button_mode))))
     assertThat(stateData.value).isEqualTo(LocalizedString.WithResourceAndArguments(R.string.general_unlocked))
   }
 
@@ -59,11 +60,23 @@ class ActionTriggerGeneralViewModelTest {
   }
 
   @Test
+  fun `should show temporary unlocked state when temporary unlock is active`() {
+    val stateData = viewModel.currentStateData(
+      weeklyActive = false,
+      temporaryUnlockActive = true,
+      mode = SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED
+    )
+
+    assertThat(stateData?.value).isEqualTo(localizedString(R.string.action_trigger_temporary_unlocked))
+  }
+
+  @Test
   fun `should show offline state when device is offline even with weekly schedule active`() {
     val stateData = viewModel.currentStateData(weeklyActive = true, offline = true)
 
     assertThat(stateData).isNotNull
-    assertThat(stateData!!.label).isEqualTo(localizedString(R.string.details_timer_state_label))
+    assertThat(stateData!!.label)
+      .isEqualTo(LocalizedString.WithFormat("%s:", listOf(localizedString(R.string.action_trigger_schedule_button_mode))))
     assertThat(stateData.value).isEqualTo(localizedString(R.string.offline))
   }
 
@@ -150,6 +163,7 @@ class ActionTriggerGeneralViewModelTest {
   fun `should open unlock dialog with current schedule duration`() {
     viewModel.setPrivateField("mode", SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED)
     viewModel.setPrivateField("currentTemporaryUnlockDurationS", 300)
+    viewModel.setPrivateField("defaultTemporaryUnlockDurationS", 600)
 
     viewModel.onUnlock()
 
@@ -158,9 +172,35 @@ class ActionTriggerGeneralViewModelTest {
   }
 
   @Test
+  fun `should use default temporary unlock duration when schedule duration is unavailable`() {
+    viewModel.setPrivateField("mode", SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED)
+    viewModel.setPrivateField("currentTemporaryUnlockDurationS", null)
+    viewModel.setPrivateField("defaultTemporaryUnlockDurationS", 600)
+
+    viewModel.onUnlock()
+
+    assertThat(viewModel.getViewState().value.unlockDialog)
+      .isEqualTo(UnlockDialogState(temporaryUnlockDurationS = 600, unlockTemporaryAllowed = true))
+  }
+
+  @Test
+  fun `should disable temporary unlock when selected duration is changed to zero`() {
+    viewModel.setPrivateField("mode", SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED)
+    viewModel.setPrivateField("currentTemporaryUnlockDurationS", null)
+    viewModel.setPrivateField("defaultTemporaryUnlockDurationS", 600)
+
+    viewModel.onUnlock()
+    viewModel.onUnlockDialogDurationChange(0)
+
+    assertThat(viewModel.getViewState().value.unlockDialog)
+      .isEqualTo(UnlockDialogState(temporaryUnlockDurationS = 0, unlockTemporaryAllowed = false))
+  }
+
+  @Test
   fun `should disable temporary unlock when current schedule duration is zero`() {
     viewModel.setPrivateField("mode", SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED)
     viewModel.setPrivateField("currentTemporaryUnlockDurationS", 0)
+    viewModel.setPrivateField("defaultTemporaryUnlockDurationS", 600)
 
     viewModel.onUnlock()
 

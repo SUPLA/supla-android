@@ -46,6 +46,7 @@ import org.supla.android.images.ImageId
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.ui.lists.ListOnlineState
 import org.supla.android.ui.lists.channelissues.ChannelIssuesView
+import org.supla.android.ui.lists.sensordata.IssueIconBlock
 import org.supla.android.ui.lists.sensordata.RelatedChannelData
 import org.supla.android.ui.lists.sensordata.SensorsItemsView
 import org.supla.android.ui.views.buttons.supla.SuplaButton
@@ -160,7 +161,7 @@ private fun Preview() {
             icon = ImageId(R.drawable.fnc_container_level_sensor_on),
             caption = LocalizedString.WithId(LocalizedStringId.CHANNEL_CAPTION_CONTAINER_LEVEL_SENSOR),
             userCaption = "",
-            batteryIcon = IssueIcon.Battery50,
+            iconsBlock = { IssueIconBlock(IssueIcon.Battery50) },
             showChannelStateIcon = true
           ),
           RelatedChannelData.Visible(
@@ -170,7 +171,7 @@ private fun Preview() {
             icon = ImageId(R.drawable.fnc_container_level_sensor_off),
             caption = LocalizedString.WithId(LocalizedStringId.CHANNEL_CAPTION_CONTAINER_LEVEL_SENSOR),
             userCaption = "",
-            batteryIcon = null,
+            iconsBlock = null,
             showChannelStateIcon = false
           ),
           RelatedChannelData.Invisible
@@ -201,7 +202,7 @@ private fun Preview_NoLevel() {
             icon = ImageId(R.drawable.fnc_container_level_sensor_on),
             caption = LocalizedString.WithId(LocalizedStringId.CHANNEL_CAPTION_CONTAINER_LEVEL_SENSOR),
             userCaption = "",
-            batteryIcon = IssueIcon.Battery50,
+            iconsBlock = { IssueIconBlock(IssueIcon.Battery50) },
             showChannelStateIcon = true
           ),
           RelatedChannelData.Invisible,
@@ -212,7 +213,7 @@ private fun Preview_NoLevel() {
             icon = ImageId(R.drawable.fnc_container_level_sensor_off),
             caption = LocalizedString.WithId(LocalizedStringId.CHANNEL_CAPTION_CONTAINER_LEVEL_SENSOR),
             userCaption = "",
-            batteryIcon = null,
+            iconsBlock = null,
             showChannelStateIcon = false
           )
         ),

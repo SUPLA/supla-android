@@ -17,23 +17,38 @@ package org.supla.android.ui.views.forms
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
+import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.details.switchdetail.timer.TimeValues
+import org.supla.android.tools.SuplaPreview
 
 @Composable
 fun TimePicker(
   timeInSeconds: Int,
   onTimeChanged: (Int) -> Unit,
   modifier: Modifier = Modifier,
+  enabled: Boolean = true,
   maxTimeInSeconds: Int = 86_399
 ) {
   val maxTime = maxTimeInSeconds.coerceAtLeast(0)
@@ -45,7 +60,7 @@ fun TimePicker(
   val maxSeconds = (maxTime - values.hours * 3600 - values.minutes * 60).coerceIn(0, 59)
   val secondsRange = 0..maxSeconds
 
-  Box(modifier = modifier) {
+  Box(modifier = modifier.width(IntrinsicSize.Max).height(IntrinsicSize.Max)) {
     NumberPickerHighlight()
     Row(
       horizontalArrangement = Arrangement.spacedBy(Distance.default),
@@ -56,20 +71,51 @@ fun TimePicker(
       NumberPicker(
         range = hoursRange,
         selectedValue = values.hours,
+        enabled = enabled,
         formatter = { context, value -> context.resources.getQuantityString(R.plurals.hour_pattern, value, value) },
         onValueChanged = { onTimeChanged(it.times(3600) + values.minutes.times(60) + values.seconds) }
       )
       NumberPicker(
         range = minutesRange,
         selectedValue = values.minutes,
+        enabled = enabled,
         formatter = { context, value -> context.resources.getQuantityString(R.plurals.minute_pattern, value, value) },
         onValueChanged = { onTimeChanged(values.hours.times(3600) + it.times(60) + values.seconds) }
       )
       NumberPicker(
         range = secondsRange,
         selectedValue = values.seconds,
+        enabled = enabled,
         formatter = { context, value -> context.resources.getQuantityString(R.plurals.second_pattern, value, value) },
         onValueChanged = { onTimeChanged(values.hours.times(3600) + values.minutes.times(60) + it) }
+      )
+    }
+    if (!enabled) {
+      Box(modifier = Modifier.fillMaxSize().clickable(onClick = {}))
+    }
+  }
+}
+
+@SuplaPreview
+@Composable
+private fun TimePickerPreview() {
+  SuplaTheme {
+    var enabledTime by remember { mutableIntStateOf(7 * 3600 + 30 * 60) }
+    var disabledTime by remember { mutableIntStateOf(12 * 3600) }
+
+    Column(
+      modifier = Modifier.padding(Distance.default),
+      verticalArrangement = Arrangement.spacedBy(Distance.default)
+    ) {
+      TimePicker(
+        timeInSeconds = enabledTime,
+        onTimeChanged = { enabledTime = it },
+        modifier = Modifier.fillMaxWidth()
+      )
+      TimePicker(
+        timeInSeconds = disabledTime,
+        onTimeChanged = { disabledTime = it },
+        enabled = false
       )
     }
   }
