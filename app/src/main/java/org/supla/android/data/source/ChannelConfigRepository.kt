@@ -25,6 +25,7 @@ import org.supla.android.data.source.local.dao.ChannelConfigDao
 import org.supla.android.data.source.local.entity.ChannelConfigEntity
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.SuplaChannelConfig
+import org.supla.android.data.source.remote.actiontrigger.SuplaChannelActionTriggerConfig
 import org.supla.android.data.source.remote.container.SuplaChannelContainerConfig
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeMeasurementConfig
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeMeterConfig
@@ -63,6 +64,10 @@ class ChannelConfigRepository @Inject constructor(
   }
 
   fun insertOrUpdate(profileId: Long, config: SuplaChannelHvacConfig): Completable {
+    return channelConfigDao.insertOrUpdate(config.toEntity(profileId, gson))
+  }
+
+  fun insertOrUpdate(profileId: Long, config: SuplaChannelActionTriggerConfig): Completable {
     return channelConfigDao.insertOrUpdate(config.toEntity(profileId, gson))
   }
 
@@ -146,5 +151,14 @@ private fun SuplaChannelHvacConfig.toEntity(profileId: Long, gson: Gson): Channe
     profileId = profileId,
     config = gson.toJson(this),
     configType = ChannelConfigType.HVAC,
+    configCrc32 = crc32
+  )
+
+private fun SuplaChannelActionTriggerConfig.toEntity(profileId: Long, gson: Gson): ChannelConfigEntity =
+  ChannelConfigEntity(
+    channelId = remoteId,
+    profileId = profileId,
+    config = gson.toJson(this),
+    configType = ChannelConfigType.ACTION_TRIGGER,
     configCrc32 = crc32
   )

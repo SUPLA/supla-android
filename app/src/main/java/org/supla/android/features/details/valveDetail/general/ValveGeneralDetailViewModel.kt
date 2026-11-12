@@ -33,6 +33,7 @@ import org.supla.android.extensions.subscribeBy
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaThreading
+import org.supla.android.ui.lists.sensordata.IssueIconBlock
 import org.supla.android.ui.lists.sensordata.RelatedChannelData
 import org.supla.android.ui.views.buttons.SwitchButtonState
 import org.supla.android.usecases.channel.ActionException
@@ -145,7 +146,7 @@ class ValveGeneralDetailViewModel @Inject constructor(
       icon = getChannelIconUseCase(channelDataEntity),
       caption = getCaptionUseCase(channelDataEntity.shareable),
       userCaption = channel.caption,
-      batteryIcon = getChannelBatteryIconUseCase(channelDataEntity.shareable),
+      iconsBlock = { IssueIconBlock(getChannelBatteryIconUseCase(channelDataEntity.shareable)) },
       showChannelStateIcon = channelDataEntity.showInfo
     )
 

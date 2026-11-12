@@ -943,8 +943,8 @@
   <string name="general_locked">Zablokowany</string>
   <string name="general_unlocked">Odblokowany</string>
   <string name="at_allow_temporary_unlock">Zezwalaj na tymczasowe odblokowanie</string>
-  <string name="at_locked_temporary_unlock_allowed">Zablokowany z możliwością chwilowego odblokowania</string>
-  <string name="channel_caption_action_trigger">Wyzwalacz akcji</string>
+  <string name="at_locked_temporary_unlock_allowed">Zablokowany (chwilowe odblokowanie)</string>
+  <string name="channel_caption_action_trigger">Przycisk</string>
   <string name="action_trigger_list_related_title">Powiązane przyciski</string>
   <string name="toolbar_search_hint">Wpisz 2 znaki, aby wyszukać…</string>
   <string name="details_timer_select_program">Wybierz program</string>
@@ -990,7 +990,11 @@
   <string name="relay_schedule_program_first_duration">Pierwszy czas trwania (%1$s)</string>
   <string name="relay_schedule_program_second_duration">Drugi czas trwania (%1$s)</string>
   <string name="action_trigger_schedule_temporary_unlock_duration">Czas chwilowego odblokowania</string>
-  <string name="action_trigger_unlock_dialog_title">Odblokuj wyzwalacz akcji</string>
+  <string name="action_trigger_schedule_button_mode">Tryb przycisku</string>
+  <string name="action_trigger_schedule_default_temporary_unlock_duration">Domyślny</string>
+  <string name="action_trigger_schedule_other_temporary_unlock_duration">Własny</string>
+  <string name="action_trigger_unlock_dialog_title">Odblokuj przycisk</string>
   <string name="action_trigger_unlock_temporarily">Odblokuj tymczasowo</string>
   <string name="details_buttons">Przyciski</string>
+  <string name="action_trigger_temporary_unlocked">tymczasowo odblokowany</string>
 </resources>

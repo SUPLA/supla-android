@@ -114,6 +114,9 @@ class ProvideChannelDetailTypeUseCase @Inject constructor() : BaseDetailTypeProv
       if (SuplaChannelFlag.WEEKLY_SCHEDULE inside channelWithChildren.flags) {
         add(DetailPage.GATE_SCHEDULE)
       }
+      if (channelWithChildren.hasActionTriggers) {
+        add(DetailPage.ACTION_TRIGGER_LIST)
+      }
     }
 
   private fun getActionTriggerDetailPages(channelWithChildren: ChannelWithChildren): List<DetailPage> =

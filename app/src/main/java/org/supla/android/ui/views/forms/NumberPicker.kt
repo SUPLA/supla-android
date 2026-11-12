@@ -18,7 +18,11 @@ package org.supla.android.ui.views.forms
  */
 
 import android.content.Context
+import android.os.Build
 import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.NumberPicker
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -34,11 +38,13 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import org.supla.android.R
+import org.supla.core.shared.extensions.forTrue
 
 @Composable
 fun NumberPicker(
   range: IntRange,
   selectedValue: Int = 0,
+  enabled: Boolean = true,
   formatter: (Context, Int) -> String = { _, i -> "$i" },
   onValueChanged: (Int) -> Unit = { }
 ) {
@@ -51,7 +57,8 @@ fun NumberPicker(
       numberPicker.maxValue = range.last
       numberPicker.displayedValues = range.map { formatter(context, it) }.toTypedArray()
       numberPicker.value = selectedValue.coerceIn(range)
-      numberPicker.setOnValueChangedListener { _, _, newValue -> onValueChanged(newValue) }
+      numberPicker.enabled = enabled
+      numberPicker.setOnValueChangedListener { _, _, newValue -> enabled.forTrue { onValueChanged(newValue) } }
 
       view
     },
@@ -61,7 +68,8 @@ fun NumberPicker(
       val rangeChanged = numberPicker.minValue != range.first || numberPicker.maxValue != range.last
       val valuesChanged = numberPicker.displayedValues?.contentEquals(formattedValues) != true
 
-      numberPicker.setOnValueChangedListener { _, _, newValue -> onValueChanged(newValue) }
+      numberPicker.enabled = enabled
+      numberPicker.setOnValueChangedListener { _, _, newValue -> enabled.forTrue { onValueChanged(newValue) } }
 
       if (rangeChanged || valuesChanged) {
         val temporaryMin = minOf(numberPicker.minValue, range.first)
@@ -92,3 +100,27 @@ fun BoxScope.NumberPickerHighlight() =
       )
       .align(Alignment.Center)
   )
+
+private var NumberPicker.enabled: Boolean
+  get() = false
+  set(value) {
+    val color = if (value) R.color.on_surface else R.color.disabled
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      textColor = context.resources.getColor(color, null)
+    } else {
+      findEditText()?.setTextColor(context.resources.getColor(color, null))
+    }
+  }
+
+private fun View.findEditText(): EditText? {
+  if (this is EditText) return this
+
+  if (this is ViewGroup) {
+    for (index in 0 until childCount) {
+      getChildAt(index).findEditText()?.let { return it }
+    }
+  }
+
+  return null
+}
