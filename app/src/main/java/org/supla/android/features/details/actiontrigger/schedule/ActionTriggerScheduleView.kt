@@ -29,6 +29,7 @@ import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.data.source.remote.hvac.label
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.features.details.actiontrigger.schedule.data.ActionTriggerScheduleProgram
+import org.supla.android.features.details.actiontrigger.schedule.data.AtProgramDurationOption
 import org.supla.android.features.details.actiontrigger.schedule.ui.dialogs.AtProgramSettingsDialog
 import org.supla.android.features.details.actiontrigger.schedule.ui.dialogs.AtProgramSettingsScope
 import org.supla.android.tools.SuplaPreview
@@ -65,6 +66,7 @@ private val previewScope = object : ActionTriggerScheduleScope {
   override fun onQuartersSelectionFinish() {}
   override fun onAtProgramSettingsModeChange(mode: SuplaButtonMode) {}
   override fun onAtProgramSettingsDurationChange(value: Int) {}
+  override fun onAtProgramSettingsDefaultDurationChange(option: AtProgramDurationOption) {}
   override fun onAtProgramSettingsDismiss() {}
   override fun onAtProgramSettingsSave() {}
   override fun onScheduleTableLongPress(key: ScheduleDetailEntryBoxKey?) {}

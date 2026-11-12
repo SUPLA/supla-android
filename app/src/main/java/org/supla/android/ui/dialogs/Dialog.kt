@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -92,25 +93,30 @@ fun DialogHeader(title: String) =
   )
 
 @Composable
-fun DialogButtonsRow(content: @Composable RowScope.() -> Unit) =
+fun DialogButtonsRow(
+  spacing: Dp = Distance.small,
+  padding: PaddingValues = PaddingValues(all = Distance.default),
+  content: @Composable RowScope.() -> Unit
+) =
   Row(
     modifier = Modifier
       .fillMaxWidth()
-      .padding(all = dimensionResource(id = R.dimen.distance_default)),
+      .padding(padding),
     content = content,
-    horizontalArrangement = Arrangement.spacedBy(16.dp),
+    horizontalArrangement = Arrangement.spacedBy(spacing),
     verticalAlignment = Alignment.CenterVertically
   )
 
 @Composable
 fun DialogButtonsColumn(
   spacing: Dp = Distance.small,
+  padding: PaddingValues = PaddingValues(all = Distance.default),
   content: @Composable ColumnScope.() -> Unit
 ) =
   Column(
     modifier = Modifier
       .fillMaxWidth()
-      .padding(all = dimensionResource(id = R.dimen.distance_default)),
+      .padding(padding),
     content = content,
     verticalArrangement = Arrangement.spacedBy(spacing),
     horizontalAlignment = Alignment.CenterHorizontally
@@ -123,67 +129,61 @@ fun DialogButtons(
   processing: Boolean = false,
   positiveEnabled: Boolean = true,
   @StringRes negativeTextRes: Int = R.string.cancel,
-  @StringRes positiveTextRes: Int = R.string.ok
+  @StringRes positiveTextRes: Int = R.string.ok,
+  padding: PaddingValues = PaddingValues(all = Distance.default)
 ) {
   if (LocalConfiguration.current.isPhoneLandscape) {
-    DialogButtonsRow {
-      DialogButtonComponents(
-        onNegativeClick = onNegativeClick,
-        onPositiveClick = onPositiveClick,
+    DialogButtonsRow(padding = padding) {
+      DialogNegativeButton(
+        onClick = onNegativeClick,
         modifier = Modifier.weight(1f),
-        processing = processing,
-        positiveEnabled = positiveEnabled,
-        negativeTextRes = negativeTextRes,
-        positiveTextRes = positiveTextRes
+        enabled = !processing,
+        textRes = negativeTextRes
       )
+
+      if (processing) {
+        Box(modifier = Modifier.weight(1f)) {
+          CircularProgressIndicator(
+            modifier = Modifier
+              .align(Alignment.Center)
+              .size(32.dp)
+          )
+        }
+      } else {
+        DialogPositiveButton(
+          onClick = onPositiveClick,
+          modifier = Modifier.weight(1f),
+          enabled = positiveEnabled,
+          textRes = positiveTextRes
+        )
+      }
     }
   } else {
-    DialogButtonsColumn {
-      DialogButtonComponents(
-        onNegativeClick = onNegativeClick,
-        onPositiveClick = onPositiveClick,
-        processing = processing,
+    DialogButtonsColumn(padding = padding) {
+      if (processing) {
+        Box(modifier = Modifier.fillMaxWidth()) {
+          CircularProgressIndicator(
+            modifier = Modifier
+              .align(Alignment.Center)
+              .size(32.dp)
+          )
+        }
+      } else {
+        DialogPositiveButton(
+          onClick = onPositiveClick,
+          modifier = Modifier.fillMaxWidth(),
+          enabled = positiveEnabled,
+          textRes = positiveTextRes
+        )
+      }
+
+      DialogNegativeButton(
+        onClick = onNegativeClick,
         modifier = Modifier.fillMaxWidth(),
-        positiveEnabled = positiveEnabled,
-        negativeTextRes = negativeTextRes,
-        positiveTextRes = positiveTextRes
+        enabled = !processing,
+        textRes = negativeTextRes
       )
     }
-  }
-}
-
-@Composable
-private fun DialogButtonComponents(
-  onNegativeClick: () -> Unit,
-  onPositiveClick: () -> Unit,
-  modifier: Modifier = Modifier,
-  processing: Boolean = false,
-  positiveEnabled: Boolean = true,
-  @StringRes negativeTextRes: Int = R.string.cancel,
-  @StringRes positiveTextRes: Int = R.string.ok
-) {
-  DialogNegativeButton(
-    onClick = onNegativeClick,
-    modifier = modifier,
-    enabled = !processing,
-    textRes = negativeTextRes
-  )
-
-  if (processing) {
-    Box(modifier = modifier) {
-      CircularProgressIndicator(
-        modifier = Modifier
-          .align(Alignment.Center)
-          .size(32.dp)
-      )
-    }
-  } else {
-    DialogPositiveButton(
-      onClick = onPositiveClick,
-      modifier = modifier,
-      enabled = positiveEnabled,
-      textRes = positiveTextRes
-    )
   }
 }
 

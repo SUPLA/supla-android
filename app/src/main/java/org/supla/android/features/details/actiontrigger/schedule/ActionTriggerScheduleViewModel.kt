@@ -29,6 +29,7 @@ import org.supla.android.data.source.local.calendar.QuarterOfHour
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.ConfigResult
 import org.supla.android.data.source.remote.SuplaDeviceConfig
+import org.supla.android.data.source.remote.actiontrigger.SuplaChannelActionTriggerConfig
 import org.supla.android.data.source.remote.hvac.SuplaButtonMode
 import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
@@ -38,11 +39,11 @@ import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.extensions.subscribeBy
 import org.supla.android.features.details.actiontrigger.schedule.data.ActionTriggerScheduleProgram
-import org.supla.android.features.details.actiontrigger.schedule.data.AtProgramSettingsData
+import org.supla.android.features.details.actiontrigger.schedule.data.AtProgramDurationOption
+import org.supla.android.features.details.actiontrigger.schedule.data.AtProgramSettingsDialogState
 import org.supla.android.features.details.actiontrigger.schedule.data.MAX_TEMPORARY_UNLOCK_DURATION_S
 import org.supla.android.features.details.actiontrigger.schedule.extensions.toWeeklyScheduleConfigChange
 import org.supla.android.features.details.actiontrigger.schedule.extensions.viewActionTriggerProgramsList
-import org.supla.android.features.details.actiontrigger.schedule.ui.dialogs.AtProgramSettingsViewState
 import org.supla.android.features.details.schedule.DelayedWeeklyScheduleConfigSubject
 import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.views.schedule.ScheduleDetailEntryBoxKey
@@ -76,6 +77,7 @@ class ActionTriggerScheduleViewModel @Inject constructor(
 
   private val configReloadSubject = PublishSubject.create<Unit>()
   private var remoteId: Int = 0
+  private var defaultTemporaryUnlockDurationS: Int = 0
   private var changing: Boolean = false
   private var lastInteractionTime: Long? = null
 
@@ -108,8 +110,13 @@ class ActionTriggerScheduleViewModel @Inject constructor(
     Observable.combineLatest(
       channelConfigEventsManager.observerConfig(remoteId)
         .filter { it.config is SuplaChannelWeeklyScheduleConfig },
+      channelConfigEventsManager.observerConfig(remoteId)
+        .filter { it.config is SuplaChannelActionTriggerConfig },
       deviceConfigEventsManager.observerConfig(deviceId)
-    ) { weeklyConfig, deviceConfig ->
+    ) { weeklyConfig, triggerConfig, deviceConfig ->
+      if (triggerConfig.result == ConfigResult.RESULT_TRUE && triggerConfig.config is SuplaChannelActionTriggerConfig) {
+        defaultTemporaryUnlockDurationS = triggerConfig.config.temporaryUnlockDurationSec.toInt()
+      }
       LoadedData(
         weeklyScheduleConfig = weeklyConfig.config as SuplaChannelWeeklyScheduleConfig,
         weeklyScheduleResult = weeklyConfig.result,
@@ -145,38 +152,58 @@ class ActionTriggerScheduleViewModel @Inject constructor(
     updateState { state ->
       val programConfiguration = state.editorState.programs.firstOrNull { it.program == program }
         ?: return@updateState state
-      val data = AtProgramSettingsData(
+      val storedDuration = programConfiguration.buttonTemporaryUnlockDurationS ?: 0
+      val durationOptions = AtProgramDurationOption.entries
+      val activeDuration = if (storedDuration == 0) durationOptions.first() else durationOptions.last()
+
+      val data = AtProgramSettingsDialogState(
         program = program,
         selectedMode = programConfiguration.buttonMode,
-        buttonTemporaryUnlockDurationS = programConfiguration.buttonTemporaryUnlockDurationS
+        durationOptions = durationOptions,
+        activeDuration = activeDuration,
+        currentTemporaryUnlockDurationS = if (storedDuration == 0) defaultTemporaryUnlockDurationS else storedDuration,
+        savedTemporaryUnlockDurationS = storedDuration
       )
 
-      state.copy(programSettings = AtProgramSettingsViewState(data))
+      state.copy(programSettings = data)
     }
   }
 
   override fun onAtProgramSettingsModeChange(mode: SuplaButtonMode) {
     updateState { state ->
-      val settings = state.programSettings ?: return@updateState state
-      if (mode !in ALLOWED_MODES) {
-        return@updateState state
-      }
-
-      val data = settings.data.copy(
-        selectedMode = mode,
-        buttonTemporaryUnlockDurationS = (mode == SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED)
-          .forTrue { settings.data.buttonTemporaryUnlockDurationS }
+      state.copy(
+        programSettings = state.programSettings?.copy(
+          selectedMode = mode,
+          currentTemporaryUnlockDurationS = (mode == SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED)
+            .forTrue { state.programSettings.currentTemporaryUnlockDurationS },
+        )
       )
-      state.copy(programSettings = AtProgramSettingsViewState(data))
     }
   }
 
   override fun onAtProgramSettingsDurationChange(value: Int) {
-    val duration = value.coerceIn(0, MAX_TEMPORARY_UNLOCK_DURATION_S)
     updateState { state ->
-      val settings = state.programSettings ?: return@updateState state
-      val data = settings.data.copy(buttonTemporaryUnlockDurationS = duration)
-      state.copy(programSettings = AtProgramSettingsViewState(data))
+      val duration = value.coerceIn(0, MAX_TEMPORARY_UNLOCK_DURATION_S)
+      state.copy(
+        programSettings = state.programSettings?.copy(
+          currentTemporaryUnlockDurationS = duration,
+          savedTemporaryUnlockDurationS = duration
+        )
+      )
+    }
+  }
+
+  override fun onAtProgramSettingsDefaultDurationChange(option: AtProgramDurationOption) {
+    updateState { state ->
+      val duration = option.isDefault.forTrue { defaultTemporaryUnlockDurationS }
+        ?: state.programSettings?.savedTemporaryUnlockDurationS ?: 0
+
+      state.copy(
+        programSettings = state.programSettings?.copy(
+          activeDuration = option,
+          currentTemporaryUnlockDurationS = duration
+        )
+      )
     }
   }
 
@@ -186,17 +213,12 @@ class ActionTriggerScheduleViewModel @Inject constructor(
 
   override fun onAtProgramSettingsSave() {
     updateState { state ->
-      val settings = state.programSettings ?: return@updateState state
-      val data = settings.data
+      val data = state.programSettings ?: return@updateState state
       val updatedProgram = ActionTriggerScheduleProgram(
         SuplaWeeklyScheduleProgram(
           program = data.program,
           buttonMode = data.selectedMode,
-          buttonTemporaryUnlockDurationS = if (data.selectedMode == SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED) {
-            data.buttonTemporaryUnlockDurationS
-          } else {
-            0
-          }
+          buttonTemporaryUnlockDurationS = data.selectedDuration
         )
       )
       val newState = state.copy(
@@ -314,7 +336,10 @@ class ActionTriggerScheduleViewModel @Inject constructor(
   }
 
   private fun reloadConfig(remoteId: Int) {
-    suplaClientProvider.provide()?.getChannelConfig(remoteId, ChannelConfigType.WEEKLY_SCHEDULE)
+    suplaClientProvider.provide()?.let { client ->
+      client.getChannelConfig(remoteId, ChannelConfigType.WEEKLY_SCHEDULE)
+      client.getChannelConfig(remoteId, ChannelConfigType.DEFAULT)
+    }
   }
 
   private fun onConfigLoaded(data: LoadedData) {
@@ -365,5 +390,5 @@ data class ActionTriggerScheduleViewState(
   val loadingState: LoadingTimeoutManager.LoadingState = LoadingTimeoutManager.LoadingState(),
   val editorState: WeeklyScheduleEditorState<ActionTriggerScheduleProgram> = WeeklyScheduleEditorState(),
   val quarterSelection: QuartersSelectionData? = null,
-  val programSettings: AtProgramSettingsViewState? = null
+  val programSettings: AtProgramSettingsDialogState? = null
 ) : ViewState()

@@ -286,7 +286,7 @@ private fun PreviewGroup() {
             icon = ImageId(R.drawable.fnc_garage_door_closed),
             caption = LocalizedString.Constant("Garage Door"),
             userCaption = "",
-            batteryIcon = null,
+            iconsBlock = null,
             showChannelStateIcon = true
           ),
           RelatedChannelData.Invisible

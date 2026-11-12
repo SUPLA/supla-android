@@ -28,7 +28,8 @@ enum class ChannelConfigType(val value: Int) {
   GENERAL_PURPOSE_METER(4),
   FACADE_BLIND(5),
   CONTAINER(6),
-  HVAC(7);
+  HVAC(7),
+  ACTION_TRIGGER(8);
 
   companion object {
     fun from(value: Int): ChannelConfigType {
@@ -53,6 +54,7 @@ enum class ChannelConfigType(val value: Int) {
         SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
         SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
         SuplaFunction.HVAC_THERMOSTAT -> HVAC
+        SuplaFunction.ACTION_TRIGGER -> ACTION_TRIGGER
         else -> throw IllegalArgumentException("Channel not supported (function: `${channel.function}`)")
       }
   }

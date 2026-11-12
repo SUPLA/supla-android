@@ -33,6 +33,7 @@ import org.supla.android.usecases.channel.ObserveChannelWithChildrenUseCase
 import org.supla.android.usecases.details.ProvideChannelDetailTypeUseCase
 import org.supla.android.usecases.details.StandardDetailType
 import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.core.shared.data.model.function.actiontrigger.SuplaActionTriggerFlag
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetChannelBatteryIconUseCase
@@ -85,7 +86,14 @@ class ActionTriggerListViewModel @Inject constructor(
     icon = getChannelIconUseCase(channelDataEntity),
     caption = getCaptionUseCase(channelDataEntity.shareable),
     userCaption = channel.caption,
-    batteryIcon = getChannelBatteryIconUseCase(withChildren.shareable),
+    iconsBlock = {
+      val value = channelDataEntity.channelValueEntity.asAtValue()
+      ActionTriggerIcons(
+        weeklyActive = value.flags.contains(SuplaActionTriggerFlag.WEEKLY_SCHEDULE_ENABLED),
+        indicatorType = value.indicatorType,
+        channelDataEntity.showInfo
+      )
+    },
     showChannelStateIcon = channelDataEntity.showInfo
   )
 

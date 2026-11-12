@@ -25,6 +25,7 @@ import org.supla.android.images.ImageId
 import org.supla.android.ui.views.list.ListItemStatus
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.android.usecases.location.CollapsedFlag
+import org.supla.core.shared.data.model.function.actiontrigger.ActionTriggerValue
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.data.model.lists.ListItemIssues
 import org.supla.core.shared.infrastructure.LocalizedString
@@ -230,6 +231,39 @@ sealed interface ListItem {
     leftButtonString = leftButtonString,
     rightButtonString = rightButtonString
   )
+
+  class ActionTriggerItem(
+    remoteId: Int,
+    profileId: Long,
+    function: SuplaFunction,
+    locationCaption: String,
+    locationId: Int,
+    status: ListItemStatus,
+    captionProvider: LocalizedString,
+    userCaption: String,
+    icon: ImageId,
+    issues: ListItemIssues,
+    estimatedTimerEndDate: Date? = null,
+    infoSupported: Boolean = false,
+    val indicatorType: ActionTriggerValue.IndicatorType
+  ) : DefaultItem(
+    remoteId = remoteId,
+    profileId = profileId,
+    function = function,
+    locationCaption = locationCaption,
+    locationId = locationId,
+    status = status,
+    captionProvider = captionProvider,
+    userCaption = userCaption,
+    icon = icon,
+    value = null,
+    issues = issues,
+    processing = false,
+    estimatedTimerEndDate = estimatedTimerEndDate,
+    infoSupported = infoSupported,
+    leftButtonString = localizedString(R.string.general_unlock),
+    rightButtonString = localizedString(R.string.general_lock)
+  )
 }
 
 fun ListItem.hasSameContentAs(other: ListItem): Boolean {
@@ -270,6 +304,8 @@ private fun ListItem.DefaultItem.hasSameSubtypeContentAs(other: ListItem.Default
       other is ListItem.HeatpolThermostatItem && subValue == other.subValue
     is ListItem.HvacThermostatItem ->
       other is ListItem.HvacThermostatItem && subValue == other.subValue && indicatorIcon == other.indicatorIcon
+    is ListItem.ActionTriggerItem ->
+      other is ListItem.ActionTriggerItem && indicatorType == other.indicatorType
     else -> true
   }
 
