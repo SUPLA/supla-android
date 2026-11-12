@@ -23,7 +23,7 @@ import org.supla.core.shared.data.model.function.actiontrigger.SuplaActionTrigge
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
 
-class ActionTriggerIssuesProvider : ChannelIssuesProvider {
+class ActionTriggerScheduleInfoProvider : ChannelIssuesProvider {
   override fun provide(channelWithChildren: ChannelWithChildren): List<ChannelIssueItem> {
     if (!channelWithChildren.isActionTrigger) {
       return emptyList()

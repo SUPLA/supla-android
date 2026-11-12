@@ -25,6 +25,7 @@ import org.supla.core.shared.data.model.lists.ListItemIssues
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.LocalizedStringId
 import org.supla.core.shared.usecase.GetCaptionUseCase
+import org.supla.core.shared.usecase.channel.issues.ActionTriggerScheduleInfoProvider
 
 class GetChannelIssuesForListUseCase(
   private val getChannelLowBatteryIssueUseCase: GetChannelLowBatteryIssueUseCase,
@@ -32,6 +33,8 @@ class GetChannelIssuesForListUseCase(
   private val getChannelBatteryIconUseCase: GetChannelBatteryIconUseCase,
   private val getCaptionUseCase: GetCaptionUseCase
 ) {
+
+  private val actionTriggerScheduleInfoProvider = ActionTriggerScheduleInfoProvider()
 
   operator fun invoke(channelWithChildren: ChannelWithChildren): ListItemIssues {
     return when (channelWithChildren.channel.status) {
@@ -99,7 +102,8 @@ class GetChannelIssuesForListUseCase(
           .map { it.extendOn(channelWithChildren.channel.remoteId, getCaptionUseCase(channelWithChildren.channel)) }
       }
 
-    val channelIssues = getChannelSpecificIssuesUseCase(channelWithChildren)
+    val channelIssues = getChannelSpecificIssuesUseCase(channelWithChildren) +
+      actionTriggerScheduleInfoProvider.provide(channelWithChildren)
 
     return if (childrenIssues.isEmpty()) {
       channelIssues

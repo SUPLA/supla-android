@@ -54,6 +54,7 @@ import org.supla.android.ui.extensions.isPhoneLandscape
 import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.Switch
 import org.supla.android.ui.views.buttons.SwitchButtonsLayout
+import org.supla.android.ui.views.buttons.TextButton
 import org.supla.android.ui.views.buttons.supla.SuplaButton
 import org.supla.android.ui.views.buttons.supla.SuplaButtonDefaults
 import org.supla.android.ui.views.channelstate.ChannelCurrentData
@@ -206,7 +207,7 @@ private fun ActionTriggerModeButton(
         LockIcon(color = color)
       } else if (showTemporaryUnlockIcon) {
         Image(
-          drawableId = R.drawable.ic_unlock_temporary,
+          drawableId = R.drawable.ic_lock_temporary_open,
           tint = color
         )
       } else {
@@ -232,7 +233,7 @@ private fun ActionTriggerGeneralScope.UnlockDialog(state: UnlockDialogState) {
       timeInSeconds = state.temporaryUnlockDurationS,
       maxTimeInSeconds = 64_800,
       onTimeChanged = ::onUnlockDialogDurationChange,
-      modifier = Modifier.padding(horizontal = Distance.horizontal, vertical = Distance.tiny)
+      modifier = Modifier.fillMaxWidth().padding(horizontal = Distance.horizontal)
     )
     Buttons(state)
   }
@@ -241,35 +242,43 @@ private fun ActionTriggerGeneralScope.UnlockDialog(state: UnlockDialogState) {
 @Composable
 private fun ActionTriggerGeneralScope.Buttons(state: UnlockDialogState) {
   if (LocalConfiguration.current.isPhoneLandscape) {
-    DialogButtonsRow { ButtonsWithoutLayout(state, Modifier.weight(1f), Modifier) }
+    DialogButtonsRow {
+      TextButton(
+        onClick = ::onUnlockDialogDismiss,
+        text = stringResource(R.string.cancel)
+      )
+      DialogNegativeButton(
+        onClick = ::onUnlockDialogUnlock,
+        modifier = Modifier.weight(1f),
+        textRes = R.string.general_unlock
+      )
+      DialogPositiveButton(
+        onClick = ::onUnlockDialogTemporaryUnlock,
+        modifier = Modifier.weight(1f),
+        enabled = state.unlockTemporaryAllowed,
+        textRes = R.string.action_trigger_unlock_temporarily
+      )
+    }
   } else {
-    DialogButtonsColumn { ButtonsWithoutLayout(state, Modifier.fillMaxWidth()) }
+    DialogButtonsColumn(spacing = 0.dp) {
+      DialogPositiveButton(
+        onClick = ::onUnlockDialogTemporaryUnlock,
+        modifier = Modifier.fillMaxWidth().padding(bottom = Distance.small),
+        enabled = state.unlockTemporaryAllowed,
+        textRes = R.string.action_trigger_unlock_temporarily
+      )
+      DialogNegativeButton(
+        onClick = ::onUnlockDialogUnlock,
+        modifier = Modifier.fillMaxWidth().padding(bottom = Distance.tiny),
+        textRes = R.string.general_unlock
+      )
+      TextButton(
+        onClick = ::onUnlockDialogDismiss,
+        modifier = Modifier.fillMaxWidth(),
+        text = stringResource(R.string.cancel)
+      )
+    }
   }
-}
-
-@Composable
-private fun ActionTriggerGeneralScope.ButtonsWithoutLayout(
-  state: UnlockDialogState,
-  modifier: Modifier,
-  negativeModifier: Modifier = modifier
-) {
-  DialogNegativeButton(
-    onClick = ::onUnlockDialogDismiss,
-    modifier = negativeModifier,
-  )
-
-  DialogPositiveButton(
-    onClick = ::onUnlockDialogUnlock,
-    modifier = modifier,
-    textRes = R.string.general_unlock
-  )
-
-  DialogPositiveButton(
-    onClick = ::onUnlockDialogTemporaryUnlock,
-    modifier = modifier,
-    enabled = state.unlockTemporaryAllowed,
-    textRes = R.string.action_trigger_unlock_temporarily
-  )
 }
 
 private val previewScope = object : ActionTriggerGeneralScope {

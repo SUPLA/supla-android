@@ -30,6 +30,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.core.shared.data.model.channel.ChannelRelationType
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 class ReadChannelWithChildrenUseCaseTest {
 
@@ -195,5 +196,6 @@ class ReadChannelWithChildrenUseCaseTest {
 
   private fun mockChannelDataEntity(remoteId: Int): ChannelDataEntity = mockk {
     every { this@mockk.remoteId } returns remoteId
+    every { this@mockk.function } returns SuplaFunction.POWER_SWITCH
   }
 }

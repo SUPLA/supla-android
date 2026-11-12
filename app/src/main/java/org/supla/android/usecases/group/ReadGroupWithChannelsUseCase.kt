@@ -151,7 +151,7 @@ interface ChannelGroupRelationDataEntityConvertible {
           icon = getChannelIconUseCase.forState(it.channelWithChildren, getChannelStateUseCase(it.channelWithChildren)),
           caption = getCaptionUseCase(it.channelWithChildren.channel.shareable),
           userCaption = it.channelWithChildren.caption,
-          batteryIcon = null,
+          iconsBlock = null,
           showChannelStateIcon = it.channelWithChildren.channel.showInfo
         )
       }

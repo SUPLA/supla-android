@@ -25,6 +25,7 @@ import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.ConfigResult
 import org.supla.android.data.source.remote.SuplaChannelConfig
+import org.supla.android.data.source.remote.actiontrigger.SuplaChannelActionTriggerConfig
 import org.supla.android.data.source.remote.container.SuplaChannelContainerConfig
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeMeasurementConfig
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeMeterConfig
@@ -50,6 +51,12 @@ class InsertChannelConfigUseCase @Inject constructor(
       return Completable.complete()
     }
 
+    ifLet(config as? SuplaChannelActionTriggerConfig) { (config) ->
+      return profileRepository.findActiveProfile().flatMapCompletable {
+        Timber.d("Saving config (remoteId: `${config.remoteId}`, function: `${config.func}`) - container")
+        channelConfigRepository.insertOrUpdate(it.id, config)
+      }
+    }
     ifLet(config as? SuplaChannelContainerConfig) { (config) ->
       return profileRepository.findActiveProfile().flatMapCompletable {
         Timber.d("Saving config (remoteId: `${config.remoteId}`, function: `${config.func}`) - container")

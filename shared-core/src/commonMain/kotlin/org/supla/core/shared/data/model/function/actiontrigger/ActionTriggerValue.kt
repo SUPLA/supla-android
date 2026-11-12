@@ -31,6 +31,19 @@ data class ActionTriggerValue(
   val flags: List<SuplaActionTriggerFlag>
 ) {
 
+  val buttonLocked: Boolean
+    get() = buttonMode == SuplaButtonMode.LOCKED || buttonMode == SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED
+
+  val temporaryUnlockActive: Boolean
+    get() = buttonMode == SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED && flags.contains(SuplaActionTriggerFlag.TEMPORARY_UNLOCK_ACTIVE)
+
+  val indicatorType: IndicatorType
+    get() = when {
+      temporaryUnlockActive -> IndicatorType.TEMPORARY_UNLOCKED
+      buttonLocked -> IndicatorType.LOCKED
+      else -> IndicatorType.NONE
+    }
+
   companion object {
     fun from(status: SuplaChannelAvailabilityStatus, bytes: ByteArray): ActionTriggerValue {
       if (bytes.size < VALUE_LENGTH) {
@@ -51,5 +64,9 @@ data class ActionTriggerValue(
         flags = SuplaActionTriggerFlag.from(bytes[6])
       )
     }
+  }
+
+  enum class IndicatorType {
+    NONE, LOCKED, TEMPORARY_UNLOCKED
   }
 }

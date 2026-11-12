@@ -29,9 +29,9 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.ConfigResult
 import org.supla.android.data.source.remote.SuplaDeviceConfig
+import org.supla.android.data.source.remote.actiontrigger.SuplaChannelActionTriggerConfig
 import org.supla.android.data.source.remote.hvac.SuplaButtonMode
 import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
-import org.supla.android.data.source.remote.hvac.label
 import org.supla.android.data.source.remote.isAutomaticTimeSyncDisabled
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DeviceConfigEventsManager
@@ -48,7 +48,9 @@ import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.core.shared.data.model.channel.SuplaChannelFlag
 import org.supla.core.shared.data.model.function.actiontrigger.SuplaActionTriggerFlag
 import org.supla.core.shared.extensions.forTrue
+import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
+import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
 import java.util.Optional
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -68,7 +70,9 @@ class ActionTriggerGeneralViewModel @Inject constructor(
 
   private var remoteId: Int? = null
   private var mode: SuplaButtonMode? = null
+  private var temporaryUnlockActive: Boolean = false
   private var currentTemporaryUnlockDurationS: Int? = null
+  private var defaultTemporaryUnlockDurationS: Int? = null
 
   fun observeData(remoteId: Int, deviceId: Int) {
     this.remoteId = remoteId
@@ -77,6 +81,12 @@ class ActionTriggerGeneralViewModel @Inject constructor(
       .filter { it.result == ConfigResult.RESULT_TRUE && it.config is SuplaChannelWeeklyScheduleConfig }
       .map { Optional.of(it.config as SuplaChannelWeeklyScheduleConfig) }
       .startWithItem(Optional.empty<SuplaChannelWeeklyScheduleConfig>())
+      .distinctUntilChanged()
+
+    val defaultChannelConfig = channelConfigEventsManager.observerConfig(remoteId)
+      .filter { it.result == ConfigResult.RESULT_TRUE && it.config is SuplaChannelActionTriggerConfig }
+      .map { Optional.of(it.config as SuplaChannelActionTriggerConfig) }
+      .startWithItem(Optional.empty<SuplaChannelActionTriggerConfig>())
       .distinctUntilChanged()
 
     val deviceConfig = if (deviceId == 0) {
@@ -92,9 +102,11 @@ class ActionTriggerGeneralViewModel @Inject constructor(
     Observable.combineLatest(
       observeChannelWithChildrenUseCase(remoteId).subscribeOn(threading.schedulers.io),
       weeklySchedule,
+      defaultChannelConfig,
       deviceConfig,
       Observable.interval(2, TimeUnit.SECONDS, threading.schedulers.computation).startWithItem(0L)
-    ) { channelWithChildren, schedule, device, _ ->
+    ) { channelWithChildren, schedule, defaultConfig, device, _ ->
+      defaultTemporaryUnlockDurationS = defaultConfig.orElse(null)?.temporaryUnlockDurationSec?.toInt() ?: 0
       buildState(channelWithChildren.channel, schedule.orElse(null), device.orElse(null)?.isAutomaticTimeSyncDisabled() ?: false)
     }
       .observeOn(threading.schedulers.ui)
@@ -119,16 +131,25 @@ class ActionTriggerGeneralViewModel @Inject constructor(
   override fun onAuto() {}
 
   override fun onLock() {
-    performAtAction(SuplaButtonMode.LOCKED)
+    if (mode == SuplaButtonMode.LOCKED) {
+      return
+    } else if (mode == SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED && !temporaryUnlockActive) {
+      return
+    } else if (mode == SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED) {
+      performAtAction(SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED)
+    } else {
+      performAtAction(SuplaButtonMode.LOCKED)
+    }
   }
 
   override fun onUnlock() {
     if (mode == SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED) {
       updateState { state ->
+        val unlockDuration = currentTemporaryUnlockDurationS ?: defaultTemporaryUnlockDurationS ?: 0
         state.copy(
           unlockDialog = UnlockDialogState(
-            temporaryUnlockDurationS = currentTemporaryUnlockDurationS ?: 0,
-            unlockTemporaryAllowed = currentTemporaryUnlockDurationS?.let { it > 0 } ?: false
+            temporaryUnlockDurationS = unlockDuration,
+            unlockTemporaryAllowed = unlockDuration > 0
           ),
         )
       }
@@ -143,7 +164,7 @@ class ActionTriggerGeneralViewModel @Inject constructor(
       state.copy(
         unlockDialog = state.unlockDialog?.copy(
           temporaryUnlockDurationS = newValue,
-          unlockTemporaryAllowed = currentTemporaryUnlockDurationS?.let { it > 0 } ?: (newValue > 0)
+          unlockTemporaryAllowed = newValue > 0
         ),
       )
     }
@@ -200,11 +221,11 @@ class ActionTriggerGeneralViewModel @Inject constructor(
     val weeklyActive = SuplaActionTriggerFlag.WEEKLY_SCHEDULE_ENABLED in actionTriggerValue.flags
     val offline = channel.status.offline
     val programInfo = if (!offline && weeklyActive && scheduleConfig != null) {
-      ActionTriggerProgramInfoBuilder(scheduleConfig, dateProvider).build(timeSyncDisabled)
+      ActionTriggerProgramInfoBuilder(scheduleConfig, dateProvider, actionTriggerValue).build(timeSyncDisabled)
     } else {
       emptyList()
     }
-    val temporaryUnlockActive = SuplaActionTriggerFlag.TEMPORARY_UNLOCK_ACTIVE in actionTriggerValue.flags
+    temporaryUnlockActive = actionTriggerValue.temporaryUnlockActive
     val lockButtonState = lockButtonState(actionTriggerValue.buttonMode, weeklyActive, temporaryUnlockActive, offline)
     val showAllowTemporaryUnlock =
       SuplaChannelFlag.BUTTON_TEMPORARY_UNLOCK_SUPPORTED inside channel.flags &&
@@ -217,7 +238,7 @@ class ActionTriggerGeneralViewModel @Inject constructor(
     currentTemporaryUnlockDurationS = weeklyActive.forTrue { scheduleConfig?.let(::currentProgramTemporaryUnlockDuration) }
 
     return ActionTriggerGeneralViewState(
-      deviceStateData = currentStateData(weeklyActive, actionTriggerValue.buttonMode, offline),
+      deviceStateData = currentStateData(weeklyActive, temporaryUnlockActive, actionTriggerValue.buttonMode, offline),
       programInfo = programInfo,
       operatingMode = operatingMode(channel.flags, weeklyActive),
       manualButtonDisabled = offline,
@@ -292,13 +313,14 @@ class ActionTriggerGeneralViewModel @Inject constructor(
 
   internal fun currentStateData(
     weeklyActive: Boolean,
+    temporaryUnlockActive: Boolean = false,
     mode: SuplaButtonMode = SuplaButtonMode.NOT_SET,
     offline: Boolean = false
   ): ChannelCurrentData? =
     if (offline) {
       ChannelCurrentData(
         icon = null,
-        label = localizedString(R.string.details_timer_state_label),
+        label = LocalizedString.WithFormat("%s:", listOf(localizedString(R.string.action_trigger_schedule_button_mode))),
         value = localizedString(R.string.offline)
       )
     } else if (weeklyActive) {
@@ -306,14 +328,27 @@ class ActionTriggerGeneralViewModel @Inject constructor(
     } else {
       ChannelCurrentData(
         icon = null,
-        label = localizedString(R.string.details_timer_state_label),
-        value = mode.label
+        label = LocalizedString.WithFormat("%s:", listOf(localizedString(R.string.action_trigger_schedule_button_mode))),
+        value = currentModeLabel(mode, temporaryUnlockActive)
       )
+    }
+
+  private fun currentModeLabel(mode: SuplaButtonMode, temporaryUnlockActive: Boolean) =
+    when (mode) {
+      SuplaButtonMode.LOCKED -> localizedString(R.string.general_locked)
+      SuplaButtonMode.NOT_SET -> localizedString(R.string.general_unlocked)
+      SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED -> localizedString(
+        temporaryUnlockActive.forTrue { R.string.action_trigger_temporary_unlocked } ?: R.string.general_locked
+      )
+      SuplaButtonMode.CMD_WEEKLY_SCHEDULE,
+      SuplaButtonMode.CMD_SWITCH_TO_MANUAL,
+      SuplaButtonMode.CMD_TEMPORARY_UNLOCK -> LocalizedString.Constant(NO_VALUE_TEXT)
     }
 
   private fun requestConfig(remoteId: Int, deviceId: Int) {
     suplaClientProvider.provide()?.let { client ->
       client.getChannelConfig(remoteId, ChannelConfigType.WEEKLY_SCHEDULE)
+      client.getChannelConfig(remoteId, ChannelConfigType.DEFAULT)
       if (deviceId != 0) {
         client.getDeviceConfig(deviceId)
       }

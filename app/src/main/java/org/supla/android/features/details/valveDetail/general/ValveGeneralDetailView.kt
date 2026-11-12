@@ -45,6 +45,7 @@ import org.supla.android.tools.BACKGROUND_COLOR
 import org.supla.android.ui.lists.ListOnlineState
 import org.supla.android.ui.lists.channelissues.ChannelIssuesView
 import org.supla.android.ui.lists.data.error
+import org.supla.android.ui.lists.sensordata.IssueIconBlock
 import org.supla.android.ui.lists.sensordata.RelatedChannelData
 import org.supla.android.ui.lists.sensordata.SensorsItemsView
 import org.supla.android.ui.views.Image
@@ -161,7 +162,7 @@ private fun Preview() {
             icon = ImageId(R.drawable.fnc_flood_sensor_on),
             caption = LocalizedString.Constant("Flood sensor"),
             userCaption = "",
-            batteryIcon = IssueIcon.Battery50,
+            iconsBlock = { IssueIconBlock(IssueIcon.Battery50) },
             showChannelStateIcon = true
           ),
           RelatedChannelData.Visible(
@@ -171,7 +172,7 @@ private fun Preview() {
             icon = ImageId(R.drawable.fnc_flood_sensor_off),
             caption = LocalizedString.Constant("Flood sensor"),
             userCaption = "",
-            batteryIcon = IssueIcon.Battery25,
+            iconsBlock = { IssueIconBlock(IssueIcon.Battery25) },
             showChannelStateIcon = false
           ),
           RelatedChannelData.Visible(
@@ -181,7 +182,7 @@ private fun Preview() {
             icon = ImageId(R.drawable.fnc_container_level_sensor_on),
             caption = LocalizedString.Constant("Flood sensor flood sensor flood sensor flood sensor"),
             userCaption = "",
-            batteryIcon = IssueIcon.Battery50,
+            iconsBlock = { IssueIconBlock(IssueIcon.Battery50) },
             showChannelStateIcon = true
           ),
           RelatedChannelData.Visible(
@@ -191,7 +192,7 @@ private fun Preview() {
             icon = ImageId(R.drawable.fnc_container_level_sensor_off),
             caption = LocalizedString.Constant("Flood sensor"),
             userCaption = "",
-            batteryIcon = IssueIcon.Battery25,
+            iconsBlock = { IssueIconBlock(IssueIcon.Battery25) },
             showChannelStateIcon = false
           ),
           RelatedChannelData.Visible(
@@ -201,7 +202,7 @@ private fun Preview() {
             icon = ImageId(R.drawable.fnc_container_level_sensor_on),
             caption = LocalizedString.Constant("Flood sensor"),
             userCaption = "",
-            batteryIcon = IssueIcon.Battery50,
+            iconsBlock = { IssueIconBlock(IssueIcon.Battery50) },
             showChannelStateIcon = true
           ),
           RelatedChannelData.Invisible,
@@ -212,7 +213,7 @@ private fun Preview() {
             icon = ImageId(R.drawable.fnc_container_level_sensor_off),
             caption = LocalizedString.Constant("Flood sensor"),
             userCaption = "",
-            batteryIcon = IssueIcon.Battery25,
+            iconsBlock = { IssueIconBlock(IssueIcon.Battery25) },
             showChannelStateIcon = false
           )
         ),

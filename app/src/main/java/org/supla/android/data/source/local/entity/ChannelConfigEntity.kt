@@ -25,6 +25,7 @@ import org.supla.android.data.source.local.entity.ChannelConfigEntity.Companion.
 import org.supla.android.data.source.local.entity.ChannelConfigEntity.Companion.TABLE_NAME
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.SuplaChannelConfig
+import org.supla.android.data.source.remote.actiontrigger.SuplaChannelActionTriggerConfig
 import org.supla.android.data.source.remote.container.SuplaChannelContainerConfig
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeMeasurementConfig
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeMeterConfig
@@ -55,6 +56,8 @@ data class ChannelConfigEntity(
         gson.fromJson(config, SuplaChannelContainerConfig::class.java)
       ChannelConfigType.FACADE_BLIND ->
         gson.fromJson(config, SuplaChannelFacadeBlindConfig::class.java)
+      ChannelConfigType.ACTION_TRIGGER ->
+        gson.fromJson(config, SuplaChannelActionTriggerConfig::class.java)
       ChannelConfigType.DEFAULT,
       ChannelConfigType.WEEKLY_SCHEDULE,
       ChannelConfigType.UNKNOWN ->

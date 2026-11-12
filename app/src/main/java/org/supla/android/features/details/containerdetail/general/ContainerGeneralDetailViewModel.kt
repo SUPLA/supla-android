@@ -49,6 +49,7 @@ import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
 import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModelScope
+import org.supla.android.ui.lists.sensordata.IssueIconBlock
 import org.supla.android.ui.lists.sensordata.RelatedChannelData
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
@@ -184,7 +185,7 @@ class ContainerGeneralDetailViewModel @Inject constructor(
       icon = getChannelIconUseCase(channelDataEntity),
       caption = captionWithPercentage ?: caption,
       userCaption = channel.caption,
-      batteryIcon = getChannelBatteryIconUseCase(channelDataEntity.shareable),
+      iconsBlock = { IssueIconBlock(getChannelBatteryIconUseCase(channelDataEntity.shareable)) },
       showChannelStateIcon = channelDataEntity.showInfo
     )
   }

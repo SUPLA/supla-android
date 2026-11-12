@@ -35,30 +35,30 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.source.remote.hvac.SuplaButtonMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.extensions.ucFirst
-import org.supla.android.features.details.actiontrigger.schedule.data.AtProgramSettingsData
+import org.supla.android.features.details.actiontrigger.schedule.data.AtProgramDurationOption
+import org.supla.android.features.details.actiontrigger.schedule.data.AtProgramSettingsDialogState
 import org.supla.android.tools.SuplaPreview
 import org.supla.android.tools.SuplaPreviewLandscape
 import org.supla.android.ui.dialogs.Dialog
 import org.supla.android.ui.dialogs.DialogButtons
 import org.supla.android.ui.extensions.isPhoneLandscape
+import org.supla.android.ui.views.BoxSize
+import org.supla.android.ui.views.SegmentedComponent
 import org.supla.android.ui.views.forms.TimePicker
 import org.supla.android.ui.views.schedule.ScheduleProgramDialogHeader
 import org.supla.android.ui.views.spinner.Spinner
 import org.supla.android.ui.views.texts.Label
 
-data class AtProgramSettingsViewState(
-  val data: AtProgramSettingsData
-)
-
 interface AtProgramSettingsScope {
   fun onAtProgramSettingsModeChange(mode: SuplaButtonMode)
   fun onAtProgramSettingsDurationChange(value: Int)
+  fun onAtProgramSettingsDefaultDurationChange(option: AtProgramDurationOption)
   fun onAtProgramSettingsDismiss()
   fun onAtProgramSettingsSave()
 }
 
 @Composable
-fun AtProgramSettingsScope.AtProgramSettingsDialog(state: AtProgramSettingsViewState) {
+fun AtProgramSettingsScope.AtProgramSettingsDialog(state: AtProgramSettingsDialogState) {
   val modeLabels = linkedMapOf(
     SuplaButtonMode.NOT_SET to stringResource(R.string.general_unlocked).ucFirst(),
     SuplaButtonMode.LOCKED to stringResource(R.string.general_locked).ucFirst(),
@@ -66,20 +66,20 @@ fun AtProgramSettingsScope.AtProgramSettingsDialog(state: AtProgramSettingsViewS
   )
 
   Dialog(onDismiss = ::onAtProgramSettingsDismiss) {
-    ScheduleProgramDialogHeader(program = state.data.program)
+    ScheduleProgramDialogHeader(program = state.program)
     if (LocalConfiguration.current.isPhoneLandscape) {
       LandscapeSettings(state, modeLabels)
-      Buttons()
+      Buttons(state)
     } else {
       PortraitSettings(state, modeLabels)
-      Buttons()
+      Buttons(state)
     }
   }
 }
 
 @Composable
 private fun AtProgramSettingsScope.PortraitSettings(
-  state: AtProgramSettingsViewState,
+  state: AtProgramSettingsDialogState,
   modeLabels: Map<SuplaButtonMode, String>
 ) {
   ProgramModeSpinner(
@@ -89,10 +89,20 @@ private fun AtProgramSettingsScope.PortraitSettings(
       .fillMaxWidth()
       .padding(horizontal = Distance.default)
   )
-  if (state.data.selectedMode == SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED) {
+  if (state.selectedMode == SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED) {
+    Label(
+      text = stringResource(R.string.action_trigger_schedule_temporary_unlock_duration),
+      modifier = Modifier
+        .padding(horizontal = Distance.default + 12.dp)
+        .padding(top = Distance.default, bottom = Distance.tiny)
+    )
+    DurationSegments(
+      state = state,
+      modifier = Modifier
+        .padding(horizontal = Distance.default)
+    )
     TemporaryUnlockDurationPicker(
       state = state,
-      labelPadding = PaddingValues(start = Distance.default + 12.dp, top = Distance.default, end = Distance.default + 12.dp),
       pickerPadding = PaddingValues(horizontal = Distance.horizontal, vertical = Distance.tiny)
     )
   }
@@ -100,7 +110,7 @@ private fun AtProgramSettingsScope.PortraitSettings(
 
 @Composable
 private fun AtProgramSettingsScope.LandscapeSettings(
-  state: AtProgramSettingsViewState,
+  state: AtProgramSettingsDialogState,
   modeLabels: Map<SuplaButtonMode, String>
 ) {
   Row(
@@ -110,8 +120,18 @@ private fun AtProgramSettingsScope.LandscapeSettings(
       .fillMaxWidth()
       .padding(horizontal = Distance.default)
   ) {
-    ProgramModeSpinner(state, modeLabels, Modifier.weight(1f))
-    if (state.data.selectedMode == SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED) {
+    Column(modifier = Modifier.weight(1f)) {
+      ProgramModeSpinner(state, modeLabels)
+      Label(
+        text = stringResource(R.string.action_trigger_schedule_temporary_unlock_duration),
+        modifier = Modifier
+          .padding(horizontal = 12.dp)
+          .padding(top = Distance.small)
+          .padding(bottom = Distance.tiny)
+      )
+      DurationSegments(state = state)
+    }
+    if (state.selectedMode == SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED) {
       Column(modifier = Modifier.weight(1f)) {
         TemporaryUnlockDurationPicker(state = state)
       }
@@ -121,42 +141,54 @@ private fun AtProgramSettingsScope.LandscapeSettings(
 
 @Composable
 private fun AtProgramSettingsScope.ProgramModeSpinner(
-  state: AtProgramSettingsViewState,
+  state: AtProgramSettingsDialogState,
   modeLabels: Map<SuplaButtonMode, String>,
-  modifier: Modifier
+  modifier: Modifier = Modifier
 ) {
   Spinner(
-    label = stringResource(R.string.relay_schedule_program_operation_type),
+    label = stringResource(R.string.action_trigger_schedule_button_mode),
     options = modeLabels,
-    selectedOption = state.data.selectedMode,
+    selectedOption = state.selectedMode,
     onOptionSelected = ::onAtProgramSettingsModeChange,
     modifier = modifier
   )
 }
 
 @Composable
-private fun AtProgramSettingsScope.TemporaryUnlockDurationPicker(
-  state: AtProgramSettingsViewState,
-  labelPadding: PaddingValues = PaddingValues.Zero,
-  pickerPadding: PaddingValues = PaddingValues.Zero
+private fun AtProgramSettingsScope.DurationSegments(
+  state: AtProgramSettingsDialogState,
+  modifier: Modifier = Modifier
 ) {
-  Label(
-    text = stringResource(R.string.action_trigger_schedule_temporary_unlock_duration),
-    modifier = Modifier.padding(labelPadding)
-  )
-  TimePicker(
-    timeInSeconds = state.data.buttonTemporaryUnlockDurationS?.coerceIn(0, 64_800) ?: 0,
-    maxTimeInSeconds = 64_800,
-    onTimeChanged = { onAtProgramSettingsDurationChange(it.coerceIn(0, 64_800)) },
-    modifier = Modifier.padding(pickerPadding)
+  SegmentedComponent(
+    items = state.durationOptions,
+    activeItem = state.activeDuration,
+    boxSize = BoxSize.Identical,
+    modifier = modifier,
+    onClick = { onAtProgramSettingsDefaultDurationChange(it) }
   )
 }
 
 @Composable
-private fun AtProgramSettingsScope.Buttons() {
+private fun AtProgramSettingsScope.TemporaryUnlockDurationPicker(
+  state: AtProgramSettingsDialogState,
+  pickerPadding: PaddingValues = PaddingValues.Zero
+) {
+  TimePicker(
+    timeInSeconds = state.currentTemporaryUnlockDurationS?.coerceIn(0, 64_800) ?: 0,
+    maxTimeInSeconds = 64_800,
+    enabled = state.timePickerEnabled,
+    onTimeChanged = { onAtProgramSettingsDurationChange(it.coerceIn(0, 64_800)) },
+    modifier = Modifier.fillMaxWidth().padding(pickerPadding)
+  )
+}
+
+@Composable
+private fun AtProgramSettingsScope.Buttons(state: AtProgramSettingsDialogState) {
   DialogButtons(
     onNegativeClick = ::onAtProgramSettingsDismiss,
     onPositiveClick = ::onAtProgramSettingsSave,
+    positiveEnabled = state.saveEnabled,
+    padding = PaddingValues(start = Distance.default, top = Distance.tiny, end = Distance.default, bottom = Distance.default),
     negativeTextRes = R.string.cancel,
     positiveTextRes = R.string.save
   )
@@ -165,6 +197,7 @@ private fun AtProgramSettingsScope.Buttons() {
 private val previewScope = object : AtProgramSettingsScope {
   override fun onAtProgramSettingsModeChange(mode: SuplaButtonMode) {}
   override fun onAtProgramSettingsDurationChange(value: Int) {}
+  override fun onAtProgramSettingsDefaultDurationChange(option: AtProgramDurationOption) {}
   override fun onAtProgramSettingsDismiss() {}
   override fun onAtProgramSettingsSave() {}
 }
@@ -175,12 +208,12 @@ private val previewScope = object : AtProgramSettingsScope {
 private fun Preview() {
   SuplaTheme {
     previewScope.AtProgramSettingsDialog(
-      AtProgramSettingsViewState(
-        data = AtProgramSettingsData(
-          program = SuplaScheduleProgram.PROGRAM_1,
-          selectedMode = SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED,
-          buttonTemporaryUnlockDurationS = 3600
-        )
+      state = AtProgramSettingsDialogState(
+        program = SuplaScheduleProgram.PROGRAM_1,
+        selectedMode = SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED,
+        currentTemporaryUnlockDurationS = 3600,
+        durationOptions = AtProgramDurationOption.entries,
+        activeDuration = AtProgramDurationOption.CUSTOM
       )
     )
   }

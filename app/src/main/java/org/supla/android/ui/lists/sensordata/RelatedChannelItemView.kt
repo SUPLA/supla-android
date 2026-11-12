@@ -59,7 +59,7 @@ sealed interface RelatedChannelData {
   val icon: ImageId?
   val caption: LocalizedString
   val userCaption: String
-  val batteryIcon: IssueIcon?
+  val iconsBlock: (@Composable () -> Unit)?
   val showChannelStateIcon: Boolean
 
   data object Invisible : RelatedChannelData {
@@ -69,7 +69,7 @@ sealed interface RelatedChannelData {
     override val icon: ImageId = ImageId(R.drawable.ic_unknown_channel)
     override val caption: LocalizedString = localizedString(R.string.channel_caption_invisible)
     override val userCaption: String = ""
-    override val batteryIcon: IssueIcon? = null
+    override val iconsBlock: @Composable (() -> Unit)? = null
     override val showChannelStateIcon: Boolean = false
   }
 
@@ -80,7 +80,7 @@ sealed interface RelatedChannelData {
     override val icon: ImageId?,
     override val caption: LocalizedString,
     override val userCaption: String,
-    override val batteryIcon: IssueIcon?,
+    override val iconsBlock: @Composable (() -> Unit)?,
     override val showChannelStateIcon: Boolean
   ) : RelatedChannelData
 }
@@ -120,14 +120,7 @@ fun RelatedChannelItemView(
       scale = scale,
       maxLines = 2
     )
-    channel.batteryIcon?.let {
-      Image(
-        drawableId = it.resource,
-        modifier = Modifier
-          .padding(end = Distance.small)
-          .size(dimensionResource(R.dimen.icon_default_size))
-      )
-    }
+    channel.iconsBlock?.invoke()
     if (channel.showChannelStateIcon) {
       ListItemInfoIcon(
         onClick = { onInfoClick(channel) },
@@ -138,6 +131,18 @@ fun RelatedChannelItemView(
       onlineState = channel.onlineState,
       withButton = false,
       paddingValues = PaddingValues(0.dp)
+    )
+  }
+}
+
+@Composable
+fun IssueIconBlock(issueIcon: IssueIcon?) {
+  issueIcon?.let {
+    Image(
+      drawableId = it.resource,
+      modifier = Modifier
+        .padding(end = Distance.small)
+        .size(dimensionResource(R.dimen.icon_default_size))
     )
   }
 }
@@ -155,7 +160,7 @@ private fun Preview() {
           icon = ImageId(R.drawable.fnc_container_level_sensor_on),
           caption = LocalizedString.WithId(LocalizedStringId.CHANNEL_CAPTION_CONTAINER_LEVEL_SENSOR),
           userCaption = "",
-          batteryIcon = IssueIcon.Battery50,
+          iconsBlock = { IssueIconBlock(IssueIcon.Battery50) },
           showChannelStateIcon = true
         )
       )
@@ -167,7 +172,7 @@ private fun Preview() {
           icon = ImageId(R.drawable.fnc_container_level_sensor_off),
           caption = LocalizedString.WithId(LocalizedStringId.CHANNEL_CAPTION_CONTAINER_LEVEL_SENSOR),
           userCaption = "",
-          batteryIcon = null,
+          iconsBlock = null,
           showChannelStateIcon = false
         )
       )

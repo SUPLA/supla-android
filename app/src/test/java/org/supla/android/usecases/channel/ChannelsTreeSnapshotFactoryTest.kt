@@ -24,6 +24,7 @@ import org.junit.Test
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.core.shared.data.model.channel.ChannelRelationType
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 class ChannelsTreeSnapshotFactoryTest {
 
@@ -78,6 +79,7 @@ class ChannelsTreeSnapshotFactoryTest {
 
   private fun channel(remoteId: Int): ChannelDataEntity = mockk {
     every { this@mockk.remoteId } returns remoteId
+    every { this@mockk.function } returns SuplaFunction.POWER_SWITCH
   }
 
   private fun relation(channelId: Int, parentId: Int) =

@@ -64,6 +64,7 @@ class ChannelToListItemMapper @Inject constructor(
     when (channelWithChildren.function) {
       SuplaFunction.HUMIDITY_AND_TEMPERATURE -> toDoubleValueItem(channelWithChildren)
       SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS -> toHeatpolThermostatItem(channelWithChildren)
+      SuplaFunction.ACTION_TRIGGER -> toActionTriggerItem(channelWithChildren)
       SuplaFunction.HVAC_THERMOSTAT,
       SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
       SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL -> toThermostatItem(channelWithChildren)
@@ -135,8 +136,7 @@ class ChannelToListItemMapper @Inject constructor(
       SuplaFunction.DIMMER_CCT,
       SuplaFunction.VALVE_OPEN_CLOSE,
       SuplaFunction.VALVE_PERCENTAGE,
-      SuplaFunction.HVAC_HRV,
-      SuplaFunction.ACTION_TRIGGER -> toChannelItem(channelWithChildren)
+      SuplaFunction.HVAC_HRV -> toChannelItem(channelWithChildren)
     }
 
   private fun toDoubleValueItem(
@@ -214,6 +214,26 @@ class ChannelToListItemMapper @Inject constructor(
       infoSupported = channel.showInfo,
       subValue = thermostatValue.getSetpointText(thermometerValueFormatter),
       indicatorIcon = indicatorIcon.resource,
+    )
+  }
+
+  private fun toActionTriggerItem(channelWithChildren: ChannelWithChildren): ListItem.DefaultItem {
+    val value = channelWithChildren.channel.channelValueEntity.asAtValue()
+
+    return ListItem.ActionTriggerItem(
+      remoteId = channelWithChildren.remoteId,
+      profileId = channelWithChildren.profileId,
+      function = channelWithChildren.function,
+      locationCaption = channelWithChildren.channel.locationEntity.caption,
+      locationId = channelWithChildren.channel.locationEntity.remoteId,
+      status = ListItemStatus.Channel(channelWithChildren.onlineState),
+      captionProvider = getCaptionUseCase(channelWithChildren.channel.shareable),
+      userCaption = channelWithChildren.caption,
+      icon = getChannelIconUseCase(channelWithChildren),
+      issues = getChannelIssuesForListUseCase(channelWithChildren.shareable),
+      estimatedTimerEndDate = channelWithChildren.channel.channelExtendedValueEntity?.getSuplaValue()?.TimerStateValue?.countdownEndsAt,
+      infoSupported = channelWithChildren.showInfo,
+      indicatorType = value.indicatorType
     )
   }
 

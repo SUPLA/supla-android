@@ -19,6 +19,7 @@ package org.supla.android.features.details.detailbase.base
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.systemBars
@@ -113,6 +114,15 @@ fun DetailScreen(
       action = topPage.topBarAction(),
       handler = { topPage.route(item)?.let { navigator?.navigateTo(it) } }
     )
+  }
+
+  BackHandler {
+    val firstPage = pages.first()
+    if (page != firstPage) {
+      page = viewModel.onPageChanged(firstPage, pages)
+    } else {
+      navigator?.back()
+    }
   }
 
   if (LocalConfiguration.current.isPhoneLandscape) {

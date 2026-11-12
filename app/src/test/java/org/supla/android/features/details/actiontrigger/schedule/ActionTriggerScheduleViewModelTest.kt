@@ -15,9 +15,9 @@ import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.features.details.actiontrigger.schedule.data.ActionTriggerScheduleProgram
-import org.supla.android.features.details.actiontrigger.schedule.data.AtProgramSettingsData
+import org.supla.android.features.details.actiontrigger.schedule.data.AtProgramDurationOption
+import org.supla.android.features.details.actiontrigger.schedule.data.AtProgramSettingsDialogState
 import org.supla.android.features.details.actiontrigger.schedule.data.MAX_TEMPORARY_UNLOCK_DURATION_S
-import org.supla.android.features.details.actiontrigger.schedule.ui.dialogs.AtProgramSettingsViewState
 import org.supla.android.features.details.schedule.DelayedWeeklyScheduleConfigSubject
 import org.supla.android.tools.SuplaThreading
 import org.supla.android.ui.views.schedule.editor.WeeklyScheduleEditorState
@@ -63,8 +63,16 @@ class ActionTriggerScheduleViewModelTest :
 
     viewModel.onAtProgramSettingsModeChange(SuplaButtonMode.LOCKED)
 
-    assertThat(viewModel.getViewState().value.programSettings?.data)
-      .isEqualTo(AtProgramSettingsData(program, SuplaButtonMode.LOCKED, null))
+    assertThat(viewModel.getViewState().value.programSettings)
+      .isEqualTo(
+        AtProgramSettingsDialogState(
+          program = program,
+          selectedMode = SuplaButtonMode.LOCKED,
+          durationOptions = AtProgramDurationOption.entries,
+          activeDuration = AtProgramDurationOption.CUSTOM,
+          currentTemporaryUnlockDurationS = null
+        )
+      )
   }
 
   @Test
@@ -74,7 +82,7 @@ class ActionTriggerScheduleViewModelTest :
 
     viewModel.onAtProgramSettingsDurationChange(Int.MAX_VALUE)
 
-    assertThat(viewModel.getViewState().value.programSettings?.data?.buttonTemporaryUnlockDurationS)
+    assertThat(viewModel.getViewState().value.programSettings?.currentTemporaryUnlockDurationS)
       .isEqualTo(MAX_TEMPORARY_UNLOCK_DURATION_S)
   }
 
@@ -101,7 +109,13 @@ class ActionTriggerScheduleViewModelTest :
     viewModel.setState(
       ActionTriggerScheduleViewState(
         editorState = WeeklyScheduleEditorState(programs = listOf(programData)),
-        programSettings = AtProgramSettingsViewState(AtProgramSettingsData(program, mode, durationS))
+        programSettings = AtProgramSettingsDialogState(
+          program = program,
+          selectedMode = mode,
+          durationOptions = AtProgramDurationOption.entries,
+          activeDuration = AtProgramDurationOption.CUSTOM,
+          currentTemporaryUnlockDurationS = durationS
+        )
       )
     )
   }

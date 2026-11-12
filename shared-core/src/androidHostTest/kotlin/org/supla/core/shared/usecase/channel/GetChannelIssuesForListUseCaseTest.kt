@@ -212,6 +212,7 @@ class GetChannelIssuesForListUseCaseTest {
     val mainChannel: Channel = mockk {
       every { remoteId } returns 1
       every { status } returns SuplaChannelAvailabilityStatus.ONLINE
+      every { function } returns SuplaFunction.HVAC_THERMOSTAT
     }
     val channelWithChildren: ChannelWithChildren = mockk {
       every { channel } returns mainChannel
@@ -240,6 +241,7 @@ class GetChannelIssuesForListUseCaseTest {
   private fun mockChannelWithChildren(status: SuplaChannelAvailabilityStatus = SuplaChannelAvailabilityStatus.ONLINE): ChannelWithChildren {
     val channel: Channel = mockk {
       every { this@mockk.status } returns status
+      every { this@mockk.function } returns SuplaFunction.HVAC_THERMOSTAT
     }
     return mockk {
       every { this@mockk.channel } returns channel

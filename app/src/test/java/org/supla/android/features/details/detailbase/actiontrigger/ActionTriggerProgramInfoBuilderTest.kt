@@ -31,6 +31,7 @@ import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleEntry
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
 import org.supla.android.ui.views.channelstate.ChannelProgramData
+import org.supla.core.shared.data.model.function.actiontrigger.ActionTriggerValue
 import org.supla.core.shared.infrastructure.LocalizedString
 
 class ActionTriggerProgramInfoBuilderTest {
@@ -58,9 +59,12 @@ class ActionTriggerProgramInfoBuilderTest {
         SuplaWeeklyScheduleEntry(DayOfWeek.MONDAY, 10, QuarterOfHour.SECOND, SuplaScheduleProgram.PROGRAM_2)
       )
     )
+    val value: ActionTriggerValue = mockk {
+      every { temporaryUnlockActive } returns false
+    }
 
     // when
-    val programInfo = ActionTriggerProgramInfoBuilder(config, dateProvider).build()
+    val programInfo = ActionTriggerProgramInfoBuilder(config, dateProvider, value).build()
 
     // then
     assertThat(programInfo).hasSize(2)
@@ -70,5 +74,50 @@ class ActionTriggerProgramInfoBuilderTest {
     assertThat(programInfo[1].type).isEqualTo(ChannelProgramData.Type.NEXT)
     assertThat(programInfo[1].description)
       .isEqualTo(LocalizedString.WithFormat("%s ⏱️", listOf(LocalizedString.WithResourceAndArguments(R.string.general_locked))))
+  }
+
+  @Test
+  fun `should show temporary unlocked state and hide remaining time when temporary unlock is active`() {
+    // given
+    val dateProvider = mockk<DateProvider>()
+    every { dateProvider.currentMinute() } returns 2
+    every { dateProvider.currentDayOfWeek() } returns DayOfWeek.MONDAY
+    every { dateProvider.currentHour() } returns 10
+    val config = SuplaChannelWeeklyScheduleConfig(
+      remoteId = 1,
+      func = null,
+      crc32 = 0,
+      programConfigurations = listOf(
+        SuplaWeeklyScheduleProgram(SuplaScheduleProgram.PROGRAM_1, buttonMode = SuplaButtonMode.LOCKED),
+        SuplaWeeklyScheduleProgram(
+          SuplaScheduleProgram.PROGRAM_2,
+          buttonMode = SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED
+        )
+      ),
+      schedule = listOf(
+        SuplaWeeklyScheduleEntry(DayOfWeek.MONDAY, 10, QuarterOfHour.FIRST, SuplaScheduleProgram.PROGRAM_1),
+        SuplaWeeklyScheduleEntry(DayOfWeek.MONDAY, 10, QuarterOfHour.SECOND, SuplaScheduleProgram.PROGRAM_2)
+      )
+    )
+    val value: ActionTriggerValue = mockk {
+      every { temporaryUnlockActive } returns true
+    }
+
+    // when
+    val programInfo = ActionTriggerProgramInfoBuilder(config, dateProvider, value).build()
+
+    // then
+    assertThat(programInfo).hasSize(2)
+    assertThat(programInfo[0].type).isEqualTo(ChannelProgramData.Type.CURRENT)
+    assertThat(programInfo[0].description)
+      .isEqualTo(LocalizedString.WithResourceAndArguments(R.string.action_trigger_temporary_unlocked))
+    assertThat(programInfo[0].time).isNull()
+    assertThat(programInfo[1].description)
+      .isEqualTo(
+        LocalizedString.WithFormat(
+          "%s ⏱️",
+          listOf(LocalizedString.WithResourceAndArguments(R.string.general_locked))
+        )
+      )
   }
 }

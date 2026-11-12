@@ -18,21 +18,32 @@ package org.supla.android.features.details.actiontrigger.list
  */
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import org.supla.android.R
 import org.supla.android.core.ui.ViewState
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.images.ImageId
 import org.supla.android.tools.SuplaPreview
+import org.supla.android.ui.extensions.ifTrue
 import org.supla.android.ui.lists.ListOnlineState
 import org.supla.android.ui.lists.sensordata.RelatedChannelData
 import org.supla.android.ui.lists.sensordata.RelatedChannelsView
+import org.supla.android.ui.views.Image
+import org.supla.android.ui.views.icons.LockIcon
 import org.supla.android.ui.views.texts.BodyMedium
+import org.supla.core.shared.data.model.function.actiontrigger.ActionTriggerValue
 import org.supla.core.shared.infrastructure.LocalizedString
 
 data class ActionTriggerListViewState(
@@ -73,6 +84,55 @@ fun ActionTriggerListScope.View(
   }
 }
 
+@Composable
+fun ActionTriggerIcons(
+  weeklyActive: Boolean,
+  indicatorType: ActionTriggerValue.IndicatorType,
+  stateIconVisible: Boolean
+) {
+  Row {
+    ActionTriggerIndicatorIcon(
+      type = indicatorType,
+      size = dimensionResource(R.dimen.icon_default_size),
+      modifier = Modifier.padding(end = Distance.tiny)
+    )
+    weeklyActive.ifTrue {
+      Image(
+        drawableId = R.drawable.ic_schedule,
+        tint = MaterialTheme.colorScheme.onSurface,
+        modifier = Modifier.padding(end = Distance.tiny)
+      )
+    }
+
+    if (!stateIconVisible && (indicatorType != ActionTriggerValue.IndicatorType.NONE || weeklyActive)) {
+      Spacer(modifier = Modifier.width(Distance.tiny))
+    }
+  }
+}
+
+@Composable
+fun ActionTriggerIndicatorIcon(
+  type: ActionTriggerValue.IndicatorType,
+  modifier: Modifier = Modifier,
+  size: Dp = dimensionResource(R.dimen.icon_small_size)
+) {
+  when (type) {
+    ActionTriggerValue.IndicatorType.NONE -> Unit
+    ActionTriggerValue.IndicatorType.LOCKED ->
+      LockIcon(
+        color = MaterialTheme.colorScheme.onSurface,
+        modifier = modifier,
+        size = size
+      )
+    ActionTriggerValue.IndicatorType.TEMPORARY_UNLOCKED ->
+      Image(
+        drawableId = R.drawable.ic_lock_temporary_open,
+        tint = MaterialTheme.colorScheme.onSurface,
+        modifier = modifier.size(size)
+      )
+  }
+}
+
 @SuplaPreview
 @Composable
 private fun Preview() {
@@ -87,8 +147,8 @@ private fun Preview() {
             icon = ImageId(R.drawable.fnc_action_trigger),
             caption = LocalizedString.Constant("Action trigger 1"),
             userCaption = "",
-            batteryIcon = null,
-            showChannelStateIcon = false
+            iconsBlock = { ActionTriggerIcons(true, ActionTriggerValue.IndicatorType.LOCKED, true) },
+            showChannelStateIcon = true
           ),
           RelatedChannelData.Visible(
             channelId = 2,
@@ -97,7 +157,7 @@ private fun Preview() {
             icon = ImageId(R.drawable.fnc_action_trigger),
             caption = LocalizedString.Constant("Action trigger 2"),
             userCaption = "",
-            batteryIcon = null,
+            iconsBlock = { ActionTriggerIcons(false, ActionTriggerValue.IndicatorType.TEMPORARY_UNLOCKED, false) },
             showChannelStateIcon = false
           )
         )

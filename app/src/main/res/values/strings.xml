@@ -984,10 +984,13 @@
   <string name="general_unlock">unlock</string>
   <string name="general_locked">locked</string>
   <string name="action_trigger_schedule_temporary_unlock_duration">Temporary unlock duration</string>
+  <string name="action_trigger_schedule_button_mode">Button mode</string>
+  <string name="action_trigger_schedule_default_temporary_unlock_duration">Default</string>
+  <string name="action_trigger_schedule_other_temporary_unlock_duration">Custom</string>
   <string name="general_unlocked">unlocked</string>
   <string name="at_allow_temporary_unlock">Allow temporary unlock</string>
-  <string name="at_locked_temporary_unlock_allowed">Locked with temporary unlock allowed</string>
-  <string name="action_trigger_unlock_dialog_title">Unlock Action Trigger</string>
+  <string name="at_locked_temporary_unlock_allowed">Locked (temporary unlock)</string>
+  <string name="action_trigger_unlock_dialog_title">Unlock Button</string>
   <string name="action_trigger_unlock_temporarily">Unlock temporarily</string>
   <string name="wizard_result_certificate_untrusted">The device certificate is not trusted. Make sure you are connecting to the right device and that its software is up to date.</string>
   <string name="wizard_result_certificate_expired">The device certificate has expired. Update the device software or contact support. Also check that the date and time on your phone are correct.</string>
@@ -1000,7 +1003,7 @@
   <string name="channel_caption_smoke_sensor">Smoke sensor</string>
   <string name="channel_caption_carbon_monoxide_sensor">Carbon monoxide sensor</string>
   <string name="channel_caption_gas_sensor">Gas sensor</string>
-  <string name="channel_caption_action_trigger">Action trigger</string>
+  <string name="channel_caption_action_trigger">Button</string>
   <string name="action_trigger_list_related_title">Related buttons</string>
   <string name="schedule_program_default">Default</string>
   <string name="schedule_program_turn_on_seconds">Turn on %1$ds</string>
@@ -1017,4 +1020,5 @@
   <string name="relay_schedule_program_first_duration">First duration (%1$s)</string>
   <string name="relay_schedule_program_second_duration">Second duration (%1$s)</string>
   <string name="details_buttons">Buttons</string>
+  <string name="action_trigger_temporary_unlocked">temporary unlocked</string>
 </resources>

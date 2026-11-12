@@ -18,13 +18,14 @@ package org.supla.android.features.details.actiontrigger.schedule.data
  */
 
 import androidx.annotation.DrawableRes
-import org.supla.android.data.formatting.TimeFormatter
+import org.supla.android.R
 import org.supla.android.data.source.remote.hvac.SuplaButtonMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
 import org.supla.android.data.source.remote.hvac.label
 import org.supla.android.ui.views.schedule.editor.WeeklyScheduleProgram
 import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 
 data class ActionTriggerScheduleProgram(
   override val program: SuplaScheduleProgram,
@@ -42,19 +43,7 @@ data class ActionTriggerScheduleProgram(
       val durationS = program.buttonTemporaryUnlockDurationS
       val label = when (buttonMode) {
         SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED ->
-          if (durationS == null || durationS == 0) {
-            LocalizedString.WithFormat("%s ⏱\uFE0F", listOf(buttonMode.label))
-          } else if (durationS < 60) {
-            LocalizedString.WithFormat(
-              "%s %ss",
-              listOf(buttonMode.label, TimeFormatter.format(durationS, useShortForm = true))
-            )
-          } else {
-            LocalizedString.WithFormat(
-              "%s %s",
-              listOf(buttonMode.label, TimeFormatter.format(durationS, useShortForm = true))
-            )
-          }
+          LocalizedString.WithFormat("%s ⏱\uFE0F", listOf(localizedString(R.string.general_locked)))
         else -> buttonMode.label
       }
       return ActionTriggerScheduleProgram(program.program, buttonMode, durationS, label)
