@@ -87,7 +87,7 @@ fun SwitchGeneralScope.View(
   Box {
     Column {
       if (state.electricityMeterState != null) {
-        ChannelState(state.deviceStateData, state.programInfo)
+        ChannelState(state.deviceStateData, programInfo = state.programInfo)
         state.channelIssues?.let { ChannelIssuesView(it, modifier = Modifier.padding(top = Distance.default)) }
         Box(modifier = Modifier.weight(1f)) {
           ElectricityMeterMetricsView(
@@ -104,7 +104,7 @@ fun SwitchGeneralScope.View(
           Shadow(orientation = ShadowOrientation.STARTING_BOTTOM, modifier = Modifier.align(Alignment.BottomCenter))
         }
       } else if (state.impulseCounterState != null) {
-        ChannelState(state.deviceStateData, state.programInfo)
+        ChannelState(state.deviceStateData, programInfo = state.programInfo)
         state.channelIssues?.let { ChannelIssuesView(it, modifier = Modifier.padding(top = Distance.default)) }
         Box(modifier = Modifier.weight(1f)) {
           ImpulseCounterMetricsView(
@@ -128,7 +128,7 @@ fun SwitchGeneralScope.View(
           onCaptionLongPress = onCaptionLongPress
         )
       } else if (state.deviceStateData != null || state.programInfo.isNotEmpty()) {
-        ChannelState(state.deviceStateData, state.programInfo)
+        ChannelState(state.deviceStateData, programInfo = state.programInfo)
         state.channelIssues?.let { ChannelIssuesView(it) }
         Spacer(modifier = Modifier.weight(1f))
       } else {

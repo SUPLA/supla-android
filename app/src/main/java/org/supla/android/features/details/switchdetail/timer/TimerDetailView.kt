@@ -109,7 +109,7 @@ private fun TimerDetailViewScope.PortraitDefault(state: TimersDetailViewState) {
     modifier = Modifier.fillMaxHeight(),
     verticalArrangement = Arrangement.SpaceBetween
   ) {
-    ChannelState(state.deviceStateData, state.programInfo)
+    ChannelState(state.deviceStateData, programInfo = state.programInfo)
 
     Column(
       modifier = Modifier
@@ -207,7 +207,7 @@ private fun TimerDetailViewScope.LandscapeDefault(state: TimersDetailViewState) 
       .padding(start = Distance.default, end = Distance.default, bottom = Distance.default)
   ) {
     Column(modifier = Modifier.weight(1f)) {
-      ChannelState(state.deviceStateData, state.programInfo, padding = PaddingValues(top = Distance.default))
+      ChannelState(state.deviceStateData, programInfo = state.programInfo, padding = PaddingValues(top = Distance.default))
       Spacer(modifier = Modifier.weight(1f))
       state.forceActive.ifFalse { DurationInfoTime(state) }
       StartButton(state, padding = PaddingValues.Zero)
@@ -236,7 +236,7 @@ private fun TimerDetailViewScope.LandscapeRunning(state: TimersDetailViewState, 
       .padding(start = Distance.default, end = Distance.default, bottom = Distance.default)
   ) {
     Column(modifier = Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
-      ChannelState(state.deviceStateData, state.programInfo, padding = PaddingValues(top = Distance.default))
+      ChannelState(state.deviceStateData, programInfo = state.programInfo, padding = PaddingValues(top = Distance.default))
       Spacer(modifier = Modifier.weight(1f))
       TimerInProgress(
         timerData = timerData,

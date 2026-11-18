@@ -67,9 +67,9 @@ import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.LoadingScrim
 import org.supla.android.ui.views.buttons.supla.SuplaButton
 import org.supla.android.ui.views.buttons.supla.SuplaButtonDefaults
-import org.supla.android.ui.views.channelstate.ChannelCurrentState
 import org.supla.android.ui.views.channelstate.ChannelProgramData
 import org.supla.android.ui.views.channelstate.ChannelProgramState
+import org.supla.android.ui.views.channelstate.ChannelState
 import org.supla.android.ui.views.thermostat.TemperatureControlButton
 import org.supla.android.ui.views.tools.Shadow
 import org.supla.android.ui.views.tools.ShadowOrientation
@@ -149,8 +149,8 @@ private fun ThermostatGeneralScope.ThermostatView(viewState: ThermostatGeneralVi
       Column {
         if (viewState.isOff.not() && viewState.isAutoFunction && !viewState.programmedModeActive) {
           if (viewState.viewModelState?.timerEndDate != null) {
-            ChannelCurrentState(
-              data = viewState.deviceState,
+            ChannelState(
+              deviceStateData = viewState.deviceState,
               modifier = Modifier
                 .fillMaxWidth()
                 .height(80.dp)
@@ -161,8 +161,8 @@ private fun ThermostatGeneralScope.ThermostatView(viewState: ThermostatGeneralVi
         } else if (viewState.sensorIssue != null) {
           SensorIssueView(sensorIssue = viewState.sensorIssue)
         } else if (viewState.isOffline.not() && viewState.viewModelState?.timerEndDate != null) {
-          ChannelCurrentState(
-            data = viewState.deviceState,
+          ChannelState(
+            deviceStateData = viewState.deviceState,
             modifier = Modifier
               .fillMaxWidth()
               .height(80.dp)
