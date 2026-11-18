@@ -59,7 +59,7 @@ import org.supla.android.tools.SuplaPreviewLandscape
 import org.supla.android.ui.views.TimerProgressView
 import org.supla.android.ui.views.buttons.TextButton
 import org.supla.android.ui.views.buttons.supla.SuplaButton
-import org.supla.android.ui.views.channelstate.ChannelCurrentState
+import org.supla.android.ui.views.channelstate.ChannelState
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.usecase.channel.valueformatter.DefaultValueFormatter
 import java.util.Date
@@ -91,8 +91,8 @@ private fun ThermostatTimerInProgressScope.Landscape(state: TimerDetailViewState
       verticalArrangement = Arrangement.SpaceEvenly,
       modifier = Modifier.fillMaxHeight().weight(1f)
     ) {
-      ChannelCurrentState(
-        data = state.deviceState,
+      ChannelState(
+        deviceStateData = state.deviceState,
         modifier = Modifier.padding(top = Distance.default)
       )
       EditTimeButton { editTimer() }
@@ -112,8 +112,8 @@ private fun ThermostatTimerInProgressScope.Portrait(state: TimerDetailViewState)
       .fillMaxHeight()
       .background(MaterialTheme.colorScheme.background)
   ) {
-    ChannelCurrentState(
-      data = state.deviceState,
+    ChannelState(
+      deviceStateData = state.deviceState,
       modifier = Modifier
         .align(Alignment.TopCenter)
         .padding(top = Distance.default)

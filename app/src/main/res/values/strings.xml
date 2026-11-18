@@ -1021,4 +1021,5 @@
   <string name="relay_schedule_program_second_duration">Second duration (%1$s)</string>
   <string name="details_buttons">Buttons</string>
   <string name="action_trigger_temporary_unlocked">temporary unlocked</string>
+  <string name="channel_current_state_left">Left: %1$s (%2$d s)</string>
 </resources>

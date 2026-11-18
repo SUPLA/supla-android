@@ -84,6 +84,7 @@ import org.supla.android.ui.views.ChannelOfflineView
 import org.supla.android.ui.views.buttons.IconButton
 import org.supla.android.ui.views.card.SummaryCardData
 import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun ElectricityMeterMetricsView(
@@ -486,7 +487,7 @@ private fun ((SuplaElectricityMeasurementType) -> Unit).click(type: SuplaElectri
 private fun Info(scrollState: ScrollState, onClose: () -> Unit, modifier: Modifier = Modifier) {
   val offset = remember { Animatable(100.dp.toPx()) }
   LaunchedEffect("Swipe animation") {
-    delay(2000)
+    delay(2000.milliseconds)
     while (true) {
       launch {
         scrollState.animateScrollBy(
@@ -497,7 +498,7 @@ private fun Info(scrollState: ScrollState, onClose: () -> Unit, modifier: Modifi
       launch {
         offset.animateTo((-100).dp.toPx(), animationSpec = tween(durationMillis = 750, easing = CubicBezierEasing(0.5f, 0.0f, 0.3f, 1.0f)))
       }
-      delay(750)
+      delay(750.milliseconds)
       launch {
         scrollState.animateScrollBy(
           (-100).dp.toPx(),
@@ -507,7 +508,7 @@ private fun Info(scrollState: ScrollState, onClose: () -> Unit, modifier: Modifi
       launch {
         offset.animateTo(100.dp.toPx(), animationSpec = tween(durationMillis = 750, easing = CubicBezierEasing(0.5f, 0.0f, 0.3f, 1.0f)))
       }
-      delay(2000)
+      delay(2000.milliseconds)
     }
   }
 

@@ -35,8 +35,11 @@ import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.lists.onlineState
 import org.supla.android.ui.views.list.ListItemStatus
 import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.core.shared.data.model.channel.SuplaChannelFlag
 import org.supla.core.shared.data.model.channel.suplaFlags
+import org.supla.core.shared.data.model.function.actiontrigger.ActionTriggerValue
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.extensions.forTrue
 import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.GetChannelActionStringUseCase
@@ -219,6 +222,7 @@ class ChannelToListItemMapper @Inject constructor(
 
   private fun toActionTriggerItem(channelWithChildren: ChannelWithChildren): ListItem.DefaultItem {
     val value = channelWithChildren.channel.channelValueEntity.asAtValue()
+    val flags = SuplaChannelFlag.from(channelWithChildren.flags)
 
     return ListItem.ActionTriggerItem(
       remoteId = channelWithChildren.remoteId,
@@ -233,7 +237,9 @@ class ChannelToListItemMapper @Inject constructor(
       issues = getChannelIssuesForListUseCase(channelWithChildren.shareable),
       estimatedTimerEndDate = channelWithChildren.channel.channelExtendedValueEntity?.getSuplaValue()?.TimerStateValue?.countdownEndsAt,
       infoSupported = channelWithChildren.showInfo,
-      indicatorType = value.indicatorType
+      leftButtonString = getChannelActionStringUseCase.leftButton(channelWithChildren.function, flags)?.let { localizedString(it) },
+      rightButtonString = getChannelActionStringUseCase.rightButton(channelWithChildren.function, flags)?.let { localizedString(it) },
+      indicatorType = value.status.online.forTrue { value.indicatorType } ?: ActionTriggerValue.IndicatorType.NONE
     )
   }
 

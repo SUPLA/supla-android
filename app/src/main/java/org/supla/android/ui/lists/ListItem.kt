@@ -245,6 +245,8 @@ sealed interface ListItem {
     issues: ListItemIssues,
     estimatedTimerEndDate: Date? = null,
     infoSupported: Boolean = false,
+    leftButtonString: LocalizedString? = null,
+    rightButtonString: LocalizedString? = null,
     val indicatorType: ActionTriggerValue.IndicatorType
   ) : DefaultItem(
     remoteId = remoteId,
@@ -261,8 +263,8 @@ sealed interface ListItem {
     processing = false,
     estimatedTimerEndDate = estimatedTimerEndDate,
     infoSupported = infoSupported,
-    leftButtonString = localizedString(R.string.general_unlock),
-    rightButtonString = localizedString(R.string.general_lock)
+    leftButtonString = leftButtonString,
+    rightButtonString = rightButtonString
   )
 }
 

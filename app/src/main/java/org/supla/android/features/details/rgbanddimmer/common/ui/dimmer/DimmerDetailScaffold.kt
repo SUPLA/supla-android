@@ -53,7 +53,7 @@ import org.supla.android.ui.views.buttons.SwitchButtons
 import org.supla.android.ui.views.buttons.SwitchIconButton
 import org.supla.android.ui.views.buttons.supla.SuplaButton
 import org.supla.android.ui.views.buttons.supla.SuplaButtonDefaults
-import org.supla.android.ui.views.channelstate.ChannelCurrentState
+import org.supla.android.ui.views.channelstate.ChannelState
 
 @Composable
 fun DimmerDetailScope.Scaffold(
@@ -144,7 +144,7 @@ private fun DimmerDetailScope.Landscape(
     Column(
       modifier = Modifier.weight(1f)
     ) {
-      state.deviceStateData?.let { ChannelCurrentState(data = it, modifier = Modifier.padding(vertical = Distance.vertical)) }
+      state.deviceStateData?.let { ChannelState(deviceStateData = it, modifier = Modifier.padding(vertical = Distance.vertical)) }
       state.channelIssues?.let { issues -> ChannelIssuesView(issues) }
 
       brightnessBox(state.value, Modifier)
@@ -191,7 +191,7 @@ private fun DimmerDetailScope.Portrait(
   val sizeClass = LocalSizeClassProvider.current
 
   Column {
-    state.deviceStateData?.let { ChannelCurrentState(data = it, modifier = Modifier.padding(vertical = sizeClass.padding)) }
+    state.deviceStateData?.let { ChannelState(deviceStateData = it, modifier = Modifier.padding(vertical = sizeClass.padding)) }
     sizeClass.isSmall.ifFalse {
       state.channelIssues?.let { issues -> ChannelIssuesView(issues) }
     }
