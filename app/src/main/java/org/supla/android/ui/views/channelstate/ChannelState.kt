@@ -26,8 +26,8 @@ import org.supla.android.core.ui.theme.Distance
 @Composable
 fun ChannelState(
   deviceStateData: ChannelCurrentData?,
-  programInfo: List<ChannelProgramData>,
   modifier: Modifier = Modifier,
+  programInfo: List<ChannelProgramData> = emptyList(),
   padding: PaddingValues = PaddingValues(start = Distance.default, top = Distance.default, end = Distance.default)
 ) {
   if (programInfo.isNotEmpty()) {

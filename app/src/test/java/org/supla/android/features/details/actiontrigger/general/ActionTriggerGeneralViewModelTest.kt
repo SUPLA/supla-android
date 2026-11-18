@@ -200,7 +200,7 @@ class ActionTriggerGeneralViewModelTest {
   fun `should disable temporary unlock when current schedule duration is zero`() {
     viewModel.setPrivateField("mode", SuplaButtonMode.LOCKED_TEMPORARY_UNLOCK_ALLOWED)
     viewModel.setPrivateField("currentTemporaryUnlockDurationS", 0)
-    viewModel.setPrivateField("defaultTemporaryUnlockDurationS", 600)
+    viewModel.setPrivateField("defaultTemporaryUnlockDurationS", 0)
 
     viewModel.onUnlock()
 

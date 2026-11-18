@@ -65,7 +65,7 @@ import org.supla.android.ui.views.buttons.SwitchButtons
 import org.supla.android.ui.views.buttons.SwitchIconButton
 import org.supla.android.ui.views.buttons.supla.SuplaButtonDefaults
 import org.supla.android.ui.views.channelstate.ChannelCurrentData
-import org.supla.android.ui.views.channelstate.ChannelCurrentState
+import org.supla.android.ui.views.channelstate.ChannelState
 import org.supla.core.shared.infrastructure.localizedString
 
 interface RgbDetailScope : RgbColorDialogScope, SavedColorListScope {
@@ -117,7 +117,7 @@ private fun RgbDetailScope.Landscape(
     Column(
       modifier = Modifier.weight(1f)
     ) {
-      state.deviceStateData?.let { ChannelCurrentState(data = it, modifier = Modifier.padding(vertical = Distance.vertical)) }
+      state.deviceStateData?.let { ChannelState(deviceStateData = it, modifier = Modifier.padding(vertical = Distance.vertical)) }
       state.channelIssues?.let { issues -> ChannelIssuesView(issues) }
 
       ColorAndBrightnessBox(color, state.value, !state.offline)
@@ -221,7 +221,7 @@ private fun RgbDetailScope.Portrait(state: RgbDetailViewState) {
   }
 
   Column {
-    state.deviceStateData?.let { ChannelCurrentState(data = it, modifier = Modifier.padding(vertical = sizeClass.padding)) }
+    state.deviceStateData?.let { ChannelState(deviceStateData = it, modifier = Modifier.padding(vertical = sizeClass.padding)) }
     sizeClass.isSmall.ifFalse {
       state.channelIssues?.let { issues -> ChannelIssuesView(issues) }
     }

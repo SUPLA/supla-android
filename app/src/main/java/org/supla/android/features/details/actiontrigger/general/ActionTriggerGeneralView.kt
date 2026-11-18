@@ -105,7 +105,7 @@ interface ActionTriggerGeneralScope : OperatingButtonsScope {
 fun ActionTriggerGeneralScope.View(state: ActionTriggerGeneralViewState) {
   Column(horizontalAlignment = Alignment.CenterHorizontally) {
     if (state.deviceStateData != null || state.programInfo.isNotEmpty()) {
-      ChannelState(state.deviceStateData, state.programInfo)
+      ChannelState(state.deviceStateData, programInfo = state.programInfo)
     }
     Spacer(modifier = Modifier.weight(1f))
 

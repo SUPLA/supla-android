@@ -997,4 +997,5 @@
   <string name="action_trigger_unlock_temporarily">Odblokuj tymczasowo</string>
   <string name="details_buttons">Przyciski</string>
   <string name="action_trigger_temporary_unlocked">tymczasowo odblokowany</string>
+  <string name="channel_current_state_left">Pozostało: %1$s (%2$d s)</string>
 </resources>

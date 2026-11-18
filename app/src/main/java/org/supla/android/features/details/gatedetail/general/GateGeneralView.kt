@@ -99,7 +99,7 @@ fun GateGeneralScope.View(
 ) {
   Column {
     if (state.deviceStateData != null || state.programInfo.isNotEmpty()) {
-      ChannelState(state.deviceStateData, state.programInfo)
+      ChannelState(state.deviceStateData, programInfo = state.programInfo)
       state.channelIssues?.let { issues -> ChannelIssuesView(issues) }
       Spacer(modifier = Modifier.weight(1f))
     }
