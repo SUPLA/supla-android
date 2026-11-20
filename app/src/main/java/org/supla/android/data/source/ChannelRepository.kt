@@ -65,7 +65,7 @@ class ChannelRepository @Inject constructor(
       .firstOrError()
       .map { channels -> channels.filter { it.locationEntity.caption == locationCaption } }
 
-  fun findChannelListForGroup(groupId: Int): List<ChannelDataEntity> = channelDao.findListForGroup(groupId).blockingGet()
+  fun findChannelListForGroup(groupId: Int): Single<List<ChannelDataEntity>> = channelDao.findListForGroup(groupId)
 
   fun update(entity: ChannelEntity) = channelDao.update(entity)
 

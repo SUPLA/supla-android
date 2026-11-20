@@ -72,9 +72,9 @@ class GroupTotalValue {
           SuplaFunction.CONTROLLING_THE_ROOF_WINDOW,
           SuplaFunction.TERRACE_AWNING,
           SuplaFunction.CURTAIN,
-          SuplaFunction.VERTICAL_BLIND,
           SuplaFunction.ROLLER_GARAGE_DOOR ->
             ShadingSystemGroupValue(it)
+          SuplaFunction.VERTICAL_BLIND,
           SuplaFunction.CONTROLLING_THE_FACADE_BLIND ->
             ShadowingBlindGroupValue(it)
           SuplaFunction.PROJECTOR_SCREEN ->

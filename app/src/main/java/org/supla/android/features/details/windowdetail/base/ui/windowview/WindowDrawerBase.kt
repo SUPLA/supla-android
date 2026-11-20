@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.nativePaint
+import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.unit.dp
 import org.supla.android.features.details.windowdetail.base.data.WindowState
 import org.supla.android.features.details.windowdetail.base.ui.applyForWindow
@@ -36,9 +37,9 @@ abstract class WindowDrawerBase<D : WindowDimensBase, S : WindowState, C : Windo
 
   protected abstract fun DrawScope.drawShadowingElements(windowState: S, runtimeDimens: D, colors: C)
 
-  protected abstract fun DrawScope.drawMarkers(windowState: S, runtimeDimens: D, colors: C)
+  protected abstract fun DrawScope.drawMarkers(windowState: S, runtimeDimens: D, colors: C, textMeasurer: TextMeasurer)
 
-  fun drawWindow(scope: DrawScope, runtimeDimens: D, colors: C, windowState: S) {
+  fun drawWindow(scope: DrawScope, runtimeDimens: D, colors: C, windowState: S, textMeasurer: TextMeasurer) {
     with(scope) {
       val windowFrameRadius = WINDOW_FRAME_RADIUS.dp.toPx().times(runtimeDimens.scale)
 
@@ -65,7 +66,7 @@ abstract class WindowDrawerBase<D : WindowDimensBase, S : WindowState, C : Windo
         paint
       )
 
-      drawMarkers(windowState, runtimeDimens, colors)
+      drawMarkers(windowState, runtimeDimens, colors, textMeasurer)
     }
   }
 

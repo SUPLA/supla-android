@@ -17,16 +17,19 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import com.google.gson.Gson
 import io.mockk.MockKAnnotations
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.mockk
+import io.mockk.slot
 import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -34,14 +37,18 @@ import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.storage.ApplicationPreferences
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.ProfileRepository
+import org.supla.android.data.source.local.entity.ChannelConfigEntity
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.custom.GroupOnlineSummary
+import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.ConfigResult
+import org.supla.android.data.source.remote.SuplaChannelConfig
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.remote.rollershutter.SuplaChannelFacadeBlindConfig
 import org.supla.android.data.source.remote.rollershutter.SuplaTiltControlType
@@ -49,6 +56,7 @@ import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.features.details.windowdetail.base.BaseWindowViewEvent
 import org.supla.android.features.details.windowdetail.base.data.ShadingBlindMarker
+import org.supla.android.features.details.windowdetail.base.data.ShadingBlindWindowState
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValueFormat
 import org.supla.android.features.details.windowdetail.base.data.verticalblinds.VerticalBlindWindowState
@@ -66,9 +74,10 @@ import org.supla.android.usecases.client.CallSuplaClientOperationUseCase
 import org.supla.android.usecases.client.ExecuteShadingSystemActionUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.client.LoginUseCase
+import org.supla.android.usecases.group.CalculateGroupTiltingDetailsUseCase
 import org.supla.android.usecases.group.GetGroupOnlineSummaryUseCase
 import org.supla.android.usecases.group.ObserveChannelGroupByRemoteIdUseCase
-import org.supla.android.usecases.group.ReadGroupTiltingDetailsUseCase
+import org.supla.android.usecases.group.TiltingDetails
 import org.supla.android.usecases.group.totalvalue.ShadowingBlindGroupValue
 import org.supla.core.shared.data.model.function.facadeblind.FacadeBlindValue
 import org.supla.core.shared.data.model.shadingsystem.SuplaShadingSystemFlag
@@ -84,7 +93,7 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
   private lateinit var executeShadingSystemActionUseCase: ExecuteShadingSystemActionUseCase
 
   @RelaxedMockK
-  private lateinit var readGroupTiltingDetailsUseCase: ReadGroupTiltingDetailsUseCase
+  private lateinit var calculateGroupTiltingDetailsUseCase: CalculateGroupTiltingDetailsUseCase
 
   @RelaxedMockK
   private lateinit var suplaClientProvider: SuplaClientProvider
@@ -112,6 +121,12 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
 
   @RelaxedMockK
   private lateinit var profileRepository: ProfileRepository
+
+  @RelaxedMockK
+  private lateinit var channelRepository: ChannelRepository
+
+  @RelaxedMockK
+  private lateinit var gson: Gson
 
   @RelaxedMockK
   private lateinit var loginUseCase: LoginUseCase
@@ -687,6 +702,12 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
 
     every { observeChannelGroupByRemoteIdUseCase.invoke(remoteId) } returns Observable.just(group)
     every { getGroupOnlineSummaryUseCase.invoke(321L) } returns Maybe.just(onlineSummary)
+    every { channelRepository.findChannelListForGroup(remoteId) } returns Single.just(
+      listOf(mockGroupChannel(50, 85), mockGroupChannel(30, 25))
+    )
+    every { gson.fromJson(any<String>(), SuplaChannelFacadeBlindConfig::class.java) } returns mockConfig()
+    every { calculateGroupTiltingDetailsUseCase.invoke(any()) } returns
+      TiltingDetails.Similar(0, 180, SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING)
     every { preferences.isShowOpeningPercent } returns false
 
     // when
@@ -696,10 +717,13 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
     assertThat(states).containsExactly(
       VerticalBlindsViewModelState(
         remoteId = remoteId,
+        tiltControlType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
         windowState = VerticalBlindWindowState(
           position = WindowGroupedValue.Different(30f, 50f),
-          slatTilt = WindowGroupedValue.Similar(85f),
-          markers = listOf(ShadingBlindMarker(50f, 85f), ShadingBlindMarker(30f, 25f)),
+          slatTilt = WindowGroupedValue.Different(25f, 85f),
+          tilt0Angle = 0f,
+          tilt100Angle = 180f,
+          markers = listOf(ShadingBlindMarker(30f, 25f, 0f, 180f), ShadingBlindMarker(50f, 85f, 0f, 180f)),
           positionTextFormat = WindowGroupedValueFormat.PERCENTAGE
         ),
         viewState = WindowViewState(
@@ -709,9 +733,36 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
           onlineStatusString = "2/5",
           orientation = ShadingSystemOrientation.HORIZONTAL
         ),
-        lastPosition = 0
+        lastPosition = null
       )
     )
+  }
+
+  @Test
+  fun `should pass missing channel config when calculating group tilting details`() {
+    // given
+    val remoteId = 123
+    val group = mockGroup(remoteId, status = SuplaChannelAvailabilityStatus.ONLINE)
+    val onlineSummary = GroupOnlineSummary(2, 5)
+    val configs = slot<List<SuplaChannelConfig?>>()
+
+    every { observeChannelGroupByRemoteIdUseCase.invoke(remoteId) } returns Observable.just(group)
+    every { getGroupOnlineSummaryUseCase.invoke(321L) } returns Maybe.just(onlineSummary)
+    every { channelRepository.findChannelListForGroup(remoteId) } returns Single.just(
+      listOf(mockGroupChannel(50, 85, configEntity = null), mockGroupChannel(30, 25))
+    )
+    every { gson.fromJson(any<String>(), SuplaChannelFacadeBlindConfig::class.java) } returns mockConfig()
+    every { calculateGroupTiltingDetailsUseCase.invoke(capture(configs)) } returns TiltingDetails.Unknown
+    every { preferences.isShowOpeningPercent } returns false
+
+    // when
+    viewModel.observeData(remoteId, ItemType.GROUP)
+
+    // then
+    assertThat(configs.captured).hasSize(2).containsNull()
+    assertThat(states.single().windowState.tilt0Angle).isNull()
+    assertThat(states.single().windowState.tilt100Angle).isNull()
+    assertThat(states.single().tiltControlType).isNull()
   }
 
   @Test
@@ -723,6 +774,8 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
 
     every { observeChannelGroupByRemoteIdUseCase.invoke(remoteId) } returns Observable.just(group)
     every { getGroupOnlineSummaryUseCase.invoke(321L) } returns Maybe.just(onlineSummary)
+    every { channelRepository.findChannelListForGroup(remoteId) } returns Single.just(emptyList())
+    every { calculateGroupTiltingDetailsUseCase.invoke(any()) } returns TiltingDetails.Unknown
     every { preferences.isShowOpeningPercent } returns false
 
     // when
@@ -744,7 +797,7 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
           onlineStatusString = "2/5",
           orientation = ShadingSystemOrientation.HORIZONTAL
         ),
-        lastPosition = 0
+        lastPosition = null
       )
     )
   }
@@ -770,6 +823,7 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
     val channelData: ChannelDataEntity = mockk {
       every { this@mockk.remoteId } returns remoteId
       every { channelValueEntity } returns value
+      every { configEntity } returns null
       every { this@mockk.flags } returns 0
     }
 
@@ -787,6 +841,27 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
       every { this@mockk.remoteId } returns remoteId
       every { channelGroupEntity } returns group
       every { this@mockk.status } returns status
+    }
+  }
+
+  private fun mockGroupChannel(
+    position: Int,
+    tilt: Int,
+    configEntity: ChannelConfigEntity? = ChannelConfigEntity(1, 1, "{}", ChannelConfigType.FACADE_BLIND, 0L)
+  ): ChannelDataEntity {
+    val facadeBlindValue: FacadeBlindValue = mockk {
+      every { this@mockk.position } returns position
+      every { this@mockk.tilt } returns tilt
+      every { this@mockk.flags } returns listOf(SuplaShadingSystemFlag.TILT_IS_SET)
+      every { hasValidPosition() } returns (position != -1)
+      every { hasValidTilt() } returns (tilt != -1)
+    }
+    val value = mockk<ChannelValueEntity> {
+      every { asFacadeBlindValue() } returns facadeBlindValue
+    }
+    return mockk {
+      every { channelValueEntity } returns value
+      every { this@mockk.configEntity } returns configEntity
     }
   }
 

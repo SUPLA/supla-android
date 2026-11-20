@@ -31,7 +31,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
@@ -45,12 +44,15 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextMeasurer
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.extensions.drawPercentage
 import org.supla.android.extensions.limit
 import org.supla.android.extensions.toPx
 import org.supla.android.features.details.windowdetail.base.data.ShadingBlindMarker
@@ -62,11 +64,11 @@ import org.supla.android.features.details.windowdetail.base.ui.windowview.Window
 import org.supla.android.features.details.windowdetail.base.ui.windowview.WindowDimensBase
 import org.supla.android.features.details.windowdetail.base.ui.windowview.WindowDrawerBase
 import kotlin.math.abs
+import org.supla.android.extensions.drawText as drawCenteredText
 
 val slatShadowRadius = 1.dp
 private const val MOVE_HYSTERESIS = 20
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun VerticalBlindsWindowView(
   windowState: VerticalBlindWindowState,
@@ -78,6 +80,7 @@ fun VerticalBlindsWindowView(
   val (windowDimens, updateDimens) = remember { mutableStateOf<RuntimeDimens?>(null) }
   val moveState = remember { mutableStateOf(MoveState()) }
   val colors = VerticalBlindColors.standard()
+  val textMeasurer = rememberTextMeasurer()
 
   Canvas(
     modifier = modifier
@@ -91,7 +94,7 @@ fun VerticalBlindsWindowView(
                 moveState.value = moveState.value.copy(
                   initialPoint = Offset(event.x, event.y),
                   initialVerticalPercentage = windowState.slatTilt?.value ?: 0f,
-                  initialHorizontalPercentage = windowState.position.value,
+                  initialHorizontalPercentage = windowState.position.value ?: 0f,
                   horizontalAllowed = true,
                   verticalAllowed = false
                 )
@@ -111,7 +114,7 @@ fun VerticalBlindsWindowView(
                 ?.let { offset -> onPositionChanging?.let { it(offset.y, offset.x) } }
             }
             MotionEvent.ACTION_UP -> {
-              onPositionChanged?.let { it(windowState.slatTilt?.value ?: 0f, windowState.position.value) }
+              onPositionChanged?.let { it(windowState.slatTilt?.value ?: 0f, windowState.position.value ?: 0f) }
               moveState.value = moveState.value.copy(initialPoint = null)
             }
           }
@@ -123,7 +126,13 @@ fun VerticalBlindsWindowView(
       return@Canvas // Skip drawing when view size is not set yet
     }
 
-    WindowDrawer.drawWindow(this@Canvas, runtimeDimens = windowDimens, colors = colors, windowState = windowState)
+    WindowDrawer.drawWindow(
+      scope = this@Canvas,
+      runtimeDimens = windowDimens,
+      colors = colors,
+      windowState = windowState,
+      textMeasurer = textMeasurer
+    )
     if (enabled.not()) {
       drawRect(colors.disabledOverlay)
     }
@@ -136,13 +145,14 @@ private object WindowDrawer : WindowDrawerBase<RuntimeDimens, VerticalBlindWindo
   private val tiltInitialCorrection = 1.dp.toPx()
   private const val TILT_RANGE = 180f
   private const val TILT_HALF_RANGE = 90f
+  private val markerLinesOffsets = listOf(2.5.dp, 0.dp, (-2.5).dp)
 
   override fun DrawScope.drawShadowingElements(
     windowState: VerticalBlindWindowState,
     runtimeDimens: RuntimeDimens,
     colors: VerticalBlindColors
   ) {
-    val leftCorrection = windowState.position.value
+    val leftCorrection = (windowState.position.value ?: 0f)
       .times(runtimeDimens.movementLimit)
       .div(100f)
 
@@ -170,23 +180,21 @@ private object WindowDrawer : WindowDrawerBase<RuntimeDimens, VerticalBlindWindo
   override fun DrawScope.drawMarkers(
     windowState: VerticalBlindWindowState,
     runtimeDimens: RuntimeDimens,
-    colors: VerticalBlindColors
+    colors: VerticalBlindColors,
+    textMeasurer: TextMeasurer
   ) {
     windowState.markers.forEach { marker ->
       val leftPosition = runtimeDimens.topLineRect.left
         .plus(runtimeDimens.slatWidth)
         .plus(runtimeDimens.movementLimit.times(marker.position).div(100f))
 
-      val tilt0 = windowState.tilt0Angle ?: VerticalBlindWindowState.DEFAULT_TILT_0_ANGLE
-      val tilt100 = windowState.tilt100Angle ?: VerticalBlindWindowState.DEFAULT_TILT_100_ANGLE
-      val degrees = tilt0.plus(tilt100.minus(tilt0).times(marker.tilt).div(100))
-      val trimmed = SlatTiltSliderDimens.trimAngle(degrees)
-
       drawMarker(
-        Offset(leftPosition, runtimeDimens.topLineRect.bottom),
-        trimmed,
-        runtimeDimens,
-        colors
+        offset = Offset(leftPosition, runtimeDimens.topLineRect.bottom),
+        value = marker.tiltValue,
+        tilt = marker.tilt?.let { SlatTiltSliderDimens.trimAngle(it) },
+        runtimeDimens = runtimeDimens,
+        windowColors = colors,
+        textMeasurer = textMeasurer
       )
     }
   }
@@ -233,7 +241,14 @@ private object WindowDrawer : WindowDrawerBase<RuntimeDimens, VerticalBlindWindo
     drawPath(path = path, color = colors.slatBorder, style = Stroke(width = 1.dp.toPx()))
   }
 
-  private fun DrawScope.drawMarker(offset: Offset, tilt: Float, runtimeDimens: RuntimeDimens, windowColors: VerticalBlindColors) {
+  private fun DrawScope.drawMarker(
+    offset: Offset,
+    value: Float?,
+    tilt: Float?,
+    runtimeDimens: RuntimeDimens,
+    windowColors: VerticalBlindColors,
+    textMeasurer: TextMeasurer
+  ) {
     drawCircle(color = windowColors.slatBackground, radius = runtimeDimens.markerInfoRadius, center = offset)
     drawCircle(
       color = windowColors.slatBorder,
@@ -243,28 +258,42 @@ private object WindowDrawer : WindowDrawerBase<RuntimeDimens, VerticalBlindWindo
     )
     val lineOffset = runtimeDimens.markerInfoRadius / 2
 
-    val lines = listOf(
-      offset.minus(Offset(0f, 2.5.dp.toPx())),
-      offset,
-      offset.plus(Offset(0f, 2.5.dp.toPx()))
-    )
-    lines.forEach {
-      rotate(tilt, it) {
-        drawLine(
-          color = windowColors.markerBorder,
-          start = Offset(it.x - lineOffset, it.y),
-          end = Offset(it.x + lineOffset, it.y),
-          strokeWidth = 1.dp.toPx()
-        )
+    if (tilt != null) {
+      markerLinesOffsets.forEach {
+        val y = offset.y - it.toPx()
+        rotate(tilt, Offset(x = offset.x, y = y)) {
+          drawLine(
+            color = windowColors.markerBorder,
+            start = Offset(offset.x - lineOffset, y),
+            end = Offset(offset.x + lineOffset, y),
+            strokeWidth = 1.dp.toPx()
+          )
+        }
       }
+    } else if (value != null) {
+      drawPercentage(
+        value = value.div(100f),
+        textMeasurer = textMeasurer,
+        color = windowColors.markerBorder,
+        center = offset,
+        textSize = 6.dp
+      )
+    } else {
+      drawCenteredText(
+        text = "?",
+        textMeasurer = textMeasurer,
+        color = windowColors.markerBorder,
+        center = offset,
+        textSize = 6.dp
+      )
     }
   }
 }
 
 private fun DrawScope.applyForSlat(paint: Paint, colors: VerticalBlindColors) {
   with(paint) {
-    style = android.graphics.Paint.Style.FILL
-    strokeCap = android.graphics.Paint.Cap.SQUARE
+    style = Paint.Style.FILL
+    strokeCap = Paint.Cap.SQUARE
     color = colors.slatBackground.toArgb()
     setShadowLayer(slatShadowRadius.toPx(), 0f, 1.5.dp.toPx(), colors.shadow.toArgb())
   }

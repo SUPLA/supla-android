@@ -45,8 +45,8 @@ data class FacadeBlindValue(
 
       return FacadeBlindValue(
         status = status,
-        position = bytes[0].toInt().let { if (it < INVALID_VALUE || it > MAX_VALUE) INVALID_VALUE else it },
-        tilt = bytes[1].toInt().let { if (it < INVALID_VALUE || it > MAX_VALUE) INVALID_VALUE else it },
+        position = bytes[0].toInt().let { if (it !in INVALID_VALUE..MAX_VALUE) INVALID_VALUE else it },
+        tilt = bytes[1].toInt().let { if (it !in INVALID_VALUE..MAX_VALUE) INVALID_VALUE else it },
         flags = SuplaShadingSystemFlag.from(bytes.toShort(3, 4).toInt())
       )
     }

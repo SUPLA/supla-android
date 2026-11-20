@@ -17,6 +17,7 @@ package org.supla.android.features.details.windowdetail.base.ui.facadeblinds
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.hoverable
@@ -29,7 +30,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
@@ -49,12 +50,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextMeasurer
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Shadow
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.data.ValuesFormatter
+import org.supla.android.extensions.drawText
+import org.supla.android.ui.views.texts.BodySmall
 
 object SlatTiltSliderDimens {
   val thumbSize = 40.dp
@@ -71,22 +82,28 @@ object SlatTiltSliderDimens {
       .minus(SLAT_MAX_ANGLE)
 }
 
+data class SlatMarker(
+  val value: Float, // value as percentage
+  val tilt: Float? // tilt as degrees, may be not available
+)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SlatTiltSlider(
-  value: Float,
+  value: Float?,
   modifier: Modifier = Modifier,
   valueRange: ClosedFloatingPointRange<Float> = 0f..100f,
   steps: Int = 0,
-  slatsTiltDegrees: Float = 0f,
+  slatsTiltDegrees: Float? = 0f,
   enabled: Boolean = true,
+  markers: List<SlatMarker>? = null,
   onValueChange: (Float) -> Unit = {},
   onValueChangeFinished: (Float) -> Unit = {}
 ) {
   val interactionSource = remember { MutableInteractionSource() }
-  var lastValue = value
+  var lastValue: Float? = value
   Slider(
-    value = value,
+    value = value ?: 0f,
     valueRange = valueRange,
     steps = steps,
     enabled = enabled,
@@ -94,10 +111,10 @@ fun SlatTiltSlider(
       lastValue = it
       onValueChange(it)
     },
-    onValueChangeFinished = { onValueChangeFinished(lastValue) },
+    onValueChangeFinished = { onValueChangeFinished(lastValue ?: 0f) },
     interactionSource = interactionSource,
-    thumb = { Thumb(interactionSource = interactionSource, degrees = slatsTiltDegrees, enabled = enabled) },
-    track = { Track(steps, enabled = enabled) },
+    thumb = { Thumb(interactionSource, value, slatsTiltDegrees, enabled, visible = lastValue != null) },
+    track = { Track(steps, enabled = enabled, markers) },
     modifier = modifier,
   )
 }
@@ -105,8 +122,10 @@ fun SlatTiltSlider(
 @Composable
 private fun Thumb(
   interactionSource: MutableInteractionSource,
-  degrees: Float,
-  enabled: Boolean
+  value: Float?,
+  degrees: Float?,
+  enabled: Boolean,
+  visible: Boolean
 ) {
   val interactions = remember { mutableStateListOf<Interaction>() }
   LaunchedEffect(interactionSource) {
@@ -122,66 +141,76 @@ private fun Thumb(
     }
   }
 
-  val slatDegrees = SlatTiltSliderDimens.trimAngle(degrees)
-
-  Box(
-    Modifier
-      .size(SlatTiltSliderDimens.thumbSize)
-      .indication(
-        interactionSource = interactionSource,
-        indication = ripple(
-          bounded = false,
-          radius = SlatTiltSliderDimens.thumbSize.div(2)
+  if (visible) {
+    Box(
+      Modifier
+        .size(SlatTiltSliderDimens.thumbSize)
+        .indication(
+          interactionSource = interactionSource,
+          indication = ripple(
+            bounded = false,
+            radius = SlatTiltSliderDimens.thumbSize.div(2)
+          )
         )
-      )
-      .hoverable(interactionSource = interactionSource)
-      .let {
-        if (enabled) {
-          it.shadow(elevation = Shadow.elevation, shape = CircleShape)
-        } else {
-          it
+        .hoverable(interactionSource = interactionSource)
+        .let {
+          if (enabled) {
+            it.shadow(elevation = Shadow.elevation, shape = CircleShape)
+          } else {
+            it
+          }
+        }
+        .background(
+          color = MaterialTheme.colorScheme.surface,
+          shape = CircleShape
+        )
+        .border(
+          width = 1.dp,
+          color = colorResource(id = R.color.disabled),
+          shape = RoundedCornerShape(corner = CornerSize(SlatTiltSliderDimens.thumbSize.div(2)))
+        )
+    ) {
+      if (enabled) {
+        if (degrees != null) {
+          val slatDegrees = SlatTiltSliderDimens.trimAngle(degrees)
+
+          Column(modifier = Modifier.align(Alignment.Center), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+            repeat(3) {
+              Box(
+                modifier = Modifier
+                  .rotate(slatDegrees)
+                  .width(12.dp)
+                  .height(1.dp)
+                  .background(MaterialTheme.colorScheme.onSurface, RoundedCornerShape(0.5.dp))
+              )
+            }
+          }
+        } else if (value != null) {
+          BodySmall(
+            text = ValuesFormatter.getPercentageString(value = value.div(100f)),
+            modifier = Modifier.align(Alignment.Center)
+          )
         }
       }
-      .background(
-        color = MaterialTheme.colorScheme.surface,
-        shape = CircleShape
-      )
-      .border(
-        width = 1.dp,
-        color = colorResource(id = R.color.disabled),
-        shape = RoundedCornerShape(corner = CornerSize(SlatTiltSliderDimens.thumbSize.div(2)))
-      )
-  ) {
-    if (enabled) {
-      Column(modifier = Modifier.align(Alignment.Center), verticalArrangement = Arrangement.spacedBy(3.dp)) {
-        Box(
-          modifier = Modifier
-            .rotate(slatDegrees)
-            .width(12.dp)
-            .height(1.dp)
-            .background(colorResource(id = R.color.on_surface_variant), RoundedCornerShape(0.5.dp))
-        )
-        Box(
-          modifier = Modifier
-            .rotate(slatDegrees)
-            .width(12.dp)
-            .height(1.dp)
-            .background(colorResource(id = R.color.on_surface_variant), RoundedCornerShape(0.5.dp))
-        )
-        Box(
-          modifier = Modifier
-            .rotate(slatDegrees)
-            .width(12.dp)
-            .height(1.dp)
-            .background(colorResource(id = R.color.on_surface_variant), RoundedCornerShape(0.5.dp))
-        )
-      }
     }
+  } else {
+    Box(
+      Modifier
+        .size(SlatTiltSliderDimens.thumbSize)
+        .indication(
+          interactionSource = interactionSource,
+          indication = ripple(
+            bounded = false,
+            radius = SlatTiltSliderDimens.thumbSize.div(2)
+          )
+        )
+        .hoverable(interactionSource = interactionSource)
+    )
   }
 }
 
 @Composable
-private fun Track(steps: Int, enabled: Boolean) {
+private fun Track(steps: Int, enabled: Boolean, markers: List<SlatMarker>?) {
   val color = if (enabled) {
     colorResource(id = R.color.gray_light)
   } else {
@@ -194,15 +223,82 @@ private fun Track(steps: Int, enabled: Boolean) {
       .background(color, shape = RoundedCornerShape(SlatTiltSliderDimens.trackHeight.div(2))),
     verticalAlignment = Alignment.CenterVertically
   ) {
-    for (i in 0 until steps - 2) {
-      Spacer(modifier = Modifier.weight(1f))
-      Box(
-        modifier = Modifier
-          .size(SlatTiltSliderDimens.trackPointSize)
-          .background(colorResource(id = R.color.on_primary), shape = CircleShape)
-      )
+    val stepBackground = MaterialTheme.colorScheme.onPrimary
+    val markerBackground = MaterialTheme.colorScheme.surface
+    val markerBorder = if (enabled) colorResource(R.color.disabled) else MaterialTheme.colorScheme.outline
+    val markerContent = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.outline
+    val textMeasurer = rememberTextMeasurer()
+
+    Canvas(
+      modifier = Modifier.fillMaxSize()
+    ) {
+      val distance = size.width.div(steps - 1)
+      for (i in 1 until steps - 1) {
+        drawCircle(
+          color = stepBackground,
+          radius = SlatTiltSliderDimens.trackPointSize.toPx().div(2),
+          center = Offset(distance.times(i), center.y)
+        )
+      }
+
+      markers?.forEach {
+        drawMarker(
+          backgroundColor = markerBackground,
+          borderColor = markerBorder,
+          contentColor = markerContent,
+          position = it.value,
+          degrees = it.tilt,
+          textMeasurer = textMeasurer
+        )
+      }
     }
-    Spacer(modifier = Modifier.weight(1f))
+  }
+}
+
+private val markerLinesOffsets = listOf(4.dp, 0.dp, (-4).dp)
+private fun DrawScope.drawMarker(
+  backgroundColor: Color,
+  borderColor: Color,
+  contentColor: Color,
+  position: Float,
+  degrees: Float?,
+  textMeasurer: TextMeasurer
+) {
+  val xOffset = size.width / 100 * position
+  drawCircle(
+    color = backgroundColor,
+    radius = 12.dp.toPx(),
+    center = Offset(xOffset, center.y)
+  )
+  drawCircle(
+    color = borderColor,
+    radius = 12.dp.toPx(),
+    style = Stroke(width = 1.dp.toPx()),
+    center = Offset(xOffset, center.y)
+  )
+
+  if (degrees != null) {
+    val rotation = SlatTiltSliderDimens.trimAngle(degrees)
+    markerLinesOffsets.forEach { lineOffset ->
+      rotate(
+        degrees = rotation,
+        pivot = Offset(xOffset, center.y - lineOffset.toPx())
+      ) {
+        drawLine(
+          color = contentColor,
+          start = Offset(xOffset - 5.dp.toPx(), center.y - lineOffset.toPx()),
+          end = Offset(xOffset + 5.dp.toPx(), center.y - lineOffset.toPx()),
+          strokeWidth = 1.dp.toPx()
+        )
+      }
+    }
+  } else {
+    drawText(
+      text = "?",
+      textMeasurer = textMeasurer,
+      color = contentColor,
+      center = Offset(xOffset, center.y)
+    )
   }
 }
 
@@ -215,6 +311,18 @@ private fun Preview() {
       SlatTiltSlider(value = 2f, valueRange = 1f..10f, steps = 10)
       SlatTiltSlider(value = 55f)
       SlatTiltSlider(value = 55f, enabled = false)
+      SlatTiltSlider(value = null, enabled = false, markers = previewMarkers)
+      SlatTiltSlider(value = null, enabled = true, markers = previewMarkers)
+      SlatTiltSlider(value = 55f, slatsTiltDegrees = null)
     }
   }
 }
+
+private val previewMarkers = listOf(
+  SlatMarker(0f, 180f),
+  SlatMarker(25f, 45f),
+  SlatMarker(50f, 90f),
+  SlatMarker(75f, 0f),
+  SlatMarker(100f, 65f),
+  SlatMarker(85f, null),
+)

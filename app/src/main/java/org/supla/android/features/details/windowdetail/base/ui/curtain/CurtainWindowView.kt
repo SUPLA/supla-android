@@ -30,7 +30,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
@@ -41,6 +40,8 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextMeasurer
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
@@ -54,7 +55,6 @@ import org.supla.android.features.details.windowdetail.base.ui.windowview.Window
 import org.supla.android.features.details.windowdetail.base.ui.windowview.WindowDimensBase
 import org.supla.android.features.details.windowdetail.base.ui.windowview.WindowDrawerBase
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CurtainWindowView(
   windowState: CurtainWindowState,
@@ -66,6 +66,7 @@ fun CurtainWindowView(
   val (windowDimens, updateDimens) = remember { mutableStateOf<RuntimeDimens?>(null) }
   val moveState = remember { mutableStateOf(MoveState(horizontalAllowed = true)) }
   val colors = CurtainColors.standard()
+  val textMeasurer = rememberTextMeasurer()
 
   Canvas(
     modifier = modifier
@@ -78,7 +79,7 @@ fun CurtainWindowView(
               if (windowDimens.windowRect.contains(point)) {
                 moveState.value = moveState.value.copy(
                   initialPoint = Offset(event.x, event.y),
-                  initialHorizontalPercentage = windowState.position.value
+                  initialHorizontalPercentage = windowState.position.value ?: 0f
                 )
               }
             }
@@ -89,7 +90,7 @@ fun CurtainWindowView(
                 ?.let { position -> onPositionChanging?.let { it(position.x) } }
             }
             MotionEvent.ACTION_UP -> {
-              onPositionChanged?.let { it(windowState.position.value) }
+              onPositionChanged?.let { it(windowState.position.value ?: 0f) }
               moveState.value = moveState.value.copy(initialPoint = null)
             }
           }
@@ -101,7 +102,13 @@ fun CurtainWindowView(
       return@Canvas // Skip drawing when view size is not set yet
     }
 
-    WindowDrawer.drawWindow(this@Canvas, runtimeDimens = windowDimens, colors = colors, windowState = windowState)
+    WindowDrawer.drawWindow(
+      scope = this@Canvas,
+      runtimeDimens = windowDimens,
+      colors = colors,
+      windowState = windowState,
+      textMeasurer = textMeasurer
+    )
     if (enabled.not()) {
       drawRect(colors.disabledOverlay)
     }
@@ -111,7 +118,7 @@ fun CurtainWindowView(
 private object WindowDrawer : WindowDrawerBase<RuntimeDimens, CurtainWindowState, CurtainColors>() {
 
   override fun DrawScope.drawShadowingElements(windowState: CurtainWindowState, runtimeDimens: RuntimeDimens, colors: CurtainColors) {
-    val position = if (windowState.markers.isEmpty()) windowState.position.value else windowState.markers.max()
+    val position = if (windowState.markers.isEmpty()) windowState.position.value ?: 0f else windowState.markers.max()
 
     val curtainWidthDiff = runtimeDimens.leftCurtainRect.width.minus(runtimeDimens.curtainMinWidth).times(100.minus(position)).div(100)
 
@@ -119,7 +126,12 @@ private object WindowDrawer : WindowDrawerBase<RuntimeDimens, CurtainWindowState
     drawCurtain(runtimeDimens.rightCurtainRect.narrowToRight(curtainWidthDiff), colors)
   }
 
-  override fun DrawScope.drawMarkers(windowState: CurtainWindowState, runtimeDimens: RuntimeDimens, colors: CurtainColors) {
+  override fun DrawScope.drawMarkers(
+    windowState: CurtainWindowState,
+    runtimeDimens: RuntimeDimens,
+    colors: CurtainColors,
+    textMeasurer: TextMeasurer
+  ) {
     windowState.markers.forEach { markerPosition ->
       val curtainWidthDiffForMarker = runtimeDimens.leftCurtainRect.width
         .minus(runtimeDimens.curtainMinWidth)

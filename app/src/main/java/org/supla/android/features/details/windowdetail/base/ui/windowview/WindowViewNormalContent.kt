@@ -52,6 +52,7 @@ import org.supla.android.features.details.windowdetail.base.data.facadeblinds.Fa
 import org.supla.android.features.details.windowdetail.base.data.verticalblinds.VerticalBlindWindowState
 import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemAction
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
+import org.supla.android.features.details.windowdetail.base.ui.facadeblinds.SlatMarker
 import org.supla.android.features.details.windowdetail.base.ui.facadeblinds.SlatTiltSlider
 import org.supla.android.features.details.windowdetail.base.ui.facadeblinds.SlatTiltSliderDimens
 import org.supla.android.features.details.windowdetail.base.ui.windowview.controls.HoldToMoveVerticalButtons
@@ -169,10 +170,11 @@ private fun VerticalControlButtons(
     }
     (windowState as? FacadeBlindWindowState)?.let {
       SlatTiltSlider(
-        value = windowState.slatTilt?.value ?: 0f,
+        value = windowState.slatTilt?.value,
         modifier = Modifier.width(240.dp),
         enabled = viewState.enabled && windowState.slatTilt != null,
-        slatsTiltDegrees = windowState.slatTiltDegrees ?: 0f,
+        slatsTiltDegrees = windowState.sliderSlatTiltDegrees,
+        markers = windowState.markers.mapNotNull { marker -> marker.tiltValue?.let { SlatMarker(it, marker.tilt) } },
         onValueChange = { onAction(ShadingSystemAction.TiltTo(it)) },
         onValueChangeFinished = { onAction(ShadingSystemAction.TiltSetTo(it)) }
       )
@@ -216,12 +218,13 @@ private fun HorizontalControlButtons(
     Spacer(modifier = Modifier.height(8.dp))
     (windowState as? VerticalBlindWindowState)?.let {
       SlatTiltSlider(
-        value = windowState.slatTilt?.value ?: 0f,
+        value = windowState.slatTilt?.value,
         modifier = Modifier
           .width(300.dp)
           .height(40.dp),
         enabled = viewState.enabled && windowState.slatTilt != null,
-        slatsTiltDegrees = windowState.slatTiltDegrees ?: 0f,
+        slatsTiltDegrees = windowState.sliderSlatTiltDegrees,
+        markers = windowState.markers.mapNotNull { marker -> marker.tiltValue?.let { SlatMarker(it, marker.tilt) } },
         onValueChange = { onAction(ShadingSystemAction.TiltTo(it)) },
         onValueChangeFinished = { onAction(ShadingSystemAction.TiltSetTo(it)) }
       )

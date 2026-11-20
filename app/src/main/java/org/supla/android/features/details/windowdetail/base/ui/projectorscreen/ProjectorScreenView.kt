@@ -89,7 +89,7 @@ fun ProjectorScreenView(
               if (windowDimens.canvasRect.contains(point)) {
                 moveState.value = moveState.value.copy(
                   initialPoint = Offset(event.x, event.y),
-                  initialVerticalPercentage = windowState.position.value
+                  initialVerticalPercentage = windowState.position.value ?: 0f
                 )
               }
             }
@@ -100,7 +100,7 @@ fun ProjectorScreenView(
                 ?.let { position -> onPositionChanging?.let { it(position) } }
             }
             MotionEvent.ACTION_UP -> {
-              onPositionChanged?.let { it(windowState.position.value) }
+              onPositionChanged?.let { it(windowState.position.value ?: 0f) }
               moveState.value = moveState.value.copy(initialPoint = null)
             }
           }
@@ -113,7 +113,7 @@ fun ProjectorScreenView(
     }
 
     val position = if (windowState.markers.isEmpty()) windowState.position.value else windowState.markers.max()
-    val screenHeight = windowDimens.maxScreenHeight.times(position).div(100)
+    val screenHeight = windowDimens.maxScreenHeight.times(position ?: 0f).div(100)
     val bottomRect = windowDimens.bottomRect.translate(0f, screenHeight)
     val radius = bottomRect.height.div(2)
     val cornerRadius = CornerRadius(radius, radius)

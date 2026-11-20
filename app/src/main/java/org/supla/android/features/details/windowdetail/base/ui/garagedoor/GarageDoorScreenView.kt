@@ -89,7 +89,7 @@ fun GarageDoorScreenView(
               if (windowDimens.canvasRect.contains(point)) {
                 moveState.value = moveState.value.copy(
                   initialPoint = Offset(event.x, event.y),
-                  initialVerticalPercentage = windowState.position.value
+                  initialVerticalPercentage = windowState.position.value ?: 0f
                 )
               }
             }
@@ -100,7 +100,7 @@ fun GarageDoorScreenView(
                 ?.let { position -> onPositionChanging?.let { it(position) } }
             }
             MotionEvent.ACTION_UP -> {
-              onPositionChanged?.let { it(windowState.position.value) }
+              onPositionChanged?.invoke(windowState.position.value ?: 0f)
               moveState.value = moveState.value.copy(initialPoint = null)
             }
           }
@@ -113,7 +113,7 @@ fun GarageDoorScreenView(
     }
 
     val position = if (windowState.markers.isEmpty()) windowState.position.value else windowState.markers.max()
-    val topCorrection = windowDimens.movementMaxHeight.times(100f.minus(position)).div(100)
+    val topCorrection = windowDimens.movementMaxHeight.times(100f.minus(position ?: 0f)).div(100)
 
     GarageDoorDrawer.drawGarageBuilding(this@Canvas, windowDimens, colors)
     GarageDoorDrawer.drawGarageContent(this@Canvas, garageContentPainter, windowDimens)

@@ -1,4 +1,7 @@
 package org.supla.android.features.details.windowdetail.base.data
+
+import org.supla.core.shared.extensions.guardLet
+
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -19,5 +22,13 @@ package org.supla.android.features.details.windowdetail.base.data
 
 data class ShadingBlindMarker(
   val position: Float,
-  val tilt: Float
-)
+  val tiltValue: Float?,
+  val tilt0Angle: Float? = null,
+  val tilt100Angle: Float? = null
+) {
+  val tilt: Float?
+    get() {
+      val (tiltValue, tilt0, tilt100) = guardLet(tiltValue, tilt0Angle, tilt100Angle) { return null }
+      return tiltValue.angleBetween(tilt0, tilt100)
+    }
+}

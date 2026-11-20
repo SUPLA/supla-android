@@ -190,11 +190,11 @@ class GroupTotalValueTest {
   fun `should convert to string and back - vertical blind`() {
     // given
     val totalValue = GroupTotalValue()
-    totalValue.add(ShadingSystemGroupValue(position = 80, closeSensorActive = true), online = true)
-    totalValue.add(ShadingSystemGroupValue(position = 50, closeSensorActive = false), online = true)
+    totalValue.add(ShadowingBlindGroupValue(position = 80, tilt = 10), online = true)
+    totalValue.add(ShadowingBlindGroupValue(position = 50, tilt = 50), online = true)
     // offline items should be not added
-    totalValue.add(ShadingSystemGroupValue(position = 50, closeSensorActive = false), online = false)
-    totalValue.add(ShadingSystemGroupValue(position = 50, closeSensorActive = false), online = false)
+    totalValue.add(ShadowingBlindGroupValue(position = 50, tilt = 20), online = false)
+    totalValue.add(ShadowingBlindGroupValue(position = 50, tilt = 70), online = false)
 
     // when
     val totalValueString = totalValue.asString()
@@ -202,10 +202,10 @@ class GroupTotalValueTest {
 
     // then
     assertThat(totalValue.online).isEqualTo(50)
-    assertThat(totalValueString).isEqualTo("80:1|50:0")
+    assertThat(totalValueString).isEqualTo("80:10|50:50")
     assertThat(values).containsExactly(
-      ShadingSystemGroupValue(position = 80, closeSensorActive = true),
-      ShadingSystemGroupValue(position = 50, closeSensorActive = false)
+      ShadowingBlindGroupValue(position = 80, tilt = 10),
+      ShadowingBlindGroupValue(position = 50, tilt = 50)
     )
   }
 

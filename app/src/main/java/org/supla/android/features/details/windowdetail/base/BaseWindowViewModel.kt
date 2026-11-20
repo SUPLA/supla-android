@@ -192,12 +192,12 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
       .disposeBySelf()
   }
 
-  private fun observeGroupData(remoteId: Int) {
+  protected open fun observeGroupData(remoteId: Int) {
     observeChannelGroupByRemoteIdUseCase(remoteId)
       .flatMap { groupData ->
         getGroupOnlineSummaryUseCase.invoke(groupData.id!!)
           .toObservable()
-          .map { GroupData(groupData, it) }
+          .map { GroupData(groupData, it, emptyList()) }
       }
       .attachSilent()
       .subscribeBy(
@@ -228,36 +228,38 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
       .disposeBySelf()
   }
 
-  protected fun <T> getGroupValues(values: List<T>, hadMarkers: Boolean, extractor: ((T) -> Float)? = null): WindowGroupedValue {
-    var lastValue: Float? = null
-    var minValue: Float? = null
-    var maxValue: Float? = null
+  protected fun <T> getGroupValues(
+    values: List<T>,
+    hadMarkers: Boolean? = null,
+    extractor: ((T) -> Float)? = null
+  ): WindowGroupedValue {
+    if (values.isEmpty()) return WindowGroupedValue.Invalid
 
-    for (value in values) {
-      val floatValue: Float = if (value is Float) value else extractor!!(value)
+    var firstValue: Float? = null
+    var minValue = Float.POSITIVE_INFINITY
+    var maxValue = Float.NEGATIVE_INFINITY
 
-      if (minValue == null || minValue > floatValue) {
-        minValue = floatValue
-      }
-      if (maxValue == null || maxValue < floatValue) {
-        maxValue = floatValue
-      }
+    for (item in values) {
+      val value = if (item is Float) item else extractor!!(item)
 
-      if (lastValue == null) {
-        lastValue = floatValue
-      }
+      if (firstValue == null) firstValue = value
+      minValue = minOf(minValue, value)
+      maxValue = maxOf(maxValue, value)
     }
 
-    return if (lastValue == null || lastValue == -1f) {
-      WindowGroupedValue.Invalid
-    } else {
-      ifLet(minValue, maxValue) { (min, max) ->
-        if ((hadMarkers && abs(min - max) > 3) || abs(min - max) > 5) {
-          return WindowGroupedValue.Different(min, max)
-        }
+    val differenceThreshold =
+      when (hadMarkers) {
+        true -> 3
+        false -> 5
+        null -> 0
       }
 
-      WindowGroupedValue.Similar(lastValue)
+    return if (firstValue == -1f || firstValue == null) {
+      WindowGroupedValue.Invalid
+    } else if (maxValue - minValue > differenceThreshold) {
+      WindowGroupedValue.Different(minValue, maxValue)
+    } else {
+      WindowGroupedValue.Similar(firstValue)
     }
   }
 
@@ -325,7 +327,8 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
 
   protected data class GroupData(
     val groupDataEntity: ChannelGroupDataEntity,
-    val onlineSummary: GroupOnlineSummary
+    val onlineSummary: GroupOnlineSummary,
+    val channels: List<ChannelDataEntity>
   )
 }
 

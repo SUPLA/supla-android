@@ -44,6 +44,8 @@ import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextMeasurer
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
@@ -74,6 +76,7 @@ fun RollerShutterWindowView(
   val (windowDimens, updateDimens) = remember { mutableStateOf<RuntimeDimens?>(null) }
   val moveState = remember { mutableStateOf(MoveState()) }
   val colors = RollerShutterColors.standard()
+  val textMeasurer = rememberTextMeasurer()
 
   Canvas(
     modifier = modifier
@@ -86,7 +89,7 @@ fun RollerShutterWindowView(
               if (windowDimens.windowRect.contains(point)) {
                 moveState.value = moveState.value.copy(
                   initialPoint = Offset(event.x, event.y),
-                  initialVerticalPercentage = windowState.position.value
+                  initialVerticalPercentage = windowState.position.value ?: 0f
                 )
               }
             }
@@ -97,7 +100,7 @@ fun RollerShutterWindowView(
                 ?.let { position -> onPositionChanging?.let { it(position.y) } }
             }
             MotionEvent.ACTION_UP -> {
-              onPositionChanged?.let { it(windowState.position.value) }
+              onPositionChanged?.let { it(windowState.position.value ?: 0f) }
               moveState.value = moveState.value.copy(initialPoint = null)
             }
           }
@@ -109,7 +112,13 @@ fun RollerShutterWindowView(
       return@Canvas // Skip drawing when view size is not set yet
     }
 
-    WindowDrawer.drawWindow(this@Canvas, runtimeDimens = windowDimens, colors = colors, windowState = windowState)
+    WindowDrawer.drawWindow(
+      scope = this@Canvas,
+      runtimeDimens = windowDimens,
+      colors = colors,
+      windowState = windowState,
+      textMeasurer = textMeasurer
+    )
     if (enabled.not()) {
       drawRect(colors.disabledOverlay)
     }
@@ -124,7 +133,7 @@ private object WindowDrawer : WindowDrawerBase<RuntimeDimens, RollerShutterWindo
     colors: RollerShutterColors
   ) {
     // 0 ... 1 -> 0 ... 100%
-    val position = if (windowState.markers.isEmpty()) windowState.position.value else windowState.markers.max()
+    val position = if (windowState.markers.isEmpty()) windowState.position.value ?: 0f else windowState.markers.max()
     val positionCorrectedByBottomPosition = position
       .div(windowState.bottomPosition)
       .let { if (it > 1) 1f else it }
@@ -166,7 +175,12 @@ private object WindowDrawer : WindowDrawerBase<RuntimeDimens, RollerShutterWindo
     }
   }
 
-  override fun DrawScope.drawMarkers(windowState: RollerShutterWindowState, runtimeDimens: RuntimeDimens, colors: RollerShutterColors) {
+  override fun DrawScope.drawMarkers(
+    windowState: RollerShutterWindowState,
+    runtimeDimens: RuntimeDimens,
+    colors: RollerShutterColors,
+    textMeasurer: TextMeasurer
+  ) {
     windowState.markers.forEach { position ->
       val topPosition = runtimeDimens.topLineRect.bottom
         .plus(runtimeDimens.movementLimit.minus(runtimeDimens.slatDistance).times(position).div(100f))

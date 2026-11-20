@@ -105,7 +105,7 @@ fun RoofWindowView(
               if (windowDimens.canvasRect.contains(point)) {
                 moveState.value = moveState.value.copy(
                   initialPoint = Offset(event.x, event.y),
-                  initialVerticalPercentage = windowState.position.value
+                  initialVerticalPercentage = windowState.position.value ?: 0f
                 )
               }
             }
@@ -116,7 +116,7 @@ fun RoofWindowView(
                 ?.let { position -> onPositionChanging?.let { it(position) } }
             }
             MotionEvent.ACTION_UP -> {
-              onPositionChanged?.let { it(windowState.position.value) }
+              onPositionChanged?.let { it(windowState.position.value ?: 0f) }
               moveState.value = moveState.value.copy(initialPoint = null)
             }
           }
@@ -398,4 +398,4 @@ private fun Camera.asDynamic(windowDimens: RoofWindowDimens, roofWindowState: Ro
 }
 
 val RoofWindowState.openedOffset: Float
-  get() = MAX_OPENED_OFFSET.times(100f.minus(position.value)).div(100f)
+  get() = MAX_OPENED_OFFSET.times(100f.minus(position.value ?: 0f)).div(100f)
