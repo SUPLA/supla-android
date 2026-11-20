@@ -53,6 +53,7 @@ import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.details.windowdetail.base.data.TerraceAwningState
+import org.supla.android.features.details.windowdetail.base.data.ValueDestination
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.ui.MoveState
 import org.supla.android.features.details.windowdetail.base.ui.applyForAwningMarker
@@ -86,7 +87,7 @@ fun TerraceAwningView(
               if (windowDimens.canvasRect.contains(point)) {
                 moveState.value = moveState.value.copy(
                   initialPoint = Offset(event.x, event.y),
-                  initialVerticalPercentage = windowState.position.value
+                  initialVerticalPercentage = windowState.position.value(ValueDestination.WINDOW) ?: 0f
                 )
               }
             }
@@ -97,7 +98,7 @@ fun TerraceAwningView(
                 ?.let { position -> onPositionChanging?.let { it(position) } }
             }
             MotionEvent.ACTION_UP -> {
-              onPositionChanged?.let { it(windowState.position.value) }
+              onPositionChanged?.let { it(windowState.position.value(ValueDestination.WINDOW) ?: 0f) }
               moveState.value = moveState.value.copy(initialPoint = null)
             }
           }
@@ -110,7 +111,7 @@ fun TerraceAwningView(
     }
 
     if (windowState.markers.isEmpty()) {
-      TerraceAwningDrawer.awningShadow(this@Canvas, windowDimens, colors, windowState.position.value)
+      TerraceAwningDrawer.awningShadow(this@Canvas, windowDimens, colors, windowState.position.value(ValueDestination.WINDOW) ?: 0f)
     } else {
       TerraceAwningDrawer.awningShadow(this@Canvas, windowDimens, colors, windowState.markers.max())
     }
@@ -118,7 +119,7 @@ fun TerraceAwningView(
     TerraceAwningDrawer.window(this@Canvas, windowDimens, colors)
 
     if (windowState.markers.isEmpty()) {
-      TerraceAwningDrawer.awning(this@Canvas, windowDimens, colors, windowState.position.value)
+      TerraceAwningDrawer.awning(this@Canvas, windowDimens, colors, windowState.position.value(ValueDestination.WINDOW) ?: 0f)
     } else {
       windowState.markers.sortedDescending().forEachIndexed { index, position ->
         TerraceAwningDrawer.awningLikeMarker(this@Canvas, windowDimens, colors, position, index == 0)

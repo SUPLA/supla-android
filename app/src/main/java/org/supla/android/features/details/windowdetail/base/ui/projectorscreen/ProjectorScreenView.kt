@@ -30,7 +30,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
@@ -58,12 +57,12 @@ import org.supla.android.core.branding.Configuration
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.details.windowdetail.base.data.ProjectorScreenState
+import org.supla.android.features.details.windowdetail.base.data.ValueDestination
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.ui.MoveState
 import org.supla.android.features.details.windowdetail.base.ui.applyForWindow
 import org.supla.core.shared.extensions.guardLet
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ProjectorScreenView(
   windowState: ProjectorScreenState,
@@ -89,7 +88,7 @@ fun ProjectorScreenView(
               if (windowDimens.canvasRect.contains(point)) {
                 moveState.value = moveState.value.copy(
                   initialPoint = Offset(event.x, event.y),
-                  initialVerticalPercentage = windowState.position.value
+                  initialVerticalPercentage = windowState.position.value(ValueDestination.WINDOW) ?: 0f
                 )
               }
             }
@@ -100,7 +99,7 @@ fun ProjectorScreenView(
                 ?.let { position -> onPositionChanging?.let { it(position) } }
             }
             MotionEvent.ACTION_UP -> {
-              onPositionChanged?.let { it(windowState.position.value) }
+              onPositionChanged?.let { it(windowState.position.value(ValueDestination.WINDOW) ?: 0f) }
               moveState.value = moveState.value.copy(initialPoint = null)
             }
           }
@@ -112,8 +111,8 @@ fun ProjectorScreenView(
       return@Canvas // Skip drawing when view size is not set yet
     }
 
-    val position = if (windowState.markers.isEmpty()) windowState.position.value else windowState.markers.max()
-    val screenHeight = windowDimens.maxScreenHeight.times(position).div(100)
+    val position = if (windowState.markers.isEmpty()) windowState.position.value(ValueDestination.WINDOW) else windowState.markers.max()
+    val screenHeight = windowDimens.maxScreenHeight.times(position ?: 0f).div(100)
     val bottomRect = windowDimens.bottomRect.translate(0f, screenHeight)
     val radius = bottomRect.height.div(2)
     val cornerRadius = CornerRadius(radius, radius)

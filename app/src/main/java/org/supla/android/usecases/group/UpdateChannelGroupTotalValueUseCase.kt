@@ -103,9 +103,9 @@ private fun ChannelGroupEntity.getGroupValue(value: ChannelValueEntity): GroupVa
     SuplaFunction.CONTROLLING_THE_ROOF_WINDOW,
     SuplaFunction.TERRACE_AWNING,
     SuplaFunction.CURTAIN,
-    SuplaFunction.VERTICAL_BLIND,
     SuplaFunction.ROLLER_GARAGE_DOOR ->
       ShadingSystemGroupValue(value.asRollerShutterValue().alwaysValidPosition, (value.getSubValueHi() and 0x1) == 0x1)
+    SuplaFunction.VERTICAL_BLIND,
     SuplaFunction.CONTROLLING_THE_FACADE_BLIND ->
       value.asFacadeBlindValue().let { ShadowingBlindGroupValue(it.alwaysValidPosition, it.alwaysValidTilt) }
     SuplaFunction.PROJECTOR_SCREEN ->

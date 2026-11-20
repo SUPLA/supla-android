@@ -17,9 +17,11 @@ package org.supla.android.features.details.windowdetail.base.ui
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import io.reactivex.rxjava3.core.Observable
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.storage.ApplicationPreferences
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.rollershutter.SuplaChannelFacadeBlindConfig
@@ -32,7 +34,6 @@ import org.supla.android.features.details.windowdetail.base.BaseWindowViewModelS
 import org.supla.android.features.details.windowdetail.base.data.ShadingBlindMarker
 import org.supla.android.features.details.windowdetail.base.data.ShadingBlindWindowState
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
-import org.supla.android.features.details.windowdetail.base.data.facadeblinds.FacadeBlindWindowState
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaThreading
 import org.supla.android.usecases.channel.ObserveChannelWithChildrenUseCase
@@ -44,29 +45,26 @@ import org.supla.android.usecases.client.LoginUseCase
 import org.supla.android.usecases.client.VALUE_IGNORE
 import org.supla.android.usecases.group.GetGroupOnlineSummaryUseCase
 import org.supla.android.usecases.group.ObserveChannelGroupByRemoteIdUseCase
-import org.supla.android.usecases.group.ReadGroupTiltingDetailsUseCase
-import org.supla.android.usecases.group.TiltingDetails
 import org.supla.core.shared.extensions.guardLet
-import timber.log.Timber
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 
 abstract class BaseBlindsViewModel<S : BaseBlindsViewModelState>(
-  private val channelConfigEventsManager: ChannelConfigEventsManager,
+  private val observeChannelGroupByRemoteIdUseCase: ObserveChannelGroupByRemoteIdUseCase,
   private val executeShadingSystemActionUseCase: ExecuteShadingSystemActionUseCase,
+  private val getGroupOnlineSummaryUseCase: GetGroupOnlineSummaryUseCase,
+  private val channelConfigEventsManager: ChannelConfigEventsManager,
   override val suplaClientProvider: SuplaClientProvider,
-  private val readGroupTiltingDetailsUseCase: ReadGroupTiltingDetailsUseCase,
-  executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
+  private val channelRepository: ChannelRepository,
   callSuplaClientOperationUseCase: CallSuplaClientOperationUseCase,
   observeChannelWithChildrenUseCase: ObserveChannelWithChildrenUseCase,
-  observeChannelGroupByRemoteIdUseCase: ObserveChannelGroupByRemoteIdUseCase,
-  getGroupOnlineSummaryUseCase: GetGroupOnlineSummaryUseCase,
-  preferences: ApplicationPreferences,
-  dateProvider: DateProvider,
+  executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
   profileRepository: ProfileRepository,
-  loginUseCase: LoginUseCase,
+  preferences: ApplicationPreferences,
   authorizeUseCase: AuthorizeUseCase,
+  dateProvider: DateProvider,
+  loginUseCase: LoginUseCase,
   defaultState: S,
   threading: SuplaThreading
 ) : BaseWindowViewModel<S>(
@@ -92,9 +90,9 @@ abstract class BaseBlindsViewModel<S : BaseBlindsViewModelState>(
     tilt0Angle: Float,
     tilt100Angle: Float,
     tiltControlType: SuplaTiltControlType,
-    tiltingTime: Int? = null,
-    openingTime: Int? = null,
-    closingTime: Int? = null
+    tiltingTime: Int,
+    openingTime: Int,
+    closingTime: Int
   )
 
   override fun handleAction(action: ShadingSystemAction, remoteId: Int, itemType: ItemType) {
@@ -144,7 +142,7 @@ abstract class BaseBlindsViewModel<S : BaseBlindsViewModelState>(
             state
           } else {
             val tilt = when {
-              state.windowState.slatTilt == null -> null
+              state.windowState.windowTilt == null -> null
               state.tiltControlType == SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING -> limitTilt(action.tilt, action.position, state)
               state.tiltControlType != SuplaTiltControlType.TILTS_ONLY_WHEN_FULLY_CLOSED || action.position == 100f -> action.tilt
               else -> 0f
@@ -162,7 +160,7 @@ abstract class BaseBlindsViewModel<S : BaseBlindsViewModelState>(
             it
           } else {
             val tilt = when {
-              it.windowState.slatTilt == null -> VALUE_IGNORE.toFloat()
+              it.windowState.windowTilt == null -> VALUE_IGNORE.toFloat()
               it.tiltControlType == SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING -> limitTilt(action.tilt, action.position, it)
               it.tiltControlType != SuplaTiltControlType.TILTS_ONLY_WHEN_FULLY_CLOSED || action.position == 100f -> action.tilt
               else -> 0f
@@ -183,22 +181,8 @@ abstract class BaseBlindsViewModel<S : BaseBlindsViewModelState>(
 
   fun loadConfig(remoteId: Int, itemType: ItemType) {
     when (itemType) {
-      ItemType.CHANNEL ->
-        suplaClientProvider.provide()?.getChannelConfig(remoteId, ChannelConfigType.DEFAULT)
-      ItemType.GROUP ->
-        readGroupTiltingDetailsUseCase(remoteId)
-          .attachSilent()
-          .subscribeBy(
-            onSuccess = {
-              if (it is TiltingDetails.Similar) {
-                updateTiltingDetails(it.tilt0Angle.toFloat(), it.tilt100Angle.toFloat(), it.tiltControlType)
-              } else {
-                Timber.i("Tilting details differs from Similar: $it")
-              }
-            },
-            onError = defaultErrorHandler("loadConfig")
-          )
-          .disposeBySelf()
+      ItemType.CHANNEL -> suplaClientProvider.provide()?.getChannelConfig(remoteId, ChannelConfigType.DEFAULT)
+      ItemType.GROUP -> Unit
     }
   }
 
@@ -212,6 +196,22 @@ abstract class BaseBlindsViewModel<S : BaseBlindsViewModelState>(
         )
         .disposeBySelf()
     }
+  }
+
+  override fun observeGroupData(remoteId: Int) {
+    observeChannelGroupByRemoteIdUseCase(remoteId)
+      .flatMap { groupData ->
+        Observable.zip(
+          getGroupOnlineSummaryUseCase.invoke(groupData.id!!).toObservable(),
+          channelRepository.findChannelListForGroup(groupData.remoteId).toObservable()
+        ) { summary, channels -> GroupData(groupData, summary, channels) }
+      }
+      .attachSilent()
+      .subscribeBy(
+        onNext = { handleGroup(it) },
+        onError = defaultErrorHandler("loadGroupData")
+      )
+      .disposeBySelf()
   }
 
   private fun limitTilt(tilt: Float, position: Float, state: S): Float {
@@ -235,7 +235,7 @@ abstract class BaseBlindsViewModel<S : BaseBlindsViewModelState>(
     val (facadeConfig) = guardLet(config.config as? SuplaChannelFacadeBlindConfig) { return }
     val (tilt0, tilt100) =
       if (facadeConfig.tilt0Angle == facadeConfig.tilt100Angle) {
-        listOf(FacadeBlindWindowState.DEFAULT_TILT_0_ANGLE, FacadeBlindWindowState.DEFAULT_TILT_100_ANGLE)
+        listOf(ShadingBlindWindowState.DEFAULT_TILT_0_ANGLE, ShadingBlindWindowState.DEFAULT_TILT_100_ANGLE)
       } else {
         listOf(facadeConfig.tilt0Angle.toFloat(), facadeConfig.tilt100Angle.toFloat())
       }

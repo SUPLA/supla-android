@@ -123,7 +123,7 @@ class TerraceAwningViewModel @Inject constructor(
       }
 
       val positions = group.groupDataEntity.channelGroupEntity.getRollerShutterPositions()
-      val overallPosition = getGroupValues(positions, state.windowState.markers.isNotEmpty())
+      val overallPosition = getGroupValues(positions)
 
       updateGroup(state, group.groupDataEntity, group.onlineSummary) {
         it.copy(

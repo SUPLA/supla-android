@@ -55,6 +55,7 @@ import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 import org.supla.android.usecases.profile.CloudUrl
 import org.supla.android.usecases.profile.LoadActiveProfileUrlUseCase
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -223,7 +224,10 @@ class GroupListViewModel @Inject constructor(
         createProfileGroupsListUseCase(filterString)
           .attach()
           .doOnError(defaultErrorHandler("observeGroups()"))
-          .onErrorResumeNext { _: Throwable -> Observable.empty() }
+          .onErrorResumeNext { error: Throwable ->
+            Timber.e(error, "Could not create groups")
+            Observable.empty()
+          }
       }
       .subscribeBy(
         onNext = this::updateItemsAtomically

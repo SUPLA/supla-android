@@ -17,9 +17,48 @@ package org.supla.android.features.details.windowdetail.base.data
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.R
+import org.supla.core.shared.extensions.guardLet
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
+
 abstract class ShadingBlindWindowState : WindowState() {
 
-  abstract val slatTilt: WindowGroupedValue?
-
+  abstract val windowTilt: WindowGroupedValue?
+  abstract val sliderTilt: WindowGroupedValue?
   abstract val markers: List<ShadingBlindMarker>
+  abstract val tilt0Angle: Float?
+  abstract val tilt100Angle: Float?
+
+  val windowTiltDegrees: Float?
+    get() {
+      val (tilt) = guardLet(windowTilt) { return null }
+
+      val tilt0 = tilt0Angle ?: DEFAULT_TILT_0_ANGLE
+      val tilt100 = tilt100Angle ?: DEFAULT_TILT_100_ANGLE
+
+      return tilt.asAngle(tilt0, tilt100)
+    }
+
+  val sliderTiltDegrees: Float?
+    get() {
+      val (tilt) = guardLet(sliderTilt) { return null }
+      val (tilt0, tilt100) = guardLet(tilt0Angle, tilt100Angle) { return null }
+
+      return tilt.asAngle(tilt0, tilt100)
+    }
+
+  fun slatTiltText(): LocalizedString {
+    val (tilt) = guardLet(windowTilt) {
+      return localizedString(R.string.facade_blinds_no_tilt)
+    }
+    return LocalizedString.Constant(tilt.asString(tiltTextFormat, tilt0Angle, tilt100Angle))
+  }
+
+  companion object {
+    const val DEFAULT_TILT_0_ANGLE = 0f
+    const val DEFAULT_TILT_100_ANGLE = 180f
+
+    val tiltTextFormat: WindowGroupedValueFormat = WindowGroupedValueFormat.DEGREE
+  }
 }

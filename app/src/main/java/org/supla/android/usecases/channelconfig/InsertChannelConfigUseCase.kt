@@ -114,7 +114,7 @@ class InsertChannelConfigUseCase @Inject constructor(
     Timber.w("Got config which cannot be stored (remoteId: `${config?.remoteId}`, function: `${config?.func}`)")
 
     ifLet(config) { (config) ->
-      // if could not store try to delete
+      // if it could not store try to delete
       if (shouldHandle(config)) {
         return profileRepository.findActiveProfile().flatMapCompletable {
           Timber.d("Saving config (remoteId: `${config.remoteId}`, function: `${config.func}`)")

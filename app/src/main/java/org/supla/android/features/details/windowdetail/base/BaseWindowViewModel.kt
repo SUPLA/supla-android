@@ -57,8 +57,6 @@ import org.supla.core.shared.data.model.channel.SuplaChannelFlag
 import org.supla.core.shared.data.model.shadingsystem.ShadingSystemValue
 import org.supla.core.shared.data.model.shadingsystem.SuplaShadingSystemFlag
 import org.supla.core.shared.extensions.guardLet
-import org.supla.core.shared.extensions.ifLet
-import kotlin.math.abs
 import kotlin.math.roundToInt
 
 abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
@@ -192,12 +190,12 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
       .disposeBySelf()
   }
 
-  private fun observeGroupData(remoteId: Int) {
+  protected open fun observeGroupData(remoteId: Int) {
     observeChannelGroupByRemoteIdUseCase(remoteId)
       .flatMap { groupData ->
         getGroupOnlineSummaryUseCase.invoke(groupData.id!!)
           .toObservable()
-          .map { GroupData(groupData, it) }
+          .map { GroupData(groupData, it, emptyList()) }
       }
       .attachSilent()
       .subscribeBy(
@@ -228,37 +226,42 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
       .disposeBySelf()
   }
 
-  protected fun <T> getGroupValues(values: List<T>, hadMarkers: Boolean, extractor: ((T) -> Float)? = null): WindowGroupedValue {
-    var lastValue: Float? = null
-    var minValue: Float? = null
-    var maxValue: Float? = null
+  protected fun <T> getGroupValues(
+    values: List<T>,
+    hadMarkers: Boolean = false,
+    threshold: GroupThreshold = GroupThreshold.Default,
+    extractor: ((T) -> Float)? = null
+  ): WindowGroupedValue {
+    if (values.isEmpty()) return WindowGroupedValue.Invalid
 
-    for (value in values) {
-      val floatValue: Float = if (value is Float) value else extractor!!(value)
+    var firstValue: Float? = null
+    var minValue = Float.POSITIVE_INFINITY
+    var maxValue = Float.NEGATIVE_INFINITY
 
-      if (minValue == null || minValue > floatValue) {
-        minValue = floatValue
-      }
-      if (maxValue == null || maxValue < floatValue) {
-        maxValue = floatValue
-      }
+    for (item in values) {
+      val value = if (item is Float) item else extractor!!(item)
 
-      if (lastValue == null) {
-        lastValue = floatValue
-      }
+      if (firstValue == null) firstValue = value
+      minValue = minOf(minValue, value)
+      maxValue = maxOf(maxValue, value)
     }
 
-    return if (lastValue == null || lastValue == -1f) {
+    return if (firstValue == -1f || firstValue == null) {
       WindowGroupedValue.Invalid
+    } else if (maxValue - minValue > threshold.get(hadMarkers)) {
+      WindowGroupedValue.Different(minValue, maxValue)
     } else {
-      ifLet(minValue, maxValue) { (min, max) ->
-        if ((hadMarkers && abs(min - max) > 3) || abs(min - max) > 5) {
-          return WindowGroupedValue.Different(min, max)
-        }
-      }
-
-      WindowGroupedValue.Similar(lastValue)
+      WindowGroupedValue.Similar(firstValue)
     }
+  }
+
+  sealed class GroupThreshold(val small: Int, val big: Int) {
+
+    fun get(hadMarkers: Boolean): Int = if (hadMarkers) small else big
+
+    data object Default : GroupThreshold(3, 5)
+    data object Slat : GroupThreshold(50, 60)
+    data object None : GroupThreshold(0, 0)
   }
 
   protected open fun canShowMoveTime(state: S): Boolean =
@@ -325,7 +328,8 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
 
   protected data class GroupData(
     val groupDataEntity: ChannelGroupDataEntity,
-    val onlineSummary: GroupOnlineSummary
+    val onlineSummary: GroupOnlineSummary,
+    val channels: List<ChannelDataEntity>
   )
 }
 

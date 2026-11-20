@@ -17,50 +17,76 @@ package org.supla.android.features.details.windowdetail.base.data
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.extensions.ifLet
+import java.util.Locale
 
 enum class WindowGroupedValueFormat {
   OPENING_PERCENTAGE, PERCENTAGE, DEGREE
 }
 
-sealed class WindowGroupedValue(open val value: Float) {
+enum class ValueDestination {
+  WINDOW, SLIDER
+}
 
-  open fun asString(format: WindowGroupedValueFormat, value0: Float? = null, value100: Float? = null): String = when (format) {
-    WindowGroupedValueFormat.OPENING_PERCENTAGE -> String.format("%.0f%%", 100f - value)
-    WindowGroupedValueFormat.PERCENTAGE -> String.format("%.0f%%", value)
-    WindowGroupedValueFormat.DEGREE -> {
-      ifLet(value0, value100) { (value0, value100) ->
-        return String.format("%.0f°", valueToAngle(value, value0, value100))
+sealed class WindowGroupedValue(protected open val value: Float?) {
+
+  abstract fun value(destination: ValueDestination): Float?
+
+  open fun asString(format: WindowGroupedValueFormat, value0: Float? = null, value100: Float? = null): String {
+    val (value) = guardLet(value) { return "" }
+    return when (format) {
+      WindowGroupedValueFormat.OPENING_PERCENTAGE -> String.format(Locale.getDefault(), "%.0f%%", 100f - value)
+      WindowGroupedValueFormat.PERCENTAGE -> String.format(Locale.getDefault(), "%.0f%%", value)
+      WindowGroupedValueFormat.DEGREE -> {
+        ifLet(value0, value100) { (value0, value100) ->
+          return String.format(Locale.getDefault(), "%.0f°", value.angleBetween(value0, value100))
+        }
+
+        String.format(Locale.getDefault(), "%.0f%%", value)
       }
-
-      String.format("%.0f%%", value)
     }
   }
 
-  fun asAngle(value0: Float, value100: Float) = valueToAngle(value, value0, value100)
-
-  protected fun valueToAngle(value: Float, value0: Float, value100: Float) =
-    value0.plus(value100.minus(value0).times(value).div(100f))
+  fun asAngle(value0: Float, value100: Float): Float? = value?.angleBetween(value0, value100)
 
   data class Different(
     private val min: Float,
-    private val max: Float
-  ) : WindowGroupedValue(0f) {
+    private val max: Float,
+  ) : WindowGroupedValue(null) {
+
+    override fun value(destination: ValueDestination): Float? =
+      when (destination) {
+        ValueDestination.WINDOW -> max
+        ValueDestination.SLIDER -> null
+      }
 
     override fun asString(format: WindowGroupedValueFormat, value0: Float?, value100: Float?): String = when (format) {
-      WindowGroupedValueFormat.OPENING_PERCENTAGE -> String.format("%.0f%% - %.0f%%", 100f - max, 100f - min)
-      WindowGroupedValueFormat.PERCENTAGE -> String.format("%.0f%% - %.0f%%", min, max)
+      WindowGroupedValueFormat.OPENING_PERCENTAGE -> String.format(Locale.getDefault(), "%.0f%% - %.0f%%", 100f - max, 100f - min)
+      WindowGroupedValueFormat.PERCENTAGE -> String.format(Locale.getDefault(), "%.0f%% - %.0f%%", min, max)
       WindowGroupedValueFormat.DEGREE -> {
         ifLet(value0, value100) { (value0, value100) ->
-          return String.format("%.0f° - %.0f°", valueToAngle(min, value0, value100), valueToAngle(max, value0, value100))
+          return String.format(
+            Locale.getDefault(),
+            "%.0f° - %.0f°",
+            min.angleBetween(value0, value100),
+            max.angleBetween(value0, value100)
+          )
         }
 
-        String.format("%.0f%% - %.0f%%", min, max)
+        String.format(Locale.getDefault(), "%.0f%% - %.0f%%", min, max)
       }
     }
   }
 
-  object Invalid : WindowGroupedValue(0f)
+  object Invalid : WindowGroupedValue(null) {
+    override fun value(destination: ValueDestination): Float? = null
+  }
 
-  data class Similar(override val value: Float) : WindowGroupedValue(value)
+  data class Similar(override val value: Float) : WindowGroupedValue(value) {
+    override fun value(destination: ValueDestination): Float = value
+  }
 }
+
+fun Float.angleBetween(angle0: Float, angle100: Float): Float =
+  angle0.plus(angle100.minus(angle0).times(this).div(100f))

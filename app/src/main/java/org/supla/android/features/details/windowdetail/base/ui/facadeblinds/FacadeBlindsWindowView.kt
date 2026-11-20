@@ -31,8 +31,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
@@ -45,14 +45,22 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextMeasurer
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.extensions.defaultFont
+import org.supla.android.extensions.drawPercentage
 import org.supla.android.extensions.toPx
 import org.supla.android.features.details.windowdetail.base.data.ShadingBlindMarker
+import org.supla.android.features.details.windowdetail.base.data.ValueDestination
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.data.facadeblinds.FacadeBlindWindowState
 import org.supla.android.features.details.windowdetail.base.ui.MoveState
@@ -60,13 +68,18 @@ import org.supla.android.features.details.windowdetail.base.ui.windowview.SlatDi
 import org.supla.android.features.details.windowdetail.base.ui.windowview.WindowDimens
 import org.supla.android.features.details.windowdetail.base.ui.windowview.WindowDimensBase
 import org.supla.android.features.details.windowdetail.base.ui.windowview.WindowDrawerBase
+import org.supla.core.shared.extensions.guardLet
+import org.supla.core.shared.usecase.channel.valueformatter.types.ValueUnit
 import kotlin.math.abs
 import kotlin.math.ceil
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.roundToInt
+import org.supla.android.extensions.drawText as drawCenteredText
 
 val slatShadowRadius = 1.dp
 private const val HORIZONTAL_MOVE_HYSTERESIS = 20
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun FacadeBlindsWindowView(
   windowState: FacadeBlindWindowState,
@@ -78,6 +91,7 @@ fun FacadeBlindsWindowView(
   val (windowDimens, updateDimens) = remember { mutableStateOf<RuntimeDimens?>(null) }
   val moveState = remember { mutableStateOf(MoveState()) }
   val colors = FacadeBlindColors.standard()
+  val textMeasurer = rememberTextMeasurer()
 
   Canvas(
     modifier = modifier
@@ -90,8 +104,8 @@ fun FacadeBlindsWindowView(
               if (windowDimens.windowRect.contains(point)) {
                 moveState.value = moveState.value.copy(
                   initialPoint = Offset(event.x, event.y),
-                  initialVerticalPercentage = windowState.position.value,
-                  initialHorizontalPercentage = windowState.slatTilt?.value ?: 0f,
+                  initialVerticalPercentage = windowState.position.value(ValueDestination.WINDOW) ?: 0f,
+                  initialHorizontalPercentage = windowState.windowTilt?.value(ValueDestination.WINDOW) ?: 0f,
                   horizontalAllowed = false
                 )
               }
@@ -110,7 +124,10 @@ fun FacadeBlindsWindowView(
                 ?.let { offset -> onPositionChanging?.let { it(offset.x, offset.y) } }
             }
             MotionEvent.ACTION_UP -> {
-              onPositionChanged?.let { it(windowState.slatTilt?.value ?: 0f, windowState.position.value) }
+              onPositionChanged?.invoke(
+                windowState.windowTilt?.value(ValueDestination.WINDOW) ?: 0f,
+                windowState.position.value(ValueDestination.WINDOW) ?: 0f
+              )
               moveState.value = moveState.value.copy(initialPoint = null)
             }
           }
@@ -122,7 +139,13 @@ fun FacadeBlindsWindowView(
       return@Canvas // Skip drawing when view size is not set yet
     }
 
-    WindowDrawer.drawWindow(this@Canvas, runtimeDimens = windowDimens, colors = colors, windowState = windowState)
+    WindowDrawer.drawWindow(
+      scope = this@Canvas,
+      runtimeDimens = windowDimens,
+      colors = colors,
+      windowState = windowState,
+      textMeasurer = textMeasurer
+    )
     if (enabled.not()) {
       drawRect(colors.disabledOverlay)
     }
@@ -136,26 +159,29 @@ private object WindowDrawer : WindowDrawerBase<RuntimeDimens, FacadeBlindWindowS
   private const val TILT_RANGE = 180f
   private const val TILT_HALF_RANGE = 90f
 
+  private val markerLinesOffsets = listOf(2.5.dp, 0.dp, (-2.5).dp)
+  private val markerCluster = MarkerCluster()
+
   override fun DrawScope.drawShadowingElements(
     windowState: FacadeBlindWindowState,
     runtimeDimens: RuntimeDimens,
     colors: FacadeBlindColors
   ) {
-    val topCorrection = windowState.position.value.div(100f)
+    val topCorrection = (windowState.position.value(ValueDestination.WINDOW)?.div(100f) ?: 0f)
       .times(runtimeDimens.movementLimit)
       .plus(runtimeDimens.slatDistance.times(1.5f)) // Needed to align slats bottom with window bottom
 
     // When the roller shutter position is bigger than bottom position we need to start "closing slats".
     // Here the available space for "opened" slats is calculated
     val slatsCount = runtimeDimens.slats.size
-    val progression = windowState.slatTiltDegrees?.let { if (it > 50) 1..slatsCount else null } ?: (slatsCount downTo 1)
+    val progression = windowState.windowTiltDegrees?.let { if (it > 50) 1..slatsCount else null } ?: (slatsCount downTo 1)
     for (i in progression) {
       drawSlat(
         topCorrection = topCorrection - runtimeDimens.movementLimit,
         rect = runtimeDimens.slats[i - 1],
         runtimeDimens = runtimeDimens,
         colors = colors,
-        tilt = windowState.slatTiltDegrees
+        tilt = windowState.windowTiltDegrees
       )
     }
   }
@@ -163,22 +189,86 @@ private object WindowDrawer : WindowDrawerBase<RuntimeDimens, FacadeBlindWindowS
   override fun DrawScope.drawMarkers(
     windowState: FacadeBlindWindowState,
     runtimeDimens: RuntimeDimens,
-    colors: FacadeBlindColors
+    colors: FacadeBlindColors,
+    textMeasurer: TextMeasurer
   ) {
+    markerCluster.clean()
+
     windowState.markers.forEach { marker ->
       val topPosition = runtimeDimens.topLineRect.bottom
         .plus(runtimeDimens.movementLimit.minus(runtimeDimens.slatDistance).times(marker.position).div(100f))
 
-      val tilt0 = windowState.tilt0Angle ?: FacadeBlindWindowState.DEFAULT_TILT_0_ANGLE
-      val tilt100 = windowState.tilt100Angle ?: FacadeBlindWindowState.DEFAULT_TILT_100_ANGLE
-      val degrees = tilt0.plus(tilt100.minus(tilt0).times(marker.tilt).div(100))
-      val trimmed = SlatTiltSliderDimens.trimAngle(degrees)
+      if (markerCluster.y == null) {
+        markerCluster.first(topPosition, marker)
+      } else if (markerCluster.covers(topPosition, runtimeDimens.markerInfoRadius)) {
+        markerCluster.append(marker)
+      } else if (markerCluster.shouldDrawAsSingleMarker) {
+        drawMarker(
+          offset = Offset(runtimeDimens.windowRect.left, markerCluster.safeY),
+          value = markerCluster.minValue,
+          tilt = markerCluster.minTilt?.let { SlatTiltSliderDimens.trimAngle(it) },
+          runtimeDimens = runtimeDimens,
+          windowColors = colors,
+          textMeasurer = textMeasurer
+        )
 
+        // Clear and take next marker
+        markerCluster.first(topPosition, marker)
+      } else if (markerCluster.hasTilt) {
+        drawMergedMarkers(
+          offset = Offset(runtimeDimens.windowRect.left, markerCluster.safeY),
+          minValue = markerCluster.minTilt ?: 0f,
+          maxValue = markerCluster.maxTilt ?: 0f,
+          unit = ValueUnit.TEMPERATURE_DEGREE.toString(),
+          runtimeDimens = runtimeDimens,
+          windowColors = colors,
+          textMeasurer = textMeasurer
+        )
+
+        // Clear and take next marker
+        markerCluster.first(topPosition, marker)
+      } else {
+        drawMergedMarkers(
+          offset = Offset(runtimeDimens.windowRect.left, markerCluster.safeY),
+          text = markerCluster.percentageText,
+          runtimeDimens = runtimeDimens,
+          windowColors = colors,
+          textMeasurer = textMeasurer
+        )
+
+        // Clear and take next marker
+        markerCluster.first(topPosition, marker)
+      }
+    }
+
+    val (topPosition) = guardLet(markerCluster.y) { return }
+
+    if (markerCluster.shouldDrawAsSingleMarker) {
       drawMarker(
-        Offset(runtimeDimens.windowRect.left, topPosition),
-        trimmed,
-        runtimeDimens,
-        colors
+        offset = Offset(runtimeDimens.windowRect.left, topPosition),
+        value = markerCluster.minValue,
+        tilt = markerCluster.minTilt?.let { SlatTiltSliderDimens.trimAngle(it) },
+        runtimeDimens = runtimeDimens,
+        windowColors = colors,
+        textMeasurer = textMeasurer
+      )
+    } else if (markerCluster.hasTilt) {
+      drawMergedMarkers(
+        offset = Offset(runtimeDimens.windowRect.left, topPosition),
+        minValue = markerCluster.minTilt ?: 0f,
+        maxValue = markerCluster.maxTilt ?: 0f,
+        unit = ValueUnit.TEMPERATURE_DEGREE.toString(),
+        runtimeDimens = runtimeDimens,
+        windowColors = colors,
+        textMeasurer = textMeasurer
+      )
+    } else if (markerCluster.count > 1) {
+      drawMergedMarkers(
+        offset = Offset(runtimeDimens.windowRect.left, topPosition),
+        text = markerCluster.percentageText,
+        runtimeDimens = runtimeDimens,
+        windowColors = colors,
+        textMeasurer = textMeasurer
       )
     }
   }
@@ -225,7 +315,14 @@ private object WindowDrawer : WindowDrawerBase<RuntimeDimens, FacadeBlindWindowS
     drawPath(path = path, color = colors.slatBorder, style = Stroke(width = 1.dp.toPx()))
   }
 
-  private fun DrawScope.drawMarker(offset: Offset, tilt: Float, runtimeDimens: RuntimeDimens, windowColors: FacadeBlindColors) {
+  private fun DrawScope.drawMarker(
+    offset: Offset,
+    value: Float?,
+    tilt: Float?,
+    runtimeDimens: RuntimeDimens,
+    windowColors: FacadeBlindColors,
+    textMeasurer: TextMeasurer
+  ) {
     drawCircle(color = windowColors.slatBackground, radius = runtimeDimens.markerInfoRadius, center = offset)
     drawCircle(
       color = windowColors.slatBorder,
@@ -235,28 +332,96 @@ private object WindowDrawer : WindowDrawerBase<RuntimeDimens, FacadeBlindWindowS
     )
     val lineOffset = runtimeDimens.markerInfoRadius / 2
 
-    val lines = listOf(
-      offset.minus(Offset(0f, 2.5.dp.toPx())),
-      offset,
-      offset.plus(Offset(0f, 2.5.dp.toPx()))
-    )
-    lines.forEach {
-      rotate(tilt, it) {
-        drawLine(
-          color = windowColors.markerBorder,
-          start = Offset(it.x - lineOffset, it.y),
-          end = Offset(it.x + lineOffset, it.y),
-          strokeWidth = 1.dp.toPx()
-        )
+    if (tilt != null) {
+      markerLinesOffsets.forEach {
+        val y = offset.y - it.toPx()
+        rotate(tilt, Offset(x = offset.x, y = y)) {
+          drawLine(
+            color = windowColors.markerBorder,
+            start = Offset(offset.x - lineOffset, y),
+            end = Offset(offset.x + lineOffset, y),
+            strokeWidth = 1.dp.toPx()
+          )
+        }
       }
+    } else if (value != null) {
+      drawPercentage(
+        value = value.div(100f),
+        textMeasurer = textMeasurer,
+        color = windowColors.markerBorder,
+        center = offset,
+        textSize = 6.dp
+      )
+    } else {
+      drawCenteredText(
+        text = "?",
+        textMeasurer = textMeasurer,
+        color = windowColors.markerBorder,
+        center = offset,
+        textSize = 6.dp
+      )
     }
+  }
+
+  private fun DrawScope.drawMergedMarkers(
+    offset: Offset,
+    minValue: Float,
+    maxValue: Float,
+    unit: String,
+    runtimeDimens: RuntimeDimens,
+    windowColors: FacadeBlindColors,
+    textMeasurer: TextMeasurer
+  ) {
+    drawMergedMarkers(
+      offset = offset,
+      text = "${minValue.roundToInt()}$unit - ${maxValue.roundToInt()}$unit",
+      runtimeDimens = runtimeDimens,
+      windowColors = windowColors,
+      textMeasurer = textMeasurer
+    )
+  }
+
+  private fun DrawScope.drawMergedMarkers(
+    offset: Offset,
+    text: String,
+    runtimeDimens: RuntimeDimens,
+    windowColors: FacadeBlindColors,
+    textMeasurer: TextMeasurer
+  ) {
+    val padding = 4.dp.toPx()
+    val textLayout = textMeasurer.measure(
+      text = text,
+      style = TextStyle(
+        fontSize = (12.dp.toPx() / density / fontScale).sp,
+        fontFamily = defaultFont
+      )
+    )
+
+    drawRoundRect(
+      color = windowColors.slatBackground,
+      topLeft = Offset(offset.x - runtimeDimens.markerInfoRadius, offset.y - runtimeDimens.markerInfoRadius),
+      size = Size(textLayout.size.width.toFloat() + padding.times(2), runtimeDimens.markerInfoRadius.times(2)),
+      cornerRadius = CornerRadius(runtimeDimens.markerInfoRadius, runtimeDimens.markerInfoRadius)
+    )
+    drawRoundRect(
+      color = windowColors.slatBorder,
+      topLeft = Offset(offset.x - runtimeDimens.markerInfoRadius, offset.y - runtimeDimens.markerInfoRadius),
+      size = Size(textLayout.size.width.toFloat() + padding.times(2), runtimeDimens.markerInfoRadius.times(2)),
+      cornerRadius = CornerRadius(runtimeDimens.markerInfoRadius, runtimeDimens.markerInfoRadius),
+      style = Stroke(width = 1.5.dp.toPx())
+    )
+    drawText(
+      textLayoutResult = textLayout,
+      color = windowColors.markerBorder,
+      topLeft = Offset(offset.x - runtimeDimens.markerInfoRadius + padding, offset.y - textLayout.size.height.div(2))
+    )
   }
 }
 
 private fun DrawScope.applyForSlat(paint: Paint, colors: FacadeBlindColors) {
   with(paint) {
-    style = android.graphics.Paint.Style.FILL
-    strokeCap = android.graphics.Paint.Cap.SQUARE
+    style = Paint.Style.FILL
+    strokeCap = Paint.Cap.SQUARE
     color = colors.slatBackground.toArgb()
     setShadowLayer(slatShadowRadius.toPx(), 0f, 1.5.dp.toPx(), colors.shadow.toArgb())
   }
@@ -319,6 +484,86 @@ private data class RuntimeDimens(
   }
 }
 
+internal data class MarkerCluster(
+  var y: Float? = null,
+  var minTilt: Float? = null,
+  var maxTilt: Float? = null,
+  var minValue: Float? = null,
+  var maxValue: Float? = null,
+  var count: Int = 0
+) {
+  val safeY: Float
+    get() = y ?: 0f
+
+  val shouldDrawAsSingleMarker: Boolean
+    get() = count == 1 ||
+      (hasTilt && minTilt == maxTilt) ||
+      (!hasTilt && minValue != null && minValue == maxValue)
+
+  val hasTilt: Boolean
+    get() = minTilt != null && maxTilt != null
+
+  val percentageText: String
+    get() {
+      val unit = ValueUnit.PERCENTAGE
+      val (minValue, maxValue) = guardLet(minValue, maxValue) { return "?" }
+      return if (minValue == maxValue) "$minValue" else "$minValue$unit - $maxValue$unit"
+    }
+
+  fun first(y: Float, marker: ShadingBlindMarker) {
+    this.y = y
+    this.minTilt = marker.tilt
+    this.maxTilt = marker.tilt
+    this.minValue = marker.tiltValue
+    this.maxValue = marker.tiltValue
+    this.count = 1
+  }
+
+  fun append(marker: ShadingBlindMarker) {
+    minTilt = minOfNullable(minTilt, marker.tilt)
+    maxTilt = maxOfNullable(maxTilt, marker.tilt)
+    minValue = minOfNullable(minValue, marker.tiltValue)
+    maxValue = maxOfNullable(maxValue, marker.tiltValue)
+    count++
+  }
+
+  fun covers(y: Float, radius: Float): Boolean =
+    this.y?.let { abs(y - it) < radius.times(2) } ?: false
+
+  fun clean() {
+    y = null
+    minTilt = null
+    maxTilt = null
+    minValue = null
+    maxValue = null
+    count = 0
+  }
+}
+
+private fun minOfNullable(first: Float?, second: Float?): Float? {
+  return if (first == null && second == null) {
+    null
+  } else if (first == null) {
+    second
+  } else if (second == null) {
+    first
+  } else {
+    min(first, second)
+  }
+}
+
+private fun maxOfNullable(first: Float?, second: Float?): Float? {
+  return if (first == null && second == null) {
+    null
+  } else if (first == null) {
+    second
+  } else if (second == null) {
+    first
+  } else {
+    max(first, second)
+  }
+}
+
 @Preview
 @Composable
 private fun Preview_Normal() {
@@ -344,7 +589,14 @@ private fun Preview_Normal() {
           .height(350.dp)
           .background(color = colorResource(id = R.color.background))
       ) {
-        val markers = listOf(ShadingBlindMarker(0f, 50f), ShadingBlindMarker(35f, 25f))
+        val markers = listOf(
+          ShadingBlindMarker(0f, 50f),
+          ShadingBlindMarker(20f, 70f),
+//          ShadingBlindMarker(24f, 25f, tilt0Angle = 0f, tilt100Angle = 90f),
+//          ShadingBlindMarker(25f, 75f, tilt0Angle = 0f, tilt100Angle = 90f),
+//          ShadingBlindMarker(60f, 25f, tilt0Angle = 0f, tilt100Angle = 90f),
+//          ShadingBlindMarker(100f, 25f)
+        )
         FacadeBlindsWindowView(
           windowState = FacadeBlindWindowState(WindowGroupedValue.Similar(75f), markers = markers),
           modifier = Modifier

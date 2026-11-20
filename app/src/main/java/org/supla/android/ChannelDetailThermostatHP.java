@@ -671,7 +671,8 @@ public class ChannelDetailThermostatHP extends DetailLayout
       return;
     }
 
-    List<ChannelDataEntity> channels = channelRepository.findChannelListForGroup(getRemoteId());
+    List<ChannelDataEntity> channels =
+        channelRepository.findChannelListForGroup(getRemoteId()).blockingGet();
 
     if (refreshLock <= System.currentTimeMillis()) {
 
