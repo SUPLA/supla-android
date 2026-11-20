@@ -337,7 +337,7 @@ class UpdateChannelGroupTotalValueUseCaseTest {
   @Test
   fun `should build total string - vertical blind`() {
     // given
-    val curtain = mockVerticalBlind(2, status = SuplaChannelAvailabilityStatus.ONLINE, position = 30)
+    val curtain = mockVerticalBlind(2, status = SuplaChannelAvailabilityStatus.ONLINE, position = 30, tilt = 50)
 
     every { channelGroupRelationRepository.findAllVisibleRelations() } returns Single.just(listOf(curtain))
     every { channelGroupRepository.update(any()) } returns Completable.complete()
@@ -357,7 +357,7 @@ class UpdateChannelGroupTotalValueUseCaseTest {
     val groups = captor.captured
     assertThat(groups)
       .extracting({ it.remoteId }, { it.online }, { it.totalValue })
-      .containsExactly(tuple(2, 100, "30:0"))
+      .containsExactly(tuple(2, 100, "30:50"))
   }
 
   @Test
@@ -499,11 +499,13 @@ class UpdateChannelGroupTotalValueUseCaseTest {
     groupId: Int,
     status: SuplaChannelAvailabilityStatus = SuplaChannelAvailabilityStatus.OFFLINE,
     position: Int = 0,
+    tilt: Int = 0,
     sensor: Int = 0
   ) =
     mockRelationData(groupId, SuplaFunction.VERTICAL_BLIND, status) {
-      every { it.asRollerShutterValue() } returns mockk {
+      every { it.asFacadeBlindValue() } returns mockk {
         every { this@mockk.alwaysValidPosition } returns position
+        every { this@mockk.alwaysValidTilt } returns tilt
       }
       every { it.getSubValueHi() } returns sensor
     }

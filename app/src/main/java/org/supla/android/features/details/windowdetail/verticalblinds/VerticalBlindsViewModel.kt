@@ -17,16 +17,22 @@ package org.supla.android.features.details.windowdetail.verticalblinds
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.storage.ApplicationPreferences
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.complex.toShadingBlindMarkers
+import org.supla.android.data.source.remote.rollershutter.SuplaChannelFacadeBlindConfig
 import org.supla.android.data.source.remote.rollershutter.SuplaTiltControlType
+import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.features.details.windowdetail.base.data.ShadingBlindMarker
+import org.supla.android.features.details.windowdetail.base.data.ValueDestination
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.data.verticalblinds.VerticalBlindWindowState
 import org.supla.android.features.details.windowdetail.base.ui.BaseBlindsViewModel
@@ -41,45 +47,49 @@ import org.supla.android.usecases.client.CallSuplaClientOperationUseCase
 import org.supla.android.usecases.client.ExecuteShadingSystemActionUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.client.LoginUseCase
+import org.supla.android.usecases.group.CalculateGroupTiltingDetailsUseCase
 import org.supla.android.usecases.group.GetGroupOnlineSummaryUseCase
 import org.supla.android.usecases.group.ObserveChannelGroupByRemoteIdUseCase
-import org.supla.android.usecases.group.ReadGroupTiltingDetailsUseCase
 import org.supla.android.usecases.group.totalvalue.ShadowingBlindGroupValue
 import org.supla.core.shared.data.model.shadingsystem.SuplaShadingSystemFlag
+import org.supla.core.shared.extensions.forTrue
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class VerticalBlindsViewModel @Inject constructor(
-  channelConfigEventsManager: ChannelConfigEventsManager,
-  executeShadingSystemActionUseCase: ExecuteShadingSystemActionUseCase,
-  readGroupTiltingDetailsUseCase: ReadGroupTiltingDetailsUseCase,
-  suplaClientProvider: SuplaClientProvider,
-  executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
-  callSuplaClientOperationUseCase: CallSuplaClientOperationUseCase,
-  observeChannelWithChildrenUseCase: ObserveChannelWithChildrenUseCase,
+  private val calculateGroupTiltingDetailsUseCase: CalculateGroupTiltingDetailsUseCase,
+  @param:Named(GSON_FOR_REPO) private val gson: Gson,
   observeChannelGroupByRemoteIdUseCase: ObserveChannelGroupByRemoteIdUseCase,
+  executeShadingSystemActionUseCase: ExecuteShadingSystemActionUseCase,
+  observeChannelWithChildrenUseCase: ObserveChannelWithChildrenUseCase,
+  callSuplaClientOperationUseCase: CallSuplaClientOperationUseCase,
   getGroupOnlineSummaryUseCase: GetGroupOnlineSummaryUseCase,
-  preferences: ApplicationPreferences,
-  dateProvider: DateProvider,
+  channelConfigEventsManager: ChannelConfigEventsManager,
+  executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
+  suplaClientProvider: SuplaClientProvider,
   profileRepository: ProfileRepository,
-  loginUseCase: LoginUseCase,
+  channelRepository: ChannelRepository,
+  preferences: ApplicationPreferences,
   authorizeUseCase: AuthorizeUseCase,
+  dateProvider: DateProvider,
+  loginUseCase: LoginUseCase,
   threading: SuplaThreading
 ) : BaseBlindsViewModel<VerticalBlindsViewModelState>(
-  channelConfigEventsManager,
+  observeChannelGroupByRemoteIdUseCase,
   executeShadingSystemActionUseCase,
+  getGroupOnlineSummaryUseCase,
+  channelConfigEventsManager,
   suplaClientProvider,
-  readGroupTiltingDetailsUseCase,
-  executeSimpleActionUseCase,
+  channelRepository,
   callSuplaClientOperationUseCase,
   observeChannelWithChildrenUseCase,
-  observeChannelGroupByRemoteIdUseCase,
-  getGroupOnlineSummaryUseCase,
-  preferences,
-  dateProvider,
+  executeSimpleActionUseCase,
   profileRepository,
-  loginUseCase,
+  preferences,
   authorizeUseCase,
+  dateProvider,
+  loginUseCase,
   VerticalBlindsViewModelState(),
   threading
 ) {
@@ -96,7 +106,8 @@ class VerticalBlindsViewModel @Inject constructor(
     state.copy(
       windowState = state.windowState.copy(
         position = position,
-        slatTilt = tilt?.let { WindowGroupedValue.Similar(it) },
+        windowTilt = tilt?.let { WindowGroupedValue.Similar(it) },
+        sliderTilt = tilt?.let { WindowGroupedValue.Similar(it) },
         markers = markers
       )
     )
@@ -128,14 +139,19 @@ class VerticalBlindsViewModel @Inject constructor(
       val value = channel.channelValueEntity.asFacadeBlindValue()
       val position = if (value.hasValidPosition()) value.position else 0
       val tilt = if (value.hasValidTilt() && value.flags.contains(SuplaShadingSystemFlag.TILT_IS_SET)) value.tilt else null
+      val config = (channel.configEntity?.toSuplaConfig(gson) as? SuplaChannelFacadeBlindConfig)
 
       updateChannel(state, channel, value) {
         it.copy(
           windowState = it.windowState.copy(
             position = WindowGroupedValue.Similar(if (value.status.online) position.toFloat() else 25f),
-            slatTilt = tilt?.let { t -> WindowGroupedValue.Similar(if (value.status.online) t.toFloat() else 50f) },
+            windowTilt = tilt?.let { t -> WindowGroupedValue.Similar(if (value.status.online) t.toFloat() else 50f) },
+            sliderTilt = tilt?.let { t -> WindowGroupedValue.Similar(if (value.status.online) t.toFloat() else 50f) },
+            tilt0Angle = config?.tilt0Angle?.toFloat(),
+            tilt100Angle = config?.tilt100Angle?.toFloat(),
             positionTextFormat = positionTextFormat
           ),
+          tiltControlType = config?.type,
           lastPosition = position
         )
       }
@@ -149,39 +165,55 @@ class VerticalBlindsViewModel @Inject constructor(
       }
 
       val positions = group.groupDataEntity.channelGroupEntity.getVerticalBlindPositions()
+
       val overallPosition = getGroupValues(positions, state.windowState.markers.isNotEmpty()) { it.position.toFloat() }
-      val overallTilt = WindowGroupedValue.Similar(positions.maxOfOrNull { it.tilt }?.toFloat() ?: 0f)
-      val markers = (if (overallPosition is WindowGroupedValue.Different) positions else emptyList())
-        .map { ShadingBlindMarker(it.position.toFloat(), it.tilt.toFloat()) }
+      val slatTiltForWindow = getGroupValues(
+        values = positions,
+        hadMarkers = state.windowState.markers.isNotEmpty(),
+        threshold = GroupThreshold.Slat,
+        extractor = { it.tilt.toFloat() }
+      )
+      val slatTiltForSlider = getGroupValues(
+        values = positions,
+        hadMarkers = state.windowState.markers.isNotEmpty(),
+        threshold = GroupThreshold.None,
+        extractor = { it.tilt.toFloat() }
+      )
+      val markers = group.channels.toShadingBlindMarkers(gson)
+      val tiltingDetails = calculateGroupTiltingDetailsUseCase(group.channels.map { it.configEntity?.toSuplaConfig(gson) })
 
       updateGroup(state, group.groupDataEntity, group.onlineSummary) {
         it.copy(
           remoteId = group.groupDataEntity.remoteId,
           windowState = it.windowState.copy(
             position = if (group.groupDataEntity.status.online) overallPosition else WindowGroupedValue.Similar(25f),
-            slatTilt = if (group.groupDataEntity.status.online) overallTilt else WindowGroupedValue.Similar(50f),
+            windowTilt = if (group.groupDataEntity.status.online) slatTiltForWindow else WindowGroupedValue.Similar(50f),
+            sliderTilt = if (group.groupDataEntity.status.online) slatTiltForSlider else WindowGroupedValue.Similar(50f),
+            tilt0Angle = tiltingDetails.tilt0Angle?.toFloat(),
+            tilt100Angle = tiltingDetails.tilt100Angle?.toFloat(),
             markers = if (group.groupDataEntity.status.online) markers else emptyList(),
             positionTextFormat = positionTextFormat
           ),
+          tiltControlType = tiltingDetails.tiltControlType,
           viewState = it.viewState.copy(
             positionUnknown = overallPosition is WindowGroupedValue.Invalid,
           ),
-          lastPosition = overallPosition.value.toInt()
+          lastPosition = group.groupDataEntity.status.online.forTrue { overallPosition.value(ValueDestination.WINDOW)?.toInt() }
         )
       }
     }
   }
 
   override fun canShowMoveTime(state: VerticalBlindsViewModelState) =
-    state.viewState.positionUnknown || state.windowState.slatTilt == null
+    state.viewState.positionUnknown || state.windowState.windowTilt == null
 
   override fun updateTiltingDetails(
     tilt0Angle: Float,
     tilt100Angle: Float,
     tiltControlType: SuplaTiltControlType,
-    tiltingTime: Int?,
-    openingTime: Int?,
-    closingTime: Int?
+    tiltingTime: Int,
+    openingTime: Int,
+    closingTime: Int
   ) {
     updateState {
       it.copy(

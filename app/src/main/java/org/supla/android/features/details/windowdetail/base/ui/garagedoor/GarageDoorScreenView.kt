@@ -58,6 +58,7 @@ import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.details.windowdetail.base.data.GarageDoorState
+import org.supla.android.features.details.windowdetail.base.data.ValueDestination
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.ui.MoveState
 import org.supla.android.features.details.windowdetail.base.ui.applyForWindow
@@ -89,7 +90,7 @@ fun GarageDoorScreenView(
               if (windowDimens.canvasRect.contains(point)) {
                 moveState.value = moveState.value.copy(
                   initialPoint = Offset(event.x, event.y),
-                  initialVerticalPercentage = windowState.position.value
+                  initialVerticalPercentage = windowState.position.value(ValueDestination.WINDOW) ?: 0f
                 )
               }
             }
@@ -100,7 +101,7 @@ fun GarageDoorScreenView(
                 ?.let { position -> onPositionChanging?.let { it(position) } }
             }
             MotionEvent.ACTION_UP -> {
-              onPositionChanged?.let { it(windowState.position.value) }
+              onPositionChanged?.invoke(windowState.position.value(ValueDestination.WINDOW) ?: 0f)
               moveState.value = moveState.value.copy(initialPoint = null)
             }
           }
@@ -112,8 +113,8 @@ fun GarageDoorScreenView(
       return@Canvas // Skip drawing when view size is not set yet
     }
 
-    val position = if (windowState.markers.isEmpty()) windowState.position.value else windowState.markers.max()
-    val topCorrection = windowDimens.movementMaxHeight.times(100f.minus(position)).div(100)
+    val position = if (windowState.markers.isEmpty()) windowState.position.value(ValueDestination.WINDOW) else windowState.markers.max()
+    val topCorrection = windowDimens.movementMaxHeight.times(100f.minus(position ?: 0f)).div(100)
 
     GarageDoorDrawer.drawGarageBuilding(this@Canvas, windowDimens, colors)
     GarageDoorDrawer.drawGarageContent(this@Canvas, garageContentPainter, windowDimens)

@@ -38,11 +38,13 @@ import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.details.windowdetail.base.data.RollerShutterWindowState
+import org.supla.android.features.details.windowdetail.base.data.ValueDestination
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.data.WindowState
 import org.supla.android.features.details.windowdetail.base.data.facadeblinds.FacadeBlindWindowState
 import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemAction
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
+import org.supla.android.features.details.windowdetail.base.ui.facadeblinds.SlatMarker
 import org.supla.android.features.details.windowdetail.base.ui.facadeblinds.SlatTiltSlider
 import org.supla.android.features.details.windowdetail.base.ui.windowview.controls.HoldToMoveVerticalButtons
 import org.supla.android.features.details.windowdetail.base.ui.windowview.controls.IssuesView
@@ -102,10 +104,11 @@ fun WindowViewSmallContent(
         )
         (windowState as? FacadeBlindWindowState)?.let {
           SlatTiltSlider(
-            value = windowState.slatTilt?.value ?: 0f,
+            value = windowState.sliderTilt?.value(ValueDestination.SLIDER),
             modifier = Modifier.fillMaxWidth(),
-            enabled = viewState.enabled && windowState.slatTilt != null,
-            slatsTiltDegrees = windowState.slatTiltDegrees ?: 0f,
+            enabled = viewState.enabled && windowState.windowTilt != null,
+            slatsTiltDegrees = windowState.sliderTiltDegrees,
+            markers = windowState.markers.mapNotNull { marker -> marker.tiltValue?.let { SlatMarker(it, marker.tilt) } },
             onValueChange = { onAction(ShadingSystemAction.TiltTo(it)) },
             onValueChangeFinished = { onAction(ShadingSystemAction.TiltSetTo(it)) }
           )

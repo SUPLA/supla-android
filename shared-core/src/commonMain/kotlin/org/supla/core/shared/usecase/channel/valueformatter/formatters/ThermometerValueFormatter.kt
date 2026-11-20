@@ -24,15 +24,14 @@ import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import org.supla.core.shared.usecase.channel.valueformatter.types.InvalidValue
 import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
 import org.supla.core.shared.usecase.channel.valueformatter.types.ValuePrecision
-import org.supla.core.shared.usecase.channel.valueformatter.types.ValueUnit
 
 class ThermometerValueFormatter(
   private val preferences: ApplicationPreferences,
 ) : ValueFormatter() {
 
-  override val defaultFormatSpecification: ValueFormatSpecification = ValueFormatSpecification.Companion.ThermometerDefault
+  override val defaultFormatSpecification: ValueFormatSpecification = ValueFormatSpecification.ThermometerDefault
 
-  override val invalidValue: InvalidValue = InvalidValue.Companion.Thermometer
+  override val invalidValue: InvalidValue = InvalidValue.Thermometer
 
   override fun format(value: Any?, format: ValueFormat): String {
     val unit = when (format.withUnit) {

@@ -17,6 +17,7 @@ package org.supla.android.data.source.local.entity.complex
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import com.google.gson.Gson
 import org.supla.android.data.source.local.entity.custom.Phase
 import org.supla.android.data.source.local.entity.hasMeasurements
 import org.supla.android.data.source.local.entity.isElectricityMeter
@@ -27,8 +28,11 @@ import org.supla.android.data.source.local.entity.isShadingSystem
 import org.supla.android.data.source.local.entity.isThermometer
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 import org.supla.android.data.source.remote.channel.suplaElectricityMeterMeasuredTypes
+import org.supla.android.data.source.remote.rollershutter.SuplaChannelFacadeBlindConfig
+import org.supla.android.features.details.windowdetail.base.data.ShadingBlindMarker
 import org.supla.android.lib.SuplaChannelElectricityMeterValue
 import org.supla.android.lib.SuplaChannelImpulseCounterValue
+import org.supla.core.shared.data.model.shadingsystem.SuplaShadingSystemFlag
 import timber.log.Timber
 
 fun ChannelDataEntity.isIconValueItem() = channelEntity.isIconValueItem()
@@ -50,6 +54,24 @@ val ChannelDataEntity.Electricity: ChannelDataElectricityExtension
 
 val ChannelDataEntity.ImpulseCounter: ChannelDataImpulseCounterExtension
   get() = ChannelDataImpulseCounterExtension(this)
+
+fun List<ChannelDataEntity>.toShadingBlindMarkers(gson: Gson): List<ShadingBlindMarker> =
+  mapNotNull { channel ->
+    val value = channel.channelValueEntity.asFacadeBlindValue()
+    if (!value.hasValidPosition()) return@mapNotNull null
+
+    val tiltValue = value.tilt
+      .takeIf { value.hasValidTilt() && value.flags.contains(SuplaShadingSystemFlag.TILT_IS_SET) }
+      ?.toFloat()
+
+    val config = (channel.configEntity?.toSuplaConfig(gson) as? SuplaChannelFacadeBlindConfig)
+    ShadingBlindMarker(
+      position = value.position.toFloat(),
+      tiltValue = tiltValue,
+      tilt0Angle = config?.tilt0Angle?.toFloat(),
+      tilt100Angle = config?.tilt100Angle?.toFloat()
+    )
+  }.sortedBy { it.position }
 
 @JvmInline
 value class ChannelDataElectricityExtension(private val channelData: ChannelDataEntity) {
