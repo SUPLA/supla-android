@@ -14,7 +14,7 @@
   <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
   <uses-permission android:name="android.permission.NFC" />
 
-  <uses-feature android:name="android.hardware.wifi" />
+  <uses-feature android:name="android.hardware.wifi" android:required="false" />
   <uses-feature
     android:name="android.hardware.nfc"
     android:required="false" />
@@ -124,8 +124,7 @@
     <activity
       android:name=".ZWaveConfigurationWizardActivity"
       android:exported="true"
-      android:launchMode="singleTop"
-      android:screenOrientation="sensorPortrait" />
+      android:launchMode="singleTop" />
 
     <activity
       android:name=".features.widget.doublewidget.DoubleWidgetConfigurationActivity"
