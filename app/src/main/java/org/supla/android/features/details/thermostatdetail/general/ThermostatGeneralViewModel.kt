@@ -214,11 +214,11 @@ class ThermostatGeneralViewModel @Inject constructor(
     val state = currentState()
 
     state.viewModelState?.let { viewModelState ->
-      if (heatPercentage != null && heatPercentage != state.setpointHeatTemperaturePercentage) {
+      if (heatPercentage != null && heatPercentage.isFinite() && heatPercentage != state.setpointHeatTemperaturePercentage) {
         val temperature = getTemperatureForPosition(heatPercentage, viewModelState)
 
         updateStateForHeatChange(viewModelState.copy(setpointHeatTemperature = temperature, lastChangedHeat = true))
-      } else if (coolPercentage != null && coolPercentage != state.setpointCoolTemperaturePercentage) {
+      } else if (coolPercentage != null && coolPercentage.isFinite() && coolPercentage != state.setpointCoolTemperaturePercentage) {
         val temperature = getTemperatureForPosition(coolPercentage, viewModelState)
 
         updateStateForCoolChange(viewModelState.copy(setpointCoolTemperature = temperature, lastChangedHeat = false))
@@ -737,7 +737,7 @@ data class ThermostatGeneralViewState(
         viewModelState?.configMaxTemperature
       ) { (heat, min, max) ->
         return when (viewModelState?.mode) {
-          SuplaHvacMode.HEAT, SuplaHvacMode.HEAT_COOL -> heat.minus(min).div(max - min)
+          SuplaHvacMode.HEAT, SuplaHvacMode.HEAT_COOL -> if (min == max) 0f else heat.minus(min).div(max - min)
           else -> null
         }
       }
@@ -752,7 +752,7 @@ data class ThermostatGeneralViewState(
         viewModelState?.configMaxTemperature
       ) { (cool, min, max) ->
         return when (viewModelState?.mode) {
-          SuplaHvacMode.COOL, SuplaHvacMode.HEAT_COOL -> cool.minus(min).div(max - min)
+          SuplaHvacMode.COOL, SuplaHvacMode.HEAT_COOL -> if (min == max) 0f else cool.minus(min).div(max - min)
           else -> null
         }
       }
