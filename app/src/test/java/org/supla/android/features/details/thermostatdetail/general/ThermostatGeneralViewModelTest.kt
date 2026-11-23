@@ -466,6 +466,75 @@ class ThermostatGeneralViewModelTest :
   }
 
   @Test
+  fun `should return zero setpoint percentages when temperature range is zero`() {
+    // given
+    val heatState = thermostatDefaultState(remoteId = 321, setpointTemperatureHeat = 0f).let { state ->
+      state.copy(
+        viewModelState = state.viewModelState!!.copy(configMinTemperature = 0f, configMaxTemperature = 0f)
+      )
+    }
+    val coolState = thermostatDefaultState(
+      remoteId = 321,
+      setpointTemperatureCool = 0f,
+      mode = SuplaHvacMode.COOL
+    ).let { state ->
+      state.copy(
+        viewModelState = state.viewModelState!!.copy(configMinTemperature = 0f, configMaxTemperature = 0f)
+      )
+    }
+
+    // then
+    assertThat(heatState.setpointHeatTemperaturePercentage).isEqualTo(0f)
+    assertThat(coolState.setpointCoolTemperaturePercentage).isEqualTo(0f)
+  }
+
+  @Test
+  fun `should ignore non finite heat setpoint position and finish changing`() {
+    // given
+    val remoteId = 321
+    val deviceId = 321
+    mockHeatThermostat(remoteId, deviceId, setpointTemperatureHeat = 22.4f)
+    every { dateProvider.currentDate() } returns date(2025, 9, 8, 11, 39)
+    every { checkIsSlaveThermostatUseCase(remoteId) } returns Single.just(false)
+
+    // when
+    viewModel.observeData(remoteId, deviceId)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
+    val initialViewModelState = states.last().viewModelState
+    viewModel.markChanging()
+    viewModel.setpointTemperatureChanged(Float.NaN, null)
+
+    // then
+    assertThat(states.last().changing).isFalse()
+    assertThat(states.last().viewModelState).isEqualTo(initialViewModelState)
+    verify(exactly = 0) { delayedThermostatActionSubject.emit(any()) }
+    confirmVerified(delayedThermostatActionSubject)
+  }
+
+  @Test
+  fun `should ignore non finite cool setpoint position and finish changing`() {
+    // given
+    val remoteId = 321
+    val deviceId = 321
+    mockCoolThermostat(remoteId, deviceId, setpointTemperature = 22.4f)
+    every { dateProvider.currentDate() } returns date(2025, 9, 8, 11, 39)
+    every { checkIsSlaveThermostatUseCase(remoteId) } returns Single.just(false)
+
+    // when
+    viewModel.observeData(remoteId, deviceId)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
+    val initialViewModelState = states.last().viewModelState
+    viewModel.markChanging()
+    viewModel.setpointTemperatureChanged(null, Float.POSITIVE_INFINITY)
+
+    // then
+    assertThat(states.last().changing).isFalse()
+    assertThat(states.last().viewModelState).isEqualTo(initialViewModelState)
+    verify(exactly = 0) { delayedThermostatActionSubject.emit(any()) }
+    confirmVerified(delayedThermostatActionSubject)
+  }
+
+  @Test
   fun `should change heat temperature by step`() {
     // given
     val remoteId = 321

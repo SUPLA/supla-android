@@ -437,7 +437,12 @@ private fun DrawScope.drawSetPoint(
   val angle = START_ANGLE + SWEEP_ANGLE.times(config.value)
   val centerPoint = getPositionOnCircle(angle, radius, center).run {
     if (config.canMove(initialPoint, this, center, radius)) {
-      getNearestCirclePoint(movingPoint!!, center, radius, minAlpha, maxAlpha, config.positionObserver!!)
+      val movingDistance = movingPoint.distanceTo(center)
+      if (movingDistance?.isFinite() == true && movingDistance > 0f) {
+        getNearestCirclePoint(movingPoint!!, center, radius, minAlpha, maxAlpha, config.positionObserver!!)
+      } else {
+        this
+      }
     } else {
       this
     }
