@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -124,8 +125,11 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
   @Inject ChannelRepository channelRepository;
 
   @Override
+  @SuppressLint("SourceLockedOrientationActivity")
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
     mFuncList = new ArrayList<>();
     mNodeList = new ArrayList<>();
