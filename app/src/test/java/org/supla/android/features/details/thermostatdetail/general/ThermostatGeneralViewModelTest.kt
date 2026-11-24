@@ -55,6 +55,7 @@ import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.extensions.date
 import org.supla.android.extensions.shift
+import org.supla.android.images.ImageId
 import org.supla.android.lib.SuplaChannelExtendedValue
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.SuplaTimerState
@@ -242,6 +243,63 @@ class ThermostatGeneralViewModelTest :
         thermometerValueFormatter = valueFormatter
       )
     )
+  }
+
+  @Test
+  fun `should show pump and heat source icons when slave thermostats share switch remote ids`() {
+    // given
+    val remoteId = 123
+    val deviceId = 321
+    val sharedSwitchRemoteId = 777
+    mockHeatThermostat(
+      remoteId,
+      deviceId,
+      23.4f,
+      children = mockSlaveThermostats(
+        pumpRemoteIds = listOf(sharedSwitchRemoteId, sharedSwitchRemoteId),
+        heatSourceRemoteIds = listOf(sharedSwitchRemoteId, sharedSwitchRemoteId)
+      )
+    )
+    every { checkIsSlaveThermostatUseCase(remoteId) } returns Single.just(false)
+    every { dateProvider.currentDate() } returns date(2025, 9, 8, 11, 39)
+    val sharedIcon = ImageId(1001)
+    every { getChannelIconUseCase.invoke(any<ChannelDataEntity>()) } returns sharedIcon
+
+    // when
+    viewModel.observeData(remoteId, deviceId)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
+
+    // then
+    assertThat(states.last().pumpSwitchIcon).isEqualTo(sharedIcon)
+    assertThat(states.last().heatOrColdSourceSwitchIcon).isEqualTo(sharedIcon)
+  }
+
+  @Test
+  fun `should show pump and heat source icons when slave thermostats have different switch remote ids`() {
+    // given
+    val remoteId = 123
+    val deviceId = 321
+    mockHeatThermostat(
+      remoteId,
+      deviceId,
+      23.4f,
+      children = mockSlaveThermostats(
+        pumpRemoteIds = listOf(701, 702),
+        heatSourceRemoteIds = listOf(801, 802)
+      )
+    )
+    every { checkIsSlaveThermostatUseCase(remoteId) } returns Single.just(false)
+    every { dateProvider.currentDate() } returns date(2025, 9, 8, 11, 39)
+    val switchIcon = ImageId(1002)
+    every { getChannelIconUseCase.invoke(any<ChannelDataEntity>()) } returns switchIcon
+
+    // when
+    viewModel.observeData(remoteId, deviceId)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
+
+    // then
+    assertThat(states.last().pumpSwitchIcon).isEqualTo(switchIcon)
+    assertThat(states.last().heatOrColdSourceSwitchIcon).isEqualTo(switchIcon)
   }
 
   @Test
@@ -869,7 +927,8 @@ class ThermostatGeneralViewModelTest :
     weeklyScheduleActive: Boolean = false,
     mode: SuplaHvacMode = SuplaHvacMode.HEAT,
     timerEndDate: Date? = null,
-    func: SuplaFunction = SuplaFunction.HVAC_THERMOSTAT
+    func: SuplaFunction = SuplaFunction.HVAC_THERMOSTAT,
+    children: List<ChannelChildEntity>? = null
   ) {
     val flags = mutableListOf(SuplaThermostatFlag.SETPOINT_TEMP_MIN_SET)
     if (weeklyScheduleActive) {
@@ -881,7 +940,8 @@ class ThermostatGeneralViewModelTest :
       mode = mode,
       setpointTemperatureHeat = setpointTemperatureHeat,
       flags = flags,
-      timerEndDate = timerEndDate
+      timerEndDate = timerEndDate,
+      children = children
     )
 
     every { channelConfigEventsManager.observerConfig(remoteId) } returns
@@ -954,7 +1014,8 @@ class ThermostatGeneralViewModelTest :
     setpointTemperatureHeat: Float? = null,
     setpointTemperatureCool: Float? = null,
     flags: List<SuplaThermostatFlag> = listOf(SuplaThermostatFlag.SETPOINT_TEMP_MIN_SET),
-    timerEndDate: Date? = null
+    timerEndDate: Date? = null,
+    children: List<ChannelChildEntity>? = null
   ): ChannelWithChildren {
     val thermostatValue: ThermostatValue = mockk {
       every { status } returns SuplaChannelAvailabilityStatus.ONLINE
@@ -1002,17 +1063,40 @@ class ThermostatGeneralViewModelTest :
     }
     val thermometerWithChildren: ChannelWithChildren = mockk {
     }
-    val children = listOf(
+    val channelChildren = children ?: listOf(
       mockChannelChildEntity(ChannelRelationType.MAIN_THERMOMETER, SuplaFunction.THERMOMETER, dataEntity = thermometerEntity),
       mockChannelChildEntity(ChannelRelationType.AUX_THERMOMETER_FLOOR, SuplaFunction.THERMOMETER, remoteId = 998)
     )
 
-    every { children[0].function } returns SuplaFunction.THERMOMETER
-    every { children[0].withChildren } returns thermometerWithChildren
-    every { getChannelValueUseCase.invoke<Double>(thermometerWithChildren) } returns 15.3
+    if (children == null) {
+      every { channelChildren[0].function } returns SuplaFunction.THERMOMETER
+      every { channelChildren[0].withChildren } returns thermometerWithChildren
+      every { getChannelValueUseCase.invoke<Double>(thermometerWithChildren) } returns 15.3
+    }
 
-    return ChannelWithChildren(channelDataEntity, children)
+    return ChannelWithChildren(channelDataEntity, channelChildren)
   }
+
+  private fun mockSlaveThermostats(pumpRemoteIds: List<Int>, heatSourceRemoteIds: List<Int>): List<ChannelChildEntity> =
+    pumpRemoteIds.indices.map { index ->
+      mockChannelChildEntity(
+        relationType = ChannelRelationType.MASTER_THERMOSTAT,
+        function = SuplaFunction.HVAC_THERMOSTAT,
+        remoteId = 600 + index,
+        children = listOf(
+          mockChannelChildEntity(
+            relationType = ChannelRelationType.PUMP_SWITCH,
+            function = SuplaFunction.POWER_SWITCH,
+            remoteId = pumpRemoteIds[index]
+          ),
+          mockChannelChildEntity(
+            relationType = ChannelRelationType.HEAT_OR_COLD_SOURCE_SWITCH,
+            function = SuplaFunction.POWER_SWITCH,
+            remoteId = heatSourceRemoteIds[index]
+          )
+        )
+      )
+    }
 
   private fun mockSuplaChannelHvacConfig(
     remoteId: Int,
@@ -1069,7 +1153,8 @@ class ThermostatGeneralViewModelTest :
     relationType: ChannelRelationType,
     function: SuplaFunction? = null,
     dataEntity: ChannelDataEntity? = null,
-    remoteId: Int? = null
+    remoteId: Int? = null,
+    children: List<ChannelChildEntity> = emptyList()
   ): ChannelChildEntity {
     val channelDataEntity = dataEntity ?: remoteId?.let {
       mockk {
@@ -1086,7 +1171,7 @@ class ThermostatGeneralViewModelTest :
     return mockk<ChannelChildEntity> {
       function?.let { every { this@mockk.function } returns it }
       every { this@mockk.relationType } returns relationType
-      every { this@mockk.children } returns emptyList()
+      every { this@mockk.children } returns children
       every { this@mockk.channelDataEntity } returns channelDataEntity
       every { channelRelationEntity } returns mockk(relaxed = true)
     }
