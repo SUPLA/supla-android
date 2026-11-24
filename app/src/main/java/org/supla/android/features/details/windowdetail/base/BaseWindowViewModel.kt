@@ -261,7 +261,7 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
 
     data object Default : GroupThreshold(3, 5)
     data object Slat : GroupThreshold(50, 60)
-    data object None : GroupThreshold(0, 0)
+    data object None : GroupThreshold(0, 1)
   }
 
   protected open fun canShowMoveTime(state: S): Boolean =

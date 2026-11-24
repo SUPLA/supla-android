@@ -497,8 +497,8 @@ internal data class MarkerCluster(
 
   val shouldDrawAsSingleMarker: Boolean
     get() = count == 1 ||
-      (hasTilt && minTilt == maxTilt) ||
-      (!hasTilt && minValue != null && minValue == maxValue)
+      (hasTilt && minTilt?.roundToInt() == maxTilt?.roundToInt()) ||
+      (!hasTilt && minValue != null && minValue?.roundToInt() == maxValue?.roundToInt())
 
   val hasTilt: Boolean
     get() = minTilt != null && maxTilt != null
@@ -590,12 +590,10 @@ private fun Preview_Normal() {
           .background(color = colorResource(id = R.color.background))
       ) {
         val markers = listOf(
-          ShadingBlindMarker(0f, 50f),
-          ShadingBlindMarker(20f, 70f),
-//          ShadingBlindMarker(24f, 25f, tilt0Angle = 0f, tilt100Angle = 90f),
-//          ShadingBlindMarker(25f, 75f, tilt0Angle = 0f, tilt100Angle = 90f),
-//          ShadingBlindMarker(60f, 25f, tilt0Angle = 0f, tilt100Angle = 90f),
-//          ShadingBlindMarker(100f, 25f)
+          ShadingBlindMarker(24f, 25f, tilt0Angle = 0f, tilt100Angle = 90f),
+          ShadingBlindMarker(25f, 75f, tilt0Angle = 0f, tilt100Angle = 90f),
+          ShadingBlindMarker(60f, 25f, tilt0Angle = 0f, tilt100Angle = 90f),
+          ShadingBlindMarker(100f, 25f)
         )
         FacadeBlindsWindowView(
           windowState = FacadeBlindWindowState(WindowGroupedValue.Similar(75f), markers = markers),
