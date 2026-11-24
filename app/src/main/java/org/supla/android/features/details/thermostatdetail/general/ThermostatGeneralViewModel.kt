@@ -443,7 +443,14 @@ class ThermostatGeneralViewModel @Inject constructor(
 
     channelWithChildren.allDescendantFlat
       .filter { it.relationType == ChannelRelationType.PUMP_SWITCH }
-      .let { if (it.size == 1) return getChannelIconUseCase(it.first().channelDataEntity) }
+      .let { pumps ->
+        // check any pump on
+        pumps.firstOrNull { it.channelDataEntity.channelValueEntity.asRelayValue().on }
+          ?.let { return getChannelIconUseCase(it.channelDataEntity) }
+
+        // check any pump off
+        pumps.firstOrNull()?.let { return getChannelIconUseCase(it.channelDataEntity) }
+      }
 
     return null
   }
@@ -454,7 +461,14 @@ class ThermostatGeneralViewModel @Inject constructor(
 
     channelWithChildren.allDescendantFlat
       .filter { it.relationType == ChannelRelationType.HEAT_OR_COLD_SOURCE_SWITCH }
-      .let { if (it.size == 1) return getChannelIconUseCase(it.first().channelDataEntity) }
+      .let { pumps ->
+        // check any switch on
+        pumps.firstOrNull { it.channelDataEntity.channelValueEntity.asRelayValue().on }
+          ?.let { return getChannelIconUseCase(it.channelDataEntity) }
+
+        // check any switch off
+        pumps.firstOrNull()?.let { return getChannelIconUseCase(it.channelDataEntity) }
+      }
 
     return null
   }
