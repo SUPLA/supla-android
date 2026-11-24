@@ -84,6 +84,8 @@ class ChannelsTreeSnapshotFactory @Inject constructor(
       SuplaFunction.LIGHTSWITCH,
       SuplaFunction.POWER_SWITCH,
       SuplaFunction.STAIRCASE_TIMER,
+      SuplaFunction.PUMP_SWITCH,
+      SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH,
       SuplaFunction.CONTROLLING_THE_GATE,
       SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
       SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,

@@ -38,8 +38,9 @@ class ProvideChannelDetailTypeUseCase @Inject constructor() : BaseDetailTypeProv
     when (val function = channelWithChildren.channel.function) {
       SuplaFunction.DIMMER,
       SuplaFunction.DIMMER_CCT,
-      SuplaFunction.DIMMER_AND_RGB_LIGHTING,
-      SuplaFunction.DIMMER_CCT_AND_RGB -> StandardDetailType(getDimmerAndRgbDetailPages(channelWithChildren))
+      SuplaFunction.RGB_LIGHTING,
+      SuplaFunction.DIMMER_CCT_AND_RGB,
+      SuplaFunction.DIMMER_AND_RGB_LIGHTING -> StandardDetailType(getDimmerAndRgbDetailPages(channelWithChildren))
       SuplaFunction.ACTION_TRIGGER -> StandardDetailType(getActionTriggerDetailPages(channelWithChildren))
       SuplaFunction.LIGHTSWITCH,
       SuplaFunction.POWER_SWITCH,
