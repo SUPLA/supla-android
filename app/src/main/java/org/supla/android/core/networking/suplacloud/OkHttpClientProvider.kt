@@ -44,15 +44,17 @@ class OkHttpClientProvider @Inject constructor(
         }
       )
       .authenticator(tokenAuthenticator)
-      .also {
-        val socketFactory = suplaCloudConfigHolder.socketFactory
-        val trustManagers = suplaCloudConfigHolder.trustManagers
-
-        // Used only by private supla cloud instances
-        if (socketFactory != null && trustManagers != null) {
-          it.sslSocketFactory(socketFactory, trustManagers[0] as X509TrustManager)
-          it.hostnameVerifier { _, _ -> true }
-        }
-      }
+      .also(::configure)
       .build()
+
+  fun configure(builder: OkHttpClient.Builder) {
+    val socketFactory = suplaCloudConfigHolder.socketFactory
+    val trustManagers = suplaCloudConfigHolder.trustManagers
+
+    // Used only by private supla cloud instances
+    if (socketFactory != null && trustManagers != null) {
+      builder.sslSocketFactory(socketFactory, trustManagers[0] as X509TrustManager)
+      builder.hostnameVerifier { _, _ -> true }
+    }
+  }
 }

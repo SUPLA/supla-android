@@ -67,10 +67,10 @@ class BaseWindowViewModelTest {
 
   @Test
   fun `zero threshold considers only identical values similar`() {
-    assertThat(viewModel.withoutMarkers(listOf(20f, 20f, 20f), BaseWindowViewModel.GroupThreshold.None))
+    assertThat(viewModel.withoutMarkers(listOf(20f, 20.1f, 19.8f), BaseWindowViewModel.GroupThreshold.None))
       .isEqualTo(WindowGroupedValue.Similar(20f))
-    assertThat(viewModel.withoutMarkers(listOf(20f, 20.01f), BaseWindowViewModel.GroupThreshold.None))
-      .isEqualTo(WindowGroupedValue.Different(min = 20f, max = 20.01f))
+    assertThat(viewModel.withoutMarkers(listOf(20f, 21.01f), BaseWindowViewModel.GroupThreshold.None))
+      .isEqualTo(WindowGroupedValue.Different(min = 20f, max = 21.01f))
   }
 
   private data class TestValue(val value: Float)

@@ -25,7 +25,8 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.supla.android.BuildConfig
 import org.supla.android.core.networking.suplacloud.CloudApiTokenProvider
-import org.supla.android.core.networking.suplacloud.SuplaCloudConfigHolder
+import org.supla.android.core.networking.suplacloud.OkHttpClientProvider
+import org.supla.android.core.networking.suplacloud.SuplaCloudUrlProvider
 import org.supla.android.data.source.remote.rest.schedule.ScheduleDto
 import org.supla.android.di.GSON_FOR_API
 import retrofit2.Retrofit
@@ -57,8 +58,9 @@ interface CloudApiService {
 
   @Singleton
   class Provider @Inject constructor(
-    private val configHolder: SuplaCloudConfigHolder,
+    private val urlProvider: SuplaCloudUrlProvider,
     private val tokenProvider: CloudApiTokenProvider,
+    private val okHttpClientProvider: OkHttpClientProvider,
     @param:Named(GSON_FOR_API) private val gson: Gson
   ) {
     private var retrofitInstance: Retrofit? = null
@@ -66,7 +68,7 @@ interface CloudApiService {
 
     @WorkerThread
     fun provide(): CloudApiService {
-      val url = requireNotNull(configHolder.url) { "Cloud server URL missing!" }
+      val url = urlProvider.requireUrl()
       return provideRetrofit(url).create(CloudApiService::class.java)
     }
 
@@ -79,6 +81,7 @@ interface CloudApiService {
           .baseUrl(url)
           .client(
             OkHttpClient.Builder()
+              .also(okHttpClientProvider::configure)
               .addInterceptor(
                 Interceptor { chain ->
                   val request = chain.request().newBuilder().apply {
