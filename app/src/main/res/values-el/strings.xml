@@ -901,4 +901,5 @@
   <string name="relay_schedule_program_mode_automatic">Αυτόματα</string>
   <string name="relay_schedule_program_first_duration">Πρώτη διάρκεια (%1$s)</string>
   <string name="relay_schedule_program_second_duration">Δεύτερη διάρκεια (%1$s)</string>
+  <string name="channel_current_state_left">Απομένει: %1$s (%2$d δευτ.)</string>
 </resources>

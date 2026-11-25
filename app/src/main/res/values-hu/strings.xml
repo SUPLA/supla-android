@@ -904,4 +904,5 @@
   <string name="relay_schedule_program_mode_automatic">Automatikus</string>
   <string name="relay_schedule_program_first_duration">Első időtartam (%1$s)</string>
   <string name="relay_schedule_program_second_duration">Második időtartam (%1$s)</string>
+  <string name="channel_current_state_left">Hátralévő idő: %1$s (%2$d mp)</string>
 </resources>

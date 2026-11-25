@@ -909,4 +909,5 @@
   <string name="relay_schedule_program_mode_automatic">Automat</string>
   <string name="relay_schedule_program_first_duration">Prima durată (%1$s)</string>
   <string name="relay_schedule_program_second_duration">A doua durată (%1$s)</string>
+  <string name="channel_current_state_left">Timp rămas: %1$s (%2$d s)</string>
 </resources>

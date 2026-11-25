@@ -886,4 +886,5 @@
   <string name="relay_schedule_program_mode_automatic">Automatinis</string>
   <string name="relay_schedule_program_first_duration">Pirmoji trukmė (%1$s)</string>
   <string name="relay_schedule_program_second_duration">Antroji trukmė (%1$s)</string>
+  <string name="channel_current_state_left">Liko: %1$s (%2$d sek.)</string>
 </resources>
