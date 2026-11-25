@@ -124,12 +124,6 @@ class MainScreen(
       MessageTemplate.Builder(carContext.getString(R.string.android_auto_empty_message))
         .setIcon(CarIcon.ALERT)
         .setHeader(createHeader(R.string.android_auto_empty_header).build())
-        .addAction(
-          Action.Builder()
-            .setTitle(carContext.getString(R.string.android_auto_empty_refresh))
-            .setOnClickListener { observeAndroidAutoItems() }
-            .build()
-        )
         .build()
     } else {
       GridTemplate.Builder()

@@ -743,7 +743,6 @@
   <string name="channel_btn_stop">Dayandır</string>
   <string name="android_auto_action">Əməliyyat: %1$s</string>
   <string name="android_auto_empty_header">Konfiqurasiya tələb olunur</string>
-  <string name="android_auto_empty_refresh">Yenilə</string>
   <string name="android_auto_empty_message">Android Auto-nu SUPLA tətbiqində yalnız avtomobil park vəziyyətində olanda qurun.</string>
   <string name="android_auto_executing" translatable="false">İcra olunur…</string>
   <string name="android_auto_delete_title" translatable="false">Element silinir</string>

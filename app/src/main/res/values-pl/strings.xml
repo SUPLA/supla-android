@@ -749,7 +749,6 @@
   <string name="channel_btn_stop">Stop</string>
   <string name="android_auto_action">Akcja: %1$s</string>
   <string name="android_auto_empty_header">Wymagana konfiguracja</string>
-  <string name="android_auto_empty_refresh">Odśwież</string>
   <string name="android_auto_empty_message">Skonfiguruj Android Auto w aplikacji SUPLA, tylko wtedy, gdy samochód jest zaparkowany.</string>
   <string name="android_auto_executing">Wykonywanie…</string>
   <string name="android_auto_delete_title">Usuwanie</string>
