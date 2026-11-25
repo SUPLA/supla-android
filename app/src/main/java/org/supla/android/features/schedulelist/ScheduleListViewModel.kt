@@ -22,6 +22,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx3.await
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.supla.android.R
 import org.supla.android.core.networking.suplacloud.CloudApiTokenProvider
 import org.supla.android.core.ui.BaseViewModel
@@ -59,6 +61,7 @@ class ScheduleListViewModel @Inject constructor(
 
   private var profileId: Long? = null
   private var scheduleIdForCaptionChange: Int? = null
+  private val scheduleUpdateMutexes = mutableMapOf<Int, Mutex>()
   private val schedulesReloadSubject = PublishSubject.create<Unit>()
 
   init {
@@ -80,16 +83,18 @@ class ScheduleListViewModel @Inject constructor(
     }
 
     viewModelScope.launch {
-      updateState { it.copy(loading = true, loadingError = false) }
-      try {
-        val cloudApiService = threading.io { cloudApiServiceProvider.provide() }
-        val schedule = threading.io { cloudApiService.getSchedule(remoteId) }
-        if (schedule.enabled != enabled) {
-          threading.io { cloudApiService.updateSchedule(remoteId, schedule.copy(enabled = enabled)) }
+      scheduleUpdateMutex(remoteId).withLock {
+        updateState { it.copy(loading = true, loadingError = false) }
+        try {
+          val cloudApiService = threading.io { cloudApiServiceProvider.provide() }
+          val schedule = threading.io { cloudApiService.getSchedule(remoteId) }
+          if (schedule.enabled != enabled) {
+            threading.io { cloudApiService.updateSchedule(remoteId, schedule.copy(enabled = enabled)) }
+          }
+          schedulesReloadSubject.onNext(Unit)
+        } catch (error: Exception) {
+          handleScheduleLoadingError(error)
         }
-        schedulesReloadSubject.onNext(Unit)
-      } catch (error: Exception) {
-        handleScheduleLoadingError(error)
       }
     }
   }
@@ -126,30 +131,32 @@ class ScheduleListViewModel @Inject constructor(
     }
 
     viewModelScope.launch {
-      updateState {
-        it.copy(captionChangeDialogState = it.captionChangeDialogState?.copy(loading = true, error = null))
-      }
-      try {
-        val cloudApiService = threading.io { cloudApiServiceProvider.provide() }
-        val schedule = threading.io { cloudApiService.getSchedule(remoteId) }
-        threading.io { cloudApiService.updateSchedule(remoteId, schedule.copy(caption = caption)) }
-        onCaptionChangeDismiss()
-        schedulesReloadSubject.onNext(Unit)
-      } catch (error: Exception) {
-        if (error is HttpException && error.code() == 401) {
-          updateState {
-            it.copy(captionChangeDialogState = it.captionChangeDialogState?.copy(loading = false))
-          }
-          handleScheduleLoadingError(error)
-        } else {
-          Timber.e(error, "Changing schedule caption failed")
-          updateState {
-            it.copy(
-              captionChangeDialogState = it.captionChangeDialogState?.copy(
-                loading = false,
-                error = localizedString(R.string.caption_change_failed)
+      scheduleUpdateMutex(remoteId).withLock {
+        updateState {
+          it.copy(captionChangeDialogState = it.captionChangeDialogState?.copy(loading = true, error = null))
+        }
+        try {
+          val cloudApiService = threading.io { cloudApiServiceProvider.provide() }
+          val schedule = threading.io { cloudApiService.getSchedule(remoteId) }
+          threading.io { cloudApiService.updateSchedule(remoteId, schedule.copy(caption = caption)) }
+          onCaptionChangeDismiss()
+          schedulesReloadSubject.onNext(Unit)
+        } catch (error: Exception) {
+          if (error is HttpException && error.code() == 401) {
+            updateState {
+              it.copy(captionChangeDialogState = it.captionChangeDialogState?.copy(loading = false))
+            }
+            handleScheduleLoadingError(error)
+          } else {
+            Timber.e(error, "Changing schedule caption failed")
+            updateState {
+              it.copy(
+                captionChangeDialogState = it.captionChangeDialogState?.copy(
+                  loading = false,
+                  error = localizedString(R.string.caption_change_failed)
+                )
               )
-            )
+            }
           }
         }
       }
@@ -240,6 +247,11 @@ class ScheduleListViewModel @Inject constructor(
     }
   }
 
+  private fun scheduleUpdateMutex(remoteId: Int): Mutex =
+    synchronized(scheduleUpdateMutexes) {
+      scheduleUpdateMutexes.getOrPut(remoteId) { Mutex() }
+    }
+
   private suspend fun loadSchedules() {
     val profileId = profileId ?: return
 
@@ -255,7 +267,7 @@ class ScheduleListViewModel @Inject constructor(
 
   private fun observeSchedulesReloads() {
     schedulesReloadSubject
-      .debounce(250, TimeUnit.MILLISECONDS, threading.schedulers.computation)
+      .debounce(3, TimeUnit.SECONDS, threading.schedulers.computation)
       .subscribeBy(onNext = { loadSchedulesOrShowAuthorization() })
       .disposeBySelf()
   }
