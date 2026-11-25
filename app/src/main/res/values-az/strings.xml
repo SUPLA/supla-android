@@ -988,4 +988,5 @@
   <string name="relay_schedule_program_mode_automatic">Avtomatik</string>
   <string name="relay_schedule_program_first_duration">Birinci müddət (%1$s)</string>
   <string name="relay_schedule_program_second_duration">İkinci müddət (%1$s)</string>
+  <string name="channel_current_state_left">Qalıb: %1$s (%2$d san.)</string>
 </resources>

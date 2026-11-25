@@ -889,4 +889,5 @@
   <string name="relay_schedule_program_mode_automatic">Automaticky</string>
   <string name="relay_schedule_program_first_duration">První doba trvání (%1$s)</string>
   <string name="relay_schedule_program_second_duration">Druhá doba trvání (%1$s)</string>
+  <string name="channel_current_state_left">Zbývá: %1$s (%2$d s)</string>
 </resources>
