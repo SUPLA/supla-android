@@ -670,7 +670,6 @@
   <string name="channel_btn_stop">Stopp</string>
   <string name="android_auto_action">Handling: %1$s</string>
   <string name="android_auto_empty_header">Konfigurasjon kreves</string>
-  <string name="android_auto_empty_refresh">Oppdater</string>
   <string name="android_auto_empty_message">Konfigurer Android Auto i SUPLA-appen når det er trygt.</string>
   <string name="add_wizard_step_1_qr_info"><![CDATA[Hvis du har en QR-kode, bruk skanneren. For enheter uten QR-kode, trykk <b>Neste</b> for å fortsette.]]></string>
   <string name="add_wizard_network_name">Nettverksnavn</string>
